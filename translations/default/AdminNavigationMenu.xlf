@@ -571,6 +571,40 @@ Comment: subtab</note>
         <target>Authorization Server</target>
         <note>Line: 133</note>
       </trans-unit>
+      <trans-unit id="a80d5e18649d829bda78450f7c862711">
+        <source>Webservice</source>
+        <target>Webservice</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="61fe9018991004014d12b8d81568df90">
+        <source>Statuses</source>
+        <target>Statuses</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="fcf3b725bb6ebb0e635b0f0902ade451">
+        <source><![CDATA[Theme & Logo]]></source>
+        <target><![CDATA[Theme & Logo]]></target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="a5cd3ed116608dac017f14c046ea56bf">
+        <source>Roles</source>
+        <target>Roles</target>
+        <note>Line: 101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/AliasGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ab81f57823f6aeb02362291f23883e6">
+        <source>Aliases</source>
+        <target>Aliases</target>
+        <note>Line: 71</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/AuthorizedApplicationGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -578,7 +612,70 @@ Comment: subtab</note>
       <trans-unit id="90854a1066286ca37c7757a35ea96f5d">
         <source>List of applications</source>
         <target>List of applications</target>
-        <note>Line: 63</note>
+        <note>Line: 62</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/BackupDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6eb1bcebc80d5fc77924a35a0f8a44af">
+        <source>DB backups</source>
+        <target>DB backups</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/CustomerGroupsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="517a8a7dbf1f6e371509817de328e396">
+        <source>Customer groups</source>
+        <target>Customer groups</target>
+        <note>Line: 60</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/MetaGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="eff583da754980d2ae9628799dde5606">
+        <source>Meta configuration</source>
+        <target>Meta configuration</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/RequestSqlGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e680cbd86de5d826aa31b1e236449297">
+        <source>SQL queries</source>
+        <target>SQL queries</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/SearchEngineGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c11f8c1ad1eb515cd4fbbd3a1ec200e3">
+        <source>Search engines</source>
+        <target>Search engines</target>
+        <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/TaxRulesGroupGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4442216adca4f675cc2498139bae625d">
+        <source>Tax rules</source>
+        <target>Tax rules</target>
+        <note>Line: 70</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/WebserviceKeyDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0a6d33c72dd18ba51220ac5d614281c0">
+        <source>Webservice keys</source>
+        <target>Webservice keys</target>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -587,7 +684,72 @@ Comment: subtab</note>
       <trans-unit id="9456409336f81ac68e55e23d73471a11">
         <source>Authorization Server Management</source>
         <target>Authorization Server Management</target>
-        <note>Line: 58</note>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="ce4e18fe9f497c7a1e28d47c26930c80">
+        <source>New authorized application</source>
+        <target>New authorized application</target>
+        <note>Line: 112</note>
+      </trans-unit>
+      <trans-unit id="6aee465b900e61d75f34b54e13295e02">
+        <source>Editing application %application_name%</source>
+        <target>Editing application %application_name%</target>
+        <note>Line: 154</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/BackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="aecb63e193fd78cde871402ce2797b9b">
+        <source>Downloading backup %s</source>
+        <target>Downloading backup %s</target>
+        <note>Line: 118</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1e884e3078d9978e216a027ecd57fb34">
+        <source>E-mail</source>
+        <target>E-mail</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b08baa69304b6f4cd7ee5453beeea5e">
+        <source>New employee</source>
+        <target>New employee</target>
+        <note>Line: 307</note>
+      </trans-unit>
+      <trans-unit id="6ec0710e475401ee17e5564f30595d3d">
+        <source>Editing %lastname% %firstname%'s profile</source>
+        <target>Editing %lastname% %firstname%'s profile</target>
+        <note>Line: 397</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/FeatureFlagController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1c2b143a5dac134cfa115f52c21aaa54">
+        <source><![CDATA[New & experimental features]]></source>
+        <target><![CDATA[New & experimental features]]></target>
+        <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2bc552c7f5b06de83528d30cfa040708">
+        <source>New role</source>
+        <target>New role</target>
+        <note>Line: 149</note>
+      </trans-unit>
+      <trans-unit id="53dfb6b0b85dd9a24b60f6e3f3e6c482">
+        <source>Editing %role_name% role</source>
+        <target>Editing %role_name% role</target>
+        <note>Line: 213</note>
       </trans-unit>
     </body>
   </file>
@@ -603,6 +765,91 @@ Comment: subtab</note>
         <target>Employee Sessions</target>
         <note>Line: 185</note>
       </trans-unit>
+      <trans-unit id="548a6a2553ac4c206715f1977d2be125">
+        <source>Customer sessions</source>
+        <target>Customer sessions</target>
+        <note>Line: 215</note>
+      </trans-unit>
+      <trans-unit id="9766534ce6dcab04489a9a1ebe98b281">
+        <source>Employee sessions</source>
+        <target>Employee sessions</target>
+        <note>Line: 185</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SqlManagerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="326c73d5c73bb5bd4ca0afba560fb0b6">
+        <source>SQL manager</source>
+        <target>SQL manager</target>
+        <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="4486d7504c9b9f442eee74520281fc14">
+        <source>New SQL query</source>
+        <target>New SQL query</target>
+        <note>Line: 194</note>
+      </trans-unit>
+      <trans-unit id="8e33bacbcf5bcf18f8726b8764f875e2">
+        <source>Editing SQL query %query%</source>
+        <target>Editing SQL query %query%</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="f90a1a7a073993d3a7cbccd8c951f6d3">
+        <source>Result of SQL query</source>
+        <target>Result of SQL query</target>
+        <note>Line: 347</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d1bb24de3713f9eecce6dd4d55cc816d">
+        <source>New webservice key</source>
+        <target>New webservice key</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="b0ada7bf3a1d7af00453c044175db84d">
+        <source>Editing webservice key %key%</source>
+        <target>Editing webservice key %key%</target>
+        <note>Line: 143</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ContactsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a21d7cef80483da4ac834359332c6c6e">
+        <source>New contact</source>
+        <target>New contact</target>
+        <note>Line: 151</note>
+      </trans-unit>
+      <trans-unit id="888c4b5d2aca02d6bd55cf34925c7e04">
+        <source>Editing %name%</source>
+        <target>Editing %name%</target>
+        <note>Line: 197</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7531c93cd8549f6bac4d4d65f1dc9a46">
+        <source>Customer settings</source>
+        <target>Customer settings</target>
+        <note>Line: 56</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="351088d5d5a9d30dca12de29bc809ef0">
+        <source>New page configuration</source>
+        <target>New page configuration</target>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="c8528d6f224ea21d864430edc7bfe183">
+        <source>Editing configuration for %name%</source>
+        <target>Editing configuration for %name%</target>
+        <note>Line: 180</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -614,6 +861,72 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="26d3e79e4b40d4b7093a24f771a7677c">
+        <source>New order status</source>
+        <target>New order status</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="4f60cee3a28dacd53708715000dbf235">
+        <source>Editing order status %name%</source>
+        <target>Editing order status %name%</target>
+        <note>Line: 208</note>
+      </trans-unit>
+      <trans-unit id="3956bc3700de714bbdf4dc3cceb69643">
+        <source>New return status</source>
+        <target>New return status</target>
+        <note>Line: 252</note>
+      </trans-unit>
+      <trans-unit id="873be1812621ef8eb4a1c4da93eb28d6">
+        <source>Editing return status %name%</source>
+        <target>Editing return status %name%</target>
+        <note>Line: 295</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6cca136d1846ffcd272db5faf7d5281f">
+        <source>Product settings</source>
+        <target>Product settings</target>
+        <note>Line: 59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/SearchEnginesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7720114182e3cbae40571e8b0a4d2d0e">
+        <source>Editing search engine %name%</source>
+        <target>Editing search engine %name%</target>
+        <note>Line: 163</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/CmsPageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="52015afb6ec8b940ef903ff73f4c4058">
+        <source>New category</source>
+        <target>New category</target>
+        <note>Line: 369</note>
+      </trans-unit>
+      <trans-unit id="6687c514a391d33e016729463d90eb29">
+        <source>New page</source>
+        <target>New page</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="dfaea404fe47ee02854c74dfbe5d53a8">
+        <source>Editing page %name%</source>
+        <target>Editing page %name%</target>
+        <note>Line: 314</note>
+      </trans-unit>
+      <trans-unit id="f6bfa27c865a06ef9b0d9bb5a5724be6">
+        <source>Editing category %name%</source>
+        <target>Editing category %name%</target>
+        <note>Line: 436</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9312b7e2a7e98ff341ddb219397c0d9c">
@@ -621,32 +934,409 @@ Comment: subtab</note>
         <target>Email Theme</target>
         <note>Line: 82</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Webservice/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a80d5e18649d829bda78450f7c862711">
-        <source>Webservice</source>
-        <target>Webservice</target>
-        <note>Line: 29</note>
+      <trans-unit id="389a132e433aac4a30e19e05eabd42a7">
+        <source>Email theme</source>
+        <target>Email theme</target>
+        <note>Line: 82</note>
+      </trans-unit>
+      <trans-unit id="d18bc754c79cf330891016958d3834f7">
+        <source>Previewing theme %s</source>
+        <target>Previewing theme %s</target>
+        <note>Line: 246</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="61fe9018991004014d12b8d81568df90">
-        <source>Statuses</source>
-        <target>Statuses</target>
-        <note>Line: 27</note>
+      <trans-unit id="524c17bb604fef8a5b85150dfd480552">
+        <source>Module positions</source>
+        <target>Module positions</target>
+        <note>Line: 138</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="fcf3b725bb6ebb0e635b0f0902ade451">
-        <source><![CDATA[Theme & Logo]]></source>
-        <target><![CDATA[Theme & Logo]]></target>
-        <note>Line: 29</note>
+      <trans-unit id="8a602bb445146718f08e3aba13569f11">
+        <source>Theme import</source>
+        <target>Theme import</target>
+        <note>Line: 239</note>
+      </trans-unit>
+      <trans-unit id="f0dbca7d922e4e759a1e3b512b9be852">
+        <source>Choose layouts</source>
+        <target>Choose layouts</target>
+        <note>Line: 427</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/CountryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="acd0b5d0d73b60e08ab45d501566bb6a">
+        <source>New country</source>
+        <target>New country</target>
+        <note>Line: 113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/CurrencyController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7f8d9c5bc150e79b1f1bf05050858992">
+        <source>New currency</source>
+        <target>New currency</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="ad4c7ba221e581a63658ac676655539f">
+        <source>Editing currency %name%</source>
+        <target>Editing currency %name%</target>
+        <note>Line: 199</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="26dd759b2303669caeb03d2c48da7387">
+        <source>New language</source>
+        <target>New language</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="7c4fd5a20a5217b37cfafb01753f5757">
+        <source>Editing language %name%</source>
+        <target>Editing language %name%</target>
+        <note>Line: 206</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f997e0cedf6946f95298ba0830f8d837">
+        <source>Editing state %value%</source>
+        <target>Editing state %value%</target>
+        <note>Line: 182</note>
+      </trans-unit>
+      <trans-unit id="2ad00a107b7c5572feb9d89a90a21a67">
+        <source>New state</source>
+        <target>New state</target>
+        <note>Line: 226</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/TaxController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1a4412c87fdc53070b2a0d8cd1cf3cd">
+        <source>New tax</source>
+        <target>New tax</target>
+        <note>Line: 193</note>
+      </trans-unit>
+      <trans-unit id="2e4e97c7fd7922e46577eb55d3da836c">
+        <source>Editing tax %name%</source>
+        <target>Editing tax %name%</target>
+        <note>Line: 252</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/TaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="af4a7a1f7975e2f67b0dbefb21a2a94d">
+        <source>New tax rule</source>
+        <target>New tax rule</target>
+        <note>Line: 113</note>
+      </trans-unit>
+      <trans-unit id="4dab3ddddfb2d1a6ee0ed69e0cd6b82f">
+        <source>Editing tax rule %value%</source>
+        <target>Editing tax rule %value%</target>
+        <note>Line: 160</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/ZoneController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="09462056b43efa6d8213540519406c56">
+        <source>New zone</source>
+        <target>New zone</target>
+        <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="754ff66f97c1812a40a1dadf0dab4263">
+        <source>Editing zone %name%</source>
+        <target>Editing zone %name%</target>
+        <note>Line: 194</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Modules/AlertsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d6cf804374b3ac23c1f9bd818c3dce97">
+        <source>Module alerts</source>
+        <target>Module alerts</target>
+        <note>Line: 51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Modules/ModuleAbstractController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="17e0ca27e686200d42e478e2457052aa">
+        <source>Module notifications</source>
+        <target>Module notifications</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Modules/UpdatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d6e05eff8637a0a8c198eca3b16ce6ac">
+        <source>Module updates</source>
+        <target>Module updates</target>
+        <note>Line: 60</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Payment/PaymentMethodsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0da8d9a75492046bea7f314521e07cae">
+        <source>Payment methods</source>
+        <target>Payment methods</target>
+        <note>Line: 64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Line: 678</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="393d8c6bc7a04264bd9523dc8c92b818">
+        <source>New address</source>
+        <target>New address</target>
+        <note>Line: 310</note>
+      </trans-unit>
+      <trans-unit id="397e919e54db188434a198c259fe10ef">
+        <source>Editing address %alias%</source>
+        <target>Editing address %alias%</target>
+        <note>Line: 588</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="681e10aecbafd7dd385fa51798ca0fd6">
+        <source>New file</source>
+        <target>New file</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="ce153042d579430501074bdc85f19971">
+        <source>Editing file %value%</source>
+        <target>Editing file %value%</target>
+        <note>Line: 190</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttributeController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ba1a660262c78f47f2ca3cbae7969d7b">
+        <source>Attribute %name%</source>
+        <target>Attribute %name%</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CartRuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3b8c8bf8ab2226d5a44454a20ad7fafb">
+        <source>Cart rules</source>
+        <target>Cart rules</target>
+        <note>Line: 84</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CatalogPriceRuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e1d1aa629a69a879c0d85629c5171562">
+        <source>New catalog rule</source>
+        <target>New catalog rule</target>
+        <note>Line: 217</note>
+      </trans-unit>
+      <trans-unit id="bce0caa8158ef644db741e1c7a97d061">
+        <source>Editing price rule %name%</source>
+        <target>Editing price rule %name%</target>
+        <note>Line: 261</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b419dbbbb81b8738bc4bd26565bd3965">
+        <source>Category %name%</source>
+        <target>Category %name%</target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="19866a55363b5b9057abca52dfecdffc">
+        <source>Editing category %category_name%</source>
+        <target>Editing category %category_name%</target>
+        <note>Line: 429</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="824a3a83a007a97494ec5981cebf67a5">
+        <source>New feature</source>
+        <target>New feature</target>
+        <note>Line: 125</note>
+      </trans-unit>
+      <trans-unit id="c5181dffbcb3a594b06bee627e6d7a73">
+        <source>Editing feature %name%</source>
+        <target>Editing feature %name%</target>
+        <note>Line: 270</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1a1cfcd92f96cfc882e1959416bd1d25">
+        <source>New brand</source>
+        <target>New brand</target>
+        <note>Line: 163</note>
+      </trans-unit>
+      <trans-unit id="8d9f25c83ff125bc4527afaea77eb109">
+        <source>Brand %name%</source>
+        <target>Brand %name%</target>
+        <note>Line: 197</note>
+      </trans-unit>
+      <trans-unit id="76708272cb08f77d9b29155a5e195ee2">
+        <source>Editing brand %name%</source>
+        <target>Editing brand %name%</target>
+        <note>Line: 252</note>
+      </trans-unit>
+      <trans-unit id="c875bb4dec66c7087e561e776fdebdec">
+        <source>New brand address</source>
+        <target>New brand address</target>
+        <note>Line: 614</note>
+      </trans-unit>
+      <trans-unit id="f7a47b5947a407c44b38d60e92444801">
+        <source>Editing brand address</source>
+        <target>Editing brand address</target>
+        <note>Line: 668</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="993efb6924edde322dfef8ff31340eef">
+        <source>New supplier</source>
+        <target>New supplier</target>
+        <note>Line: 133</note>
+      </trans-unit>
+      <trans-unit id="72cba91b377120d11a1c99f0780452c4">
+        <source>Editing supplier %name%</source>
+        <target>Editing supplier %name%</target>
+        <note>Line: 338</note>
+      </trans-unit>
+      <trans-unit id="e5aa54e0ef42ba6b66ba5d7a66d4464c">
+        <source>Supplier %name%</source>
+        <target>Supplier %name%</target>
+        <note>Line: 410</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d8165ec099ad89c083692dae84567e87">
+        <source>New customer</source>
+        <target>New customer</target>
+        <note>Line: 209</note>
+      </trans-unit>
+      <trans-unit id="69ebc35efeb4f755ec3e9c44b4da635c">
+        <source>Editing customer %name%</source>
+        <target>Editing customer %name%</target>
+        <note>Line: 275</note>
+      </trans-unit>
+      <trans-unit id="5e9c386fd740838940d06575fcd21e69">
+        <source>Customer %name%</source>
+        <target>Customer %name%</target>
+        <note>Line: 382</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/CustomerThreadController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2273d1167a6212812d95dc8fadbae78e">
+        <source>Customer service</source>
+        <target>Customer service</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="fb93d4508215311fab3af66a0a59bb3a">
+        <source>Customer thread #%s</source>
+        <target>Customer thread #%s</target>
+        <note>Line: 120</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/MerchandiseReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="11f1330fcfb981b8b2cf67b34680622e">
+        <source>Return merchandise authorization (RMA)</source>
+        <target>Return merchandise authorization (RMA)</target>
+        <note>Line: 127</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="38d6bc03067212bb0c2633f8a57d5881">
+        <source>Order messages</source>
+        <target>Order messages</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="13069ec50d7bc6460b29455250382a96">
+        <source>New order message</source>
+        <target>New order message</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="ce04057c3ca31a85a217d3ebf7562b83">
+        <source>Editing message %s</source>
+        <target>Editing message %s</target>
+        <note>Line: 170</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e706797cf15950f95f5290943ee6a821">
+        <source>Cart #%s</source>
+        <target>Cart #%s</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CreditSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d1a365ea7809ae5831c6d9f86886630c">
+        <source>Credit slips</source>
+        <target>Credit slips</target>
+        <note>Line: 95</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/DeliveryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2898357e76b3db5f604bf5bf02637b13">
+        <source>Delivery slips</source>
+        <target>Delivery slips</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4c9120f1a5947445c0e9620254ceb30b">
+        <source>New order</source>
+        <target>New order</target>
+        <note>Line: 267</note>
       </trans-unit>
     </body>
   </file>
@@ -656,15 +1346,6 @@ Comment: subtab</note>
         <source><![CDATA[Attributes & Features]]></source>
         <target><![CDATA[Attributes & Features]]></target>
         <note>Line: 38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Address/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
-        <source>Addresses</source>
-        <target>Addresses</target>
-        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>

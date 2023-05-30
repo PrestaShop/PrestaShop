@@ -220,12 +220,12 @@
       <trans-unit id="d42436f136f07fe81921a4939242c3bf">
         <source>Your shop's default carrier.</source>
         <target>Your shop's default carrier.</target>
-        <note>Line: 89</note>
+        <note>Line: 90</note>
       </trans-unit>
       <trans-unit id="4f309c91cb82ce5d20c15d015759a21e">
         <source>This will only be visible in the front office.</source>
         <target>This will only be visible in the front office.</target>
-        <note>Line: 119</note>
+        <note>Line: 117</note>
       </trans-unit>
     </body>
   </file>

@@ -5,7 +5,7 @@
       <trans-unit id="74b5807fcdcf929e5f827d32e8af0524">
         <source>Activate module for this shop context: %s.</source>
         <target>Activate module for this shop context: %s.</target>
-        <note>Line: 33</note>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -38,7 +38,12 @@
       <trans-unit id="f996dce5bdfb1b1094e41cf996c5fdae">
         <source>Please specify module URL</source>
         <target>Please specify module URL</target>
-        <note>Line: 119</note>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="8095c31813f8e77d292bf6bec964169b">
+        <source>Unknown archive type.</source>
+        <target>Unknown archive type.</target>
+        <note>Line: 98</note>
       </trans-unit>
     </body>
   </file>
@@ -47,42 +52,42 @@
       <trans-unit id="9bbf45a624c880d590d7b6796e5a7a9c">
         <source>The module was successfully downloaded.</source>
         <target>The module was successfully downloaded.</target>
-        <note>Line: 501</note>
+        <note>Line: 510</note>
       </trans-unit>
       <trans-unit id="6832d3339f3238558d9e290f4ff36bb8">
         <source>Module(s) installed successfully.</source>
         <target>Module(s) installed successfully.</target>
-        <note>Line: 505</note>
+        <note>Line: 514</note>
       </trans-unit>
       <trans-unit id="0be078b247fde4986e320cd2684e7ab9">
         <source>Module(s) uninstalled successfully.</source>
         <target>Module(s) uninstalled successfully.</target>
-        <note>Line: 506</note>
+        <note>Line: 515</note>
       </trans-unit>
       <trans-unit id="7f31b58c32d9112f9bb160a481f6a911">
         <source>Module reset successfully.</source>
         <target>Module reset successfully.</target>
-        <note>Line: 514</note>
+        <note>Line: 523</note>
       </trans-unit>
       <trans-unit id="3270965aab0523dca0351cefc83e40b0">
         <source>Module deleted successfully.</source>
         <target>Module deleted successfully.</target>
-        <note>Line: 515</note>
+        <note>Line: 524</note>
       </trans-unit>
       <trans-unit id="35a596598c0477aea67abfa33b053697">
         <source>Successfully signed in to PrestaShop Addons.</source>
         <target>Successfully signed in to PrestaShop Addons.</target>
-        <note>Line: 525</note>
+        <note>Line: 534</note>
       </trans-unit>
       <trans-unit id="980b6caee06822f8c5df45eb7db277be">
         <source>The module transplanted successfully to the hook.</source>
         <target>The module transplanted successfully to the hook.</target>
-        <note>Line: 509</note>
+        <note>Line: 518</note>
       </trans-unit>
       <trans-unit id="80e868e8d753c3ec4066aab283e66cbc">
         <source>The module was successfully removed from the hook.</source>
         <target>The module was successfully removed from the hook.</target>
-        <note>Line: 510</note>
+        <note>Line: 519</note>
       </trans-unit>
     </body>
   </file>
@@ -91,32 +96,32 @@
       <trans-unit id="cda10a1476bc741e9cec7b0a4fd2cb7d">
         <source>Unable to install the module (Module name is not valid).</source>
         <target>Unable to install the module (Module name is not valid).</target>
-        <note>Line: 379</note>
+        <note>Line: 378</note>
       </trans-unit>
       <trans-unit id="5a6d75d2128c9e038623b0eecbf70cfb">
         <source>The version of your module is not compliant with your PrestaShop version.</source>
         <target>The version of your module is not compliant with your PrestaShop version.</target>
-        <note>Line: 386</note>
+        <note>Line: 385</note>
       </trans-unit>
       <trans-unit id="bdc79db372bbf5800052e41b5dbab04c">
         <source>Before installing this module, you have to install this/these module(s) first:</source>
         <target>Before installing this module, you have to install this/these module(s) first:</target>
-        <note>Line: 395</note>
+        <note>Line: 394</note>
       </trans-unit>
       <trans-unit id="7ae364c250c9b28880e13e2c4edae218">
         <source>This module has already been installed.</source>
         <target>This module has already been installed.</target>
-        <note>Line: 409</note>
+        <note>Line: 408</note>
       </trans-unit>
       <trans-unit id="4c15c8d9982596e224487cab7b4d51f5">
         <source>Could not install module controllers.</source>
         <target>Could not install module controllers.</target>
-        <note>Line: 415</note>
+        <note>Line: 414</note>
       </trans-unit>
       <trans-unit id="5bd632bbdcdfb6aece20bdf1ae8fea52">
         <source>Technical error: PrestaShop could not install this module.</source>
         <target>Technical error: PrestaShop could not install this module.</target>
-        <note>Line: 428</note>
+        <note>Line: 427</note>
       </trans-unit>
       <trans-unit id="071fd3819a08e165553f33babf3dc334">
         <source>Current version: %s</source>
@@ -151,92 +156,117 @@
       <trans-unit id="f79dcf8179bb9d8fa72d169f71702b44">
         <source>To prevent any problem, this module has been turned off</source>
         <target>To prevent any problem, this module has been turned off</target>
-        <note>Line: 529</note>
+        <note>Line: 532</note>
       </trans-unit>
       <trans-unit id="4762b130ddcc0e4d2eacf0c59a8b17a2">
         <source>The module is not installed.</source>
         <target>The module is not installed.</target>
-        <note>Line: 744</note>
+        <note>Line: 746</note>
       </trans-unit>
       <trans-unit id="6869dc1977dbff7c5749120241f74ff0">
         <source>Unable to install override: %s</source>
         <target>Unable to install override: %s</target>
-        <note>Line: 864</note>
+        <note>Line: 866</note>
       </trans-unit>
       <trans-unit id="e8f98f4457c87a8aad1d4d625ad1a9f3">
         <source>%1$s is not a valid module name.</source>
         <target>%1$s is not a valid module name.</target>
-        <note>Line: 1199</note>
+        <note>Line: 1160</note>
       </trans-unit>
       <trans-unit id="8f62a26bf441ad698c2c562ec10448c4">
         <source>All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration</source>
         <target>All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration</target>
-        <note>Line: 1367</note>
+        <note>Line: 1328</note>
       </trans-unit>
       <trans-unit id="2cff6a926907204ad5c1916ba96ed815">
         <source>%s could not be loaded.</source>
         <target>%s could not be loaded.</target>
-        <note>Line: 1392</note>
+        <note>Line: 1353</note>
       </trans-unit>
       <trans-unit id="db0275528fda19c75f79d296ded0c6e7">
         <source>Error found in config file:</source>
         <target>Error found in config file:</target>
-        <note>Line: 1400</note>
+        <note>Line: 1361</note>
       </trans-unit>
       <trans-unit id="f9c47597596f7159815c61957f4f8ec2">
         <source>%1$s (parse error in %2$s)</source>
         <target>%1$s (parse error in %2$s)</target>
-        <note>Line: 1455</note>
+        <note>Line: 1416</note>
       </trans-unit>
       <trans-unit id="8014d5d92e09a563588869c623bd0abf">
         <source>%1$s (class missing in %2$s)</source>
         <target>%1$s (class missing in %2$s)</target>
-        <note>Line: 1522</note>
+        <note>Line: 1483</note>
       </trans-unit>
       <trans-unit id="a0b8a508d6ca8113e6439f623e7bf7cf">
         <source>The following module(s) could not be loaded</source>
         <target>The following module(s) could not be loaded</target>
-        <note>Line: 1574</note>
+        <note>Line: 1535</note>
       </trans-unit>
       <trans-unit id="eddeabd79f8ca673d888fa2ffe9cf69a">
         <source>No template found for module</source>
         <target>No template found for module</target>
-        <note>Line: 2213</note>
+        <note>Line: 2174</note>
       </trans-unit>
       <trans-unit id="45e26faecce815f7e1ac16b32ac5278e">
         <source>The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.</source>
         <target>The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.</target>
-        <note>Line: 2895</note>
+        <note>Line: 2856</note>
       </trans-unit>
       <trans-unit id="03c32a7a2568d41e186d59293b02f662">
         <source>The method %1$s in the class %2$s is already overridden.</source>
         <target>The method %1$s in the class %2$s is already overridden.</target>
-        <note>Line: 2898</note>
+        <note>Line: 2859</note>
       </trans-unit>
       <trans-unit id="71bf68c93ca29a72a3a5080a30e20ecc">
         <source>Failed to override method %1$s in class %2$s.</source>
         <target>Failed to override method %1$s in class %2$s.</target>
-        <note>Line: 2975</note>
+        <note>Line: 2936</note>
       </trans-unit>
       <trans-unit id="a08302edbf2d9f7ddd43ae8bd1de5caa">
         <source>The property %1$s in the class %2$s is already defined.</source>
         <target>The property %1$s in the class %2$s is already defined.</target>
-        <note>Line: 2910</note>
+        <note>Line: 2871</note>
       </trans-unit>
       <trans-unit id="7893f5f2917811b37c628f787c83af8a">
         <source>Failed to override property %1$s in class %2$s.</source>
         <target>Failed to override property %1$s in class %2$s.</target>
-        <note>Line: 2983</note>
+        <note>Line: 2944</note>
       </trans-unit>
       <trans-unit id="6f89d5bc3c94e885d4a3716accc12983">
         <source>The constant %1$s in the class %2$s is already defined.</source>
         <target>The constant %1$s in the class %2$s is already defined.</target>
-        <note>Line: 2922</note>
+        <note>Line: 2883</note>
       </trans-unit>
       <trans-unit id="d27626d5c768d3782dcc6343e8a0c0f6">
         <source>Failed to override constant %1$s in class %2$s.</source>
         <target>Failed to override constant %1$s in class %2$s.</target>
-        <note>Line: 2991</note>
+        <note>Line: 2952</note>
+      </trans-unit>
+      <trans-unit id="1b46628784efbff29a2c8bae30756d89">
+        <source>%d file update applied</source>
+        <target>%d file update applied</target>
+        <note>Line: 517</note>
+      </trans-unit>
+      <trans-unit id="f1ca8d16777736f2082eddbcb3911fc2">
+        <source>No update has been applied</source>
+        <target>No update has been applied</target>
+        <note>Line: 523</note>
+      </trans-unit>
+      <trans-unit id="139e603a7f90e7745502f371c0f31d24">
+        <source>Updated from: %s to %s</source>
+        <target>Updated from: %s to %s</target>
+        <note>Line: 525</note>
+      </trans-unit>
+      <trans-unit id="90cb8c2e1b3e0cf5f80d9b4ba708bb10">
+        <source>%d update left</source>
+        <target>%d update left</target>
+        <note>Line: 526</note>
+      </trans-unit>
+      <trans-unit id="7b04376c7b6c2faf8367c5b9754fd26b">
+        <source>Module %s cannot be updated this time: please refresh this page to update it.</source>
+        <target>Module %s cannot be updated this time: please refresh this page to update it.</target>
+        <note>Line: 530</note>
       </trans-unit>
     </body>
   </file>
@@ -270,11 +300,6 @@
   </file>
   <file original="controllers/admin/AdminModulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8095c31813f8e77d292bf6bec964169b">
-        <source>Unknown archive type.</source>
-        <target>Unknown archive type.</target>
-        <note>Line: 496</note>
-      </trans-unit>
       <trans-unit id="723aac54d8b88c84ca0c9328f3912bf9">
         <source>There was an error while extracting the module (file may be corrupted).</source>
         <target>There was an error while extracting the module (file may be corrupted).</target>
@@ -338,7 +363,7 @@
       <trans-unit id="5a69d1cb0ef4096b272b3b441555d737">
         <source>You do not have permission to configure this module.</source>
         <target>You do not have permission to configure this module.</target>
-        <note>Line: 659</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="2c465b2a1769653563dcacfc83ab61d0">
         <source>This module is already installed: %s.</source>
@@ -369,6 +394,11 @@
         <source>The following module(s) could not be installed properly: %s.</source>
         <target>The following module(s) could not be installed properly: %s.</target>
         <note>Line: 806</note>
+      </trans-unit>
+      <trans-unit id="1813abdaaf1d6cb0a856a8e41cea2e44">
+        <source>The module "%modulename%" cannot be found</source>
+        <target>The module "%modulename%" cannot be found</target>
+        <note>Line: 135</note>
       </trans-unit>
     </body>
   </file>
@@ -504,6 +534,11 @@
         <source>You are not allowed to delete the module %module%.</source>
         <target>You are not allowed to delete the module %module%.</target>
         <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="b09ef7cfc0d14e9cda28259db10e5b67">
+        <source>You are not allowed to update the module %module%.</source>
+        <target>You are not allowed to update the module %module%.</target>
+        <note>Line: 189</note>
       </trans-unit>
     </body>
   </file>
@@ -730,6 +765,21 @@
         <source>An action is already in progress. Please wait for it to finish.</source>
         <target>An action is already in progress. Please wait for it to finish.</target>
         <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="fe362e049bff0d63b7aef71fbbdbfa56">
+        <source>Are you sure you want to update this module?</source>
+        <target>Are you sure you want to update this module?</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="19f33ad249711242ad9fd87a8bea8e61">
+        <source>Are you sure you want to update these modules?</source>
+        <target>Are you sure you want to update these modules?</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="d2a7540602512845be7664d4acb23f2c">
+        <source>We strongly advise you to update the modules on maintenance mode to avoid any cache issues.</source>
+        <target>We strongly advise you to update the modules on maintenance mode to avoid any cache issues.</target>
+        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>

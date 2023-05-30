@@ -14,12 +14,12 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>Line: 7172</note>
+        <note>Line: 7171</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>Line: 7193</note>
+        <note>Line: 7192</note>
       </trans-unit>
     </body>
   </file>
@@ -37,12 +37,12 @@
       <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
         <source>The discount was successfully generated.</source>
         <target>The discount was successfully generated.</target>
-        <note>Line: 524</note>
+        <note>Line: 533</note>
       </trans-unit>
       <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
         <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
         <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
-        <note>Line: 530</note>
+        <note>Line: 539</note>
       </trans-unit>
     </body>
   </file>
@@ -107,12 +107,12 @@
       <trans-unit id="de2a79b3b161c486acb8f80861cd107c">
         <source>This feature has been disabled. You can activate it here: %link%.</source>
         <target>This feature has been disabled. You can activate it here: %link%.</target>
-        <note>Line: 520</note>
+        <note>Line: 516</note>
       </trans-unit>
       <trans-unit id="7f7cd1de48a84bc7ba0dfcde99de2604">
         <source>Failed to delete the attribute.</source>
         <target>Failed to delete the attribute.</target>
-        <note>Line: 786</note>
+        <note>Line: 782</note>
       </trans-unit>
     </body>
   </file>
@@ -165,42 +165,42 @@
       <trans-unit id="c1a4c1b929c4f5c81f80ece2d7b196aa">
         <source>Invalid product</source>
         <target>Invalid product</target>
-        <note>Line: 477</note>
+        <note>Line: 472</note>
       </trans-unit>
       <trans-unit id="e5b55dc69d10c8673f9d5db587591526">
         <source>Invalid combination</source>
         <target>Invalid combination</target>
-        <note>Line: 392</note>
+        <note>Line: 387</note>
       </trans-unit>
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 448</note>
+        <note>Line: 443</note>
       </trans-unit>
       <trans-unit id="b164de93448b61c61dd1c0f68c2c5884">
         <source>An order has already been placed with this cart.</source>
         <target>An order has already been placed with this cart.</target>
-        <note>Line: 475</note>
+        <note>Line: 470</note>
       </trans-unit>
       <trans-unit id="89ecb554b799211aca0441e691419963">
         <source>This product cannot be added to the cart.</source>
         <target>This product cannot be added to the cart.</target>
-        <note>Line: 498</note>
+        <note>Line: 493</note>
       </trans-unit>
       <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
         <source>You already have the maximum quantity available for this product.</source>
         <target>You already have the maximum quantity available for this product.</target>
-        <note>Line: 510</note>
+        <note>Line: 505</note>
       </trans-unit>
       <trans-unit id="fac7c1f73a2c97252e59cac143ae1930">
         <source>Invalid voucher.</source>
         <target>Invalid voucher.</target>
-        <note>Line: 660</note>
+        <note>Line: 655</note>
       </trans-unit>
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
-        <note>Line: 491</note>
+        <note>Line: 486</note>
       </trans-unit>
     </body>
   </file>
@@ -209,17 +209,17 @@
       <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
-        <note>Line: 2815</note>
+        <note>Line: 2814</note>
       </trans-unit>
       <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
         <source>Error while creating additional image</source>
         <target>Error while creating additional image</target>
-        <note>Line: 2844</note>
+        <note>Line: 2843</note>
       </trans-unit>
       <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
         <source>Invalid quantity</source>
         <target>Invalid quantity</target>
-        <note>Line: 1594</note>
+        <note>Line: 1593</note>
       </trans-unit>
       <trans-unit id="64985418ce04cf0225e600592044206c">
         <source>We were unable to associate this attachment to a product.</source>
@@ -319,112 +319,112 @@
       <trans-unit id="ed6c7c35c51ba299b38e3af151a5ec0f">
         <source>An error occurred while attempting to associate this image with your shop. </source>
         <target>An error occurred while attempting to associate this image with your shop.</target>
-        <note>Line: 1502</note>
+        <note>Line: 1501</note>
       </trans-unit>
       <trans-unit id="3154baa59f6cfb5bb140601d79f61c84">
         <source>An error occurred while attempting to move this picture.</source>
         <target>An error occurred while attempting to move this picture.</target>
-        <note>Line: 1525</note>
+        <note>Line: 1524</note>
       </trans-unit>
       <trans-unit id="0b4a86d617393c34bddd4367b84ddb2c">
         <source>An error occurred while attempting to update the cover picture.</source>
         <target>An error occurred while attempting to update the cover picture.</target>
-        <note>Line: 1544</note>
+        <note>Line: 1543</note>
       </trans-unit>
       <trans-unit id="268b0ba02b8af913a35c543c793a99ef">
         <source>An error occurred while attempting to delete the product image.</source>
         <target>An error occurred while attempting to delete the product image.</target>
-        <note>Line: 1583</note>
+        <note>Line: 1582</note>
       </trans-unit>
       <trans-unit id="c4e7595c4e8f49c80458997b912d749b">
         <source>Wrong IDs</source>
         <target>Wrong IDs</target>
-        <note>Line: 1590</note>
+        <note>Line: 1589</note>
       </trans-unit>
       <trans-unit id="74efb694173710062ae76c1e9949817e">
         <source>Invalid price/discount amount</source>
         <target>Invalid price/discount amount</target>
-        <note>Line: 1592</note>
+        <note>Line: 1591</note>
       </trans-unit>
       <trans-unit id="c1169398ceb716e384995717131c9ff7">
         <source>Please select a discount type (amount or percentage).</source>
         <target>Please select a discount type (amount or percentage).</target>
-        <note>Line: 1596</note>
+        <note>Line: 1595</note>
       </trans-unit>
       <trans-unit id="78682ae939690325cf8c96e22595c06a">
         <source>The from/to date is invalid.</source>
         <target>The from/to date is invalid.</target>
-        <note>Line: 1598</note>
+        <note>Line: 1597</note>
       </trans-unit>
       <trans-unit id="fba78cbc51e76234884ba4d6c232bc12">
         <source>The name for feature %1$s is too long in %2$s.</source>
         <target>The name for feature %1$s is too long in %2$s.</target>
-        <note>Line: 1627</note>
+        <note>Line: 1626</note>
       </trans-unit>
       <trans-unit id="bd43d37e6647d4638a621aa4ccbde2ff">
         <source>A valid name required for feature. %1$s in %2$s.</source>
         <target>A valid name required for feature. %1$s in %2$s.</target>
-        <note>Line: 1636</note>
+        <note>Line: 1635</note>
       </trans-unit>
       <trans-unit id="0c58058923630a64ce3f415a07cbb00d">
         <source>An error occurred while adding tags.</source>
         <target>An error occurred while adding tags.</target>
-        <note>Line: 2375</note>
+        <note>Line: 2374</note>
       </trans-unit>
       <trans-unit id="32caa1cdf0ea26b2e1267d45a57beacf">
         <source>This %1$s field is required at least in %2$s</source>
         <target>This %1$s field is required at least in %2$s</target>
-        <note>Line: 2061</note>
+        <note>Line: 2060</note>
       </trans-unit>
       <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
         <source>The %1$s field is too long (%2$d chars max).</source>
         <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Line: 2129</note>
+        <note>Line: 2128</note>
       </trans-unit>
       <trans-unit id="95c0b24839f6e4ffe0e395d8d26ce4ee">
         <source>This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).</source>
         <target>This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).</target>
-        <note>Line: 2110</note>
+        <note>Line: 2109</note>
       </trans-unit>
       <trans-unit id="5e2457ed64286c209f67a9333ed52a17">
         <source>An error occurred while attempting to delete previous tags.</source>
         <target>An error occurred while attempting to delete previous tags.</target>
-        <note>Line: 2365</note>
+        <note>Line: 2364</note>
       </trans-unit>
       <trans-unit id="4177a725868ed37e7de5c8c65f4a8b0e">
         <source>The selected currency is not valid</source>
         <target>The selected currency is not valid</target>
-        <note>Line: 2556</note>
+        <note>Line: 2555</note>
       </trans-unit>
       <trans-unit id="48b51a11285fae0b1f416165ae8fd489">
         <source>An error occurred while copying image, the file does not exist anymore.</source>
         <target>An error occurred while copying image, the file does not exist anymore.</target>
-        <note>Line: 2857</note>
+        <note>Line: 2856</note>
       </trans-unit>
       <trans-unit id="9f26cf683839613815feebc0b1e1c6b9">
         <source>An error occurred while copying image, the file width is 0px.</source>
         <target>An error occurred while copying image, the file width is 0px.</target>
-        <note>Line: 2862</note>
+        <note>Line: 2861</note>
       </trans-unit>
       <trans-unit id="de880a806b9948f168a2e70fff130160">
         <source>An error occurred while copying image, check your memory limit.</source>
         <target>An error occurred while copying image, check your memory limit.</target>
-        <note>Line: 2867</note>
+        <note>Line: 2866</note>
       </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
         <target>An error occurred while copying the image.</target>
-        <note>Line: 2872</note>
+        <note>Line: 2871</note>
       </trans-unit>
       <trans-unit id="c88e73613e3f68ead933cd57e2828323">
         <source>You can't add product packs into a pack</source>
         <target>You can't add product packs into a pack</target>
-        <note>Line: 3182</note>
+        <note>Line: 3181</note>
       </trans-unit>
       <trans-unit id="5de4038e3ea0841bf6179f99103fcccd">
         <source>An error occurred while attempting to add products to the pack.</source>
         <target>An error occurred while attempting to add products to the pack.</target>
-        <note>Line: 3184</note>
+        <note>Line: 3183</note>
       </trans-unit>
       <trans-unit id="9f0a59f1609218c049435abd2351bd84">
         <source>An error occurred while updating the specific price.</source>
@@ -454,7 +454,7 @@
       <trans-unit id="c24ed8eb6e592f766cd1d31ae49ed5b1">
         <source>A specific price already exists for these parameters.</source>
         <target>A specific price already exists for these parameters.</target>
-        <note>Line: 1600</note>
+        <note>Line: 1599</note>
       </trans-unit>
       <trans-unit id="da792c9eb1652c5939671ae14592b264">
         <source>Invalid description for %s language.</source>
@@ -530,22 +530,22 @@
       <trans-unit id="cf3905df049698bb01639e4394e82048">
         <source>It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.</source>
         <target>It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.</target>
-        <note>Line: 119</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="66108be221251f01430ee5c2257e98ca">
         <source>Error while deleting the stock</source>
         <target>Error while deleting the stock</target>
-        <note>Line: 135</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="7173e38e8a10ed379625687638ddfe74">
         <source>Successful deletion</source>
         <target>Successful deletion</target>
-        <note>Line: 140</note>
+        <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="160f1ab34ecfb437b1767602d5ee093f">
         <source>You cannot delete this attribute.</source>
         <target>You cannot delete this attribute.</target>
-        <note>Line: 147</note>
+        <note>Line: 145</note>
       </trans-unit>
     </body>
   </file>
@@ -620,57 +620,57 @@
       <trans-unit id="f4158fa3500ce1523a52bee74971f5f2">
         <source>Product(s) successfully activated.</source>
         <target>Product(s) successfully activated.</target>
-        <note>Line: 800</note>
+        <note>Line: 793</note>
       </trans-unit>
       <trans-unit id="25b325c47f9b5f88d7820b079bafa02e">
         <source>Product(s) successfully deactivated.</source>
         <target>Product(s) successfully deactivated.</target>
-        <note>Line: 829</note>
+        <note>Line: 822</note>
       </trans-unit>
       <trans-unit id="01996897996faf465514bdf1091b6d4d">
         <source>Product(s) successfully deleted.</source>
         <target>Product(s) successfully deleted.</target>
-        <note>Line: 858</note>
+        <note>Line: 851</note>
       </trans-unit>
       <trans-unit id="290ed9aa59dd098c9e112c4f9770407d">
         <source>Product(s) successfully duplicated.</source>
         <target>Product(s) successfully duplicated.</target>
-        <note>Line: 887</note>
+        <note>Line: 880</note>
       </trans-unit>
       <trans-unit id="c1746190e47d69ea7f0db7f098de7cab">
         <source>Products successfully sorted.</source>
         <target>Products successfully sorted.</target>
-        <note>Line: 991</note>
+        <note>Line: 984</note>
       </trans-unit>
       <trans-unit id="7bdb2828f248bbd55bba16dcc63223d9">
         <source>Product successfully deleted.</source>
         <target>Product successfully deleted.</target>
-        <note>Line: 1079</note>
+        <note>Line: 1072</note>
       </trans-unit>
       <trans-unit id="85d8f7e3038017826a8215396b96865b">
         <source>Product successfully duplicated.</source>
         <target>Product successfully duplicated.</target>
-        <note>Line: 1105</note>
+        <note>Line: 1098</note>
       </trans-unit>
       <trans-unit id="98434b0cd2f3cf08418ea1f0a9c55f0a">
         <source>Product successfully activated.</source>
         <target>Product successfully activated.</target>
-        <note>Line: 1131</note>
+        <note>Line: 1124</note>
       </trans-unit>
       <trans-unit id="fd1d6d9c7d146c9f81572224bae86951">
         <source>Product successfully deactivated.</source>
         <target>Product successfully deactivated.</target>
-        <note>Line: 1157</note>
+        <note>Line: 1150</note>
       </trans-unit>
       <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
         <source>To put this product online, please enter a name.</source>
         <target>To put this product online, please enter a name.</target>
-        <note>Line: 1357</note>
+        <note>Line: 1284</note>
       </trans-unit>
       <trans-unit id="17f8ed44513d0c7833b2b8fa1c170981">
         <source>The product you are trying to access doesn't exist.</source>
         <target>The product you are trying to access doesn't exist.</target>
-        <note>Line: 477</note>
+        <note>Line: 470</note>
       </trans-unit>
     </body>
   </file>
@@ -693,27 +693,41 @@
       <trans-unit id="a874ef298164bbd4d00d55901225cd87">
         <source>An error occurred while uploading the image:</source>
         <target>An error occurred while uploading the image:</target>
-        <note>Line: 920</note>
+        <note>Line: 952</note>
       </trans-unit>
       <trans-unit id="b50f440e3c9f14988bd0086683e77095">
         <source>You cannot remove this category because one of your shops uses it as a root category.</source>
         <target>You cannot remove this category because one of your shops uses it as a root category.</target>
-        <note>Line: 894</note>
+        <note>Line: 926</note>
       </trans-unit>
       <trans-unit id="3d85438a25723cc56bd4aefb9b368bc0">
         <source>An error occurred while creating the category.</source>
         <target>An error occurred while creating the category.</target>
-        <note>Line: 898</note>
+        <note>Line: 930</note>
       </trans-unit>
       <trans-unit id="17668cbc24213c8d43211a67139c3939">
         <source>The root category of a shop cannot be edited.</source>
         <target>The root category of a shop cannot be edited.</target>
-        <note>Line: 902</note>
+        <note>Line: 934</note>
       </trans-unit>
       <trans-unit id="175ad2b319a95a0b7c580dbc4205fdac">
         <source>An error occurred while editing the category.</source>
         <target>An error occurred while editing the category.</target>
-        <note>Line: 906</note>
+        <note>Line: 938</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="942de5f8276c49d5159ae30df3f29a6b">
+        <source><![CDATA[The features are enabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></source>
+        <target><![CDATA[The features are enabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></target>
+        <note>Line: 331</note>
+      </trans-unit>
+      <trans-unit id="f568d0f89a82fd70eaec65a461fbcc88">
+        <source><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></source>
+        <target><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></target>
+        <note>Line: 338</note>
       </trans-unit>
     </body>
   </file>
@@ -722,12 +736,12 @@
       <trans-unit id="5769710cefad47e76691be9d61b7231c">
         <source><![CDATA[The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
-        <note>Line: 819</note>
+        <note>Line: 825</note>
       </trans-unit>
       <trans-unit id="1205b99b993cef78d80b0bcbc312f2c3">
         <source><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
-        <note>Line: 826</note>
+        <note>Line: 832</note>
       </trans-unit>
     </body>
   </file>
@@ -745,12 +759,12 @@
       <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
         <source>Error for product %product_id%: %error_message%</source>
         <target>Error for product %product_id%: %error_message%</target>
-        <note>Line: 1383</note>
+        <note>Line: 1366</note>
       </trans-unit>
       <trans-unit id="ee5c982526f2e7b8e72b282dc590aafd">
         <source>When redirecting towards a product you must select a target product.</source>
         <target>When redirecting towards a product you must select a target product.</target>
-        <note>Line: 1424</note>
+        <note>Line: 1407</note>
       </trans-unit>
     </body>
   </file>
@@ -759,17 +773,17 @@
       <trans-unit id="60df675f17670057ec657783db03d35e">
         <source>Unable to resize one or more of your pictures.</source>
         <target>Unable to resize one or more of your pictures.</target>
-        <note>Line: 539</note>
+        <note>Line: 554</note>
       </trans-unit>
       <trans-unit id="3aff310e32cb7bb2d1affd97920c9f4b">
         <source><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
-        <note>Line: 581</note>
+        <note>Line: 596</note>
       </trans-unit>
       <trans-unit id="555740fcf7bb2fb267bc711c4919edcb">
         <source><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
-        <note>Line: 588</note>
+        <note>Line: 603</note>
       </trans-unit>
     </body>
   </file>
@@ -787,7 +801,7 @@
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>Line: 1689</note>
+        <note>Line: 1691</note>
       </trans-unit>
     </body>
   </file>
@@ -796,7 +810,16 @@
       <trans-unit id="04f6302b96c8cbaaec71cc884a6626a5">
         <source>Cannot find specific price %price%</source>
         <target>Cannot find specific price %price%</target>
-        <note>Line: 140</note>
+        <note>Line: 137</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Catalog/Category/AbstractCategoryType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2aaa34b619469eaa197d57046c9a6868">
+        <source>You have reached the limit (%limit%) of files to upload, please remove files to continue uploading</source>
+        <target>You have reached the limit (%limit%) of files to upload, please remove files to continue uploading</target>
+        <note>Line: 201</note>
       </trans-unit>
     </body>
   </file>
@@ -805,7 +828,7 @@
       <trans-unit id="8bc6a12d95b969fb603306eab1f0603b">
         <source>This pack is empty. You must add at least one product item.</source>
         <target>This pack is empty. You must add at least one product item.</target>
-        <note>Line: 399</note>
+        <note>Line: 397</note>
       </trans-unit>
     </body>
   </file>

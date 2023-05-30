@@ -14,7 +14,7 @@
       <trans-unit id="d4eab6753f9f3d4b57580427264beaa6">
         <source>Successful update</source>
         <target>Successful update</target>
-        <note>Line: 82</note>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -23,72 +23,72 @@
       <trans-unit id="e9d71289fdbe4799d4fe91ccc17be0af">
         <source>The thumbnails were successfully regenerated.</source>
         <target>The thumbnails were successfully regenerated.</target>
-        <note>Line: 502</note>
+        <note>Line: 511</note>
       </trans-unit>
       <trans-unit id="1b73f0da557b7b0773d0fc6b5fd0a3b4">
         <source>Successful upload.</source>
         <target>Successful upload.</target>
-        <note>Line: 511</note>
+        <note>Line: 520</note>
       </trans-unit>
       <trans-unit id="759d07e8bdf6d3a5863ed521009b3ac1">
         <source>Duplication was completed successfully.</source>
         <target>Duplication was completed successfully.</target>
-        <note>Line: 512</note>
+        <note>Line: 521</note>
       </trans-unit>
       <trans-unit id="13f1ce18a02ac5293cf5a4274f9300de">
         <source>The selected images have successfully been moved.</source>
         <target>The selected images have successfully been moved.</target>
-        <note>Line: 518</note>
+        <note>Line: 527</note>
       </trans-unit>
       <trans-unit id="714903406a224ca68890e377ea111388">
         <source>Your cover image selection has been saved.</source>
         <target>Your cover image selection has been saved.</target>
-        <note>Line: 519</note>
+        <note>Line: 528</note>
       </trans-unit>
       <trans-unit id="b2266c7007fff254b1a9373f8a648a1c">
         <source>The image's shop association has been modified.</source>
         <target>The image's shop association has been modified.</target>
-        <note>Line: 520</note>
+        <note>Line: 529</note>
       </trans-unit>
       <trans-unit id="3a627484fcb2a5d110b44a390d5ee7c1">
         <source>A zone has been assigned to the selection successfully.</source>
         <target>A zone has been assigned to the selection successfully.</target>
-        <note>Line: 521</note>
+        <note>Line: 530</note>
       </trans-unit>
       <trans-unit id="be3af9d697c193da1a7dbfcf195050ea">
         <source>Successful upgrade.</source>
         <target>Successful upgrade.</target>
-        <note>Line: 522</note>
+        <note>Line: 531</note>
       </trans-unit>
       <trans-unit id="7173e38e8a10ed379625687638ddfe74">
         <source>Successful deletion</source>
         <target>Successful deletion</target>
-        <note>Line: 494</note>
+        <note>Line: 503</note>
       </trans-unit>
       <trans-unit id="6483df61619946ebf2427ba360df7ce5">
         <source>The settings have been successfully updated.</source>
         <target>The settings have been successfully updated.</target>
-        <note>Line: 499</note>
+        <note>Line: 508</note>
       </trans-unit>
       <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
         <source>The status has been successfully updated.</source>
         <target>The status has been successfully updated.</target>
-        <note>Line: 498</note>
+        <note>Line: 507</note>
       </trans-unit>
       <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
         <source>Comment successfully added.</source>
         <target>Comment successfully added.</target>
-        <note>Line: 504</note>
+        <note>Line: 513</note>
       </trans-unit>
       <trans-unit id="6a5ec212066b2a271ad914acf3dfaeb6">
         <source>Image successfully deleted.</source>
         <target>Image successfully deleted.</target>
-        <note>Line: 500</note>
+        <note>Line: 509</note>
       </trans-unit>
       <trans-unit id="02d5b938505dcda41a52ef3abcbd354a">
         <source>The selection has been successfully deleted.</source>
         <target>The selection has been successfully deleted.</target>
-        <note>Line: 495</note>
+        <note>Line: 504</note>
       </trans-unit>
     </body>
   </file>
@@ -106,7 +106,7 @@
       <trans-unit id="79f062391903591d68e514a400e136cf">
         <source>The status has been updated successfully.</source>
         <target>The status has been updated successfully.</target>
-        <note>Line: 85</note>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>
@@ -211,12 +211,12 @@
       <trans-unit id="63cca4f457cad586dc9495a2e671b745">
         <source>Successful duplication</source>
         <target>Successful duplication</target>
-        <note>Line: 1176</note>
+        <note>Line: 1186</note>
       </trans-unit>
       <trans-unit id="b33f41d62d6358d2af05d739ac193889">
         <source>Your store context has been automatically modified.</source>
         <target>Your store context has been automatically modified.</target>
-        <note>Line: 430</note>
+        <note>Line: 440</note>
       </trans-unit>
     </body>
   </file>
@@ -225,7 +225,7 @@
       <trans-unit id="cc6450370541d1ecfdbdada739732ec1">
         <source>Update successful.</source>
         <target>Update successful.</target>
-        <note>Line: 1008</note>
+        <note>Line: 1078</note>
       </trans-unit>
     </body>
   </file>
@@ -252,22 +252,22 @@
       <trans-unit id="9cdbb80d4545ac63312bd530784829a3">
         <source>The product was successfully added.</source>
         <target>The product was successfully added.</target>
-        <note>Line: 110</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="dc6df66ef8a64a3bf228c70e64269a8e">
         <source>The product was successfully removed.</source>
         <target>The product was successfully removed.</target>
-        <note>Line: 111</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="abb8738509cd73014d30de00b1b16ebe">
         <source>[1] products were successfully added.</source>
         <target>[1] products were successfully added.</target>
-        <note>Line: 112</note>
+        <note>Line: 110</note>
       </trans-unit>
       <trans-unit id="b34a5361f169c417578d4bfcf924aff6">
         <source>[1] products were successfully removed.</source>
         <target>[1] products were successfully removed.</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>

@@ -119,12 +119,12 @@
       <trans-unit id="4701eef0c0a005e2245180a983fe030e">
         <source>You do not have access to this wishlist.</source>
         <target>You do not have access to this wishlist.</target>
-        <note>Line: 84</note>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="d4e3353b723d705ed7a41ba11c17c9f2">
         <source>WishList: %wishlist_name%</source>
         <target>WishList: %wishlist_name%</target>
-        <note>Line: 139</note>
+        <note>Line: 137</note>
       </trans-unit>
     </body>
   </file>

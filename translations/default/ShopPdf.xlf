@@ -5,7 +5,7 @@
       <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
         <source>: </source>
         <target>:</target>
-        <note>Line: 1209</note>
+        <note>Line: 1213</note>
       </trans-unit>
     </body>
   </file>
@@ -46,7 +46,7 @@
       <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
         <source>Credit slip</source>
         <target>Credit slip</target>
-        <note>Line: 88</note>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -198,7 +198,7 @@
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
-        <note>Line: 165</note>
+        <note>Line: 161</note>
       </trans-unit>
     </body>
   </file>

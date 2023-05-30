@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/functions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e67615d6c998f1a013f1d27bbc555cff">
+        <source>You are configuring your store for group shop %s</source>
+        <target>You are configuring your store for group shop %s</target>
+        <note>Line: 397</note>
+      </trans-unit>
+      <trans-unit id="1165ec47ce359708f4a608d4decd04f6">
+        <source>You are configuring your store for shop %s</source>
+        <target>You are configuring your store for shop %s</target>
+        <note>Line: 399</note>
+      </trans-unit>
+      <trans-unit id="db26e10564e958809d798e8048fcbc0a">
+        <source>Invalid security token</source>
+        <target>Invalid security token</target>
+        <note>Line: 486</note>
+      </trans-unit>
+      <trans-unit id="a4da6f31ab268a5310bc475e63ab92db">
+        <source>I understand the risks and I really want to display this page</source>
+        <target>I understand the risks and I really want to display this page</target>
+        <note>Line: 493</note>
+      </trans-unit>
+      <trans-unit id="5196611ad1bf27e9cef5375b038c04db">
+        <source>Take me out of here!</source>
+        <target>Take me out of here!</target>
+        <note>Line: 496</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="62acf0bc057112bf91cd1ff9f1426c6c">
@@ -37,7 +66,7 @@
       <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
         <source>Discount name</source>
         <target>Discount name</target>
-        <note>Line: 209</note>
+        <note>Line: 192</note>
       </trans-unit>
     </body>
   </file>
@@ -212,22 +241,17 @@
       <trans-unit id="deccbe4e9083c3b5f7cd2632722765bb">
         <source>Translate</source>
         <target>Translate</target>
-        <note>Line: 84</note>
+        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="c439b45b0a80369402e0d6158b55590f">
         <source>Generate RTL Stylesheets</source>
         <target>Generate RTL Stylesheets</target>
-        <note>Line: 92</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="53103fcc4656f55c219b600ded3c7438">
         <source>Manage hooks</source>
         <target>Manage hooks</target>
-        <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Line: 79</note>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>
@@ -1075,32 +1099,32 @@
       <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
         <source>Now</source>
         <target>Now</target>
-        <note>Line: 811</note>
+        <note>Line: 808</note>
       </trans-unit>
       <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
         <source>Done</source>
         <target>Done</target>
-        <note>Line: 812</note>
+        <note>Line: 809</note>
       </trans-unit>
       <trans-unit id="3964fd83339fec5014c831822005653a">
         <source>Choose Time</source>
         <target>Choose Time</target>
-        <note>Line: 818</note>
+        <note>Line: 815</note>
       </trans-unit>
       <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
         <source>Time</source>
         <target>Time</target>
-        <note>Line: 819</note>
+        <note>Line: 816</note>
       </trans-unit>
       <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
         <source>Hour</source>
         <target>Hour</target>
-        <note>Line: 820</note>
+        <note>Line: 817</note>
       </trans-unit>
       <trans-unit id="62902641c38f3a4a8eb3212454360e24">
         <source>Minute</source>
         <target>Minute</target>
-        <note>Line: 821</note>
+        <note>Line: 818</note>
       </trans-unit>
     </body>
   </file>
@@ -1153,6 +1177,11 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
+        <note>Line: 417</note>
+      </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
@@ -1187,6 +1216,11 @@
         <source>To</source>
         <target>To</target>
         <note>Line: 365</note>
+      </trans-unit>
+      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
+        <source>and stay</source>
+        <target>and stay</target>
+        <note>Line: 206</note>
       </trans-unit>
     </body>
   </file>
@@ -1380,15 +1414,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
-        <source>and stay</source>
-        <target>and stay</target>
-        <note>Line: 79</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/new-theme/template/components/layout/non-responsive.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ed95254a7068ffd8729fd94d07347d67">
@@ -1432,47 +1457,47 @@
       <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
         <source>List</source>
         <target>List</target>
-        <note>Line: 654</note>
+        <note>Line: 663</note>
       </trans-unit>
       <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
         <source>View details</source>
         <target>View details</target>
-        <note>Line: 660</note>
+        <note>Line: 669</note>
       </trans-unit>
       <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
         <source>Options</source>
         <target>Options</target>
-        <note>Line: 665</note>
+        <note>Line: 674</note>
       </trans-unit>
       <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
         <source>Generator</source>
         <target>Generator</target>
-        <note>Line: 670</note>
+        <note>Line: 679</note>
       </trans-unit>
       <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
         <source>%s: %s</source>
         <target>%s: %s</target>
-        <note>Line: 766</note>
+        <note>Line: 775</note>
       </trans-unit>
       <trans-unit id="921d54865f8169b84c90d4335c256494">
         <source>filter by %s</source>
         <target>filter by %s</target>
-        <note>Line: 773</note>
+        <note>Line: 782</note>
       </trans-unit>
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>Line: 4060</note>
+        <note>Line: 3986</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>Line: 1216</note>
+        <note>Line: 1225</note>
       </trans-unit>
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>Line: 1325</note>
+        <note>Line: 1334</note>
       </trans-unit>
       <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
         <source>Do you really want to uninstall this module?</source>
@@ -1555,7 +1580,7 @@
       <trans-unit id="0f0c014bcfe255c6749d8e665ff8bb4e">
         <source>Translate this module</source>
         <target>Translate this module</target>
-        <note>Line: 1216</note>
+        <note>Line: 211</note>
       </trans-unit>
     </body>
   </file>
@@ -2113,7 +2138,7 @@ According to the Rec.30;Art.7(1)(c)</target>
       <trans-unit id="2871afea416378d2772937c4d67d6c2c">
         <source>Generate password</source>
         <target>Generate password</target>
-        <note>Line: 122</note>
+        <note>Line: 124</note>
       </trans-unit>
     </body>
   </file>

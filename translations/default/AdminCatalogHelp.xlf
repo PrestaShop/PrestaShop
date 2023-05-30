@@ -122,7 +122,7 @@
       <trans-unit id="7d5672f569de406c85249db6f1c99ec0">
         <source>Save then add another value</source>
         <target>Save then add another value</target>
-        <note>Line: 576</note>
+        <note>Line: 572</note>
       </trans-unit>
     </body>
   </file>
@@ -272,7 +272,7 @@
       <trans-unit id="cc2ac103a9c1411fd67952983e25978a">
         <source>Create a new product: CTRL+P</source>
         <target>Create a new product: CTRL+P</target>
-        <note>Line: 388</note>
+        <note>Line: 383</note>
       </trans-unit>
     </body>
   </file>
@@ -281,12 +281,42 @@
       <trans-unit id="88fe88f4033791ef6f38fbb7f7c58f04">
         <source>To have a different title from the category name, enter it here.</source>
         <target>To have a different title from the category name, enter it here.</target>
-        <note>Line: 158</note>
+        <note>Line: 225</note>
       </trans-unit>
       <trans-unit id="0a7ca3ce7cde025a585cd02d7382b48f">
         <source>To have a different description than your category summary in search results page, write it here.</source>
         <target>To have a different description than your category summary in search results page, write it here.</target>
-        <note>Line: 191</note>
+        <note>Line: 259</note>
+      </trans-unit>
+      <trans-unit id="739d9250414669d4dcbcf189f4db48c9">
+        <source><![CDATA[If you want a category to appear in your store's menu, configure your menu module in [1]Modules > Module Manager[/1].]]></source>
+        <target><![CDATA[If you want a category to appear in your store's menu, configure your menu module in [1]Modules > Module Manager[/1].]]></target>
+        <note>Line: 170</note>
+      </trans-unit>
+      <trans-unit id="d227bb016fe4862389c292b5708db741">
+        <source>This is the cover image for your category: it will be displayed on the category's page. The description will appear in its top-left corner.</source>
+        <target>This is the cover image for your category: it will be displayed on the category's page. The description will appear in its top-left corner.</target>
+        <note>Line: 181</note>
+      </trans-unit>
+      <trans-unit id="e4128eb4934611a9c28e82de23e0916c">
+        <source>It will display a thumbnail on the parent category's page, if the theme allows it.</source>
+        <target>It will display a thumbnail on the parent category's page, if the theme allows it.</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="e2d72a87555014936ff8055509bd2909">
+        <source>It will display a thumbnail representing the category in the menu, if the theme allows it.</source>
+        <target>It will display a thumbnail representing the category in the menu, if the theme allows it.</target>
+        <note>Line: 196</note>
+      </trans-unit>
+      <trans-unit id="2aed1d6a09ee1c1b35ea452b67c01278">
+        <source><![CDATA[Allowed characters: letters, numbers, underscores (_) and hyphens (-). To allow more characters, enable the 'Accented URL' feature in Shop Parameters > Traffic & SEO.]]></source>
+        <target><![CDATA[Allowed characters: letters, numbers, underscores (_) and hyphens (-). To allow more characters, enable the 'Accented URL' feature in Shop Parameters > Traffic & SEO.]]></target>
+        <note>Line: 311</note>
+      </trans-unit>
+      <trans-unit id="dbf7ca6ce67648b790f71e6ae2f5c8dd">
+        <source>Select the customer groups which will have access to this category.</source>
+        <target>Select the customer groups which will have access to this category.</target>
+        <note>Line: 339</note>
       </trans-unit>
     </body>
   </file>
@@ -304,22 +334,22 @@
       <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
         <source>Search for a product</source>
         <target>Search for a product</target>
-        <note>Line: 206</note>
+        <note>Line: 207</note>
       </trans-unit>
       <trans-unit id="9242ed633bcac07574f63fba6e184fd8">
         <source>Enter your product name</source>
         <target>Enter your product name</target>
-        <note>Line: 238</note>
+        <note>Line: 239</note>
       </trans-unit>
       <trans-unit id="7f6c27a96363effdda77216cf1251400">
         <source><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></source>
         <target><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></target>
-        <note>Line: 269</note>
+        <note>Line: 270</note>
       </trans-unit>
       <trans-unit id="1fbfcc9642d39544207c67f66ec3bc00">
         <source>Search and add a related product</source>
         <target>Search and add a related product</target>
-        <note>Line: 359</note>
+        <note>Line: 357</note>
       </trans-unit>
     </body>
   </file>
@@ -328,7 +358,7 @@
       <trans-unit id="8246ddfaa2c607ace3ae3a4643d957d1">
         <source>Use a comma to create separate tags. E.g.: dress, cotton, party dresses.</source>
         <target>Use a comma to create separate tags. E.g.: dress, cotton, party dresses.</target>
-        <note>Line: 114</note>
+        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>
@@ -337,7 +367,7 @@
       <trans-unit id="420f46a170eef476454fa134085a85a2">
         <source>Per kilo, per litre</source>
         <target>Per kilo, per litre</target>
-        <note>Line: 237</note>
+        <note>Line: 235</note>
       </trans-unit>
     </body>
   </file>
@@ -360,7 +390,7 @@
       <trans-unit id="8533d8d42f2c7ef3078797984ea14675">
         <source>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</source>
         <target>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</target>
-        <note>Line: 137</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="26511e4120f7b4f3135a21b9f35efed8">
         <source>To which product the page should redirect?</source>
@@ -380,32 +410,32 @@
       <trans-unit id="af809f35e40bd6f644509ad566ecf38c">
         <source>To have a different title from the product name, enter it here.</source>
         <target>To have a different title from the product name, enter it here.</target>
-        <note>Line: 101</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="b0ea2bd9df4b8ee746b4e5fd28503851">
         <source>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</source>
         <target>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</target>
-        <note>Line: 112</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="5f99bb8ecd940f311cb66fadfc467a2b">
         <source>To have a different description than your product summary in search results pages, write it here.</source>
         <target>To have a different description than your product summary in search results pages, write it here.</target>
-        <note>Line: 126</note>
+        <note>Line: 122</note>
       </trans-unit>
       <trans-unit id="96bacc9c71fc8b7763f985fed3dfc545">
         <source>To which product should the page redirect?</source>
         <target>To which product should the page redirect?</target>
-        <note>Line: 186</note>
+        <note>Line: 182</note>
       </trans-unit>
       <trans-unit id="6dd1254fcdbcc7b3fd459617adad9289">
         <source>To which category should the page redirect?</source>
         <target>To which category should the page redirect?</target>
-        <note>Line: 188</note>
+        <note>Line: 184</note>
       </trans-unit>
       <trans-unit id="1b9648d6a32243bb7003ae8046dc7c1a">
         <source>By default, the main category will be used if no category is selected.</source>
         <target>By default, the main category will be used if no category is selected.</target>
-        <note>Line: 189</note>
+        <note>Line: 185</note>
       </trans-unit>
     </body>
   </file>
@@ -423,7 +453,7 @@
       <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
         <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
         <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
-        <note>Line: 109</note>
+        <note>Line: 110</note>
       </trans-unit>
     </body>
   </file>
@@ -433,15 +463,6 @@
         <source>This interface allows you to specify the suppliers of the current combination.</source>
         <target>This interface allows you to specify the suppliers of the current combination.</target>
         <note>Line: 88</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0834dbec80c240be5b2fda7c96b79b50">
-        <source>Search product</source>
-        <target>Search product</target>
-        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -542,6 +563,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Type/ProductSearchType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0834dbec80c240be5b2fda7c96b79b50">
+        <source>Search product</source>
+        <target>Search product</target>
+        <note>Line: 83</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
@@ -624,7 +654,7 @@
       <trans-unit id="b78db8ba6d89ef3a49b95e6f92235997">
         <source>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it.</source>
         <target>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it.</target>
-        <note>Line: 56</note>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
@@ -999,7 +1029,7 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
       <trans-unit id="53d98bd116f47fdfe15c8eb4525c5e99">
         <source>You now have three default customer groups.</source>
         <target>You now have three default customer groups.</target>
-        <note>Line: 193</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -1008,7 +1038,7 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
       <trans-unit id="b40b4b1a0589005b45e9fa351c1b91f3">
         <source>An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.</source>
         <target>An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.</target>
-        <note>Line: 40</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>

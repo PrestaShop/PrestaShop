@@ -5,17 +5,17 @@
       <trans-unit id="91a52a2a855d5abd5597a481c20f3972">
         <source>No new order for now :(</source>
         <target>No new order for now :(</target>
-        <note>Line: 339</note>
+        <note>Line: 338</note>
       </trans-unit>
       <trans-unit id="235a11509f6bd6143ddf165affbf7dad">
         <source>No new customer for now :(</source>
         <target>No new customer for now :(</target>
-        <note>Line: 349</note>
+        <note>Line: 348</note>
       </trans-unit>
       <trans-unit id="b7c3bb1b80422ee7587d604b1a97ce3c">
         <source>No new message for now.</source>
         <target>No new message for now.</target>
-        <note>Line: 359</note>
+        <note>Line: 358</note>
       </trans-unit>
       <trans-unit id="a2b8ed9c305b8ea86116b603cca78a97">
         <source>registered</source>
@@ -30,7 +30,7 @@
       <trans-unit id="13886bc255a80b7c11e0585013feeb30">
         <source>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</source>
         <target>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</target>
-        <note>Line: 231</note>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="67a33d40bef41c3b79d6b973bfcbc89a">
         <source>Your shop is in maintenance.</source>
@@ -45,27 +45,27 @@
       <trans-unit id="6f68993eb55ac938b8ae0fcba53b93db">
         <source>Your store is in debug mode.</source>
         <target>Your store is in debug mode.</target>
-        <note>Line: 231</note>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="b0ba9e87fe502f010c233334e4159f29">
         <source>Your store is in maintenance mode.</source>
         <target>Your store is in maintenance mode.</target>
-        <note>Line: 243</note>
+        <note>Line: 242</note>
       </trans-unit>
       <trans-unit id="672d0c62dfc352f75e3a3f6b87c5cb38">
         <source>Your visitors and customers cannot access your store while in maintenance mode.</source>
         <target>Your visitors and customers cannot access your store while in maintenance mode.</target>
-        <note>Line: 246</note>
+        <note>Line: 245</note>
       </trans-unit>
       <trans-unit id="e836817be56f338bde214cef916764f4">
         <source><![CDATA[To manage the maintenance settings, go to Shop Parameters > General > Maintenance tab.]]></source>
         <target><![CDATA[To manage the maintenance settings, go to Shop Parameters > General > Maintenance tab.]]></target>
-        <note>Line: 249</note>
+        <note>Line: 248</note>
       </trans-unit>
       <trans-unit id="a69e9340de5fd491580e9bb528b36424">
         <source>Admins can access the store front office without storing their IP.</source>
         <target>Admins can access the store front office without storing their IP.</target>
-        <note>Line: 253</note>
+        <note>Line: 252</note>
       </trans-unit>
     </body>
   </file>

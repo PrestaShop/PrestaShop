@@ -131,45 +131,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b6ff06f41cb66b5b89be6a3670e40d63">
-        <source>Provide the state name to be displayed in addresses and on invoices.</source>
-        <target>Provide the state name to be displayed in addresses and on invoices.</target>
-        <note>Line: 155</note>
-      </trans-unit>
-      <trans-unit id="473d5a5e7a18ca5e30b399ae0dfda18e">
-        <source>1 to 4 letter ISO code.</source>
-        <target>1 to 4 letter ISO code.</target>
-        <note>Line: 164</note>
-      </trans-unit>
-      <trans-unit id="d44080730b4d80fb65b9018d57c058b3">
-        <source>You can prefix it with the country ISO code if needed.</source>
-        <target>You can prefix it with the country ISO code if needed.</target>
-        <note>Line: 164</note>
-      </trans-unit>
-      <trans-unit id="0f6ca10753a64573af4ae286c7421e62">
-        <source>Country where the state is located.</source>
-        <target>Country where the state is located.</target>
-        <note>Line: 177</note>
-      </trans-unit>
-      <trans-unit id="68240d02aad03eed41bc52305688a035">
-        <source>Only the countries with the option "contains states" enabled are displayed.</source>
-        <target>Only the countries with the option "contains states" enabled are displayed.</target>
-        <note>Line: 177</note>
-      </trans-unit>
-      <trans-unit id="15c5d5dd58a9e70b8b86a7447dd00f70">
-        <source>Geographical region where this state is located.</source>
-        <target>Geographical region where this state is located.</target>
-        <note>Line: 190</note>
-      </trans-unit>
-      <trans-unit id="ec92dbe75bbcc2fbf4cad6302df97c19">
-        <source>Used for shipping</source>
-        <target>Used for shipping</target>
-        <note>Line: 191</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e14eeddb992a1fa103cb2669178369cf">
@@ -219,7 +180,7 @@
       <trans-unit id="72d86566f89f1aa5a853fe2750bf96a5">
         <source>ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)</source>
         <target>ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)</target>
-        <note>Line: 173</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="c7c838899b96b2b17ea954d2578cf541">
         <source>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
@@ -234,7 +195,7 @@
       <trans-unit id="48da3cf2897b7f486bdf8657354a3667">
         <source><![CDATA[Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></source>
         <target><![CDATA[Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></target>
-        <note>Line: 197</note>
+        <note>Line: 195</note>
       </trans-unit>
     </body>
   </file>
@@ -315,7 +276,7 @@
       <trans-unit id="bb0fa2ec7b2d1fcfc14bf6587cc51a66">
         <source>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</source>
         <target>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</target>
-        <note>Line: 103</note>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -348,27 +309,66 @@
       <trans-unit id="c4b8d8d900acf4712d4511f6c39e6578">
         <source>The default language used in your shop.</source>
         <target>The default language used in your shop.</target>
-        <note>Line: 94</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="90f1a96f31bb51ae7d7f347c3b5df846">
         <source>Set browser language as default language.</source>
         <target>Set browser language as default language.</target>
-        <note>Line: 110</note>
+        <note>Line: 100</note>
       </trans-unit>
       <trans-unit id="59a0d89a785e4e00f80b5d6154a446d0">
         <source>The default country used in your shop.</source>
         <target>The default country used in your shop.</target>
-        <note>Line: 120</note>
+        <note>Line: 110</note>
       </trans-unit>
       <trans-unit id="754ab93466f1c17d19e11e8a03731ebd">
         <source>Set country corresponding to browser language.</source>
         <target>Set country corresponding to browser language.</target>
-        <note>Line: 136</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="eb99748a0429320ff7a0120625ace088">
         <source>The default currency used in your shop.</source>
         <target>The default currency used in your shop.</target>
-        <note>Line: 149</note>
+        <note>Line: 134</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b6ff06f41cb66b5b89be6a3670e40d63">
+        <source>Provide the state name to be displayed in addresses and on invoices.</source>
+        <target>Provide the state name to be displayed in addresses and on invoices.</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="473d5a5e7a18ca5e30b399ae0dfda18e">
+        <source>1 to 4 letter ISO code.</source>
+        <target>1 to 4 letter ISO code.</target>
+        <note>Line: 118</note>
+      </trans-unit>
+      <trans-unit id="d44080730b4d80fb65b9018d57c058b3">
+        <source>You can prefix it with the country ISO code if needed.</source>
+        <target>You can prefix it with the country ISO code if needed.</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="0f6ca10753a64573af4ae286c7421e62">
+        <source>Country where the state is located.</source>
+        <target>Country where the state is located.</target>
+        <note>Line: 148</note>
+      </trans-unit>
+      <trans-unit id="68240d02aad03eed41bc52305688a035">
+        <source>Only the countries with the option "contains states" enabled are displayed.</source>
+        <target>Only the countries with the option "contains states" enabled are displayed.</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="15c5d5dd58a9e70b8b86a7447dd00f70">
+        <source>Geographical region where this state is located.</source>
+        <target>Geographical region where this state is located.</target>
+        <note>Line: 163</note>
+      </trans-unit>
+      <trans-unit id="ec92dbe75bbcc2fbf4cad6302df97c19">
+        <source>Used for shipping</source>
+        <target>Used for shipping</target>
+        <note>Line: 165</note>
       </trans-unit>
     </body>
   </file>
@@ -391,22 +391,22 @@
       <trans-unit id="fc6d7eca192247f8406fc4fc8ff896ef">
         <source>Select whether or not to include tax on purchases.</source>
         <target>Select whether or not to include tax on purchases.</target>
-        <note>Line: 93</note>
+        <note>Line: 94</note>
       </trans-unit>
       <trans-unit id="ea9d4f5bdfaaa411eb8c74355aec4553">
         <source>Select whether or not to display tax on a distinct line in the cart.</source>
         <target>Select whether or not to display tax on a distinct line in the cart.</target>
-        <note>Line: 112</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="9065c9561edb357b57b213c15813cb32">
         <source>If you disable the ecotax, the ecotax for all your products will be set to 0.</source>
         <target>If you disable the ecotax, the ecotax for all your products will be set to 0.</target>
-        <note>Line: 134</note>
+        <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="a84047cec2a677153211d701853a65b4">
         <source>Define the ecotax (e.g. French ecotax: 20%).</source>
         <target>Define the ecotax (e.g. French ecotax: 20%).</target>
-        <note>Line: 143</note>
+        <note>Line: 144</note>
       </trans-unit>
     </body>
   </file>

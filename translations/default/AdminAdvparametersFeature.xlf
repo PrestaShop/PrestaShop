@@ -5,12 +5,12 @@
       <trans-unit id="b61541208db7fa7dba42c85224405911">
         <source>Menu</source>
         <target>Menu</target>
-        <note>Line: 274</note>
+        <note>Line: 270</note>
       </trans-unit>
       <trans-unit id="1587f391edb6fe6f3b919aaa27e25cfb">
         <source>No menu</source>
         <target>No menu</target>
-        <note>Line: 284</note>
+        <note>Line: 280</note>
       </trans-unit>
     </body>
   </file>
@@ -115,6 +115,11 @@ Comment: Customer threads feature flag</note>
         <note>Line: 92
 Comment: Order states feature flag</note>
       </trans-unit>
+      <trans-unit id="98f770b0af18ca763421bac22b4b6805">
+        <source>Features</source>
+        <target>Features</target>
+        <note>Line: 95</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/lang/KeysReference/ProfileLang.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -160,12 +165,12 @@ Comment: Order states feature flag</note>
       <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
         <source>Supply Orders</source>
         <target>Supply Orders</target>
-        <note>Line: 4642</note>
+        <note>Line: 4657</note>
       </trans-unit>
       <trans-unit id="9f954c5e16659673382f03fa027772ea">
         <source>Supply Order Details</source>
         <target>Supply Order Details</target>
-        <note>Line: 4645</note>
+        <note>Line: 4660</note>
       </trans-unit>
       <trans-unit id="fa4ecc0168c2a9e448f469e3835d2a68">
         <source>Product Reference</source>
@@ -575,7 +580,7 @@ Comment: Order states feature flag</note>
       <trans-unit id="6b127dc82937049e45e74aebca783e74">
         <source>Store contacts</source>
         <target>Store contacts</target>
-        <note>Line: 4632</note>
+        <note>Line: 4647</note>
       </trans-unit>
       <trans-unit id="a7b4930bf2fc5d57eec6b03097200152">
         <source>EAN-13</source>
@@ -594,7 +599,7 @@ Comment: Order states feature flag</note>
       <trans-unit id="60e3ee398aa0ee3498c68914b5d5fb1a">
         <source>Back office connection from %ip%</source>
         <target>Back office connection from %ip%</target>
-        <note>Line: 252</note>
+        <note>Line: 257</note>
       </trans-unit>
     </body>
   </file>
@@ -615,16 +620,6 @@ Comment: voluntary do affectation here</note>
         <target>Edit this SQL query</target>
         <note>Line: 108</note>
       </trans-unit>
-      <trans-unit id="9b5c3d6674b3af1946fb50faae7079e2">
-        <source>SQL query name</source>
-        <target>SQL query name</target>
-        <note>Line: 153</note>
-      </trans-unit>
-      <trans-unit id="10d8074bf1e35bcac9911c5fe26261cf">
-        <source>Select your default file encoding</source>
-        <target>Select your default file encoding</target>
-        <note>Line: 71</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -632,62 +627,62 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="5e3d6d040d8a81befd75127d526646bc">
         <source>Contact information</source>
         <target>Contact information</target>
-        <note>Line: 569</note>
+        <note>Line: 573</note>
       </trans-unit>
       <trans-unit id="a66b5528ae08e780a5df59ae913c66e7">
         <source>Discount prices</source>
         <target>Discount prices</target>
-        <note>Line: 572</note>
+        <note>Line: 576</note>
       </trans-unit>
       <trans-unit id="b71593973c58bb41eb302d037f6b1230">
         <source>Module hooks</source>
         <target>Module hooks</target>
-        <note>Line: 578</note>
+        <note>Line: 582</note>
       </trans-unit>
       <trans-unit id="f71429893913cde74dcacde3d283626e">
         <source>Meta information</source>
         <target>Meta information</target>
-        <note>Line: 579</note>
+        <note>Line: 583</note>
       </trans-unit>
       <trans-unit id="4ae24b703273d53941a17737bb2b1a9a">
         <source>Product combinations</source>
         <target>Product combinations</target>
-        <note>Line: 581</note>
+        <note>Line: 585</note>
       </trans-unit>
       <trans-unit id="cf173b732a2a0377698d631db6185836">
         <source>Available quantities for sale</source>
         <target>Available quantities for sale</target>
-        <note>Line: 582</note>
+        <note>Line: 586</note>
       </trans-unit>
       <trans-unit id="3020c78ae45aff9a35b95856af076765">
         <source>Warehouses</source>
         <target>Warehouses</target>
-        <note>Line: 584</note>
+        <note>Line: 588</note>
       </trans-unit>
       <trans-unit id="339b1acb0d1f26923dc4545a9f749ab3">
         <source>Webservice accounts</source>
         <target>Webservice accounts</target>
-        <note>Line: 585</note>
+        <note>Line: 589</note>
       </trans-unit>
       <trans-unit id="775a3ab6add326ef93f2382f49f9e500">
         <source>Attribute groups</source>
         <target>Attribute groups</target>
-        <note>Line: 586</note>
+        <note>Line: 590</note>
       </trans-unit>
       <trans-unit id="6fab199dbf5a4155871fb0d5dbfa9827">
         <source>Tax rules groups</source>
         <target>Tax rules groups</target>
-        <note>Line: 589</note>
+        <note>Line: 593</note>
       </trans-unit>
       <trans-unit id="3b8c8bf8ab2226d5a44454a20ad7fafb">
         <source>Cart rules</source>
         <target>Cart rules</target>
-        <note>Line: 592</note>
+        <note>Line: 596</note>
       </trans-unit>
       <trans-unit id="c8cfbbbe4253e14390b2b14d7e60d9c8">
         <source>Import data</source>
         <target>Import data</target>
-        <note>Line: 609</note>
+        <note>Line: 613</note>
       </trans-unit>
       <trans-unit id="5fb93170a6b0ac85ca8c080d2c469702">
         <source>Choose the source shop</source>
@@ -697,7 +692,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="1d92a46c4e14c43c3096d85c9f26fc4e">
         <source>Choose data to import</source>
         <target>Choose data to import</target>
-        <note>Line: 624</note>
+        <note>Line: 628</note>
       </trans-unit>
       <trans-unit id="5a8f8f8e0bcbfcd926271ee7d7351134">
         <source>Shop groups list</source>
@@ -707,17 +702,22 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="517a8a7dbf1f6e371509817de328e396">
         <source>Customer groups</source>
         <target>Customer groups</target>
-        <note>Line: 588</note>
+        <note>Line: 592</note>
       </trans-unit>
       <trans-unit id="80f6b81a57a2d0130fc0c998a03d3cf9">
         <source>Choose the source store</source>
         <target>Choose the source store</target>
-        <note>Line: 616</note>
+        <note>Line: 620</note>
       </trans-unit>
       <trans-unit id="d38c99665bd92e632c7ad19e47d1222d">
         <source>Store groups list</source>
         <target>Store groups list</target>
-        <note>Line: 892</note>
+        <note>Line: 896</note>
+      </trans-unit>
+      <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
+        <source>Employees</source>
+        <target>Employees</target>
+        <note>Line: 577</note>
       </trans-unit>
     </body>
   </file>
@@ -756,27 +756,27 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="5b55607ff39362e86c0693626a6cc20f">
         <source>Share customers</source>
         <target>Share customers</target>
-        <note>Line: 206</note>
+        <note>Line: 211</note>
       </trans-unit>
       <trans-unit id="f11fe16f68bf58c9dde0f23156a5dd5d">
         <source>Share available quantities for sale</source>
         <target>Share available quantities for sale</target>
-        <note>Line: 226</note>
+        <note>Line: 231</note>
       </trans-unit>
       <trans-unit id="166dcd2b34652eee355742934826795a">
         <source>Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.</source>
         <target>Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.</target>
-        <note>Line: 241</note>
+        <note>Line: 246</note>
       </trans-unit>
       <trans-unit id="a23a8100bb34ea482c8fb134da89710e">
         <source>Share orders</source>
         <target>Share orders</target>
-        <note>Line: 245</note>
+        <note>Line: 250</note>
       </trans-unit>
       <trans-unit id="e2dc533eb11f8dca38c806a5635533b6">
         <source>Store group</source>
         <target>Store group</target>
-        <note>Line: 184</note>
+        <note>Line: 189</note>
       </trans-unit>
       <trans-unit id="43d180619356641995d3c1575c4bad12">
         <source>Default store</source>
@@ -786,17 +786,17 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="2bf15871fc25294752b26d49fe93e49c">
         <source>Add a new group of stores</source>
         <target>Add a new group of stores</target>
-        <note>Line: 169</note>
+        <note>Line: 174</note>
       </trans-unit>
       <trans-unit id="ecf1759c7e770af2c288ee6fd92777e6">
         <source>Add a new store</source>
         <target>Add a new store</target>
-        <note>Line: 155</note>
+        <note>Line: 160</note>
       </trans-unit>
       <trans-unit id="f99969398eb4fb8f688a20bd5347fc05">
         <source>Name of the store group</source>
         <target>Name of the store group</target>
-        <note>Line: 191</note>
+        <note>Line: 196</note>
       </trans-unit>
     </body>
   </file>
@@ -805,7 +805,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="224154fa6f3601b7de4690ba6a9ad8b4">
         <source>Multistore tree</source>
         <target>Multistore tree</target>
-        <note>Line: 368</note>
+        <note>Line: 373</note>
       </trans-unit>
       <trans-unit id="4a4d1260782270739eeeef6d58db0f73">
         <source>Shop URL ID</source>
@@ -1012,6 +1012,15 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/AliasGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
+        <source>Refresh list</source>
+        <target>Refresh list</target>
+        <note>Line: 150</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/BackupDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
@@ -1103,15 +1112,6 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/TaxGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
-        <source>Refresh list</source>
-        <target>Refresh list</target>
-        <note>Line: 203</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/Core/Import/EntityField/Provider/CategoryFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f8a0fa3674c3336359b77bbe8e942a2c">
@@ -1151,6 +1151,11 @@ Comment: voluntary do affectation here</note>
         <target>Add new profile</target>
         <note>Line: 149</note>
       </trans-unit>
+      <trans-unit id="e4c29551cc148d92d776fe4bddef6e8d">
+        <source>Add new role</source>
+        <target>Add new role</target>
+        <note>Line: 75</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Api/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1158,12 +1163,12 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
         <source>Product reference</source>
         <target>Product reference</target>
-        <note>Line: 177</note>
+        <note>Line: 176</note>
       </trans-unit>
       <trans-unit id="ae5977a08e8a3d45283789d99c67c3c3">
         <source>Combination reference</source>
         <target>Combination reference</target>
-        <note>Line: 178</note>
+        <note>Line: 177</note>
       </trans-unit>
     </body>
   </file>
@@ -1538,7 +1543,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="435a2d71a0c6c33cd2c917b00b8e0da1">
         <source>Default page</source>
         <target>Default page</target>
-        <note>Line: 227</note>
+        <note>Line: 229</note>
       </trans-unit>
     </body>
   </file>
@@ -1556,57 +1561,57 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="5489cb5630228b5afe0c21cc2ac9242c">
         <source>What do you want to import?</source>
         <target>What do you want to import?</target>
-        <note>Line: 55</note>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="14020ff11547c4c18da91394d1cae2a6">
         <source>Select a file to import</source>
         <target>Select a file to import</target>
-        <note>Line: 73</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="2a1a026f56b4c51cc839e513370379fd">
         <source>Language of the file</source>
         <target>Language of the file</target>
-        <note>Line: 78</note>
+        <note>Line: 79</note>
       </trans-unit>
       <trans-unit id="35ebd0ba1ead54eee9c5684437aa519b">
         <source>Field separator</source>
         <target>Field separator</target>
-        <note>Line: 82</note>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="e08caeac3f80ffa7889cdf1c8f30111f">
         <source>Multiple value separator</source>
         <target>Multiple value separator</target>
-        <note>Line: 86</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="1269b023d7c37aceefb33ef49c9fec4d">
         <source>Delete all [1]categories[/1] before import</source>
         <target>Delete all [1]categories[/1] before import</target>
-        <note>Line: 94</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="feae9fd88b4d107b4de593e8b5a494d8">
         <source>Use product reference as key</source>
         <target>Use product reference as key</target>
-        <note>Line: 106</note>
+        <note>Line: 107</note>
       </trans-unit>
       <trans-unit id="ff4ba5e49465c8bc4fb9ac41e57ae73d">
         <source>Skip thumbnails regeneration</source>
         <target>Skip thumbnails regeneration</target>
-        <note>Line: 113</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="0cbac2aa7274da1457a7c645202fcfbc">
         <source>Force all ID numbers</source>
         <target>Force all ID numbers</target>
-        <note>Line: 119</note>
+        <note>Line: 120</note>
       </trans-unit>
       <trans-unit id="347ad906588aa29395f77470509165ec">
         <source>Send notification email</source>
         <target>Send notification email</target>
-        <note>Line: 123</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="c290a5941ad6eb0d5fe8752c15c5fd78">
         <source>Next step</source>
         <target>Next step</target>
-        <note>Line: 127</note>
+        <note>Line: 128</note>
       </trans-unit>
     </body>
   </file>
@@ -1626,10 +1631,24 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestSettingsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="10d8074bf1e35bcac9911c5fe26261cf">
+        <source>Select your default file encoding</source>
+        <target>Select your default file encoding</target>
+        <note>Line: 44</note>
+      </trans-unit>
       <trans-unit id="c1643cfb8e00b9f5e8cecabbac424f14">
         <source>Enable multi-statements queries</source>
         <target>Enable multi-statements queries</target>
         <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9b5c3d6674b3af1946fb50faae7079e2">
+        <source>SQL query name</source>
+        <target>SQL query name</target>
+        <note>Line: 54</note>
       </trans-unit>
     </body>
   </file>
@@ -1691,12 +1710,12 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="a3946b47f44a8f7adf9c9b6e38911790">
         <source>Enable PrestaShop's webservice</source>
         <target>Enable PrestaShop's webservice</target>
-        <note>Line: 63</note>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="8a05d87b51cc003b5a3c018b37a6d311">
         <source>Enable CGI mode for PHP</source>
         <target>Enable CGI mode for PHP</target>
-        <note>Line: 72</note>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -1729,17 +1748,17 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="d9c2d86a66aa5a45326c3757f3a272cc">
         <source>Current password</source>
         <target>Current password</target>
-        <note>Line: 78</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="3544848f820b9d94a3f3871a382cf138">
         <source>New password</source>
         <target>New password</target>
-        <note>Line: 88</note>
+        <note>Line: 90</note>
       </trans-unit>
       <trans-unit id="4c231e0da3eaaa6a9752174f7f9cfb31">
         <source>Confirm password</source>
         <target>Confirm password</target>
-        <note>Line: 103</note>
+        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
@@ -1851,9 +1870,9 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
-        <source>Employees</source>
-        <target>Employees</target>
+      <trans-unit id="f8c8b903cb2e4f297e4b96d4b9c1e98a">
+        <source>Employee</source>
+        <target>Employee</target>
         <note>Line: 34</note>
       </trans-unit>
     </body>
@@ -1868,6 +1887,11 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="5d2ae622748ac5639d18bf235c196342">
         <source>Create profiles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.</source>
         <target>Create profiles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="12470772e1d22f18225ef5142bf89771">
+        <source>Create roles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.</source>
+        <target>Create roles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.</target>
         <note>Line: 33</note>
       </trans-unit>
     </body>
@@ -1886,7 +1910,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="485263210a4a12e35e3426045e3301b1">
         <source>Add new employee</source>
         <target>Add new employee</target>
-        <note>Line: 30</note>
+        <note>Line: 29</note>
       </trans-unit>
     </body>
   </file>
@@ -1983,6 +2007,11 @@ Comment: Recommended modules will be attached to here.</note>
         <target>Profile</target>
         <note>Line: 32</note>
       </trans-unit>
+      <trans-unit id="bbbabdbe1b262f75d99d62880b953be1">
+        <source>Role</source>
+        <target>Role</target>
+        <note>Line: 32</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2033,7 +2062,7 @@ Comment: Recommended modules will be attached to here.</note>
       <trans-unit id="26420bd9e260012164a58a0f002e4821">
         <source>Add new SQL query</source>
         <target>Add new SQL query</target>
-        <note>Line: 34</note>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>
@@ -2043,6 +2072,11 @@ Comment: Recommended modules will be attached to here.</note>
         <source>SQL query result</source>
         <target>SQL query result</target>
         <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="fe0eb4f46e9b34fc1147b36173fae5a0">
+        <source>SQL query results</source>
+        <target>SQL query results</target>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>
@@ -2070,12 +2104,12 @@ Comment: Recommended modules will be attached to here.</note>
       <trans-unit id="6f2a85b1f1db5c398fe6123b80dcdb6b">
         <source>Password policy</source>
         <target>Password policy</target>
-        <note>Line: 58</note>
+        <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="8da7288a967251a5ece7398ee9ccc517">
         <source>0 means the password is extremely easy to guess (within 10^3 guesses). Dictionary words like "password" or "mother" score 0.</source>
         <target>0 means the password is extremely easy to guess (within 10^3 guesses). Dictionary words like "password" or "mother" score 0.</target>
-        <note>Line: 69</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="f6e312ff777ced3efe9ec2537ca94d80">
         <source>1 is still very easy to guess (guesses lesser than 10^6). An extra character on a dictionary word can score 1.</source>
@@ -2095,22 +2129,22 @@ Comment: Recommended modules will be attached to here.</note>
       <trans-unit id="9e4ed1a59cbfd96288f7e6376ddadf0c">
         <source>4 is very unguessable (guesses greater than or equal to 10^10) and provides strong protection from offline slow-hash scenario.</source>
         <target>4 is very unguessable (guesses greater than or equal to 10^10) and provides strong protection from offline slow-hash scenario.</target>
-        <note>Line: 73</note>
+        <note>Line: 72</note>
       </trans-unit>
       <trans-unit id="478541a16f7d2800f3ea4427cb628ff0">
         <source>1 is still very easy to guess (guesses less than 10^6). An extra character on a dictionary word can score 1.</source>
         <target>1 is still very easy to guess (guesses less than 10^6). An extra character on a dictionary word can score 1.</target>
-        <note>Line: 70</note>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="1efea0fb945ffed57c73aec90dea4810">
         <source>2 is pretty easy to guess (guesses less than 10^8). It provides some protection from unthrottled online attacks.</source>
         <target>2 is pretty easy to guess (guesses less than 10^8). It provides some protection from unthrottled online attacks.</target>
-        <note>Line: 71</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="7355c93a5762175f1b68a5123e1234d7">
         <source>3 is safely unguessable (guesses less than 10^10). It offers moderate protection from offline slow-hash scenario.</source>
         <target>3 is safely unguessable (guesses less than 10^10). It offers moderate protection from offline slow-hash scenario.</target>
-        <note>Line: 72</note>
+        <note>Line: 71</note>
       </trans-unit>
     </body>
   </file>
@@ -2126,6 +2160,11 @@ Comment: Recommended modules will be attached to here.</note>
         <target>Set the resource permissions for this key:</target>
         <note>Line: 43</note>
       </trans-unit>
+      <trans-unit id="ad87ea508b9dc8dddc98bf041b907c55">
+        <source>Webservice key</source>
+        <target>Webservice key</target>
+        <note>Line: 32</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Webservice/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2133,27 +2172,27 @@ Comment: Recommended modules will be attached to here.</note>
       <trans-unit id="644ebe55744f361a22bc3c9be9bc4ccf">
         <source>Add new webservice key</source>
         <target>Add new webservice key</target>
-        <note>Line: 34</note>
+        <note>Line: 30</note>
       </trans-unit>
       <trans-unit id="5a8228d4c852fd51c735b3563b33d3ed">
         <source>Webservice status</source>
         <target>Webservice status</target>
-        <note>Line: 57</note>
+        <note>Line: 53</note>
       </trans-unit>
       <trans-unit id="2ab627ad288e54ed2712f137ceb37a37">
         <source>Webservice is enabled. Main entry point is</source>
         <target>Webservice is enabled. Main entry point is</target>
-        <note>Line: 61</note>
+        <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="ee67cd2d024d58dcd7fa82242c067479">
         <source>It seems that the webservice endpoint is not functional. If you are using httpd/apache2, you need to enable URL rewriting on your server.</source>
         <target>It seems that the webservice endpoint is not functional. If you are using httpd/apache2, you need to enable URL rewriting on your server.</target>
-        <note>Line: 68</note>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="72ba85f9d889729fb8ed9cf34c11688a">
         <source>Read the [1]developer documentation[/1].</source>
         <target>Read the [1]developer documentation[/1].</target>
-        <note>Line: 72</note>
+        <note>Line: 68</note>
       </trans-unit>
     </body>
   </file>
@@ -2657,15 +2696,6 @@ Comment: Recommended modules will be attached to here.</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
-        <source>File size</source>
-        <target>File size</target>
-        <note>Line: 28</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="88627291a92931577d427c5fd68f511e">
@@ -2686,6 +2716,15 @@ Comment: Recommended modules will be attached to here.</note>
         <source>Price per unit</source>
         <target>Price per unit</target>
         <note>Line: 69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
+        <source>File size</source>
+        <target>File size</target>
+        <note>Line: 1638</note>
       </trans-unit>
     </body>
   </file>

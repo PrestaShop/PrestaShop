@@ -5,32 +5,32 @@
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
-        <note>Line: 901</note>
+        <note>Line: 860</note>
       </trans-unit>
       <trans-unit id="43775ce1723057d9e3d21e5969324fd1">
         <source>Straight rows of keys are easy to guess</source>
         <target>Straight rows of keys are easy to guess</target>
-        <note>Line: 1779</note>
+        <note>Line: 1722</note>
       </trans-unit>
       <trans-unit id="bed5e315d09dedac517831b95571a7f4">
         <source>Short keyboard patterns are easy to guess</source>
         <target>Short keyboard patterns are easy to guess</target>
-        <note>Line: 1780</note>
+        <note>Line: 1723</note>
       </trans-unit>
       <trans-unit id="37ffb1976d12530b5c07821baaf5be39">
         <source>Use a longer keyboard pattern with more turns</source>
         <target>Use a longer keyboard pattern with more turns</target>
-        <note>Line: 1781</note>
+        <note>Line: 1724</note>
       </trans-unit>
       <trans-unit id="773ac0d662987369abf46eebc9000a09">
         <source>Repeats like "aaa" are easy to guess</source>
         <target>Repeats like "aaa" are easy to guess</target>
-        <note>Line: 1782</note>
+        <note>Line: 1725</note>
       </trans-unit>
       <trans-unit id="97681c90722711e8081dcbd10620502e">
         <source>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</source>
         <target>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</target>
-        <note>Line: 1783</note>
+        <note>Line: 1726</note>
       </trans-unit>
       <trans-unit id="c0072984cd1f6cb90856cd8f00a4ad3b">
         <source>Sequences like abc or 6543 are easy to guess</source>
@@ -40,97 +40,97 @@
       <trans-unit id="25096ab4fbb9994547ace751ca107515">
         <source>Recent years are easy to guess</source>
         <target>Recent years are easy to guess</target>
-        <note>Line: 1785</note>
+        <note>Line: 1728</note>
       </trans-unit>
       <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
         <source>Dates are often easy to guess</source>
         <target>Dates are often easy to guess</target>
-        <note>Line: 1786</note>
+        <note>Line: 1729</note>
       </trans-unit>
       <trans-unit id="954a21d373e3f1bd2446606700a37217">
         <source>This is a top-10 common password</source>
         <target>This is a top-10 common password</target>
-        <note>Line: 1787</note>
+        <note>Line: 1730</note>
       </trans-unit>
       <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
         <source>This is a top-100 common password</source>
         <target>This is a top-100 common password</target>
-        <note>Line: 1788</note>
+        <note>Line: 1731</note>
       </trans-unit>
       <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
         <source>This is a very common password</source>
         <target>This is a very common password</target>
-        <note>Line: 1789</note>
+        <note>Line: 1732</note>
       </trans-unit>
       <trans-unit id="c92578d4545d5aceb430aed0c7285398">
         <source>This is similar to a commonly used password</source>
         <target>This is similar to a commonly used password</target>
-        <note>Line: 1790</note>
+        <note>Line: 1733</note>
       </trans-unit>
       <trans-unit id="9769bc6be635c708fee72d29f5a08f30">
         <source>A word by itself is easy to guess</source>
         <target>A word by itself is easy to guess</target>
-        <note>Line: 1791</note>
+        <note>Line: 1734</note>
       </trans-unit>
       <trans-unit id="83812066e07a07e691d165c97ba89735">
         <source>Names and surnames by themselves are easy to guess</source>
         <target>Names and surnames by themselves are easy to guess</target>
-        <note>Line: 1792</note>
+        <note>Line: 1735</note>
       </trans-unit>
       <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
         <source>Common names and surnames are easy to guess</source>
         <target>Common names and surnames are easy to guess</target>
-        <note>Line: 1793</note>
+        <note>Line: 1736</note>
       </trans-unit>
       <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
         <source>Use a few words, avoid common phrases</source>
         <target>Use a few words, avoid common phrases</target>
-        <note>Line: 1794</note>
+        <note>Line: 1737</note>
       </trans-unit>
       <trans-unit id="db3fe1774e30b4103c663805d999043b">
         <source>No need for symbols, digits, or uppercase letters</source>
         <target>No need for symbols, digits, or uppercase letters</target>
-        <note>Line: 1795</note>
+        <note>Line: 1738</note>
       </trans-unit>
       <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
         <source>Avoid repeated words and characters</source>
         <target>Avoid repeated words and characters</target>
-        <note>Line: 1796</note>
+        <note>Line: 1739</note>
       </trans-unit>
       <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
         <source>Avoid sequences</source>
         <target>Avoid sequences</target>
-        <note>Line: 1797</note>
+        <note>Line: 1740</note>
       </trans-unit>
       <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
         <source>Avoid recent years</source>
         <target>Avoid recent years</target>
-        <note>Line: 1798</note>
+        <note>Line: 1741</note>
       </trans-unit>
       <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
         <source>Avoid years that are associated with you</source>
         <target>Avoid years that are associated with you</target>
-        <note>Line: 1799</note>
+        <note>Line: 1742</note>
       </trans-unit>
       <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
         <source>Avoid dates and years that are associated with you</source>
         <target>Avoid dates and years that are associated with you</target>
-        <note>Line: 1800</note>
+        <note>Line: 1743</note>
       </trans-unit>
       <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
         <source>Capitalization doesn't help very much</source>
         <target>Capitalization doesn't help very much</target>
-        <note>Line: 1801</note>
+        <note>Line: 1744</note>
       </trans-unit>
       <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
         <source>All-uppercase is almost as easy to guess as all-lowercase</source>
         <target>All-uppercase is almost as easy to guess as all-lowercase</target>
-        <note>Line: 1802</note>
+        <note>Line: 1745</note>
       </trans-unit>
       <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
         <source>Reversed words aren't much harder to guess</source>
         <target>Reversed words aren't much harder to guess</target>
-        <note>Line: 1803</note>
+        <note>Line: 1746</note>
       </trans-unit>
       <trans-unit id="e3c220047c05727a174783f106b69f2b">
         <source>Predictable substitutions like '@' instead of 'a' don't help very much</source>
@@ -140,17 +140,17 @@
       <trans-unit id="a2bfda43aef35df5f7edb8f8de1f5f30">
         <source>Add another word or two. Uncommon words are better.</source>
         <target>Add another word or two. Uncommon words are better.</target>
-        <note>Line: 1805</note>
+        <note>Line: 1748</note>
       </trans-unit>
       <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
         <source>Sequences like "abc" or "6543" are easy to guess</source>
         <target>Sequences like "abc" or "6543" are easy to guess</target>
-        <note>Line: 1784</note>
+        <note>Line: 1727</note>
       </trans-unit>
       <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
         <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
         <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
-        <note>Line: 1804</note>
+        <note>Line: 1747</note>
       </trans-unit>
     </body>
   </file>
@@ -207,7 +207,7 @@
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
         <source>Merchandise returns</source>
         <target>Merchandise returns</target>
-        <note>Line: 138</note>
+        <note>Line: 136</note>
       </trans-unit>
     </body>
   </file>
@@ -216,7 +216,7 @@
       <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
         <source>The page you are looking for was not found.</source>
         <target>The page you are looking for was not found.</target>
-        <note>Line: 1457</note>
+        <note>Line: 1433</note>
       </trans-unit>
     </body>
   </file>
@@ -283,7 +283,7 @@
       <trans-unit id="84be54bb4bd1b755a27d86388700d097">
         <source>Brands</source>
         <target>Brands</target>
-        <note>Line: 224</note>
+        <note>Line: 242</note>
       </trans-unit>
     </body>
   </file>
@@ -301,22 +301,22 @@
       <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
         <source>(tax incl.)</source>
         <target>(tax incl.)</target>
-        <note>Line: 436</note>
+        <note>Line: 441</note>
       </trans-unit>
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>Line: 437</note>
+        <note>Line: 442</note>
       </trans-unit>
       <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
         <source>(tax included)</source>
         <target>(tax included)</target>
-        <note>Line: 439</note>
+        <note>Line: 444</note>
       </trans-unit>
       <trans-unit id="e9e7ca277da652bde67ef5faafb755dc">
         <source>(tax excluded)</source>
         <target>(tax excluded)</target>
-        <note>Line: 440</note>
+        <note>Line: 445</note>
       </trans-unit>
     </body>
   </file>

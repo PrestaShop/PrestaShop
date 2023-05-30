@@ -5,7 +5,7 @@
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>Line: 315</note>
+        <note>Line: 314</note>
       </trans-unit>
       <trans-unit id="d70861cbe7f8c9a1241c39b3e7ef5ef2">
         <source>View my shop</source>
@@ -15,42 +15,42 @@
       <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
         <source>Welcome back %name%</source>
         <target>Welcome back %name%</target>
-        <note>Line: 388</note>
+        <note>Line: 387</note>
       </trans-unit>
       <trans-unit id="3d8de6fcc09baf73f7175fe59f278ced">
         <source>Your profile</source>
         <target>Your profile</target>
-        <note>Line: 389</note>
+        <note>Line: 388</note>
       </trans-unit>
       <trans-unit id="c87aacf5673fada1108c9f809d354311">
         <source>Sign out</source>
         <target>Sign out</target>
-        <note>Line: 404</note>
+        <note>Line: 403</note>
       </trans-unit>
       <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
         <source>Quick Access</source>
         <target>Quick Access</target>
-        <note>Line: 134</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
         <source>Please name this shortcut:</source>
         <target>Please name this shortcut:</target>
-        <note>Line: 180</note>
+        <note>Line: 179</note>
       </trans-unit>
       <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
         <source>Customers</source>
         <target>Customers</target>
-        <note>Line: 321</note>
+        <note>Line: 320</note>
       </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
-        <note>Line: 235</note>
+        <note>Line: 234</note>
       </trans-unit>
       <trans-unit id="38a27c0c7ef7a05e13efa2798ee21533">
         <source>Maintenance mode</source>
         <target>Maintenance mode</target>
-        <note>Line: 268</note>
+        <note>Line: 267</note>
       </trans-unit>
       <trans-unit id="0a71c80de89d7b2d3e6b22974a4a7548">
         <source>A new order has been placed on your shop.</source>
@@ -80,27 +80,27 @@
       <trans-unit id="10df6a640ea9625829122dfb5842795e">
         <source>PrestaShop logo</source>
         <target>PrestaShop logo</target>
-        <note>Line: 124</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="f5c26758149849ee0f84a2eceaf0acfd">
         <source>Remove from QuickAccess</source>
         <target>Remove from QuickAccess</target>
-        <note>Line: 151</note>
+        <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="383247a8cb198be4042d128986100cea">
         <source>Add current page to QuickAccess</source>
         <target>Add current page to QuickAccess</target>
-        <note>Line: 158</note>
+        <note>Line: 157</note>
       </trans-unit>
       <trans-unit id="165122309e15dc09c30b78951e53cb5a">
         <source>Manage quick accesses</source>
         <target>Manage quick accesses</target>
-        <note>Line: 165</note>
+        <note>Line: 164</note>
       </trans-unit>
       <trans-unit id="d7e8f7da874f7ef3f4bae2524ad52bfd">
         <source>View my store</source>
         <target>View my store</target>
-        <note>Line: 292</note>
+        <note>Line: 291</note>
       </trans-unit>
       <trans-unit id="94b96a5e5bca774e9f863b3b5fe8cd5d">
         <source>A new order has been placed on your store.</source>
@@ -359,7 +359,7 @@
       <trans-unit id="41a7f6c804ab172caeb2c2a6f116bdde">
         <source>Select stores</source>
         <target>Select stores</target>
-        <note>Line: 30</note>
+        <note>Line: 29</note>
       </trans-unit>
     </body>
   </file>

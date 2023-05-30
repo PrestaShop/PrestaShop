@@ -49,7 +49,7 @@
       <trans-unit id="9ff082251dea737459c9f32e73ca7a62">
         <source>For security reasons, you must also delete the /install folder.</source>
         <target>For security reasons, you must also delete the /install folder.</target>
-        <note>Line: 426</note>
+        <note>Line: 425</note>
       </trans-unit>
     </body>
   </file>
@@ -58,64 +58,64 @@
       <trans-unit id="64bebbfcf422901ff5898cd0d0f92ba4">
         <source>SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.</source>
         <target>SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.</target>
-        <note>Line: 90</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="0c38dbc5d2689404ee34e0fc2da845cf">
         <source>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</source>
         <target>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</target>
-        <note>Line: 94</note>
+        <note>Line: 99</note>
       </trans-unit>
       <trans-unit id="1414e6b52fb36401e73871528bfb074d">
         <source>The employee does not exist, or the password provided is incorrect.</source>
         <target>The employee does not exist, or the password provided is incorrect.</target>
-        <note>Line: 246</note>
+        <note>Line: 251</note>
       </trans-unit>
       <trans-unit id="54a27a9a29b0e113daa86220ba7e7880">
         <source>This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).</source>
         <target>This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).</target>
-        <note>Line: 249</note>
+        <note>Line: 254</note>
       </trans-unit>
       <trans-unit id="f197511588fa1467e957bf6c48539e88">
         <source>This account does not exist.</source>
         <target>This account does not exist.</target>
-        <note>Line: 433
+        <note>Line: 438
 Comment: check matching employee id with its email</note>
       </trans-unit>
       <trans-unit id="b2e73e907ab40d78981c8bbfd0e0881f">
         <source>You can reset your password every %interval% minute(s) only. Please try again later.</source>
         <target>You can reset your password every %interval% minute(s) only. Please try again later.</target>
-        <note>Line: 435</note>
+        <note>Line: 440</note>
       </trans-unit>
       <trans-unit id="70888a5d7f35d91f8085cba884f7298e">
         <source>Please, check your mailbox. A link to reset your password has been sent to you.</source>
         <target>Please, check your mailbox. A link to reset your password has been sent to you.</target>
-        <note>Line: 380</note>
+        <note>Line: 385</note>
       </trans-unit>
       <trans-unit id="61c79423624504f70ce7b16f76587aac">
         <source>An error occurred while attempting to reset your password.</source>
         <target>An error occurred while attempting to reset your password.</target>
-        <note>Line: 385</note>
+        <note>Line: 390</note>
       </trans-unit>
       <trans-unit id="eed80aefc5a34c94db6274505d68d151">
         <source>Some identification information is missing.</source>
         <target>Some identification information is missing.</target>
-        <note>Line: 420</note>
+        <note>Line: 425</note>
       </trans-unit>
       <trans-unit id="375dee52ced3330cd3496340b32098ca">
         <source>The password is missing: please enter your new password.</source>
         <target>The password is missing: please enter your new password.</target>
-        <note>Line: 423
+        <note>Line: 428
 Comment: password (twice)</note>
       </trans-unit>
       <trans-unit id="f01fb987f60542e0bff1bf7bed42d142">
         <source>The password is not in a valid format.</source>
         <target>The password is not in a valid format.</target>
-        <note>Line: 425</note>
+        <note>Line: 430</note>
       </trans-unit>
       <trans-unit id="76e08a16ce116959f282955d33c51aa0">
         <source>The confirmation is empty: please fill in the password confirmation as well.</source>
         <target>The confirmation is empty: please fill in the password confirmation as well.</target>
-        <note>Line: 427</note>
+        <note>Line: 432</note>
       </trans-unit>
       <trans-unit id="aa5244bee1e322b66e46ba2be4a46388">
         <source>The confirmation password doesn't match. Please double check both passwords.</source>
@@ -125,28 +125,28 @@ Comment: password (twice)</note>
       <trans-unit id="56f5aa17fc3a9c5d9827bb148f072cd2">
         <source>Your password reset request expired. Please start again.</source>
         <target>Your password reset request expired. Please start again.</target>
-        <note>Line: 438
+        <note>Line: 443
 Comment: To update password, we must have the temporary reset token that matches.</note>
       </trans-unit>
       <trans-unit id="2a8fac0ed3799588798c1b531a2b65ef">
         <source>An error occurred while attempting to change your password.</source>
         <target>An error occurred while attempting to change your password.</target>
-        <note>Line: 494</note>
+        <note>Line: 499</note>
       </trans-unit>
       <trans-unit id="30d1a8e4c44146dcccec7b7a11db6d6e">
         <source>The password has been changed successfully.</source>
         <target>The password has been changed successfully.</target>
-        <note>Line: 488</note>
+        <note>Line: 493</note>
       </trans-unit>
       <trans-unit id="bb6b5a34b7623ca921968d9181a1066b">
         <source>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</source>
         <target>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</target>
-        <note>Line: 324</note>
+        <note>Line: 329</note>
       </trans-unit>
       <trans-unit id="b0ad621a246d9c2118751d0b763e5853">
         <source>The confirmation password doesn't match. Please double-check both passwords.</source>
         <target>The confirmation password doesn't match. Please double-check both passwords.</target>
-        <note>Line: 429</note>
+        <note>Line: 434</note>
       </trans-unit>
     </body>
   </file>

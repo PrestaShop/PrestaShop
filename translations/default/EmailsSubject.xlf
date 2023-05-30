@@ -5,7 +5,12 @@
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>Line: 1285</note>
+        <note>Line: 1298</note>
+      </trans-unit>
+      <trans-unit id="9a843f20677a52ca79af903123147af0">
+        <source>Welcome!</source>
+        <target>Welcome!</target>
+        <note>Line: 1282</note>
       </trans-unit>
     </body>
   </file>
@@ -29,15 +34,6 @@
         <source>Log: You have a new alert from your shop</source>
         <target>Log: You have a new alert from your shop</target>
         <note>Line: 118</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerPersister.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9a843f20677a52ca79af903123147af0">
-        <source>Welcome!</source>
-        <target>Welcome!</target>
-        <note>Line: 265</note>
       </trans-unit>
     </body>
   </file>
@@ -78,7 +74,7 @@
       <trans-unit id="a218495ad30949e8ea1f64a261e37463">
         <source>Import complete</source>
         <target>Import complete</target>
-        <note>Line: 4799</note>
+        <note>Line: 4814</note>
       </trans-unit>
     </body>
   </file>

@@ -5,12 +5,12 @@
       <trans-unit id="db7c4e6b5be6dd888962b943e77b29ee">
         <source>RTL Module</source>
         <target>RTL Module</target>
-        <note>Line: 94</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="53103fcc4656f55c219b600ded3c7438">
         <source>Manage hooks</source>
         <target>Manage hooks</target>
-        <note>Line: 101</note>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>
@@ -194,20 +194,6 @@ Comment: Set the modules categories</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="031f3657c3601889e98df488db139b75">
-        <source>Service by %author%</source>
-        <target>Service by %author%</target>
-        <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 100</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
@@ -229,6 +215,11 @@ Comment: Set the modules categories</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="031f3657c3601889e98df488db139b75">
+        <source>Service by %author%</source>
+        <target>Service by %author%</target>
+        <note>Line: 72</note>
+      </trans-unit>
       <trans-unit id="228e8380ee42b3ba5d59cdc502dc154d">
         <source>Upgrade available</source>
         <target>Upgrade available</target>
@@ -370,6 +361,11 @@ Comment: Set the modules categories</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 212</note>
+      </trans-unit>
       <trans-unit id="bc3b3665bd89d8eb6e3c7b0789fa98c5">
         <source>v%version% by %author%</source>
         <target>v%version% by %author%</target>
@@ -505,6 +501,11 @@ Comment: Set the modules categories</note>
       <trans-unit id="910144fc8b8d5c1d2cb59cbe5c04a01b">
         <source>Upgrade All</source>
         <target>Upgrade All</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="71803586f945801418d03befeb4acd99">
+        <source>Update all</source>
+        <target>Update all</target>
         <note>Line: 38</note>
       </trans-unit>
     </body>

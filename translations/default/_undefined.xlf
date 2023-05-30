@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="894e565fb7d7a1d846211b1cddf4428c">
+        <source>%count% errors</source>
+        <target>%count% errors</target>
+        <note>Line: 755</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

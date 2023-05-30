@@ -111,7 +111,7 @@
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 218</note>
+        <note>Line: 201</note>
       </trans-unit>
     </body>
   </file>
@@ -301,21 +301,21 @@
       <trans-unit id="bff13ed1cd5b83b03f024f1eb6524337">
         <source>Default carrier</source>
         <target>Default carrier</target>
-        <note>Line: 85</note>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/PreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
         <source>Handling charges</source>
         <target>Handling charges</target>
-        <note>Line: 106</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
         <source>Free shipping starts at</source>
         <target>Free shipping starts at</target>
-        <note>Line: 114</note>
+        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>
@@ -365,12 +365,12 @@
       <trans-unit id="914419aa32f04011357d3b604a86d7eb">
         <source>Carrier</source>
         <target>Carrier</target>
-        <note>Line: 44</note>
+        <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
         <source>Shipping cost</source>
         <target>Shipping cost</target>
-        <note>Line: 46</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>

@@ -60,6 +60,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Line: 186</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/statsbestmanufacturers/statsbestmanufacturers.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="58ef962a87e6fbbea6027c17a954a18d">
@@ -88,7 +97,7 @@
       <trans-unit id="bcc5aa7d20ec5e8bfa75d7754753e35b">
         <source>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</source>
         <target>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</target>
-        <note>Line: 234</note>
+        <note>Line: 247</note>
       </trans-unit>
     </body>
   </file>
@@ -106,7 +115,7 @@
       <trans-unit id="d522a12a111ad26cc15c16da99cebef6">
         <source>This product is not associated with the store selected in the multistore header, please select another one.</source>
         <target>This product is not associated with the store selected in the multistore header, please select another one.</target>
-        <note>Line: 1469</note>
+        <note>Line: 1452</note>
       </trans-unit>
       <trans-unit id="2c7dae12339ce3e31db32f7b78288369">
         <source>This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].</source>
@@ -116,7 +125,16 @@
       <trans-unit id="0269f018a765e0d969747a1871c109a1">
         <source>This page is only compatible in a single-store context. Please select a store in the multistore header.</source>
         <target>This page is only compatible in a single-store context. Please select a store in the multistore header.</target>
-        <note>Line: 1485</note>
+        <note>Line: 1468</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Catalog/Category/AbstractCategoryType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6fe11d39747aff42159920688f59f575">
+        <source>Invalid characters: %s</source>
+        <target>Invalid characters: %s</target>
+        <note>Line: 110</note>
       </trans-unit>
     </body>
   </file>
@@ -134,21 +152,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Catalog/FeatureType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ba3c0bbfa1072eb7cf7b38749e5c69d">
+        <source>Invalid characters: %chars%</source>
+        <target>Invalid characters: %chars%</target>
+        <note>Line: 62</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 216</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6fe11d39747aff42159920688f59f575">
-        <source>Invalid characters: %s</source>
-        <target>Invalid characters: %s</target>
-        <note>Line: 187</note>
+        <note>Line: 260</note>
       </trans-unit>
     </body>
   </file>
@@ -158,15 +176,6 @@
         <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
         <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
         <note>Line: 49</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
-        <source>Invalid characters:</source>
-        <target>Invalid characters:</target>
-        <note>Line: 170</note>
       </trans-unit>
     </body>
   </file>
