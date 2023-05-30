@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 const VENDOR_NAME = 'prestashop/';
 
-function fetchVersionComposerLock(): array {
+function fetchVersionComposerLock(): array
+{
     $composerLock = file_get_contents('composer.lock');
     $composerLock = json_decode($composerLock, true);
 
@@ -45,7 +46,7 @@ function fetchVersionComposerLock(): array {
 
 // Fetch modules from the repository PrestaShop/prestashop-modules
 $hCurl = curl_init();
-curl_setopt($hCurl, CURLOPT_USERAGENT,'PrestaShop/CronUpdateModules');
+curl_setopt($hCurl, CURLOPT_USERAGENT, 'PrestaShop/CronUpdateModules');
 curl_setopt($hCurl, CURLOPT_URL, 'https://api.github.com/repos/PrestaShop/prestashop-modules/git/trees/master');
 curl_setopt($hCurl, CURLOPT_RETURNTRANSFER, 1);
 $gitJSON = curl_exec($hCurl);
@@ -60,7 +61,7 @@ if (empty($gitJSON['tree'])) {
     echo 'Empty return from the API';
     die();
 }
-$modulesGit = array_filter($gitJSON['tree'], function(array $val) {
+$modulesGit = array_filter($gitJSON['tree'], function (array $val) {
     return $val['type'] === 'commit';
 });
 
@@ -103,7 +104,7 @@ foreach ($moduleComposerLockOriginal as $moduleName => $moduleVersion) {
     if ($moduleVersion === $moduleComposerLockAfterUpdate[$moduleName]) {
         continue;
     }
-    $pullRequestBodyBumpModules .= 'Module `' . $moduleName. '`: Bump version from `' . $moduleVersion
+    $pullRequestBodyBumpModules .= 'Module `' . $moduleName . '`: Bump version from `' . $moduleVersion
         . '` to `' . $moduleComposerLockAfterUpdate[$moduleName] . '`<br />';
 }
 
@@ -114,15 +115,15 @@ if (empty($pullRequestBodyBumpModules)) {
 
 file_put_contents(
     'cron_php_update_modules.txt',
-    '| Questions         | Answers' . PHP_EOL
-        . '| ----------------- | -----------------' . PHP_EOL
-        . '| Branch?           | develop' . PHP_EOL
-        . '| Description?      | ' . $pullRequestBodyBumpModules . PHP_EOL
+    '| Questions         | Answers |' . PHP_EOL
+        . '| ----------------- | ----------------- |' . PHP_EOL
+        . '| Branch?           | develop |' . PHP_EOL
+        . '| Description?      | ' . $pullRequestBodyBumpModules . ' |' . PHP_EOL
         . '| Type?             | improvement' . PHP_EOL
-        . '| Category?         | CO' . PHP_EOL
-        . '| BC breaks?        | no' . PHP_EOL
-        . '| Deprecations?     | no' . PHP_EOL
-        . '| Fixed ticket?     | N/A' . PHP_EOL
-        . '| How to test?      | N/A' . PHP_EOL
-        . '| Possible impacts? | N/A' . PHP_EOL
+        . '| Category?         | CO |' . PHP_EOL
+        . '| BC breaks?        | no |' . PHP_EOL
+        . '| Deprecations?     | no |' . PHP_EOL
+        . '| Fixed ticket?     | N/A |' . PHP_EOL
+        . '| How to test?      | N/A |' . PHP_EOL
+        . '| Possible impacts? | N/A |' . PHP_EOL
 );
