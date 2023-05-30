@@ -74,10 +74,10 @@ export default class StoreData {
     this.country = storeToCreate.country || 'France';
 
     /** @type {string} Latitude of the address of the store */
-    this.latitude = storeToCreate.latitude || faker.address.latitude();
+    this.latitude = storeToCreate.latitude || faker.address.latitude().toString();
 
     /** @type {string} Longitude of the address of the store */
-    this.longitude = storeToCreate.longitude || faker.address.longitude();
+    this.longitude = storeToCreate.longitude || faker.address.longitude().toString();
 
     /** @type {string} Phone number of the store (default format 01########) */
     this.phone = storeToCreate.phone || faker.phone.number('01########');
