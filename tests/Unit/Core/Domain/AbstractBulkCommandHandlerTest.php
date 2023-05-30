@@ -113,7 +113,6 @@ class AbstractBulkCommandHandlerTest extends TestCase
 
         $this->assertInstanceOf(TestCommand::class, $handler->getCommand());
     }
-
 }
 
 class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
@@ -249,7 +248,8 @@ class FailingId implements IdInterface
     }
 }
 
-class TestCommand {
+class TestCommand
+{
     public function __construct(public readonly array $ids, public readonly bool $enabled)
     {
     }
