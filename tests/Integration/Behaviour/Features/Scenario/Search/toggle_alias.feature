@@ -20,10 +20,6 @@ Feature: Update alias status from Back Office (BO)
       | alias2       | blues  | blouse | 0      |
 
   Scenario: I enable multiple aliases
-    Given following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 0      |
-      | alias2       | blues  | blouse | 0      |
     When I enable alias with reference "alias1"
     And I enable alias with reference "alias2"
     Then following aliases should exist:
