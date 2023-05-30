@@ -90,6 +90,8 @@ class ModuleManager extends BOBasePage {
 
   private readonly modalConfirmCancel: (moduleTag: string, action: string) => string;
 
+  private readonly modalConfirmUninstallForceDeletion: (moduleTag: string) => string;
+
   private readonly statusDropdownDiv: string;
 
   private readonly statusDropdownMenu: string;
@@ -184,6 +186,8 @@ class ModuleManager extends BOBasePage {
       + ` div.modal-footer a.module_action_modal_${action}`;
     this.modalConfirmCancel = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag, action)}`
       + ' div.modal-footer input[type="button"][data-dismiss="modal"]';
+    this.modalConfirmUninstallForceDeletion = (moduleTag: string) => `${this.modalConfirmAction(moduleTag, 'uninstall')}`
+      + ' #force_deletion';
   }
 
   /*
@@ -403,9 +407,16 @@ class ModuleManager extends BOBasePage {
    * @param module {ModuleData} Module data to install/uninstall
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @param cancel {boolean} Cancel the action
+   * @param forceDeletion {boolean} Delete module folder after uninstall
    * @return {Promise<string | null>}
    */
-  async setActionInModule(page: Page, module: ModuleData, action: string, cancel: boolean = false): Promise<string | null> {
+  async setActionInModule(
+    page: Page,
+    module: ModuleData,
+    action: string,
+    cancel: boolean = false,
+    forceDeletion: boolean = false,
+  ): Promise<string | null> {
     await this.closeGrowlMessage(page);
 
     if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {
@@ -423,12 +434,39 @@ class ModuleManager extends BOBasePage {
         await this.elementNotVisible(page, this.modalConfirmAction(module.tag, action), 10000);
         return '';
       }
+      if (action === 'uninstall' && forceDeletion) {
+        await page.click(this.modalConfirmUninstallForceDeletion(module.tag));
+      }
       if (action === 'disable' || action === 'uninstall' || action === 'reset') {
         await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));
       }
     }
 
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   Returns the main action module action
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Module data
+   */
+  async getMainActionInModule(page: Page, module: ModuleData): Promise<string> {
+    const actions: string[] = [
+      'enable',
+      'disable',
+      'install',
+      'configure',
+    ];
+
+    for (let i: number = 0; i < actions.length; i++) {
+      const action = actions[i];
+
+      if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {
+        return action;
+      }
+    }
+
+    return '';
   }
 
   /**
