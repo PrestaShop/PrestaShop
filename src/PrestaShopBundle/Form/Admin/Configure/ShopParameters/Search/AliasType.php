@@ -72,8 +72,6 @@ class AliasType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $aliasId = $options['alias_id'];
-
         $builder
             ->add('aliases', TranslatableType::class, [
                 'required' => true,
@@ -97,12 +95,11 @@ class AliasType extends TranslatorAwareType
             ->add('search_terms', EntitySearchInputType::class, [
                 'label' => $this->trans('Search Terms', 'Admin.Shopparameters.Help'),
                 'label_tag_name' => 'h3',
-                'remote_url' => $this->router->generate('admin_alias_search_associations', [
+                'remote_url' => $this->router->generate('admin_search_index', [
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
                 ]),
                 'min_length' => 3,
-                'filtered_identities' => $aliasId > 0 ? [$aliasId] : [],
                 'placeholder' => $this->trans('Search term', 'Admin.Catalog.Help'),
             ])
         ;
