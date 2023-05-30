@@ -69,7 +69,10 @@ class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * @param AliasId $id
+     * @param BulkUpdateAliasStatusCommand $command
+     *
+     * @return void
      */
     protected function handleSingleAction(mixed $id, mixed $command): void
     {
