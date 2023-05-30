@@ -555,17 +555,17 @@
       <trans-unit id="89d371deca1b2b50a933fabc8005ccfb">
         <source>%module% did not return a valid response on installation.</source>
         <target>%module% did not return a valid response on installation.</target>
-        <note>Line: 391</note>
+        <note>Line: 389</note>
       </trans-unit>
       <trans-unit id="35e839bc1864dd50a75500028c3ebb33">
         <source>Installation of module %module% was successful.</source>
         <target>Installation of module %module% was successful.</target>
-        <note>Line: 397</note>
+        <note>Line: 395</note>
       </trans-unit>
       <trans-unit id="f52c6f7b6fcbd586aee22044aeb6c897">
         <source>Installation of module %module% failed. %error%</source>
         <target>Installation of module %module% failed. %error%</target>
-        <note>Line: 436</note>
+        <note>Line: 434</note>
       </trans-unit>
       <trans-unit id="277a6bb3a47512862fc6a39dbbbb9b8b">
         <source>Impossible to install form source</source>
@@ -575,7 +575,7 @@
       <trans-unit id="003d97add88d9195366bfa9edcb6b357">
         <source>Impossible to install from source</source>
         <target>Impossible to install from source</target>
-        <note>Line: 424</note>
+        <note>Line: 422</note>
       </trans-unit>
     </body>
   </file>

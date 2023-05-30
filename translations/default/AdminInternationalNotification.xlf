@@ -594,7 +594,7 @@ Comment: @todo Throw exception</note>
       <trans-unit id="2c4113bd192a65a98ee212d9e946d152">
         <source>You must select at least one translation type to export translations.</source>
         <target>You must select at least one translation type to export translations.</target>
-        <note>Line: 266</note>
+        <note>Line: 268</note>
       </trans-unit>
     </body>
   </file>

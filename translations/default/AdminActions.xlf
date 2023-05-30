@@ -831,12 +831,12 @@
       <trans-unit id="c26a5c9ca9fc94f086bb108ad5976c1b">
         <source>Add new authorized app</source>
         <target>Add new authorized app</target>
-        <note>Line: 97</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="11462e482d740331d0da0f74b1e58c44">
         <source>Add new API access</source>
         <target>Add new API access</target>
-        <note>Line: 104</note>
+        <note>Line: 119</note>
       </trans-unit>
     </body>
   </file>
