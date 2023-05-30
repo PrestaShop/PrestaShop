@@ -43,8 +43,8 @@ abstract class AbstractBulkCommandHandler
      * @param string $exceptionToCatch when cought this exception will allow the loop to continue
      *                                 and show bulk error at the end of the loop, instead of breaking it on first error.
      *                                 All other exceptions will cause the loop to immediately stop and throw the exception.
-     *
-     * @throws BulkCommandExceptionInterface
+     * @param mixed|null $command It can be null or any command that is used by the command handler. It is drilled through
+     *                            method parameters to deliver other command variables than entity ids.
      */
     protected function handleBulkAction(array $ids, string $exceptionToCatch, mixed $command = null): void
     {
@@ -79,7 +79,7 @@ abstract class AbstractBulkCommandHandler
 
     /**
      * @param mixed $id
-     * @param mixed $command
+     * @param mixed|null $command
      */
     abstract protected function handleSingleAction(mixed $id, mixed $command): void;
 
