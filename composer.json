@@ -131,7 +131,7 @@
         "prestashop/translationtools-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^5.1",
         "smarty/smarty": "^4.3.1",
-        "soundasleep/html2text": "^0.5.0",
+        "soundasleep/html2text": "^2.1.0",
         "symfony/asset": "5.4.*",
         "symfony/cache": "5.4.*",
         "symfony/config": "5.4.*",
