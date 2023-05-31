@@ -1,0 +1,115 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{#
+# This form theme is an implementation of PrestaShop UI kit, it based on the bootstrap4 layout and overrides a few
+# blocks to match our expected integration of the UI kit.
+#
+# This theme uses/extends the basic bootstrap_4_horizontal_layout meaning the form labels/inputs are displayed
+# are displayed horizontally in a column way.
+#
+# Unlike our prestashop_ui_kit_base.html.twig theme which is the parent of this theme and is based on bootstrap_4_layout
+# where labels/inputs are displayed one under the other.
+#}
+
+{% use 'bootstrap_4_horizontal_layout.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_puik_base.html.twig' %}
+
+{# overrides from bootstrap_4_horizontal_layout #}
+
+{% block form_start -%}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
+  {{- parent() -}}
+{%- endblock form_start %}
+
+{# Labels #}
+
+{% block form_label -%}
+  {% apply spaceless %}
+    {% if label is same as(null) %}
+    {% elseif label is same as(false) %}
+      {# Use false as label is you don't want an empty column #}
+    {% else %}
+      {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' puik-label')|trim}) %}
+    <label class="{{ label_attr.class }}">
+      {{ label }}
+      {% if required -%}
+        <span class="puik-label--required">*</span>
+      {%- endif %}
+    </label>
+    {% endif %}
+  {% endapply %}
+{%- endblock form_label %}
+
+{# Rows #}
+
+{% block form_row -%}
+  {% apply spaceless %}
+    {# In horizontal theme when using a title for label it needs to be outside of the row div #}
+    {% if label_tag_name is defined %}
+      {{ form_label(form) }}
+    {% endif %}
+
+    {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+    {% set disabledField = false %}
+    {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
+      {% set disabledField = true %}
+    {% endif %}
+
+    <div class="{{ block('form_row_class') }}{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if (attr.visible is defined and not attr.visible) %} d-none{% endif %}">
+      {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
+      {% if attribute(form.parent, multistoreCheckboxName) is defined %}
+        {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
+        {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
+      {% endif %}
+
+      {% if label_tag_name is not defined %}
+        {{ form_label(form) }}
+      {% endif %}
+      <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
+        {{ form_widget(form) }}
+        {{ form_errors(form, {'attr': {'fieldError': true}}) }}
+      </div>
+      {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
+        {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}
+      {% endif %}
+
+      {{- block('form_external_link') -}}
+      {{- block('form_alert') -}}
+    </div>
+  {% endapply %}
+
+  {% if column_breaker %}
+    <div class="form-group form-column-breaker"></div>
+  {% endif %}
+{%- endblock form_row %}
+
+{% block form_group_class -%}
+  col-sm input-container
+{%- endblock form_group_class %}
+
+{% block form_row_class -%}
+  form-group row{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}
+{%- endblock form_row_class %}
