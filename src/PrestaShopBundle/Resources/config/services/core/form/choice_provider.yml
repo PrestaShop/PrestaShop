@@ -24,6 +24,29 @@ services:
     arguments:
       $combinationFeature: '@PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature'
 
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider:
+    public: false
+    autowire: true
+    arguments:
+      $combinationFeature: '@PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature'
+
+  prestashop.core.form.choice_provider.country_by_id:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
+    public: false
+    autowire: true
+    arguments:
+      - '@prestashop.adapter.data_provider.currency'
+
+  prestashop.core.form.choice_provider.currency_by_id:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider
+
+  prestashop.core.form.choice_provider.timezone_by_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'
+    arguments:
+      - '@prestashop.core.admin.timezone.repository'
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider:
     arguments:
       - '@prestashop.core.admin.timezone.repository'
@@ -39,15 +62,32 @@ services:
       - '@prestashop.adapter.language.validator'
       - '@prestashop.adapter.data_provider.language'
 
+  prestashop.core.form.choice_provider.country_by_iso_code:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.country'
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider:
+    public: false
+    autowire: true
     arguments:
       - '@prestashop.adapter.data_provider.group'
 
+  prestashop.core.form.choice_provider.group_by_id:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider:
+    autowire: true
+    public: false
     arguments:
       - '@prestashop.adapter.data_provider.carrier'
 
-  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider:
+  prestashop.core.form.choice_provider.carrier_by_reference_id:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider
+
+  prestashop.core.form.choice_provider.order_state_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
     arguments:
       $orderStateDataProvider: '@prestashop.adapter.data_provider.order_state'
 

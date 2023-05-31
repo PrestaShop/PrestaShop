@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
-use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Payment\PaymentModulePreferencesConfiguration;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,29 +41,30 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
-     * @var array
+     * @var CurrencyByIdChoiceProvider
      */
-    private $currencyChoices;
+    private $currencyByIdChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array<string, ModuleInterface> $paymentModules
-     * @param array $currencyChoices
+     * @param PaymentModuleListProvider $paymentModuleListProvider
+     * @param CurrencyByIdChoiceProvider $currencyByIdChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $paymentModules,
-        array $currencyChoices
+        PaymentModuleListProvider $paymentModuleListProvider,
+        CurrencyByIdChoiceProvider $currencyByIdChoiceProvider
     ) {
-        parent::__construct($translator, $locales, $paymentModules);
+        parent::__construct($translator, $locales, $paymentModuleListProvider);
 
-        $this->currencyChoices = $currencyChoices;
+        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $currencyChoices = $this->currencyByIdChoiceProvider->getChoices();
         $builder
             ->add('currency_restrictions', MaterialMultipleChoiceTableCardType::class, [
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
@@ -73,8 +75,8 @@ class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestric
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
-                'choices' => $this->getCurrencyChoices(),
-                'multiple_choices' => $this->getCurrencyChoicesForPaymentModules(),
+                'choices' => $this->getCurrencyChoices($currencyChoices),
+                'multiple_choices' => $this->getCurrencyChoicesForPaymentModules($currencyChoices),
                 'headers_fixed' => true,
             ]);
     }
@@ -82,9 +84,10 @@ class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestric
     /**
      * Get multiple currency choices for payment modules.
      *
+     * @param array $currencyChoices
      * @return array
      */
-    private function getCurrencyChoicesForPaymentModules(): array
+    private function getCurrencyChoicesForPaymentModules(array $currencyChoices): array
     {
         $choices = [];
 
@@ -92,10 +95,9 @@ class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestric
             $moduleInstance = $paymentModule->getInstance();
 
             $allowMultipleCurrencies = true;
-            $currencyChoices = $this->currencyChoices;
             if ('radio' === $moduleInstance->currencies_mode) {
                 $allowMultipleCurrencies = false;
-                $currencyChoices = $this->getCurrencyChoices();
+                $currencyChoices = $this->getCurrencyChoices($currencyChoices);
             }
             $choices[] = [
                 'name' => $paymentModule->get('name'),
@@ -111,12 +113,13 @@ class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestric
     /**
      * Get currency choices with specific additional choices.
      *
+     * @param array $currencyChoices
      * @return array
      */
-    private function getCurrencyChoices(): array
+    private function getCurrencyChoices(array $currencyChoices): array
     {
         return array_merge(
-            $this->currencyChoices,
+            $currencyChoices,
             $this->getAdditionalCurrencyChoices()
         );
     }

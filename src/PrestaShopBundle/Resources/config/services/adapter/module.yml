@@ -58,12 +58,16 @@ services:
       - '@prestashop.adapter.presenter.module'
       - '@prestashop.adapter.module.payment_module_provider'
 
-  prestashop.adapter.module.payment_module_provider:
-    class: PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider
+  PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider:
+    autowire: true
+    public: false
     arguments:
       - '@prestashop.core.admin.module.repository'
       - '@prestashop.bundle.repository.module'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+  prestashop.adapter.module.payment_module_provider:
+    alias: PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider
 
   prestashop.adapter.legacy.module:
     class: PrestaShop\PrestaShop\Adapter\Module\Module

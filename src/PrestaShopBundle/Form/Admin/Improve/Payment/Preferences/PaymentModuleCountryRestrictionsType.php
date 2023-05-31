@@ -29,7 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -40,33 +41,33 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PaymentModuleCountryRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
-     * @var array
-     */
-    private $countryChoices;
-
-    /**
      * @var CountryDataProvider
      */
     private $countryDataProvider;
 
     /**
+     * @var CountryByIdChoiceProvider
+     */
+    private $countryByIdChoiceProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array<string, ModuleInterface> $paymentModules
-     * @param array $countryChoices
+     * @param PaymentModuleListProvider $paymentModuleListProvider
+     * @param CountryByIdChoiceProvider $countryByIdChoiceProvider
      * @param CountryDataProvider $countryDataProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $paymentModules,
-        array $countryChoices,
+        PaymentModuleListProvider $paymentModuleListProvider,
+        CountryByIdChoiceProvider $countryByIdChoiceProvider,
         CountryDataProvider $countryDataProvider
     ) {
-        parent::__construct($translator, $locales, $paymentModules);
+        parent::__construct($translator, $locales, $paymentModuleListProvider);
 
-        $this->countryChoices = $countryChoices;
         $this->countryDataProvider = $countryDataProvider;
+        $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
     }
 
     /**
@@ -74,6 +75,7 @@ class PaymentModuleCountryRestrictionsType extends AbstractPaymentModuleRestrict
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $countryChoices = $this->countryByIdChoiceProvider->getChoices();
         $builder
             ->add('country_restrictions', MaterialMultipleChoiceTableCardType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
@@ -84,8 +86,8 @@ class PaymentModuleCountryRestrictionsType extends AbstractPaymentModuleRestrict
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
-                'choices' => $this->countryChoices,
-                'multiple_choices' => $this->getCountryChoicesForPaymentModules(),
+                'choices' => $countryChoices,
+                'multiple_choices' => $this->getCountryChoicesForPaymentModules($countryChoices),
                 'headers_fixed' => true,
             ]);
     }
@@ -93,18 +95,18 @@ class PaymentModuleCountryRestrictionsType extends AbstractPaymentModuleRestrict
     /**
      * Get multiple country choices for payment modules.
      *
+     * @param array $countryChoices
      * @return array
      */
-    private function getCountryChoicesForPaymentModules(): array
+    private function getCountryChoicesForPaymentModules(array $countryChoices): array
     {
         $multipleChoices = [];
 
         foreach ($this->paymentModules as $paymentModule) {
             $limitedCountries = $paymentModule->get('limited_countries');
 
-            $countryChoices = $this->countryChoices;
             if (is_array($limitedCountries) && !empty($limitedCountries)) {
-                $countryChoices = $this->getLimitedCountryChoices($limitedCountries);
+                $countryChoices = $this->getLimitedCountryChoices($limitedCountries, $countryChoices);
             }
 
             $multipleChoices[] = [
@@ -122,21 +124,21 @@ class PaymentModuleCountryRestrictionsType extends AbstractPaymentModuleRestrict
      * Get country choices by country ISO codes.
      *
      * @param array $limitedCountryIsoCodes
+     * @param array $countryChoices
      *
      * @return array
      */
-    private function getLimitedCountryChoices(array $limitedCountryIsoCodes): array
+    private function getLimitedCountryChoices(array $limitedCountryIsoCodes, array $countryChoices): array
     {
-        $countryChoices = [];
-
+        $limitedCountryChoices = [];
         foreach ($limitedCountryIsoCodes as $isoCode) {
             $countryId = $this->countryDataProvider->getIdByIsoCode($isoCode);
-            $countryValueIndex = array_search($countryId, $this->countryChoices);
+            $countryValueIndex = array_search($countryId, $countryChoices);
             if (false !== $countryId && false !== $countryValueIndex) {
-                $countryChoices[] = $this->countryChoices[$countryValueIndex];
+                $limitedCountryChoices[] = $countryChoices[$countryValueIndex];
             }
         }
 
-        return $countryChoices;
+        return $limitedCountryChoices;
     }
 }

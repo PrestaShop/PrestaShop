@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
+use PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -46,16 +47,16 @@ abstract class AbstractPaymentModuleRestrictionsType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array<string, ModuleInterface> $paymentModules
+     * @param PaymentModuleListProvider $paymentModuleListProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $paymentModules
+        PaymentModuleListProvider $paymentModuleListProvider
     ) {
         parent::__construct($translator, $locales);
 
-        $this->paymentModules = $this->sortPaymentModules($paymentModules);
+        $this->paymentModules = $this->sortPaymentModules($paymentModuleListProvider->getPaymentModuleList());
     }
 
     /**

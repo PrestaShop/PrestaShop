@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
-use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -39,29 +40,29 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PaymentModuleGroupRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
-     * @var array
+     * @var GroupByIdChoiceProvider
      */
-    private $groupChoices;
+    private $groupByIdChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array<string, ModuleInterface> $paymentModules
-     * @param array $groupChoices
+     * @param PaymentModuleListProvider $paymentModuleListProvider
+     * @param GroupByIdChoiceProvider $groupByIdChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $paymentModules,
-        array $groupChoices
+        PaymentModuleListProvider $paymentModuleListProvider,
+        GroupByIdChoiceProvider $groupByIdChoiceProvider
     ) {
-        parent::__construct($translator, $locales, $paymentModules);
-
-        $this->groupChoices = $groupChoices;
+        parent::__construct($translator, $locales, $paymentModuleListProvider);
+        $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $groupChoices = $this->groupByIdChoiceProvider->getChoices();
         $builder
             ->add('group_restrictions', MaterialMultipleChoiceTableCardType::class, [
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
@@ -72,8 +73,8 @@ class PaymentModuleGroupRestrictionsType extends AbstractPaymentModuleRestrictio
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
-                'choices' => $this->groupChoices,
-                'multiple_choices' => $this->getGroupChoicesForPaymentModules(),
+                'choices' => $groupChoices,
+                'multiple_choices' => $this->getGroupChoicesForPaymentModules($groupChoices),
                 'headers_fixed' => true,
             ]);
     }
@@ -83,19 +84,19 @@ class PaymentModuleGroupRestrictionsType extends AbstractPaymentModuleRestrictio
      *
      * @return array<int, array<string, string|bool|array>>
      */
-    private function getGroupChoicesForPaymentModules(): array
+    private function getGroupChoicesForPaymentModules(array $groupChoices): array
     {
-        $groupChoices = [];
+        $groupChoicesForPaymentModules = [];
 
         foreach ($this->paymentModules as $paymentModule) {
-            $groupChoices[] = [
+            $groupChoicesForPaymentModules[] = [
                 'name' => $paymentModule->get('name'),
                 'label' => $paymentModule->get('displayName'),
                 'multiple' => true,
-                'choices' => $this->groupChoices,
+                'choices' => $groupChoices,
             ];
         }
 
-        return $groupChoices;
+        return $groupChoicesForPaymentModules;
     }
 }

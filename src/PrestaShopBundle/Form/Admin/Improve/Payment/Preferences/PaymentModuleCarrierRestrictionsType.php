@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
-use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -39,29 +40,30 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PaymentModuleCarrierRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
-     * @var array
+     * @var CarrierByReferenceChoiceProvider
      */
-    private $carrierChoices;
+    private $carrierByReferenceChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array<string, ModuleInterface> $paymentModules
-     * @param array $carrierChoices
+     * @param PaymentModuleListProvider $paymentModuleListProvider
+     * @param CarrierByReferenceChoiceProvider $carrierByReferenceChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $paymentModules,
-        array $carrierChoices
+        PaymentModuleListProvider $paymentModuleListProvider,
+        CarrierByReferenceChoiceProvider $carrierByReferenceChoiceProvider
     ) {
-        parent::__construct($translator, $locales, $paymentModules);
+        parent::__construct($translator, $locales, $paymentModuleListProvider);
 
-        $this->carrierChoices = $carrierChoices;
+        $this->carrierByReferenceChoiceProvider = $carrierByReferenceChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $carrierChoices = $this->carrierByReferenceChoiceProvider->getChoices();
         $builder
             ->add('carrier_restrictions', MaterialMultipleChoiceTableCardType::class, [
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
@@ -72,8 +74,8 @@ class PaymentModuleCarrierRestrictionsType extends AbstractPaymentModuleRestrict
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
-                'choices' => $this->carrierChoices,
-                'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
+                'choices' => $carrierChoices,
+                'multiple_choices' => $this->getCarrierChoicesForPaymentModules($carrierChoices),
                 'headers_fixed' => true,
             ]);
     }
@@ -83,19 +85,19 @@ class PaymentModuleCarrierRestrictionsType extends AbstractPaymentModuleRestrict
      *
      * @return array
      */
-    private function getCarrierChoicesForPaymentModules(): array
+    private function getCarrierChoicesForPaymentModules($carrierChoices): array
     {
-        $carrierChoices = [];
+        $paymentModuleCarrierChoices = [];
 
         foreach ($this->paymentModules as $paymentModule) {
-            $carrierChoices[] = [
+            $paymentModuleCarrierChoices[] = [
                 'name' => $paymentModule->get('name'),
                 'label' => $paymentModule->get('displayName'),
                 'multiple' => true,
-                'choices' => $this->carrierChoices,
+                'choices' => $carrierChoices,
             ];
         }
 
-        return $carrierChoices;
+        return $paymentModuleCarrierChoices;
     }
 }
