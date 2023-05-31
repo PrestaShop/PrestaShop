@@ -100,7 +100,7 @@ class Preferences extends BOBasePage {
       `${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`,
     );
     await this.setCheckedWithIcon(page, this.countryRestrictionsCheckbox(paymentModule, countryID), valueWanted);
-    await this.clickAndWaitForNavigation(page, this.countryRestrictionsSaveButton);
+    await this.clickAndWaitForNavigation(page, this.currencyRestrictionsSaveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
