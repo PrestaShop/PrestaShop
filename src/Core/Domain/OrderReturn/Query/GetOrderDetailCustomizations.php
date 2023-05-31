@@ -39,15 +39,22 @@ class GetOrderDetailCustomizations
     private $orderDetailId;
 
     /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * GetOrderDetailCustomizations constructor.
      *
      * @param int $orderDetailId
+     * @param int $languageId
      *
      * @throws OrderException
      */
-    public function __construct(int $orderDetailId)
+    public function __construct(int $orderDetailId, int $languageId)
     {
         $this->orderDetailId = new OrderDetailId($orderDetailId);
+        $this->languageId = $languageId;
     }
 
     /**
@@ -56,5 +63,13 @@ class GetOrderDetailCustomizations
     public function getOrderDetailId(): OrderDetailId
     {
         return $this->orderDetailId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLanguageId(): int
+    {
+        return $this->languageId;
     }
 }

@@ -37,11 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomi
 class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomizationsHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @var OrderRepository
      */
     private $orderRepository;
@@ -49,14 +44,11 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
     /**
      * GetOrderDetailCustomizationsHandler constructor.
      *
-     * @param int $contextLangId
      * @param OrderRepository $orderRepository
      */
     public function __construct(
-        int $contextLangId,
         OrderRepository $orderRepository
     ) {
-        $this->contextLangId = $contextLangId;
         $this->orderRepository = $orderRepository;
     }
 
@@ -67,6 +59,6 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
      */
     public function handle(GetOrderDetailCustomizations $query): ?OrderDetailCustomizations
     {
-        return $this->orderRepository->getOrderDetailCustomizations($query->getOrderDetailId(), new LanguageId($this->contextLangId));
+        return $this->orderRepository->getOrderDetailCustomizations($query->getOrderDetailId(), new LanguageId($query->getLanguageId()));
     }
 }

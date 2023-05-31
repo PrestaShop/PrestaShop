@@ -420,7 +420,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsGridDataFactory'
     autowire: true
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsGridDataFactory'
+      $orderReturnProductsGridDataFactory: '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsGridDataFactory'
+      $contextLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
   prestashop.core.grid.data.factory.tax_rules_group:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'

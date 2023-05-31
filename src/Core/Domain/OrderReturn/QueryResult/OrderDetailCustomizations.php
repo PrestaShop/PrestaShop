@@ -50,9 +50,7 @@ class OrderDetailCustomizations
      */
     private function setOrderDetailCustomizations(array $orderDetailCustomizations): void
     {
-        foreach ($orderDetailCustomizations as $orderDetailCustomization) {
-            $this->orderDetailCustomizations[] = $orderDetailCustomization;
-        }
+        $this->orderDetailCustomizations = $orderDetailCustomizations;
     }
 
     /**

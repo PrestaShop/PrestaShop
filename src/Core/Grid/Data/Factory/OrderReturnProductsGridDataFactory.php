@@ -50,17 +50,25 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
     private $getOrderDetailCustomizationHandler;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * OrderReturnProductsGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $orderReturnProductsGridDataFactory
      * @param GetOrderDetailCustomizationsHandlerInterface $getOrderDetailCustomizationHandler
+     * @param int $contextLangId
      */
     public function __construct(
         GridDataFactoryInterface $orderReturnProductsGridDataFactory,
-        GetOrderDetailCustomizationsHandlerInterface $getOrderDetailCustomizationHandler
+        GetOrderDetailCustomizationsHandlerInterface $getOrderDetailCustomizationHandler,
+        int $contextLangId
     ) {
         $this->orderReturnProductsGridDataFactory = $orderReturnProductsGridDataFactory;
         $this->getOrderDetailCustomizationHandler = $getOrderDetailCustomizationHandler;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -93,7 +101,8 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
         $modifiedOrderReturnProducts = [];
         foreach ($orderReturnProducts as $orderReturnProduct) {
             $getOrderDetailCustomization = new GetOrderDetailCustomizations(
-                (int) $orderReturnProduct['id_order_detail']
+                (int) $orderReturnProduct['id_order_detail'],
+                $this->contextLangId
             );
             $orderReturnProduct['customizations'] = $this->getOrderDetailCustomizationHandler->handle($getOrderDetailCustomization);
             $modifiedOrderReturnProducts[] = $orderReturnProduct;

@@ -17,7 +17,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler:
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@prestashop.adapter.order.repository.order_repository'
     tags:
       - name: tactician.handler
