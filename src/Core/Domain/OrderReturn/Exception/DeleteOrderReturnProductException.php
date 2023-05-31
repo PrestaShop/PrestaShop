@@ -33,9 +33,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
  */
 class DeleteOrderReturnProductException extends OrderReturnProductException
 {
-    const ORDER_RETURN_PRODUCT_NOT_FOUND = 10;
+    public const ORDER_RETURN_PRODUCT_NOT_FOUND = 10;
 
-    const LAST_ORDER_RETURN_PRODUCT = 20;
+    public const LAST_ORDER_RETURN_PRODUCT = 20;
 
-    const UNEXPECTED_ERROR = 30;
+    public const UNEXPECTED_ERROR = 30;
 }

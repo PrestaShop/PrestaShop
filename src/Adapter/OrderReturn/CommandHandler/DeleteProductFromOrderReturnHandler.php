@@ -42,14 +42,14 @@ class DeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler imp
      * @throws DeleteOrderReturnProductException
      */
     public function handle(DeleteProductFromOrderReturnCommand $command): void
-{
-    try {
-        $this->deleteOrderReturnProduct(
+    {
+        try {
+            $this->deleteOrderReturnProduct(
             $command->getOrderReturnId(),
             $command->getOrderReturnDetailId()
         );
-    } catch (OrderReturnException $e) {
-        throw new DeleteOrderReturnProductException($e->getMessage(), $e->getCode());
+        } catch (OrderReturnException $e) {
+            throw new DeleteOrderReturnProductException($e->getMessage(), $e->getCode());
+        }
     }
-}
 }

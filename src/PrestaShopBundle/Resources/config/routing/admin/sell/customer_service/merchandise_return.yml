@@ -5,7 +5,8 @@ admin_merchandise_returns_index:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::indexAction
     _legacy_controller: AdminReturn
-#  _legacy_link: AdminReturn
+    _legacy_link: AdminReturn
+    _legacy_feature_flag: order_return
 
 admin_merchandise_returns_save_options:
   path: /options
@@ -13,7 +14,7 @@ admin_merchandise_returns_save_options:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::indexAction
     _legacy_controller: AdminReturn
-#  _legacy_link: AdminReturn:submitOptionsorder_return
+    _legacy_link: AdminReturn:submitOptionsorder_return
 
 admin_merchandise_returns_filter:
   path: /
@@ -23,7 +24,8 @@ admin_merchandise_returns_filter:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.merchandise_return
     redirectRoute: admin_merchandise_returns_index
     _legacy_controller: AdminReturn
-#  _legacy_link: AdminReturn:submitFilterorder_return
+    _legacy_link: AdminReturn:submitFilterorder_return
+    _legacy_feature_flag: order_return
 
 admin_order_returns_edit:
   path: /{orderReturnId}/edit
@@ -31,7 +33,8 @@ admin_order_returns_edit:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::editAction
     _legacy_controller: AdminReturn
-    #    _legacy_link: AdminReturn:updateorder_return
+    _legacy_link: AdminReturn:updateorder_return
+    _legacy_feature_flag: order_return
     _legacy_parameters:
       id_order_return: orderReturnId
   requirements:
@@ -43,7 +46,8 @@ admin_order_returns_update:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturn::editAction
     _legacy_controller: AdminReturn
-    #    _legacy_link: AdminReturn:updateorder_return
+    _legacy_link: AdminReturn:updateorder_return
+    _legacy_feature_flag: order_return
     _legacy_parameters:
       id_order_return: orderReturnId
   requirements:
@@ -59,7 +63,8 @@ admin_order_returns_products_filter:
     redirectQueryParamsToKeep:
       - 'orderReturnId'
     _legacy_controller: AdminReturn
-  #    _legacy_link: AdminReturn:submitFilterorder_return
+    _legacy_link: AdminReturn:submitFilterorder_return
+    _legacy_feature_flag: order_return
   requirements:
     orderReturnId: \d+
 
@@ -69,10 +74,11 @@ admin_order_returns_delete_product:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProduct
     _legacy_controller: AdminReturn
-  #    _legacy_link: AdminReturn:deleteorder_return_detail
-  #    _legacy_parameters:
-  #      id_order_return: orderReturnId
-  #      id_order_detail: orderReturnDetailId
+    _legacy_link: AdminReturn:deleteorder_return_detail
+    _legacy_feature_flag: order_return
+    _legacy_parameters:
+      id_order_return: orderReturnId
+      id_order_detail: orderReturnDetailId
   requirements:
     orderReturnId: \d+
     orderReturnDetailId: \d+

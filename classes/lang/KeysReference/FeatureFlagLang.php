@@ -94,3 +94,7 @@ trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.
 
 trans('Features', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated features page.', 'Admin.Advparameters.Help');
+
+// Merchandise Return feature flag
+trans('Merchandise Return', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated merchandise return page.', 'Admin.Advparameters.Help');
