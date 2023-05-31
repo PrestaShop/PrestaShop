@@ -216,7 +216,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     {
         $orderReturnDetailIds = $request->request->all('order_return_products_order_return_bulk');
         foreach ($orderReturnDetailIds as &$orderReturnDetailId) {
-            $orderReturnDetailId = (int)$orderReturnDetailId;
+            $orderReturnDetailId = (int) $orderReturnDetailId;
         }
 
         return $orderReturnDetailIds;
