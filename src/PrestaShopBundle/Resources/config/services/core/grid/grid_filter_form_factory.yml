@@ -35,9 +35,3 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@router'
       - 'admin_credit_slips_search'
-
-  PrestaShop\PrestaShop\Core\Grid\Filter\OrderReturnProductsFilterFormFactory:
-    autowire: true
-    public: false
-    arguments:
-      - '@prestashop.core.grid.filter.form_factory'

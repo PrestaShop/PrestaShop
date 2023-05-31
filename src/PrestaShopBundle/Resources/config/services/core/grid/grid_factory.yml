@@ -374,7 +374,7 @@ services:
     arguments:
       $definitionFactory: '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDefinitionFactory'
       $dataFactory: '@PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsDecorator'
-      $filterFormFactory: '@PrestaShop\PrestaShop\Core\Grid\Filter\OrderReturnProductsFilterFormFactory'
+      $filterFormFactory: '@prestashop.core.grid.filter.form_factory'
 
   prestashop.core.grid.factory.order_return_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
