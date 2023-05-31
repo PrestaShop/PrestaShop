@@ -214,9 +214,9 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      */
     private function getBulkOrderReturnDetailsFromRequest(Request $request): array
     {
-        $orderReturnDetailIds = $request->request->get('order_return_products_order_return_bulk');
-        if (!is_array($orderReturnDetailIds)) {
-            return [];
+        $orderReturnDetailIds = $request->request->all('order_return_products_order_return_bulk');
+        foreach ($orderReturnDetailIds as &$orderReturnDetailId) {
+            $orderReturnDetailId = (int)$orderReturnDetailId;
         }
 
         return $orderReturnDetailIds;
