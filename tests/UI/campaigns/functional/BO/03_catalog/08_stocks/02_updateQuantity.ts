@@ -126,7 +126,7 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
         const numberOfMovements = await movementsPage.getNumberOfElementInGrid(page);
         await expect(numberOfMovements).to.be.at.least(1);
 
-        const productName = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'name');
+        const productName = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'product_name');
         await expect(productName).to.equal(productStock.name);
 
         // Check movement quantity
