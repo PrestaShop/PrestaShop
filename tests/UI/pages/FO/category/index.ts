@@ -346,7 +346,7 @@ class Category extends FOBasePage {
   }
 
   /**
-   * Return
+   * Return if search filters are visible
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
