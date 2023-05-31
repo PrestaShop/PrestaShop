@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ade1741e9994c826670e5552f5950492",
+    "content-hash": "7bdd811a7bbe553d47f01992e31b9d1f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -16310,16 +16310,16 @@
         },
         {
             "name": "johnkary/phpunit-speedtrap",
-            "version": "v3.3.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnkary/phpunit-speedtrap.git",
-                "reference": "9ba81d42676da31366c85d3ff8c10a8352d02030"
+                "reference": "d6600d2218396b78856c335f83479503957a5fa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/9ba81d42676da31366c85d3ff8c10a8352d02030",
-                "reference": "9ba81d42676da31366c85d3ff8c10a8352d02030",
+                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/d6600d2218396b78856c335f83479503957a5fa9",
+                "reference": "d6600d2218396b78856c335f83479503957a5fa9",
                 "shasum": ""
             },
             "require": {
@@ -16356,9 +16356,9 @@
             ],
             "support": {
                 "issues": "https://github.com/johnkary/phpunit-speedtrap/issues",
-                "source": "https://github.com/johnkary/phpunit-speedtrap/tree/v3.3.0"
+                "source": "https://github.com/johnkary/phpunit-speedtrap/tree/v4.0.1"
             },
-            "time": "2020-12-18T16:20:16+00:00"
+            "time": "2022-10-17T00:56:56+00:00"
         },
         {
             "name": "justinrainbow/json-schema",

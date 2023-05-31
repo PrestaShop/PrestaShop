@@ -195,7 +195,7 @@
         "behat/behat": "^3.5",
         "ergebnis/composer-normalize": "^2.8",
         "friendsofphp/php-cs-fixer": "^v3.2.0",
-        "johnkary/phpunit-speedtrap": "^3",
+        "johnkary/phpunit-speedtrap": "^v4.0.1",
         "mikey179/vfsstream": "^1.6",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9.3",
