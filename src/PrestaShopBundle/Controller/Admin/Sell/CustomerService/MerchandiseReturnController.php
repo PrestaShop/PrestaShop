@@ -109,8 +109,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      */
     public function editAction(int $orderReturnId, OrderReturnProductsFilters $filters, Request $request): Response
     {
-        dump($filters);
-        die;
         $gridFactory = $this->get('PrestaShop\PrestaShop\Core\Grid\Factory\OrderReturnProductsGridFactory');
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_return_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
