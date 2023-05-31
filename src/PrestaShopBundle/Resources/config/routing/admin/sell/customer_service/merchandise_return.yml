@@ -30,22 +30,9 @@ admin_merchandise_returns_filter:
 
 admin_order_returns_edit:
   path: /{orderReturnId}/edit
-  methods: [ GET, POST ]
+  methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::editAction
-    _legacy_controller: AdminReturn
-    _legacy_link: AdminReturn:updateorder_return
-    _legacy_feature_flag: order_return
-    _legacy_parameters:
-      id_order_return: orderReturnId
-  requirements:
-    orderReturnId: \d+
-
-admin_order_returns_update:
-  path: /{orderReturnId}/update
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturn::editAction
     _legacy_controller: AdminReturn
     _legacy_link: AdminReturn:updateorder_return
     _legacy_feature_flag: order_return
@@ -66,6 +53,19 @@ admin_order_returns_products_filter:
     _legacy_controller: AdminReturn
     _legacy_link: AdminReturn:submitFilterorder_return
     _legacy_feature_flag: order_return
+  requirements:
+    orderReturnId: \d+
+
+admin_order_returns_update:
+  path: /{orderReturnId}/update
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturn::editAction
+    _legacy_controller: AdminReturn
+    _legacy_link: AdminReturn:updateorder_return
+    _legacy_feature_flag: order_return
+    _legacy_parameters:
+      id_order_return: orderReturnId
   requirements:
     orderReturnId: \d+
 
