@@ -89,7 +89,6 @@ class SearchController extends FrameworkBundleAdminController
         $aliasForm = $aliasFormBuilder->getForm();
         $aliasForm->handleRequest($request);
 
-
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/Alias/create.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'aliasForm' => $aliasForm->createView(),
