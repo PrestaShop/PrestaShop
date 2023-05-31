@@ -42,7 +42,6 @@ services:
       - '@prestashop.adapter.data_provider.language'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider:
-    public: false
     arguments:
       - '@prestashop.adapter.data_provider.group'
 
@@ -51,7 +50,6 @@ services:
       - '@prestashop.adapter.data_provider.carrier'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
     arguments:
       $orderStateDataProvider: '@prestashop.adapter.data_provider.order_state'
 
