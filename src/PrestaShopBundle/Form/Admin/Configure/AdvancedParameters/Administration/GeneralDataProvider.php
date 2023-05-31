@@ -110,7 +110,7 @@ final class GeneralDataProvider implements FormDataProviderInterface
             }
 
             if ($frontOfficeLifeTimeCookie > CookieOptions::MAX_COOKIE_VALUE) {
-                $errors->add(new AdministrationConfigurationError(FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
+                $errors->add(new AdministrationConfigurationError(AdministrationConfigurationError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
             }
         }
 
