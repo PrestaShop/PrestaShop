@@ -57,10 +57,11 @@ class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkD
 
     /**
      * @param AliasId $id
+     * @param mixed $command
      *
      * @return void
      */
-    protected function handleSingleAction(mixed $id): void
+    protected function handleSingleAction(mixed $id, mixed $command): void
     {
         $this->aliasRepository->delete($id);
     }
