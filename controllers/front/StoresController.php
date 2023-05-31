@@ -23,10 +23,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Adapter\Presenter\Store\StorePresenter;
+
 class StoresControllerCore extends FrontController
 {
     /** @var string */
     public $php_self = 'stores';
+
+    /** @var StorePresenter */
+    protected $storePresenter;
 
     /**
      * Get formatted string address.
@@ -140,6 +145,22 @@ class StoresControllerCore extends FrontController
     }
 
     /**
+     * Initialize stores controller.
+     *
+     * @see FrontController::init()
+     */
+    public function init()
+    {
+        // Initialize presenter, we will use it for all cases
+        $this->storePresenter = new StorePresenter(
+            $this->context->link,
+            $this->context->getTranslator()
+        );
+
+        parent::init();
+    }
+
+    /**
      * Assign template vars related to page content.
      *
      * @see FrontController::initContent()
@@ -166,54 +187,11 @@ class StoresControllerCore extends FrontController
     {
         $stores = Store::getStores($this->context->language->id);
 
-        $imageRetriever = new \PrestaShop\PrestaShop\Adapter\Image\ImageRetriever($this->context->link);
-        $attr = ['address1', 'address2', 'postcode', 'city', 'id_state', 'id_country'];
-
         foreach ($stores as &$store) {
-            unset($store['active']);
-            // Prepare $store.address
-            $address = new Address();
-            $store['address'] = [];
-
-            foreach ($attr as $a) {
-                $address->{$a} = $store[$a];
-                $store['address'][$a] = $store[$a];
-                unset($store[$a]);
-            }
-            $store['address']['formatted'] = AddressFormat::generateAddress($address, [], '<br />');
-
-            // Prepare $store.business_hours
-            // Required for trad
-            $temp = json_decode($store['hours'], true);
-            unset($store['hours']);
-            $store['business_hours'] = [
-                [
-                    'day' => $this->trans('Monday', [], 'Shop.Theme.Global'),
-                    'hours' => $temp[0],
-                ], [
-                    'day' => $this->trans('Tuesday', [], 'Shop.Theme.Global'),
-                    'hours' => $temp[1],
-                ], [
-                    'day' => $this->trans('Wednesday', [], 'Shop.Theme.Global'),
-                    'hours' => $temp[2],
-                ], [
-                    'day' => $this->trans('Thursday', [], 'Shop.Theme.Global'),
-                    'hours' => $temp[3],
-                ], [
-                    'day' => $this->trans('Friday', [], 'Shop.Theme.Global'),
-                    'hours' => $temp[4],
-                ], [
-                    'day' => $this->trans('Saturday', [], 'Shop.Theme.Global'),
-                    'hours' => $temp[5],
-                ], [
-                    'day' => $this->trans('Sunday', [], 'Shop.Theme.Global'),
-                    'hours' => $temp[6],
-                ],
-            ];
-            $store['image'] = $imageRetriever->getImage(new Store($store['id_store']), $store['id_store']);
-            if (is_array($store['image'])) {
-                $store['image']['legend'] = $store['image']['legend'][$this->context->language->id];
-            }
+            $store = $this->storePresenter->present(
+                $store,
+                $this->context->language
+            );
         }
 
         return $stores;
