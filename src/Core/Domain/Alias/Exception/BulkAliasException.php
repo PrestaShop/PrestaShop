@@ -37,8 +37,12 @@ use Throwable;
  */
 class BulkAliasException extends AliasException implements BulkCommandExceptionInterface
 {
-    public const FAILED_BULK_DELETE = 1;
-
+    /**
+     * @param Throwable[] $exceptions
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
     public function __construct(
         private readonly array $exceptions,
         string $message = 'Errors occurred during Alias bulk action',
