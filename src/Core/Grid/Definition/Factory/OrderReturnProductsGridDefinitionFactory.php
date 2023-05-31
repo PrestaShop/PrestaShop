@@ -55,7 +55,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
      * OrderReturnProductsGridDefinitionFactory constructor.
      *
      * @param HookDispatcherInterface $hookDispatcher
-     *
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher
@@ -180,7 +179,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                     ])
                     ->setAssociatedColumn('product_quantity')
             );
-
     }
 
     /**
@@ -188,6 +186,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
      */
     protected function getBulkActions()
     {
-        return (new BulkActionCollection());
+        return new BulkActionCollection();
     }
 }

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Factory;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
@@ -39,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\DependencyInjection\Container;
@@ -68,7 +68,6 @@ class OrderReturnProductsGridFactory extends GridFactory
         GridFilterFormFactoryInterface $filterFormFactory,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
-
     ) {
         parent::__construct($definitionFactory, $dataFactory, $filterFormFactory, $hookDispatcher);
         $this->translator = $translator;
@@ -110,7 +109,6 @@ class OrderReturnProductsGridFactory extends GridFactory
      * @param OrderReturnProductsFilters $searchCriteria
      *
      * @return GridDefinition
-     *
      */
     private function modifyDefinition(GridDefinition $definition, OrderReturnProductsFilters $searchCriteria): GridDefinition
     {
@@ -124,7 +122,7 @@ class OrderReturnProductsGridFactory extends GridFactory
                     ],
                     'redirect_route' => 'admin_order_returns_edit',
                     'redirect_route_params' => [
-                        'orderReturnId' =>  $searchCriteria->getOrderReturnId(),
+                        'orderReturnId' => $searchCriteria->getOrderReturnId(),
                     ],
                 ])
                 ->setAssociatedColumn('actions')

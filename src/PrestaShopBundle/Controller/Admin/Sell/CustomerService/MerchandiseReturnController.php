@@ -105,6 +105,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return Response
+     *
      * @throws InvalidArgumentException
      */
     public function editAction(int $orderReturnId, OrderReturnProductsFilters $filters, Request $request): Response

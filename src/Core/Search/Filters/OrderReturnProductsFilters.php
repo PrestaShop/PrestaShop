@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Provides default filters for order returns grid.
