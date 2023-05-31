@@ -59,6 +59,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
     /** @var bool */
     protected $lockedToAllShopContext = false;
 
+    protected $usePuikTheme = false;
+
     /**
      * @param string $controllerName
      * @param string $title
@@ -83,7 +85,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $helpLink = '',
         $jsRouterMetadata = [],
         $metaTitle = '',
-        $useRegularH1Structure = true
+        $useRegularH1Structure = true,
+        $usePuikTheme = false
     ) {
         // Compatibility with legacy behavior.
         // Some controllers can only be used in "All stores" context.
@@ -107,8 +110,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
             $this->lockedToAllShopContext = true;
         }
 
-        parent::__construct($controllerName, 'new-theme');
+        parent::__construct($controllerName,$usePuikTheme ? 'puik-theme' : 'new-theme');
 
+        $this->usePuikTheme = $usePuikTheme;
         $this->title = $title;
         $this->meta_title = ($metaTitle !== '') ? $metaTitle : $title;
         $this->display = $displayType;

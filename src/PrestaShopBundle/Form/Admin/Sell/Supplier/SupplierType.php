@@ -125,6 +125,7 @@ class SupplierType extends TranslatorAwareType
             ->add('name', TextType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'required' => true,
+                'label_attr' => ['class' => 'test'],
                 'help' => $invalidCharsText,
                 'constraints' => [
                     new NotBlank([
