@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import basicHelper from '@utils/basicHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -12,7 +13,6 @@ import movementsPage from '@pages/BO/catalog/stocks/movements';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import basicHelper from "@utils/basicHelper";
 
 const baseContext: string = 'functional_BO_catalog_stocks_movements_sortAndPagination';
 
@@ -49,13 +49,13 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       await expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
-    /*it('should bulk edit quantity of all products in the first page', async function () {
+    it('should bulk edit quantity of all products in the first page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantity', baseContext);
 
       // Update quantity and check successful message
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
       await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
-    });*/
+    });
   });
 
   describe('Sort movements table', async () => {
@@ -71,8 +71,22 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     const sortTests = [
       {args: {testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByProductIDAsc', sortBy: 'product_id', sortDirection: 'asc', isNumber: true}},
-      {args: {testIdentifier: 'sortByProductIDDesc', sortBy: 'product_id', sortDirection: 'desc', isNumber: true}},
+      {
+        args: {
+          testIdentifier: 'sortByProductIDAsc',
+          sortBy: 'product_id',
+          sortDirection: 'asc',
+          isNumber: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByProductIDDesc',
+          sortBy: 'product_id',
+          sortDirection: 'desc',
+          isNumber: true,
+        },
+      },
       {args: {testIdentifier: 'sortByProductNameAsc', sortBy: 'product_name', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByProductNameDesc', sortBy: 'product_name', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc'}},
