@@ -8,6 +8,8 @@ import type {Page} from 'playwright';
  * @extends ModuleConfiguration
  */
 class KeycloakConnectorDemo extends ModuleConfiguration {
+  public readonly pageTitle: string;
+
   private readonly formKeycloakEndpoint: string;
 
   private readonly formKeycloakButtonSubmit: string;
@@ -19,7 +21,9 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
   constructor() {
     super();
 
-    // Newsletter registrations table selectors
+    this.pageTitle = `Keycloak connector • ${global.INSTALL.SHOP_NAME}`;
+
+    // Form selectors
     this.formKeycloakEndpoint = '#form_KEYCLOAK_ENDPOINT';
     this.formKeycloakButtonSubmit = 'form.form-horizontal .card-footer button';
   }
@@ -27,7 +31,7 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
   /* Methods */
 
   /**
-   * Get number of newsletter registrations
+   * Set the Keycloak Realm Endpoint
    * @param page {Page} Browser tab
    * @param endpoint {string}
    * @returns {Promise<number>}
@@ -35,7 +39,7 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
   async setKeycloakEndpoint(page: Page, endpoint: string): Promise<string> {
     await page.fill(this.formKeycloakEndpoint, endpoint);
 
-    await page.click(this.formKeycloakButtonSubmit);
+    await this.clickAndWaitForNavigation(page, this.formKeycloakButtonSubmit);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

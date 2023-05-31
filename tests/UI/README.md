@@ -48,12 +48,13 @@ npm install
 
 ### Keycloak parameters
 
-| Parameter           | Description                                                                              |
-|---------------------|------------------------------------------------------------------------------------------|
-| KEYCLOAK_SERVER     | The server for Keycloak (default to **`http://127.0.0.1:8003`**)                         |
-| KEYCLOAK_ADMIN_USER | The admin user for connecting to Keycloak (default to **`admin`**)                       |
-| KEYCLOAK_ADMIN_PASS | The admin password for connecting to Keycloak (default to **`admin`**)                   |
-| KEYCLOAK_CLIENT_ID  | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop_client_id`**) |
+| Parameter             | Description                                                                              |
+|-----------------------|------------------------------------------------------------------------------------------|
+| KEYCLOAK_URL_EXTERNAL | The external URL for Keycloak (default to **`http://127.0.0.1:8003`**) (outside Docker)  |
+| KEYCLOAK_URL_INTERNAL | The internal URL for Keycloak (default to **`http://keycloak:8080`**) (inside Docker)    |
+| KEYCLOAK_ADMIN_USER   | The admin user for connecting to Keycloak (default to **`admin`**)                       |
+| KEYCLOAK_ADMIN_PASS   | The admin password for connecting to Keycloak (default to **`admin`**)                   |
+| KEYCLOAK_CLIENT_ID    | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop_client_id`**) |
 
 ### Playwright parameters
 

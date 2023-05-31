@@ -28,7 +28,7 @@ class ModuleConfiguration extends BOBasePage {
    * Get module name from page title
    * @return {Promise<string>}
    */
-  getPageSubtitle(page: Page): Promise<string> {
+  async getPageSubtitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageHeadSubtitle);
   }
 }
