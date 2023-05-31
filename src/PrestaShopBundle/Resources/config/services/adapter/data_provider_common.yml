@@ -2,10 +2,6 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider:
-    public: false
-    autowire: true
-
   prestashop.adapter.data_provider.country:
     alias: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
 
