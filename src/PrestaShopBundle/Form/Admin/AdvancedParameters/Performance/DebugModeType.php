@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -50,6 +52,24 @@ class DebugModeType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Debug mode', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Enable or disable debug mode. Debug mode will enable extended error reporting, display the Symfony debug bar, and other features.', 'Admin.Advparameters.Help'),
+            ])
+            ->add('debug_cookie_name', TextType::class, [
+                'required' => false,
+                'attr' => ['placeholder' => 'COOKIE_NAME'],
+                'label' => $this->trans('Debug cookie name', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('(Optional) Insert a cookie name to enable the debug mode only when this cookie is set.', 'Admin.Advparameters.Help'),
+                'row_attr' => [
+                    'class' => 'debug-mode-option',
+                ],
+            ])
+            ->add('debug_cookie_value', TextType::class, [
+                'required' => false,
+                'attr' => ['placeholder' => 'COOKIE_VALUE'],
+                'label' => $this->trans('Debug cookie value', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('(Optional) Insert a value to enable the debug mode only when the cookie configured above is set to this value.', 'Admin.Advparameters.Help'),
+                'row_attr' => [
+                    'class' => 'debug-mode-option',
+                ],
             ])
             ->add('debug_profiling', SwitchType::class, [
                 'required' => false,
