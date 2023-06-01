@@ -11,9 +11,11 @@ import stocksPage from '@pages/BO/catalog/stocks';
 import dashboardPage from '@pages/BO/dashboard';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
+// Import data
+import Products from '@data/demo/products';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import Products from "@data/demo/products";
 
 const baseContext: string = 'functional_BO_catalog_stocks_movements_sortAndPagination';
 
@@ -145,7 +147,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     });
 
     it('should bulk edit the quantity of all products in the first page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToSecondPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantityFirstPage', baseContext);
 
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
       await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
