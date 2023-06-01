@@ -161,7 +161,7 @@
         "symfony/password-hasher": "5.4.*",
         "symfony/polyfill-php73": "^1.10",
         "symfony/process": "5.4.*",
-        "symfony/property-access": "5.4.*",
+        "symfony/property-access": "6.3.*",
         "symfony/property-info": "5.4.*",
         "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/psr-http-message-bridge": "^2.1",
