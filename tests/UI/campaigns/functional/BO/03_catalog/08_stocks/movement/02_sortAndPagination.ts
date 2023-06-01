@@ -35,7 +35,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  describe('PRE-TEST: Bulk edit the quantity of products in the first page of stocks table', async () => {
+  describe('PRE-TEST: Bulk edit the quantity of products in stocks table', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
@@ -50,10 +50,10 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       await expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
-    it(`should bulk edit the quantity of the product ${Products.demo_8.name}'`, async function () {
+    it(`should bulk edit the quantity of the product '${Products.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantity', baseContext);
 
-      await stocksPage.simpleFilter(page, Products.demo_8.name);
+      await stocksPage.simpleFilter(page, Products.demo_1.name);
 
       // Update quantity and check successful message
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
@@ -130,7 +130,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     });
   });
 
-  describe('Bulk edit the quantity of products in the the 2 pages of stocks table', async () => {
+  describe('Bulk edit the quantity of products in the 2 pages of stocks table', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage2', baseContext);
 
