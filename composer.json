@@ -55,7 +55,7 @@
         "mrclay/minify": "^3.0.11",
         "nikic/php-parser": "^4.0",
         "nyholm/psr7": "^1.5",
-        "pelago/emogrifier": "^v6.0.0",
+        "pelago/emogrifier": "^v7.0.0",
         "phpoffice/phpspreadsheet": "^1.19",
         "prestashop/autoload": "^1.0",
         "prestashop/blockreassurance": "^5.1",
