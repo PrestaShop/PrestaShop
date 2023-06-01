@@ -296,5 +296,6 @@
         "restore-test-db": "Restore the whole DB in a single dump",
         "restore-test-tables": "Restore all tables one by one, only when they have been modified",
         "test-all": "Launch all PHPUnit test suites"
-    }
+    },
+    "author": "PrestaShop"
 }

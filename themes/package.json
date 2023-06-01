@@ -1,35 +1,35 @@
 {
-  "name": "prestashop-core-theme-js",
-  "version": "1.7.5",
-  "description": "Tools to manage minimal assets for themes",
-  "main": "index.js",
-  "scripts": {
-    "build": "webpack --progress --mode production",
-    "lint": "eslint -c .eslintrc.js --ext .js,.vue ./_core",
-    "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue ./_core --fix",
-    "watch": "webpack --progress -w --mode development"
-  },
-  "author": "PrestaShop",
-  "license": "OSL-3.0",
-  "dependencies": {
-    "@prestashop-core/jquery.live-polyfill": "^1.1.2",
-    "jquery": "^3.5.1",
-    "jquery-migrate": "^3.1.0",
-    "jquery.browser": "^0.1.0",
-    "punycode": "^2.1.1",
-    "zxcvbn": "^4.4.2"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.3",
-    "esbuild-loader": "^2.15.1",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-import-resolver-webpack": "^0.12.1",
-    "eslint-plugin-html": "^6.0.0",
-    "eslint-plugin-import": "^2.20.0",
-    "mini-css-extract-plugin": "^2.6.1",
-    "path": "^0.12.7",
-    "webpack": "^5.37.1",
-    "webpack-cli": "^4.7.0"
-  }
+    "name": "prestashop-core-theme-js",
+    "version": "1.7.5",
+    "description": "Tools to manage minimal assets for themes",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack --progress --mode production",
+        "lint": "eslint -c .eslintrc.js --ext .js,.vue ./_core",
+        "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue ./_core --fix",
+        "watch": "webpack --progress -w --mode development"
+    },
+    "author": "PrestaShop",
+    "license": "OSL-3.0",
+    "dependencies": {
+        "@prestashop-core/jquery.live-polyfill": "^1.1.2",
+        "jquery": "^3.5.1",
+        "jquery-migrate": "^3.1.0",
+        "jquery.browser": "^0.1.0",
+        "punycode": "^2.1.1",
+        "zxcvbn": "^4.4.2"
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.0.3",
+        "esbuild-loader": "^2.15.1",
+        "eslint": "^6.8.0",
+        "eslint-config-airbnb-base": "^14.0.0",
+        "eslint-import-resolver-webpack": "^0.12.1",
+        "eslint-plugin-html": "^6.0.0",
+        "eslint-plugin-import": "^2.20.0",
+        "mini-css-extract-plugin": "^2.6.1",
+        "path": "^0.12.7",
+        "webpack": "^5.37.1",
+        "webpack-cli": "^4.7.0"
+    }
 }

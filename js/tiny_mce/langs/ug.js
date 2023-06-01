@@ -1,3 +1,27 @@
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
 tinymce.addI18n('ug',{
 "Cut": "\u0643\u06d0\u0633\u0649\u0634",
 "Your browser doesn't support direct access to the clipboard. Please use the Ctrl+X\/C\/V keyboard shortcuts instead.": "\u0633\u0649\u0632\u0646\u0649\u06ad \u062a\u0648\u0631 \u0643\u06c6\u0631\u06af\u06c8\u0686\u0649\u06ad\u0649\u0632 \u0642\u0649\u064a\u0649\u067e \u0686\u0627\u067e\u0644\u0627\u0634 \u062a\u0627\u062e\u062a\u0649\u0633\u0649 \u0632\u0649\u064a\u0627\u0631\u06d5\u062a \u0642\u0649\u0644\u0649\u0634\u0646\u0649 \u0642\u0648\u0644\u0644\u0649\u0645\u0627\u064a\u062f\u06c7.  Ctrl+X\/C\/V \u062a\u06d0\u0632\u0644\u06d5\u062a\u0645\u06d5 \u0643\u0648\u0646\u06c7\u067e\u0643\u0649\u0633\u0649 \u0626\u0627\u0631\u0642\u0649\u0644\u0649\u0642 \u0643\u06d0\u0633\u0649\u067e \u0686\u0627\u067e\u0644\u0627\u0634 \u0645\u06d5\u0634\u063a\u06c7\u0644\u0627\u062a\u0649 \u0642\u0649\u0644\u0649\u06ad.",
