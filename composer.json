@@ -47,7 +47,6 @@
         "jakeasmith/http_build_url": "^1",
         "lcobucci/jwt": "^5.0.0",
         "league/oauth2-server": "^8.3",
-        "league/tactician-bundle": "^1.4",
         "martinlindhe/php-mb-helpers": "^0.1.6",
         "matthiasmullie/minify": "~1.3.0",
         "mobiledetect/mobiledetectlib": "^3.74.0",
