@@ -13,6 +13,7 @@ import movementsPage from '@pages/BO/catalog/stocks/movements';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import Products from "@data/demo/products";
 
 const baseContext: string = 'functional_BO_catalog_stocks_movements_sortAndPagination';
 
@@ -49,8 +50,10 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       await expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
-    it('should bulk edit quantity of all products in the first page', async function () {
+    it(`should bulk edit the quantity of the product ${Products.demo_8.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantity', baseContext);
+
+      await stocksPage.simpleFilter(page, Products.demo_8.name);
 
       // Update quantity and check successful message
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
@@ -127,7 +130,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     });
   });
 
-  describe('Bulk edit the quantity of products in the second page of stocks table', async () => {
+  describe('Bulk edit the quantity of products in the the 2 pages of stocks table', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage2', baseContext);
 
@@ -139,6 +142,13 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
 
       const pageTitle = await stocksPage.getPageTitle(page);
       await expect(pageTitle).to.contains(stocksPage.pageTitle);
+    });
+
+    it('should bulk edit the quantity of all products in the first page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToSecondPage', baseContext);
+
+      const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
+      await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
     });
 
     it('should go to the second page and bulk edit the quantity of all products', async function () {
