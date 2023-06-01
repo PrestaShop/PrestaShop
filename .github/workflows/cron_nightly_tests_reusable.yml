@@ -50,9 +50,7 @@ jobs:
           - ${{ inputs.BRANCH }}
         CAMPAIGN:
           - 'cldr'
-          - 'sanity'
-          - 'sanity:productV2'
-          - 'regression'
+          - 'functional:API'
           - 'functional:BO:login'
           - 'functional:BO:dashboard'
           - 'functional:BO:orders'
@@ -71,7 +69,11 @@ jobs:
           - 'functional:FO'
           - 'functional:FO:classic'
           - 'functional:FO:hummingbird'
-          - 'functional:API'
+          - 'functional:WS'
+          - 'modules'
+          - 'regression'
+          - 'sanity'
+          - 'sanity:productV2'
         exclude:
           - BRANCH: 8.0.x
             CAMPAIGN: 'cldr'
@@ -85,6 +87,10 @@ jobs:
             CAMPAIGN: 'functional:FO:classic'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:FO:hummingbird'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:WS'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules'
           - BRANCH: 8.1.x
             CAMPAIGN: 'functional:FO'
           - BRANCH: develop
