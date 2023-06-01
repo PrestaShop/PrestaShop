@@ -5,27 +5,30 @@ services:
   prestashop.adapter.order_state.command_handler.add_order_state:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\AddOrderStateHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand'
+        method: handle
 
   prestashop.adapter.order_state.query_handler.get_order_state_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\QueryHandler\GetOrderStateForEditingHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing'
+        method: handle
 
   prestashop.adapter.order_state.command_handler.edit_order_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\EditOrderStateHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand'
+        method: handle
 
   prestashop.adapter.order_state.command_handler.delete_order_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\DeleteOrderStateHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\DeleteOrderStateCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\DeleteOrderStateCommand', method: handle }
 
   prestashop.adapter.order_state.command_handler.bulk_delete_order_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\BulkDeleteOrderStateHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\BulkDeleteOrderStateCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\BulkDeleteOrderStateCommand', method: handle }

@@ -5,14 +5,16 @@ services:
   prestashop.adapter.hook.command_handler.update_hook_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Hook\CommandHandler\UpdateHookStatusCommandHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand
+        method: handle
 
   prestashop.adapter.hook.command_handler.get_hook_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetHookStatusHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\HookManager: ~
 

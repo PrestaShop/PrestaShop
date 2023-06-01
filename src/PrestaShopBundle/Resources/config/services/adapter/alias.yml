@@ -12,13 +12,15 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAliasHandler:
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\GetAliasForEditingHandler:
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\DeleteAliasHandler:
     tags:
@@ -32,13 +34,15 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasStatusHandler:
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkUpdateAliasStatusHandler:
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasHandler:
     tags:

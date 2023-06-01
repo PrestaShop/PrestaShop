@@ -9,7 +9,7 @@ services:
       - '@prestashop.core.shop.logo_uploader'
       - '@prestashop.core.hook.dispatcher'
     tags:
-      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand' }
+      - { name: messenger.message_handler, handles: 'PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand', method: handle }
 
   prestashop.adapter.shop.url.base_url_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'
@@ -52,8 +52,9 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_")'
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_DIR_")'
     tags:
-      - name: 'tactician.handler'
-        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths
+      - name: 'messenger.message_handler'
+        handles: PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths
+        method: handle
 
   prestashop.adapter.shop.query_handler.search_shops_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\SearchShopsHandler'
@@ -61,8 +62,9 @@ services:
       - '@prestashop.core.admin.shop.repository'
       - '@prestashop.core.admin.shop_group.repository'
     tags:
-      - name: 'tactician.handler'
-        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
+      - name: 'messenger.message_handler'
+        handles: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
+        method: handle
 
   prestashop.adapter.shop.url.product_image_folder_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider'

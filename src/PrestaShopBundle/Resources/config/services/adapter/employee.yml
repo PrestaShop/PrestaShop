@@ -5,29 +5,29 @@ services:
   prestashop.adapter.profile.employee.command_handler.toggle_employee_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ToggleEmployeeStatusHandler'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand, method: handle }
 
   prestashop.adapter.profile.employee.command_handler.bulk_update_employee_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\BulkUpdateEmployeeStatusHandler'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand, method: handle }
 
   prestashop.adapter.profile.employee.command_handler.delete_employee_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\DeleteEmployeeHandler'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand, method: handle }
 
   prestashop.adapter.profile.employee.command_handler.bulk_delete_employee_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\BulkDeleteEmployeeHandler'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand, method: handle }
 
   prestashop.adapter.employee.query_handler.get_employee_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForEditingHandler'
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing, method: handle }
 
   prestashop.adapter.employee.form_access_checker:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\EmployeeFormAccessChecker'
@@ -42,7 +42,7 @@ services:
       - '@prestashop.core.employee.profile_access_checker'
       - '@prestashop.adapter.data_provider.employee'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand, method: handle }
 
   prestashop.adapter.employee.command_handler.edit_employee_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\EditEmployeeHandler'
@@ -52,7 +52,7 @@ services:
       - '@prestashop.adapter.data_provider.employee'
       - '@prestashop.adapter.legacy.context'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand, method: handle }
 
   prestashop.adapter.employee.avatar_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\AvatarProvider'
@@ -75,4 +75,4 @@ services:
   prestashop.adapter.employee.query_handler.get_employee_email_by_id_handler:
     class: PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeEmailByIdHandler
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById, method: handle }

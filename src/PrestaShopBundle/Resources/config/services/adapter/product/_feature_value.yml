@@ -6,22 +6,25 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update\ProductFeatureValueUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\FeatureValue\CommandHandler\RemoveAllFeatureValuesFromProductHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update\ProductFeatureValueUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeatureValuesFromProductCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeatureValuesFromProductCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\FeatureValue\QueryHandler\GetProductFeatureValuesHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update\ProductFeatureValueUpdater:
     autowire: true

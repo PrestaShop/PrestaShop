@@ -6,11 +6,9 @@ services:
     alias: PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
 
   PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface:
-    class: PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter
+    class: PrestaShop\PrestaShop\Core\CommandBus\MessengerCommandBusAdapter
     autowire: true
     public: false
-    arguments:
-      - '@tactician.commandbus.default'
 
   prestashop.core.query_bus:
     parent: 'prestashop.core.command_bus'

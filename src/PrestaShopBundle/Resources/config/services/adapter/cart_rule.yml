@@ -6,44 +6,48 @@ services:
     autowire: true
     public: false
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand, method: handle }
 
   PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler\GetCartRuleForEditingHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing'
+        method: handle
 
   prestashop.adapter.cart_rule.query_handler.search_cart_rules_handler:
     class: PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler\SearchCartRulesHandler
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules, method: handle }
 
   prestashop.adapter.cart_rule.command_handler.delete_cart_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\DeleteCartRuleHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand'
+        method: handle
 
   prestashop.adapter.cart_rule.command_handler.bulk_delete_cart_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\BulkDeleteCartRuleHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand'
+        method: handle
 
   prestashop.adapter.cart_rule.command_handler.toggle_cart_rule_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\ToggleCartRuleStatusHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand'
+        method: handle
 
   prestashop.adapter.cart_rule.command_handler.bulk_toggle_cart_rule_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\BulkToggleCartRuleStatusHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand', method: handle }
 
   PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator:
     autowire: true
@@ -60,7 +64,7 @@ services:
     autowire: true
     public: false
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand, method: handle }
 
   PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller:
     autowire: true

@@ -7,4 +7,4 @@ services:
     arguments:
       - '@prestashop.adapter.debug_mode'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand, method: handle }

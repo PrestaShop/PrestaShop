@@ -17,37 +17,40 @@ services:
   prestashop.adapter.tax.command_handler.delete_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\DeleteTaxHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand', method: handle }
 
   prestashop.adapter.tax.command_handler.toggle_tax_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\ToggleTaxStatusHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand', method: handle }
 
   prestashop.adapter.tax.command_handler.bulk_toggle_tax_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkToggleTaxStatusHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand', method: handle }
 
   prestashop.adapter.tax.command_handler.bulk_delete_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkDeleteTaxHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand', method: handle }
 
   prestashop.adapter.tax.query_handler.get_tax_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\QueryHandler\GetTaxForEditingHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing'
+        method: handle
 
   prestashop.adapter.tax.command_handler.edit_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\EditTaxHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand'
+        method: handle
 
   prestashop.adapter.tax.command_handler.add_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\AddTaxHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand'
+        method: handle

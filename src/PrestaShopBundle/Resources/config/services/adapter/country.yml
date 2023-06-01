@@ -7,8 +7,9 @@ services:
     arguments:
       - '@prestashop.adapter.country.country_required_fields_provider'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields'
+        method: handle
 
   prestashop.adapter.country.country_zip_code_requirements_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryZipCodeRequirementsProvider'
@@ -28,24 +29,24 @@ services:
     public: true
     autowire: true
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand', method: handle }
 
   PrestaShop\PrestaShop\Adapter\Country\CommandHandler\DeleteCountryHandler:
     public: false
     autowire: true
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand', method: handle }
 
   PrestaShop\PrestaShop\Adapter\Country\CommandHandler\EditCountryHandler:
     public: false
     autowire: true
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand', method: handle }
 
   PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryForEditingHandler:
     public: false
     autowire: true
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing', method: handle }
 
   PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator:

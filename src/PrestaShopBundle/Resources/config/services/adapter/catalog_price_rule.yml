@@ -5,40 +5,46 @@ services:
   prestashop.adapter.catalog_price_rule.command_handler.delete_catalog_price_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler\DeleteCatalogPriceRuleHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand'
+        method: handle
 
   prestashop.adapter.catalog_price_rule.command_handler.bulk_delete_catalog_price_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler\BulkDeleteCatalogPriceRuleHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand'
+        method: handle
 
   prestashop.adapter.catalog_price_rule.command_handler.add_catalog_price_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler\AddCatalogPriceRuleHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand'
+        method: handle
 
   prestashop.adapter.catalog_price_rule.command_handler.edit_catalog_price_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler\EditCatalogPriceRuleHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand'
+        method: handle
 
   prestashop.adapter.catalog_price_rule.command_handler.get_catalog_price_rule_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleForEditingHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing'
+        method: handle
 
   prestashop.adapter.catalog_price_rule.query_handler.get_catalog_price_rule_list_for_product_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleListForProductHandler'
     arguments:
       - '@prestashop.adapter.catalog_price_rule.repository.catalog_price_rule_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct'
+        method: handle
 
   prestashop.adapter.catalog_price_rule.repository.catalog_price_rule_repository:
     class: PrestaShop\PrestaShop\Adapter\CatalogPriceRule\Repository\CatalogPriceRuleRepository

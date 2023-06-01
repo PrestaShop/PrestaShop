@@ -12,7 +12,7 @@ services:
       - '@prestashop.adapter.sql_manager.sql_query_validator'
       - '@translator'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand', method: handle }
 
   prestashop.adapter.sql_manager.command_handler.edit_request_sql:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\EditSqlRequestHandler'
@@ -20,37 +20,37 @@ services:
       - '@prestashop.adapter.sql_manager.sql_query_validator'
       - '@translator'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand', method: handle }
 
   prestashop.adapter.sql_manager.command_handler.delete_request_sql:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\DeleteSqlRequestHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand', method: handle }
 
   prestashop.adapter.sql_manager.command_handler.bulk_delete_request_sql:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\BulkDeleteSqlRequestHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand', method: handle }
 
   # Query handlers
   prestashop.adapter.sql_manager.query_handler.get_request_sql_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestForEditingHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing', method: handle }
 
   prestashop.adapter.sql_manager.query_handler.get_request_sql_execution_result:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestExecutionResultHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult', method: handle }
 
   prestashop.adapter.sql_manager.query_handler.get_database_tables_list:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetDatabaseTablesListHandler'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList', method: handle }
 
   prestashop.adapter.sql_manager.query_handler.get_database_table_fields_list:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetDatabaseTableFieldsListHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList', method: handle }

@@ -26,24 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
-use League\Tactician\CommandBus;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 /**
- * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract.
+ * Class MessengerCommandBusAdapter is the Symfony Messenger CommandsBus implementation for PrestaShop's contract.
  */
-final class TacticianCommandBusAdapter implements CommandBusInterface
+final class MessengerCommandBusAdapter implements CommandBusInterface
 {
-    /**
-     * @var CommandBus
-     */
-    private $bus;
 
-    /**
-     * @param CommandBus $bus
-     */
-    public function __construct(CommandBus $bus)
+    public function __construct(private readonly MessageBusInterface $commandBus)
     {
-        $this->bus = $bus;
     }
 
     /**
@@ -51,6 +45,14 @@ final class TacticianCommandBusAdapter implements CommandBusInterface
      */
     public function handle($command)
     {
-        return $this->bus->handle($command);
+        try {
+            return $this->commandBus
+                ->dispatch($command)
+                ->last(HandledStamp::class)
+                ->getResult()
+                ;
+        } catch (HandlerFailedException $exception) {
+            throw $exception->getPrevious();
+        }
     }
 }

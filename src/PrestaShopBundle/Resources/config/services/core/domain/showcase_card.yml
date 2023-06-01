@@ -13,8 +13,9 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.showcase_card.configuration_map'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand'
+        method: handle
 
   # Query handlers
 
@@ -24,5 +25,6 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.showcase_card.configuration_map'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed'
+        method: handle

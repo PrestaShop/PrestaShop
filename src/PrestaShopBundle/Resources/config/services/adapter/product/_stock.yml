@@ -26,8 +26,9 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetCombinationStockMovementsHandler:
     arguments:
@@ -35,8 +36,9 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater:
     autowire: true

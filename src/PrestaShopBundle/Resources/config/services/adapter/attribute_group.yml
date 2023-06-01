@@ -13,28 +13,32 @@ services:
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand'
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandler:
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\GetAttributeGroupListHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList'
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandler:
     autowire: true
     public: false
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository:
     arguments:

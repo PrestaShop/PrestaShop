@@ -9,56 +9,64 @@ services:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\QueryHandler\GetFeatureForEditingHandler:
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureValueHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository'
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureValueHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\QueryHandler\GetFeatureValueForEditingHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\BulkDeleteFeatureHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureValueHandler:
     autowire: true

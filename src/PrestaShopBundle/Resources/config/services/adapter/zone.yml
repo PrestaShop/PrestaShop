@@ -5,41 +5,48 @@ services:
   prestashop.adapter.zone.command_handler.add_zone_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\CommandHandler\AddZoneHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\AddZoneCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\AddZoneCommand'
+        method: handle
 
   prestashop.adapter.zone.command_handler.toggle_zone_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\CommandHandler\ToggleZoneStatusHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\ToggleZoneStatusCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\ToggleZoneStatusCommand'
+        method: handle
 
   prestashop.adapter.zone.command_handler.edit_zone_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\CommandHandler\EditZoneHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\EditZoneCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\EditZoneCommand'
+        method: handle
 
   prestashop.adapter.zone.query_handler.get_zone_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\QueryHandler\GetZoneForEditingHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing'
+        method: handle
 
   prestashop.adapter.zone.command_handler.delete_zone_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\CommandHandler\DeleteZoneHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\DeleteZoneCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\DeleteZoneCommand'
+        method: handle
 
   prestashop.adapter.zone.command_handler.bulk_delete_zone_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\CommandHandler\BulkDeleteZoneHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\BulkDeleteZoneCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\BulkDeleteZoneCommand'
+        method: handle
 
   prestashop.adapter.zone.command_handler.bulk_toggle_zone_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\CommandHandler\BulkToggleZoneStatusHandler'
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\BulkToggleZoneStatusCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Zone\Command\BulkToggleZoneStatusCommand'
+        method: handle

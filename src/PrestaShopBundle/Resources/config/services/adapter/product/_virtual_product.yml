@@ -6,16 +6,18 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\UpdateVirtualProductFileHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater:
     autowire: true
@@ -40,5 +42,6 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand
+        method: handle

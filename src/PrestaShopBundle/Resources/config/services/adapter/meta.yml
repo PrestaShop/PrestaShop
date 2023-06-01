@@ -18,8 +18,9 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       - '@prestashop.adapter.meta.data_provider'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'
+        method: handle
 
   prestashop.adapter.meta.command_handler.edit_meta:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\EditMetaHandler'
@@ -27,16 +28,18 @@ services:
       - '@validator'
       - '@prestashop.adapter.meta.data_provider'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'
+        method: handle
 
   # QUERY HANDLERS
 
   prestashop.adapter.meta.query_handler.get_meta_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\QueryHandler\GetMetaForEditingHandler'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing'
+        method: handle
 
 
   prestashop.adapter.meta.query_handler.get_pages_for_layout_customization_handler:
@@ -44,5 +47,6 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization'
+        method: handle

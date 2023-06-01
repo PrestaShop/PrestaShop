@@ -8,18 +8,21 @@ services:
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\AddApplicationHandler:
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand'
+        method: handle
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\EditApplicationHandler:
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand'
+        method: handle
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler\GetApplicationForEditingHandler:
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing'
+        method: handle
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\DeleteApplicationHandler:
     tags:

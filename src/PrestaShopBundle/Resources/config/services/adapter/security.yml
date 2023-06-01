@@ -7,48 +7,54 @@ services:
     arguments:
       - '@prestashop.adapter.security.repository.customer_session_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand'
+        method: handle
 
   prestashop.adapter.security.command_handler.clear_customer_session_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\ClearOutdatedCustomerSessionHandler'
     arguments:
       - '@prestashop.adapter.security.repository.customer_session_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedCustomerSessionCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedCustomerSessionCommand'
+        method: handle
 
   prestashop.adapter.security.command_handler.delete_employee_session_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\DeleteEmployeeSessionHandler'
     arguments:
       - '@prestashop.adapter.security.repository.employee_session_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand'
+        method: handle
 
   prestashop.adapter.security.command_handler.clear_employee_session_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\ClearOutdatedEmployeeSessionHandler'
     arguments:
       - '@prestashop.adapter.security.repository.employee_session_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedEmployeeSessionCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedEmployeeSessionCommand'
+        method: handle
 
   prestashop.adapter.security.command_handler.bulk_delete_employees_sessions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeeSessionsHandler'
     arguments:
       - '@prestashop.adapter.security.repository.employee_session_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand'
+        method: handle
 
   prestashop.adapter.security.command_handler.bulk_delete_customers_sessions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteCustomerSessionsHandler'
     arguments:
       - '@prestashop.adapter.security.repository.customer_session_repository'
     tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand'
+      - name: 'messenger.message_handler'
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand'
+        method: handle
 
   prestashop.adapter.security.repository.customer_session_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository'

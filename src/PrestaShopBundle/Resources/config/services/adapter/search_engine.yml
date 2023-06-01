@@ -6,30 +6,35 @@ services:
   prestashop.adapter.search_engine.command_handler.add_search_engine_handler:
     class: PrestaShop\PrestaShop\Adapter\SearchEngine\CommandHandler\AddSearchEngineHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\AddSearchEngineCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\AddSearchEngineCommand
+        method: handle
 
   prestashop.adapter.search_engine.command_handler.bulk_delete_search_engine_handler:
     class: PrestaShop\PrestaShop\Adapter\SearchEngine\CommandHandler\BulkDeleteSearchEngineHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\BulkDeleteSearchEngineCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\BulkDeleteSearchEngineCommand
+        method: handle
 
   prestashop.adapter.search_engine.command_handler.delete_search_engine_handler:
     class: PrestaShop\PrestaShop\Adapter\SearchEngine\CommandHandler\DeleteSearchEngineHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\DeleteSearchEngineCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\DeleteSearchEngineCommand
+        method: handle
 
   prestashop.adapter.search_engine.command_handler.edit_search_engine_handler:
     class: PrestaShop\PrestaShop\Adapter\SearchEngine\CommandHandler\EditSearchEngineHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\EditSearchEngineCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\EditSearchEngineCommand
+        method: handle
 
   # Query Handlers
   prestashop.adapter.search_engine.query_handler.get_search_engine_for_editing_handler:
     class: PrestaShop\PrestaShop\Adapter\SearchEngine\QueryHandler\GetSearchEngineForEditingHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing
+        method: handle

@@ -6,8 +6,9 @@ services:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\UpdateProductImageHandler:
     arguments:
@@ -16,43 +17,49 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
       - '@PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\DeleteProductImageHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\SetProductImagesForAllShopHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImagesHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetShopProductImagesHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImageHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator: ~
 

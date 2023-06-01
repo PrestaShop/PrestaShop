@@ -5,50 +5,58 @@ services:
   prestashop.adapter.cms_page.command_handler.bulk_disable_cms_page:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\BulkDisableCmsPageHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand
+        method: handle
 
   prestashop.adapter.cms_page.command_handler.bulk_enable_cms_page:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\BulkEnableCmsPageHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand
+        method: handle
 
   prestashop.adapter.cms_page.command_handler.toggle_cms_page_status:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\ToggleCmsPageStatusHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand
+        method: handle
 
   prestashop.adapter.cms_page.query_handler.get_cms_category_id_for_redirection:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler\GetCmsCategoryIdForRedirectionHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection
+        method: handle
 
   prestashop.adapter.cms_page.command_handler.delete_cms_page:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\DeleteCmsPageHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand
+        method: handle
 
   prestashop.adapter.cms_page.command_handler.bulk_delete_cms_page:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\BulkDeleteCmsPageHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand
+        method: handle
 
   prestashop.adapter.cms_page.command_handler.add_cms_page_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AddCmsPageHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand
+        method: handle
 
   prestashop.adapter.cms_page.command_handler.edit_cms_page_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\EditCmsPageHandler
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand
+        method: handle
 
   prestashop.adapter.cms_page.query_handler.get_cms_page_for_editing_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler\GetCmsPageForEditingHandler
@@ -56,5 +64,6 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().link"
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing
+        method: handle

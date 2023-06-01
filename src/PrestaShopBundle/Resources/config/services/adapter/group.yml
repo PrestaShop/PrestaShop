@@ -22,15 +22,17 @@ services:
     public: false
     autowire: true
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand'
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandler:
     public: false
     autowire: true
     tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing'
+      - name: messenger.message_handler
+        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing'
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator:
     public: false

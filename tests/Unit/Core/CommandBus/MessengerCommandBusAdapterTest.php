@@ -29,13 +29,14 @@ namespace Tests\Unit\Core\CommandBus;
 use League\Tactician\CommandBus;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
+use PrestaShop\PrestaShop\Core\CommandBus\MessengerCommandBusAdapter;
+use Symfony\Component\Messenger\MessageBusInterface;
 
-class TacticianCommandBusAdapterTest extends TestCase
+class MessengerCommandBusAdapterTest extends TestCase
 {
     public function testIsValidImplementation()
     {
-        $commandBudAdapter = new TacticianCommandBusAdapter($this->createMock(CommandBus::class));
+        $commandBudAdapter = new MessengerCommandBusAdapter($this->createMock(MessageBusInterface::class));
 
         $this->assertInstanceOf(CommandBusInterface::class, $commandBudAdapter);
     }

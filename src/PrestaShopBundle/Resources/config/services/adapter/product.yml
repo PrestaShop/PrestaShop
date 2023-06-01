@@ -67,8 +67,9 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler:
     autowire: true
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler:
     arguments:
@@ -78,20 +79,23 @@ services:
       - '@PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface'
       - '@PrestaShop\PrestaShop\Adapter\ContextStateManager'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForAssociationHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductIsEnabledHandler:
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator:
     arguments:
@@ -129,22 +133,25 @@ services:
     arguments:
       $countryId: '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_COUNTRY_DEFAULT")'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductTagsHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductsPositionsHandler:
     arguments:
@@ -152,78 +159,89 @@ services:
       - '@PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface'
       - '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductTagsHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductCategoriesHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandler:
     autowire: true
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetCarriersHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSupplierOptionsHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\QueryHandler\GetAssociatedSuppliersHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetSuppliersHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetProductDefaultSupplierHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\UpdateProductSuppliersHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater:
     autowire: true
@@ -247,42 +265,48 @@ services:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDuplicateProductHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkUpdateProductStatusHandler:
     autowire: true
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler\SetAssociatedProductAttachmentsHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler\RemoveAllAssociatedProductAttachmentsHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator:
     autowire: true
@@ -308,22 +332,25 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllRelatedProductsHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\TagRepository:
     arguments:
@@ -343,8 +370,9 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
     autowire: true
@@ -357,8 +385,9 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater:
     arguments:
@@ -377,8 +406,9 @@ services:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler:
     autowire: true
@@ -386,15 +416,17 @@ services:
     arguments:
       $productUpdatablePropertyFiller: '@PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller'
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockAvailableHandler:
     autowire: true
     public: false
     tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand
+      - name: messenger.message_handler
+        handles: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand
+        method: handle
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller:
     arguments:

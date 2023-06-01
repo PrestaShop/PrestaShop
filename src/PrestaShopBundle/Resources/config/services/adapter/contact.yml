@@ -13,18 +13,18 @@ services:
     arguments:
       - '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing', method: handle }
 
   prestashop.adapter.contact.command_handler.edit_contact:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\EditContactHandler'
     arguments:
       - '@validator'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand', method: handle }
 
   prestashop.adapter.contact.command_handler.add_contact:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\AddContactHandler'
     arguments:
       - '@validator'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand' }
+      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand', method: handle }
