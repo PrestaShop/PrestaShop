@@ -63,6 +63,8 @@ class Category extends FOBasePage {
 
   private readonly categoryDescription: string;
 
+  private readonly searchFilters: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on category page
@@ -107,6 +109,9 @@ class Category extends FOBasePage {
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quickViewModalProductImageCover = `${this.quickViewModalDiv} div.product-cover picture`;
     this.categoryDescription = '#category-description';
+
+    // Filter
+    this.searchFilters = '#search_filters_wrapper';
   }
 
   /* Methods */
@@ -338,6 +343,15 @@ class Category extends FOBasePage {
     }
 
     return null;
+  }
+
+  /**
+   * Return if search filters are visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasSearchFilters(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.searchFilters);
   }
 }
 
