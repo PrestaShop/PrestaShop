@@ -2,7 +2,7 @@ import {KeycloakAdminClient} from '@s3pweb/keycloak-admin-client-cjs';
 import type ClientRepresentation from '@keycloak/keycloak-admin-client/lib/defs/clientRepresentation.js';
 
 const kcAdminClient: KeycloakAdminClient = new KeycloakAdminClient({
-  baseUrl: global.keycloakConfig.keycloakServer,
+  baseUrl: global.keycloakConfig.keycloakExternalUrl,
   realmName: 'master',
 });
 
