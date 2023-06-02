@@ -38,7 +38,7 @@
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.7",
         "ezyang/htmlpurifier": "^v4.16",
-      "friendsofsymfony/jsrouting-bundle": "^3.2.1",
+        "friendsofsymfony/jsrouting-bundle": "^3.2.1",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.3",
         "guzzlehttp/guzzle": "^7.5",

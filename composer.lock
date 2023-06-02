@@ -18621,14 +18621,14 @@
             "time": "2022-06-03T18:03:27+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "ezyang/htmlpurifier",
-            "version": "9999999-dev",
-            "alias": "v4.14.0",
-            "alias_normalized": "4.14.0.0"
-        }
-    ],
+  "aliases": [
+    {
+      "package": "ezyang/htmlpurifier",
+      "version": "9999999-dev",
+      "alias": "v4.14.0",
+      "alias_normalized": "4.14.0.0"
+    }
+  ],
     "minimum-stability": "dev",
     "stability-flags": {
         "ezyang/htmlpurifier": 20
