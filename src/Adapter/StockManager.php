@@ -210,7 +210,7 @@ class StockManager implements StockInterface
      *
      * @param int $shopId
      *
-     * @return ShopGroup object
+     * @return ShopGroup
      */
     private function getShopGroup($shopId)
     {
