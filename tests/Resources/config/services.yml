@@ -14,14 +14,6 @@ services:
     prestashop.adapter.shop.url.category_image_folder_provider:
         class: 'Tests\Integration\Adapter\Shop\Url\TestCategoryImageFolderProvider'
 
-    # Advanced form type
-    test.integration.prestashop_bundle.form.advanced_form_type:
-        class: 'Tests\Integration\PrestaShopBundle\Form\AdvancedFormType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
     test.integration.core.form.identifiable_object.handler.form_handler_factory:
         decorates: prestashop.core.form.identifiable_object.handler.form_handler_factory
         class: 'Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerFactory'
