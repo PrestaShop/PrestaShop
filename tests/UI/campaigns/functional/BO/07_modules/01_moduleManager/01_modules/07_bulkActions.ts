@@ -86,19 +86,6 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
       },
     },
     {args: {action: 'Reset', message: moduleManagerPage.resetModuleSuccessMessage(Modules.availableQuantities.tag)}},
-    {
-      args: {
-        action: 'Disable Mobile',
-        message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag),
-      },
-    },
-    {
-      args: {
-        action: 'Enable Mobile',
-        message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag),
-      },
-    },
-
   ].forEach((test, index: number) => {
     it(`should '${test.args.action}' with bulk actions`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `bulkActions${index}`, baseContext);

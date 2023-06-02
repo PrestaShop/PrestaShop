@@ -1277,17 +1277,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Removed in PrestaShop 1.7.
-     *
-     * @return bool
-     */
-    protected function useMobileTheme()
-    {
-        return false;
-    }
-
-    /**
-     * Returns theme directory (regular or mobile).
+     * Returns theme directory
      *
      * @return string
      */

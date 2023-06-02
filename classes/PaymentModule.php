@@ -1004,7 +1004,6 @@ abstract class PaymentModuleCore extends Module
         $order->recyclable = $cart->recyclable;
         $order->gift = (bool) $cart->gift;
         $order->gift_message = $cart->gift_message;
-        $order->mobile_theme = $cart->mobile_theme;
         $order->conversion_rate = $currency->conversion_rate;
         $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, $computingPrecision) : $amount_paid;
         $order->total_paid_real = 0;

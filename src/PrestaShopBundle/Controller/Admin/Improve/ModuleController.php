@@ -75,8 +75,6 @@ class ModuleController extends ModuleAbstractController
             'bulk-disable' => $this->trans('Disable', 'Admin.Actions'),
             'bulk-enable' => $this->trans('Enable', 'Admin.Actions'),
             'bulk-reset' => $this->trans('Reset', 'Admin.Actions'),
-            'bulk-enable-mobile' => $this->trans('Enable Mobile', 'Admin.Modules.Feature'),
-            'bulk-disable-mobile' => $this->trans('Disable Mobile', 'Admin.Modules.Feature'),
             'bulk-delete' => $this->trans('Delete', 'Admin.Modules.Feature'),
         ];
 
@@ -170,8 +168,6 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_RESET:
             case ModuleAdapter::ACTION_ENABLE:
             case ModuleAdapter::ACTION_DISABLE:
-            case ModuleAdapter::ACTION_ENABLE_MOBILE:
-            case ModuleAdapter::ACTION_DISABLE_MOBILE:
                 $deniedAccess = $this->checkPermission(Permission::UPDATE);
                 break;
             case ModuleAdapter::ACTION_INSTALL:

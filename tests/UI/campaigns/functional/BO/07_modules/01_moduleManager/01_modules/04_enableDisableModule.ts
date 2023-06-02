@@ -52,20 +52,6 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
   [
     {
       args: {
-        title: 'disable mobile',
-        action: 'disableMobile',
-        message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag),
-      },
-    },
-    {
-      args: {
-        title: 'enable mobile',
-        action: 'enableMobile',
-        message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag),
-      },
-    },
-    {
-      args: {
         title: 'disable the module',
         action: 'disable',
         message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag),

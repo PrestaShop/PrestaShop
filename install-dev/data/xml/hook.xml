@@ -3614,16 +3614,6 @@
       <title>Before a module is disabled</title>
       <description>This hook is called just before a module is disabled</description>
     </hook>
-    <hook id="actionBeforeEnableMobileModule">
-      <name>actionBeforeEnableMobileModule</name>
-      <title>Before a module is enabled for mobile</title>
-      <description>This hook is called just before a module is enabled for mobile</description>
-    </hook>
-    <hook id="actionBeforeDisableMobileModule">
-      <name>actionBeforeDisableMobileModule</name>
-      <title>Before a module is disabled for mobile</title>
-      <description>This hook is called just before a module is disabled for mobile</description>
-    </hook>
     <hook id="actionBeforeResetModule">
       <name>actionBeforeResetModule</name>
       <title>Before a module is reset</title>

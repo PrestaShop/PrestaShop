@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -43,8 +42,6 @@ class Module implements ModuleInterface
     public const ACTION_UNINSTALL = 'uninstall';
     public const ACTION_ENABLE = 'enable';
     public const ACTION_DISABLE = 'disable';
-    public const ACTION_ENABLE_MOBILE = 'enableMobile';
-    public const ACTION_DISABLE_MOBILE = 'disableMobile';
     public const ACTION_RESET = 'reset';
     public const ACTION_UPGRADE = 'upgrade';
     public const ACTION_CONFIGURE = 'configure';
@@ -139,7 +136,6 @@ class Module implements ModuleInterface
     private $database_default = [
         'installed' => 0,
         'active' => null,
-        'active_on_mobile' => null,
         'version' => null,
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
@@ -228,11 +224,6 @@ class Module implements ModuleInterface
     public function isActive(): bool
     {
         return (bool) $this->database->get('active');
-    }
-
-    public function isActiveOnMobile(): bool
-    {
-        return (bool) $this->database->get('active_on_mobile');
     }
 
     public function isInstalled(): bool
@@ -335,36 +326,6 @@ class Module implements ModuleInterface
 
         $result = $this->instance->disable();
         $this->database->set('active', !$result);
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onMobileEnable(): bool
-    {
-        if (!$this->hasValidInstance()) {
-            return false;
-        }
-
-        $result = $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
-        $this->database->set('active_on_mobile', $result);
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onMobileDisable(): bool
-    {
-        if (!$this->hasValidInstance()) {
-            return false;
-        }
-
-        $result = $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
-        $this->database->set('active_on_mobile', !$result);
 
         return $result;
     }

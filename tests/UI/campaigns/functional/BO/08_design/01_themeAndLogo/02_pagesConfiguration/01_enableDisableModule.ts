@@ -62,18 +62,6 @@ describe('BO - Design - Theme & Logo : Enable/disable module', async () => {
   [
     {
       args: {
-        title: 'disable mobile',
-        action: 'disable_mobile',
-      },
-    },
-    {
-      args: {
-        title: 'enable mobile',
-        action: 'enable_mobile',
-      },
-    },
-    {
-      args: {
         title: 'disable the module',
         action: 'disable',
       },

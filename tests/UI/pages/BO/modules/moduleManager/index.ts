@@ -14,11 +14,7 @@ class ModuleManager extends BOBasePage {
 
   public readonly disableModuleSuccessMessage: (moduleTag: string) => string;
 
-  public readonly disableMobileSuccessMessage: (moduleTag: string) => string;
-
   public readonly enableModuleSuccessMessage: (moduleTag: string) => string;
-
-  public readonly enableMobileSuccessMessage: (moduleTag: string) => string;
 
   public readonly resetModuleSuccessMessage: (moduleTag: string) => string;
 
@@ -113,9 +109,7 @@ class ModuleManager extends BOBasePage {
 
     this.pageTitle = 'Module manager •';
     this.disableModuleSuccessMessage = (moduleTag: string) => `Disable action on module ${moduleTag} succeeded.`;
-    this.disableMobileSuccessMessage = (moduleTag: string) => `Disable mobile action on module ${moduleTag} succeeded.`;
     this.enableModuleSuccessMessage = (moduleTag: string) => `Enable action on module ${moduleTag} succeeded.`;
-    this.enableMobileSuccessMessage = (moduleTag: string) => `Enable mobile action on module ${moduleTag} succeeded.`;
     this.resetModuleSuccessMessage = (moduleTag: string) => `Reset action on module ${moduleTag} succeeded.`;
     this.installModuleSuccessMessage = (moduleTag: string) => `Install action on module ${moduleTag} succeeded.`;
     this.uninstallModuleSuccessMessage = (moduleTag: string) => `Uninstall action on module ${moduleTag} succeeded.`;

@@ -778,9 +778,6 @@ Country</value>
   <configuration id="SEK_FILTER_KW" name="SEK_FILTER_KW">
     <value/>
   </configuration>
-  <configuration id="PS_ALLOW_MOBILE_DEVICE" name="PS_ALLOW_MOBILE_DEVICE">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_CUSTOMER_CREATION_EMAIL" name="PS_CUSTOMER_CREATION_EMAIL">
     <value>1</value>
   </configuration>
