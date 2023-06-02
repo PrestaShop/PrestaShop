@@ -88,6 +88,8 @@ jobs:
           - 'functional:FO:hummingbird:01-03'
           - 'functional:productV2'
           - 'functional:API'
+          - 'functional:WS'
+          - 'modules'
           - 'regression'
         exclude:
           ## 8.0.x
@@ -107,6 +109,10 @@ jobs:
             CAMPAIGN: 'functional:FO:classic:08-12'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:FO:hummingbird:01-03'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:WS'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules'
           ## 8.1.x
           - BRANCH: 8.1.x
             CAMPAIGN: 'functional:FO:01-03'
