@@ -91,36 +91,36 @@ jobs:
           - 'regression'
         exclude:
           ## 8.0.x
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'cldr'
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'functional:BO:dashboard'
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'functional:productV2'
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'functional:API'
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'functional:FO:classic:01-03'
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'functional:FO:classic:04-07'
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'functional:FO:classic:08-12'
-          - BASE_BRANCH: 8.0.x
-            TEST_COMMAND: 'functional:FO:hummingbird:01-03'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'cldr'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:BO:dashboard'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:API'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:01-03'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:04-07'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:08-12'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:hummingbird:01-03'
           ## 8.1.x
-          - BASE_BRANCH: 8.1.x
-            TEST_COMMAND: 'functional:FO:01-03'
-          - BASE_BRANCH: 8.1.x
-            TEST_COMMAND: 'functional:FO:04-07'
-          - BASE_BRANCH: 8.1.x
-            TEST_COMMAND: 'functional:FO:08-12'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:08-12'
           ## develop
-          - BASE_BRANCH: develop
-            TEST_COMMAND: 'functional:FO:01-03'
-          - BASE_BRANCH: develop
-            TEST_COMMAND: 'functional:FO:04-07'
-          - BASE_BRANCH: develop
-            TEST_COMMAND: 'functional:FO:08-12'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:08-12'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
