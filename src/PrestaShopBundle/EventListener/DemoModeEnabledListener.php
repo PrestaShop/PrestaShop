@@ -28,12 +28,14 @@ namespace PrestaShopBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use ReflectionClass;
 use ReflectionObject;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -41,6 +43,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.
  */
+#[AsEventListener(
+    event: ControllerEvent::class,
+    method: 'onKernelController',
+)]
 class DemoModeEnabledListener
 {
     /**
@@ -54,11 +60,6 @@ class DemoModeEnabledListener
     private $translator;
 
     /**
-     * @var Session
-     */
-    private $session;
-
-    /**
      * @var Reader
      */
     private $annotationReader;
@@ -67,28 +68,29 @@ class DemoModeEnabledListener
      * @var bool
      */
     private $isDemoModeEnabled;
+    private RequestStack $requestStack;
 
     /**
      * DemoModeEnabledListener constructor.
      *
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param Session $session
      * @param Reader $annotationReader
-     * @param bool $isDemoModeEnabled
+     * @param RequestStack $requestStack
+     * @param ShopConfigurationInterface $configuration
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
-        Session $session,
         Reader $annotationReader,
-        $isDemoModeEnabled
+        RequestStack $requestStack,
+        ShopConfigurationInterface $configuration,
     ) {
         $this->router = $router;
         $this->translator = $translator;
-        $this->session = $session;
         $this->annotationReader = $annotationReader;
-        $this->isDemoModeEnabled = $isDemoModeEnabled;
+        $this->isDemoModeEnabled = $configuration->get('_PS_MODE_DEMO_');
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -136,7 +138,7 @@ class DemoModeEnabledListener
      */
     private function showNotificationMessage(DemoRestricted $demoRestricted)
     {
-        $this->session->getFlashBag()->add(
+        $this->requestStack->getMainRequest()->getSession()->getFlashBag()->add(
             'error',
             $this->translator->trans(
                 $demoRestricted->getMessage(),

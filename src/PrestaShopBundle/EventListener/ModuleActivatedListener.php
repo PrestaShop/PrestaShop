@@ -34,8 +34,9 @@ use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;
 use ReflectionObject;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -44,6 +45,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Allow a redirection to the right url when using ModuleActivated annotation
  * and the module is inactive.
  */
+#[AsEventListener(
+    event: ControllerEvent::class,
+    method: 'onKernelController',
+)]
 class ModuleActivatedListener
 {
     /**
@@ -57,11 +62,6 @@ class ModuleActivatedListener
     private $translator;
 
     /**
-     * @var Session
-     */
-    private $session;
-
-    /**
      * @var Reader
      */
     private $annotationReader;
@@ -70,26 +70,27 @@ class ModuleActivatedListener
      * @var ModuleRepository
      */
     private $moduleRepository;
+    private RequestStack $requestStack;
 
     /**
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param Session $session
      * @param Reader $annotationReader
+     * @param RequestStack $requestStack
      * @param ModuleRepository $moduleRepository
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
-        Session $session,
         Reader $annotationReader,
+        RequestStack $requestStack,
         ModuleRepository $moduleRepository
     ) {
         $this->router = $router;
         $this->translator = $translator;
-        $this->session = $session;
         $this->annotationReader = $annotationReader;
         $this->moduleRepository = $moduleRepository;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -136,7 +137,7 @@ class ModuleActivatedListener
      */
     private function showNotificationMessage(ModuleActivated $moduleActivated)
     {
-        $this->session->getFlashBag()->add(
+        $this->requestStack->getMainRequest()->getSession()->getFlashBag()->add(
             'error',
             $this->translator->trans(
                 $moduleActivated->getMessage(),

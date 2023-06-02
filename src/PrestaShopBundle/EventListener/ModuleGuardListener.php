@@ -61,7 +61,7 @@ class ModuleGuardListener implements EventSubscriberInterface
      */
     public function __construct(
         FolderGuardInterface $vendorFolderGuard,
-        $modulesDir,
+        string $modulesDir,
         LoggerInterface $logger
     ) {
         $this->vendorFolderGuard = $vendorFolderGuard;

@@ -30,7 +30,12 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
+#[AsEventListener(
+    event: ConsoleCommandEvent::class,
+    method: 'onConsoleCommand',
+)]
 class MultishopCommandListener
 {
     public $context;
@@ -40,12 +45,12 @@ class MultishopCommandListener
      *
      * @var string
      */
-    public $rootDir;
+    private $projectDir;
 
-    public function __construct(Context $context, $rootDir)
+    public function __construct(Context $context, string $projectDir)
     {
         $this->context = $context;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     public function onConsoleCommand(ConsoleCommandEvent $event)
@@ -81,7 +86,7 @@ class MultishopCommandListener
     private function fixUnloadedConfig()
     {
         if (!defined('_DB_PREFIX_')) {
-            require_once $this->rootDir . '/../config/config.inc.php';
+            require_once $this->projectDir . '/config/config.inc.php';
         }
     }
 }

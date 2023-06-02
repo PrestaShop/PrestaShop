@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShopBundle\Routing\Converter\LegacyParametersConverter;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Tools;
 
@@ -39,6 +40,11 @@ use Tools;
  *
  * Note: this is limited to parameters defined in the routing via _legacy_link and _legacy_parameters
  */
+#[AsEventListener(
+    event: RequestEvent::class,
+    method: 'onKernelRequest',
+    priority: 30,
+)]
 class LegacyParametersListener
 {
     /**

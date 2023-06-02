@@ -30,12 +30,17 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class FilterCmsPageCategorySearchCriteriaListener is responsible for updating CmsCategoryFilters filter with
  * cms page category id.
  */
+#[AsEventListener(
+    event: FilterSearchCriteriaEvent::class,
+    method: 'onFilterSearchCriteria',
+)]
 class FilterCmsPageCategorySearchCriteriaListener
 {
     /**

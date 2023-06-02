@@ -29,6 +29,7 @@ namespace PrestaShopBundle\EventListener;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -36,6 +37,10 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 /**
  * This class allows to redirect to back url.
  */
+#[AsEventListener(
+    event: ResponseEvent::class,
+    method: 'onKernelResponse',
+)]
 final class BackUrlRedirectResponseListener
 {
     /**

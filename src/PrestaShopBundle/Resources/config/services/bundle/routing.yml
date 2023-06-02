@@ -5,15 +5,21 @@ services:
       - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
     tags: [ routing.loader ]
 
-  prestashop.bundle.routing.converter.legacy_url_converter:
-    class: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
-    public: true
+  PrestaShopBundle\Routing\Converter\LegacyUrlConverter:
+    public: false
+    autowire: true
     arguments:
-      - '@router'
-      - '@prestashop.bundle.routing.converter.cache_provider'
+      $legacyRouteProvider: '@prestashop.bundle.routing.converter.cache_provider'
+
+  prestashop.bundle.routing.converter.legacy_url_converter:
+    alias: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
+    public: true
+
+  PrestaShopBundle\Routing\Converter\LegacyParametersConverter:
+    public: false
 
   prestashop.bundle.routing.converter.legacy_parameters_converter:
-    class: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
+    alias: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
     public: true
 
   prestashop.bundle.routing.converter.router_provider:

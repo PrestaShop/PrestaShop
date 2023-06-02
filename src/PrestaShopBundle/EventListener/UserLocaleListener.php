@@ -31,8 +31,14 @@ use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+#[AsEventListener(
+    event: RequestEvent::class,
+    method: 'onKernelRequest',
+    priority: 15,
+)]
 class UserLocaleListener
 {
     /** @var Context|null */

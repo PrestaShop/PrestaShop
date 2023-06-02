@@ -29,12 +29,17 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * This subscriber gets context from the legacy context and adds it the request attributes
  * so you can directly fetch the ShopConstraint on the controller arguments.
  */
+#[AsEventListener(
+    event: RequestEvent::class,
+    method: 'onKernelRequest',
+)]
 class ShopConstraintListener
 {
     /**

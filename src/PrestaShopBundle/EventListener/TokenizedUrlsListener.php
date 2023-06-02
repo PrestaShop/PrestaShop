@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -44,6 +45,10 @@ use Tools;
  *
  * If token in url is not found or invalid, the user is redirected to a warning page
  */
+#[AsEventListener(
+    event: RequestEvent::class,
+    method: 'onKernelRequest',
+)]
 class TokenizedUrlsListener
 {
     public function __construct(

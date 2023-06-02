@@ -26,11 +26,15 @@ services:
     arguments:
       - PrestaShopBundle\Entity\Translation
 
-  prestashop.core.admin.lang.repository:
-    class: PrestaShopBundle\Entity\Repository\LangRepository
+
+  PrestaShopBundle\Entity\Repository\LangRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    public: false
     arguments:
       - PrestaShopBundle\Entity\Lang
+
+  prestashop.core.admin.lang.repository:
+    alias: PrestaShopBundle\Entity\Repository\LangRepository
 
   prestashop.core.admin.log.repository:
     class: PrestaShopBundle\Entity\Repository\LogRepository

@@ -27,11 +27,12 @@
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -40,6 +41,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.
  */
+#[AsEventListener(
+    event: ExceptionEvent::class,
+    method: 'onKernelException',
+)]
 class AccessDeniedListener
 {
     /**
@@ -52,16 +57,13 @@ class AccessDeniedListener
      */
     private $translator;
 
-    /**
-     * @var Session
-     */
-    private $session;
+    private RequestStack $requestStack;
 
-    public function __construct(RouterInterface $router, TranslatorInterface $translator, Session $session)
+    public function __construct(RouterInterface $router, TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->router = $router;
         $this->translator = $translator;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -104,7 +106,7 @@ class AccessDeniedListener
             ], Response::HTTP_FORBIDDEN);
         }
 
-        $this->session->getFlashBag()->add('error', $this->getErrorMessage($adminSecurity));
+        $this->requestStack->getMainRequest()->getSession()->getFlashBag()->add('error', $this->getErrorMessage($adminSecurity));
 
         return new RedirectResponse(
             $this->computeRedirectionUrl($adminSecurity, $request)

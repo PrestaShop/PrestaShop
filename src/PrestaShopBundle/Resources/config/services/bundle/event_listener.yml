@@ -1,123 +1,98 @@
 services:
   _defaults:
-    public: true
-
-  prestashop.user_locale.listener:
-    class: PrestaShopBundle\EventListener\UserLocaleListener
-    arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.legacy.configuration"
-      - "@prestashop.core.admin.lang.repository"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
-
-  prestashop.dispatcher.legacy_hooks.subscriber:
-    class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
-    arguments: [ '@prestashop.core.hook.dispatcher' ]
-    tags:
-      - { name: kernel.event_subscriber }
-
-  prestashop.tokenized_url_listener:
-    class: PrestaShopBundle\EventListener\TokenizedUrlsListener
+    public: false
     autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    autoconfigure: true
+    bind:
+      $modulesDir: '%modules_dir%'
+      $projectDir: '%kernel.project_dir%'
 
-  # Priority 40 to be called before the RouterListener
-  prestashop.legacy_url_listener:
-    class: PrestaShopBundle\EventListener\LegacyUrlListener
-    arguments:
-      - "@prestashop.bundle.routing.converter.legacy_url_converter"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
+  PrestaShopBundle\EventListener\:
+    resource: "../../../../EventListener/*"
 
-  # Priority 30 to be called after the RouterListener
-  prestashop.legacy_parameters_listener:
-    class: PrestaShopBundle\EventListener\LegacyParametersListener
+  PrestaShopBundle\EventListener\MultishopCommandListener:
     arguments:
-      - "@prestashop.bundle.routing.converter.legacy_parameters_converter"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+      $context: '@prestashop.adapter.shop.context'
 
-  prestashop.multishop_command_listener:
-    class: PrestaShopBundle\EventListener\MultishopCommandListener
+  PrestaShopBundle\EventListener\ShopConstraintListener:
     arguments:
-      - "@prestashop.adapter.shop.context"
-      - "@=service('kernel').getRootDir()"
-    tags:
-      - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+      $context: '@prestashop.adapter.shop.context'
 
-  prestashop.access_denied.listener:
-    class: PrestaShopBundle\EventListener\AccessDeniedListener
+  PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener:
     arguments:
-      - "@router"
-      - "@translator"
-      - "@session"
-    tags:
-      - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+      $categorySearchCriteriaFactory: '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
 
-  prestashop.demo_mode_enabled.listener:
-    class: PrestaShopBundle\EventListener\DemoModeEnabledListener
+  PrestaShopBundle\EventListener\ModuleGuardListener:
     arguments:
-      - "@router"
-      - "@translator"
-      - "@session"
-      - "@annotation_reader"
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
-  prestashop.module_activated.listener:
-    class: PrestaShopBundle\EventListener\ModuleActivatedListener
-    arguments:
-      - "@router"
-      - "@translator"
-      - "@session"
-      - "@annotation_reader"
-      - "@prestashop.core.admin.module.repository"
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
-  prestashop.bundle.event_listener.filter_category_search_criteria:
-    class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
-    arguments:
-      - '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
-    tags:
-      - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
-
-  prestashop.bundle.event_listener.filter_cms_page_category_search_criteria:
-    class: PrestaShopBundle\EventListener\FilterCmsPageCategorySearchCriteriaListener
-    arguments:
-      - '@request_stack'
-    tags:
-      - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
-
-  prestashop.bundle.event_listener.back_url_redirect_response_listener:
-    class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider'
-      - "@prestashop.adapter.legacy.context"
-    tags:
-      - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-
-  prestashop.bundle.event_listener.module_guard_listener:
-    class: PrestaShopBundle\EventListener\ModuleGuardListener
-    arguments:
-      - '@prestashop.core.security.folder_guard.vendor'
-      - '%modules_dir%'
-      - '@logger'
-    tags:
-      - { name: kernel.event_subscriber }
+      $vendorFolderGuard: '@prestashop.core.security.folder_guard.vendor'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener:
-    class: PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener
-    autowire: true
     tags:
       - { name: core.legacy.hook.subscriber }
 
-  PrestaShopBundle\EventListener\ShopConstraintListener:
-    public: false
-    arguments:
-      - "@prestashop.adapter.shop.context"
-    tags:
-      - { name: kernel.event_listener, method: onKernelRequest }
+  prestashop.user_locale.listener:
+    alias: PrestaShopBundle\EventListener\UserLocaleListener
+    deprecated: ~
+    public: true
+
+  prestashop.dispatcher.legacy_hooks.subscriber:
+    alias: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
+    deprecated: ~
+    public: true
+
+  prestashop.tokenized_url_listener:
+    alias: PrestaShopBundle\EventListener\TokenizedUrlsListener
+    deprecated: ~
+    public: true
+
+  # Priority 40 to be called before the RouterListener
+  prestashop.legacy_url_listener:
+    alias: PrestaShopBundle\EventListener\LegacyUrlListener
+    deprecated: ~
+    public: true
+
+  # Priority 30 to be called after the RouterListener
+  prestashop.legacy_parameters_listener:
+    alias: PrestaShopBundle\EventListener\LegacyParametersListener
+    deprecated: ~
+    public: true
+
+  prestashop.multishop_command_listener:
+    alias: PrestaShopBundle\EventListener\MultishopCommandListener
+    deprecated: ~
+    public: true
+
+  prestashop.access_denied.listener:
+    alias: PrestaShopBundle\EventListener\AccessDeniedListener
+    deprecated: ~
+    public: true
+
+  prestashop.demo_mode_enabled.listener:
+    alias: PrestaShopBundle\EventListener\DemoModeEnabledListener
+    deprecated: ~
+    public: true
+
+  prestashop.module_activated.listener:
+    alias: PrestaShopBundle\EventListener\ModuleActivatedListener
+    deprecated: ~
+    public: true
+
+  prestashop.bundle.event_listener.filter_category_search_criteria:
+    alias: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
+    deprecated: ~
+    public: true
+
+  prestashop.bundle.event_listener.filter_cms_page_category_search_criteria:
+    alias: PrestaShopBundle\EventListener\FilterCmsPageCategorySearchCriteriaListener
+    deprecated: ~
+    public: true
+
+  prestashop.bundle.event_listener.back_url_redirect_response_listener:
+    alias: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
+    deprecated: ~
+    public: true
+
+  prestashop.bundle.event_listener.module_guard_listener:
+    alias: PrestaShopBundle\EventListener\ModuleGuardListener
+    deprecated: ~
+    public: true

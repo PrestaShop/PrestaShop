@@ -29,10 +29,15 @@ namespace PrestaShopBundle\EventListener;
 use PrestaShop\PrestaShop\Core\Grid\Search\Factory\DecoratedSearchCriteriaFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
  * Class FilterCategorySearchCriteriaListener updates category search criteria filters with resolved category parent id.
  */
+#[AsEventListener(
+    event: FilterSearchCriteriaEvent::class,
+    method: 'onFilterSearchCriteria',
+)]
 class FilterCategorySearchCriteriaListener
 {
     /**
