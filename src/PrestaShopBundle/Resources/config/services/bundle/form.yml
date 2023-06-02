@@ -38,3 +38,7 @@ services:
 
   form.type.common_type:
     abstract: true
+
+  PrestaShopBundle\Form\Admin\Type\CustomMoneyType:
+    alias: 'PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension'
+    deprecated: ~
