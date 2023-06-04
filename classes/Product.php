@@ -7599,9 +7599,10 @@ class ProductCore extends ObjectModel
         $attributes = Product::getAttributesParams($this->id, $id_product_attribute);
         $anchor = '#';
         $sep = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
+        $replace = $sep === '_' ? '-' : '_';
         foreach ($attributes as &$attr) {
-            $group = str_replace($sep, '_', Tools::str2url((string) $attr['group']));
-            $name = str_replace($sep, '_', Tools::str2url((string) $attr['name']));
+            $group = str_replace($sep, $replace, Tools::str2url((string) $attr['group']));
+            $name = str_replace($sep, $replace, Tools::str2url((string) $attr['name']));
             $anchor .= '/' . ($with_id ? (int) $attr['id_attribute'] . $sep : '') . $group . $sep . $name;
         }
 
