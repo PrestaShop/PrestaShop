@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use Symfony\Contracts\Cache\ItemInterface;
+
 /**
  * Class ConfigurationCore.
  */
@@ -160,6 +162,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
+        SymfonyCache::getInstance()->delete('configuration');
     }
 
     /**
@@ -167,30 +170,42 @@ class ConfigurationCore extends ObjectModel
      */
     public static function loadConfiguration()
     {
-        $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
+        $value = SymfonyCache::getInstance()->get('configuration', function (ItemInterface $item){
+            $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(
-               self::$definition['primary']
-            ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
-        $db = Db::getInstance();
-        $results = $db->executeS($sql);
-        if ($results) {
-            foreach ($results as $row) {
-                $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
-                self::$types[$row['name']] = (bool) $lang;
+                    self::$definition['primary']
+                ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
+            $db = Db::getInstance();
+            $results = $db->executeS($sql);
+            $value = [];
+            if ($results) {
+                foreach ($results as $row) {
+                    $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
+                    self::$types[$row['name']] = (bool) $lang;
 
-                if ($row['value'] === null) {
-                    $row['value'] = '';
-                }
+                    if ($row['value'] === null) {
+                        $row['value'] = '';
+                    }
 
-                if ($row['id_shop']) {
-                    self::$_new_cache_shop[$row['name']][$lang][$row['id_shop']] = $row['value'];
-                } elseif ($row['id_shop_group']) {
-                    self::$_new_cache_group[$row['name']][$lang][$row['id_shop_group']] = $row['value'];
-                } else {
-                    self::$_new_cache_global[$row['name']][$lang] = $row['value'];
+                    if ($row['id_shop']) {
+                        $value['shop'][$row['name']][$lang][$row['id_shop']] = $row['value'];
+                    } elseif ($row['id_shop_group']) {
+                        $value['group'][$row['name']][$lang][$row['id_shop_group']] = $row['value'];
+                    } else {
+                        $value['global'][$row['name']][$lang] = $row['value'];
+                    }
                 }
+            } else {
+                $value = false;
             }
+            return $value;
+        });
+
+        if ($value) {
+            self::$_new_cache_shop = $value['shop'];
+            self::$_new_cache_group = $value['group'];
+            self::$_new_cache_global = $value['global'];
             self::$_initialized = true;
         }
     }
@@ -533,7 +548,7 @@ class ConfigurationCore extends ObjectModel
                 }
             }
         }
-
+        SymfonyCache::getInstance()->delete('configuration');
         Configuration::set($key, $values, $idShopGroup, $idShop);
 
         return (bool) $result;
@@ -568,6 +583,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
+        SymfonyCache::getInstance()->delete('configuration');
 
         return $result && $result2;
     }
@@ -619,6 +635,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
+        SymfonyCache::getInstance()->delete('configuration');
     }
 
     /**
