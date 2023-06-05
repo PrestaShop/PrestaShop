@@ -35,6 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * Allows the CSRF Token in URL strategy
  *
  * @see https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Disclosure_of_Token_in_URL
+ * @deprecated since 9.0, to be removed in 10.0
  */
 class RouterPass implements CompilerPassInterface
 {

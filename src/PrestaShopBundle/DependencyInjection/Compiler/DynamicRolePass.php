@@ -34,6 +34,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
  * Sets dynamic role hierarchy in the voter.
+ *
+ * @deprecated since 9.0, to be removed in 10.0
  */
 class DynamicRolePass implements CompilerPassInterface
 {

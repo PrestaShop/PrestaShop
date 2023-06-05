@@ -27,7 +27,6 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
-use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\GridDefinitionServiceIdsCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\IdentifiableObjectFormTypesCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
@@ -36,11 +35,8 @@ use PrestaShopBundle\DependencyInjection\Compiler\OptionsFormHookNameCollectorPa
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPass;
 use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
-use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
 use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
-use Symfony\Component\DependencyInjection\Compiler\ResolveInstanceofConditionalsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -69,10 +65,8 @@ class PrestaShopBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new DynamicRolePass());
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
-        $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
         $container->addCompilerPass(new CommandAndQueryCollectorPass());
