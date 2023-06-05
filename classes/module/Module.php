@@ -41,6 +41,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceExce
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem as SfFileSystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Contracts\Cache\ItemInterface;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -339,18 +340,23 @@ abstract class ModuleCore implements ModuleInterface
             if (static::$modules_cache == null && !is_array(static::$modules_cache)) {
                 $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
 
-                static::$modules_cache = [];
-                // Join clause is done to check if the module is activated in current shop context
-                $result = Db::getInstance()->executeS('
-                SELECT m.`id_module`, m.`name`, ms.`id_module`as `mshop`
-                FROM `' . _DB_PREFIX_ . 'module` m
-                LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms
-                ON m.`id_module` = ms.`id_module`
-                AND ms.`id_shop` = ' . (int) $id_shop);
-                foreach ($result as $row) {
-                    static::$modules_cache[$row['name']] = $row;
-                    static::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
-                }
+                static::$modules_cache = SymfonyCache::getInstance()->get('modules_' . $id_shop, function (ItemInterface $item) use ($id_shop) {
+                    $item->tag('module');
+                    $modules = [];
+                    // Join clause is done to check if the module is activated in current shop context
+                    $result = Db::getInstance()->executeS('
+                        SELECT m.`id_module`, m.`name`, ms.`id_module`as `mshop`
+                        FROM `' . _DB_PREFIX_ . 'module` m
+                        LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms
+                        ON m.`id_module` = ms.`id_module`
+                        AND ms.`id_shop` = ' . (int)$id_shop);
+                    foreach ($result as $row) {
+                        $modules[$row['name']] = $row;
+                        $modules[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
+                    }
+
+                    return $modules;
+                });
             }
 
             // We load configuration from the cache
@@ -472,6 +478,7 @@ abstract class ModuleCore implements ModuleInterface
         if (Module::$update_translations_after_install) {
             $this->updateModuleTranslations();
         }
+        SymfonyCache::getInstance()->invalidateTags('module');
 
         return true;
     }
@@ -622,6 +629,7 @@ abstract class ModuleCore implements ModuleInterface
             Module::upgradeModuleVersion($this->name, $upgrade['upgraded_to']);
         }
         $this->setUpgradeMessage($upgrade);
+        SymfonyCache::getInstance()->invalidateTags('module');
 
         return $upgrade;
     }
@@ -804,6 +812,7 @@ abstract class ModuleCore implements ModuleInterface
 
             return true;
         }
+        SymfonyCache::getInstance()->invalidateTags('module');
 
         return false;
     }
@@ -893,6 +902,7 @@ abstract class ModuleCore implements ModuleInterface
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
         }
+        SymfonyCache::getInstance()->invalidateTags('module');
 
         return true;
     }
@@ -1007,6 +1017,7 @@ abstract class ModuleCore implements ModuleInterface
         if (!$this->hasShopAssociations()) {
             $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
         }
+        SymfonyCache::getInstance()->invalidateTags('module');
 
         return (bool) $result;
     }

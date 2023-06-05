@@ -462,31 +462,34 @@ class HookCore extends ObjectModel
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
-
-        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
+        $list = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) {
+            $item->tag(['hook', 'module']);
+            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
             FROM `' . _DB_PREFIX_ . 'hook_module` hm
-            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
+            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int)Context::getContext()->shop->id . ')
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
             ORDER BY hm.position'
-        );
-        $list = [];
-        foreach ($results as $result) {
-            if (!isset($list[$result['id_hook']])) {
-                $list[$result['id_hook']] = [];
-            }
+            );
+            $list = [];
+            foreach ($results as $result) {
+                if (!isset($list[$result['id_hook']])) {
+                    $list[$result['id_hook']] = [];
+                }
 
-            $list[$result['id_hook']][$result['id_module']] = [
-                'id_hook' => $result['id_hook'],
-                'title' => $result['title'],
-                'description' => $result['description'],
-                'hm.position' => $result['position'],
-                'm.position' => $result['hm_position'],
-                'id_module' => $result['id_module'],
-                'name' => $result['name'],
-                'active' => $result['active'],
-            ];
-        }
+                $list[$result['id_hook']][$result['id_module']] = [
+                    'id_hook' => $result['id_hook'],
+                    'title' => $result['title'],
+                    'description' => $result['description'],
+                    'hm.position' => $result['position'],
+                    'm.position' => $result['hm_position'],
+                    'id_module' => $result['id_module'],
+                    'name' => $result['name'],
+                    'active' => $result['active'],
+                ];
+            }
+            return $list;
+        });
         Cache::store($cache_id, $list);
 
         return $list;
@@ -647,6 +650,7 @@ class HookCore extends ObjectModel
                 ]
             );
         }
+        SymfonyCache::getInstance()->invalidateTags('module');
 
         return $return;
     }
@@ -683,6 +687,7 @@ class HookCore extends ObjectModel
                 'hook_name' => $hook_name,
             ]
         );
+        SymfonyCache::getInstance()->invalidateTags('module');
 
         return $result;
     }
@@ -753,6 +758,7 @@ class HookCore extends ObjectModel
 
         self::$disabledHookModules[] = $moduleId;
         Cache::clean(self::MODULE_LIST_BY_HOOK_KEY . '*');
+        SymfonyCache::getInstance()->invalidateTags('module');
     }
 
     /**
@@ -1061,12 +1067,6 @@ class HookCore extends ObjectModel
      */
     private static function getAllHookRegistrations(Context $context, ?string $hookName): array
     {
-        $shop = $context->shop;
-        $customer = $context->customer;
-
-        $cache_id = self::MODULE_LIST_BY_HOOK_KEY
-            . (isset($shop->id) ? '_' . $shop->id : '')
-            . (isset($customer->id) ? '_' . $customer->id : '');
 
         $useCache = (
             !in_array(
@@ -1081,10 +1081,47 @@ class HookCore extends ObjectModel
             )
         );
 
-        if ($useCache && Cache::isStored($cache_id)) {
+        if (!$useCache) {
+            return self::_getAllHookRegistrations($context, $hookName);
+        }
+        $shop = $context->shop;
+        $customer = $context->customer;
+        $groups = [];
+        $use_groups = Group::isFeatureActive();
+        $frontend = !$context->employee instanceof Employee;
+        if ($frontend) {
+            // Get groups list
+            if ($use_groups) {
+                if ($customer instanceof Customer && $customer->isLogged()) {
+                    $groups = $customer->getGroups();
+                } elseif ($customer instanceof Customer && $customer->isGuest()) {
+                    $groups = [(int) Configuration::get('PS_GUEST_GROUP')];
+                } else {
+                    $groups = [(int) Configuration::get('PS_UNIDENTIFIED_GROUP')];
+                }
+            }
+        }
+
+        $cache_id = self::MODULE_LIST_BY_HOOK_KEY
+            . ($shop->id ?? '')
+            . (!empty($groups) ? '_' . implode(',', $groups) : '');
+
+        if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
 
+        $allHookRegistrations = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($context, $hookName, $cache_id) {
+            $item->tag(['hook', 'module']);
+            return self::_getAllHookRegistrations($context, $hookName);
+        });
+
+        Cache::store($cache_id, $allHookRegistrations);
+        return $allHookRegistrations;
+    }
+    private static function _getAllHookRegistrations(Context $context, ?string $hookName): array
+    {
+        $shop = $context->shop;
+        $customer = $context->customer;
         $groups = [];
         $use_groups = Group::isFeatureActive();
         $frontend = !$context->employee instanceof Employee;
@@ -1103,7 +1140,7 @@ class HookCore extends ObjectModel
 
         // SQL Request
         $sql = new DbQuery();
-        $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
+        $sql->select('lower(h.`name`) as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
         $sql->from('module', 'm');
         if (!in_array($hookName, ['displayBackOfficeHeader', 'displayAdminLogin'])) {
             $sql->join(
@@ -1196,7 +1233,6 @@ class HookCore extends ObjectModel
         if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
             /** @var array{hook: string, id_module: int, id_hook: int, module: string} $row */
             foreach ($result as $row) {
-                $row['hook'] = strtolower($row['hook']);
                 if (!isset($allHookRegistrations[$row['hook']])) {
                     $allHookRegistrations[$row['hook']] = [];
                 }
@@ -1207,10 +1243,6 @@ class HookCore extends ObjectModel
                     'id_module' => $row['id_module'],
                 ];
             }
-        }
-
-        if ($useCache) {
-            Cache::store($cache_id, $allHookRegistrations);
         }
 
         return $allHookRegistrations;
