@@ -37,86 +37,17 @@ class UpdateAliasCommand
 {
     public readonly AliasId $aliasId;
 
-    /**
-     * @var string[]
-     */
-    private $aliases;
-
-    /**
-     * @var string
-     */
-    private $searchTerm;
-
-    /**
-     * @var bool
-     */
-    private $active;
 
     /**
      * @param int $aliasId
-     */
-    public function __construct(int $aliasId)
-    {
-        $this->aliasId = new AliasId($aliasId);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getAliases(): array
-    {
-        return $this->aliases;
-    }
-
-    /**
      * @param string[] $aliases
-     *
-     * @return UpdateAliasCommand
+     * @param string[] $searchTerm
      */
-    public function setAliases(array $aliases): UpdateAliasCommand
-    {
-        $this->aliases = $aliases;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSearchTerm(): string
-    {
-        return $this->searchTerm;
-    }
-
-    /**
-     * @param string $searchTerm
-     *
-     * @return UpdateAliasCommand
-     */
-    public function setSearchTerm(string $searchTerm): UpdateAliasCommand
-    {
-        $this->searchTerm = $searchTerm;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     *
-     * @return UpdateAliasCommand
-     */
-    public function setActive(bool $active): UpdateAliasCommand
-    {
-        $this->active = $active;
-
-        return $this;
+    public function __construct(
+        int $aliasId,
+        public readonly array $aliases,
+        public readonly array $searchTerm
+    ) {
+        $this->aliasId = new AliasId($aliasId);
     }
 }

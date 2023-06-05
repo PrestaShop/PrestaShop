@@ -49,10 +49,24 @@ class UpdateAliasHandler implements UpdateAliasHandlerInterface
     {
         $alias = $this->aliasRepository->get($command->aliasId);
 
-        $updatableProperties = $this->aliasUpdatablePropertyFiller->fillUpdatableProperties(
-            $alias,
-            $command
-        );
+//        $updatableProperties = $this->aliasUpdatablePropertyFiller->fillUpdatableProperties(
+//            $alias,
+//            $command
+//        );
+
+        foreach ($command->getAliases())
+
+        //
+
+        $updatableProperties = [];
+        if (null !== $command->getAliases()) {
+            $alias->al = $command->getLocalizedNames();
+            $updatableProperties['name'] = array_keys($command->getLocalizedNames());
+        }
+        if (null !== $command->getGender()) {
+            $title->type = $command->getGender()->getValue();
+            $updatableProperties[] = 'type';
+        }
 
         $this->aliasRepository->partialUpdate(
             $alias,
