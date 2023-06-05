@@ -24,35 +24,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * Manages Error pages (e.g. 500)
+ * Default controller for PrestaShop admin pages.
  */
-class ErrorController extends PrestaShopAdminController
+class PrestaShopAdminController extends AbstractController
 {
-    /**
-     * Enables debug mode from error page (500 for example)
-     *
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminPerformance') && is_granted('create', 'AdminPerformance') && is_granted('delete', 'AdminPerformance')"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function enableDebugModeAction(Request $request): RedirectResponse
+    public static function getSubscribedServices(): array
     {
-        $this->dispatchCommand(new SwitchDebugModeCommand(true));
+        return parent::getSubscribedServices() + [
+            CommandBusInterface::class => CommandBusInterface::class,
+        ];
+    }
 
-        return $this->redirect(
-            $request->request->get('_redirect_url')
-        );
+    /**
+     * Get commands bus to execute commands.
+     */
+    protected function dispatchCommand(mixed $command): void
+    {
+        $this->container->get(CommandBusInterface::class)->handle($command);
     }
 }

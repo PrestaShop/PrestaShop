@@ -30,7 +30,6 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use InvalidArgumentException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,6 +40,8 @@ use Symfony\Component\DependencyInjection\Reference;
  * Controllers lose the ControllerAwareTrait capabilities when they are decorated.
  *
  * This pass injects the container into PrestaShop tagged controllers to overcome this issue.
+ *
+ * @deprecated since 9.0, to be removed in 10.0. Controller are now services and can use dependency injection.
  */
 class ContainerInjectionPass implements CompilerPassInterface
 {
@@ -66,7 +67,7 @@ class ContainerInjectionPass implements CompilerPassInterface
 
             $isContainerAware = (
                 $reflectedClass->implementsInterface(ContainerAwareInterface::class)
-                || is_subclass_of($class, AbstractController::class)
+                || is_subclass_of($class, FrameworkBundleAdminController::class)
             );
 
             if ($isContainerAware) {

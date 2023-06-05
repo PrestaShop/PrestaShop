@@ -192,9 +192,9 @@ class ModuleController extends ModuleAbstractController
 
         $module = $request->get('module_name');
         $source = $request->query->get('source');
-        $moduleManager = $this->container->get('prestashop.module.manager');
-        $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $moduleManager = $this->get('prestashop.module.manager');
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $response = [$module => []];
 
         if (!method_exists($moduleManager, $action)) {
@@ -265,7 +265,7 @@ class ModuleController extends ModuleAbstractController
             $modulePresenter = $this->get('prestashop.adapter.presenter.module');
             $collectionPresented = $modulePresenter->presentCollection($collectionWithActionUrls);
 
-            $response[$module]['action_menu_html'] = $this->container->get('twig')->render(
+            $response[$module]['action_menu_html'] = $this->get('twig')->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $collectionPresented[0],
