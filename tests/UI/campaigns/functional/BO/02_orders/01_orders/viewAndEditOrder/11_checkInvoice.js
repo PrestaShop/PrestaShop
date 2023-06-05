@@ -1102,7 +1102,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
               filePath,
               `${productWithEcoTax.name}, ,  `
               + `€${productWithEcoTax.price.toFixed(2)},  ,`
-              + `ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,  `
+              + `Ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,  `
               + '1, ,  '
               + `€${productWithEcoTax.price.toFixed(2)}`,
             );
