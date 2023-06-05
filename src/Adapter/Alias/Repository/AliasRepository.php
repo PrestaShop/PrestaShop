@@ -32,6 +32,7 @@ use Alias;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -163,5 +164,45 @@ class AliasRepository extends AbstractObjectModelRepository
     {
         $this->aliasValidator->validate($alias);
         $this->partiallyUpdateObjectModel($alias, $propertiesToUpdate, $exceptionClass);
+    }
+
+    /**
+     * Deletes all related aliases
+     *
+     * @param AliasId $aliasId
+     */
+    public function deleteRelatedAliases(AliasId $aliasId): void
+    {
+        $exceptions = [];
+
+        $alisIds = $this->connection->createQueryBuilder()
+            ->addSelect('al.id_alias')
+            ->from($this->dbPrefix . 'alias', 'a')
+            ->where('a.id_alias = :aliasId')
+            ->leftJoin('a', $this->dbPrefix . 'alias', 'al', 'al.search = a.search')
+            ->setParameter('aliasId', $aliasId->getValue())
+            ->execute()
+            ->fetchFirstColumn()
+        ;
+
+        if (empty($alisIds)) {
+            return;
+        }
+
+        foreach ($alisIds as $currentAliasId) {
+            try {
+                $this->deleteObjectModel($this->get(new AliasId((int) $currentAliasId)), CannotDeleteAliasException::class);
+            } catch (CannotDeleteAliasException $e) {
+                $exceptions[] = $e;
+            }
+        }
+
+        if (!empty($exceptions)) {
+            throw new BulkAliasException(
+                $exceptions,
+                'Errors occurred during Alias bulk delete action',
+                BulkFeatureException::FAILED_BULK_DELETE
+            );
+        }
     }
 }

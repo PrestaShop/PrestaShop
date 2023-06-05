@@ -26,27 +26,8 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Alias\Filler\AliasFillerInterface;
-use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasHandlerInterface;
-
-class UpdateAliasHandler implements UpdateAliasHandlerInterface
+class AliasExistsException extends AliasException
 {
-    public function __construct(
-        protected AliasFillerInterface $aliasUpdatablePropertyFiller,
-        protected AliasRepository $aliasRepository
-    ) {
-    }
-
-    /**
-     * @param UpdateAliasCommand $command
-     */
-    public function handle(UpdateAliasCommand $command): void
-    {
-        $this->aliasRepository->deleteRelatedAliases($command->aliasId);
-        $this->aliasRepository->create($command->searchTerm, $command->aliases);
-    }
 }
