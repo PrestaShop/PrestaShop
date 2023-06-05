@@ -41,12 +41,12 @@ class UpdateAliasCommand
     /**
      * @param int $aliasId
      * @param string[] $aliases
-     * @param string[] $searchTerm
+     * @param string $searchTerm
      */
     public function __construct(
         int $aliasId,
         public readonly array $aliases,
-        public readonly array $searchTerm
+        public readonly string $searchTerm
     ) {
         $this->aliasId = new AliasId($aliasId);
     }
