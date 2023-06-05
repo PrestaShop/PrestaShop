@@ -2084,18 +2084,7 @@ abstract class ModuleCore implements ModuleInterface
 
     public static function isEnabled($module_name)
     {
-        if (!Cache::isStored('Module::isEnabled' . $module_name)) {
-            $active = false;
-            $id_module = Module::getModuleIdByName($module_name);
-            if (Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id)) {
-                $active = true;
-            }
-            Cache::store('Module::isEnabled' . $module_name, (bool) $active);
-
-            return (bool) $active;
-        }
-
-        return Cache::retrieve('Module::isEnabled' . $module_name);
+        return !empty(static::$modules_cache[$module_name]['active']);
     }
 
     /**
@@ -2598,15 +2587,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getModuleIdByName($name)
     {
-        $cache_id = 'Module::getModuleIdByName_' . pSQL($name);
-        if (!Cache::isStored($cache_id)) {
-            $result = (int) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
-            Cache::store($cache_id, $result);
-
-            return $result;
-        }
-
-        return Cache::retrieve($cache_id);
+        return static::$modules_cache[$name]['id_module'] ?? false;
     }
 
     /**
