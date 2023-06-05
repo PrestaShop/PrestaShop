@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class HookCore extends ObjectModel
 {
@@ -285,13 +286,16 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_aliases';
         if (!Cache::isStored($cacheId)) {
-            $hookAliasList = Db::getInstance()->executeS('SELECT `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`');
-            $hookAliases = [];
-            if ($hookAliasList) {
-                foreach ($hookAliasList as $ha) {
-                    $hookAliases[strtolower($ha['name'])][] = $ha['alias'];
+            $hookAliases = SymfonyCache::getInstance()->get('hook_aliases', function (ItemInterface $item) {
+                $hookAliasList = Db::getInstance()->executeS('SELECT lower(name) as `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`');
+                $hookAliases = [];
+                if ($hookAliasList) {
+                    foreach ($hookAliasList as $ha) {
+                        $hookAliases[$ha['name']][] = $ha['alias'];
+                    }
                 }
-            }
+                return $hookAliases;
+            });
             Cache::store($cacheId, $hookAliases);
 
             return $hookAliases;
@@ -337,13 +341,16 @@ class HookCore extends ObjectModel
         $cacheId = 'hook_canonical_names';
 
         if (!Cache::isStored($cacheId)) {
-            $databaseResults = Db::getInstance()->executeS('SELECT name, alias FROM `' . _DB_PREFIX_ . 'hook_alias`');
-            $hooksByAlias = [];
-            if ($databaseResults) {
-                foreach ($databaseResults as $record) {
-                    $hooksByAlias[strtolower($record['alias'])] = $record['name'];
+            $hooksByAlias = SymfonyCache::getInstance()->get($cacheId, function (ItemInterface $item) {
+                $databaseResults = Db::getInstance()->executeS('SELECT name, lower(alias) as alias FROM `' . _DB_PREFIX_ . 'hook_alias`');
+                $hooksByAlias = [];
+                if ($databaseResults) {
+                    foreach ($databaseResults as $record) {
+                        $hooksByAlias[$record['alias']] = $record['name'];
+                    }
                 }
-            }
+                return $hooksByAlias;
+            });
             Cache::store($cacheId, $hooksByAlias);
 
             return $hooksByAlias;
