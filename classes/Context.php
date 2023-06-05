@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use Detection\MobileDetect;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -106,8 +107,7 @@ class ContextCore
     /** @var Smarty|null */
     public $smarty;
 
-    /** @var Mobile_Detect */
-    public $mobile_detect;
+    public ?MobileDetect $mobile_detect = null;
 
     /** @var int */
     public $mode;
@@ -127,18 +127,12 @@ class ContextCore
     /** @var int */
     protected $priceComputingPrecision = null;
 
-    /**
-     * Mobile device of the customer.
-     *
-     * @var bool|null
-     */
-    protected $mobile_device = null;
+    /** Mobile device of the customer. */
+    protected ?bool $mobile_device = null;
 
-    /** @var bool|null */
-    protected $is_mobile = null;
+    protected ?bool $is_mobile = null;
 
-    /** @var bool|null */
-    protected $is_tablet = null;
+    protected ?bool $is_tablet = null;
 
     /** @var int */
     public const DEVICE_COMPUTER = 1;
@@ -161,26 +155,18 @@ class ContextCore
     /** @var int */
     public const MODE_HOST = 8;
 
-    /**
-     * Sets Mobile_Detect tool object.
-     *
-     * @return Mobile_Detect
-     */
-    public function getMobileDetect()
+    /** Sets MobileDetect tool object. */
+    public function getMobileDetect(): MobileDetect
     {
         if ($this->mobile_detect === null) {
-            $this->mobile_detect = new Mobile_Detect();
+            $this->mobile_detect = new MobileDetect();
         }
 
         return $this->mobile_detect;
     }
 
-    /**
-     * Checks if visitor's device is a mobile device.
-     *
-     * @return bool
-     */
-    public function isMobile()
+    /** Checks if visitor's device is a mobile device. */
+    public function isMobile(): bool
     {
         if ($this->is_mobile === null) {
             $mobileDetect = $this->getMobileDetect();
@@ -190,12 +176,8 @@ class ContextCore
         return $this->is_mobile;
     }
 
-    /**
-     * Checks if visitor's device is a tablet device.
-     *
-     * @return bool
-     */
-    public function isTablet()
+    /** Checks if visitor's device is a tablet device. */
+    public function isTablet(): bool
     {
         if ($this->is_tablet === null) {
             $mobileDetect = $this->getMobileDetect();
@@ -210,10 +192,8 @@ class ContextCore
      * in the next major. There is no replacement, all clients should have the same experience.
      *
      * Sets mobile_device context variable.
-     *
-     * @return bool
      */
-    public function getMobileDevice()
+    public function getMobileDevice(): bool
     {
         @trigger_error(
             sprintf(
@@ -226,12 +206,8 @@ class ContextCore
         return false;
     }
 
-    /**
-     * Returns mobile device type.
-     *
-     * @return int
-     */
-    public function getDevice()
+    /** Returns mobile device type. */
+    public function getDevice(): int
     {
         static $device = null;
 
