@@ -26,15 +26,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Api\StateProvider;
+namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 
 use ApiPlatform\Metadata\Get;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShopBundle\Api\StateProvider\HookStatusProvider;
+use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
+use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
+use RuntimeException;
 
-class HookStatusProviderTest extends TestCase
+class QueryProviderTest extends TestCase
 {
     /**
      * @var CommandBusInterface
@@ -56,24 +58,29 @@ class HookStatusProviderTest extends TestCase
         ;
     }
 
-    private function createResultBasedOnQuery(GetHookStatus $query): bool
+    private function createResultBasedOnQuery(GetHookStatus $query): HookStatus
     {
         if ($query->getHookId()->getValue() === 1) {
-            return false;
+            return new HookStatus($query->getHookId()->getValue(), false);
         }
 
         if ($query->getHookId()->getValue() === 2) {
-            return true;
+            return new HookStatus($query->getHookId()->getValue(), true);
         }
 
-        return true;
+        throw new RuntimeException(sprintf('Hook "%s" was not expected in query bus mock', $query->getHookId()->getValue()));
     }
 
     public function testProvideHookStatus(): void
     {
-        $hookStatusProvider = new HookStatusProvider($this->queryBus);
+        $hookStatusProvider = new QueryProvider($this->queryBus);
         $get = new Get();
-        self::assertEquals(false, $hookStatusProvider->provide($get, ['id' => 1])->isActive());
-        self::assertEquals(true, $hookStatusProvider->provide($get, ['id' => 2])->isActive());
+        $get = $get->withExtraProperties(['query' => "PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus"]);
+        /** @var HookStatus $hookStatus */
+        $hookStatus = $hookStatusProvider->provide($get, ['hookId' => 1]);
+        self::assertEquals(false, $hookStatus->isActive());
+        /** @var HookStatus $hookStatus */
+        $hookStatus = $hookStatusProvider->provide($get, ['hookId' => 2]);
+        self::assertTrue($hookStatus->isActive());
     }
 }

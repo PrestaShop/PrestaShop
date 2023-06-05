@@ -26,20 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Api\StateProvider;
+namespace PrestaShopBundle\ApiPlatform\Provider;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShopBundle\Api\Resource\HookStatus;
 
-/**
- * Provide a HookStatus DTO when request the api about hook status
- *
- * @experimental
- */
-final class HookStatusProvider implements ProviderInterface
+class QueryProvider implements ProviderInterface
 {
     private $queryBus;
 
@@ -48,18 +41,10 @@ final class HookStatusProvider implements ProviderInterface
         $this->queryBus = $queryBus;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): HookStatus
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        /** @var bool $hookStatus */
-        $hookStatus = $this->queryBus->handle(new GetHookStatus($uriVariables['id']));
+        $query = $operation->getExtraProperties()['query'];
 
-        $hookStatusResource = new HookStatus();
-        $hookStatusResource->setId($uriVariables['id']);
-        $hookStatusResource->setActive($hookStatus);
-
-        return $hookStatusResource;
+        return $this->queryBus->handle(new $query(...$uriVariables));
     }
 }

@@ -26,31 +26,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Hook\QueryHandler;
+namespace PrestaShopBundle\ApiPlatform\Resources;
 
-use Hook;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
+use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
-/**
- * @internal
- */
-final class GetHookStatusHandler implements GetHookStatusHandlerInterface
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/hook-status/{hookId}',
+            requirements: ['id' => '\d+'],
+            exceptionToStatus: [HookNotFoundException::class => 404],
+            provider: QueryProvider::class,
+            extraProperties: ['query' => GetHookStatus::class]
+        ),
+        new Put(
+            uriTemplate: '/hook-status',
+            processor: CommandProcessor::class,
+            extraProperties: ['command' => UpdateHookStatusCommand::class]
+        ),
+    ]
+)]
+class Hook
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function handle(GetHookStatus $query)
-    {
-        $hookId = $query->getHookId()->getValue();
-        $hook = new Hook($hookId);
+    #[ApiProperty(identifier: true)]
+    public int $hookId;
 
-        if ($hook->id !== $hookId) {
-            throw new HookNotFoundException(sprintf('Hook with id "%d" was not found.', $hookId));
-        }
-
-        return new HookStatus($hook->id, (bool) $hook->active);
-    }
+    /**
+     * @var bool
+     */
+    public bool $status;
 }

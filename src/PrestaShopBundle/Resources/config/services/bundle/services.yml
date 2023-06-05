@@ -104,12 +104,19 @@ services:
     public: false
     tags: [ 'container.env_var_processor' ]
 
-  PrestaShopBundle\Api\StateProvider\HookStatusProvider:
+  PrestaShopBundle\ApiPlatform\Provider\QueryProvider:
     tags: [ 'api_platform.state_provider' ]
     public: false
     autowire: true
     arguments:
       - '@prestashop.core.query_bus'
+
+  PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
+    tags: [ 'api_platform.state_processor' ]
+    public: false
+    autowire: true
+    arguments:
+      - '@prestashop.core.command_bus'
 
   PrestaShopBundle\Security\Admin\SessionRenewer:
     arguments:

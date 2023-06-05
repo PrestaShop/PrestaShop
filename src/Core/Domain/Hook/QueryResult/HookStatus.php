@@ -24,14 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShopBundle\Api\Resource;
+namespace PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult;
 
 /**
- * DTO used to get necessary informations when request the API about hook status
- *
- * @experimental
+ * Stores query result for getting manufacturer for viewing
  */
 class HookStatus
 {
@@ -45,6 +41,12 @@ class HookStatus
      */
     private $isActive;
 
+    public function __construct(int $id, bool $isActive)
+    {
+        $this->id = $id;
+        $this->isActive = $isActive;
+    }
+
     /**
      * @return int
      */
@@ -54,26 +56,10 @@ class HookStatus
     }
 
     /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return bool
      */
     public function isActive(): bool
     {
         return $this->isActive;
-    }
-
-    /**
-     * @param bool $isActive
-     */
-    public function setActive(bool $isActive): void
-    {
-        $this->isActive = $isActive;
     }
 }

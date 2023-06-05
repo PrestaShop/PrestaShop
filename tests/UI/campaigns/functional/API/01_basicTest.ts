@@ -26,7 +26,7 @@ describe('API : Basic Test', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestNewApiHookStatus', baseContext);
 
       const apiResponse = await apiContext.get('new-api/hook-status');
-      await expect(apiResponse.status()).to.eq(404);
+      await expect(apiResponse.status()).to.eq(405);
     });
   });
 });

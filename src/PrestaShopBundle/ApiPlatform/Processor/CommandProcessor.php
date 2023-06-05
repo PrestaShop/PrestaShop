@@ -26,31 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Hook\QueryHandler;
+namespace PrestaShopBundle\ApiPlatform\Processor;
 
-use Hook;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
-/**
- * @internal
- */
-final class GetHookStatusHandler implements GetHookStatusHandlerInterface
+class CommandProcessor implements ProcessorInterface
 {
     /**
-     * {@inheritdoc}
+     * @var CommandBusInterface
      */
-    public function handle(GetHookStatus $query)
-    {
-        $hookId = $query->getHookId()->getValue();
-        $hook = new Hook($hookId);
+    private $commandBus;
 
-        if ($hook->id !== $hookId) {
-            throw new HookNotFoundException(sprintf('Hook with id "%d" was not found.', $hookId));
+    /**
+     * @param CommandBusInterface $commandBus
+     */
+    public function __construct(CommandBusInterface $commandBus)
+    {
+        $this->commandBus = $commandBus;
+    }
+
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        $command = $operation->getExtraProperties()['command'];
+        $reflectionMethod = new \ReflectionMethod($command, '__construct');
+        $constructParameters = $reflectionMethod->getParameters();
+        $parameters = [];
+        foreach ($constructParameters as $parameter) {
+            $parameters[] = $data->{$parameter->name};
         }
 
-        return new HookStatus($hook->id, (bool) $hook->active);
+        $this->commandBus->handle(new $command(...array_values($parameters)));
     }
 }
