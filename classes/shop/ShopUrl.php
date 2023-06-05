@@ -134,6 +134,7 @@ class ShopUrlCore extends ObjectModel
         foreach (Db::getInstance()->executeS($sql) as $row) {
             Db::getInstance()->update('shop_url', ['main' => 1], 'id_shop_url = ' . $row['id_shop_url']);
         }
+        SymfonyCache::getInstance()->invalidateTags('shop');
 
         return $res;
     }

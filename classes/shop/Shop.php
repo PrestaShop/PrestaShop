@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * @since 1.5.0
@@ -686,21 +687,32 @@ class ShopCore extends ObjectModel
         if (null !== self::$shops && !$refresh) {
             return;
         }
-
-        self::$shops = [];
-
-        $from = '';
-        $where = '';
-
+        if ($refresh) {
+            SymfonyCache::getInstance()->invalidateTags('shop');
+        }
+        $cache_id = 'shops';
+        $employee_id = null;
         $employee = Context::getContext()->employee;
 
-        // If the profile isn't a superAdmin
+        // If Front Office or if the profile isn't a superAdmin
         if (Validate::isLoadedObject($employee) && $employee->id_profile != _PS_ADMIN_PROFILE_) {
-            $from .= 'LEFT JOIN ' . _DB_PREFIX_ . 'employee_shop es ON es.id_shop = s.id_shop';
-            $where .= 'AND es.id_employee = ' . (int) $employee->id;
+            $employee_id = (int) $employee->id;
+            $cache_id .= ' _ ' . $employee->employee_id;
         }
 
-        $sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri
+        self::$shops = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($employee_id) {
+            $item->tag('shop');
+            $value = [];
+
+            $from = '';
+            $where = '';
+
+            if (!empty($employee_id)) {
+                $from .= 'LEFT JOIN ' . _DB_PREFIX_ . 'employee_shop es ON es.id_shop = s.id_shop';
+                $where .= 'AND es.id_employee = ' . $employee_id;
+            }
+
+            $sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri
                 FROM ' . _DB_PREFIX_ . 'shop_group gs
                 LEFT JOIN ' . _DB_PREFIX_ . 'shop s
                     ON s.id_shop_group = gs.id_shop_group
@@ -712,34 +724,37 @@ class ShopCore extends ObjectModel
                     ' . $where . '
                 ORDER BY gs.name, s.name';
 
-        if ($results = Db::getInstance()->executeS($sql)) {
-            foreach ($results as $row) {
-                if (!isset(self::$shops[$row['id_shop_group']])) {
-                    self::$shops[$row['id_shop_group']] = [
-                        'id' => $row['id_shop_group'],
-                        'name' => $row['group_name'],
-                        'share_customer' => $row['share_customer'],
-                        'share_order' => $row['share_order'],
-                        'share_stock' => $row['share_stock'],
-                        'shops' => [],
+            if ($results = Db::getInstance()->executeS($sql)) {
+                foreach ($results as $row) {
+                    if (!isset($value[$row['id_shop_group']])) {
+                        $value[$row['id_shop_group']] = [
+                            'id' => $row['id_shop_group'],
+                            'name' => $row['group_name'],
+                            'share_customer' => $row['share_customer'],
+                            'share_order' => $row['share_order'],
+                            'share_stock' => $row['share_stock'],
+                            'shops' => [],
+                        ];
+                    }
+
+                    $row = $row + ['theme_name' => ''];
+
+                    $value[$row['id_shop_group']]['shops'][$row['id_shop']] = [
+                        'id_shop' => $row['id_shop'],
+                        'id_shop_group' => $row['id_shop_group'],
+                        'name' => $row['shop_name'],
+                        'id_category' => $row['id_category'],
+                        'theme_name' => $row['theme_name'],
+                        'domain' => $row['domain'],
+                        'domain_ssl' => $row['domain_ssl'],
+                        'uri' => $row['physical_uri'] . $row['virtual_uri'],
+                        'active' => $row['active'],
                     ];
                 }
-
-                $row = $row + ['theme_name' => ''];
-
-                self::$shops[$row['id_shop_group']]['shops'][$row['id_shop']] = [
-                    'id_shop' => $row['id_shop'],
-                    'id_shop_group' => $row['id_shop_group'],
-                    'name' => $row['shop_name'],
-                    'id_category' => $row['id_category'],
-                    'theme_name' => $row['theme_name'],
-                    'domain' => $row['domain'],
-                    'domain_ssl' => $row['domain_ssl'],
-                    'uri' => $row['physical_uri'] . $row['virtual_uri'],
-                    'active' => $row['active'],
-                ];
             }
-        }
+
+            return $value;
+        });
     }
 
     public static function getCompleteListOfShopsID()
@@ -1011,6 +1026,7 @@ class ShopCore extends ObjectModel
         static::$shops = null;
         static::$feature_active = null;
         static::$context_shop_group = null;
+        SymfonyCache::getInstance()->invalidateTags('shop');
         Cache::clean('Shop::*');
     }
 
@@ -1180,8 +1196,11 @@ class ShopCore extends ObjectModel
     public static function isFeatureActive()
     {
         if (static::$feature_active === null) {
-            static::$feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
+            static::$feature_active = SymfonyCache::getInstance()->get('isFeatureActive', function (ItemInterface $item){
+                $item->tag('shop');
+                return Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
                 && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
+            });
         }
 
         return static::$feature_active;
