@@ -35,7 +35,6 @@ use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
@@ -45,7 +44,6 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             uriTemplate: '/hook-status/{hookId}',
             requirements: ['id' => '\d+'],
             exceptionToStatus: [HookNotFoundException::class => 404],
-            output: HookStatus::class,
             provider: QueryProvider::class,
             extraProperties: ['query' => GetHookStatus::class]
         ),

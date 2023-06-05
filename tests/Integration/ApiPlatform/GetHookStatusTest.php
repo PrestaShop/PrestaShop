@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Api;
+namespace Tests\Integration\ApiPlatform;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use Tests\Resources\DatabaseDump;
@@ -68,6 +68,44 @@ class GetHookStatusTest extends ApiTestCase
 
         $inactiveHook->delete();
         $activeHook->delete();
+    }
+
+    public function testDisableHook(): void
+    {
+        $hook = new \Hook();
+        $hook->name = 'disableHook';
+        $hook->active = true;
+        $hook->add();
+
+        $bearerToken = $this->getBearerToken();
+        static::createClient()->request('PUT', '/new-api/hook-status', [
+            'auth_bearer' => $bearerToken,
+            'json' => ['hookId' => (int) $hook->id, 'status' => false],
+        ]);
+        self::assertResponseStatusCodeSame(200);
+
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
+        self::assertEquals(json_decode($response->getContent())->active, false);
+        self::assertResponseStatusCodeSame(200);
+    }
+
+    public function testEnableHook(): void
+    {
+        $hook = new \Hook();
+        $hook->name = 'enableHook';
+        $hook->active = false;
+        $hook->add();
+
+        $bearerToken = $this->getBearerToken();
+        static::createClient()->request('PUT', '/new-api/hook-status', [
+            'auth_bearer' => $bearerToken,
+            'json' => ['hookId' => (int) $hook->id, 'status' => true],
+        ]);
+        self::assertResponseStatusCodeSame(200);
+
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
+        self::assertEquals(json_decode($response->getContent())->active, true);
+        self::assertResponseStatusCodeSame(200);
     }
 
     private function getBearerToken(): string
