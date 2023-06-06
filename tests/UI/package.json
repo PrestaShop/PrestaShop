@@ -34,7 +34,7 @@
     "test:functional:BO:login": "TEST_PATH='functional/BO/00_login/*' npm run test:specific",
     "test:functional:BO:orders": "TEST_PATH='functional/BO/02_orders/*' npm run test:specific",
     "test:functional:BO:orders:01": "TEST_PATH='functional/BO/02_orders/01*/*' npm run test:specific",
-    "test:functional:BO:orders:01-0*1*": "TEST_PATH='functional/BO/02_orders/01*/{0*,1*}' npm run test:specific",
+    "test:functional:BO:orders:01:0-1": "TEST_PATH='functional/BO/02_orders/01*/{0*,1*}' npm run test:specific",
     "test:functional:BO:orders:01-create-orders": "TEST_PATH='functional/BO/02_orders/01*/createOrders/*' npm run test:specific",
     "test:functional:BO:orders:01-view-and-edit-order": "TEST_PATH='functional/BO/02_orders/01*/viewAndEditOrder/*' npm run test:specific",
     "test:functional:BO:orders:02": "TEST_PATH='functional/BO/02_orders/02*/*' npm run test:specific",
