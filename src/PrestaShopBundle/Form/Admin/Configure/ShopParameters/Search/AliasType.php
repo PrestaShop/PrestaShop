@@ -76,11 +76,9 @@ class AliasType extends TranslatorAwareType
             ->add('aliases', TranslatableType::class, [
                 'required' => true,
                 'label' => $this->trans('Aliases', 'Admin.Shopparameters.Help'),
-                'label_tag_name' => 'h3',
-                'label_subtitle' => $this->trans('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\').', 'Admin.Shopparameters.Help'),
                 'help' => sprintf(
                     '%s',
-                    $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
+                    $this->trans('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\'). Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
                 ),
                 'options' => [
                     'constraints' => [
@@ -94,7 +92,6 @@ class AliasType extends TranslatorAwareType
             ])
             ->add('search_terms', EntitySearchInputType::class, [
                 'label' => $this->trans('Search Terms', 'Admin.Shopparameters.Help'),
-                'label_tag_name' => 'h3',
                 'remote_url' => $this->router->generate('admin_search_index', [
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
