@@ -126,7 +126,7 @@ class HookCore extends ObjectModel
         Cache::clean('hook_idsbyname');
         Cache::clean('hook_idsbyname_withalias');
         Cache::clean('active_hooks');
-        SymfonyCache::getInstance()->invalidateTags('hook');
+        SymfonyCache::getInstance()->invalidateTags(['hook']);
 
         return parent::add($autodate, $null_values);
     }
@@ -136,7 +136,7 @@ class HookCore extends ObjectModel
         Cache::clean('hook_idsbyname');
         Cache::clean('hook_idsbyname_withalias');
         Cache::clean('active_hooks');
-        SymfonyCache::getInstance()->invalidateTags('hook');
+        SymfonyCache::getInstance()->invalidateTags(['hook']);
 
         parent::clearCache($all);
     }
@@ -650,7 +650,7 @@ class HookCore extends ObjectModel
                 ]
             );
         }
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
 
         return $return;
     }
@@ -687,7 +687,7 @@ class HookCore extends ObjectModel
                 'hook_name' => $hook_name,
             ]
         );
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
 
         return $result;
     }
@@ -758,7 +758,7 @@ class HookCore extends ObjectModel
 
         self::$disabledHookModules[] = $moduleId;
         Cache::clean(self::MODULE_LIST_BY_HOOK_KEY . '*');
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
     }
 
     /**

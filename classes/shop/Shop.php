@@ -688,7 +688,7 @@ class ShopCore extends ObjectModel
             return;
         }
         if ($refresh) {
-            SymfonyCache::getInstance()->invalidateTags('shop');
+            SymfonyCache::getInstance()->invalidateTags(['shop']);
         }
         $cache_id = 'shops';
         $employee_id = null;
@@ -1026,7 +1026,7 @@ class ShopCore extends ObjectModel
         static::$shops = null;
         static::$feature_active = null;
         static::$context_shop_group = null;
-        SymfonyCache::getInstance()->invalidateTags('shop');
+        SymfonyCache::getInstance()->invalidateTags(['shop']);
         Cache::clean('Shop::*');
     }
 

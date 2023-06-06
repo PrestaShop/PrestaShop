@@ -478,7 +478,7 @@ abstract class ModuleCore implements ModuleInterface
         if (Module::$update_translations_after_install) {
             $this->updateModuleTranslations();
         }
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
 
         return true;
     }
@@ -629,7 +629,7 @@ abstract class ModuleCore implements ModuleInterface
             Module::upgradeModuleVersion($this->name, $upgrade['upgraded_to']);
         }
         $this->setUpgradeMessage($upgrade);
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
 
         return $upgrade;
     }
@@ -812,7 +812,7 @@ abstract class ModuleCore implements ModuleInterface
 
             return true;
         }
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
 
         return false;
     }
@@ -902,7 +902,7 @@ abstract class ModuleCore implements ModuleInterface
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
         }
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
 
         return true;
     }
@@ -1017,7 +1017,7 @@ abstract class ModuleCore implements ModuleInterface
         if (!$this->hasShopAssociations()) {
             $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
         }
-        SymfonyCache::getInstance()->invalidateTags('module');
+        SymfonyCache::getInstance()->invalidateTags(['module']);
 
         return (bool) $result;
     }
