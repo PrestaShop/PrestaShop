@@ -111,7 +111,7 @@ class AttachmentCore extends ObjectModel
     public function delete()
     {
         if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
-            @unlink(_PS_DOWNLOAD_DIR_ . $this->file);
+            @unlink(_PS_DOWNLOAD_DIR_ . basename($this->file));
         }
 
         $sql = new DbQuery();
