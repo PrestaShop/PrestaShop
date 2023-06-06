@@ -697,7 +697,7 @@ class ShopCore extends ObjectModel
         // If Front Office or if the profile isn't a superAdmin
         if (Validate::isLoadedObject($employee) && $employee->id_profile != _PS_ADMIN_PROFILE_) {
             $employee_id = (int) $employee->id;
-            $cache_id .= ' _ ' . $employee->employee_id;
+            $cache_id .= ' _ ' . $employee_id;
         }
 
         self::$shops = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($employee_id) {
