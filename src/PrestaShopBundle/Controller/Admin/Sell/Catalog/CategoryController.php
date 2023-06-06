@@ -121,7 +121,7 @@ class CategoryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
-            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request, $currentCategoryId),
+            'layoutHeaderToolbarBtn' => $this->getCategoryIndexToolbarButtons($request, $currentCategoryId),
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
@@ -872,9 +872,15 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getCategoryToolbarButtons(Request $request, int $categoryId): array
+    private function getCategoryIndexToolbarButtons(Request $request, int $categoryId): array
     {
         $toolbarButtons = [];
+
+        $toolbarButtons['edit'] = [
+            'href' => $this->generateUrl('admin_categories_edit', ['categoryId' => $categoryId]),
+            'desc' => $this->trans('Edit category', 'Admin.Catalog.Feature'),
+            'icon' => 'mode_edit',
+        ];
 
         if ($this->get('prestashop.adapter.feature.multistore')->isUsed()) {
             $toolbarButtons['add_root'] = [

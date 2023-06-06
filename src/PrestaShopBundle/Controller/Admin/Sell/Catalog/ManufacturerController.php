@@ -100,6 +100,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'manufacturerGrid' => $this->presentGrid($manufacturerGrid),
             'manufacturerAddressGrid' => $this->presentGrid($manufacturerAddressGrid),
             'settingsTipMessage' => $this->getSettingsTipMessage(),
+            'layoutHeaderToolbarBtn' => $this->getManufacturerIndexToolbarButtons(),
         ]);
     }
 
@@ -193,6 +194,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'layoutHeaderToolbarBtn' => $this->getManufacturerViewToolbarButtons($manufacturerId),
             'layoutTitle' => $this->trans(
                 'Brand %name%',
                 'Admin.Navigation.Menu',
@@ -833,5 +835,45 @@ class ManufacturerController extends FrameworkBundleAdminController
             'Admin.Catalog.Notification',
             [$urlOpening, $urlEnding]
         );
+    }
+
+    /**
+     * @return array
+     */
+    private function getManufacturerIndexToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add_manufacturer'] = [
+            'href' => $this->generateUrl('admin_manufacturers_create'),
+            'desc' => $this->trans('Add new brand', 'Admin.Catalog.Feature'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        $toolbarButtons['add_manufacturer_address'] = [
+            'href' => $this->generateUrl('admin_manufacturer_addresses_create'),
+            'desc' => $this->trans('Add new brand address', 'Admin.Catalog.Feature'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
+    }
+
+    /**
+     * @param int $manufacturerId
+     *
+     * @return array
+     */
+    private function getManufacturerViewToolbarButtons(int $manufacturerId): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['edit'] = [
+            'href' => $this->generateUrl('admin_manufacturers_edit', ['manufacturerId' => $manufacturerId]),
+            'desc' => $this->trans('Edit brand', 'Admin.Catalog.Feature'),
+            'icon' => 'mode_edit',
+        ];
+
+        return $toolbarButtons;
     }
 }
