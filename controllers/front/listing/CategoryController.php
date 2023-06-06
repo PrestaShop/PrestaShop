@@ -44,7 +44,7 @@ class CategoryControllerCore extends ProductListingFrontController
      */
     protected $category;
 
-    public function canonicalRedirection($canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = '')
     {
         if (Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
@@ -232,7 +232,7 @@ class CategoryControllerCore extends ProductListingFrontController
         }, $this->category->getSubCategories($this->context->language->id));
     }
 
-    protected function getImage($object, $id_image)
+    protected function getImage(Category $object, int $id_image)
     {
         $retriever = new ImageRetriever(
             $this->context->link

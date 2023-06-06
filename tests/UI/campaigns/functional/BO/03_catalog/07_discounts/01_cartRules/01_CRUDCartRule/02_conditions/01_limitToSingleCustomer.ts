@@ -143,7 +143,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       {args: {column: 'code', value: ''}},
       {args: {column: 'description', value: newCartRuleData.name}},
       {args: {column: 'quantity', value: '1'}},
-      {args: {column: 'value', value: '20.00%'}},
+      {args: {column: 'value', value: '20%'}},
       {args: {column: 'minimum', value: 'None'}},
       {args: {column: 'cumulative', value: 'Yes'}},
       {args: {column: 'expiration_date', value: expirationDate}},

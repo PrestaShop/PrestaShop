@@ -778,7 +778,7 @@ class FrontControllerCore extends Controller
      *
      * @param string $canonical_url
      */
-    protected function canonicalRedirection($canonical_url = '')
+    protected function canonicalRedirection(string $canonical_url = '')
     {
         if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET') {
             return;

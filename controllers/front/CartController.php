@@ -56,7 +56,7 @@ class CartControllerCore extends FrontController
      *
      * @param string $canonicalURL
      */
-    public function canonicalRedirection($canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = '')
     {
     }
 
@@ -538,7 +538,7 @@ class CartControllerCore extends FrontController
      *
      * @return bool
      */
-    public function productInCartMatchesCriteria($productInCart)
+    public function productInCartMatchesCriteria(array $productInCart)
     {
         return (
             !isset($this->id_product_attribute) ||
@@ -582,7 +582,7 @@ class CartControllerCore extends FrontController
      *
      * @return bool
      */
-    protected function shouldAvailabilityErrorBeRaised($product, $qtyToCheck)
+    protected function shouldAvailabilityErrorBeRaised(Product $product, int $qtyToCheck)
     {
         if (($this->id_product_attribute)) {
             return !Product::isAvailableWhenOutOfStock($product->out_of_stock)

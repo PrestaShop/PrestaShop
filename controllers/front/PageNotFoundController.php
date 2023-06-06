@@ -46,7 +46,7 @@ class PageNotFoundControllerCore extends FrontController
         $this->setTemplate('errors/404');
     }
 
-    protected function canonicalRedirection($canonical_url = '')
+    protected function canonicalRedirection(string $canonical_url = '')
     {
         // 404 - no need to redirect to the canonical url
     }

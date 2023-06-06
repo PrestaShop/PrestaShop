@@ -336,7 +336,7 @@ class GetFileControllerCore extends FrontController
      *
      * @param string $msg
      */
-    protected function displayCustomError($msg)
+    protected function displayCustomError(string $msg)
     {
         $translations = [
             'Invalid key.' => $this->trans('Invalid key.', [], 'Shop.Notifications.Error'),
