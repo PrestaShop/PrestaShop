@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use Context;
 use Employee;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
@@ -112,11 +111,6 @@ class AdminModuleDataProvider implements ModuleInterface
     private $employee;
 
     /**
-     * @var ShopContext
-     */
-    private $shopContext;
-
-    /**
      * @var array
      */
     protected $catalog_modules = [];
@@ -134,13 +128,11 @@ class AdminModuleDataProvider implements ModuleInterface
     public function __construct(
         CategoriesProvider $categoriesProvider,
         ModuleDataProvider $modulesProvider,
-        ShopContext $shopContext,
         Employee $employee = null
     ) {
         $this->categoriesProvider = $categoriesProvider;
         $this->moduleProvider = $modulesProvider;
         $this->employee = $employee;
-        $this->shopContext = $shopContext;
     }
 
     /**
@@ -241,7 +233,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             if ($module->isInstalled()) {
                 unset($urls['install']);
-                if (!$module->isActive($this->shopContext)) {
+                if (!$module->isActive()) {
                     unset(
                         $urls['disable'],
                         $urls['enableMobile'],
