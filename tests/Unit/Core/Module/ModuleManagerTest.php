@@ -94,7 +94,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->uninstall(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -103,7 +103,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->enable(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->enable(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -112,7 +112,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->disable(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->disable(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -122,7 +122,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->upgrade(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -135,7 +135,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE_NAME, true));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->reset(self::UNINSTALLED_MODULE_NAME);
     }
 
