@@ -353,6 +353,25 @@ class ProductLazyArrayTest extends TestCase
             self::PRODUCT_AVAILABLE_NOW,
         ];
 
+        // Product page: out of stock, not allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 0,
+                    'stock_quantity' => 0,
+                    'quantity' => 0,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            self::PRODUCT_NOT_AVAILABLE,
+        ];
+
         // not enough stock, not allowed to order when out of stock
         yield [
             array_merge(
