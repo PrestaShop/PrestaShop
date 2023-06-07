@@ -369,7 +369,6 @@ class ModuleDataProvider
         return false;
     }
 
-
     /**
      * Checks if the module is active on at least one shop of the context.
      */
