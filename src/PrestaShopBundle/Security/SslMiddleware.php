@@ -135,7 +135,7 @@ class SslMiddleware
 
         return count($protocol) === 2
             && $protocol[0] === 'TLS'
-            && preg_match('/^1\.[01]$/', $protocol[1]) === 0
+            && preg_match('/^(1(\.0)?(\.1)?$).*$/', $protocol[1]) === 0
         ;
     }
 
