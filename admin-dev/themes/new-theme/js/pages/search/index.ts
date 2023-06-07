@@ -35,6 +35,7 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import TranslatableInput from '@components/translatable-input';
+import SearchTermSearchInput from '@components/form/search-term-search-input';
 
 const {$} = window;
 
@@ -43,6 +44,7 @@ const {$} = window;
  */
 $(() => {
   const aliasGrid = new Grid('alias');
+  const searchTermInputContainer = '#alias_search_terms_search_input';
 
   aliasGrid.addExtension(new ReloadListActionExtension());
   aliasGrid.addExtension(new ExportToSqlManagerExtension());
@@ -63,4 +65,6 @@ $(() => {
       createTokensOnBlur: true,
     },
   });
+
+  new SearchTermSearchInput(searchTermInputContainer);
 });
