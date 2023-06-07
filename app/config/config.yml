@@ -91,14 +91,6 @@ twig:
     modify_all_shops_prefix: !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX
 
-# Swiftmailer Configuration
-swiftmailer:
-  transport: "%mailer_transport%"
-  host: "%mailer_host%"
-  username: "%mailer_user%"
-  password: "%mailer_password%"
-  spool: { type: memory }
-
 api_platform:
   title: PrestaShop API
   version: 1.0.0

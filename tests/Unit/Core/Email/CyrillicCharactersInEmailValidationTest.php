@@ -23,49 +23,48 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Email;
+namespace Tests\Unit\Core\Email;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Result\Reason\ExceptionFound;
-use Egulias\EmailValidator\Validation\EmailValidation;
-use PrestaShop\PrestaShop\Core\Exception\NonASCIIInLocalPartException;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Email\CyrillicCharactersInEmailValidation;
 
-class SwiftMailerValidation implements EmailValidation
+class CyrillicCharactersInEmailValidationTest extends TestCase
 {
     /**
-     * @var InvalidEmail|null
+     * @var CyrillicCharactersInEmailValidation
      */
-    private $error;
+    protected $validator;
 
     /**
-     * {@inheritdoc}
+     * @var EmailLexer
      */
-    public function isValid(string $email, EmailLexer $emailLexer): bool
-    {
-        $parts = explode('@', $email);
-        if (preg_match('/[^\x00-\x7F]/', $parts[0])) {
-            $this->error = new InvalidEmail(new ExceptionFound(new NonASCIIInLocalPartException()), '');
-        }
+    protected $lexer;
 
-        return null === $this->error;
+    protected function setUp(): void
+    {
+        $this->validator = new CyrillicCharactersInEmailValidation();
+        $this->lexer = new EmailLexer();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getError(): ?InvalidEmail
+    public function testForEmptyWarnings(): void
     {
-        return $this->error;
+        $this->assertEquals([], $this->validator->getWarnings());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getWarnings(): array
+    public function testForNonASCII(): void
     {
-        return [];
+        $this->assertNull($this->validator->getError());
+        $this->assertFalse($this->validator->isValid('é@gmail.com', $this->lexer));
+        $this->assertInstanceOf(InvalidEmail::class, $this->validator->getError());
+    }
+
+    public function testForASCII(): void
+    {
+        $this->assertNull($this->validator->getError());
+        $this->assertTrue($this->validator->isValid('test@gmail.com', $this->lexer));
+        $this->assertNull($this->validator->getError());
     }
 }

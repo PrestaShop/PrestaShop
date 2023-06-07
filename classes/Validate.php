@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
-use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
+use PrestaShop\PrestaShop\Core\Email\CyrillicCharactersInEmailValidation;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
@@ -75,10 +75,10 @@ class ValidateCore
             return false;
         }
 
-        // Check if the value is correct according to both validators (RFC & SwiftMailer)
+        // Check if the value is correct according to both validators (RFC & CyrillicCharactersInEmailValidation)
         return (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
             new RFCValidation(),
-            new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
+            new CyrillicCharactersInEmailValidation(),
         ]));
     }
 

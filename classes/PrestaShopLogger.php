@@ -169,7 +169,7 @@ class PrestaShopLoggerCore extends ObjectModel
         $log->id_shop = Shop::getContext() == Shop::CONTEXT_SHOP ? (int) $context->shop->getContextualShopId() : null;
         $log->id_shop_group = Shop::getContext() == Shop::CONTEXT_GROUP ? (int) $context->shop->getContextShopGroupID() : null;
 
-        if ($objectType != 'SwiftMessage') {
+        if ($objectType != 'MailerMessage') {
             PrestaShopLogger::sendByMail($log);
         }
 
