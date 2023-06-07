@@ -171,6 +171,7 @@ class ConfigurationCore extends ObjectModel
     public static function loadConfiguration()
     {
         $value = SymfonyCache::getInstance()->get('configuration', function (ItemInterface $item) {
+            $item->tag('configuration');
             $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(

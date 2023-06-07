@@ -395,11 +395,14 @@ class ShopCore extends ObjectModel
         }
 
         $http_host = Tools::getHttpHost();
-        $all_media = array_merge(
-            Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
-            Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
-            Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
-        );
+        $all_media = SymfonyCache::getInstance()->get('all_media', function (ItemInterface $item) {
+            $item->tag(['configuration']);
+            return array_merge(
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+            );
+        });
 
         $isAllShop = 'all' === $id_shop;
         $isApiInUse = defined('_PS_API_IN_USE_') && _PS_API_IN_USE_;
