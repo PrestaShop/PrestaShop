@@ -526,3 +526,11 @@ services:
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\StoreGridDataFactory'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.api_access:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory'
+      - '@prestashop.core.grid.data_factory.api_access'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'

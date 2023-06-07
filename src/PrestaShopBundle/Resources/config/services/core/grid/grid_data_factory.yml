@@ -656,3 +656,12 @@ services:
     public: false
     arguments:
       - '@prestashop.core.grid.data.factory.store'
+
+  prestashop.core.grid.data_factory.api_access:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    public: false
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\ApiAccessQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'api_access'
