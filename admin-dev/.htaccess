@@ -73,3 +73,9 @@ DirectoryIndex index.php
         # RedirectTemp cannot be used instead
     </IfModule>
 </IfModule>
+
+<IfModule mod_ssl.c>
+    # Send information about SSL/TLS version to $_SERVER so we can check that
+    # the required version of TLS is used for API calls.
+    SSLOptions +StdEnvVars
+</IfModule>

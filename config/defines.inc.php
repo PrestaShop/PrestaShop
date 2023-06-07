@@ -63,6 +63,9 @@ if (!defined('_PS_SMARTY_CACHING_TYPE_')) {
 if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
 }
+if (!defined('_PS_API_FORCE_TLS_VERSION_')) {
+    define('_PS_API_FORCE_TLS_VERSION_', true);
+}
 
 if (!defined('_PS_DO_NOT_LOAD_CONFIGURATION_')) {
     define('_PS_DO_NOT_LOAD_CONFIGURATION_', false);
