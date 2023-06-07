@@ -135,7 +135,7 @@ class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestric
     {
         return [
             $this->trans('Customer currency', 'Admin.Payment.Feature') => PaymentModulePreferencesConfiguration::CUSTOMER_CURRENCY,
-            $this->trans('Shop default currency', 'Admin.Payment.Feature') => PaymentModulePreferencesConfiguration::SHOP_DEFAULT_CURRENCY,
+            $this->trans('Store default currency', 'Admin.Payment.Feature') => PaymentModulePreferencesConfiguration::SHOP_DEFAULT_CURRENCY,
         ];
     }
 }
