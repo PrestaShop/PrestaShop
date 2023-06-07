@@ -75,7 +75,11 @@ if (_PS_MODE_DEV_) {
 // Loads .env file from the root of project if present
 $dotEnvFile = dirname(__FILE__, 2) . '/.env';
 if (file_exists($dotEnvFile)) {
-    (new Dotenv(false))->loadEnv($dotEnvFile);
+    (new Dotenv())
+        // DO NOT use putEnv
+        ->usePutenv(false)
+        ->loadEnv($dotEnvFile)
+    ;
 }
 
 require_once __DIR__ . '/../app/AppKernel.php';
