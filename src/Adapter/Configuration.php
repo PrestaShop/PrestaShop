@@ -422,18 +422,19 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     private function buildShopConstraintFromContext(): ShopConstraint
     {
-        @trigger_error(
-            'Not specifying the optional ShopConstraint parameter is deprecated since version 1.7.8.0',
-            E_USER_DEPRECATED
-        );
-
-        if (Shop::getContext() === Shop::CONTEXT_SHOP) {
-            return ShopConstraint::shop(Shop::getContextShopID());
-        } elseif (Shop::getContext() === Shop::CONTEXT_GROUP) {
-            return ShopConstraint::shopGroup(Shop::getContextShopGroupID());
+        static $constraint;
+        if (!is_null($constraint)) {
+            return $constraint;
         }
 
-        return ShopConstraint::allShops();
+        if (Shop::getContext() === Shop::CONTEXT_SHOP) {
+            $constraint = ShopConstraint::shop(Shop::getContextShopID());
+        } elseif (Shop::getContext() === Shop::CONTEXT_GROUP) {
+            $constraint = ShopConstraint::shopGroup(Shop::getContextShopGroupID());
+        }
+
+        $constraint = ShopConstraint::allShops();
+        return $constraint;
     }
 
     /**
