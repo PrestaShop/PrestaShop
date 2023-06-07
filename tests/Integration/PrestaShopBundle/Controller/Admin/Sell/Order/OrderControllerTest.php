@@ -79,7 +79,6 @@ class OrderControllerTest extends WebTestCase
 
     public function testSearchProductsWithContent(): void
     {
-        $token = $this->tokenManager->getToken('form');
         $this->client->request(
             'GET',
             $this->router->generate(
@@ -88,7 +87,6 @@ class OrderControllerTest extends WebTestCase
                     'search_phrase' => 'Brown bear',
                     'currency_id' => 1,
                     'order_id' => 1,
-                    '_token' => $token->getValue(),
                 ]
             )
         );
@@ -106,7 +104,6 @@ class OrderControllerTest extends WebTestCase
 
     public function testSearchProductsEmptyPhrase(): void
     {
-        $token = $this->tokenManager->getToken('form');
         $this->client->request(
             'GET',
             $this->router->generate(
@@ -115,7 +112,6 @@ class OrderControllerTest extends WebTestCase
                     'search_phrase' => '',
                     'currency_id' => 1,
                     'order_id' => 1,
-                    '_token' => $token->getValue(),
                 ]
             )
         );

@@ -373,9 +373,18 @@ class EmployeeController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_employees_edit', [
-                    'employeeId' => $result->getIdentifiableObjectId(),
-                ]);
+                // If we are editing our own profile, we must set a new token before redirect to avoid compromised page
+                // todo: to be improved when UserProvider is also improved.
+                // @see https://github.com/PrestaShop/PrestaShop/pull/32861
+                $redirectParameters = ['employeeId' => $result->getIdentifiableObjectId()];
+                if ($contextEmployeeProvider->getId() === $result->getIdentifiableObjectId()) {
+                    $newToken = $this->get('security.csrf.token_manager')
+                        ->getToken($employeeForm->get('email')->getData())
+                        ->getValue();
+                    $redirectParameters['_token'] = $newToken;
+                }
+
+                return $this->redirectToRoute('admin_employees_edit', $redirectParameters);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
