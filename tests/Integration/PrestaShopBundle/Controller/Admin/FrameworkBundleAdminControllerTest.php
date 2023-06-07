@@ -37,8 +37,6 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
-use Psr\Log\NullLogger;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -71,6 +69,11 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
         self::mockContext();
 
         $this->client = self::createClient();
+
+        // Global var for SymfonyContainer
+        global $kernel;
+        $kernel = self::$kernel;
+
         $this->router = self::$kernel->getContainer()->get('router');
         $this->translator = self::$kernel->getContainer()->get('translator');
 
@@ -199,17 +202,9 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             ],
         ]);
 
-        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
-
-        self::$kernel->getContainer()->set(FeatureFlagRepository::class, $mockFeatureFlagRepository);
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('prestashop.core.kpi_row.presenter', $kpiRowPresenterMock);
-        self::$kernel->getContainer()->set('logger', new NullLogger());
     }
 
     /**
@@ -256,6 +251,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     public function getDataProvider(): array
     {
         return [
+            'admin_module_manage' => ['Module Manager', 'admin_module_manage'],
             // @todo: something is missing for Vuejs application in translations page.
             //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
             'admin_administration' => ['Administration', 'admin_administration'],
@@ -291,7 +287,6 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             'admin_manufacturers_index' => ['Brands', 'admin_manufacturers_index'],
             'admin_metas_create' => ['Add new meta', 'admin_metas_create'],
             'admin_metas_index' => ['Meta', 'admin_metas_index'],
-            'admin_module_manage' => ['Module Manager', 'admin_module_manage'],
             'admin_module_notification' => ['Module notifications', 'admin_module_notification'],
             'admin_module_updates' => ['Module notifications', 'admin_module_updates'],
             'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
