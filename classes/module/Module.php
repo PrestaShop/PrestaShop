@@ -983,8 +983,9 @@ abstract class ModuleCore implements ModuleInterface
             $result &= $this->uninstallOverrides();
         }
 
-        // Disable module for all shops
-        $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id);
+        // Disable module for all shops or contextual shops
+        $whereIdShop = $force_all ? '' : ' AND `id_shop` IN(' . implode(', ', Shop::getContextListShopID()) . ')';
+        $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id . $whereIdShop);
 
         // if module has no more shop associations, set module.active = 0
         if (!$this->hasShopAssociations()) {
