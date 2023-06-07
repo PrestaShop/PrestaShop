@@ -248,8 +248,12 @@ class SpecificPriceCore extends ObjectModel
 
     public static function getPriority($id_product)
     {
+        static $config;
+        if (is_null($config)) {
+            $config = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
+        }
         if (!SpecificPrice::isFeatureActive()) {
-            return explode(';', Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES'));
+            return explode(';', $config);
         }
 
         if (!isset(self::$_cache_priorities[(int) $id_product])) {
@@ -264,7 +268,7 @@ class SpecificPriceCore extends ObjectModel
         $priority = self::$_cache_priorities[(int) $id_product];
 
         if (!$priority) {
-            $priority = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
+            $priority = $config;
         }
         $priority = 'id_customer;' . $priority;
 
@@ -790,7 +794,11 @@ class SpecificPriceCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        return (bool) Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
+        static $config;
+        if (is_null($config)) {
+            $config = Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
+        }
+        return $config;
     }
 
     /**

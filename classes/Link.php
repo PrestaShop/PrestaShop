@@ -1383,11 +1383,17 @@ class LinkCore
      */
     public function getBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
+        static $configuration;
+        if(empty($configuration)) {
+            $configuration['PS_SSL_ENABLED'] = Configuration::get('PS_SSL_ENABLED');
+            $configuration['PS_SSL_ENABLED_EVERYWHERE'] = Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+            $configuration['PS_MULTISHOP_FEATURE_ACTIVE'] = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+        }
         if (null === $ssl) {
-            $ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+            $ssl = ($configuration['PS_SSL_ENABLED'] && $configuration['PS_SSL_ENABLED_EVERYWHERE']);
         }
 
-        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $idShop !== null) {
+        if ($configuration['PS_MULTISHOP_FEATURE_ACTIVE'] && $idShop !== null) {
             $shop = new Shop($idShop);
         } else {
             $shop = Context::getContext()->shop;

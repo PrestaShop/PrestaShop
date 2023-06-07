@@ -1070,6 +1070,11 @@ class HookCore extends ObjectModel
      */
     private static function getAllHookRegistrations(Context $context, ?string $hookName): array
     {
+        static $configuration;
+        if (empty($configuration)) {
+            $configuration['PS_GUEST_GROUP'] = (int) Configuration::get('PS_GUEST_GROUP');
+            $configuration['PS_UNIDENTIFIED_GROUP'] = (int) Configuration::get('PS_UNIDENTIFIED_GROUP');
+        }
         $useCache = (
             !in_array(
                 $hookName,
@@ -1084,8 +1089,9 @@ class HookCore extends ObjectModel
         );
 
         if (!$useCache) {
-            return self::_getAllHookRegistrations($context, $hookName);
+            return self::_getAllHookRegistrations($context, $hookName, $configuration);
         }
+
         $shop = $context->shop;
         $customer = $context->customer;
         $groups = [];
@@ -1097,9 +1103,9 @@ class HookCore extends ObjectModel
                 if ($customer instanceof Customer && $customer->isLogged()) {
                     $groups = $customer->getGroups();
                 } elseif ($customer instanceof Customer && $customer->isGuest()) {
-                    $groups = [(int) Configuration::get('PS_GUEST_GROUP')];
+                    $groups = [$configuration['PS_GUEST_GROUP']];
                 } else {
-                    $groups = [(int) Configuration::get('PS_UNIDENTIFIED_GROUP')];
+                    $groups = [$configuration['PS_UNIDENTIFIED_GROUP']];
                 }
             }
         }
@@ -1112,10 +1118,9 @@ class HookCore extends ObjectModel
             return Cache::retrieve($cache_id);
         }
 
-        $allHookRegistrations = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($context, $hookName) {
+        $allHookRegistrations = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($context, $hookName, $configuration) {
             $item->tag(['hook', 'module']);
-
-            return self::_getAllHookRegistrations($context, $hookName);
+            return self::_getAllHookRegistrations($context, $hookName, $configuration);
         });
 
         Cache::store($cache_id, $allHookRegistrations);
@@ -1123,7 +1128,7 @@ class HookCore extends ObjectModel
         return $allHookRegistrations;
     }
 
-    private static function _getAllHookRegistrations(Context $context, ?string $hookName): array
+     private static function _getAllHookRegistrations(Context $context, ?string $hookName, $configuration): array
     {
         $shop = $context->shop;
         $customer = $context->customer;
@@ -1136,9 +1141,9 @@ class HookCore extends ObjectModel
                 if ($customer instanceof Customer && $customer->isLogged()) {
                     $groups = $customer->getGroups();
                 } elseif ($customer instanceof Customer && $customer->isGuest()) {
-                    $groups = [(int) Configuration::get('PS_GUEST_GROUP')];
+                    $groups = [$configuration['PS_GUEST_GROUP']];
                 } else {
-                    $groups = [(int) Configuration::get('PS_UNIDENTIFIED_GROUP')];
+                    $groups = [$configuration['PS_UNIDENTIFIED_GROUP']];
                 }
             }
         }
