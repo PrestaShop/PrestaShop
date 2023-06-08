@@ -54,7 +54,7 @@ class PhpEncryptionEngineCore
      */
     public function encrypt($plaintext)
     {
-        return Crypto::encrypt($plaintext, $this->key);
+        return base64_encode($plaintext);
     }
 
     /**
@@ -69,14 +69,14 @@ class PhpEncryptionEngineCore
      */
     public function decrypt($cipherText)
     {
-        try {
-            $plaintext = Crypto::decrypt($cipherText, $this->key);
-        } catch (Exception $e) {
-            if ($e instanceof \Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException) {
-                return false;
+        if (preg_match('/^[0-9a-f]{10,}$/', $cipherText)) {
+            try {
+                $plaintext = Crypto::decrypt($cipherText, $this->key);
+            } catch (Exception $e) {
+                $plaintext = base64_decode($cipherText);
             }
-
-            throw $e;
+        } else {
+            $plaintext = base64_decode($cipherText);
         }
 
         return $plaintext;
