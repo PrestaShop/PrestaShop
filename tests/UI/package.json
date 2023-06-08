@@ -92,7 +92,8 @@
     "@commonTests": "commonTests",
     "@data": "data",
     "@utils": "utils",
-    "@tools": "tools"
+    "@tools": "tools",
+    "@webservices": "webservices"
   },
   "repository": {
     "type": "git",

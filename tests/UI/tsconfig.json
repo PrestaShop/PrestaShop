@@ -17,7 +17,8 @@
       "@commonTests/*": ["commonTests/*"],
       "@data/*": ["data/*"],
       "@utils/*": ["utils/*"],
-      "@tools/*": ["tools/*"]
+      "@tools/*": ["tools/*"],
+      "@webservices/*": ["webservices/*"]
     },
     "typeRoots": ["types", "node_modules/@types"],
     "skipLibCheck": true,
