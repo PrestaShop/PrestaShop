@@ -349,7 +349,7 @@ abstract class ModuleCore implements ModuleInterface
                         FROM `' . _DB_PREFIX_ . 'module` m
                         LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms
                         ON m.`id_module` = ms.`id_module`
-                        AND ms.`id_shop` = ' . (int)$id_shop);
+                        AND ms.`id_shop` = ' . (int) $id_shop);
                     foreach ($result as $row) {
                         $modules[$row['name']] = $row;
                         $modules[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;

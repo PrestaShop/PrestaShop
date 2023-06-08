@@ -297,6 +297,7 @@ class HookCore extends ObjectModel
                         $hookAliases[$ha['name']][] = $ha['alias'];
                     }
                 }
+
                 return $hookAliases;
             });
             Cache::store($cacheId, $hookAliases);
@@ -352,6 +353,7 @@ class HookCore extends ObjectModel
                         $hooksByAlias[$record['alias']] = $record['name'];
                     }
                 }
+
                 return $hooksByAlias;
             });
             Cache::store($cacheId, $hooksByAlias);
@@ -467,7 +469,7 @@ class HookCore extends ObjectModel
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
             FROM `' . _DB_PREFIX_ . 'hook_module` hm
-            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int)Context::getContext()->shop->id . ')
+            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
             ORDER BY hm.position'
             );
@@ -488,6 +490,7 @@ class HookCore extends ObjectModel
                     'active' => $result['active'],
                 ];
             }
+
             return $list;
         });
         Cache::store($cache_id, $list);
@@ -1067,7 +1070,6 @@ class HookCore extends ObjectModel
      */
     private static function getAllHookRegistrations(Context $context, ?string $hookName): array
     {
-
         $useCache = (
             !in_array(
                 $hookName,
@@ -1110,14 +1112,17 @@ class HookCore extends ObjectModel
             return Cache::retrieve($cache_id);
         }
 
-        $allHookRegistrations = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($context, $hookName, $cache_id) {
+        $allHookRegistrations = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($context, $hookName) {
             $item->tag(['hook', 'module']);
+
             return self::_getAllHookRegistrations($context, $hookName);
         });
 
         Cache::store($cache_id, $allHookRegistrations);
+
         return $allHookRegistrations;
     }
+
     private static function _getAllHookRegistrations(Context $context, ?string $hookName): array
     {
         $shop = $context->shop;
@@ -1341,7 +1346,6 @@ class HookCore extends ObjectModel
                 return $hook_names;
             });
             if (is_array($hook_names)) {
-
                 Cache::store('active_hooks', $hook_names);
             }
         }

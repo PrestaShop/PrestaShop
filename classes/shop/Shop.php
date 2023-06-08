@@ -1196,8 +1196,9 @@ class ShopCore extends ObjectModel
     public static function isFeatureActive()
     {
         if (static::$feature_active === null) {
-            static::$feature_active = SymfonyCache::getInstance()->get('isFeatureActive', function (ItemInterface $item){
+            static::$feature_active = SymfonyCache::getInstance()->get('isFeatureActive', function (ItemInterface $item) {
                 $item->tag('shop');
+
                 return Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
                 && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
             });

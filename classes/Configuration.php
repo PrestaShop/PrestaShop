@@ -170,7 +170,7 @@ class ConfigurationCore extends ObjectModel
      */
     public static function loadConfiguration()
     {
-        $value = SymfonyCache::getInstance()->get('configuration', function (ItemInterface $item){
+        $value = SymfonyCache::getInstance()->get('configuration', function (ItemInterface $item) {
             $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(
@@ -199,13 +199,14 @@ class ConfigurationCore extends ObjectModel
             } else {
                 $value = false;
             }
+
             return $value;
         });
 
         if ($value) {
-            self::$_new_cache_shop = $value['shop'];
-            self::$_new_cache_group = $value['group'];
-            self::$_new_cache_global = $value['global'];
+            self::$_new_cache_shop = $value['shop'] ?? null;
+            self::$_new_cache_group = $value['group'] ?? null;
+            self::$_new_cache_global = $value['global'] ?? null;
             self::$_initialized = true;
         }
     }
