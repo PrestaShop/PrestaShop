@@ -517,8 +517,6 @@ describe('WS - Countries : CRUD', async () => {
         });
 
         it('should check each node id, name ...', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'requestGetIDCheckAll2', baseContext);
-
           await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGetAfterPut', baseContext);
 
           // Check nodes are equal to them done in Create
