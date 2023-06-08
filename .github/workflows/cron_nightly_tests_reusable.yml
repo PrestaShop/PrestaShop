@@ -54,7 +54,7 @@ jobs:
           - 'sanity:productV2'
           - 'functional:BO:login'
           - 'functional:BO:dashboard'
-          - 'functional:BO:orders:01:0-1*'
+          - 'functional:BO:orders:01:0-1'
           - 'functional:BO:orders:01-create-orders'
           - 'functional:BO:orders:01-view-and-edit-order'
           - 'functional:BO:orders:02'
