@@ -244,15 +244,6 @@ class AdminImagesControllerCore extends AdminController
                 'suffix' => $this->trans('pixels', [], 'Admin.Design.Feature'),
                 'visibility' => Shop::CONTEXT_ALL,
             ],
-            'PS_HIGHT_DPI' => [
-                'type' => 'bool',
-                'title' => $this->trans('Generate high resolution images', [], 'Admin.Design.Feature'),
-                'required' => false,
-                'is_bool' => true,
-                'hint' => $this->trans('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.', [], 'Admin.Design.Help'),
-                'desc' => $this->trans('Enable to optimize the display of your images on high pixel density screens.', [], 'Admin.Design.Help'),
-                'visibility' => Shop::CONTEXT_ALL,
-            ],
         ];
         $formFields = array_merge($formFields, $fields);
 
@@ -630,9 +621,6 @@ class AdminImagesControllerCore extends AdminController
             return false;
         }
 
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
@@ -680,17 +668,6 @@ class AdminImagesControllerCore extends AdminController
                                         )) {
                                         $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                     }
-
-                                    if ($generate_high_dpi_images && !ImageManager::resize(
-                                        $dir . $image,
-                                        $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                        (int) $imageType['width'] * 2,
-                                        (int) $imageType['height'] * 2,
-                                        $imageFormat,
-                                        $forceFormat
-                                    )) {
-                                        $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
-                                    }
                                 }
                             }
                         }
@@ -731,27 +708,6 @@ class AdminImagesControllerCore extends AdminController
                                     );
                                 }
                             }
-                            if ($generate_high_dpi_images) {
-                                if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat)) {
-                                    if (!ImageManager::resize(
-                                            $existing_img,
-                                            $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                            (int) $imageType['width'] * 2,
-                                            (int) $imageType['height'] * 2,
-                                            $imageFormat,
-                                            $forceFormat
-                                        )) {
-                                        $this->errors[] = $this->trans(
-                                            'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
-                                            [
-                                                '%filename%' => $existing_img,
-                                                '%id%' => (int) $imageObj->id_product,
-                                            ],
-                                            'Admin.Design.Notification'
-                                        );
-                                    }
-                                }
-                            }
                         }
                     }
                 } else {
@@ -786,9 +742,6 @@ class AdminImagesControllerCore extends AdminController
     {
         $errors = false;
 
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
@@ -817,16 +770,6 @@ class AdminImagesControllerCore extends AdminController
                             $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat,
                             (int) $image_type['width'],
                             (int) $image_type['height'],
-                            $imageFormat,
-                            $forceFormat
-                        )) {
-                            $errors = true;
-                        }
-                        if ($generate_high_dpi_images && !ImageManager::resize(
-                            $file,
-                            $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat,
-                            (int) $image_type['width'] * 2,
-                            (int) $image_type['height'] * 2,
                             $imageFormat,
                             $forceFormat
                         )) {

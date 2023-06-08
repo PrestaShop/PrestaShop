@@ -414,9 +414,6 @@ class AdminStoresControllerCore extends AdminController
     {
         $ret = parent::postImage($id);
 
-        // Should we generate high DPI images?
-        $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
         if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
@@ -426,15 +423,6 @@ class AdminStoresControllerCore extends AdminController
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
-
-                if ($generate_hight_dpi_images) {
-                    ImageManager::resize(
-                        _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
-                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.jpg',
-                        (int) $image_type['width'] * 2,
-                        (int) $image_type['height'] * 2
-                    );
-                }
             }
         }
 

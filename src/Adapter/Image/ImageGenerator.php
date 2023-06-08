@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
-use Configuration;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
@@ -113,9 +112,6 @@ class ImageGenerator
             $configuredImageFormats = ['jpg'];
         }
 
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
         $result = true;
 
         foreach ($configuredImageFormats as $imageFormat) {
@@ -127,17 +123,6 @@ class ImageGenerator
                 sprintf('%s-%s.%s', rtrim($filePath, '.' . $imageFormat), stripslashes($imageType->name), $imageFormat),
                 $imageType->width,
                 $imageType->height,
-                $imageFormat,
-                $forceFormat
-            )) {
-                $result = false;
-            }
-
-            if ($generate_high_dpi_images && !ImageManager::resize(
-                $filePath,
-                sprintf('%s-%s.%s', rtrim($filePath, '.' . $imageFormat), stripslashes($imageType->name) . '2x', $imageFormat),
-                $imageType->width * 2,
-                $imageType->height * 2,
                 $imageFormat,
                 $forceFormat
             )) {
