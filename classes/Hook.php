@@ -123,9 +123,6 @@ class HookCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
-        Cache::clean('hook_idsbyname');
-        Cache::clean('hook_idsbyname_withalias');
-        Cache::clean('active_hooks');
         SymfonyCache::getInstance()->invalidateTags(['hook']);
 
         return parent::add($autodate, $null_values);
@@ -133,9 +130,6 @@ class HookCore extends ObjectModel
 
     public function clearCache($all = false)
     {
-        Cache::clean('hook_idsbyname');
-        Cache::clean('hook_idsbyname_withalias');
-        Cache::clean('active_hooks');
         SymfonyCache::getInstance()->invalidateTags(['hook']);
 
         parent::clearCache($all);
@@ -287,25 +281,18 @@ class HookCore extends ObjectModel
      */
     private static function getAllHookAliases(): array
     {
-        $cacheId = 'hook_aliases';
-        if (!Cache::isStored($cacheId)) {
-            $hookAliases = SymfonyCache::getInstance()->get('hook_aliases', function (ItemInterface $item) {
-                $hookAliasList = Db::getInstance()->executeS('SELECT lower(name) as `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`');
-                $hookAliases = [];
-                if ($hookAliasList) {
-                    foreach ($hookAliasList as $ha) {
-                        $hookAliases[$ha['name']][] = $ha['alias'];
-                    }
+        $hookAliases = SymfonyCache::getInstance()->get('hook_aliases', function (ItemInterface $item) {
+            $hookAliasList = Db::getInstance()->executeS('SELECT lower(name) as `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`');
+            $hookAliases = [];
+            if ($hookAliasList) {
+                foreach ($hookAliasList as $ha) {
+                    $hookAliases[$ha['name']][] = $ha['alias'];
                 }
-
-                return $hookAliases;
-            });
-            Cache::store($cacheId, $hookAliases);
-
+            }
             return $hookAliases;
-        }
+        });
 
-        return Cache::retrieve($cacheId);
+        return $hookAliases;
     }
 
     /**
@@ -344,24 +331,18 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_canonical_names';
 
-        if (!Cache::isStored($cacheId)) {
-            $hooksByAlias = SymfonyCache::getInstance()->get($cacheId, function (ItemInterface $item) {
-                $databaseResults = Db::getInstance()->executeS('SELECT name, lower(alias) as alias FROM `' . _DB_PREFIX_ . 'hook_alias`');
-                $hooksByAlias = [];
-                if ($databaseResults) {
-                    foreach ($databaseResults as $record) {
-                        $hooksByAlias[$record['alias']] = $record['name'];
-                    }
+        $hooksByAlias = SymfonyCache::getInstance()->get($cacheId, function (ItemInterface $item) {
+            $databaseResults = Db::getInstance()->executeS('SELECT name, lower(alias) as alias FROM `' . _DB_PREFIX_ . 'hook_alias`');
+            $hooksByAlias = [];
+            if ($databaseResults) {
+                foreach ($databaseResults as $record) {
+                    $hooksByAlias[$record['alias']] = $record['name'];
                 }
-
-                return $hooksByAlias;
-            });
-            Cache::store($cacheId, $hooksByAlias);
-
+            }
             return $hooksByAlias;
-        }
+        });
 
-        return Cache::retrieve($cacheId);
+        return $hooksByAlias;
     }
 
     /**
@@ -461,9 +442,6 @@ class HookCore extends ObjectModel
     public static function getHookModuleList()
     {
         $cache_id = 'hook_module_list';
-        if (Cache::isStored($cache_id)) {
-            return Cache::retrieve($cache_id);
-        }
         $list = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) {
             $item->tag(['hook', 'module']);
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
@@ -493,7 +471,6 @@ class HookCore extends ObjectModel
 
             return $list;
         });
-        Cache::store($cache_id, $list);
 
         return $list;
     }
@@ -1114,16 +1091,10 @@ class HookCore extends ObjectModel
             . ($shop->id ?? '')
             . (!empty($groups) ? '_' . implode(',', $groups) : '');
 
-        if (Cache::isStored($cache_id)) {
-            return Cache::retrieve($cache_id);
-        }
-
         $allHookRegistrations = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($context, $hookName, $configuration) {
             $item->tag(['hook', 'module']);
             return self::_getAllHookRegistrations($context, $hookName, $configuration);
         });
-
-        Cache::store($cache_id, $allHookRegistrations);
 
         return $allHookRegistrations;
     }
@@ -1275,9 +1246,6 @@ class HookCore extends ObjectModel
             $cacheId = 'hook_idsbyname_withalias';
         }
 
-        if (!$refreshCache && Cache::isStored($cacheId)) {
-            return Cache::retrieve($cacheId);
-        }
         $hookIds = SymfonyCache::getInstance()->get($cacheId, function (ItemInterface $item) use ($withAliases) {
             $item->tag('hook');
             $db = Db::getInstance();
@@ -1304,8 +1272,6 @@ class HookCore extends ObjectModel
             return $hookIds;
         });
 
-        Cache::store($cacheId, $hookIds);
-
         return $hookIds;
     }
 
@@ -1330,30 +1296,22 @@ class HookCore extends ObjectModel
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        $hook_names = [];
-        if (Cache::isStored('active_hooks')) {
-            $hook_names = Cache::retrieve('active_hooks');
-        } else {
-            $hook_names = SymfonyCache::getInstance()->get('active_hooks', function (ItemInterface $item) {
-                $item->tag('hook');
-                $hook_names = [];
-                $sql = new DbQuery();
-                $sql->select('id_hook, lower(name) as name');
-                $sql->from('hook', 'h');
-                $sql->where('h.active = 1');
-                $active_hooks = Db::getInstance()->executeS($sql);
-                if (!empty($active_hooks)) {
-                    foreach ($active_hooks as $hook) {
-                        $hook_names[$hook['id_hook']] = $hook['name'];
-                    }
+        $hook_names = SymfonyCache::getInstance()->get('active_hooks', function (ItemInterface $item) {
+            $item->tag('hook');
+            $hook_names = [];
+            $sql = new DbQuery();
+            $sql->select('id_hook, lower(name) as name');
+            $sql->from('hook', 'h');
+            $sql->where('h.active = 1');
+            $active_hooks = Db::getInstance()->executeS($sql);
+            if (!empty($active_hooks)) {
+                foreach ($active_hooks as $hook) {
+                    $hook_names[$hook['id_hook']] = $hook['name'];
                 }
-
-                return $hook_names;
-            });
-            if (is_array($hook_names)) {
-                Cache::store('active_hooks', $hook_names);
             }
-        }
+
+            return $hook_names;
+        });
 
         return in_array(strtolower($hook_name), $hook_names);
     }
