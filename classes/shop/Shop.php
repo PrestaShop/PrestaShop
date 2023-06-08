@@ -210,18 +210,16 @@ class ShopCore extends ObjectModel
 
     public function setUrl()
     {
-        $cache_id = 'Shop::setUrl_' . (int) $this->id;
-        if (!Cache::isStored($cache_id)) {
-            $row = Db::getInstance()->getRow('
+        $cache_id = 'shop_seturl_' . (int) $this->id;
+        $row = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) {
+            $item->tag('shop');
+            return Db::getInstance()->getRow('
               SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl
               FROM ' . _DB_PREFIX_ . 'shop s
               LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su ON (s.id_shop = su.id_shop)
-              WHERE s.id_shop = ' . (int) $this->id . '
+              WHERE s.id_shop = ' . (int)$this->id . '
               AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
-            Cache::store($cache_id, $row);
-        } else {
-            $row = Cache::retrieve($cache_id);
-        }
+        });
         if (!$row) {
             return false;
         }
@@ -396,7 +394,7 @@ class ShopCore extends ObjectModel
 
         $http_host = Tools::getHttpHost();
         $all_media = SymfonyCache::getInstance()->get('all_media', function (ItemInterface $item) {
-            $item->tag(['configuration']);
+            $item->tag('configuration');
             return array_merge(
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
@@ -1375,7 +1373,9 @@ class ShopCore extends ObjectModel
      */
     private static function findShopByHost($host)
     {
-        $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
+        $result = SymfonyCache::getInstance()->get('findShopByHost_' . $host, function (ItemInterface $item) use ($host) {
+            $item->tag('shop');
+            $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
                     FROM ' . _DB_PREFIX_ . 'shop_url su
                     LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = su.id_shop)
                     WHERE (su.domain = \'' . pSQL($host) . '\' OR su.domain_ssl = \'' . pSQL($host) . '\')
@@ -1383,7 +1383,8 @@ class ShopCore extends ObjectModel
                         AND s.deleted = 0
                     ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
 
-        $result = Db::getInstance()->executeS($sql);
+            return Db::getInstance()->executeS($sql);
+        });
 
         return $result;
     }
