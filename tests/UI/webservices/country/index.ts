@@ -1,57 +1,49 @@
-import Endpoints from '@webservices/country/endpoints.enum';
-import type {APIRequestContext, APIResponse} from 'playwright';
+import BaseWS from '@webservices/baseWs';
+import {APIRequestContext, APIResponse} from 'playwright';
 
-export default {
+export default class CountryWS extends BaseWS {
+  public static endpoint = 'api/countries';
+
   /**
    * Get All Countries
    * @param apiContext {APIRequestContext}
    * @param authorization {string}
    */
-  getAll(
+  public static getAll(
     apiContext: APIRequestContext,
     authorization: string,
   ): Promise<APIResponse> {
-    return apiContext.get(Endpoints.COUNTRIES, {
-      headers: {
-        Authorization: authorization,
-      },
-    });
-  },
+    return super.getAll(apiContext, this.endpoint, authorization);
+  }
+
   /**
    * Get By id
    * @param apiContext {APIRequestContext}
    * @param authorization {string}
    * @param idCountry {string}
    */
-  getById(
+  public static getById(
     apiContext: APIRequestContext,
     authorization: string,
     idCountry: string,
   ): Promise<APIResponse> {
-    return apiContext.get(Endpoints.COUNTRIES + idCountry, {
-      headers: {
-        Authorization: authorization,
-      },
-    });
-  },
+    return super.getById(apiContext, this.endpoint, authorization, idCountry);
+  }
+
   /**
    * Add new Country
    * @param apiContext {APIRequestContext}
    * @param authorization {string}
    * @param data {string} Xml of a new Country
    */
-  add(
+  public static add(
     apiContext: APIRequestContext,
     authorization: string,
     data: string,
   ): Promise<APIResponse> {
-    return apiContext.post(Endpoints.COUNTRIES, {
-      headers: {
-        Authorization: authorization,
-      },
-      data,
-    });
-  },
+    return super.add(apiContext, this.endpoint, authorization, data);
+  }
+
   /**
    * Update a country
    * @param apiContext {APIRequestContext}
@@ -59,34 +51,26 @@ export default {
    * @param idCountry {string}
    * @param data {string} Xml of the new Country
    */
-  update(
+  public static update(
     apiContext: APIRequestContext,
     authorization: string,
     idCountry: string,
     data: string,
   ): Promise<APIResponse> {
-    return apiContext.put(Endpoints.COUNTRIES + idCountry, {
-      headers: {
-        Authorization: authorization,
-      },
-      data,
-    });
-  },
+    return super.update(apiContext, this.endpoint, authorization, idCountry, data);
+  }
+
   /**
    * Delete a country
    * @param apiContext {APIRequestContext}
    * @param authorization {string}
    * @param idCountry {string}
    */
-  delete(
+  public static delete(
     apiContext: APIRequestContext,
     authorization: string,
     idCountry: string,
   ): Promise<APIResponse> {
-    return apiContext.delete(Endpoints.COUNTRIES + idCountry, {
-      headers: {
-        Authorization: authorization,
-      },
-    });
-  },
-};
+    return super.delete(apiContext, this.endpoint, authorization, idCountry);
+  }
+}

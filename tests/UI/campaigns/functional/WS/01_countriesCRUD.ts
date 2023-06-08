@@ -2,10 +2,9 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 import xmlHelper from '@utils/xml';
-import Endpoints from '@webservices/country/endpoints.enum';
 
 // Import webservices
-import wsCountries from '@webservices/country/ws';
+import CountryWS from '@webservices/country';
 
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
@@ -105,7 +104,7 @@ describe('WS - Countries : CRUD', async () => {
       });
     });
 
-    describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : GET `, () => {
+    describe(`Endpoint : ${CountryWS.endpoint} - Method : GET `, () => {
       let apiResponse : APIResponse;
       let xmlResponse : string;
       let countriesNode: Element[];
@@ -113,7 +112,7 @@ describe('WS - Countries : CRUD', async () => {
       it('should check response status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestGetStatus1', baseContext);
 
-        apiResponse = await wsCountries.getAll(
+        apiResponse = await CountryWS.getAll(
           apiContext,
           authorization,
         );
@@ -166,15 +165,15 @@ describe('WS - Countries : CRUD', async () => {
       });
     });
 
-    describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : POST `, () => {
-      describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : POST - Add Country `, () => {
+    describe(`Endpoint : ${CountryWS.endpoint} - Method : POST `, () => {
+      describe(`Endpoint : ${CountryWS.endpoint} - Method : POST - Add Country `, () => {
         let apiResponse: APIResponse;
         let xmlResponse : string;
 
         it('should check response status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPostStatus1', baseContext);
 
-          apiResponse = await wsCountries.add(
+          apiResponse = await CountryWS.add(
             apiContext,
             authorization,
             xmlCreate,
@@ -207,7 +206,7 @@ describe('WS - Countries : CRUD', async () => {
         });
       });
 
-      describe(`Endpoint : ${Endpoints.COUNTRIES}{id} - Method : POST - Check with WS `, () => {
+      describe(`Endpoint : ${CountryWS.endpoint}/{id} - Method : POST - Check with WS `, () => {
         let apiResponse: APIResponse;
         let xmlResponse : string;
         let countriesNodes: Element[];
@@ -215,7 +214,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check response status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetIDStatus', baseContext);
 
-          apiResponse = await wsCountries.getById(
+          apiResponse = await CountryWS.getById(
             apiContext,
             authorization,
             countryNodeID,
@@ -287,7 +286,7 @@ describe('WS - Countries : CRUD', async () => {
         });
       });
 
-      describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : POST - Check On BO `, () => {
+      describe(`Endpoint : ${CountryWS.endpoint} - Method : POST - Check On BO `, () => {
         it('should go to \'International > Locations\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
@@ -441,16 +440,16 @@ describe('WS - Countries : CRUD', async () => {
       });
     });
 
-    describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : PUT `, () => {
-      describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : PUT - Update Country `, () => {
+    describe(`Endpoint : ${CountryWS.endpoint} - Method : PUT `, () => {
+      describe(`Endpoint : ${CountryWS.endpoint} - Method : PUT - Update Country `, () => {
         let apiResponse: APIResponse;
         let xmlResponse : string;
 
-        it(`should check response status of ${Endpoints.COUNTRIES}{id}`, async function () {
+        it(`should check response status of ${CountryWS.endpoint}/{id}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPutStatus1', baseContext);
 
           xmlUpdate = getCountryXml(countryNodeID);
-          apiResponse = await wsCountries.update(
+          apiResponse = await CountryWS.update(
             apiContext,
             authorization,
             countryNodeID,
@@ -484,7 +483,7 @@ describe('WS - Countries : CRUD', async () => {
         });
       });
 
-      describe(`Endpoint : ${Endpoints.COUNTRIES}{id} - Method : PUT - Check with WS `, () => {
+      describe(`Endpoint : ${CountryWS.endpoint}/{id} - Method : PUT - Check with WS `, () => {
         let apiResponse: APIResponse;
         let xmlResponse : string;
         let countriesNodes: Element[];
@@ -492,7 +491,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check response status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetPutStatus2', baseContext);
 
-          apiResponse = await wsCountries.getById(
+          apiResponse = await CountryWS.getById(
             apiContext,
             authorization,
             countryNodeID,
@@ -565,7 +564,7 @@ describe('WS - Countries : CRUD', async () => {
         });
       });
 
-      describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : PUT - Check On BO `, () => {
+      describe(`Endpoint : ${CountryWS.endpoint} - Method : PUT - Check On BO `, () => {
         it('should filter country by ID', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost2', baseContext);
 
@@ -696,11 +695,11 @@ describe('WS - Countries : CRUD', async () => {
       });
     });
 
-    describe(`Endpoint : ${Endpoints.COUNTRIES} - Method : DELETE `, () => {
-      it(`should request the endpoint ${Endpoints.COUNTRIES}{id} with method DELETE`, async function () {
+    describe(`Endpoint : ${CountryWS.endpoint} - Method : DELETE `, () => {
+      it(`should request the endpoint ${CountryWS.endpoint}/{id} with method DELETE`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesMethodDelete', baseContext);
 
-        const apiResponse = await wsCountries.delete(
+        const apiResponse = await CountryWS.delete(
           apiContext,
           authorization,
           countryNodeID,
@@ -709,10 +708,10 @@ describe('WS - Countries : CRUD', async () => {
         await expect(apiResponse.status()).to.eq(200);
       });
 
-      it(`should request the endpoint ${Endpoints.COUNTRIES}{id} with method GET`, async function () {
+      it(`should request the endpoint ${CountryWS.endpoint}/{id} with method GET`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGetAfterDelete', baseContext);
 
-        const apiResponse = await wsCountries.getById(
+        const apiResponse = await CountryWS.getById(
           apiContext,
           authorization,
           countryNodeID,
