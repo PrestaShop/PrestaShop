@@ -162,7 +162,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
-        SymfonyCache::getInstance()->delete('configuration');
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
     }
 
     /**
@@ -550,7 +550,7 @@ class ConfigurationCore extends ObjectModel
                 }
             }
         }
-        SymfonyCache::getInstance()->delete('configuration');
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
         Configuration::set($key, $values, $idShopGroup, $idShop);
 
         return (bool) $result;
@@ -585,7 +585,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
-        SymfonyCache::getInstance()->delete('configuration');
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
 
         return $result && $result2;
     }
@@ -637,7 +637,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
-        SymfonyCache::getInstance()->delete('configuration');
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
     }
 
     /**

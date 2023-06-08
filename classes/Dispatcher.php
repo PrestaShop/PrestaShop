@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * @since 1.5.0
@@ -581,6 +582,11 @@ class DispatcherCore
         if (isset($context->shop) && $id_shop === null) {
             $id_shop = (int) $context->shop->id;
         }
+        $language_ids = Language::getIDs();
+
+        if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
+            $language_ids[] = (int)$context->language->id;
+        }
 
         // Load custom routes from modules
         $modules_routes = Hook::exec('moduleRoutes', ['id_shop' => $id_shop], null, true, false);
@@ -603,12 +609,6 @@ class DispatcherCore
             }
         }
 
-        $language_ids = Language::getIDs();
-
-        if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
-            $language_ids[] = (int) $context->language->id;
-        }
-
         // Set default routes
         foreach ($this->default_routes as $id => $route) {
             $route = $this->computeRoute(
@@ -628,7 +628,7 @@ class DispatcherCore
             // Load routes from meta table
             $sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
 					FROM `' . _DB_PREFIX_ . 'meta` m
-					LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int) $id_shop) . ')
+					LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int)$id_shop) . ')
 					ORDER BY LENGTH(ml.url_rewrite) DESC';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
@@ -658,9 +658,6 @@ class DispatcherCore
             // Load custom routes
             foreach ($this->default_routes as $route_id => $route_data) {
                 if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
-                    if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
-                        $language_ids[] = (int) $context->language->id;
-                    }
 
                     $route = $this->computeRoute(
                         $custom_route,
