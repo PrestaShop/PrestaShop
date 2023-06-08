@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use Symfony\Contracts\Cache\ItemInterface;
+
 /**
  * Class CountryCore.
  */
@@ -120,11 +122,19 @@ class CountryCore extends ObjectModel
      */
     public function delete()
     {
+        SymfonyCache::getInstance()->invalidateTags(['country']);
         if (!parent::delete()) {
             return false;
         }
 
         return Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'cart_rule_country WHERE id_country = ' . (int) $this->id);
+    }
+
+    public function update($null_values = false)
+    {
+        SymfonyCache::getInstance()->invalidateTags(['country']);
+
+        return parent::update($null_values);
     }
 
     /**
@@ -186,19 +196,23 @@ class CountryCore extends ObjectModel
         if (!Validate::isLanguageIsoCode($isoCode)) {
             die(Tools::displayError());
         }
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            '
+
+        return SymfonyCache::getInstance()->get('country_iso_' . $isoCode . '_' . (int) $active, function (ItemInterface $item) use ($isoCode, $active) {
+            $item->tag('country');
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+                '
 			SELECT `id_country`
 			FROM `' . _DB_PREFIX_ . 'country`
 			WHERE `iso_code` = \'' . pSQL(strtoupper($isoCode)) . '\''
-            . ($active ? ' AND active = 1' : '')
-        );
+                . ($active ? ' AND active = 1' : '')
+            );
 
-        if (isset($result['id_country'])) {
-            return (int) $result['id_country'];
-        }
+            if (isset($result['id_country'])) {
+                return (int) $result['id_country'];
+            }
 
-        return false;
+            return false;
+        });
     }
 
     /**
@@ -396,10 +410,13 @@ class CountryCore extends ObjectModel
      */
     public static function isNeedDniByCountryId($idCountry)
     {
-        return (bool) Db::getInstance()->getValue('
+        return SymfonyCache::getInstance()->get('country_dni_' . $idCountry, function (ItemInterface $item) use ($idCountry) {
+            $item->tag('country');
+            return (bool)Db::getInstance()->getValue('
 			SELECT `need_identification_number`
 			FROM `' . _DB_PREFIX_ . 'country`
 			WHERE `id_country` = ' . (int) $idCountry);
+        });
     }
 
     /**
