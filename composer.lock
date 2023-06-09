@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9ccd342a856ac34a583f6d13d0faed6",
+    "content-hash": "516fa4e21190f05645f799007a271a3d",
     "packages": [
         {
             "name": "api-platform/core",
@@ -8733,36 +8733,36 @@
         },
         {
             "name": "soundasleep/html2text",
-            "version": "0.5.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/soundasleep/html2text.git",
-                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad"
+                "reference": "83502b6f8f1aaef8e2e238897199d64f284b4af3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/soundasleep/html2text/zipball/cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
-                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
+                "url": "https://api.github.com/repos/soundasleep/html2text/zipball/83502b6f8f1aaef8e2e238897199d64f284b4af3",
+                "reference": "83502b6f8f1aaef8e2e238897199d64f284b4af3",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
-                "php": ">=5.3.2"
+                "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": ">=4.0",
-                "soundasleep/component-tests": "dev-master"
+                "phpstan/phpstan": "^1.9",
+                "phpunit/phpunit": "^7.0|^8.0|^9.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Html2Text\\": "src"
+                    "Soundasleep\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "EPL-1.0"
+                "MIT"
             ],
             "authors": [
                 {
@@ -8782,9 +8782,9 @@
             "support": {
                 "email": "support@jevon.org",
                 "issues": "https://github.com/soundasleep/html2text/issues",
-                "source": "https://github.com/soundasleep/html2text/tree/master"
+                "source": "https://github.com/soundasleep/html2text/tree/2.1.0"
             },
-            "time": "2017-04-19T22:01:50+00:00"
+            "time": "2023-01-06T09:28:15+00:00"
         },
         {
             "name": "symfony/amqp-messenger",

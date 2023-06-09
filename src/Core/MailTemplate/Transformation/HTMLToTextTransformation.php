@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-use Html2Text\Html2Text;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use Soundasleep\Html2Text;
 
 /**
  * HTMLTextifyTransformation is used to remove any HTML tags from the template. It
@@ -47,7 +47,7 @@ class HTMLToTextTransformation extends AbstractTransformation
      */
     public function apply($templateContent, array $templateVariables)
     {
-        $templateContent = Html2Text::convert($templateContent, true);
+        $templateContent = Html2Text::convert($templateContent, ['ignore_errors' => true]);
         if (PHP_EOL != $templateContent[strlen($templateContent) - 1]) {
             $templateContent .= PHP_EOL;
         }
