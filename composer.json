@@ -71,7 +71,6 @@
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
-        "prestashop/laminas-code-lts": "dev-4.5-lts",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^5.0",
         "prestashop/ps_banner": "^2",
