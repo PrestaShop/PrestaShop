@@ -56,12 +56,12 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      */
     private function findCommandsAndQueries(ContainerBuilder $container)
     {
-        $handlers = $container->findTaggedServiceIds('tactician.handler');
+        $handlers = $container->findTaggedServiceIds('messenger.message_handler');
 
         $commands = [];
         foreach ($handlers as $handler) {
-            if (isset(current($handler)['command'])) {
-                $commands[] = current($handler)['command'];
+            if (isset(current($handler)['handles'])) {
+                $commands[] = current($handler)['handles'];
             }
         }
 

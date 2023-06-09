@@ -48,7 +48,7 @@ final class MessengerCommandBusAdapter implements CommandBusInterface
             $stamp = $this->commandBus
                 ->dispatch($command)
                 ->last(HandledStamp::class);
-            if ($stamp instanceof HandledStamp) {
+            if ($stamp instanceof HandledStamp && $stamp->getResult() !== null) {
                 return $stamp->getResult();
             }
         } catch (HandlerFailedException $exception) {
