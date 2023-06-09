@@ -93,12 +93,11 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
 
             /**
              * TODO: Understand why this crashes PrestaShop and redirects to Front Office - no support of entities until then
-            // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
-            $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
-            if (file_exists($entitiesRessourcesPath)) {
-                $paths[] = $entitiesRessourcesPath;
-            }
-             *
+             * // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
+             * $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
+             * if (file_exists($entitiesRessourcesPath)) {
+             *   $paths[] = $entitiesRessourcesPath;
+             * }
              */
 
             // Load ApiPLatform DTOs from the src/ApiPlatform/Resources folder
