@@ -35,7 +35,6 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  */
 final class MessengerCommandBusAdapter implements CommandBusInterface
 {
-
     public function __construct(private readonly MessageBusInterface $commandBus)
     {
     }
@@ -46,11 +45,12 @@ final class MessengerCommandBusAdapter implements CommandBusInterface
     public function handle($command)
     {
         try {
-            return $this->commandBus
+            $stamp = $this->commandBus
                 ->dispatch($command)
-                ->last(HandledStamp::class)
-                ->getResult()
-                ;
+                ->last(HandledStamp::class);
+            if ($stamp instanceof HandledStamp) {
+                return $stamp->getResult();
+            }
         } catch (HandlerFailedException $exception) {
             throw $exception->getPrevious();
         }

@@ -14,7 +14,7 @@ services:
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
-      - { name: 'messenger.message_handler',handles: 'PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing', method: handle }
+      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing, method: handle }
 
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'

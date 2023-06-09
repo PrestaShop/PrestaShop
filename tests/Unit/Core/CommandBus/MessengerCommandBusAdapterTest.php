@@ -26,7 +26,6 @@
 
 namespace Tests\Unit\Core\CommandBus;
 
-use League\Tactician\CommandBus;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\MessengerCommandBusAdapter;
