@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
  */
 class HelperListCore extends Helper
 {
+    /**
+     * @var int|null
+     */
+    public $id;
+
     /** @var int size which is used for lists image thumbnail generation. */
     public const LIST_THUMBNAIL_SIZE = 45;
 

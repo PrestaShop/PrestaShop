@@ -2578,78 +2578,44 @@ class AdminControllerCore extends Controller
         $helper->show_toolbar = $this->show_toolbar;
         $helper->toolbar_scroll = $this->toolbar_scroll;
         $helper->override_folder = $this->tpl_folder;
-        if (isset($helper->actions)) {
-            $helper->actions = $this->actions;
-        }
-        if (isset($helper->simple_header)) {
-            $helper->simple_header = $this->list_simple_header;
-        }
-        if (isset($helper->bulk_actions)) {
-            $helper->bulk_actions = $this->bulk_actions;
-        }
         $helper->currentIndex = self::$currentIndex;
         $helper->table = $this->table;
         if ($helper->name_controller === null) {
             $helper->name_controller = Tools::getValue('controller');
         }
-        if (isset($helper->orderBy)) {
-            $helper->orderBy = $this->_orderBy;
-        }
-        if (isset($helper->orderWay)) {
-            $helper->orderWay = $this->_orderWay;
-        }
-        if (isset($helper->listTotal)) {
-            $helper->listTotal = $this->_listTotal;
-        }
-        if (isset($helper->shopLinkType)) {
-            $helper->shopLinkType = $this->shopLinkType;
-        }
         $helper->identifier = $this->identifier;
         $helper->token = $this->token;
-        // @phpstan-ignore-next-line
-        if (isset($helper->languages)) {
-            $helper->languages = $this->_languages;
-        }
-        if (isset($helper->specificConfirmDelete)) {
-            $helper->specificConfirmDelete = $this->specificConfirmDelete;
-        }
-        if (isset($helper->imageType)) {
-            $helper->imageType = $this->imageType;
-        }
-        if (isset($helper->no_link)) {
-            $helper->no_link = $this->list_no_link;
-        }
-        if (isset($helper->colorOnBackground)) {
-            $helper->colorOnBackground = $this->colorOnBackground;
-        }
-        if (isset($helper->ajax_params)) {
-            $helper->ajax_params = $this->ajax_params ?? null;
-        }
-        if (isset($helper->default_form_language)) {
-            $helper->default_form_language = $this->default_form_language;
-        }
         if ($helper->allow_employee_form_lang === null) {
             $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-        }
-        if (isset($helper->row_hover)) {
-            $helper->row_hover = $this->row_hover;
-        }
-        if (isset($helper->position_identifier)) {
-            $helper->position_identifier = $this->position_identifier;
         }
         if ($helper->position_group_identifier === null) {
             $helper->position_group_identifier = $this->position_group_identifier;
         }
-        // @phpstan-ignore-next-line
         $helper->controller_name = $this->controller_name;
-        if (isset($helper->list_id)) {
-            $helper->list_id = $this->list_id ?? $this->table;
-        }
         $helper->bootstrap = $this->bootstrap;
 
-        // For each action, try to add the corresponding skip elements list
-        if (isset($helper->list_skip_actions)) {
+        if ($helper instanceof HelperFormCore) {
+            $helper->languages = $this->_languages;
+            $helper->default_form_language = $this->default_form_language;
+        }
+        if ($helper instanceof HelperListCore) {
+            // For each action, try to add the corresponding skip elements list
             $helper->list_skip_actions = $this->list_skip_actions;
+            $helper->orderBy = $this->_orderBy;
+            $helper->orderWay = $this->_orderWay;
+            $helper->position_identifier = $this->position_identifier;
+            $helper->row_hover = $this->row_hover;
+            $helper->ajax_params = $this->ajax_params ?? null;
+            $helper->no_link = $this->list_no_link;
+            $helper->colorOnBackground = $this->colorOnBackground;
+            $helper->specificConfirmDelete = $this->specificConfirmDelete;
+            $helper->imageType = $this->imageType;
+            $helper->list_id = $this->list_id ?? $this->table;
+            $helper->shopLinkType = $this->shopLinkType;
+            $helper->listTotal = $this->_listTotal;
+            $helper->simple_header = $this->list_simple_header;
+            $helper->bulk_actions = $this->bulk_actions;
+            $helper->actions = $this->actions;
         }
 
         $this->helper = $helper;
