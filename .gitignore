@@ -122,7 +122,7 @@ tests-legacy/.phpunit.result.cache
 !/admin-dev/themes/new-theme/public/theme.rtlfix
 !/admin-dev/themes/default/public/theme.rtlfix
 
-# Api plateform assets
+# Api platform assets
 /admin-dev/bundles
 
 themes/*/cache/*

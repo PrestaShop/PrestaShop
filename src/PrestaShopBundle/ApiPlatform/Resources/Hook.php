@@ -54,12 +54,12 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
                         'schema' => [
                             'type' => 'string',
                         ],
-                        'description' => 'this is a description of the parameter'
+                        'description' => 'Id of the hook you are requesting the status from',
                     ],
                     [
                         'name' => 'Authorization',
                         'in' => 'scopes',
-                        'description' => "read:hook-status <br> write:hook-status "
+                        'description' => 'read:hook-status <br> write:hook-status ',
                     ],
                 ],
             ],
