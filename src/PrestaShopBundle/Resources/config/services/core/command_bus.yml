@@ -17,12 +17,11 @@ services:
   prestashop.core.provider.command_definition_provider:
     class: 'PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser'
 
-  prestashop.core.command_bus.middleware.command_register_middleware:
-    class: PrestaShop\PrestaShop\Core\CommandBus\Middleware\CommandRegisterMiddleware
+  PrestaShop\PrestaShop\Core\CommandBus\Middleware\CommandRegisterMiddleware:
+    autowire: true
+    public: false
     arguments:
-      - '@tactician.handler.locator.symfony'
-      - '@tactician.handler.command_name_extractor.class_name'
-      - '@prestashop.core.command_bus.executed_command_registry'
+      - $executedCommandRegistry: '@prestashop.core.command_bus.executed_command_registry'
 
   prestashop.core.command_bus.executed_command_registry:
     class: PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry

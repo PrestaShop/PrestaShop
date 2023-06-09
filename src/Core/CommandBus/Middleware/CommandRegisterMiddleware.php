@@ -26,56 +26,32 @@
 
 namespace PrestaShop\PrestaShop\Core\CommandBus\Middleware;
 
-use League\Tactician\Handler\CommandNameExtractor\CommandNameExtractor;
-use League\Tactician\Handler\Locator\HandlerLocator;
-use League\Tactician\Middleware;
 use PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Handler\HandlersLocatorInterface;
+use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
+use Symfony\Component\Messenger\Middleware\StackInterface;
 
 /**
  * Registers every command that was executed in system
  */
-final class CommandRegisterMiddleware implements Middleware
+final class CommandRegisterMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var HandlerLocator
-     */
-    private $handlerLocator;
-
-    /**
-     * @var CommandNameExtractor
-     */
-    private $commandNameExtractor;
-
-    /**
-     * @var ExecutedCommandRegistry
-     */
-    private $executedCommandRegistry;
-
-    /**
-     * @param HandlerLocator $handlerLocator
-     * @param CommandNameExtractor $commandNameExtractor
-     * @param ExecutedCommandRegistry $executedCommandRegistry
-     */
     public function __construct(
-        HandlerLocator $handlerLocator,
-        CommandNameExtractor $commandNameExtractor,
-        ExecutedCommandRegistry $executedCommandRegistry
+        private readonly HandlersLocatorInterface $handlersLocator,
+        private readonly ExecutedCommandRegistry $executedCommandRegistry
     ) {
-        $this->handlerLocator = $handlerLocator;
-        $this->commandNameExtractor = $commandNameExtractor;
-        $this->executedCommandRegistry = $executedCommandRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute($command, callable $next)
+    public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
-        $commandName = $this->commandNameExtractor->extract($command);
-        $handler = $this->handlerLocator->getHandlerForCommand($commandName);
+        $command = $envelope->getMessage();
+        $handlers = $this->handlersLocator->getHandlers($envelope);
 
-        $this->executedCommandRegistry->register($command, $handler);
+        foreach ($handlers as $handler) {
+            $this->executedCommandRegistry->register($command, $handler);
+        }
 
-        return $next($command);
+        return $stack->next()->handle($envelope, $stack);
     }
 }
