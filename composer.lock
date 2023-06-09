@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a9ee7b49c047cc7051b057acc0bc85b",
+    "content-hash": "9090218b879a1b1b30cd3441efb3ee1a",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5346,12 +5346,6 @@
                 "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
-            "autoload": {
-                "classmap": [
-                    "dashgoals.php",
-                    "controllers/"
-                ]
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -18621,18 +18615,9 @@
             "time": "2022-06-03T18:03:27+00:00"
         }
     ],
-  "aliases": [
-    {
-      "package": "ezyang/htmlpurifier",
-      "version": "9999999-dev",
-      "alias": "v4.14.0",
-      "alias_normalized": "4.14.0.0"
-    }
-  ],
+    "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "ezyang/htmlpurifier": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

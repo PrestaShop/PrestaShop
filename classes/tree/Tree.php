@@ -498,12 +498,12 @@ class TreeCore
     /**
      * @return bool
      *
-     * @deprecated Since 8.1 and will be removed in 9.0
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public function useInput()
     {
         @trigger_error(sprintf(
-            '%s is deprecated since 8.1 and will be removed in 9.0.',
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
             __METHOD__
         ), E_USER_DEPRECATED);
 
