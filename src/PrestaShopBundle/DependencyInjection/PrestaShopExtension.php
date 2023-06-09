@@ -38,6 +38,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class PrestaShopExtension extends Extension implements PrependExtensionInterface
 {
+    private $activeModulesPaths;
+
     public function __construct()
     {
         $this->activeModulesPaths = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModulesPaths();
@@ -76,21 +78,38 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container)
     {
+        $this->preprendApiConfig($container);
+    }
+
+    public function preprendApiConfig(ContainerBuilder $container)
+    {
+        $paths = [];
         foreach ($this->activeModulesPaths as $modulePath) {
-            if (str_ends_with($modulePath, 'api_module')) {
-                $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
-                if (file_exists($moduleConfigPath)) {
-                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$moduleConfigPath]]]);
-                }
-                $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
-                if (file_exists($entitiesRessourcesPath)) {
-                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$entitiesRessourcesPath]]]);
-                }
-                $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);
-                if (file_exists($moduleRessourcesPath)) {
-                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$moduleRessourcesPath]]]);
-                }
+            // Load YAML definition from the config/api_platform folder in the module
+            $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
+            if (file_exists($moduleConfigPath)) {
+                $paths[] = $moduleConfigPath;
             }
+
+            /**
+             * TODO: Understand why this crashes PrestaShop and redirects to Front Office - no support of entities until then
+            // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
+            $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
+            if (file_exists($entitiesRessourcesPath)) {
+                $paths[] = $entitiesRessourcesPath;
+            }
+             *
+             */
+
+            // Load ApiPLatform DTOs from the src/ApiPlatform/Resources folder
+            $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resource', $modulePath);
+            if (file_exists($moduleRessourcesPath)) {
+                $paths[] = $moduleRessourcesPath;
+            }
+        }
+
+        if (!empty($paths)) {
+            $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => $paths]]);
         }
     }
 }
