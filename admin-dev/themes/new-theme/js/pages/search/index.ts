@@ -44,7 +44,7 @@ const {$} = window;
  */
 $(() => {
   const aliasGrid = new Grid('alias');
-  const searchTermInputContainer = '#alias_search_terms_search_input';
+  const searchTermInputContainer = '#alias_search_terms';
 
   aliasGrid.addExtension(new ReloadListActionExtension());
   aliasGrid.addExtension(new ExportToSqlManagerExtension());

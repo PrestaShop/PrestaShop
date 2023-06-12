@@ -37,9 +37,7 @@ export default class SearchTermSearchInput extends EntitySearchInput {
     const referenceLabel = searchInputContainerEl.dataset.referenceLabel ?? '(Ref: %s)';
 
     // eslint-disable-next-line no-param-reassign
-    options.suggestionTemplate = (alias: Alias) => {
-      return `<div class="search-suggestion">${alias.searchTerm}</div>`;
-    };
+    options.suggestionTemplate = (alias: Alias) => `<div class="search-suggestion">${alias.searchTerm}</div>`;
     // eslint-disable-next-line no-param-reassign
     options.responseTransformer = (response: any) => {
       Object.keys(response).forEach((key) => {
