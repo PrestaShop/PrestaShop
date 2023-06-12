@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "516fa4e21190f05645f799007a271a3d",
+    "content-hash": "4a9ee7b49c047cc7051b057acc0bc85b",
     "packages": [
         {
             "name": "api-platform/core",
@@ -2885,6 +2885,69 @@
             "time": "2017-05-01T15:36:40+00:00"
         },
         {
+            "name": "laminas/laminas-code",
+            "version": "4.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-code.git",
+                "reference": "169123b3ede20a9193480c53de2a8194f8c073ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/169123b3ede20a9193480c53de2a8194f8c073ec",
+                "reference": "169123b3ede20a9193480c53de2a8194f8c073ec",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.1.0 || ~8.2.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^2.0.0",
+                "ext-phar": "*",
+                "laminas/laminas-coding-standard": "^2.3.0",
+                "laminas/laminas-stdlib": "^3.6.1",
+                "phpunit/phpunit": "^10.0.9",
+                "psalm/plugin-phpunit": "^0.18.4",
+                "vimeo/psalm": "^5.7.1"
+            },
+            "suggest": {
+                "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
+                "laminas/laminas-stdlib": "Laminas\\Stdlib component"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\Code\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Extensions to the PHP Reflection API, static code scanning, and code generation",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "code",
+                "laminas",
+                "laminasframework"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-code/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-code/issues",
+                "rss": "https://github.com/laminas/laminas-code/releases.atom",
+                "source": "https://github.com/laminas/laminas-code"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2023-05-14T12:05:38+00:00"
+        },
+        {
             "name": "lcobucci/clock",
             "version": "3.0.0",
             "source": {
@@ -5597,76 +5660,6 @@
                 "source": "https://github.com/PrestaShop/gsitemap/tree/v4.3.0"
             },
             "time": "2023-04-05T13:04:34+00:00"
-        },
-        {
-            "name": "prestashop/laminas-code-lts",
-            "version": "dev-4.5-lts",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/laminas-code-lts.git",
-                "reference": "3dbe7f7f48a5d877e02cc70e4f58cb0e1e5cca82"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/laminas-code-lts/zipball/3dbe7f7f48a5d877e02cc70e4f58cb0e1e5cca82",
-                "reference": "3dbe7f7f48a5d877e02cc70e4f58cb0e1e5cca82",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2, <8.2"
-            },
-            "replace": {
-                "laminas/laminas-code": "^4.5"
-            },
-            "require-dev": {
-                "doctrine/annotations": "^1.13.2",
-                "ext-phar": "*",
-                "laminas/laminas-coding-standard": "^2.1.0",
-                "laminas/laminas-stdlib": "^3.2.1",
-                "phpunit/phpunit": "^8.5.26",
-                "psalm/plugin-phpunit": "^0.16.1",
-                "vimeo/psalm": "^4.13.1"
-            },
-            "suggest": {
-                "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
-                "laminas/laminas-stdlib": "Laminas\\Stdlib component"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "name": "laminas/laminas-code",
-                    "url": "https://github.com/laminas/laminas-code"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "polyfill/ReflectionEnumPolyfill.php"
-                ],
-                "psr-4": {
-                    "Laminas\\Code\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Adding support for a wider range of PHP versions to laminas/laminas-code",
-            "homepage": "https://github.com/prestashop/laminas-code-lts",
-            "keywords": [
-                "code",
-                "laminas",
-                "laminasframework"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-code/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-code/issues",
-                "rss": "https://github.com/laminas/laminas-code/releases.atom",
-                "source": "https://github.com/laminas/laminas-code"
-            },
-            "time": "2022-05-03T11:51:53+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -18642,8 +18635,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "ezyang/htmlpurifier": 20,
-        "prestashop/laminas-code-lts": 20
+        "ezyang/htmlpurifier": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
