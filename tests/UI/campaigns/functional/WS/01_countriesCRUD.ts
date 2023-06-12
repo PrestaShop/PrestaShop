@@ -1,10 +1,10 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import xmlHelper from '@utils/xml';
+import countryXml from '@webservices/country/countryXml';
 
 // Import webservices
-import CountryWS from '@webservices/country';
+import CountryWS from '@webservices/country/countryWs';
 
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
@@ -124,13 +124,13 @@ describe('WS - Countries : CRUD', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'requestGetRootNode1', baseContext);
 
         xmlResponse = await apiResponse.text();
-        expect(xmlHelper.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+        expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
       });
 
       it('should check number of node under prestashop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestGetNodeNumber1', baseContext);
 
-        const rootNodes = xmlHelper.getNodes(xmlResponse, '/prestashop/*');
+        const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
         expect(rootNodes.length).to.be.eq(1);
         expect(rootNodes[0].nodeName).to.be.eq('countries');
       });
@@ -138,7 +138,7 @@ describe('WS - Countries : CRUD', async () => {
       it('should check number of nodes under countries node', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestGetNumberOfNodes1', baseContext);
 
-        countriesNode = xmlHelper.getNodes(xmlResponse, '/prestashop/countries/*');
+        countriesNode = countryXml.getAllCountries(xmlResponse);
         expect(countriesNode.length).to.be.gt(0);
       });
 
@@ -186,13 +186,13 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPostRootNode1', baseContext);
 
           xmlResponse = await apiResponse.text();
-          expect(xmlHelper.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+          expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
         });
 
         it('should check number of node under prestashop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPostNodeNumber1', baseContext);
 
-          const rootNodes = xmlHelper.getNodes(xmlResponse, '/prestashop/*');
+          const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
           expect(rootNodes.length).to.be.eq(1);
           expect(rootNodes[0].nodeName).to.be.eq('country');
         });
@@ -201,7 +201,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPostCheckId1', baseContext);
 
           // Attribute : id
-          countryNodeID = xmlHelper.getNodeValue(xmlResponse, '/prestashop/country/id');
+          countryNodeID = countryXml.getAttributeValue(xmlResponse, 'id');
           expect(countryNodeID).to.be.eq(parseInt(countryNodeID, 10).toString());
         });
       });
@@ -227,13 +227,13 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetIDRootNode1', baseContext);
 
           xmlResponse = await apiResponse.text();
-          expect(xmlHelper.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+          expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
         });
 
         it('should check number of node under prestashop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetIDNodeNumber1', baseContext);
 
-          const rootNodes = xmlHelper.getNodes(xmlResponse, '/prestashop/*');
+          const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
           expect(rootNodes.length).to.be.eq(1);
           expect(rootNodes[0].nodeName).to.be.eq('country');
         });
@@ -241,7 +241,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check number of nodes under countries node', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetIDNumberOfNodes1', baseContext);
 
-          countriesNodes = xmlHelper.getNodes(xmlResponse, '/prestashop/country/*');
+          countriesNodes = countryXml.getCountryNodes(xmlResponse);
           expect(countriesNodes.length).to.be.gt(0);
         });
 
@@ -255,30 +255,34 @@ describe('WS - Countries : CRUD', async () => {
             if (oNode.nodeName === 'id') {
               expect(oNode.textContent).to.be.eq(countryNodeID);
             } else if (oNode.nodeName === 'name') {
-              const objectNodeValueEN = xmlHelper.getNodeValue(
-                xmlCreate,
-                `/prestashop/country/${oNode.nodeName}/language[@id="1"]`,
+              const objectNodeValueEN = countryXml.getAttributeLangValue(
+                xmlResponse,
+                oNode.nodeName,
+                '1',
               );
 
-              const createNodeValueEN = xmlHelper.getNodeValue(
+              const createNodeValueEN = countryXml.getAttributeLangValue(
                 xmlCreate,
-                `/prestashop/country/${oNode.nodeName}/language[@id="1"]`,
+                oNode.nodeName,
+                '1',
               );
               expect(objectNodeValueEN).to.be.eq(createNodeValueEN);
 
-              const objectNodeValueFR = xmlHelper.getNodeValue(
-                xmlCreate,
-                `/prestashop/country/${oNode.nodeName}/language[@id="2"]`,
+              const objectNodeValueFR = countryXml.getAttributeLangValue(
+                xmlResponse,
+                oNode.nodeName,
+                '2',
               );
-              const createNodeValueFR = xmlHelper.getNodeValue(
+              const createNodeValueFR = countryXml.getAttributeLangValue(
                 xmlCreate,
-                `/prestashop/country/${oNode.nodeName}/language[@id="2"]`,
+                oNode.nodeName,
+                '2',
               );
               expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
             } else {
-              const objectNodeValue: string = xmlHelper.getNodeValue(
+              const objectNodeValue: string = countryXml.getAttributeValue(
                 xmlCreate,
-                `/prestashop/country/${oNode.nodeName}`,
+                oNode.nodeName,
               );
               expect(oNode.textContent).to.be.eq(objectNodeValue);
             }
@@ -337,7 +341,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s zone', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZone1', baseContext);
 
-          const xmlValueIDZone = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/id_zone');
+          const xmlValueIDZone = countryXml.getAttributeValue(xmlCreate, 'id_zone');
           const valueIDZone = await addCountryPage.getSelectValue(page, 'id_zone');
           expect(valueIDZone).to.be.eq(xmlValueIDZone);
         });
@@ -345,7 +349,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s currency', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCurrency1', baseContext);
 
-          const xmlValueIDCurrency = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/id_currency');
+          const xmlValueIDCurrency = countryXml.getAttributeValue(xmlCreate, 'id_currency');
           const valueIDCurrency = await addCountryPage.getSelectValue(page, 'id_currency');
           expect(valueIDCurrency).to.be.eq(xmlValueIDCurrency);
         });
@@ -353,7 +357,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s call_prefix', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCallPrefix1', baseContext);
 
-          const xmlValueCallPrefix = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/call_prefix');
+          const xmlValueCallPrefix = countryXml.getAttributeValue(xmlCreate, 'call_prefix');
           const valueCallPrefix = await addCountryPage.getInputValue(page, 'call_prefix');
           expect(valueCallPrefix).to.be.eq(xmlValueCallPrefix);
         });
@@ -361,7 +365,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s iso_code', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIsoCode1', baseContext);
 
-          const xmlValueIsoCode = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/iso_code');
+          const xmlValueIsoCode = countryXml.getAttributeValue(xmlCreate, 'iso_code');
           const valueIsoCode = await addCountryPage.getInputValue(page, 'iso_code');
           expect(valueIsoCode).to.be.eq(xmlValueIsoCode);
         });
@@ -369,7 +373,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s active', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryActive1', baseContext);
 
-          const xmlValueActive = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/active');
+          const xmlValueActive = countryXml.getAttributeValue(xmlCreate, 'active');
           const valueActive = (await addCountryPage.isCheckboxChecked(page, 'active')) ? '1' : '0';
           expect(valueActive).to.be.eq(xmlValueActive);
         });
@@ -377,7 +381,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s states', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryStates1', baseContext);
 
-          const xmlValueContainsStates = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/contains_states');
+          const xmlValueContainsStates = countryXml.getAttributeValue(xmlCreate, 'contains_states');
           const valueContainsStates = (await addCountryPage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
           expect(valueContainsStates).to.be.eq(xmlValueContainsStates);
         });
@@ -385,7 +389,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s need_identification_number', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIdentificationNumber1', baseContext);
 
-          const xmlValueNeedIDNumber = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/need_identification_number');
+          const xmlValueNeedIDNumber = countryXml.getAttributeValue(xmlCreate, 'need_identification_number');
           const valueNeedIDNumber = (await addCountryPage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
           expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
         });
@@ -393,7 +397,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s need_zip_code', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeNumber1', baseContext);
 
-          const xmlValueNeedZipCode = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/need_zip_code');
+          const xmlValueNeedZipCode = countryXml.getAttributeValue(xmlCreate, 'need_zip_code');
           const valueNeedZipCode = (await addCountryPage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
           expect(valueNeedZipCode).to.be.eq(xmlValueNeedZipCode);
         });
@@ -401,7 +405,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s zip_code_format', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeFormat1', baseContext);
 
-          const xmlValueZipCode = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/zip_code_format');
+          const xmlValueZipCode = countryXml.getAttributeValue(xmlCreate, 'zip_code_format');
           const valueZipCode = await addCountryPage.getInputValue(page, 'zipCodeFormat');
           expect(valueZipCode).to.be.eq(xmlValueZipCode);
         });
@@ -409,7 +413,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s name language 1', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang11', baseContext);
 
-          const xmlValueNameEn = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/name/language[@id="1"]');
+          const xmlValueNameEn = countryXml.getAttributeLangValue(xmlCreate, 'name', '1');
           const valueNameEn = (await addCountryPage.getInputValue(page, 'nameEn'));
           expect(valueNameEn).to.be.eq(xmlValueNameEn);
         });
@@ -417,7 +421,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s name language 2', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang21', baseContext);
 
-          const xmlValueNameFr = xmlHelper.getNodeValue(xmlCreate, '/prestashop/country/name/language[@id="2"]');
+          const xmlValueNameFr = countryXml.getAttributeLangValue(xmlCreate, 'name', '2');
           const valueNameFr = (await addCountryPage.getInputValue(page, 'nameFr'));
           expect(valueNameFr).to.be.eq(xmlValueNameFr);
         });
@@ -463,13 +467,13 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPutRootNode1', baseContext);
 
           xmlResponse = await apiResponse.text();
-          expect(xmlHelper.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+          expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
         });
 
         it('should check number of node under prestashop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPutNodeNumber1', baseContext);
 
-          const rootNodes = xmlHelper.getNodes(xmlResponse, '/prestashop/*');
+          const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
           expect(rootNodes.length).to.be.eq(1);
           expect(rootNodes[0].nodeName).to.be.eq('country');
         });
@@ -478,7 +482,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPutCheckId1', baseContext);
 
           // Attribute : id
-          countryNodeID = xmlHelper.getNodeValue(xmlResponse, '/prestashop/country/id');
+          countryNodeID = countryXml.getAttributeValue(xmlResponse, 'id');
           expect(countryNodeID).to.be.eq(parseInt(countryNodeID, 10).toString());
         });
       });
@@ -504,13 +508,13 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetPutRootNode2', baseContext);
 
           xmlResponse = await apiResponse.text();
-          expect(xmlHelper.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+          expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
         });
 
         it('should check number of node under prestashop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetPutNodeNumber1', baseContext);
 
-          const rootNodes = xmlHelper.getNodes(xmlResponse, '/prestashop/*');
+          const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
           expect(rootNodes.length).to.be.eq(1);
           expect(rootNodes[0].nodeName).to.be.eq('country');
         });
@@ -518,7 +522,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check number of nodes under countries node', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestGetPutNumberOfNodes1', baseContext);
 
-          countriesNodes = xmlHelper.getNodes(xmlResponse, '/prestashop/country/*');
+          countriesNodes = countryXml.getCountryNodes(xmlResponse);
           expect(countriesNodes.length).to.be.gt(0);
         });
 
@@ -532,31 +536,35 @@ describe('WS - Countries : CRUD', async () => {
             if (oNode.nodeName === 'id') {
               expect(oNode.textContent).to.be.eq(countryNodeID);
             } else if (oNode.nodeName === 'name') {
-              const objectNodeValueEN = xmlHelper.getNodeValue(
-                xmlUpdate,
-                `/prestashop/country/${oNode.nodeName}/language[@id="1"]`,
-              );
-
-              const createNodeValueEN = xmlHelper.getNodeValue(
+              const objectNodeValueEN = countryXml.getAttributeLangValue(
                 xmlResponse,
-                `/prestashop/country/${oNode.nodeName}/language[@id="1"]`,
+                oNode.nodeName,
+                '1',
               );
 
-              expect(objectNodeValueEN).to.be.eq(createNodeValueEN);
-
-              const objectNodeValueFR = xmlHelper.getNodeValue(
+              const updateNodeValueEN = countryXml.getAttributeLangValue(
                 xmlUpdate,
-                `/prestashop/country/${oNode.nodeName}/language[@id="2"]`,
+                oNode.nodeName,
+                '1',
               );
-              const createNodeValueFR = xmlHelper.getNodeValue(
+
+              expect(objectNodeValueEN).to.be.eq(updateNodeValueEN);
+
+              const objectNodeValueFR = countryXml.getAttributeLangValue(
                 xmlResponse,
-                `/prestashop/country/${oNode.nodeName}/language[@id="2"]`,
+                oNode.nodeName,
+                '2',
               );
-              expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
+              const updateNodeValueFR = countryXml.getAttributeLangValue(
+                xmlUpdate,
+                oNode.nodeName,
+                '2',
+              );
+              expect(objectNodeValueFR).to.be.eq(updateNodeValueFR);
             } else {
-              const objectNodeValue = xmlHelper.getNodeValue(
+              const objectNodeValue = countryXml.getAttributeValue(
                 xmlUpdate,
-                `/prestashop/country/${oNode.nodeName}`,
+                oNode.nodeName,
               );
               expect(oNode.textContent).to.be.eq(objectNodeValue);
             }
@@ -592,7 +600,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s zone', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZone2', baseContext);
 
-          const xmlValueIDZone = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/id_zone');
+          const xmlValueIDZone = countryXml.getAttributeValue(xmlUpdate, 'id_zone');
           const valueIDZone = await addCountryPage.getSelectValue(page, 'id_zone');
           expect(valueIDZone).to.be.eq(xmlValueIDZone);
         });
@@ -600,7 +608,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s currency', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCurrency2', baseContext);
 
-          const xmlValueIDCurrency = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/id_currency');
+          const xmlValueIDCurrency = countryXml.getAttributeValue(xmlUpdate, 'id_currency');
           const valueIDCurrency = await addCountryPage.getSelectValue(page, 'id_currency');
           expect(valueIDCurrency).to.be.eq(xmlValueIDCurrency);
         });
@@ -608,7 +616,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s call_prefix', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCallPrefix2', baseContext);
 
-          const xmlValueCallPrefix = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/call_prefix');
+          const xmlValueCallPrefix = countryXml.getAttributeValue(xmlUpdate, 'call_prefix');
           const valueCallPrefix = await addCountryPage.getInputValue(page, 'call_prefix');
           expect(valueCallPrefix).to.be.eq(xmlValueCallPrefix);
         });
@@ -616,7 +624,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s iso_code', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIsoCode2', baseContext);
 
-          const xmlValueIsoCode = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/iso_code');
+          const xmlValueIsoCode = countryXml.getAttributeValue(xmlUpdate, 'iso_code');
           const valueIsoCode = await addCountryPage.getInputValue(page, 'iso_code');
           expect(valueIsoCode).to.be.eq(xmlValueIsoCode);
         });
@@ -624,7 +632,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s active', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryActive2', baseContext);
 
-          const xmlValueActive = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/active');
+          const xmlValueActive = countryXml.getAttributeValue(xmlUpdate, 'active');
           const valueActive = (await addCountryPage.isCheckboxChecked(page, 'active')) ? '1' : '0';
           expect(valueActive).to.be.eq(xmlValueActive);
         });
@@ -632,7 +640,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s states', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryStates2', baseContext);
 
-          const xmlValueContainsStates = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/contains_states');
+          const xmlValueContainsStates = countryXml.getAttributeValue(xmlUpdate, 'contains_states');
           const valueContainsStates = (await addCountryPage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
           expect(valueContainsStates).to.be.eq(xmlValueContainsStates);
         });
@@ -640,7 +648,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s need_identification_number', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIdentificationNumber2', baseContext);
 
-          const xmlValueNeedIDNumber = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/need_identification_number');
+          const xmlValueNeedIDNumber = countryXml.getAttributeValue(xmlUpdate, 'need_identification_number');
           const valueNeedIDNumber = (await addCountryPage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
           expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
         });
@@ -648,7 +656,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s need_zip_code', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeNumber2', baseContext);
 
-          const xmlValueNeedZipCode = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/need_zip_code');
+          const xmlValueNeedZipCode = countryXml.getAttributeValue(xmlUpdate, 'need_zip_code');
           const valueNeedZipCode = (await addCountryPage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
           expect(valueNeedZipCode).to.be.eq(xmlValueNeedZipCode);
         });
@@ -656,7 +664,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s zip_code_format', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeFormat2', baseContext);
 
-          const xmlValueZipCode = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/zip_code_format');
+          const xmlValueZipCode = countryXml.getAttributeValue(xmlUpdate, 'zip_code_format');
           const valueZipCode = await addCountryPage.getInputValue(page, 'zipCodeFormat');
           expect(valueZipCode).to.be.eq(xmlValueZipCode);
         });
@@ -664,7 +672,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s name language 1', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang12', baseContext);
 
-          const xmlValueNameEn = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/name/language[@id="1"]');
+          const xmlValueNameEn = countryXml.getAttributeLangValue(xmlUpdate, 'name', '1');
           const valueNameEn = (await addCountryPage.getInputValue(page, 'nameEn'));
           expect(valueNameEn).to.be.eq(xmlValueNameEn);
         });
@@ -672,7 +680,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should check country\'s name language 2', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang22', baseContext);
 
-          const xmlValueNameFr = xmlHelper.getNodeValue(xmlUpdate, '/prestashop/country/name/language[@id="2"]');
+          const xmlValueNameFr = countryXml.getAttributeLangValue(xmlUpdate, 'name', '2');
           const valueNameFr = (await addCountryPage.getInputValue(page, 'nameFr'));
           expect(valueNameFr).to.be.eq(xmlValueNameFr);
         });
