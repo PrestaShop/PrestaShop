@@ -73,8 +73,14 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         try {
             $authorization = $request->headers->get('Authorization') ?? null;
-            $token = explode(' ', $authorization)[1];
-            (new Parser())->parse($token);
+            if (null === $authorization) {
+                return false;
+            }
+            $explode = explode(' ', $authorization);
+            if (count($explode) >= 2) {
+                $token = $explode[1];
+                (new Parser())->parse($token);
+            }
         } catch (InvalidTokenStructure $e) {
             return false;
         }

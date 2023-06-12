@@ -133,7 +133,6 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/32768
     it('should request the endpoint /admin-dev/new-api/hook-status/1 with invalid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
