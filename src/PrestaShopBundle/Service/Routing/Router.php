@@ -60,7 +60,10 @@ class Router extends BaseRouter
     {
         $url = parent::generate($name, $parameters, $referenceType);
 
-        if (TokenInUrls::isDisabled()) {
+        // For now, if we generate a _token and pass it in parameters, we must use it instead of use TokenManager.
+        // todo: to be improved when UserProvider is also improved.
+        // @see https://github.com/PrestaShop/PrestaShop/pull/32861
+        if (TokenInUrls::isDisabled() || isset($parameters['_token'])) {
             return $url;
         }
 
