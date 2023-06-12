@@ -83,7 +83,7 @@ class SearchController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         $aliasFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.alias_form_builder');
         $aliasForm = $aliasFormBuilder->getForm();
