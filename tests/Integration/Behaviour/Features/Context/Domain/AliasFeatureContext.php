@@ -186,7 +186,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
             if (isset($expectedAlias['active'])) {
                 Assert::assertSame(
-                    $alias['active'],
+                    (int) $alias['active'],
                     (int) $expectedAlias['active'],
                     'Unexpected alias active field'
                 );
@@ -204,18 +204,20 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
         $aliasId = $this->getSharedStorage()->get($aliasReference);
-        $command = new UpdateAliasCommand($aliasId);
+        $aliases = [];
+        $searchTerm = '';
+        $active = true;
 
         if (isset($data['aliases'])) {
-            $command->setAliases(PrimitiveUtils::castStringArrayIntoArray($data['aliases']));
+            $aliases = PrimitiveUtils::castStringArrayIntoArray($data['aliases']);
         }
         if (isset($data['search'])) {
-            $command->setSearchTerm($data['search']);
+            $searchTerm = $data['search'];
         }
         if (isset($data['active'])) {
-            $command->setActive((bool) $data['active']);
+            $active = (bool) $data['active'];
         }
 
-        return $command;
+        return new UpdateAliasCommand($aliasId, $aliases, $searchTerm, $active);
     }
 }

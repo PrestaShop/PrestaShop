@@ -72,12 +72,13 @@ class AliasRepository extends AbstractObjectModelRepository
      *
      * @param string $searchTerm
      * @param string[] $aliases
+     * @param bool $active
      *
      * @return AliasId[]
      *
      * @throws CoreException
      */
-    public function create(string $searchTerm, array $aliases): array
+    public function create(string $searchTerm, array $aliases, bool $active = true): array
     {
         $aliasIds = [];
 
@@ -90,7 +91,7 @@ class AliasRepository extends AbstractObjectModelRepository
             $alias = new Alias();
             $alias->search = $searchTerm;
             $alias->alias = $searchAlias;
-            $alias->active = true;
+            $alias->active = $active;
             $this->aliasValidator->validate($alias);
 
             $this->addObjectModel($alias, CannotAddAliasException::class);

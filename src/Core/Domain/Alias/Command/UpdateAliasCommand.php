@@ -45,7 +45,8 @@ class UpdateAliasCommand
     public function __construct(
         int $aliasId,
         public readonly array $aliases,
-        public readonly string $searchTerm
+        public readonly string $searchTerm,
+        public readonly bool $active = true
     ) {
         $this->aliasId = new AliasId($aliasId);
     }

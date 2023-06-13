@@ -8,16 +8,24 @@ Feature: Edit alias from Back Office (BO)
   As a BO user
   I need to be able to edit alias from the BO
 
-  Scenario: change alias status
+  Scenario: I edit existing alias with same search term and active status
     Given following aliases should exist:
       | id reference | alias  | search | active |
       | alias1       | bloose | blouse | 1      |
       | alias2       | blues  | blouse | 1      |
     When I update alias "alias1" with following values:
+      | aliases | bluse  |
+      | search  | blouse |
+    Then following aliases should exist:
+      | id reference | alias  | search | active |
+      | alias1       | bloose | blouse | 1      |
+      | alias2       | blues  | blouse | 1      |
+      | alias3       | bluse  | blouse | 1      |
+
+  Scenario: I edit existing alias with different search term
+    When I update alias "alias1" with following values:
       | aliases | dark  |
       | search  | black |
-      | active  | 0     |
     Then following aliases should exist:
       | id reference | alias | search | active |
-      | alias1       | dark  | black  | 0      |
-      | alias2       | blues | blouse | 1      |
+      | alias3       | dark  | black  | 1      |
