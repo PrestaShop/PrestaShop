@@ -456,6 +456,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add product with associated discount to order, Add discount to the specific order, I remove the discount of this product, if I add the product again the discount is still removed
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -540,6 +541,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add product with associated discount to order, I remove the discount of this product, if I remove the product and add it again the discount is applied again
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -629,6 +631,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add discount to the specific order, then remove it When I perform add/remove product actions the discount is not reapplied
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -703,6 +706,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
 
+  @restore-cart-rules-before-scenario
   Scenario: When a cart rule is associated to a carrier, when I change the carrier the cart rule should be added/removed accordingly
     Given there is a product in the catalog named "product1" with a price of 10.00 and 100 items in stock
     And there is a product in the catalog named "product2" with a price of 15.00 and 100 items in stock
@@ -724,6 +728,7 @@ Feature: Order from Back Office (BO)
     When I select carrier "carrier2" for cart "dummy_cart_freegift"
     Then cart "dummy_cart_freegift" should contain 1 products
 
+  @restore-cart-rules-before-scenario
   Scenario: Add a cart rule with free shipping to an order with a total of 0
     Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
     When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
@@ -765,6 +770,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.000 |
       | total_shipping_tax_incl  | 7.420 |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
     Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
     When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
@@ -807,6 +813,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.000 |
       | total_shipping_tax_incl  | 7.420 |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
     Given there is a product in the catalog named "product_expensive" with a price of 123.00 and 100 items in stock
     And there is a product in the catalog named "product_cheap" with a price of 10.00 and 100 items in stock
@@ -836,10 +843,10 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have invoice
     ## Create a new cart rule
     And I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                            | Cart Rule 50% which excludes discounted products and applies to cheapest product |
-      | reduction_percentage                   | 50                                                                               |
-      | reduction_apply_to_discounted_products | false                                                                            |
-      | discount_application_type              | cheapest_product                                                                 |
+      | name[en-US]                  | Cart Rule 50% which excludes discounted products and applies to cheapest product |
+      | discount_percentage          | 50                                                                               |
+      | apply_to_discounted_products | false                                                                            |
+      | discount_application_type    | cheapest_product                                                                 |
     ## Add the product to the order
     When I add products to order "bo_order1" without invoice and the following products details:
       | name   | product_cheap |
