@@ -244,6 +244,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
         $cartRule = new CartRule($cartRuleId);
         $cartRule->product_restriction = true;
+        //@todo: product restriction and reduction_product are 2 different features. Should they really be mixed in here to one?
         $cartRule->reduction_product = $restrictedProduct->id;
         $cartRule->save();
         $this->cartRules[$cartRuleName] = $cartRule;
@@ -699,7 +700,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     private function loadCartRule(string $reference): CartRule
     {
         if (!$this->getSharedStorage()->exists($reference)) {
-            throw new RuntimeException('Cart rule "%s" does not exist in shared storage', $reference);
+            throw new RuntimeException(sprintf('Cart rule "%s" does not exist in shared storage', $reference));
         }
 
         return new CartRule($this->getSharedStorage()->get($reference));

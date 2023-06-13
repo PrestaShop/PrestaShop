@@ -53,20 +53,7 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
      */
     public static function restoreCartRules(): void
     {
-        DatabaseDump::restoreTables(['cart_rule', 'cart_rule_shop']);
-        DatabaseDump::restoreTables([
-            'cart_rule',
-            'cart_rule_shop',
-            'cart_rule_lang',
-            'cart_cart_rule',
-            'cart_rule_carrier',
-            'cart_rule_combination',
-            'cart_rule_country',
-            'cart_rule_group',
-            'cart_rule_product_rule',
-            'cart_rule_product_rule_group',
-            'cart_rule_product_rule_value',
-        ]);
+        DatabaseDump::restoreMatchingTables('^cart_rule.*^');
     }
 
     public function createCartRuleWithReference(string $cartRuleReference, array $data): void
