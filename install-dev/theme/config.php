@@ -25,7 +25,7 @@
  */
 
 $documentationLink = 'https://devdocs.prestashop-project.org/';
-$blogLink = 'https://build.prestashop.com/';
+$blogLink = 'https://build.prestashop-project.org/';
 
 return [
     'links' => [
