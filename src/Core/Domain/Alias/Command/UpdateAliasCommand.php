@@ -37,7 +37,6 @@ class UpdateAliasCommand
 {
     public readonly AliasId $aliasId;
 
-
     /**
      * @param int $aliasId
      * @param string[] $aliases
