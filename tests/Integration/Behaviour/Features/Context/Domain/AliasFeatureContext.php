@@ -206,7 +206,6 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $aliasId = $this->getSharedStorage()->get($aliasReference);
         $aliases = [];
         $searchTerm = '';
-        $active = true;
 
         if (isset($data['aliases'])) {
             $aliases = PrimitiveUtils::castStringArrayIntoArray($data['aliases']);
@@ -214,10 +213,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['search'])) {
             $searchTerm = $data['search'];
         }
-        if (isset($data['active'])) {
-            $active = (bool) $data['active'];
-        }
 
-        return new UpdateAliasCommand($aliasId, $aliases, $searchTerm, $active);
+        return new UpdateAliasCommand($aliasId, $aliases, $searchTerm);
     }
 }
