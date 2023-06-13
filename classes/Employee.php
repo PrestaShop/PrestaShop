@@ -144,11 +144,11 @@ class EmployeeCore extends ObjectModel
     protected $webserviceParameters = [
         'fields' => [
             'id_lang' => ['xlink_resource' => 'languages'],
-            'last_passwd_gen' => ['setter' => null],
-            'stats_date_from' => ['setter' => null],
-            'stats_date_to' => ['setter' => null],
-            'stats_compare_from' => ['setter' => null],
-            'stats_compare_to' => ['setter' => null],
+            'last_passwd_gen' => ['setter' => false],
+            'stats_date_from' => ['setter' => false],
+            'stats_date_to' => ['setter' => false],
+            'stats_compare_from' => ['setter' => false],
+            'stats_compare_to' => ['setter' => false],
             'passwd' => ['setter' => 'setWsPasswd'],
         ],
     ];
