@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Alias\Filler\AliasFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasHandlerInterface;
@@ -36,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasHandlerInt
 class UpdateAliasHandler implements UpdateAliasHandlerInterface
 {
     public function __construct(
-        protected AliasFillerInterface $aliasUpdatablePropertyFiller,
         protected AliasRepository $aliasRepository
     ) {
     }
