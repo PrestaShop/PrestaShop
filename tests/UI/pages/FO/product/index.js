@@ -60,8 +60,8 @@ class Product extends FOBasePage {
     this.productReviewList = '#product-comments-list';
     this.productReviewRows = `${this.productReviewList} div.product-comment-list-item.row`;
     this.productReviewRow = row => `${this.productReviewRows}:nth-child(${row})`;
-    this.productReviewTitle = row => `${this.productReviewRow(row)} h4`;
-    this.productReviewContent = row => `${this.productReviewRow(row)} p`;
+    this.productReviewTitle = row => `${this.productReviewRow(row)} p.h4`;
+    this.productReviewContent = row => `${this.productReviewRow(row)} p:not(.h4)`;
     this.productRatingBlock = row => `${this.productReviewRow(row)} .grade-stars`;
     this.productRatingStar = row => `${this.productReviewRow(row)} .star-on`;
     // Add review selectors

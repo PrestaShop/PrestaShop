@@ -64,8 +64,8 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
   });
 
   const tests = [
-    {args: {action: 'Enable', enable: true, imageNumber: 2}},
-    {args: {action: 'Disable', enable: false, imageNumber: 1}},
+    {args: {action: 'Enable', enable: true, imageNumber: 1}},
+    {args: {action: 'Disable', enable: false, imageNumber: 0}},
   ];
 
   tests.forEach((test, index) => {
