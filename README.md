@@ -1,4 +1,4 @@
-About PrestaShop 9
+About PrestaShop 92
 --------
 
 [![PHP checks and unit tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/php.yml)
