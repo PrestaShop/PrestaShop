@@ -30,12 +30,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Model\LanguageInterface as LangInterface;
 
 /**
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\LangRepository")
  */
-class Lang implements LanguageInterface
+class Lang implements LangInterface, LanguageInterface
 {
     /**
      * @var int

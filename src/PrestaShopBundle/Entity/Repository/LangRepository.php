@@ -101,7 +101,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
      *
      * @return Lang|null
      */
-    private function searchLanguage($key, $value)
+    public function searchLanguage($key, $value)
     {
         if (isset($this->matches[$key][$value])) {
             return $this->matches[$key][$value];

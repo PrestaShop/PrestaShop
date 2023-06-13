@@ -138,3 +138,8 @@ services:
     arguments:
       - PrestaShopBundle\Entity\AuthorizedApplication
     public: true
+
+  PrestaShopBundle\Repository\LanguageRepository:
+    class: PrestaShopBundle\Repository\LanguageRepository
+    arguments:
+      - '@prestashop.core.admin.lang.repository'
