@@ -715,7 +715,7 @@ class WebserviceOutputBuilderCore
                     $field['sqlId'] = 'id';
                     $field['value'] = isset($object_assoc['id']) ? $object_assoc['id'] : null;
                 } elseif (!isset($field['sqlId'])) {
-                    $field['sqlId'] = $field_name;
+                    $field['sqlId'] = $field_name ?: 'id';
                     $field['value'] = isset($object_assoc[$field_name]) ? $object_assoc[$field_name] : null;
                 }
                 $field['entities_name'] = $assoc_name;
