@@ -257,7 +257,7 @@ Feature: Order from Back Office (BO)
       | free_shipping             | false                      |
       | discount_percentage       | 50                         |
       | discount_application_type | order_without_shipping     |
-      | quantity                  | 1000                       |
+      | total_quantity            | 1000                       |
       | quantity_per_user         | 1000                       |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
@@ -319,7 +319,7 @@ Feature: Order from Back Office (BO)
       | free_shipping             | false                      |
       | discount_percentage       | 50                         |
       | discount_application_type | order_without_shipping     |
-      | quantity                  | 1000                       |
+      | total_quantity            | 1000                       |
       | quantity_per_user         | 1000                       |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
@@ -483,7 +483,7 @@ Feature: Order from Back Office (BO)
       | discount_percentage       | 50                                 |
       | discount_application_type | specific_product                   |
       | discount_application_type | specific_product                   |
-      | quantity                  | 1000                               |
+      | total_quantity            | 1000                               |
       | quantity_per_user         | 1000                               |
       | discount_product          | Test Product With Percent Discount |
     When I add products to order "bo_order1" with new invoice and the following products details:
