@@ -102,6 +102,9 @@ class AddressCore extends ObjectModel
     /** @var bool True if address has been deleted (staying in database as deleted) */
     public $deleted = false;
 
+    /** @var int|null */
+    public $id_address;
+
     /** @var array Zone IDs cache */
     protected static $_idZones = [];
 

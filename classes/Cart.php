@@ -3837,7 +3837,7 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        if (property_exists($module, 'id_carrier')) {
+        if ($module->id_carrier) {
             $module->id_carrier = $carrier->id;
         }
 

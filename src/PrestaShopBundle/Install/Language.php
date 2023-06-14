@@ -40,6 +40,7 @@ class Language
     public $date_format_lite;
     public $date_format_full;
     public $countries;
+    public $allow_accented_chars_url;
 
     public function __construct($iso)
     {

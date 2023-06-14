@@ -76,6 +76,9 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var bool In all shops */
     public $in_all_shops;
 
+    /** @var string|null */
+    public $hash;
+
     /**
      * @see ObjectModel::$definition
      */

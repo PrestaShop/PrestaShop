@@ -119,6 +119,9 @@ abstract class ModuleCore implements ModuleInterface
     /** @var int need_instance */
     public $need_instance = 1;
 
+    /** @var int */
+    public $is_configurable = 0;
+
     /** @var string Admin tab corresponding to the module */
     public $tab = null;
 
@@ -146,6 +149,24 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var bool */
     public $show_quick_view = false;
+
+    /** @var bool */
+    public $onclick_option = false;
+
+    /** @var string|null */
+    public $addons_buy_url = null;
+
+    /** @var string|null */
+    public $url = null;
+
+    /** @var string|null */
+    public $image = null;
+
+    /** @var string|null */
+    public $price = null;
+
+    /** @var string|null Can be addonsPartner|addonsNative */
+    public $type = null;
 
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = [];
@@ -2396,7 +2417,7 @@ abstract class ModuleCore implements ModuleInterface
     <author><![CDATA[' . str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->author)) . ']]></author>'
         . $author_uri . '
     <tab><![CDATA[' . Tools::htmlentitiesUTF8($this->tab) . ']]></tab>' . (!empty($this->confirmUninstall) ? "\n\t" . '<confirmUninstall><![CDATA[' . $this->confirmUninstall . ']]></confirmUninstall>' : '') . '
-    <is_configurable>' . (isset($this->is_configurable) ? (int) $this->is_configurable : 0) . '</is_configurable>
+    <is_configurable>' . (int) $this->is_configurable . '</is_configurable>
     <need_instance>' . (int) $this->need_instance . '</need_instance>' . (!empty($this->limited_countries) ? "\n\t" . '<limited_countries>' . (count($this->limited_countries) == 1 ? $this->limited_countries[0] : '') . '</limited_countries>' : '') . '
 </module>';
         if (is_writable(_PS_MODULE_DIR_ . $this->name . '/')) {
@@ -2437,7 +2458,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getModulesAccessesByIdProfile($idProfile)
     {
-        if (empty(static::$cache_modules_roles)) {
+        if (empty(static::$cache_lgc_access)) {
             self::warmupRolesCache();
         }
 

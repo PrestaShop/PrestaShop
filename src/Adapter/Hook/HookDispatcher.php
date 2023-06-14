@@ -105,7 +105,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
             throw new \Exception('HookDispatcher must dispatch a HookEvent subclass only. ' . get_class($event) . ' given.');
         }
 
-        if ($listeners = $this->getListeners(strtolower($eventName))) {
+        if ($listeners = $this->getListeners(strtolower($eventName ?? ''))) {
             $this->doDispatch($listeners, $eventName, $event);
         } elseif ($this->isDebug && null !== $this->hookRegistry) {
             // When a hook has no listeners it means it's not even in the database or no modules were attached, in the current case

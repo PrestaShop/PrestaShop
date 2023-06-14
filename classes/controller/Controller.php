@@ -38,6 +38,11 @@ abstract class ControllerCore
     public const SERVICE_MULTISTORE_FEATURE = 'prestashop.adapter.multistore_feature';
 
     /**
+     * @var string|null
+     */
+    public $className;
+
+    /**
      * @var Context
      */
     protected $context;
@@ -153,6 +158,11 @@ abstract class ControllerCore
      * @var ContainerBuilder
      */
     protected $container;
+
+    /**
+     * @var Module|null
+     */
+    public $module;
 
     /**
      * Check if the controller is available for the current user/visitor.

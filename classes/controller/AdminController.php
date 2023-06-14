@@ -148,6 +148,9 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $fields_value = [];
 
+    /** @var int|null */
+    public $max_image_size = null;
+
     /** @var bool Define if the header of the list contains filter and sorting links or not */
     protected $list_simple_header;
 
@@ -2575,53 +2578,45 @@ class AdminControllerCore extends Controller
         $helper->show_toolbar = $this->show_toolbar;
         $helper->toolbar_scroll = $this->toolbar_scroll;
         $helper->override_folder = $this->tpl_folder;
-        $helper->actions = $this->actions;
-        $helper->simple_header = $this->list_simple_header;
-        $helper->bulk_actions = $this->bulk_actions;
         $helper->currentIndex = self::$currentIndex;
-        if ($helper->className === null) {
-            $helper->className = $this->className;
-        }
         $helper->table = $this->table;
         if ($helper->name_controller === null) {
             $helper->name_controller = Tools::getValue('controller');
         }
-        $helper->orderBy = $this->_orderBy;
-        $helper->orderWay = $this->_orderWay;
-        $helper->listTotal = $this->_listTotal;
-        if ($helper->shopLink === null) {
-            $helper->shopLink = $this->shopLink;
-        }
-        $helper->shopLinkType = $this->shopLinkType;
         $helper->identifier = $this->identifier;
         $helper->token = $this->token;
-        // @phpstan-ignore-next-line
-        $helper->languages = $this->_languages;
-        $helper->specificConfirmDelete = $this->specificConfirmDelete;
-        $helper->imageType = $this->imageType;
-        $helper->no_link = $this->list_no_link;
-        $helper->colorOnBackground = $this->colorOnBackground;
-        $helper->ajax_params = isset($this->ajax_params) ? $this->ajax_params : null;
-        // @phpstan-ignore-next-line
-        $helper->default_form_language = $this->default_form_language;
         if ($helper->allow_employee_form_lang === null) {
             $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
         }
-        if ($helper->multiple_fieldsets === null) {
-            $helper->multiple_fieldsets = $this->multiple_fieldsets;
-        }
-        $helper->row_hover = $this->row_hover;
-        $helper->position_identifier = $this->position_identifier;
         if ($helper->position_group_identifier === null) {
             $helper->position_group_identifier = $this->position_group_identifier;
         }
-        // @phpstan-ignore-next-line
         $helper->controller_name = $this->controller_name;
-        $helper->list_id = $this->list_id ?? $this->table;
         $helper->bootstrap = $this->bootstrap;
 
-        // For each action, try to add the corresponding skip elements list
-        $helper->list_skip_actions = $this->list_skip_actions;
+        if ($helper instanceof HelperFormCore) {
+            $helper->languages = $this->_languages;
+            $helper->default_form_language = $this->default_form_language;
+        }
+        if ($helper instanceof HelperListCore) {
+            // For each action, try to add the corresponding skip elements list
+            $helper->list_skip_actions = $this->list_skip_actions;
+            $helper->orderBy = $this->_orderBy;
+            $helper->orderWay = $this->_orderWay;
+            $helper->position_identifier = $this->position_identifier;
+            $helper->row_hover = $this->row_hover;
+            $helper->ajax_params = $this->ajax_params ?? null;
+            $helper->no_link = $this->list_no_link;
+            $helper->colorOnBackground = $this->colorOnBackground;
+            $helper->specificConfirmDelete = $this->specificConfirmDelete;
+            $helper->imageType = $this->imageType;
+            $helper->list_id = $this->list_id ?? $this->table;
+            $helper->shopLinkType = $this->shopLinkType;
+            $helper->listTotal = $this->_listTotal;
+            $helper->simple_header = $this->list_simple_header;
+            $helper->bulk_actions = $this->bulk_actions;
+            $helper->actions = $this->actions;
+        }
 
         $this->helper = $helper;
     }
@@ -3906,7 +3901,7 @@ class AdminControllerCore extends Controller
             }
 
             // Check image validity
-            $max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
+            $max_size = $this->max_image_size ?: 0;
             if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size))) {
                 $this->errors[] = $error;
             }

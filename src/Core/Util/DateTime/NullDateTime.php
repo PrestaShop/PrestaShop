@@ -95,6 +95,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public static function createFromMutable($object): DateTimeImmutable
     {
         throw self::buildUnusableMethodException('createFromMutable');

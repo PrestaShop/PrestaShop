@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a9ee7b49c047cc7051b057acc0bc85b",
+    "content-hash": "9090218b879a1b1b30cd3441efb3ee1a",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1925,16 +1925,16 @@
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "dev-master",
+            "version": "v4.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "1dd3e52365c32a142fb7c9c9f8f038f18e353270"
+                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/1dd3e52365c32a142fb7c9c9f8f038f18e353270",
-                "reference": "1dd3e52365c32a142fb7c9c9f8f038f18e353270",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/523407fb06eb9e5f3d59889b3978d5bfe94299c8",
+                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8",
                 "shasum": ""
             },
             "require": {
@@ -1950,7 +1950,6 @@
                 "ext-iconv": "Converts text to and from non-UTF-8 encodings",
                 "ext-tidy": "Used for pretty-printing HTML"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "files": [
@@ -1981,9 +1980,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ezyang/htmlpurifier/issues",
-                "source": "https://github.com/ezyang/htmlpurifier/tree/master"
+                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.16.0"
             },
-            "time": "2022-04-08T17:48:12+00:00"
+            "time": "2022-09-18T07:06:19+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
@@ -5382,15 +5381,9 @@
                 "php": ">=5.4"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "~3.0"
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
-            "autoload": {
-                "classmap": [
-                    "dashgoals.php",
-                    "controllers/"
-                ]
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -5424,9 +5417,6 @@
             },
             "require": {
                 "php": ">=5.4"
-            },
-            "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -18625,18 +18615,9 @@
             "time": "2022-06-03T18:03:27+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "ezyang/htmlpurifier",
-            "version": "9999999-dev",
-            "alias": "v4.14.0",
-            "alias_normalized": "4.14.0.0"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "ezyang/htmlpurifier": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -371,12 +371,26 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     /**
+     * @var bool|null
+     */
+    public $customization_required;
+    /**
+     * @var int|null
+     */
+    public $pack_quantity;
+
+    /**
      * For now default value remains undefined, to keep compatibility with page v1 and former products.
      * But once the v2 is merged the default value should be ProductType::TYPE_STANDARD
      *
      * @var string
      */
     public $product_type = ProductType::TYPE_UNDEFINED;
+
+    /**
+     * @var int
+     */
+    public $id_product;
 
     /**
      * @var int|null

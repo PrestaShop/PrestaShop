@@ -49,9 +49,8 @@ services:
   PrestaShopBundle\Twig\ContextIsoCodeProviderExtension:
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language ? service('prestashop.adapter.legacy.context').getContext().language.iso_code : 'en'"
-    properties:
-      logger: "@logger"
-      translator: "@translator"
+    tags:
+      - { name: twig.extension }
 
   PrestaShopBundle\Twig\Extension\LocalizationExtension:
     arguments:
