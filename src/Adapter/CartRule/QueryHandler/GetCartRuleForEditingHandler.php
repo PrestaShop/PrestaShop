@@ -31,11 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler;
 use CartRule;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler\GetCartRuleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleActionForEditing;
@@ -54,7 +51,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
 /**
  * Handles command which gets catalog price rule for editing using legacy object model
  */
-class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements GetCartRuleForEditingHandlerInterface
+class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterface
 {
     public function __construct(
         protected CartRuleRepository $cartRuleRepository
@@ -65,14 +62,11 @@ class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements Ge
      * @param GetCartRuleForEditing $query
      *
      * @return CartRuleForEditing
-     *
-     * @throws CartRuleException
-     * @throws CartRuleNotFoundException
      */
     public function handle(GetCartRuleForEditing $query): CartRuleForEditing
     {
         $cartRuleId = $query->cartRuleId;
-        $cartRule = $this->getCartRule($cartRuleId);
+        $cartRule = $this->cartRuleRepository->get($cartRuleId);
 
         $cartRuleInformation = $this->getCartRuleInformation($cartRule);
         $cartRuleConditions = $this->getCartRuleConditions($cartRule);
