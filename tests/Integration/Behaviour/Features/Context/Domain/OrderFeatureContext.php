@@ -85,9 +85,11 @@ use TaxManagerFactory;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
+    use ExtendedTestCaseMethodsTrait;
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
     /**
@@ -365,7 +367,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($invoiceShippingData as $invoiceShippingIndex => $invoiceShippingDetails) {
             $shippingTaxDetails = $invoiceShippingTaxDetails[$invoiceShippingIndex];
             foreach ($invoiceShippingDetails as $shippingField => $shippingValue) {
-                Assert::assertEquals(
+                $this->assertEqualsWithEpsilon(
                     (float) $shippingValue,
                     (float) $shippingTaxDetails[$shippingField],
                     sprintf(
@@ -408,7 +410,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($invoiceProductData as $invoiceProductIndex => $invoiceProductDetails) {
             $productTaxDetails = $invoiceProductTaxDetails[$invoiceProductIndex];
             foreach ($invoiceProductDetails as $taxField => $taxValue) {
-                Assert::assertEquals(
+                $this->assertEqualsWithEpsilon(
                     (float) $taxValue,
                     (float) $productTaxDetails[$taxField],
                     sprintf(
