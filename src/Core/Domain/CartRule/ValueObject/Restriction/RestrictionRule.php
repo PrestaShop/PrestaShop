@@ -35,14 +35,12 @@ class RestrictionRule
     public const TYPE_PRODUCT = 'products';
     public const TYPE_CATEGORY = 'categories';
     public const TYPE_ATTRIBUTE = 'attributes';
-    public const TYPE_FEATURE = 'features';
     public const TYPE_BRAND = 'brands';
     public const TYPE_SUPPLIER = 'suppliers';
     public const VALID_TYPES = [
         self::TYPE_PRODUCT => self::TYPE_PRODUCT,
         self::TYPE_CATEGORY => self::TYPE_CATEGORY,
         self::TYPE_ATTRIBUTE => self::TYPE_ATTRIBUTE,
-        self::TYPE_FEATURE => self::TYPE_FEATURE,
         self::TYPE_BRAND => self::TYPE_BRAND,
         self::TYPE_SUPPLIER => self::TYPE_SUPPLIER,
     ];
@@ -53,13 +51,15 @@ class RestrictionRule
     private $type;
 
     /**
+     * Ids of product, attributes, categories, manufacturers or suppliers, depending on restriction rule type
+     *
      * @var int[]
      */
     private $ids;
 
     /**
      * @param string $type
-     * @param int[] $ids
+     * @param int[]
      */
     public function __construct(
         string $type,
@@ -75,6 +75,9 @@ class RestrictionRule
         return $this->type;
     }
 
+    /**
+     * @return int[]
+     */
     public function getIds(): array
     {
         return $this->ids;

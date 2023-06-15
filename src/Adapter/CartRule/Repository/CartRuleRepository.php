@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
@@ -98,18 +99,63 @@ class CartRuleRepository extends AbstractObjectModelRepository
     {
         // first remove all product restrictions concerning provided cart rule
         $this->removeProductRestrictions($cartRuleId);
-        $ruleGroupValues = '';
 
         foreach ($restrictionRuleGroups as $restrictionRuleGroup) {
-            $qty = $restrictionRuleGroup->getRequiredQuantityInCart();
-            $ruleGroupValues .= sprintf('(%d, %d)', $qty, $cartRuleId->getValue());
-        }
+            if (empty($restrictionRuleGroup->getRestrictionRules())) {
+                throw new CartRuleConstraintException(
+                    'Restriction rules are empty',
+                    CartRuleConstraintException::INVALID_PRODUCT_RESTRICTION
+                );
+            }
 
-        $ruleGroupsStmt = sprintf(
-            'INSERT INTO (id_cart_rule, quantity) %scart_rule_product_rule_group VALUES %s',
-            $this->dbPrefix,
-            $ruleGroupValues
-        );
+            $this->connection->createQueryBuilder()
+                ->insert($this->dbPrefix . 'cart_rule_product_rule_group')
+                ->values([
+                    'id_cart_rule' => $cartRuleId->getValue(),
+                    'quantity' => $restrictionRuleGroup->getRequiredQuantityInCart(),
+                ])
+                ->execute()
+            ;
+
+            $productRuleGroupId = $this->connection->lastInsertId();
+
+            foreach ($restrictionRuleGroup->getRestrictionRules() as $restrictionRule) {
+                if ($restrictionRule->getIds()) {
+                    throw new CartRuleConstraintException(
+                        'Restriction rule products are empty',
+                        CartRuleConstraintException::INVALID_PRODUCT_RESTRICTION
+                    );
+                }
+                $this->connection->createQueryBuilder()
+                    ->insert($this->dbPrefix . 'cart_rule_product_rule')
+                    ->values([
+                        'id_product_rule_group' => $productRuleGroupId,
+                        'type' => $restrictionRule->getType(),
+                    ])
+                    ->execute()
+                ;
+
+                $productRuleId = $this->connection->lastInsertId();
+                $productRuleValues = [];
+                $checkedIds = [];
+                foreach ($restrictionRule->getIds() as $id) {
+                    if (in_array($id, $checkedIds, true)) {
+                        // skip in case there are duplicates
+                        continue;
+                    }
+                    $productRuleValues[] = sprintf('(%d, %d)', $productRuleId, $id);
+                    $checkedIds[] = $id;
+                }
+
+                $productRuleStmt = sprintf(
+                    'INSERT INTO (id_product_rule, id_item) %scart_rule_product_rule_value VALUES %s',
+                    $this->dbPrefix,
+                    implode(',', $productRuleValues)
+                );
+
+                $this->connection->executeStatement($productRuleStmt);
+            }
+        }
     }
 
     /**
