@@ -1099,4 +1099,50 @@ class ToolsTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * @param array $dataAttributes
+     * @param string $expected
+     *
+     * @dataProvider providerMakeHtmlDataAttributes
+     */
+    public function testMakeHtmlDataAttributes(array $dataAttributes, string $expected): void
+    {
+        $actual = Tools::makeHtmlDataAttributes($dataAttributes);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function providerMakeHtmlDataAttributes(): array
+    {
+        $token = Tools::passwdGen(12);
+
+        return [
+            [
+                [],
+                '',
+            ], [
+                [0 => 'value for invalid key will be skipped', 'valid-key' => 'value for valid key'],
+                'data-valid-key="value for valid key"',
+            ], [
+                ['ajax-url' => 'https://my-shop.com/ajax.php'],
+                'data-ajax-url="https://my-shop.com/ajax.php"',
+            ], [
+                ['id-product' => '1', 'id-product-attribute' => '11'],
+                'data-id-product="1" data-id-product-attribute="11"',
+            ], [
+                ['id' => ['product' => '1', 'product-attribute' => '11']],
+                'data-id-product="1" data-id-product-attribute="11"',
+            ], [
+                ['ajax' => [
+                    'url' => 'https://my-shop.com/ajax.php',
+                    'token' => $token,
+                    'param' => [
+                        'id' => 'val_param_1',
+                        'reference' => 'val_param_1',
+                    ],
+                ]],
+                'data-ajax-url="https://my-shop.com/ajax.php" data-ajax-token="' . $token . '" data-ajax-param-id="val_param_1" data-ajax-param-reference="val_param_1"',
+            ],
+        ];
+    }
 }
