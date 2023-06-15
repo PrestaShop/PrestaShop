@@ -147,9 +147,15 @@ class CartRuleRepository extends AbstractObjectModelRepository
             return;
         }
 
+        $checkedIds = [];
         $insertValues = [];
         foreach ($restrictedCartRuleIds as $restrictedCartRuleId) {
+            // skip duplicate ids if for some reason they exist
+            if (in_array($restrictedCartRuleId, $checkedIds, true)) {
+                continue;
+            }
             $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCartRuleId->getValue());
+            $checkedIds[] = $restrictedCartRuleId;
         }
 
         $this->removeRestrictedCartRules($cartRuleId);
