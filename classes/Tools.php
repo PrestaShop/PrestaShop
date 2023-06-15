@@ -3864,7 +3864,6 @@ exit;
      *
      * @return string
      */
-
     public static function makeHtmlDataAttributes(array $dataAttributes): string
     {
         $htmlDataAttributes = '';
