@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\RestrictCartRulesCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
 
-interface RestrictCartRulesHandlerInterface
+interface SetCartRuleRestrictionsHandlerInterface
 {
-    public function handle(RestrictCartRulesCommand $command): void;
+    public function handle(SetCartRuleRestrictionsCommand $command): void;
 }

@@ -31,7 +31,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\RestrictCartRulesCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
@@ -138,7 +138,7 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
     private function performCartRulesRestriction(int $cartRuleId, array $restrictedCartRuleIds): void
     {
         $this->getCommandBus()->handle(
-            new RestrictCartRulesCommand(
+            new SetCartRuleRestrictionsCommand(
                 $cartRuleId,
                 $restrictedCartRuleIds
             )

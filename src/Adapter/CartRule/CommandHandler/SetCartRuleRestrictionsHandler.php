@@ -30,18 +30,18 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\RestrictCartRulesCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\RestrictCartRulesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\SetCartRuleRestrictionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
-class RestrictCartRulesHandler implements RestrictCartRulesHandlerInterface
+class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerInterface
 {
     public function __construct(
         protected CartRuleRepository $cartRuleRepository
     ) {
     }
 
-    public function handle(RestrictCartRulesCommand $command): void
+    public function handle(SetCartRuleRestrictionsCommand $command): void
     {
         $cartRuleId = $command->cartRuleId;
         $cartRule = $this->cartRuleRepository->get($cartRuleId);

@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
-class RestrictCartRulesCommand
+class SetCartRuleRestrictionsCommand
 {
     public readonly CartRuleId $cartRuleId;
 
