@@ -47,10 +47,10 @@ export default class CountryData {
     this.id = countryToCreate.id || 0;
 
     /** @type {string} Name of the country */
-    this.name = countryToCreate.name || `test${faker.address.country()}`;
+    this.name = countryToCreate.name || `test${faker.location.country()}`;
 
     /** @type {string} Country iso code */
-    this.isoCode = countryToCreate.isoCode || faker.address.countryCode();
+    this.isoCode = countryToCreate.isoCode || faker.location.countryCode();
 
     /** @type {string} Country call Prefix */
     this.callPrefix = countryToCreate.callPrefix || '0';

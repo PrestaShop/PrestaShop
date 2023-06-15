@@ -47,22 +47,22 @@ export default class BrandAddressData {
     this.brandName = brandAddressToCreate.brandName || '--';
 
     /** @type {string} Linked address firstname */
-    this.firstName = brandAddressToCreate.firstName || faker.name.firstName();
+    this.firstName = brandAddressToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Linked address lastname */
-    this.lastName = brandAddressToCreate.lastName || faker.name.lastName();
+    this.lastName = brandAddressToCreate.lastName || faker.person.lastName();
 
     /** @type {string} Address first line */
-    this.address = brandAddressToCreate.address || faker.address.streetAddress();
+    this.address = brandAddressToCreate.address || faker.location.streetAddress();
 
     /** @type {string} Address second line */
-    this.secondaryAddress = brandAddressToCreate.secondaryAddress || faker.address.secondaryAddress();
+    this.secondaryAddress = brandAddressToCreate.secondaryAddress || faker.location.secondaryAddress();
 
     /** @type {string} Address postal code (default to this format #####) */
-    this.postalCode = brandAddressToCreate.postalCode || faker.address.zipCode();
+    this.postalCode = brandAddressToCreate.postalCode || faker.location.zipCode();
 
     /** @type {string} Address city name */
-    this.city = brandAddressToCreate.city || faker.address.city();
+    this.city = brandAddressToCreate.city || faker.location.city();
 
     /** @type {string} Address country name */
     this.country = brandAddressToCreate.country || faker.helpers.arrayElement(countriesNames);

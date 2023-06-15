@@ -133,21 +133,21 @@ export default class ProductData {
     this.description = productToCreate.description === undefined ? faker.lorem.sentence() : productToCreate.description;
 
     /** @type {string} Reference of the product */
-    this.reference = productToCreate.reference || faker.random.alphaNumeric(7);
+    this.reference = productToCreate.reference || faker.string.alphanumeric(7);
 
     /** @type {number} Quantity available of the product */
     this.quantity = productToCreate.quantity === undefined
-      ? faker.datatype.number({min: 1, max: 9})
+      ? faker.number.int({min: 1, max: 9})
       : productToCreate.quantity;
 
     /** @type {number} Tax for the product */
     this.tax = productToCreate.tax === undefined
-      ? faker.datatype.number({min: 1, max: 100})
+      ? faker.number.int({min: 1, max: 100})
       : productToCreate.tax;
 
     /** @type {number} Price tax included of the product */
     this.price = productToCreate.price === undefined
-      ? faker.datatype.number({min: 10, max: 20}) : productToCreate.price;
+      ? faker.number.int({min: 10, max: 20}) : productToCreate.price;
 
     /** @type {number} Retail price of the product */
     this.retailPrice = productToCreate.retailPrice === undefined
@@ -181,11 +181,11 @@ export default class ProductData {
     this.pack = productToCreate.pack || [
       {
         reference: 'demo_1',
-        quantity: faker.datatype.number({min: 10, max: 100}),
+        quantity: faker.number.int({min: 10, max: 100}),
       },
       {
         reference: 'demo_2',
-        quantity: faker.datatype.number({min: 10, max: 100}),
+        quantity: faker.number.int({min: 10, max: 100}),
       },
     ];
 
@@ -194,20 +194,20 @@ export default class ProductData {
 
     /** @type {number} EcoTax tax included of the product */
     this.ecoTax = productToCreate.ecoTax === undefined
-      ? faker.datatype.number({min: 1, max: 5})
+      ? faker.number.int({min: 1, max: 5})
       : productToCreate.ecoTax;
 
     /** @type {ProductSpecificPrice} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
       attributes: 'Size - S, Color - White',
-      discount: faker.datatype.number({min: 10, max: 100}),
-      startingAt: faker.datatype.number({min: 2, max: 5}),
+      discount: faker.number.int({min: 10, max: 100}),
+      startingAt: faker.number.int({min: 2, max: 5}),
       reductionType: '',
     };
 
     /** @type {number} Minimum quantity to buy for the product */
     this.minimumQuantity = productToCreate.minimumQuantity === undefined
-      ? faker.datatype.number({min: 1, max: 9})
+      ? faker.number.int({min: 1, max: 9})
       : productToCreate.minimumQuantity;
 
     /** @type {string} Stock location of the product */
@@ -215,7 +215,7 @@ export default class ProductData {
 
     /** @type {number} Low stock level of the product */
     this.lowStockLevel = productToCreate.lowStockLevel === undefined
-      ? faker.datatype.number({min: 1, max: 9})
+      ? faker.number.int({min: 1, max: 9})
       : productToCreate.lowStockLevel;
 
     /** @type {string} Label to add if product is in stock */
@@ -241,10 +241,10 @@ export default class ProductData {
     this.fileName = productToCreate.fileName || 'virtual.jpg';
 
     /** @type {number} Number of allowed downloads */
-    this.allowedDownload = productToCreate.allowedDownload || faker.datatype.number({min: 1, max: 20});
+    this.allowedDownload = productToCreate.allowedDownload || faker.number.int({min: 1, max: 20});
 
     /** @type {number} Weight of the package */
-    this.weight = productToCreate.weight || faker.datatype.number({min: 1, max: 20});
+    this.weight = productToCreate.weight || faker.number.int({min: 1, max: 20});
 
     /** @type {ProductCombination[]} */
     this.combinations = productToCreate.combinations || [];

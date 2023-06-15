@@ -10,7 +10,7 @@ function createRecord(): ImportBrand[] {
     const name = `todelete ${faker.company.name()}`;
     records.push({
       id: i + 2,
-      active: faker.datatype.number({min: 0, max: 1}),
+      active: faker.number.int({min: 0, max: 1}),
       name,
       description: faker.lorem.sentence(),
       shortDescription: faker.lorem.sentence(),

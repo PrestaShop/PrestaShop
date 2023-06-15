@@ -38,7 +38,7 @@ export default class TaxRuleData {
     this.country = taxRulesToCreate.country || faker.helpers.arrayElement(countriesNames);
 
     /** @type {string} Postal code of the country */
-    this.zipCode = taxRulesToCreate.zipCode || faker.address.zipCode();
+    this.zipCode = taxRulesToCreate.zipCode || faker.location.zipCode();
 
     /** @type {string} Behavior of the tax rule */
     this.behaviour = taxRulesToCreate.behaviour || faker.helpers.arrayElement(TaxRuleBehaviour);

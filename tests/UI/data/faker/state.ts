@@ -36,7 +36,7 @@ export default class StateData {
     this.id = stateToCreate.id || 0;
 
     /** @type {string} Name of the state */
-    this.name = stateToCreate.name || `test ${faker.address.state()}`;
+    this.name = stateToCreate.name || `test ${faker.location.state()}`;
 
     /** @type {string} Iso code of the state */
     this.isoCode = stateToCreate.isoCode || faker.helpers.arrayElement(statesIsoCodes);

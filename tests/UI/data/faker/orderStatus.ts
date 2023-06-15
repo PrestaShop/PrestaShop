@@ -56,7 +56,7 @@ export default class OrderStatusData {
     /** @type {boolean} True to hide this status in all customer orders. */
     this.hiddenOn = orderStatusToCreate.hiddenOn === undefined ? true : orderStatusToCreate.hiddenOn;
 
-    /** @type {boolean} True to send an email to the customer when his/her order status has changed */
+    /** @type {boolean} True to email the customer when his/her order status has changed */
     this.sendEmailOn = orderStatusToCreate.sendEmailOn === undefined ? true : orderStatusToCreate.sendEmailOn;
 
     /** @type {boolean} True to attach invoice PDF to email */

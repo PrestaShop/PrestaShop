@@ -45,14 +45,20 @@ export default class EmployeeData {
     /** @type {number} Employee ID */
     this.id = employeeToCreate.id || 0;
 
-    /** @type {string} Employee fistname */
-    this.firstName = employeeToCreate.firstName || faker.name.firstName();
+    /** @type {string} Employee firstname */
+    this.firstName = employeeToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Employee lastname */
-    this.lastName = employeeToCreate.lastName || faker.name.lastName();
+    this.lastName = employeeToCreate.lastName || faker.person.lastName();
 
     /** @type {string} Email of the employee */
-    this.email = employeeToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
+    this.email = employeeToCreate.email || faker.internet.email(
+      {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        provider: 'prestashop.com',
+      },
+    );
 
     /** @type {string} Password for the employee account */
     this.password = employeeToCreate.password || 'prestashop_demo';

@@ -75,16 +75,16 @@ export default class SupplierData {
     this.mobilePhone = supplierToCreate.mobilePhone || faker.phone.number('06########');
 
     /** @type {string} First line address of the supplier */
-    this.address = supplierToCreate.address || faker.address.streetAddress();
+    this.address = supplierToCreate.address || faker.location.streetAddress();
 
     /** @type {string} Second line address of the supplier */
-    this.secondaryAddress = supplierToCreate.secondaryAddress || faker.address.secondaryAddress();
+    this.secondaryAddress = supplierToCreate.secondaryAddress || faker.location.secondaryAddress();
 
     /** @type {string} Postal code of the supplier */
-    this.postalCode = supplierToCreate.postalCode || faker.address.zipCode().replace('.', '-');
+    this.postalCode = supplierToCreate.postalCode || faker.location.zipCode().replace('.', '-');
 
     /** @type {string} City for the address of the supplier */
-    this.city = supplierToCreate.city || faker.address.city();
+    this.city = supplierToCreate.city || faker.location.city();
 
     /** @type {string} Country for the address of the supplier */
     this.country = supplierToCreate.country || faker.helpers.arrayElement(countriesNames);
