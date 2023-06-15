@@ -32,8 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Resources\DatabaseDump;
@@ -55,17 +53,11 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
      * @Then cart rule with reference :cartRuleReference is enabled
      *
      * @param string $cartRuleReference
-     *
-     * @throws CartRuleConstraintException
-     * @throws RuntimeException
      */
     public function assertCartRuleEnabled(string $cartRuleReference): void
     {
-        /** @var CartRuleForEditing $cartRule */
-        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)));
-
         Assert::assertTrue(
-            $cartRule->getInformation()->isEnabled(),
+            $this->getCartRuleForEditing($cartRuleReference)->getInformation()->isEnabled(),
             sprintf('Cart rule %s is not enabled', $cartRuleReference)
         );
     }
@@ -74,16 +66,11 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
      * @Then cart rule with reference :cartRuleReference is disabled
      *
      * @param string $cartRuleReference
-     *
-     * @throws CartRuleConstraintException
      */
     public function assertCartRuleDisabled(string $cartRuleReference): void
     {
-        /** @var CartRuleForEditing $cartRule */
-        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)));
-
         Assert::assertFalse(
-            $cartRule->getInformation()->isEnabled(),
+            $this->getCartRuleForEditing($cartRuleReference)->getInformation()->isEnabled(),
             sprintf('Cart rule %s is not disabled', $cartRuleReference)
         );
     }
@@ -93,13 +80,12 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
      *
      * @param string $cartRuleReference
      *
-     * @throws CartRuleConstraintException
      * @throws NoExceptionAlthoughExpectedException
      */
     public function assertCartRuleDeleted(string $cartRuleReference): void
     {
         try {
-            $this->getQueryBus()->handle(new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)));
+            $this->getCartRuleForEditing($cartRuleReference);
             throw new NoExceptionAlthoughExpectedException(sprintf('Cart rule "%s" was found, but it was expected to be deleted', $cartRuleReference));
         } catch (CartRuleNotFoundException $e) {
             $this->getSharedStorage()->clear($cartRuleReference);
@@ -157,8 +143,21 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
     public function assertCartRule(string $cartRuleReference, TableNode $tableNode): void
     {
         $this->assertCartRuleProperties(
-            $this->getCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)),
+            $this->getCartRuleForEditing($cartRuleReference),
             $this->localizeByColumns($tableNode)
+        );
+    }
+
+    /**
+     * @Then cart rule :cartRuleReference should have no product restriction rules
+     *
+     * @return void
+     */
+    public function assertNoProductRestrictionRules(string $cartRuleReference): void
+    {
+        Assert::assertEmpty(
+            $this->getCartRuleForEditing($cartRuleReference)->getConditions()->getRestrictions()->productRestrictionRuleGroups,
+            'Cart rule was expecting to have empty product restriction rule groups'
         );
     }
 }

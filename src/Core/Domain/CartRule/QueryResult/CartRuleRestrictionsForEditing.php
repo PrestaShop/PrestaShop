@@ -28,11 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
+
 class CartRuleRestrictionsForEditing
 {
-    //@todo: add other restrictions like country, carrier, group, product, shop (shop association might be handled separatly)
+    /**
+     * @todo: fill other restrictions when related commands are implemented
+     *
+     * @param int[] $restrictedCartRuleIds
+     * @param RestrictionRuleGroup[] $productRestrictionRuleGroups
+     */
     public function __construct(
-        public readonly array $restrictedCartRuleIds
+        public readonly array $restrictedCartRuleIds,
+        public readonly array $productRestrictionRuleGroups
     ) {
     }
 }

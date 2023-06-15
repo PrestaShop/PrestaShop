@@ -33,8 +33,10 @@ use PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -156,6 +158,106 @@ class CartRuleRepository extends AbstractObjectModelRepository
                 $this->connection->executeStatement($productRuleStmt);
             }
         }
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     *
+     * @return RestrictionRuleGroup[]
+     */
+    public function getProductRestrictions(CartRuleId $cartRuleId): array
+    {
+        // retrieve all item ids based on cart rule
+        $ruleValues = $this->connection->createQueryBuilder()
+            ->select('value.id_product_rule, value.id_item')
+            ->from($this->dbPrefix . 'cart_rule_product_rule_value', 'value')
+            ->innerJoin(
+                'value',
+                $this->dbPrefix . 'cart_rule_product_rule',
+                'rule',
+                'value.id_product_rule = rule.id_product_rule'
+            )
+            ->innerJoin(
+                'rule',
+                $this->dbPrefix . 'cart_rule_product_rule_group',
+                'group',
+                'rule.id_product_rule_group = group.id_product_rule_group'
+            )
+            ->where('group.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
+
+        // retrieve all rules based on cart rule
+        $rules = $this->connection->createQueryBuilder()
+            ->select('rule.id_product_rule, rule.id_product_rule_group, rule.type')
+            ->from($this->dbPrefix . 'cart_rule_product_rule', 'rule')
+            ->innerJoin(
+                'rule',
+                $this->dbPrefix . 'cart_rule_product_rule_group',
+                'group',
+                'rule.id_product_rule_group = group.id_product_rule_group'
+            )
+            ->where('group.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        // retrieve all rule groups based on cart rule
+        $groups = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from($this->dbPrefix . 'cart_rule_product_rule_group', 'group')
+            ->where('id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        // put quantities under related group
+        $quantityForGroups = [];
+        foreach ($groups as $group) {
+            $productRuleGroupId = (int) $group['id_product_rule_group'];
+            $quantityForGroups[$productRuleGroupId] = (int) $group['quantity'];
+        }
+
+        // put types under related group and product rules
+        $typesForRules = [];
+        foreach ($rules as $rule) {
+            $productRuleId = (int) $rule['id_product_rule'];
+            $typesForRules[$rule['id_product_rule_group']][$productRuleId][] = $rule['type'];
+        }
+
+        // put ids under related product rules
+        $ruleItemIdsForRules = [];
+        foreach ($ruleValues as $ruleValue) {
+            $productRuleId = (int) $ruleValue['id_product_rule'];
+            $ruleItemIdsForRules[$productRuleId][] = (int) $ruleValue['id_item'];
+        }
+
+        // finally build the complex restriction rule groups by retrieving related values by array keys structured above
+        $restrictionRuleGroups = [];
+        foreach ($quantityForGroups as $groupId => $quantity) {
+            if (!isset($typesForRules[$groupId])) {
+                throw new CartRuleException(
+                    sprintf('Unexpected state of cart rule product restrictions. Failed to retrieve types for rules of group %d', $groupId)
+                );
+            }
+
+            $restrictionRules = [];
+            foreach ($typesForRules[$groupId] as $productRuleId => $type) {
+                if (!isset($ruleItemIdsForRules[$productRuleId])) {
+                    throw new CartRuleException(
+                        sprintf('Unexpected state of cart rule product restrictions. Failed to retrieve item ids for rule %d', $productRuleId)
+                    );
+                }
+                $restrictionRules[] = new RestrictionRule($type, $ruleItemIdsForRules[$productRuleId]);
+            }
+
+            $restrictionRuleGroups[] = new RestrictionRuleGroup($quantity, $restrictionRules);
+        }
+
+        return $restrictionRuleGroups;
     }
 
     /**

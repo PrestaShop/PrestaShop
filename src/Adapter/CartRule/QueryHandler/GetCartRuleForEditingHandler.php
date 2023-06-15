@@ -122,8 +122,8 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
         }
 
         $cartRuleRestrictions = new CartRuleRestrictionsForEditing(
-            // @todo: fill other restrictions when related commands are implemented
             $restrictedCartRules,
+            $this->getRestrictionRuleGroups($cartRule)
         );
 
         return new CartRuleConditionsForEditing(
@@ -135,6 +135,15 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
             $cartRuleMinimum,
             $cartRuleRestrictions
         );
+    }
+
+    private function getRestrictionRuleGroups(CartRule $cartRule): array
+    {
+        if (!$cartRule->product_restriction) {
+            return [];
+        }
+
+        return $this->cartRuleRepository->getProductRestrictions(new CartRuleId((int) $cartRule->id));
     }
 
     private function getCartRuleActions(CartRule $cartRule): CartRuleActionForEditing
