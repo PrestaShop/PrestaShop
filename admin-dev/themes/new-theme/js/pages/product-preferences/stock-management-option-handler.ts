@@ -41,6 +41,7 @@ class StockManagementOptionHandler {
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
     this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
+    this.handleDisplayOutOfStockLabelOption(isStockManagementEnabled);
   }
 
   /**
@@ -78,6 +79,26 @@ class StockManagementOptionHandler {
     } else {
       displayQuantitiesRadio.val(['0']);
       displayQuantitiesRadio.attr('disabled', 'disabled');
+    }
+  }
+
+  /**
+   * If stock managament is disabled
+   * then 'Display out-of-stock label on product listing pages' option must be No and disabled
+   * otherwise it should be enabled
+   *
+   * @param {int} isStockManagementEnabled
+   */
+  handleDisplayOutOfStockLabelOption(
+    isStockManagementEnabled: number,
+  ): void {
+    const displayOutOfStockLabelRadio = $('input[name="stock[oos_show_label_listing_pages]"]');
+
+    if (isStockManagementEnabled) {
+      displayOutOfStockLabelRadio.removeAttr('disabled');
+    } else {
+      displayOutOfStockLabelRadio.val(['0']);
+      displayOutOfStockLabelRadio.attr('disabled', 'disabled');
     }
   }
 }
