@@ -52,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Product\ShopListColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
@@ -524,6 +525,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         $filters = (new FilterCollection())
+            ->add(new HiddenFilter('id_category'))
             ->add(
                 (new Filter('id_product', IntegerMinMaxFilterType::class))
                     ->setTypeOptions([
