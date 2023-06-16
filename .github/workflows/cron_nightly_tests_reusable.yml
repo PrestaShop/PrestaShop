@@ -92,6 +92,27 @@ jobs:
           - 'modules'
           - 'regression'
         exclude:
+          ## 1.7.8.x
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'cldr'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:BO:dashboard'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:API'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:01-03'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:04-07'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:08-12'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:hummingbird:01-03'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:WS'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'modules'
           ## 8.0.x
           - BRANCH: 8.0.x
             CAMPAIGN: 'cldr'
@@ -135,8 +156,8 @@ jobs:
       PS_LANGUAGE: 'en'
       PS_INSTALL_AUTO: 1
       PS_DEV_MODE: 0
-      PS_ENABLE_SSL: ${{ matrix.BRANCH == '8.0.x' && '0' || '1' }}
-      PS_DOMAIN: ${{ matrix.BRANCH == '8.0.x' && 'localhost:8001' || 'localhost:8002' }}
+      PS_ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && '0' || '1' }}
+      PS_DOMAIN: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'localhost:8001' || 'localhost:8002' }}
       DB_SERVER: 'mysql'
       DB_NAME: 'prestashop'
       DB_PREFIX: 'tst_'
@@ -177,7 +198,7 @@ jobs:
       - name: Build and run shop with docker
         timeout-minutes: 15
         env:
-          URL_FO: ${{ env.GH_BRANCH == '8.0.x' && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) \
           docker-compose -f docker-compose.yml up -d --build
@@ -197,7 +218,7 @@ jobs:
         continue-on-error: true
         working-directory: ${{ inputs.TESTS_DIR }}
         env:
-          URL_FO: ${{ env.GH_BRANCH == '8.0.x' && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
           ENABLE_SSL: true
           SMTP_SERVER: '172.17.0.1'
         run: npm run ${{ env.TEST_CAMPAIGN }}
