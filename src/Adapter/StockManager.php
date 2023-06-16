@@ -43,7 +43,7 @@ class StockManager implements StockInterface
      * Gets available stock for a given product / combination / shop.
      *
      * @param object $product
-     * @param null $id_product_attribute
+     * @param int|null $id_product_attribute
      * @param int|null $id_shop
      *
      * @return StockAvailable
