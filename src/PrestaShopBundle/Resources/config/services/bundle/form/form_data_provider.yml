@@ -274,6 +274,7 @@ services:
       - '@doctrine.orm.entity_manager'
       - 'stable'
       - '@prestashop.bundle.routing.converter.cache_provider'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService'
 
   prestashop.admin.configure.advanced_parameters.beta_feature_flags_form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsFormDataProvider'
@@ -281,6 +282,7 @@ services:
       - '@doctrine.orm.entity_manager'
       - 'beta'
       - '@prestashop.bundle.routing.converter.cache_provider'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService'
 
   prestashop.adapter.security.general.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'

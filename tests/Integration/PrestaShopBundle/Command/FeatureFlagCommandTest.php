@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Integration\PrestaShopBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\Handler\HandlerFactory;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -65,9 +66,11 @@ class FeatureFlagCommandTest extends KernelTestCase
         $featureFlags = $featureFlagRepository->findAll();
         /** @var FeatureFlag $featureFlag */
         foreach ($featureFlags as $featureFlag) {
+            // Get Handler
+            $handler = HandlerFactory::getHandler($featureFlag);
             // This method is based on the output of the list action so it indirectly tests it
             $flagState = $this->getFeatureFlagState($kernel, $featureFlag->getName());
-            $this->assertEquals($flagState, $featureFlag->isEnabled());
+            $this->assertEquals($flagState, $handler->isEnabled());
         }
     }
 
@@ -112,10 +115,10 @@ class FeatureFlagCommandTest extends KernelTestCase
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $regexp = sprintf('/\|[ ]+%s[ ]+\|[ ]+([^ ]+)[ ]+\|/', $featureFlag);
+        $regexp = sprintf('/\|[ ]+%s[ ]+\|[ ]+([^ ]+)[ ]+\|[ ]+([^ ]+)[ ]+\|/', $featureFlag);
         $matches = [];
         preg_match($regexp, $output, $matches);
-        $state = $matches[1];
+        $state = $matches[2];
         $this->assertTrue(in_array($state, ['Enabled', 'Disabled']));
 
         return $state === 'Enabled';

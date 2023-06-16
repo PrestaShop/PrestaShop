@@ -72,10 +72,35 @@ class FeatureFlagType extends TranslatorAwareType
         $featureFlagData = $event->getData();
         $form = $event->getForm();
         $form->add($this->formCloner->cloneForm($form->get('enabled'), [
-            'label' => $this->trans($featureFlagData['label'], $featureFlagData['label_domain']),
-            'help' => $this->trans($featureFlagData['description'], $featureFlagData['description_domain']),
+            'label' => $this->trans($featureFlagData['label'], $featureFlagData['label_domain']) . $this->getHandlerLabel($featureFlagData),
+            'help' => $this->trans($featureFlagData['description'], $featureFlagData['description_domain']) . $this->getForcedByEnvMessage($featureFlagData),
             'attr' => ['disabled' => $featureFlagData['disabled']],
         ]));
+    }
+
+    private function getHandlerLabel(array $featureFlagData): string
+    {
+        $template = '<br><small class="form-text">%s</small>';
+
+        $htmlType = [];
+        foreach ($featureFlagData['type'] as $type) {
+            if ($type === $featureFlagData['type_used']) {
+                $htmlType[] = sprintf('<strong>%s</strong>', addslashes($type));
+            } else {
+                $htmlType[] = $type;
+            }
+        }
+
+        return sprintf($template, implode(', ', $htmlType));
+    }
+
+    private function getForcedByEnvMessage(array $featureFlagData): string
+    {
+        if ($featureFlagData['forced_by_env']) {
+            return '<br/><strong>' . $this->trans('This FeatureFlag is forced by Env.', 'Admin.Advparameters.Help') . '</strong>';
+        }
+
+        return '';
     }
 
     public function configureOptions(OptionsResolver $resolver)

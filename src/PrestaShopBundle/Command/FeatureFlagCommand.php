@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Component\Console\Command\Command;
@@ -55,16 +56,11 @@ class FeatureFlagCommand extends Command
         'list',
     ];
 
-    /**
-     * @var FeatureFlagRepository
-     */
-    private $featureFlagRepository;
-
     public function __construct(
-        FeatureFlagRepository $featureFlagRepository
+        private readonly FeatureFlagRepository $featureFlagRepository,
+        private readonly EntityManagerInterface $entityManager
     ) {
         parent::__construct();
-        $this->featureFlagRepository = $featureFlagRepository;
     }
 
     protected function configure()
@@ -99,14 +95,34 @@ class FeatureFlagCommand extends Command
     {
         $featureFlags = $this->featureFlagRepository->findAll();
         $table = new Table($output);
-        $table->setHeaders(['Feature flag', 'State']);
+        $table->setHeaders(['Feature flag', 'Type', 'State']);
         /** @var FeatureFlag $featureFlag */
         foreach ($featureFlags as $featureFlag) {
-            $table->addRow([$featureFlag->getName(), $featureFlag->isEnabled() ? 'Enabled' : 'Disabled']);
+            $handler = HandlerFactory::getHandler($featureFlag);
+            $table->addRow([
+                $featureFlag->getName(),
+                $this->getTypeRow($handler),
+                $handler->isEnabled() ? 'Enabled' : 'Disabled',
+            ]);
         }
         $table->render();
 
         return self::SUCCESS_RETURN_CODE;
+    }
+
+    private function getTypeRow(TypeHandlerInterface $handler): string
+    {
+        $out = [];
+
+        foreach ($handler->getFeatureFlag()->getTypeOrder() as $type) {
+            if ($handler->getTypeName() === $type) {
+                $out[] = "[$type]";
+            } else {
+                $out[] = $type;
+            }
+        }
+
+        return implode(',', $out);
     }
 
     private function toggleFeatureFlag(bool $expectedState, InputInterface $input, OutputInterface $output): int
@@ -128,19 +144,22 @@ class FeatureFlagCommand extends Command
             return self::INVALID_ARGUMENTS_RETURN_CODE;
         }
 
+        $handler = HandlerFactory::getHandler($featureFlag);
+
         if ($expectedState) {
-            $this->featureFlagRepository->enable($featureFlagArgument);
+            $handler->enable();
             $output->writeln(sprintf(
                 '<info>Feature flag %s was enabled</info>',
                 $featureFlagArgument
             ));
         } else {
-            $this->featureFlagRepository->disable($featureFlagArgument);
+            $handler->disable();
             $output->writeln(sprintf(
                 '<info>Feature flag %s was disabled</info>',
                 $featureFlagArgument
             ));
         }
+        $this->entityManager->flush();
 
         return self::SUCCESS_RETURN_CODE;
     }

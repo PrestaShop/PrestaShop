@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Routing\Converter\CacheCleanerInterface;
@@ -40,30 +42,17 @@ use PrestaShopBundle\Routing\Converter\CacheCleanerInterface;
  */
 class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 {
-    /** @var EntityManagerInterface */
-    protected $doctrineEntityManager;
-
-    /** @var string */
-    protected $stability;
-
-    /**
-     * @var CacheCleanerInterface
-     */
-    private $cacheCleaner;
-
     /**
      * @param EntityManagerInterface $doctrineEntityManager
      * @param string $stability
      * @param CacheCleanerInterface $cacheCleaner
      */
     public function __construct(
-        EntityManagerInterface $doctrineEntityManager,
-        string $stability,
-        CacheCleanerInterface $cacheCleaner
+        protected EntityManagerInterface $doctrineEntityManager,
+        protected readonly string $stability,
+        private CacheCleanerInterface $cacheCleaner,
+        private FeatureFlagService $featureFlagService
     ) {
-        $this->doctrineEntityManager = $doctrineEntityManager;
-        $this->stability = $stability;
-        $this->cacheCleaner = $cacheCleaner;
     }
 
     public function getData()
@@ -72,16 +61,18 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 
         $featureFlagsData = [];
         foreach ($featureFlags as $featureFlag) {
-            $featureFlagsData[$featureFlag->getName()] = [
-                'enabled' => $featureFlag->isEnabled(),
+            $flagName = $featureFlag->getName();
+            $featureFlagsData[$flagName] = [
+                'enabled' => $this->featureFlagService->isEnabled($flagName),
                 'name' => $featureFlag->getName(),
                 'label' => $featureFlag->getLabelWording(),
                 'label_domain' => $featureFlag->getLabelDomain(),
                 'description' => $featureFlag->getDescriptionWording(),
                 'description_domain' => $featureFlag->getDescriptionDomain(),
-                // You can handle specific rules here to indicate if the feature flag should be editable or not, currently
-                // no more specific rule but it can evolve in the future
-                'disabled' => false,
+                'type' => $featureFlag->getTypeOrder(),
+                'type_used' => $this->featureFlagService->getTypeUsed($flagName),
+                'disabled' => $this->featureFlagService->isReadOnly($flagName),
+                'forced_by_env' => $this->featureFlagService->getTypeUsed($flagName) === FeatureFlagSettings::TYPE_ENV,
             ];
         }
 
@@ -102,15 +93,18 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 throw new InvalidArgumentException(sprintf('Invalid feature flag configuration submitted, flag %s does not exist', $flagName));
             }
 
+            if ($this->featureFlagService->isReadonly($flagName)) {
+                continue;
+            }
+
             $flagState = $flagData['enabled'] ?? false;
             if ($flagState) {
-                $featureFlag->enable();
+                $this->featureFlagService->enable($flagName);
             } else {
-                $featureFlag->disable();
+                $this->featureFlagService->disable($flagName);
             }
         }
 
-        $this->doctrineEntityManager->flush();
         // Clear cache of legacy routes since they can depend on an associated feature flag
         // when the attribute _legacy_feature_flag is used
         $this->cacheCleaner->clearCache();
