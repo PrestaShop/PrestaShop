@@ -536,7 +536,7 @@ class StockAvailableCore extends ObjectModel
      * If $avoid_parent_pack_update is true, then packs containing the given product won't be updated.
      *
      * @param int $id_product
-     * @param int $id_product_attribute Optional
+     * @param int|null $id_product_attribute Optional
      * @param int $delta_quantity The delta quantity to update
      * @param int $id_shop Optional
      * @param bool $add_movement Optional
