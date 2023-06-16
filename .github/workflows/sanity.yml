@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -35,9 +35,18 @@ jobs:
           mysql root password: 'password'
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '10'
+          node-version: '14'
+          cache: 'npm'
+          cache-dependency-path: |
+            admin-dev/**/package-lock.json
+            tests/**/package-lock.json
+            themes/**/package-lock.json
+
+      - name: Setup NPM
+        shell: bash
+        run: npm i -g npm@6
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
@@ -46,13 +55,6 @@ jobs:
         id: composer-cache
         run: |
           echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache node Directory
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('admin-dev/**/package-lock.json', 'tests/**/package-lock.json', 'themes/**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
