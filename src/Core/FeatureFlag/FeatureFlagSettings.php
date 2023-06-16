@@ -30,8 +30,18 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
 class FeatureFlagSettings
 {
+    /**
+     * Stability consts
+     */
     public const STABILITY_STABLE = 'stable';
     public const STABILITY_BETA = 'beta';
+
+    /**
+     * Type consts
+     */
+    public const TYPE_DB = 'db';
+    public const TYPE_ENV = 'env';
+    public const TYPE_DOTENV = 'dotenv';
 
     /**
      * @deprecated Deprecated in 8.1 will be removed in next major.
