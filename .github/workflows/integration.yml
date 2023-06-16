@@ -45,14 +45,6 @@ jobs:
                 run: |
                     echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-            -   name: Cache Node Directory
-                uses: actions/cache@v2
-                with:
-                    path: ~/.npm
-                    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                    restore-keys: |
-                        ${{ runner.os }}-node-
-
             -   name: Cache Composer Directory
                 uses: actions/cache@v2
                 with:

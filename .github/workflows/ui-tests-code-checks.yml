@@ -25,9 +25,7 @@ jobs:
           node-version: '14'
           cache: 'npm'
           cache-dependency-path: |
-            admin-dev/**/package-lock.json
             tests/**/package-lock.json
-            themes/**/package-lock.json
 
       - name: Setup NPM
         shell: bash
@@ -60,9 +58,7 @@ jobs:
           node-version: '14'
           cache: 'npm'
           cache-dependency-path: |
-            admin-dev/**/package-lock.json
             tests/**/package-lock.json
-            themes/**/package-lock.json
 
       - name: Setup NPM
         shell: bash
