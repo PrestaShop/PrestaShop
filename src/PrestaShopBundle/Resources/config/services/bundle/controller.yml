@@ -10,9 +10,6 @@ services:
       tags:
         - 'controller.service_arguments'
         - 'container.service_subscriber'
-    PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController:
-      calls:
-        - [ setContainer, [ '@service_container' ] ]
 
 
   # Legacy controllers don't extend the base controller, so we need to inject the container manually.
