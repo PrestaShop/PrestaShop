@@ -47,10 +47,6 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      */
     private const NON_EXISTING_CART_RULE_ID = 54440051;
 
-    public static function buildProductRestrictionStorageKey(string $cartRuleReference): string
-    {
-        return 'cart_rule_product_restriction_groups_' . $cartRuleReference;
-    }
 
     /**
      * @When /^I (enable|disable) cart rule with reference "(.+)"$/

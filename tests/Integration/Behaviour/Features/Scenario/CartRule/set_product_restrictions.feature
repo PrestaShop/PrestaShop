@@ -70,6 +70,8 @@ Feature: Set cart rule product restrictions in BO
       | type     | references        |
       | products | product1,product2 |
     And I save product restrictions for cart rule rule_free_shipping_1
+    #@todo: this step should fail now, later to be changed with step to check actual restrictions
+    Then cart rule "rule_free_shipping_1" should have no product restriction rules
 #    When I restrict following cart rules for cart rule rule_free_shipping_1:
 #      | rule_50_percent |
 #    Then cart rule "rule_free_shipping_1" should have the following properties:

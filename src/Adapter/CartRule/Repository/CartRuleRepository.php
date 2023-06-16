@@ -168,36 +168,37 @@ class CartRuleRepository extends AbstractObjectModelRepository
     {
         // retrieve all item ids based on cart rule
         $ruleValues = $this->connection->createQueryBuilder()
-            ->select('value.id_product_rule, value.id_item')
-            ->from($this->dbPrefix . 'cart_rule_product_rule_value', 'value')
+            ->select('crprv.id_product_rule, crprv.id_item')
+            ->from($this->dbPrefix . 'cart_rule_product_rule_value', 'crprv')
             ->innerJoin(
-                'value',
+                'crprv',
                 $this->dbPrefix . 'cart_rule_product_rule',
-                'rule',
-                'value.id_product_rule = rule.id_product_rule'
+                'crpr',
+                'crprv.id_product_rule = crpr.id_product_rule'
             )
             ->innerJoin(
-                'rule',
+                'crpr',
                 $this->dbPrefix . 'cart_rule_product_rule_group',
-                'group',
-                'rule.id_product_rule_group = group.id_product_rule_group'
+                'crprg',
+                'crpr.id_product_rule_group = crprg.id_product_rule_group'
             )
-            ->where('group.id_cart_rule = :cartRuleId')
+            ->where('crprg.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()
+            ->fetchAllAssociative()
         ;
 
         // retrieve all rules based on cart rule
         $rules = $this->connection->createQueryBuilder()
-            ->select('rule.id_product_rule, rule.id_product_rule_group, rule.type')
-            ->from($this->dbPrefix . 'cart_rule_product_rule', 'rule')
+            ->select('crpr.id_product_rule, crpr.id_product_rule_group, crpr.type')
+            ->from($this->dbPrefix . 'cart_rule_product_rule', 'crpr')
             ->innerJoin(
-                'rule',
+                'crpr',
                 $this->dbPrefix . 'cart_rule_product_rule_group',
-                'group',
-                'rule.id_product_rule_group = group.id_product_rule_group'
+                'crprg',
+                'crpr.id_product_rule_group = crprg.id_product_rule_group'
             )
-            ->where('group.id_cart_rule = :cartRuleId')
+            ->where('crprg.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()
             ->fetchAllAssociative()
@@ -205,8 +206,8 @@ class CartRuleRepository extends AbstractObjectModelRepository
 
         // retrieve all rule groups based on cart rule
         $groups = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from($this->dbPrefix . 'cart_rule_product_rule_group', 'group')
+            ->select('id_product_rule_group, id_cart_rule, quantity')
+            ->from($this->dbPrefix . 'cart_rule_product_rule_group')
             ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()
@@ -224,7 +225,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $typesForRules = [];
         foreach ($rules as $rule) {
             $productRuleId = (int) $rule['id_product_rule'];
-            $typesForRules[$rule['id_product_rule_group']][$productRuleId][] = $rule['type'];
+            $typesForRules[$rule['id_product_rule_group']][$productRuleId] = $rule['type'];
         }
 
         // put ids under related product rules
