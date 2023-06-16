@@ -3,9 +3,12 @@ ARG VERSION
 
 FROM prestashop/prestashop-git:$VERSION
 
+ARG GROUP_ID
+ARG USER_ID
+
 # To run files with the same group as your primary user
-RUN groupmod -g 1000 www-data \
-  && usermod -u 1000 -g 1000 www-data
+RUN groupmod -g $GROUP_ID www-data \
+  && usermod -u $USER_ID -g $GROUP_ID www-data
 
 COPY .docker/wait-for-it.sh /tmp/
 COPY .docker/docker_run_git.sh /tmp/
@@ -19,5 +22,10 @@ RUN chown -R www-data:www-data /var/www/html/var
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt install -y nodejs
+
+# Install mailutils to make sendmail work
+RUN apt install -y \
+    apt-utils \
+    mailutils
 
 CMD ["/tmp/docker_run_git.sh"]

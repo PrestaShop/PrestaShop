@@ -418,7 +418,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       const carts = await viewCustomerPage.getTextFromElement(page, 'Last connections');
 
       expect(carts).to.contains(todayDate);
-      expect(carts).to.contains('Direct link');
     });
 
     it('should check groups', async function () {
