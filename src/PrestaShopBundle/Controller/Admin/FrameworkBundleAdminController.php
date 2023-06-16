@@ -44,6 +44,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
+ *
+ * @deprecated since 9.0 to be removed in future versions (10+ at least, when it will no more used)
  */
 class FrameworkBundleAdminController extends AbstractController implements ContainerAwareInterface
 {
@@ -54,7 +56,12 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
 
     /**
      * Override to make this compatible with the ContainerAware signature, content should be the same as in the abstract.
-     * Do not override this neither use this, it will be removed in next versions.
+     * Do not override this neither use this, it will be removed in next versions. This overridden method
+     * along with the ContainerAwareInterface was added to skip the error sent by Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver
+     * that forces the controllers extending AbstractController to be defined as service subscriber.
+     *
+     * This method allows us to keep controllers based on FrameworkBundleAdminController from being
+     * adapted. However, the core and the modules should stop using it in favor of PrestaShopAdminController
      *
      * @internal
      */
