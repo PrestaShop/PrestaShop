@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService:
+    public: true
+
+  PrestaShop\PrestaShop\Core\FeatureFlag\Handler\DbHandler: ~
+  PrestaShop\PrestaShop\Core\FeatureFlag\Handler\EnvHandler: ~
+  PrestaShop\PrestaShop\Core\FeatureFlag\Handler\DotEnvHandler: ~
