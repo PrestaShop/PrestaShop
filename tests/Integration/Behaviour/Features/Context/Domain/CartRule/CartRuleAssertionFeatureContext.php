@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Resources\DatabaseDump;
@@ -159,5 +160,65 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
             $this->getCartRuleForEditing($cartRuleReference)->getConditions()->getRestrictions()->productRestrictionRuleGroups,
             'Cart rule was expecting to have empty product restriction rule groups'
         );
+    }
+
+    /**
+     * @Then cart rule :cartRuleReference should have the following product restriction rule groups:
+     *
+     * @return void
+     */
+    public function assertProductRestrictionGroups(string $cartRuleReference, TableNode $tableNode): void
+    {
+        $actualRestrictionGroups = $this->getCartRuleForEditing($cartRuleReference)
+            ->getConditions()
+            ->getRestrictions()
+            ->productRestrictionRuleGroups
+        ;
+        $expectedDataRows = $tableNode->getColumnsHash();
+        Assert::assertCount(count($expectedDataRows), $actualRestrictionGroups, 'Unexpected product restriction groups count');
+
+        foreach ($expectedDataRows as $key => $expectedDataRow) {
+            $actualGroup = $actualRestrictionGroups[$key];
+            Assert::assertEquals(
+                $expectedDataRow['quantity'],
+                $actualGroup->getRequiredQuantityInCart(),
+                'Unexpected required quantity in cart in restriction group'
+            );
+            Assert::assertCount((int) $expectedDataRow['rules count'], $actualGroup->getRestrictionRules(), 'Unexpected rules count in restriction group');
+
+            // set group so into shared storage so that following steps can assert its values more in depth
+            $this->getSharedStorage()->set($expectedDataRow['groupReference'], $actualGroup);
+        }
+    }
+
+    /**
+     * @Then the cart rule restriction group :restrictionGroupReference should have the following rules:
+     *
+     * @param string $restrictionGroupReference
+     * @param TableNode $tableNode
+     *
+     * @return void
+     */
+    public function assertProductRestrictionRules(string $restrictionGroupReference, TableNode $tableNode): void
+    {
+        if (!$this->getSharedStorage()->exists($restrictionGroupReference)) {
+            throw new RuntimeException(sprintf(
+                'Restriction group %s was not set in shared storage. You have to first call method assertProductRestrictionGroups"',
+                $restrictionGroupReference
+            ));
+        }
+
+        $group = $this->getSharedStorage()->get($restrictionGroupReference);
+        Assert::assertInstanceOf(RestrictionRuleGroup::class, $group);
+
+        $actualRules = $group->getRestrictionRules();
+        $expectedDataRows = $tableNode->getColumnsHash();
+
+        Assert::assertCount(count($expectedDataRows), $actualRules, 'Unexpected product restriction rules count in group');
+
+        foreach ($expectedDataRows as $key => $expectedRow) {
+            Assert::assertSame($expectedRow['type'], $actualRules[$key]->getType());
+            Assert::assertSame($this->referencesToIds($expectedRow['references']), $actualRules[$key]->getIds());
+        }
     }
 }

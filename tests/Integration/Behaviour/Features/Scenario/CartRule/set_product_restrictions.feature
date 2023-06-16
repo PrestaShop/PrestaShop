@@ -70,40 +70,9 @@ Feature: Set cart rule product restrictions in BO
       | type     | references        |
       | products | product1,product2 |
     And I save product restrictions for cart rule rule_free_shipping_1
-    #@todo: this step should fail now, later to be changed with step to check actual restrictions
-    Then cart rule "rule_free_shipping_1" should have no product restriction rules
-#    When I restrict following cart rules for cart rule rule_free_shipping_1:
-#      | rule_50_percent |
-#    Then cart rule "rule_free_shipping_1" should have the following properties:
-#      | restricted cart rules | rule_50_percent |
-#    And cart rule "rule_50_percent" should have the following properties:
-#      | restricted cart rules | rule_free_shipping_1 |
-#    And cart rule "rule_70_percent" should have the following properties:
-#      | restricted cart rules |  |
-#    When I restrict following cart rules for cart rule rule_free_shipping_1:
-#      | rule_50_percent |
-#      | rule_70_percent |
-#    Then cart rule "rule_free_shipping_1" should have the following properties:
-#      | restricted cart rules | rule_50_percent,rule_70_percent |
-#    And cart rule "rule_50_percent" should have the following properties:
-#      | restricted cart rules | rule_free_shipping_1 |
-#    And cart rule "rule_70_percent" should have the following properties:
-#      | restricted cart rules | rule_free_shipping_1 |
-
-#  @restore-cart-rules-before-scenario
-#  Scenario: Provide non-existing ids for cart rule restriction
-#    When I restrict cart rules for rule_free_shipping_1 providing non-existing cart rules
-#    Then I should get cart rule error about "non-existing cart rule"
-#    And cart rule "rule_free_shipping_1" should have the following properties:
-#      | restricted cart rules |  |
-#
-#  @restore-cart-rules-before-scenario
-#  Scenario: Restrict cart rule combinations providing the same cart rule that is being edited in the restricted cart rules list
-#    Given cart rule "rule_70_percent" should have the following properties:
-#      | restricted cart rules |  |
-#    When I restrict following cart rules for cart rule rule_70_percent:
-#      | rule_50_percent |
-#      | rule_70_percent |
-#    Then I should get cart rule error about "invalid cart rule restriction"
-#    And cart rule "rule_70_percent" should have the following properties:
-#      | restricted cart rules |  |
+    Then cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
+      | groupReference | quantity | rules count |
+      | group_nr_1     | 5        | 1           |
+    And the cart rule restriction group "group_nr_1" should have the following rules:
+      | type     | references        |
+      | products | product1,product2 |
