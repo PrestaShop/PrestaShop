@@ -412,7 +412,8 @@ class CountryCore extends ObjectModel
     {
         return SymfonyCache::getInstance()->get('country_dni_' . $idCountry, function (ItemInterface $item) use ($idCountry) {
             $item->tag('country');
-            return (bool)Db::getInstance()->getValue('
+
+            return (bool) Db::getInstance()->getValue('
 			SELECT `need_identification_number`
 			FROM `' . _DB_PREFIX_ . 'country`
 			WHERE `id_country` = ' . (int) $idCountry);

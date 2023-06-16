@@ -174,6 +174,7 @@ class TaxCore extends ObjectModel
         if (is_null($result)) {
             $result = !Configuration::get('PS_TAX');
         }
+
         return $result;
     }
 

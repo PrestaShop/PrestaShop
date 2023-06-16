@@ -25,7 +25,7 @@ class SymfonyCacheCore
         static $instance = null;
         if (empty($instance)) {
             $dsn = (defined('_PS_CACHE_DSN_') ? _PS_CACHE_DSN_ : 'filesystem');
-            $ttl = (defined('_PS_CACHE_TTL_') ? _PS_CACHE_TL_ : 3600);
+            $ttl = (defined('_PS_CACHE_TTL_') ? _PS_CACHE_TTL_ : 3600);
             $prefix_key = (defined('_PS_CACHE_PREFIX_') ? _PS_CACHE_PREFIX_ : '');
             $type = substr($dsn, 0, strpos($dsn, ':'));
             switch ($type) {

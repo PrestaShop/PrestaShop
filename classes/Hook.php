@@ -289,6 +289,7 @@ class HookCore extends ObjectModel
                     $hookAliases[$ha['name']][] = $ha['alias'];
                 }
             }
+
             return $hookAliases;
         });
 
@@ -339,6 +340,7 @@ class HookCore extends ObjectModel
                     $hooksByAlias[$record['alias']] = $record['name'];
                 }
             }
+
             return $hooksByAlias;
         });
 
@@ -1093,13 +1095,14 @@ class HookCore extends ObjectModel
 
         $allHookRegistrations = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) use ($context, $hookName, $configuration) {
             $item->tag(['hook', 'module']);
+
             return self::_getAllHookRegistrations($context, $hookName, $configuration);
         });
 
         return $allHookRegistrations;
     }
 
-     private static function _getAllHookRegistrations(Context $context, ?string $hookName, $configuration): array
+    private static function _getAllHookRegistrations(Context $context, ?string $hookName, $configuration): array
     {
         $shop = $context->shop;
         $customer = $context->customer;

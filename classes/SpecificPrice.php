@@ -798,6 +798,7 @@ class SpecificPriceCore extends ObjectModel
         if (is_null($config)) {
             $config = Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
         }
+
         return $config;
     }
 

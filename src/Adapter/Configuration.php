@@ -434,6 +434,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         $constraint = ShopConstraint::allShops();
+
         return $constraint;
     }
 

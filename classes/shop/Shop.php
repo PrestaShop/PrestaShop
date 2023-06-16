@@ -213,11 +213,12 @@ class ShopCore extends ObjectModel
         $cache_id = 'shop_seturl_' . (int) $this->id;
         $row = SymfonyCache::getInstance()->get($cache_id, function (ItemInterface $item) {
             $item->tag('shop');
+
             return Db::getInstance()->getRow('
               SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl
               FROM ' . _DB_PREFIX_ . 'shop s
               LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su ON (s.id_shop = su.id_shop)
-              WHERE s.id_shop = ' . (int)$this->id . '
+              WHERE s.id_shop = ' . (int) $this->id . '
               AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
         });
         if (!$row) {
@@ -395,6 +396,7 @@ class ShopCore extends ObjectModel
         $http_host = Tools::getHttpHost();
         $all_media = SymfonyCache::getInstance()->get('all_media', function (ItemInterface $item) {
             $item->tag('configuration');
+
             return array_merge(
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),

@@ -1384,7 +1384,7 @@ class LinkCore
     public function getBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
         static $configuration;
-        if(empty($configuration)) {
+        if (empty($configuration)) {
             $configuration['PS_SSL_ENABLED'] = Configuration::get('PS_SSL_ENABLED');
             $configuration['PS_SSL_ENABLED_EVERYWHERE'] = Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
             $configuration['PS_MULTISHOP_FEATURE_ACTIVE'] = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
