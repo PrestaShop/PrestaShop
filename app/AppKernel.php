@@ -212,11 +212,21 @@ class AppKernel extends Kernel
         foreach ($installedModules as $activeModulePath)
         {
             $modulePath = _PS_MODULE_DIR_ . $activeModulePath;
-            $configPath = sprintf('%s/config/services.yml', $modulePath);
             $translationsPath = sprintf('%s/translations', $modulePath);
-            if (is_file($configPath)) {
-                $loader->load($configPath);
+
+            $configFiles = [
+                sprintf('%s/config/services.yml', $modulePath),
+                sprintf('%s/config/admin/services.yml', $modulePath),
+                // @todo Uncomment to Load this file once we'll have a unique container
+                // sprintf('%s/config/front/services.yml', $modulePath),
+            ];
+
+            foreach ($configFiles as $file) {
+                if(is_file($file)) {
+                    $loader->load($file);
+                }
             }
+
             if (is_dir($translationsPath)) {
                 $moduleTranslationsPaths[] = $translationsPath;
             }

@@ -37,8 +37,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Load services stored in installed modules.
- *
- * @deprecated since 9.0, to be removed in 10.0
  */
 class LoadServicesFromModulesPass implements CompilerPassInterface
 {
