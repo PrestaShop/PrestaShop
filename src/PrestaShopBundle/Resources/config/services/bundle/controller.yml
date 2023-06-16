@@ -2,16 +2,6 @@ services:
   _defaults:
     public: true
 
-  _instanceof:
-    # cannot use autocnfigure under _instanceof so we need to define it here
-    PrestaShopBundle\Controller\Admin\PrestaShopAdminController:
-      autowire: true
-      public: true
-      tags:
-        - 'controller.service_arguments'
-        - 'container.service_subscriber'
-
-
   # Legacy controllers don't extend the base controller, so we need to inject the container manually.
   PrestaShopBundle\Controller\Api\ApiController:
     class: PrestaShopBundle\Controller\Api\ApiController
