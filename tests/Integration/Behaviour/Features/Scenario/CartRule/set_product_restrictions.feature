@@ -11,7 +11,10 @@ Feature: Set cart rule product restrictions in BO
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And there is a currency named "chf" with iso code "CHF" and exchange rate of 1.25
     And currency "usd" is the default one
+    And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
+    And category "home" in default language named "Home" exists
+    And category "home" is the default one
     And I create cart rule "rule_free_shipping_1" with following properties:
       | name[en-US]       | free shipping 1      |
       | is_active         | true                 |
@@ -52,13 +55,21 @@ Feature: Set cart rule product restrictions in BO
       | reduction_apply_to_discounted_products | false                  |
       | discount_application_type              | order_without_shipping |
     And cart rule "rule_free_shipping_1" should have no product restriction rules
+    And I add product "product1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | virtual        |
+    And I add product "product2" with following information:
+      | name[en-US] | T-shirt nr.1 |
+      | type        | standard     |
+    And I add product "product3" with following information:
+      | name[en-US] | Shirt - Dom & Jquery |
+      | type        | standard             |
 
   Scenario: Restrict cart rule products
-    Given cart rule "rule_free_shipping_1" should have no product restriction rules
-
-#    When I set the following product restriction rules for cart rule rule_free_shipping_1:
-#      | quantity | rule type | references |
-#      | 1        | products  |
+    When I add a restriction for cart rule rule_free_shipping_1, which requires at least 5 products in cart matching one of these rules:
+      | type     | references        |
+      | products | product1,product2 |
+    And I save product restrictions for cart rule rule_free_shipping_1
 #    When I restrict following cart rules for cart rule rule_free_shipping_1:
 #      | rule_50_percent |
 #    Then cart rule "rule_free_shipping_1" should have the following properties:

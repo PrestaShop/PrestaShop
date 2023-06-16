@@ -122,7 +122,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             $productRuleGroupId = $this->connection->lastInsertId();
 
             foreach ($restrictionRuleGroup->getRestrictionRules() as $restrictionRule) {
-                if ($restrictionRule->getIds()) {
+                if (empty($restrictionRule->getIds())) {
                     throw new CartRuleConstraintException(
                         'Restriction rule products are empty',
                         CartRuleConstraintException::INVALID_PRODUCT_RESTRICTION
@@ -131,9 +131,11 @@ class CartRuleRepository extends AbstractObjectModelRepository
                 $this->connection->createQueryBuilder()
                     ->insert($this->dbPrefix . 'cart_rule_product_rule')
                     ->values([
-                        'id_product_rule_group' => $productRuleGroupId,
-                        'type' => $restrictionRule->getType(),
+                        'id_product_rule_group' => ':productRuleGroupId',
+                        'type' => ':type',
                     ])
+                    ->setParameter('productRuleGroupId', $productRuleGroupId)
+                    ->setParameter('type', $restrictionRule->getType())
                     ->execute()
                 ;
 
@@ -149,13 +151,10 @@ class CartRuleRepository extends AbstractObjectModelRepository
                     $checkedIds[] = $id;
                 }
 
-                $productRuleStmt = sprintf(
-                    'INSERT INTO (id_product_rule, id_item) %scart_rule_product_rule_value VALUES %s',
-                    $this->dbPrefix,
-                    implode(',', $productRuleValues)
-                );
-
-                $this->connection->executeStatement($productRuleStmt);
+                $this->connection->prepare('
+                    INSERT INTO ' . $this->dbPrefix . 'cart_rule_product_rule_value (id_product_rule, id_item)
+                    VALUES ' . implode(',', $productRuleValues)
+                )->executeStatement();
             }
         }
     }
@@ -354,38 +353,25 @@ class CartRuleRepository extends AbstractObjectModelRepository
     private function removeProductRestrictions(CartRuleId $cartRuleId): void
     {
         //delete records from cart_rule_product_rule_value for this cart rule
-        $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_product_rule_value', 'crprv')
-            ->innerJoin(
-                'crprv',
-                $this->dbPrefix . 'cart_rule_product_rule',
-                'crpr',
-                'crprv.id_product_rule = crpr.id_product_rule'
-            )
-            ->innerJoin(
-                'crpr',
-                $this->dbPrefix . 'cart_rule_product_rule_group',
-                'crprg',
-                'crpr.id_product_rule_group = crprg.id_product_rule_group'
-            )
-            ->where('crprg.id_cart_rule = :cartRuleId')
-            ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
-        ;
+        $this->connection->prepare('
+            DELETE crprv
+            FROM ' . $this->dbPrefix . 'cart_rule_product_rule_value AS crprv
+            INNER JOIN ' . $this->dbPrefix . 'cart_rule_product_rule AS crpr ON crprv.id_product_rule = crpr.id_product_rule
+            INNER JOIN ' . $this->dbPrefix . 'cart_rule_product_rule_group AS crprg ON crpr.id_product_rule_group = crprg.id_product_rule_group
+            WHERE crprg.id_cart_rule = :cartRuleId
+        ')->executeStatement([
+            ':cartRuleId' => $cartRuleId->getValue(),
+        ]);
 
         // delete records from cart_rule_product_rule for this cart rule
-        $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_product_rule', 'crpr')
-            ->innerJoin(
-                'crpr',
-                $this->dbPrefix . 'cart_rule_product_rule_group',
-                'crprg',
-                'crpr.id_product_rule_group = crprg.id_product_rule_group'
-            )
-            ->where('crprg.id_cart_rule = :cartRuleId')
-            ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
-        ;
+        $this->connection->prepare('
+            DELETE crpr
+            FROM  ' . $this->dbPrefix . 'cart_rule_product_rule AS crpr
+            INNER JOIN  ' . $this->dbPrefix . 'cart_rule_product_rule_group AS crprg ON crpr.id_product_rule_group = crprg.id_product_rule_group
+            WHERE crprg.id_cart_rule = :cartRuleId
+        ')->executeStatement([
+            ':cartRuleId' => $cartRuleId->getValue(),
+        ]);
 
         // and finally delete records from cart_rule_product_rule_group for this cart rule
         $this->connection->createQueryBuilder()

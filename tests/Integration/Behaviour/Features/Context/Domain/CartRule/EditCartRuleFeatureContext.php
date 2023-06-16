@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCo
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleProductRestrictionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
@@ -43,6 +46,11 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      * This is just a random number which in theory should never be reached as cart rule id in tests
      */
     private const NON_EXISTING_CART_RULE_ID = 54440051;
+
+    public static function buildProductRestrictionStorageKey(string $cartRuleReference): string
+    {
+        return 'cart_rule_product_restriction_groups_' . $cartRuleReference;
+    }
 
     /**
      * @When /^I (enable|disable) cart rule with reference "(.+)"$/
@@ -117,6 +125,34 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
     }
 
     /**
+     *
+     * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity products in cart matching one of these rules:
+     *
+     * @param string $cartRuleReference
+     * @param int $quantity
+     * @param TableNode $table
+     *
+     * @return void
+     */
+    public function addRestrictionRule(string $cartRuleReference, int $quantity, TableNode $table): void
+    {
+        $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
+
+        $rules = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $rules[] = new RestrictionRule($row['type'], $this->referencesToIds($row['references']));
+        }
+
+        $restrictionGroups = [];
+        if ($this->getSharedStorage()->exists($restrictionsKey)) {
+            $restrictionGroups = $this->getSharedStorage()->get($restrictionsKey);
+        }
+
+        $restrictionGroups[] = new RestrictionRuleGroup($quantity, $rules);
+        $this->getSharedStorage()->set($restrictionsKey, $restrictionGroups);
+    }
+
+    /**
      * @When I restrict cart rules for :cartRuleReference providing non-existing cart rules
      *
      * @param string $cartRuleReference
@@ -133,6 +169,25 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
         } catch (CartRuleNotFoundException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I save product restrictions for cart rule :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     *
+     * @return void
+     */
+    public function setProductRestrictionRules(string $cartRuleReference): void
+    {
+        $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
+
+        $this->getCommandBus()->handle(new SetCartRuleProductRestrictionsCommand(
+            $this->getSharedStorage()->get($cartRuleReference),
+            $this->getSharedStorage()->get($restrictionsKey)
+        ));
+
+        $this->getSharedStorage()->clear($restrictionsKey);
     }
 
     private function performCartRulesRestriction(int $cartRuleId, array $restrictedCartRuleIds): void

@@ -45,6 +45,7 @@ class RestrictionRuleGroup
         array $restrictionRules
     ) {
         $this->requiredQuantityInCart = $requiredQuantityInCart;
+        //@todo: can restricitons be empty?
         $this->restrictionRules = $restrictionRules;
     }
 
@@ -62,5 +63,12 @@ class RestrictionRuleGroup
     public function getRestrictionRules(): array
     {
         return $this->restrictionRules;
+    }
+
+    public function addRestrictionRule(RestrictionRule $restrictionRule): RestrictionRuleGroup
+    {
+        $this->restrictionRules[] = $restrictionRule;
+
+        return $this;
     }
 }
