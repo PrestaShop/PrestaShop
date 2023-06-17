@@ -71,7 +71,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\GeoCoordinatesType:
     arguments:
-        - "@translator"
+      - "@translator"
 
   PrestaShopBundle\Form\Admin\Type\LocaleChoiceType:
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
