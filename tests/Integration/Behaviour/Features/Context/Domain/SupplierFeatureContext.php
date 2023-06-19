@@ -218,7 +218,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $supplierReference
      */
-    public function assertManufacturerHasLogoImage(string $supplierReference): void
+    public function assertSupplierHasLogoImage(string $supplierReference): void
     {
         $editableSupplier = $this->getEditableSupplier($supplierReference);
         Assert::assertNotNull($editableSupplier->getLogoImage());
@@ -229,7 +229,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $supplierReference
      */
-    public function assertManufacturerHasNotLogoImage(string $supplierReference)
+    public function assertSupplierHasNoLogoImage(string $supplierReference): void
     {
         $editableSupplier = $this->getEditableSupplier($supplierReference);
         Assert::assertNull($editableSupplier->getLogoImage());
