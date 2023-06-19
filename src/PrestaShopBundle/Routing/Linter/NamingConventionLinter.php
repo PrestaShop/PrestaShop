@@ -78,7 +78,7 @@ final class NamingConventionLinter implements RouteLinterInterface
             );
         }
 
-        list($controller, $method) = explode('::', $defaultController, 2);
+        [$controller, $method] = explode('::', $defaultController, 2);
         if (!method_exists($controller, $method)) {
             throw new ControllerNotFoundException(
                 sprintf('Controller "%s" does not exist.', $defaultController),

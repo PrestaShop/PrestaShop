@@ -118,7 +118,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         }
 
         $moduleId = (int) $ids[1];
-        list($event, $hookName) = $args;
+        [$event, $hookName] = $args;
 
         $content = Hook::exec(
             $hookName,

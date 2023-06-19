@@ -165,7 +165,7 @@ class TreeBuilder
             $subtree['__messages'] = [$domain => $messages];
             if (isset($messages['__metadata'])) {
                 $subtree['__fixed_length_id'] = '_' . sha1($domain);
-                list($subtree['__domain']) = explode('.', $domain);
+                [$subtree['__domain']] = explode('.', $domain);
                 $subtree['__metadata'] = $messages['__metadata'];
                 $subtree['__metadata']['domain'] = $subtree['__domain'];
                 unset($messages['__metadata']);

@@ -108,7 +108,7 @@ class DemoModeEnabledListener
             return;
         }
 
-        list($controllerObject, $methodName) = $controller;
+        [$controllerObject, $methodName] = $controller;
         $demoRestricted = $this->getAnnotation($controllerObject, $methodName);
 
         if (!$demoRestricted instanceof DemoRestricted) {

@@ -102,7 +102,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
             return null;
         }
 
-        list($controller, $method) = explode('::', $controller, 2);
+        [$controller, $method] = explode('::', $controller, 2);
 
         return [
             'controller' => $controller,

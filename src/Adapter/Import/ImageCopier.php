@@ -234,7 +234,7 @@ final class ImageCopier
         $pathInfos = array_reverse($pathInfos);
         $path = '';
         foreach ($pathInfos as $pathInfo) {
-            list($width, $height, $path) = $pathInfo;
+            [$width, $height, $path] = $pathInfo;
             if ($width >= $targetWidth && $height >= $targetHeight) {
                 return $path;
             }

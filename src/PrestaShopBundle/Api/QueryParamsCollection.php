@@ -648,7 +648,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            list($idAttributeGroup, $idAttribute) = explode(':', $value);
+            [$idAttributeGroup, $idAttribute] = explode(':', $value);
             $sqlParams['attribute_id_' . $index] = (string) $idAttribute;
             $sqlParams['attribute_group_id_' . $index] = (string) $idAttributeGroup;
         }, range(0, count($value) - 1), $value);
@@ -704,7 +704,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            list($idFeature, $idFeatureValue) = explode(':', $value);
+            [$idFeature, $idFeatureValue] = explode(':', $value);
             $sqlParams['feature_id_' . $index] = (string) $idFeature;
             $sqlParams['feature_value_id_' . $index] = (string) $idFeatureValue;
         }, range(0, count($value) - 1), $value);

@@ -152,7 +152,7 @@ class Catalogue
             }
 
             // update child and get its counters
-            list($count, $missing) = $this->updateCounters($subtree[$key]);
+            [$count, $missing] = $this->updateCounters($subtree[$key]);
 
             // update this tree's counters by adding the child's
             $subtree[self::METADATA_KEY_NAME]['count'] += $count;
