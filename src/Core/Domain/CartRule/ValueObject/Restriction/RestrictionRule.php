@@ -66,6 +66,7 @@ class RestrictionRule
         array $ids
     ) {
         $this->assertType($type);
+        $this->assertIds($ids);
         $this->type = $type;
         $this->ids = $ids;
     }
@@ -83,6 +84,25 @@ class RestrictionRule
         return $this->ids;
     }
 
+    /**
+     * @param int[] $ids
+     *
+     * @return void
+     *
+     * @throws CartRuleConstraintException
+     */
+    private function assertIds(array $ids): void
+    {
+        foreach ($ids as $id) {
+            if (!is_int($id) || $id <= 0) {
+                throw new CartRuleConstraintException(
+                    'Restricted item id must be positive integer',
+                    CartRuleConstraintException::INVALID_RESTRICTION_RULE_ID
+                );
+            }
+        }
+    }
+
     private function assertType(string $type): void
     {
         if (in_array($type, self::VALID_TYPES, true)) {
@@ -91,7 +111,7 @@ class RestrictionRule
 
         throw new CartRuleConstraintException(
           sprintf('Invalid type provided to %s', self::class),
-            CartRuleConstraintException::INVALID_RESTRICTION_RULE
+            CartRuleConstraintException::INVALID_RESTRICTION_RULE_TYPE
         );
     }
 }

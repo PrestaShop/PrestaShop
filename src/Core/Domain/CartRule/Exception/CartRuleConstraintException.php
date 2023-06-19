@@ -73,5 +73,6 @@ class CartRuleConstraintException extends CartRuleException
     public const INVALID_ACTIVE = 37;
     public const NON_UNIQUE_CODE = 38;
     public const INVALID_PRICE_DISCOUNT = 39;
-    public const INVALID_RESTRICTION_RULE = 40;
+    public const INVALID_RESTRICTION_RULE_TYPE = 40;
+    public const INVALID_RESTRICTION_RULE_ID = 41;
 }
