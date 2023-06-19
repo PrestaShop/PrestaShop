@@ -39,11 +39,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class GeoCoordinatesType extends AbstractType
 {
     /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
      * @param TranslatorInterface $translator
      */
     public function __construct(
