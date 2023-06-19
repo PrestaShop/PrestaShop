@@ -46,8 +46,6 @@ class SearchAliasForAssociationHandler implements SearchAliasesForAssociationHan
      */
     public function handle(SearchAliasesForAssociation $query): array
     {
-        $searchTerms = $this->aliasRepository->searchAliases($query->searchTerm, $query->limit);
-
-        return $searchTerms;
+        return $this->aliasRepository->searchAliases($query->searchTerm, $query->limit);
     }
 }
