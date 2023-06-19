@@ -46,10 +46,8 @@ class UpdateAliasHandler implements UpdateAliasHandlerInterface
     {
         $existingAlias = $this->aliasRepository->get($command->aliasId);
 
-        // We need to delete existing aliases if search term is different as we are changing all aliases searchTerm
-        // And previous searchTerm is obsolete
+        // We need to delete existing aliases to add new alias entries
         $this->aliasRepository->deleteAliasesBySearchTerm($existingAlias->search);
-
         $this->aliasRepository->create($command->searchTerm, $command->aliases);
     }
 }
