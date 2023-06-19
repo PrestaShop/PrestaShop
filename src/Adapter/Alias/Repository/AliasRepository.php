@@ -178,7 +178,7 @@ class AliasRepository extends AbstractObjectModelRepository
     {
         $exceptions = [];
 
-        $alisIds = $this->connection->createQueryBuilder()
+        $aliasIds = $this->connection->createQueryBuilder()
             ->addSelect('a.id_alias')
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :searchTerm')
@@ -187,11 +187,11 @@ class AliasRepository extends AbstractObjectModelRepository
             ->fetchFirstColumn()
         ;
 
-        if (empty($alisIds)) {
+        if (empty($aliasIds)) {
             return;
         }
 
-        foreach ($alisIds as $currentAliasId) {
+        foreach ($aliasIds as $currentAliasId) {
             try {
                 $this->deleteObjectModel($this->get(new AliasId((int) $currentAliasId)), CannotDeleteAliasException::class);
             } catch (CannotDeleteAliasException $e) {
