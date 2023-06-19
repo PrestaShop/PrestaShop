@@ -59,7 +59,7 @@ class RestrictionRule
 
     /**
      * @param string $type
-     * @param int[]
+     * @param int[] $ids
      */
     public function __construct(
         string $type,

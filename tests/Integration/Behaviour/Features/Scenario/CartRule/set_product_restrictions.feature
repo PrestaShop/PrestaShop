@@ -126,8 +126,8 @@ Feature: Set cart rule product restrictions in BO
       | categories | home       |
     And I add a restriction for cart rule rule_50_percent, which requires at least 2 product in cart matching one of these rules:
       | type       | references  |
-      | attributes | clothes,men |
-      | attributes | women       |
+      | categories | clothes,men |
+      | categories | women       |
     And I save product restrictions for cart rule rule_50_percent
     Then cart rule "rule_50_percent" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
@@ -138,8 +138,8 @@ Feature: Set cart rule product restrictions in BO
       | categories | home       |
     And the cart rule restriction group "group_nr_2" should have the following rules:
       | type       | references  |
-      | attributes | clothes,men |
-      | attributes | women       |
+      | categories | clothes,men |
+      | categories | women       |
 
   Scenario: Restrict cart rule products by defining manufacturer matching rules
     Given I clear all product restrictions for cart rule rule_50_percent
@@ -202,3 +202,34 @@ Feature: Set cart rule product restrictions in BO
     And the cart rule restriction group "free_nr_1" should have the following rules:
       | type      | references                          |
       | suppliers | fashionSupplier,accessoriesSupplier |
+
+  Scenario: Restrict cart rule products by defining mixed rules
+    Given I clear all product restrictions for cart rule rule_50_percent
+    And I clear all product restrictions for cart rule rule_free_shipping_1
+    When I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
+      | type       | references        |
+      | products   | product1,product2 |
+      | products   | product3          |
+      | attributes | S,M               |
+      | categories | clothes,men       |
+      | categories | women             |
+    And I add a restriction for cart rule rule_free_shipping_1, which requires at least 2 products in cart matching one of these rules:
+      | type          | references                          |
+      | suppliers     | fashionSupplier,accessoriesSupplier |
+      | manufacturers | graphicCorner                       |
+    And I save product restrictions for cart rule rule_free_shipping_1
+    Then cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
+      | groupReference | quantity | rules count |
+      | free_nr_1      | 1        | 5           |
+      | free_nr_2      | 2        | 2           |
+    And the cart rule restriction group "free_nr_1" should have the following rules:
+      | type       | references        |
+      | products   | product1,product2 |
+      | products   | product3          |
+      | attributes | S,M               |
+      | categories | clothes,men       |
+      | categories | women             |
+    And the cart rule restriction group "free_nr_2" should have the following rules:
+      | type          | references                          |
+      | suppliers     | fashionSupplier,accessoriesSupplier |
+      | manufacturers | graphicCorner                       |
