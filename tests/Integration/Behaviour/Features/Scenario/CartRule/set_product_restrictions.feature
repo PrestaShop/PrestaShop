@@ -13,11 +13,17 @@ Feature: Set cart rule product restrictions in BO
     And currency "usd" is the default one
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
-    And category "home" in default language named "Home" exists
-    And category "home" is the default one
     And attribute "S" named "S" in en language exists
     And attribute "M" named "M" in en language exists
     And attribute "L" named "L" in en language exists
+    And category "home" in default language named "Home" exists
+    And category "home" is the default one
+    And category "clothes" in default language named "Clothes" exists
+    And category "clothes" parent is category "home"
+    And category "men" in default language named "Men" exists
+    And category "men" parent is category "clothes"
+    And category "women" in default language named "Women" exists
+    And category "women" parent is category "clothes"
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
@@ -60,7 +66,7 @@ Feature: Set cart rule product restrictions in BO
     And cart rule "rule_free_shipping_1" should have no product restriction rules
     And cart rule "rule_50_percent" should have no product restriction rules
 
-  Scenario: Restrict cart rule products and then clear all the restrictions
+  Scenario: Restrict cart rule products and clear all the restrictions
     When I add a restriction for cart rule rule_free_shipping_1, which requires at least 5 products in cart matching one of these rules:
       | type     | references        |
       | products | product1,product2 |
@@ -86,7 +92,7 @@ Feature: Set cart rule product restrictions in BO
     When I clear all product restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have no product restriction rules
 
-  Scenario: Restrict cart rule attributes
+  Scenario: Restrict cart rule products by defining attribute matching rules
     When I add a restriction for cart rule rule_50_percent, which requires at least 7 products in cart matching one of these rules:
       | type       | references |
       | attributes | S,M        |
@@ -107,3 +113,24 @@ Feature: Set cart rule product restrictions in BO
       | attributes | S,M        |
       | attributes | L          |
     And cart rule "rule_free_shipping_1" should have no product restriction rules
+
+  Scenario: Restrict cart rule products by defining category matching rules
+    When I add a restriction for cart rule rule_50_percent, which requires at least 3 products in cart matching one of these rules:
+      | type       | references |
+      | categories | home       |
+    And I add a restriction for cart rule rule_50_percent, which requires at least 2 product in cart matching one of these rules:
+      | type       | references  |
+      | attributes | clothes,men |
+      | attributes | women       |
+    And I save product restrictions for cart rule rule_50_percent
+    Then cart rule "rule_50_percent" should have the following product restriction rule groups:
+      | groupReference | quantity | rules count |
+      | group_nr_1     | 3        | 1           |
+      | group_nr_2     | 2        | 2           |
+    And the cart rule restriction group "group_nr_1" should have the following rules:
+      | type       | references |
+      | categories | home       |
+    And the cart rule restriction group "group_nr_2" should have the following rules:
+      | type       | references  |
+      | attributes | clothes,men |
+      | attributes | women       |
