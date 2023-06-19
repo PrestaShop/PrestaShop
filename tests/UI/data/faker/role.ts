@@ -15,6 +15,6 @@ export default class RoleData {
    */
   constructor(roleToCreate: RoleCreator = {}) {
     /** @type {string} Name of the profile */
-    this.name = roleToCreate.name || faker.name.jobType();
+    this.name = roleToCreate.name || faker.person.jobType();
   }
 }

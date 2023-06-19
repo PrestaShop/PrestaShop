@@ -18,7 +18,7 @@ export default class TaxRulesGroupData {
    */
   constructor(taxRulesGroupToCreate: TaxRulesGroupCreator = {}) {
     /** @type {string} Name of the tax rules group */
-    this.name = (taxRulesGroupToCreate.name || `FR tax Rule ${faker.random.word()}`).substring(0, 30).trim();
+    this.name = (taxRulesGroupToCreate.name || `FR tax Rule ${faker.lorem.word()}`).substring(0, 30).trim();
 
     /** @type {boolean} Status of the tax rules group */
     this.enabled = taxRulesGroupToCreate.enabled === undefined ? true : taxRulesGroupToCreate.enabled;

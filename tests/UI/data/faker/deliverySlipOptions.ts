@@ -20,6 +20,6 @@ export default class DeliverySlipOptionsData {
     this.prefix = deliverySlipOptions.prefix || `#${faker.lorem.word()}`;
 
     /** @type {number} Number of delivery slips created */
-    this.number = deliverySlipOptions.number || faker.datatype.number({min: 10, max: 200});
+    this.number = deliverySlipOptions.number || faker.number.int({min: 10, max: 200});
   }
 }
