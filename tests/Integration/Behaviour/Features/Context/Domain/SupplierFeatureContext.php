@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use RuntimeException;
 use State;
+use Supplier;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SupplierFeatureContext extends AbstractDomainFeatureContext
@@ -121,6 +122,23 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         } catch (SupplierException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Given supplier :manufacturerReference named :name exists
+     *
+     * @param string $name
+     * @param string $supplierReference
+     */
+    public function assertSupplierExistsByName(string $name, string $supplierReference): void
+    {
+        if ($supplierId = Supplier::getIdByName($name)) {
+            $this->getSharedStorage()->set($supplierReference, $supplierId);
+
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Supplier %s named "%s" does not exist', $supplierReference, $name));
     }
 
     /**

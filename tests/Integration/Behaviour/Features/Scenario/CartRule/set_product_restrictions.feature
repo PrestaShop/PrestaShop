@@ -26,6 +26,8 @@ Feature: Set cart rule product restrictions in BO
     And category "women" parent is category "clothes"
     And manufacturer studioDesign named "Studio Design" exists
     And manufacturer graphicCorner named "Graphic Corner" exists
+    And supplier fashionSupplier named "Fashion supplier" exists
+    And supplier accessoriesSupplier named "Accessories supplier" exists
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
@@ -169,3 +171,34 @@ Feature: Set cart rule product restrictions in BO
     And the cart rule restriction group "free_nr_1" should have the following rules:
       | type          | references                 |
       | manufacturers | studioDesign,graphicCorner |
+
+  Scenario: Restrict cart rule products by defining manufacturer matching rules
+    Given I clear all product restrictions for cart rule rule_50_percent
+    And I clear all product restrictions for cart rule rule_free_shipping_1
+    When I add a restriction for cart rule rule_50_percent, which requires at least 2 products in cart matching one of these rules:
+      | type      | references      |
+      | suppliers | fashionSupplier |
+    And I add a restriction for cart rule rule_50_percent, which requires at least 1 product in cart matching one of these rules:
+      | type      | references          |
+      | suppliers | accessoriesSupplier |
+    And I save product restrictions for cart rule rule_50_percent
+    And I add a restriction for cart rule rule_free_shipping_1, which requires at least 4 products in cart matching one of these rules:
+      | type      | references                          |
+      | suppliers | fashionSupplier,accessoriesSupplier |
+    And I save product restrictions for cart rule rule_free_shipping_1
+    Then cart rule "rule_50_percent" should have the following product restriction rule groups:
+      | groupReference | quantity | rules count |
+      | 50_nr_1        | 2        | 1           |
+      | 50_nr_2        | 1        | 1           |
+    And the cart rule restriction group "50_nr_1" should have the following rules:
+      | type      | references      |
+      | suppliers | fashionSupplier |
+    And the cart rule restriction group "50_nr_2" should have the following rules:
+      | type      | references          |
+      | suppliers | accessoriesSupplier |
+    And cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
+      | groupReference | quantity | rules count |
+      | free_nr_1      | 4        | 1           |
+    And the cart rule restriction group "free_nr_1" should have the following rules:
+      | type      | references                          |
+      | suppliers | fashionSupplier,accessoriesSupplier |
