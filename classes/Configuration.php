@@ -224,10 +224,6 @@ class ConfigurationCore extends ObjectModel
             return false;
         }
 
-        if (!is_int($key) && !is_string($key)) {
-            return false;
-        }
-
         // Init the cache on demand
         if (!self::$_initialized) {
             Configuration::loadConfiguration();
@@ -372,6 +368,10 @@ class ConfigurationCore extends ObjectModel
      */
     public static function hasKey($key, $idLang = null, $idShopGroup = null, $idShop = null)
     {
+        if (!is_int($key) && !is_string($key)) {
+            return false;
+        }
+
         return
             Configuration::get($key, $idLang, $idShopGroup, $idShop, self::$hasKeyDefaultDummy) != self::$hasKeyDefaultDummy;
     }
