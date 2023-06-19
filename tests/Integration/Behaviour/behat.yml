@@ -261,6 +261,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\DeleteCartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\EditCartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationListingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext

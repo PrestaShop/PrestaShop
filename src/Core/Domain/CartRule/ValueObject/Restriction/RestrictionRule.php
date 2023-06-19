@@ -35,13 +35,13 @@ class RestrictionRule
     public const TYPE_PRODUCT = 'products';
     public const TYPE_CATEGORY = 'categories';
     public const TYPE_ATTRIBUTE = 'attributes';
-    public const TYPE_BRAND = 'brands';
+    public const TYPE_MANUFACTURERS = 'manufacturers';
     public const TYPE_SUPPLIER = 'suppliers';
     public const VALID_TYPES = [
         self::TYPE_PRODUCT => self::TYPE_PRODUCT,
         self::TYPE_CATEGORY => self::TYPE_CATEGORY,
         self::TYPE_ATTRIBUTE => self::TYPE_ATTRIBUTE,
-        self::TYPE_BRAND => self::TYPE_BRAND,
+        self::TYPE_MANUFACTURERS => self::TYPE_MANUFACTURERS,
         self::TYPE_SUPPLIER => self::TYPE_SUPPLIER,
     ];
 
