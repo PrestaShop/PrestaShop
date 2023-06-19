@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -88,6 +89,26 @@ class SearchController extends FrameworkBundleAdminController
         $aliasFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.alias_form_builder');
         $aliasForm = $aliasFormBuilder->getForm();
         $aliasForm->handleRequest($request);
+
+        try {
+            $aliasFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.alias_form_handler');
+            $result = $aliasFormHandler->handle($aliasForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_search_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            );
+        }
+
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/Alias/create.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
