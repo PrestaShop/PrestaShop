@@ -113,6 +113,8 @@ jobs:
             CAMPAIGN: 'functional:WS'
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'modules'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'sanity:productV2'
           ## 8.0.x
           - BRANCH: 8.0.x
             CAMPAIGN: 'cldr'
@@ -163,7 +165,7 @@ jobs:
       DB_PREFIX: 'tst_'
       DB_USER: 'root'
       DB_PASSWD: 'prestashop'
-      ADMIN_PASSWD: 'Correct Horse Battery Staple'
+      ADMIN_PASSWD: ${{ (matrix.BRANCH == '1.7.8.x') && 'prestashop_demo' || 'Correct Horse Battery Staple' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -219,7 +221,7 @@ jobs:
         working-directory: ${{ inputs.TESTS_DIR }}
         env:
           URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
-          ENABLE_SSL: true
+          ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && false || true }}
           SMTP_SERVER: '172.17.0.1'
         run: npm run ${{ env.TEST_CAMPAIGN }}
 
