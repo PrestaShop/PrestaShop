@@ -17,31 +17,36 @@ Feature: Edit alias from Back Office (BO)
       | aliases | bluse  |
       | search  | blouse |
     Then following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
-      | alias3       | bluse  | blouse |
+      | id reference | alias | search |
+      | alias3       | bluse | blouse |
 
   Scenario: I edit existing alias with different search term that does not exist
-    When I update alias "alias1" with following values:
-      | aliases | dark  |
-      | search  | black |
+    Given I add alias with following information:
+      | alias  | dress  |
+      | search | blouse |
+    And following aliases should exist:
+      | id reference | alias | search |
+      | alias3       | bluse | blouse |
+      | alias4       | dress | blouse |
+    When I update alias "alias3" with following values:
+      | aliases | black |
+      | search  | dark  |
     Then following aliases should exist:
       | id reference | alias | search |
-      | alias3       | dark  | black  |
+      | alias5       | black | dark   |
 
   Scenario: I edit existing alias with different search term that does exist
-    When I add alias with following information:
-      | alias  | large |
-      | search | big   |
+    Given I add alias with following information:
+      | alias  | dress  |
+      | search | blouse |
+    And following aliases should exist:
+      | id reference | alias | search |
+      | alias5       | black | dark   |
+      | alias6       | dress | blouse |
+    When I update alias "alias5" with following values:
+      | aliases | bluse  |
+      | search  | blouse |
     Then following aliases should exist:
       | id reference | alias | search |
-      | alias3       | dark  | black  |
-      | alias4       | large | big    |
-    When I update alias "alias3" with following values:
-      | aliases | huge |
-      | search  | big  |
-    Then following aliases should exist:
-      | id reference | alias | search |
-      | alias4       | large | big    |
-      | alias5       | huge  | big    |
+      | alias6       | dress | blouse |
+      | alias7       | bluse | blouse |

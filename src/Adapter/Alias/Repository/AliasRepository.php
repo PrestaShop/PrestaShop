@@ -172,18 +172,17 @@ class AliasRepository extends AbstractObjectModelRepository
     /**
      * Deletes all related aliases
      *
-     * @param AliasId $aliasId
+     * @param string $searchTerm
      */
-    public function deleteRelatedAliases(AliasId $aliasId): void
+    public function deleteAliasesBySearchTerm(string $searchTerm): void
     {
         $exceptions = [];
 
         $alisIds = $this->connection->createQueryBuilder()
-            ->addSelect('al.id_alias')
+            ->addSelect('a.id_alias')
             ->from($this->dbPrefix . 'alias', 'a')
-            ->where('a.id_alias = :aliasId')
-            ->leftJoin('a', $this->dbPrefix . 'alias', 'al', 'al.search = a.search')
-            ->setParameter('aliasId', $aliasId->getValue())
+            ->where('a.search = :searchTerm')
+            ->setParameter('searchTerm', $searchTerm)
             ->execute()
             ->fetchFirstColumn()
         ;
