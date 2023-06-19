@@ -70,8 +70,6 @@ services:
       - '@prestashop.bundle.form.data_transformer.idn_converter'
 
   PrestaShopBundle\Form\Admin\Type\GeoCoordinatesType:
-    arguments:
-      - "@translator"
 
   PrestaShopBundle\Form\Admin\Type\LocaleChoiceType:
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
