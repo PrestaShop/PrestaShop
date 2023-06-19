@@ -26,11 +26,28 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
-/**
- * Thrown when new alias update fails
- */
-class CannotUpdateAliasException extends AliasException
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasHandlerInterface;
+
+class UpdateAliasHandler implements UpdateAliasHandlerInterface
 {
+    public function __construct(
+        protected AliasRepository $aliasRepository
+    ) {
+    }
+
+    /**
+     * @param UpdateAliasCommand $command
+     */
+    public function handle(UpdateAliasCommand $command): void
+    {
+        $existingAlias = $this->aliasRepository->get($command->aliasId);
+
+        // We need to delete existing aliases to add new alias entries
+        $this->aliasRepository->deleteAliasesBySearchTerm($existingAlias->search);
+        $this->aliasRepository->create($command->searchTerm, $command->aliases);
+    }
 }

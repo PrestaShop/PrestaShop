@@ -24,13 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 
 /**
- * Thrown when new alias update fails
+ * Defines contract to handle @see UpdateAliasCommand
  */
-class CannotUpdateAliasException extends AliasException
+interface UpdateAliasHandlerInterface
 {
+    /**
+     * @param UpdateAliasCommand $command
+     */
+    public function handle(UpdateAliasCommand $command): void;
 }

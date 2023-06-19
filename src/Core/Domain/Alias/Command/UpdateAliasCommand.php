@@ -26,11 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 
 /**
- * Thrown when new alias update fails
+ * Edits alias with given data
  */
-class CannotUpdateAliasException extends AliasException
+class UpdateAliasCommand
 {
+    public readonly AliasId $aliasId;
+
+    /**
+     * @param int $aliasId
+     * @param string[] $aliases
+     * @param string $searchTerm
+     */
+    public function __construct(
+        int $aliasId,
+        public readonly array $aliases,
+        public readonly string $searchTerm,
+    ) {
+        $this->aliasId = new AliasId($aliasId);
+    }
 }

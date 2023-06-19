@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
 /**
- * Thrown when new alias update fails
+ * Thrown when alias deletion fails
  */
-class CannotUpdateAliasException extends AliasException
+class CannotDeleteAliasException extends AliasException
 {
 }

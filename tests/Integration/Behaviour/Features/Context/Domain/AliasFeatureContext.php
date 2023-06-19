@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
@@ -136,6 +137,22 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update alias ":aliasReference" with following values:
+     *
+     * @return void
+     */
+    public function assertUpdateAlias(string $aliasReference, TableNode $table): void
+    {
+        $updateAliasCommand = $this->buildUpdateAliasCommand($aliasReference, $table);
+
+        try {
+            $this->getCommandBus()->handle($updateAliasCommand);
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @BeforeFeature @restore-aliases-before-feature
      */
     public static function restoreAliasTables(): void
@@ -169,7 +186,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
             if (isset($expectedAlias['active'])) {
                 Assert::assertSame(
-                    $alias['active'],
+                    (int) $alias['active'],
                     (int) $expectedAlias['active'],
                     'Unexpected alias active field'
                 );
@@ -181,5 +198,22 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $idsByIdReferences;
+    }
+
+    private function buildUpdateAliasCommand(string $aliasReference, TableNode $table): UpdateAliasCommand
+    {
+        $data = $table->getRowsHash();
+        $aliasId = $this->getSharedStorage()->get($aliasReference);
+        $aliases = [];
+        $searchTerm = '';
+
+        if (isset($data['aliases'])) {
+            $aliases = PrimitiveUtils::castStringArrayIntoArray($data['aliases']);
+        }
+        if (isset($data['search'])) {
+            $searchTerm = $data['search'];
+        }
+
+        return new UpdateAliasCommand($aliasId, $aliases, $searchTerm);
     }
 }

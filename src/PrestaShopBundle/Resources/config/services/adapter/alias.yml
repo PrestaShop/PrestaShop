@@ -29,3 +29,8 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand
