@@ -144,19 +144,23 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
     public function addRestrictionRule(string $cartRuleReference, int $quantity, TableNode $table): void
     {
         $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
-
         $rules = [];
-        foreach ($table->getColumnsHash() as $row) {
-            $rules[] = new RestrictionRule($row['type'], $this->referencesToIds($row['references']));
-        }
 
-        $restrictionGroups = [];
-        if ($this->getSharedStorage()->exists($restrictionsKey)) {
-            $restrictionGroups = $this->getSharedStorage()->get($restrictionsKey);
-        }
+        try {
+            foreach ($table->getColumnsHash() as $row) {
+                $rules[] = new RestrictionRule($row['type'], $this->referencesToIds($row['references']));
+            }
 
-        $restrictionGroups[] = new RestrictionRuleGroup($quantity, $rules);
-        $this->getSharedStorage()->set($restrictionsKey, $restrictionGroups);
+            $restrictionGroups = [];
+            if ($this->getSharedStorage()->exists($restrictionsKey)) {
+                $restrictionGroups = $this->getSharedStorage()->get($restrictionsKey);
+            }
+
+            $restrictionGroups[] = new RestrictionRuleGroup($quantity, $rules);
+            $this->getSharedStorage()->set($restrictionsKey, $restrictionGroups);
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**

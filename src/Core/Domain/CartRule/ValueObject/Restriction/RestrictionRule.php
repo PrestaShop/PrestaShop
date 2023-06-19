@@ -93,10 +93,16 @@ class RestrictionRule
      */
     private function assertIds(array $ids): void
     {
+        if (empty($ids)) {
+            throw new CartRuleConstraintException(
+                sprintf('%s item ids cannot be empty', self::class),
+                CartRuleConstraintException::EMPTY_RESTRICTION_RULE_IDS
+            );
+        }
         foreach ($ids as $id) {
             if (!is_int($id) || $id <= 0) {
                 throw new CartRuleConstraintException(
-                    'Restricted item id must be positive integer',
+                    sprintf('%s item id must be positive integer', self::class),
                     CartRuleConstraintException::INVALID_RESTRICTION_RULE_ID
                 );
             }

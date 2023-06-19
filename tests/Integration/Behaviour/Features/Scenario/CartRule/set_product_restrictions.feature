@@ -233,3 +233,12 @@ Feature: Set cart rule product restrictions in BO
       | type          | references                          |
       | suppliers     | fashionSupplier,accessoriesSupplier |
       | manufacturers | graphicCorner                       |
+
+  Scenario: Provide restrictions with empty list of rules
+    Given I clear all product restrictions for cart rule rule_50_percent
+    And I clear all product restrictions for cart rule rule_free_shipping_1
+    When I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
+      | type     | references |
+      | products |            |
+    Then I should get cart rule error about "empty restriction rule ids"
+    And cart rule rule_free_shipping_1 should have no product restriction rules
