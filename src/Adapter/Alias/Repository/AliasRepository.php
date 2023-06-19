@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotDeleteAliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -198,5 +199,34 @@ class AliasRepository extends AbstractObjectModelRepository
                 BulkFeatureException::FAILED_BULK_DELETE
             );
         }
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param int|null $limit
+     *
+     * @return AliasForAssociation[]
+     */
+    public function searchAliases(string $searchPhrase, ?int $limit = null): array
+    {
+        $dbSearchPhrase = sprintf('"%%%s%%"', $searchPhrase);
+        $qb = $this->connection->createQueryBuilder();
+        $searchTerms = $qb
+            ->addSelect('a.search')
+            ->from($this->dbPrefix . 'alias', 'a')
+            ->addOrderBy('a.search', 'ASC')
+            ->addGroupBy('a.id_alias')
+            ->setMaxResults($limit)
+            ->where($qb->expr()->like('a.search', $dbSearchPhrase))
+            ->execute()
+            ->fetchAllAssociative();
+
+        $aliasesForAssociation = [];
+
+        foreach ($searchTerms as $searchTerm) {
+            $aliasesForAssociation[] = new AliasForAssociation((string) $searchTerm);
+        }
+
+        return $aliasesForAssociation;
     }
 }

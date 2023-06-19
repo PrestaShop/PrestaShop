@@ -26,23 +26,28 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult;
+namespace PrestaShop\PrestaShop\Adapter\Alias\QueryHandler;
 
-use JsonSerializable;
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchAliasesForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\SearchAliasesForAssociationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
 
-/**
- * Transfers alias data for association.
- */
-class AliasForAssociation implements JsonSerializable
+class SearchAliasForAssociationHandler implements SearchAliasesForAssociationHandlerInterface
 {
-    public function __construct(public readonly string $searchTerm)
+    public function __construct(private readonly AliasRepository $aliasRepository)
     {
     }
 
-    public function jsonSerialize(): mixed
+    /**
+     * @param SearchAliasesForAssociation $query
+     *
+     * @return AliasForAssociation[]
+     */
+    public function handle(SearchAliasesForAssociation $query): array
     {
-        return [
-            'searchTerm' => $this->searchTerm,
-        ];
+        $searchTerms = $this->aliasRepository->searchAliases($query->searchTerm, $query->limit);
+
+        return $searchTerms;
     }
 }

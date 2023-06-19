@@ -28,12 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
+
 /**
  * Class SearchAliasesForAssociation is responsible for searching aliases with particular search terms.
  */
 class SearchAliasesForAssociation
 {
-    public function __construct(public readonly string $searchTerm)
+    public function __construct(public readonly string $searchTerm, public readonly ?int $limit = null)
     {
+        if (null !== $limit && $limit <= 0) {
+            throw new AliasConstraintException('Search limit must be a positive integer or null', AliasConstraintException::INVALID_SEARCH_LIMIT);
+        }
     }
 }
