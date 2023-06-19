@@ -4,6 +4,10 @@ inputs:
   php-version:
     required: true
     description: PHP version
+  database:
+    required: true
+    description: Database Type
+    default: "mysql"
   mysql-version:
     required: true
     description: Mysql version
@@ -13,6 +17,18 @@ inputs:
   mysql-root-password:
     required: true
     description: Mysql root password
+  postgresql-version:
+    required: true
+    description: PostgreSQL version
+  postgresql-database:
+    required: true
+    description: Database to create
+  postgresql-user:
+    required: true
+    description: PostgreSQL User
+  postgresql-password:
+    required: true
+    description: PostgreSQL Password
   node-version:
     required: true
     description: Node version
@@ -39,7 +55,7 @@ runs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ inputs.php-version }}
-        extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
+        extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql, pgsql
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
@@ -66,10 +82,20 @@ runs:
 
     - name: Setup MySQL
       uses: mirromutth/mysql-action@v1.1
+      if: inputs.database == 'mysql'
       with:
         mysql version: ${{ inputs.mysql-version }}
         mysql database: ${{ inputs.mysql-database }}
         mysql root password: ${{ inputs.mysql-root-password }}
+
+    - name: Setup PostgreSQL
+      uses: harmon758/postgresql-action@v1
+      if: inputs.database == 'postgresql'
+      with:
+        postgresql version: ${{ inputs.postgresql-version }}
+        postgresql db: ${{ inputs.postgresql-database }}
+        postgresql user: ${{ inputs.postgresql-user }}
+        postgresql password: ${{ inputs.postgresql-password }}
 
     - name: Setup Node
       uses: actions/setup-node@v3
@@ -113,12 +139,24 @@ runs:
         sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" config/defines.inc.php
 
     - name: Install PrestaShop
-      if: inputs.ps-auto-install == 'true'
+      if: inputs.ps-auto-install == 'true' && inputs.database == 'mysql'
       shell: bash
       run: |
         sudo runuser -g www-data -u www-data -- php install-dev/index_cli.php \
         ---domain="localhost" --db_server="127.0.0.1:3306" --db_name="${{ inputs.mysql-database }}" \
         --db_user="root" --db_password=${{ inputs.mysql-root-password }} \
+         --prefix="tst_" --firstname="Marc" --lastname="Beier" \
+        --password="$ADMIN_PASSWD" --email="demo@prestashop.com" \
+        --language="en" --country="fr" \
+        --ssl=1
+
+    - name: Install PrestaShop
+      if: inputs.ps-auto-install == 'true' && inputs.database == 'postgresql'
+      shell: bash
+      run: |
+        sudo runuser -g www-data -u www-data -- php install-dev/index_cli.php \
+        ---domain="localhost" --db_server="127.0.0.1:5432" --db_type --db_name="${{ inputs.postgresql-database }}" \
+        --db_user="${{ inputs.postgresql-user }}" --db_password=${{ inputs.postgresql-password }} \
          --prefix="tst_" --firstname="Marc" --lastname="Beier" \
         --password="$ADMIN_PASSWD" --email="demo@prestashop.com" \
         --language="en" --country="fr" \

@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         php: [ '8.1', '8.2' ]
+        database: [ 'mysql', 'postgresql' ]
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -28,10 +29,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
+        if: matrix.database == 'mysql'
         with:
           mysql version: '8.0'
           mysql database: 'prestashop'
           mysql root password: 'password'
+      - name: Setup PostgreSQL
+        uses: harmon758/postgresql-action@v1
+        if: matrix.database == 'postgresql'
+        with:
+          postgresql version: '15'
+          postgresql db: 'prestashop'
+          postgresql user: 'root'
+          postgresql password: 'password'
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -73,6 +83,7 @@ jobs:
         run: make front-classic
 
       - name: Change MySQL authentication method
+        if: matrix.database == 'mysql'
         run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
 
       - name: Run integration-tests
