@@ -47,6 +47,17 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      */
     private const NON_EXISTING_CART_RULE_ID = 54440051;
 
+    /**
+     * Provides string to set and retrieve certain cart rule product restrictions state from shared storage
+     *
+     * @param string $cartRuleReference
+     *
+     * @return string
+     */
+    public static function buildProductRestrictionStorageKey(string $cartRuleReference): string
+    {
+        return 'cart_rule_product_restriction_groups_' . $cartRuleReference;
+    }
 
     /**
      * @When /^I (enable|disable) cart rule with reference "(.+)"$/
@@ -122,7 +133,7 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
 
     /**
      *
-     * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity products in cart matching one of these rules:
+     * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s) in cart matching one of these rules:
      *
      * @param string $cartRuleReference
      * @param int $quantity
@@ -168,13 +179,32 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
     }
 
     /**
+     * @When I clear all product restrictions for cart rule :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     *
+     * @return void
+     */
+    public function clearProductRestrictionRules(string $cartRuleReference): void
+    {
+        $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
+
+        $this->getCommandBus()->handle(new SetCartRuleProductRestrictionsCommand(
+            $this->getSharedStorage()->get($cartRuleReference),
+            []
+        ));
+
+        $this->getSharedStorage()->clear($restrictionsKey);
+    }
+
+    /**
      * @When I save product restrictions for cart rule :cartRuleReference
      *
      * @param string $cartRuleReference
      *
      * @return void
      */
-    public function setProductRestrictionRules(string $cartRuleReference): void
+    public function saveProductRestrictionRules(string $cartRuleReference): void
     {
         $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
 
