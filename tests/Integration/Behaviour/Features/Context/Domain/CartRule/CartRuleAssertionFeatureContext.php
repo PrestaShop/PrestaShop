@@ -123,6 +123,10 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
                 'class' => CartRuleConstraintException::class,
                 'code' => CartRuleConstraintException::EMPTY_RESTRICTION_RULE_IDS,
             ],
+            'empty restriction rules' => [
+                'class' => CartRuleConstraintException::class,
+                'code' => CartRuleConstraintException::EMPTY_RESTRICTION_RULES,
+            ],
             'non-existing cart rule' => [
                 'class' => CartRuleNotFoundException::class,
                 'code' => 0,

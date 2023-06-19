@@ -32,7 +32,6 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
@@ -103,13 +102,6 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->removeProductRestrictions($cartRuleId);
 
         foreach ($restrictionRuleGroups as $restrictionRuleGroup) {
-            if (empty($restrictionRuleGroup->getRestrictionRules())) {
-                throw new CartRuleConstraintException(
-                    'Restriction rules are empty',
-                    CartRuleConstraintException::INVALID_PRODUCT_RESTRICTION
-                );
-            }
-
             $this->connection->createQueryBuilder()
                 ->insert($this->dbPrefix . 'cart_rule_product_rule_group')
                 ->values([
@@ -122,12 +114,6 @@ class CartRuleRepository extends AbstractObjectModelRepository
             $productRuleGroupId = $this->connection->lastInsertId();
 
             foreach ($restrictionRuleGroup->getRestrictionRules() as $restrictionRule) {
-                if (empty($restrictionRule->getIds())) {
-                    throw new CartRuleConstraintException(
-                        'Restriction rule products are empty',
-                        CartRuleConstraintException::INVALID_PRODUCT_RESTRICTION
-                    );
-                }
                 $this->connection->createQueryBuilder()
                     ->insert($this->dbPrefix . 'cart_rule_product_rule')
                     ->values([

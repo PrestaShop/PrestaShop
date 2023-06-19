@@ -235,10 +235,44 @@ Feature: Set cart rule product restrictions in BO
       | manufacturers | graphicCorner                       |
 
   Scenario: Provide restrictions with empty list of rules
-    Given I clear all product restrictions for cart rule rule_50_percent
-    And I clear all product restrictions for cart rule rule_free_shipping_1
+    Given I clear all product restrictions for cart rule rule_free_shipping_1
     When I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
       | type     | references |
       | products |            |
     Then I should get cart rule error about "empty restriction rule ids"
     And cart rule rule_free_shipping_1 should have no product restriction rules
+
+  Scenario: Rule to require any quantity of product matching certain rules
+    Given I clear all product restrictions for cart rule rule_free_shipping_1
+    When I add a restriction for cart rule rule_free_shipping_1, which requires any quantity of product in cart matching one of these rules:
+      | type       | references  |
+      | products   | product1    |
+      | categories | clothes,men |
+    And I add a restriction for cart rule rule_free_shipping_1, which requires any quantity of product in cart matching one of these rules:
+      | type      | references                          |
+      | suppliers | fashionSupplier,accessoriesSupplier |
+    And I add a restriction for cart rule rule_free_shipping_1, which requires at least 100 product in cart matching one of these rules:
+      | type          | references    |
+      | manufacturers | graphicCorner |
+    And I save product restrictions for cart rule rule_free_shipping_1
+    Then cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
+      | groupReference | quantity | rules count |
+      | free_nr_1      | 0        | 2           |
+      | free_nr_2      | 0        | 1           |
+      | free_nr_3      | 100      | 1           |
+    And the cart rule restriction group "free_nr_1" should have the following rules:
+      | type       | references  |
+      | products   | product1    |
+      | categories | clothes,men |
+    And the cart rule restriction group "free_nr_2" should have the following rules:
+      | type      | references                          |
+      | suppliers | fashionSupplier,accessoriesSupplier |
+    And the cart rule restriction group "free_nr_3" should have the following rules:
+      | type          | references    |
+      | manufacturers | graphicCorner |
+
+  Scenario: Provide restriction group with empty list of restrictions
+    Given I clear all product restrictions for cart rule rule_50_percent
+    When I add a restriction for cart rule rule_50_percent, which requires at least 1 product, but I provide empty list of rules
+    Then I should get cart rule error about "empty restriction rules"
+    And cart rule rule_50_percent should have no product restriction rules

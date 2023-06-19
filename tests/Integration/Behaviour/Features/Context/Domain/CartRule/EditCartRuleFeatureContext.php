@@ -134,21 +134,25 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
     /**
      *
      * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s) in cart matching one of these rules:
+     * @When I add a restriction for cart rule :cartRuleReference, which requires any quantity of product(s) in cart matching one of these rules:
+     * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s), but I provide empty list of rules
      *
      * @param string $cartRuleReference
      * @param int $quantity
-     * @param TableNode $table
+     * @param TableNode|null $table
      *
      * @return void
      */
-    public function addRestrictionRule(string $cartRuleReference, int $quantity, TableNode $table): void
+    public function addRestrictionRule(string $cartRuleReference, int $quantity = 0, ?TableNode $table = null): void
     {
         $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
         $rules = [];
 
         try {
-            foreach ($table->getColumnsHash() as $row) {
-                $rules[] = new RestrictionRule($row['type'], $this->referencesToIds($row['references']));
+            if ($table) {
+                foreach ($table->getColumnsHash() as $row) {
+                    $rules[] = new RestrictionRule($row['type'], $this->referencesToIds($row['references']));
+                }
             }
 
             $restrictionGroups = [];
