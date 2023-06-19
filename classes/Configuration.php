@@ -353,7 +353,7 @@ class ConfigurationCore extends ObjectModel
     }
 
     // arbitrary string value nobody will use intentionally
-    private static $hasKeyDefaultDummy = "Configuration::hasKey Default Dummy Value 1802";
+    private static $hasKeyDefaultDummy = 'Configuration::hasKey Default Dummy Value 1802';
 
     /**
      * Check if key exists in configuration.
@@ -364,6 +364,7 @@ class ConfigurationCore extends ObjectModel
      * @param int|null $idShop
      *
      * @return bool
+     *
      * @deprecated use Configuration::get
      */
     public static function hasKey($key, $idLang = null, $idShopGroup = null, $idShop = null)
@@ -372,8 +373,7 @@ class ConfigurationCore extends ObjectModel
             return false;
         }
 
-        return
-            Configuration::get($key, $idLang, $idShopGroup, $idShop, self::$hasKeyDefaultDummy) != self::$hasKeyDefaultDummy;
+        return Configuration::get($key, $idLang, $idShopGroup, $idShop, self::$hasKeyDefaultDummy) != self::$hasKeyDefaultDummy;
     }
 
     /**
