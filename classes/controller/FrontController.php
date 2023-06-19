@@ -1586,11 +1586,11 @@ class FrontControllerCore extends Controller
      */
     public function getShopLogo(): array
     {
-        if (!Configuration::hasKey('PS_LOGO')) {
+        $logoFileName = Configuration::get('PS_LOGO');
+        if ($logoFileName == null) {
             return [];
         }
 
-        $logoFileName = Configuration::get('PS_LOGO');
         $logoFileDir = _PS_IMG_DIR_ . $logoFileName;
 
         if (!file_exists($logoFileDir)) {
