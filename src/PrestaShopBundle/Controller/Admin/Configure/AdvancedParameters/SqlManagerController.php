@@ -483,7 +483,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     protected function handleException(SqlRequestException $e)
     {
         $code = $e->getCode();
-        $type = get_class($e);
+        $type = $e::class;
 
         $exceptionMessages = [
             SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
@@ -518,7 +518,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function handleViewException(SqlRequestException $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         $exceptionMessages = [
             SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
@@ -538,7 +538,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function handleExportException(Exception $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         if ($e instanceof FileWritingException) {
             return $this->handleApplicationExportException($e);
@@ -568,7 +568,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $applicationErrors[$code];
         }
 
-        return $this->getFallbackErrorMessage(get_class($e), $code);
+        return $this->getFallbackErrorMessage($e::class, $code);
     }
 
     /**
@@ -578,7 +578,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function handleDomainExportException(SqlRequestException $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         $domainErrors = [
             SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),

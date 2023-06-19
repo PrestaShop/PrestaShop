@@ -67,7 +67,7 @@ class NullDateTime extends DateTimeImmutable
         }
 
         throw new RuntimeException(
-            sprintf('Format "%s" is not supported by %s', $format, get_class($this))
+            sprintf('Format "%s" is not supported by %s', $format, static::class)
         );
     }
 

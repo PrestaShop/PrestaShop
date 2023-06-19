@@ -47,7 +47,7 @@ final class BulkDeleteSupplierHandler extends AbstractDeleteSupplierHandler impl
             try {
                 $this->removeSupplier($supplierId);
             } catch (SupplierException $e) {
-                if (SupplierException::class === get_class($e)) {
+                if (SupplierException::class === $e::class) {
                     throw new CannotDeleteSupplierException(sprintf('Cannot delete Supplier object with id "%s".', $supplierId->getValue()), CannotDeleteSupplierException::FAILED_BULK_DELETE);
                 }
 

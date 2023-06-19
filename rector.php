@@ -6,7 +6,6 @@ use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\CodeQuality\Rector\ClassMethod\OptionalParametersAfterRequiredRector;
 use Rector\Config\RectorConfig;
 use Rector\Php53\Rector\Ternary\TernaryToElvisRector;
-use Rector\Php54\Rector\Array_\LongArrayToShortArrayRector;
 use Rector\Php55\Rector\Class_\ClassConstantToSelfClassRector;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php56\Rector\FuncCall\PowToExpRector;
@@ -16,7 +15,6 @@ use Rector\Php70\Rector\If_\IfToSpaceshipRector;
 use Rector\Php70\Rector\MethodCall\ThisCallOnStaticMethodToStaticCallRector;
 use Rector\Php70\Rector\Ternary\TernaryToNullCoalescingRector;
 use Rector\Php71\Rector\FuncCall\CountOnNullRector;
-use Rector\Php71\Rector\List_\ListToArrayDestructRector;
 use Rector\Php71\Rector\TryCatch\MultiExceptionCatchRector;
 use Rector\Php72\Rector\FuncCall\GetClassOnNullRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
@@ -28,7 +26,6 @@ use Rector\Php74\Rector\Ternary\ParenthesizeNestedTernaryRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\Class_\StringableForToStringRector;
-use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php80\Rector\FunctionLike\MixedTypeRector;
 use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
@@ -74,11 +71,8 @@ return static function (RectorConfig $rectorConfig): void {
         TernaryToNullCoalescingRector::class => '*',
         RemoveUnusedVariableInCatchRector::class => '*',
         StringableForToStringRector::class => '*',
-//        LongArrayToShortArrayRector::class => '*',
-//        ListToArrayDestructRector::class => '*',
         StringClassNameToClassConstantRector::class => '*',
         IfToSpaceshipRector::class => '*',
-        ClassOnObjectRector::class => '*',
         FirstClassCallableRector::class => '*',
         ExceptionHandlerTypehintRector::class => '*',
         ThisCallOnStaticMethodToStaticCallRector::class => '*',

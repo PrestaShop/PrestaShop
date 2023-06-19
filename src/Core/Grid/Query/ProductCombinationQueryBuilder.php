@@ -67,7 +67,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected %s, but got %s',
-                    ProductCombinationFilters::class, get_class($searchCriteria)
+                    ProductCombinationFilters::class, $searchCriteria::class
                 )
             );
         }
@@ -99,7 +99,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected %s, but got %s',
-                    ProductCombinationFilters::class, get_class($searchCriteria)
+                    ProductCombinationFilters::class, $searchCriteria::class
                 )
             );
         }

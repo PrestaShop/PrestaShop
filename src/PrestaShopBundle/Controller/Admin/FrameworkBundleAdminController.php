@@ -496,7 +496,7 @@ class FrameworkBundleAdminController extends AbstractController
             return $e->getMessage();
         }
 
-        $exceptionType = get_class($e);
+        $exceptionType = $e::class;
         $exceptionCode = $e->getCode();
 
         if (isset($messages[$exceptionType])) {

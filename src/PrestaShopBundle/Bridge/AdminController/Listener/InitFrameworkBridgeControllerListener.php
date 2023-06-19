@@ -88,7 +88,7 @@ class InitFrameworkBridgeControllerListener
         /** @var FrameworkBridgeControllerInterface $controller */
         $controller = $event->getController()[0];
 
-        if (!is_string(get_class($controller))) {
+        if (!is_string($controller::class)) {
             return;
         }
 

@@ -228,7 +228,7 @@ class ShopLogosType extends AbstractType
                 $formType = $formField->getConfig()->getType()->getInnerType();
                 $options = $formField->getConfig()->getOptions();
                 $options['attr']['disabled'] = true;
-                $form->add($originalFieldName, get_class($formType), $options);
+                $form->add($originalFieldName, $formType::class, $options);
             }
         });
     }
@@ -258,7 +258,7 @@ class ShopLogosType extends AbstractType
                 $options = $formField->getConfig()->getOptions();
                 $options['attr']['data-shop-restriction-source'] = $fieldName;
 
-                $form->add($fieldName, get_class($formType), $options);
+                $form->add($fieldName, $formType::class, $options);
             }
         });
     }

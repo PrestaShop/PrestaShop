@@ -459,7 +459,7 @@ class ThemeManager implements AddonManagerInterface
     private function installFromZip($source)
     {
         /** @var Finder $finderClass */
-        $finderClass = get_class($this->finder);
+        $finderClass = $this->finder::class;
         $this->finder = $finderClass::create();
 
         $sandboxPath = $this->getSandboxPath();
