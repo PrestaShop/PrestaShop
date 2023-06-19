@@ -74,7 +74,6 @@ class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkD
         return new BulkAliasException(
             $caughtExceptions,
             'Errors occurred during Alias bulk delete action',
-            BulkFeatureException::FAILED_BULK_DELETE
         );
     }
 
