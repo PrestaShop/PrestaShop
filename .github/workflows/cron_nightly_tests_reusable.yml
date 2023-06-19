@@ -113,6 +113,8 @@ jobs:
             CAMPAIGN: 'functional:WS'
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'modules'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'sanity:productV2'
           ## 8.0.x
           - BRANCH: 8.0.x
             CAMPAIGN: 'cldr'
