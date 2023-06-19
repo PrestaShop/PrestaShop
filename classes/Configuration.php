@@ -224,6 +224,10 @@ class ConfigurationCore extends ObjectModel
             return false;
         }
 
+        if (!is_int($key) && !is_string($key)) {
+            return false;
+        }
+
         // Init the cache on demand
         if (!self::$_initialized) {
             Configuration::loadConfiguration();
@@ -243,11 +247,11 @@ class ConfigurationCore extends ObjectModel
             $idShopGroup = Shop::getContextShopGroupID(true);
         }
 
-        if ($idShop && Configuration::hasKey($key, $idLang, null, $idShop)) {
+        if ($idShop && Configuration::_hasKey($key, $idLang, null, $idShop)) {
             return self::$_new_cache_shop[$key][$idLang][$idShop];
-        } elseif ($idShopGroup && Configuration::hasKey($key, $idLang, $idShopGroup)) {
+        } elseif ($idShopGroup && Configuration::_hasKey($key, $idLang, $idShopGroup)) {
             return self::$_new_cache_group[$key][$idLang][$idShopGroup];
-        } elseif (Configuration::hasKey($key, $idLang)) {
+        } elseif (Configuration::_hasKey($key, $idLang)) {
             return self::$_new_cache_global[$key][$idLang];
         }
 
@@ -339,22 +343,8 @@ class ConfigurationCore extends ObjectModel
         return $results;
     }
 
-    /**
-     * Check if key exists in configuration.
-     *
-     * @param mixed $key
-     * @param mixed|null $idLang
-     * @param int|null $idShopGroup
-     * @param int|null $idShop
-     *
-     * @return bool
-     */
-    public static function hasKey($key, $idLang = null, $idShopGroup = null, $idShop = null)
+    private static function _hasKey($key, $idLang = null, $idShopGroup = null, $idShop = null)
     {
-        if (!is_int($key) && !is_string($key)) {
-            return false;
-        }
-
         $idLang = (int) $idLang;
 
         if ($idShop) {
@@ -364,6 +354,26 @@ class ConfigurationCore extends ObjectModel
         }
 
         return isset(self::$_new_cache_global[$key][$idLang]);
+    }
+
+    // arbitrary string value nobody will use intentionally
+    private static $hasKeyDefaultDummy = "Configuration::hasKey Default Dummy Value 1802";
+
+    /**
+     * Check if key exists in configuration.
+     *
+     * @param mixed $key
+     * @param mixed|null $idLang
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
+     *
+     * @return bool
+     * @deprecated use Configuration::get
+     */
+    public static function hasKey($key, $idLang = null, $idShopGroup = null, $idShop = null)
+    {
+        return
+            Configuration::get($key, $idLang, $idShopGroup, $idShop, self::$hasKeyDefaultDummy) != self::$hasKeyDefaultDummy;
     }
 
     /**
@@ -464,13 +474,13 @@ class ConfigurationCore extends ObjectModel
             // if there isn't a $stored_value, we must insert $value
             if (
               ((!is_numeric($value) && $value === $storedValue) || (is_numeric($value) && $value == $storedValue))
-               && Configuration::hasKey($key, $lang, $idShopGroup, $idShop)
+               && Configuration::_hasKey($key, $lang, $idShopGroup, $idShop)
             ) {
                 continue;
             }
 
             // If key already exists, update value
-            if (Configuration::hasKey($key, $lang, $idShopGroup, $idShop)) {
+            if (Configuration::_hasKey($key, $lang, $idShopGroup, $idShop)) {
                 if (!$lang) {
                     // Update config not linked to lang
                     $result &= Db::getInstance()->update(self::$definition['table'], [
@@ -653,7 +663,7 @@ class ConfigurationCore extends ObjectModel
         $idShopGroup = $context == Shop::CONTEXT_GROUP && Shop::getContext() != Shop::CONTEXT_ALL ? Shop::getContextShopGroupID(true) : null;
         $idShop = $context == Shop::CONTEXT_SHOP && Shop::getContext() == Shop::CONTEXT_SHOP ? Shop::getContextShopID(true) : null;
 
-        return Configuration::hasKey($key, $idLang, $idShopGroup, $idShop);
+        return Configuration::_hasKey($key, $idLang, $idShopGroup, $idShop);
     }
 
     /**
