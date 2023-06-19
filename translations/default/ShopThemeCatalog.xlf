@@ -21,6 +21,11 @@
         <target>Item</target>
         <note>Line: 1217</note>
       </trans-unit>
+      <trans-unit id="7d74f3b92b19da5e606d737d339a966dsadasdasda">
+        <source>{items, plural, =0 {Items} =1 {Item} other {Items}}</source>
+        <target>{items, plural, =0 {Items} =1 {Item} other {Items}}</target>
+        <note>Line: 1217</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/front/SitemapController.php" source-language="en-US" target-language="en" datatype="plaintext">
