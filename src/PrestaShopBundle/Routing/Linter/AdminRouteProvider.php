@@ -55,7 +55,7 @@ final class AdminRouteProvider
         $adminRoutes = [];
 
         foreach ($this->router->getRouteCollection() as $routeName => $route) {
-            if (strpos($routeName, 'admin_') !== 0) {
+            if (!str_starts_with($routeName, 'admin_')) {
                 continue;
             }
 

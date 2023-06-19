@@ -106,7 +106,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
      */
     public function __call($name, $args)
     {
-        if (strpos($name, 'call_') !== 0) {
+        if (!str_starts_with($name, 'call_')) {
             throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
         }
 

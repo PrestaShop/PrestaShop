@@ -262,7 +262,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         foreach ($filterParams as $k => $v) {
-            if ($v == '' || strpos($k, 'filter_') !== 0) {
+            if ($v == '' || !str_starts_with($k, 'filter_')) {
                 continue;
             }
             if ($k == 'filter_category') {

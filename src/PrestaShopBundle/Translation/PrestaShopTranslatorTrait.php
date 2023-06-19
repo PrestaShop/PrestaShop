@@ -171,7 +171,7 @@ trait PrestaShopTranslatorTrait
     private function shouldFallbackToLegacyModuleTranslation(string $message, ?string $domain, ?string $locale): bool
     {
         return
-            'Modules.' === substr($domain ?? '', 0, 8)
+            str_starts_with($domain ?? '', 'Modules.')
             && (
                 !method_exists($this, 'getCatalogue')
                 || !$this->getCatalogue($locale)->has($message, $this->normalizeDomain($domain))

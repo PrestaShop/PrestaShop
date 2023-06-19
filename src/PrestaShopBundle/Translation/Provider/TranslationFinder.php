@@ -149,7 +149,7 @@ class TranslationFinder
         $basename = $file->getBasename('.xlf');
 
         $domain = $basename;
-        if (strpos($basename, $locale) === false) {
+        if (!str_contains($basename, $locale)) {
             $domain .= '.' . $locale;
         }
 

@@ -93,7 +93,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
-            if (strpos($methodDoc, '@arrayAccess') !== false) {
+            if (str_contains($methodDoc, '@arrayAccess')) {
                 $this->arrayAccessList->offsetSet(
                     $this->convertMethodNameToIndex($method->getName()),
                     [

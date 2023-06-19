@@ -230,7 +230,7 @@ class EntityTranslator implements EntityTranslatorInterface
     private function buildTableNameFromDataLang(DataLangCore $dataLang): string
     {
         $tableName = $this->dataLang->getTableName();
-        if (substr($tableName, 0, strlen($this->dbPrefix)) !== $this->dbPrefix) {
+        if (!str_starts_with($tableName, $this->dbPrefix)) {
             $tableName = $this->dbPrefix . $tableName;
         }
 

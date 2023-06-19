@@ -210,7 +210,7 @@ EOF;
         }
 
         // Test if legacy template from "content.tpl" has '{$content}'
-        if (false === strpos($layout, '{$content}')) {
+        if (!str_contains($layout, '{$content}')) {
             throw new Exception('PrestaShopBundle\Twig\LayoutExtension cannot find the {$content} string in legacy layout template', 1);
         }
 

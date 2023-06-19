@@ -71,7 +71,7 @@ final class NamingConventionLinter implements RouteLinterInterface
     private function getControllerAndMethodName(Route $route)
     {
         $defaultController = $route->getDefault('_controller');
-        if (false === strpos($defaultController, '::')) {
+        if (!str_contains($defaultController, '::')) {
             throw new SymfonyControllerConventionException(
                 sprintf('Controller "%s" does not follow symfony convention.', $defaultController),
                 $defaultController

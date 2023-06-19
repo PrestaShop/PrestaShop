@@ -296,7 +296,7 @@ class ShopLogosType extends AbstractType
     {
         $diff = \strlen($haystack) - \strlen($needle);
 
-        return $diff >= 0 && strpos($haystack, $needle, $diff) !== false;
+        return $diff >= 0 && str_contains($haystack, $needle);
     }
 
     /**

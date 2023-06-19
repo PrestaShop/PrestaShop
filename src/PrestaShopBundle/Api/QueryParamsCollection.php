@@ -316,7 +316,7 @@ abstract class QueryParamsCollection
         $implodableOrder = [];
 
         foreach ($this->queryParams['order'] as $order) {
-            $descendingOrder = false !== strpos($order, 'desc');
+            $descendingOrder = str_contains($order, 'desc');
             $filterColumn = $this->removeDirection($order);
 
             $orderFiltered = '{' . $filterColumn . '}';

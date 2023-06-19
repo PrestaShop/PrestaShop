@@ -98,7 +98,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     {
         $controller = $route->getDefault('_controller');
 
-        if (strpos($controller, '::') === false) {
+        if (!str_contains($controller, '::')) {
             return null;
         }
 

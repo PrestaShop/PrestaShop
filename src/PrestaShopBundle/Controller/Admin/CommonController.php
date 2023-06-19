@@ -127,7 +127,7 @@ class CommonController extends FrameworkBundleAdminController
         // urls from route
         $callerParameters = $request->attributes->get('caller_parameters', []);
         foreach ($callerParameters as $k => $v) {
-            if (strpos($k, '_') === 0) {
+            if (str_starts_with($k, '_')) {
                 unset($callerParameters[$k]);
             }
         }
