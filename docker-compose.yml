@@ -56,6 +56,7 @@ services:
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
+      USE_SYMFONY_LAYOUT: ${USE_SYMFONY_LAYOUT:-0}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
       - "8001:80"
