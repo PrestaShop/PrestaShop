@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
-    name: Sanity
+    name: Sanity Symfony Layout
     strategy:
       matrix:
         php: [ '8.1' ]
