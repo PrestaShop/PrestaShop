@@ -215,16 +215,16 @@ class AliasRepository extends AbstractObjectModelRepository
             ->addSelect('a.search')
             ->from($this->dbPrefix . 'alias', 'a')
             ->addOrderBy('a.search', 'ASC')
-            ->addGroupBy('a.id_alias')
+            ->addGroupBy('a.search')
             ->setMaxResults($limit)
             ->where($qb->expr()->like('a.search', $dbSearchPhrase))
             ->execute()
-            ->fetchFirstColumn();
+            ->fetchAllAssociative();
 
         $aliasesForAssociation = [];
 
         foreach ($searchTerms as $searchTerm) {
-            $aliasesForAssociation[] = new AliasForAssociation((string) $searchTerm);
+            $aliasesForAssociation[] = new AliasForAssociation((string) $searchTerm['search']);
         }
 
         return $aliasesForAssociation;
