@@ -7,7 +7,7 @@ on:
 jobs:
 
   sanity:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: Sanity - PHP 7.1
     strategy:
       matrix:
@@ -16,13 +16,13 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
 
       - name: Setup Apache
         run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
@@ -35,9 +35,18 @@ jobs:
           mysql root password: 'password'
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '10'
+          node-version: '14'
+          cache: 'npm'
+          cache-dependency-path: |
+            admin-dev/**/package-lock.json
+            tests/**/package-lock.json
+            themes/**/package-lock.json
+
+      - name: Setup NPM
+        shell: bash
+        run: npm i -g npm@6
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
@@ -45,17 +54,10 @@ jobs:
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache node Directory
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('admin-dev/**/package-lock.json', 'tests/**/package-lock.json', 'themes/**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('/composer.lock') }}
@@ -71,7 +73,7 @@ jobs:
           sudo service apache2 restart
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
@@ -87,8 +89,8 @@ jobs:
           TAKE_SCREENSHOT_AFTER_FAIL: true
         working-directory: ./tests/UI
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
-          name: fail
+          name: screenshots-${{ matrix.php }}
           path: ./tests/UI/screenshots/
