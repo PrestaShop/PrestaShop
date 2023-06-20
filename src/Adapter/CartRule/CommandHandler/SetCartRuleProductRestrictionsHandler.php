@@ -34,25 +34,20 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\SetCartRuleProduct
 
 class SetCartRuleProductRestrictionsHandler implements SetCartRuleProductRestrictionsHandlerInterface
 {
-    /**
-     * @var CartRuleRepository
-     */
-    private $cartRuleRepository;
-
     public function __construct(
-        CartRuleRepository $cartRuleRepository
+        protected CartRuleRepository $cartRuleRepository
     ) {
-        $this->cartRuleRepository = $cartRuleRepository;
     }
 
     public function handle(SetCartRuleProductRestrictionsCommand $command): void
     {
-        $cartRuleId = $command->getCartRuleId();
+        $cartRuleId = $command->cartRuleId;
         $cartRule = $this->cartRuleRepository->get($cartRuleId);
+        $restrictionRuleGroups = $command->restrictionRuleGroups;
 
-        $this->cartRuleRepository->setProductRestrictions($cartRuleId, $command->getRestrictionRuleGroups());
+        $this->cartRuleRepository->setProductRestrictions($cartRuleId, $restrictionRuleGroups);
 
-        $cartRule->product_restriction = !empty($command->getRestrictionRuleGroups());
+        $cartRule->product_restriction = !empty($restrictionRuleGroups);
         $this->cartRuleRepository->partialUpdate($cartRule, ['product_restriction']);
     }
 }

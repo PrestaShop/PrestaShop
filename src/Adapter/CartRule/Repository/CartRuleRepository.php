@@ -106,14 +106,14 @@ class CartRuleRepository extends AbstractObjectModelRepository
                 ->insert($this->dbPrefix . 'cart_rule_product_rule_group')
                 ->values([
                     'id_cart_rule' => $cartRuleId->getValue(),
-                    'quantity' => $restrictionRuleGroup->getRequiredQuantityInCart(),
+                    'quantity' => $restrictionRuleGroup->requiredQuantityInCart,
                 ])
                 ->execute()
             ;
 
             $productRuleGroupId = $this->connection->lastInsertId();
 
-            foreach ($restrictionRuleGroup->getRestrictionRules() as $restrictionRule) {
+            foreach ($restrictionRuleGroup->restrictionRules as $restrictionRule) {
                 $this->connection->createQueryBuilder()
                     ->insert($this->dbPrefix . 'cart_rule_product_rule')
                     ->values([
@@ -121,14 +121,14 @@ class CartRuleRepository extends AbstractObjectModelRepository
                         'type' => ':type',
                     ])
                     ->setParameter('productRuleGroupId', $productRuleGroupId)
-                    ->setParameter('type', $restrictionRule->getType())
+                    ->setParameter('type', $restrictionRule->type)
                     ->execute()
                 ;
 
                 $productRuleId = $this->connection->lastInsertId();
                 $productRuleValues = [];
                 $checkedIds = [];
-                foreach ($restrictionRule->getIds() as $id) {
+                foreach ($restrictionRule->ids as $id) {
                     if (in_array($id, $checkedIds, true)) {
                         // skip in case there are duplicates
                         continue;

@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -189,10 +190,10 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
             $actualGroup = $actualRestrictionGroups[$key];
             Assert::assertEquals(
                 $expectedDataRow['quantity'],
-                $actualGroup->getRequiredQuantityInCart(),
+                $actualGroup->requiredQuantityInCart,
                 'Unexpected required quantity in cart in restriction group'
             );
-            Assert::assertCount((int) $expectedDataRow['rules count'], $actualGroup->getRestrictionRules(), 'Unexpected rules count in restriction group');
+            Assert::assertCount((int) $expectedDataRow['rules count'], $actualGroup->restrictionRules, 'Unexpected rules count in restriction group');
 
             // set group into shared storage so that following steps can assert its values more in depth
             $this->getSharedStorage()->set($expectedDataRow['groupReference'], $actualGroup);
@@ -219,14 +220,16 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
         $group = $this->getSharedStorage()->get($restrictionGroupReference);
         Assert::assertInstanceOf(RestrictionRuleGroup::class, $group);
 
-        $actualRules = $group->getRestrictionRules();
+        $actualRules = $group->restrictionRules;
         $expectedDataRows = $tableNode->getColumnsHash();
 
         Assert::assertCount(count($expectedDataRows), $actualRules, 'Unexpected product restriction rules count in group');
 
         foreach ($expectedDataRows as $key => $expectedRow) {
-            Assert::assertSame($expectedRow['type'], $actualRules[$key]->getType());
-            Assert::assertSame($this->referencesToIds($expectedRow['references']), $actualRules[$key]->getIds());
+            /** @var RestrictionRule $actualRule */
+            $actualRule = $actualRules[$key];
+            Assert::assertSame($expectedRow['type'], $actualRule->type);
+            Assert::assertSame($this->referencesToIds($expectedRow['references']), $actualRule->ids);
         }
     }
 }

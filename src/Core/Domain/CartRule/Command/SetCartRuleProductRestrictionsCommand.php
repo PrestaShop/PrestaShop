@@ -36,34 +36,16 @@ class SetCartRuleProductRestrictionsCommand
     /**
      * @var CartRuleId
      */
-    private $cartRuleId;
+    public readonly CartRuleId $cartRuleId;
 
     /**
-     * @var RestrictionRuleGroup[]
+     * @param int $cartRuleId
+     * @param RestrictionRuleGroup[] $restrictionRuleGroups
      */
-    private $restrictionRuleGroups;
-
     public function __construct(
         int $cartRuleId,
-        array $restrictionRuleGroups
+        public readonly array $restrictionRuleGroups
     ) {
         $this->cartRuleId = new CartRuleId($cartRuleId);
-        $this->restrictionRuleGroups = $restrictionRuleGroups;
-    }
-
-    /**
-     * @return CartRuleId
-     */
-    public function getCartRuleId(): CartRuleId
-    {
-        return $this->cartRuleId;
-    }
-
-    /**
-     * @return RestrictionRuleGroup[]
-     */
-    public function getRestrictionRuleGroups(): array
-    {
-        return $this->restrictionRuleGroups;
     }
 }

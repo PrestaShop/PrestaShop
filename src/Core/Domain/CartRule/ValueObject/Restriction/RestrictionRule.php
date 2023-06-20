@@ -46,42 +46,15 @@ class RestrictionRule
     ];
 
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * Ids of product, attributes, categories, manufacturers or suppliers, depending on restriction rule type
-     *
-     * @var int[]
-     */
-    private $ids;
-
-    /**
      * @param string $type
-     * @param int[] $ids
+     * @param int[] $ids Ids of product, attributes, categories, manufacturers or suppliers, depending on restriction rule type
      */
     public function __construct(
-        string $type,
-        array $ids
+        public readonly string $type,
+        public readonly array $ids
     ) {
         $this->assertType($type);
         $this->assertIds($ids);
-        $this->type = $type;
-        $this->ids = $ids;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getIds(): array
-    {
-        return $this->ids;
     }
 
     /**

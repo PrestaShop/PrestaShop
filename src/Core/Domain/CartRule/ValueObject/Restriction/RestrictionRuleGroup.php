@@ -34,38 +34,14 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 class RestrictionRuleGroup
 {
     /**
-     * @var int
+     * @param int $requiredQuantityInCart
+     * @param RestrictionRule[] $restrictionRules
      */
-    private $requiredQuantityInCart;
-
-    /**
-     * @var RestrictionRule[]
-     */
-    private $restrictionRules;
-
     public function __construct(
-        int $requiredQuantityInCart,
-        array $restrictionRules
+        public readonly int $requiredQuantityInCart,
+        public readonly array $restrictionRules
     ) {
         $this->assertRestrictionRules($restrictionRules);
-        $this->requiredQuantityInCart = $requiredQuantityInCart;
-        $this->restrictionRules = $restrictionRules;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRequiredQuantityInCart(): int
-    {
-        return $this->requiredQuantityInCart;
-    }
-
-    /**
-     * @return RestrictionRule[]
-     */
-    public function getRestrictionRules(): array
-    {
-        return $this->restrictionRules;
     }
 
     /**

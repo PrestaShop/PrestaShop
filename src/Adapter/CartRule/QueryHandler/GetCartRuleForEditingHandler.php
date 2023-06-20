@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleReductionForE
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleRestrictionsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
@@ -54,7 +55,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
 class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterface
 {
     public function __construct(
-        protected CartRuleRepository $cartRuleRepository
+        protected readonly CartRuleRepository $cartRuleRepository
     ) {
     }
 
@@ -137,6 +138,11 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
         );
     }
 
+    /**
+     * @param CartRule $cartRule
+     *
+     * @return RestrictionRuleGroup[]
+     */
     private function getRestrictionRuleGroups(CartRule $cartRule): array
     {
         if (!$cartRule->product_restriction) {
