@@ -191,7 +191,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      * @param string $search
      * @param TableNode $tableNode
      */
-    public function assertSearchProducts(string $search, TableNode $tableNode): void
+    public function assertSearchAliases(string $search, TableNode $tableNode): void
     {
         /** @var AliasForAssociation[] $foundAliasesForAssociation */
         $foundAliasesForAssociation = $this->getQueryBus()->handle(new SearchAliasesForAssociation($search));
