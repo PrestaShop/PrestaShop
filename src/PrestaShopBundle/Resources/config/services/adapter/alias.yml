@@ -20,6 +20,16 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
 
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\DeleteAliasHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkDeleteAliasHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand
+
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasStatusHandler:
     tags:
       - name: tactician.handler

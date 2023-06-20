@@ -43,28 +43,15 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 class AliasRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var Connection
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param AliasValidator $aliasValidator
      */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var AliasValidator
-     */
-    private $aliasValidator;
-
     public function __construct(
-        Connection $connection,
-        string $dbPrefix,
-        AliasValidator $aliasValidator
+        protected Connection $connection,
+        protected string $dbPrefix,
+        protected AliasValidator $aliasValidator
     ) {
-        $this->aliasValidator = $aliasValidator;
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -154,6 +141,11 @@ class AliasRepository extends AbstractObjectModelRepository
         ;
 
         return $qb->execute()->fetchFirstColumn();
+    }
+
+    public function delete(AliasId $aliasId): void
+    {
+        $this->deleteObjectModel($this->get($aliasId), CannotDeleteAliasException::class);
     }
 
     /**

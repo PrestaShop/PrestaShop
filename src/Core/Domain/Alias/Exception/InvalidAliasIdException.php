@@ -24,39 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
-use Throwable;
-
 /**
- * Base class to use for bulk operations, it stores a list of exception indexed by the alias ID that was impacted.
- * It should be used as a base class for all the bulk action exceptions.
+ * Class InvalidAliasIdException is thrown when AliasId with invalid value is being created.
  */
-class BulkAliasException extends AliasException implements BulkCommandExceptionInterface
+class InvalidAliasIdException extends AliasException
 {
-    /**
-     * @param Throwable[] $exceptions
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
-     */
-    public function __construct(
-        private readonly array $exceptions,
-        string $message = 'Errors occurred during Alias bulk action',
-        int $code = 0,
-        Throwable $previous = null
-    ) {
-        parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExceptions(): array
-    {
-        return $this->exceptions;
-    }
 }

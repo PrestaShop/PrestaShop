@@ -31,7 +31,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
@@ -147,6 +149,35 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->getCommandBus()->handle($updateAliasCommand);
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I delete alias :reference
+     *
+     * @param string $reference
+     */
+    public function deleteAlias(string $reference): void
+    {
+        /** @var string[] $aliasId */
+        $aliasId = $this->getSharedStorage()->get($reference);
+
+        try {
+            $this->getCommandBus()->handle(new DeleteAliasCommand(new AliasId((int) $aliasId)));
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete aliases :aliasReferences
+     */
+    public function bulkDeleteAlias(string $aliasReferences): void
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteAliasCommand($this->referencesToIds($aliasReferences)));
         } catch (AliasException $e) {
             $this->setLastException($e);
         }

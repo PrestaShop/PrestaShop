@@ -26,37 +26,23 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
-use Throwable;
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\DeleteAliasHandlerInterface;
 
-/**
- * Base class to use for bulk operations, it stores a list of exception indexed by the alias ID that was impacted.
- * It should be used as a base class for all the bulk action exceptions.
- */
-class BulkAliasException extends AliasException implements BulkCommandExceptionInterface
+class DeleteAliasHandler implements DeleteAliasHandlerInterface
 {
-    /**
-     * @param Throwable[] $exceptions
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
-     */
-    public function __construct(
-        private readonly array $exceptions,
-        string $message = 'Errors occurred during Alias bulk action',
-        int $code = 0,
-        Throwable $previous = null
-    ) {
-        parent::__construct($message, $code, $previous);
+    public function __construct(private readonly AliasRepository $aliasRepository)
+    {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExceptions(): array
+    public function handle(DeleteAliasCommand $command): void
     {
-        return $this->exceptions;
+        $this->aliasRepository->delete($command->aliasId);
     }
 }

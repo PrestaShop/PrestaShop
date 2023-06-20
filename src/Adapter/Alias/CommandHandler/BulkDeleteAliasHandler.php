@@ -23,46 +23,46 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\BulkDeleteAliasHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\BulkDeleteFeatureHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
-class BulkDeleteFeatureHandler extends AbstractBulkCommandHandler implements BulkDeleteFeatureHandlerInterface
+/**
+ * Handles command which deletes aliases in bulk action
+ */
+class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkDeleteAliasHandlerInterface
 {
-    /**
-     * @var FeatureRepository
-     */
-    private $featureRepository;
-
-    public function __construct(
-        FeatureRepository $featureRepository
-    ) {
-        $this->featureRepository = $featureRepository;
-    }
-
-    public function handle(BulkDeleteFeatureCommand $command): void
+    public function __construct(protected AliasRepository $aliasRepository)
     {
-        $this->handleBulkAction($command->getFeatureIds(), FeatureException::class);
     }
 
     /**
-     * @param FeatureId $id
-     * @param BulkDeleteFeatureCommand $command
+     * {@inheritdoc}
+     */
+    public function handle(BulkDeleteAliasCommand $command): void
+    {
+        $this->handleBulkAction($command->getAliasIds(), AliasException::class);
+    }
+
+    /**
+     * @param AliasId $id
+     * @param mixed $command
      *
      * @return void
      */
     protected function handleSingleAction(mixed $id, mixed $command): void
     {
-        $this->featureRepository->delete($id);
+        $this->aliasRepository->delete($id);
     }
 
     /**
@@ -70,18 +70,17 @@ class BulkDeleteFeatureHandler extends AbstractBulkCommandHandler implements Bul
      */
     protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
     {
-        return new BulkFeatureException(
+        return new BulkAliasException(
             $caughtExceptions,
-            'Errors occurred during Feature bulk delete action',
-            BulkFeatureException::FAILED_BULK_DELETE
+            'Errors occurred during Alias bulk delete action',
         );
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function supports($id): bool
+    protected function supports(mixed $id): bool
     {
-        return $id instanceof FeatureId;
+        return $id instanceof AliasId;
     }
 }
