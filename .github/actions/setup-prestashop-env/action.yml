@@ -116,6 +116,12 @@ runs:
         echo "Disabling DEV mode ...";
         sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" config/defines.inc.php
 
+    - name: Adapt Back Office layout
+      if: inputs.backoffice-layout == 'symfony'
+      shell: bash
+      run: |
+        sudo runuser -g www-data -u www-data -- echo USE_SYMFONY_LAYOUT=1 >> .env
+
     - name: Install PrestaShop
       if: inputs.ps-auto-install == 'true'
       shell: bash
@@ -127,12 +133,6 @@ runs:
         --password="$ADMIN_PASSWD" --email="demo@prestashop.com" \
         --language="en" --country="fr" \
         --ssl=1
-
-    - name: Adapt Back Office layout
-      if: inputs.backoffice-layout == 'symfony'
-      shell: bash
-      run: |
-        sudo runuser -g www-data -u www-data -- php ./bin/console prestashop:feature-flag enable symfony_layout
 
     - name: Clear and warmup cache for dev mode
       if: inputs.ps-dev-mode == 'true'
