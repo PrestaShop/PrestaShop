@@ -109,12 +109,6 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener:
-    class: PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener
-    autowire: true
-    tags:
-      - { name: core.legacy.hook.subscriber }
-
   PrestaShopBundle\EventListener\ShopConstraintListener:
     public: false
     arguments:
