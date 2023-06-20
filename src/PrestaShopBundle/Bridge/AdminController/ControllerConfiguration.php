@@ -419,7 +419,7 @@ class ControllerConfiguration
      */
     private function build(): void
     {
-        if (strpos('Admin', $this->legacyControllerName) === 0) {
+        if (str_starts_with($this->legacyControllerName, 'Admin')) {
             $this->controllerType = 'admin';
         } else {
             $this->controllerType = 'front';
