@@ -19,6 +19,7 @@ PrestaShop is an Open Source e-commerce web application, committed to providing 
 
 This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 1.7), please go to [the download page][download] on the official PrestaShop site.
 
+test ci 2
 
 About the 'develop' branch
 --------
