@@ -29,9 +29,7 @@ jobs:
           node-version: '16'
           npm-version: '7'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          ps-auto-install: true
           backoffice-layout: symfony
-          ps-dev-mode: 'false'
 
       - name: Cache Playwright browsers
         uses: actions/cache@v3
@@ -43,8 +41,8 @@ jobs:
         run: mv .env.ci .env
         working-directory: ./tests/UI
 
-      - name: Run tests without install or the feature flag value will be overridden
-        run: npm ci && npm run test:sanity:no-install:fast-fail && npm run test:sanity:productV2:fast-fail
+      - name: Run tests even with install since the symfony layout is enabled via .env
+        run: npm ci && npm run test:sanity:fast-fail && npm run test:sanity:productV2:fast-fail
         working-directory: ./tests/UI
         env:
           ENABLE_SSL: true
