@@ -1334,6 +1334,7 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING . '-ids');
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION . '-ids');
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
+        Cache::clean('getContextualValue_*');
 
         if ((int) $cartRule->gift_product) {
             $this->updateQty(

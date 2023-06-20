@@ -36,7 +36,6 @@ use Context;
 use DateInterval;
 use DateTime;
 use Db;
-use Order;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
@@ -437,8 +436,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         $this->getCurrentCart()->addCartRule((int) $cartRule->id);
-        //@todo: should this be added inside production addCartRule instead?
-        Cache::clean('getContextualValue_*');
     }
 
     /**
