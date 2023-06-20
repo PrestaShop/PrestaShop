@@ -9,6 +9,8 @@ jobs:
                 php: ['7.1', '7.2', '7.3', '7.4']
             fail-fast: false
         steps:
+            -   uses: actions/checkout@v3
+
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
                 with:
@@ -34,8 +36,6 @@ jobs:
             -   name: Setup NPM
                 shell: bash
                 run: npm i -g npm@6
-
-            -   uses: actions/checkout@v3
 
             -   name: PrestaShop Configuration
                 run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
