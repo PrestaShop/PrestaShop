@@ -172,15 +172,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleWithProductRuleRestriction(string $cartRuleName, string $categoryName, int $quantity)
     {
-        if ($this->getSharedStorage()->exists($cartRuleName)) {
-            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
-            //       it is not ideal, but for now it should work, until restrictions are migrated.
-            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
-        } else {
-            $this->checkCartRuleWithNameExists($cartRuleName);
-            $cartRuleId = $this->cartRules[$cartRuleName]->id;
-        }
-
+        $cartRuleId = $this->getCartRuleId($cartRuleName);
         $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
         $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
 
@@ -232,14 +224,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         string $productName,
         int $quantity = 1
     ): void {
-        if ($this->getSharedStorage()->exists($cartRuleName)) {
-            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
-            //       it is not ideal, but for now it should work, until restrictions are migrated.
-            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
-        } else {
-            $this->checkCartRuleWithNameExists($cartRuleName);
-            $cartRuleId = $this->cartRules[$cartRuleName]->id;
-        }
+        $cartRuleId = $this->getCartRuleId($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
         $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
         $cartRule = new CartRule($cartRuleId);
@@ -272,15 +257,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleNamedIsRestrictedToCarrierNamed($cartRuleName, $carrierName)
     {
         $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
-
-        if ($this->getSharedStorage()->exists($cartRuleName)) {
-            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
-            //       it is not ideal, but for now it should work, until restrictions are migrated.
-            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
-        } else {
-            $this->checkCartRuleWithNameExists($cartRuleName);
-            $cartRuleId = (int) $this->cartRules[$cartRuleName]->id;
-        }
+        $cartRuleId = $this->getCartRuleId($cartRuleName);
         $cartRule = new CartRule($cartRuleId);
         $cartRule->carrier_restriction = true;
         $cartRule->save();
@@ -300,15 +277,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleNamedIsRestrictedToCountryNamed(string $cartRuleName, string $country)
     {
         $this->countryFeatureContext->checkCountryWithIsoCodeExists($country);
-
-        if ($this->getSharedStorage()->exists($cartRuleName)) {
-            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
-            //       it is not ideal, but for now it should work, until restrictions are migrated.
-            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
-        } else {
-            $this->checkCartRuleWithNameExists($cartRuleName);
-            $cartRuleId = (int) $this->cartRules[$cartRuleName]->id;
-        }
+        $cartRuleId = $this->getCartRuleId($cartRuleName);
 
         $cartRule = new CartRule($cartRuleId);
         $cartRule->country_restriction = true;
@@ -699,10 +668,20 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     private function loadCartRule(string $reference): CartRule
     {
-        if (!$this->getSharedStorage()->exists($reference)) {
-            throw new RuntimeException(sprintf('Cart rule "%s" does not exist in shared storage', $reference));
+        return new CartRule($this->getCartRuleId($reference));
+    }
+
+    private function getCartRuleId(string $cartRuleReference): int
+    {
+        if ($this->getSharedStorage()->exists($cartRuleReference)) {
+            // @todo: This allows applying this step to cart rule which was created with a step using CQRS command and saved to shared storage
+            // it is not ideal, but for now it should work, until restrictions are migrated.
+            $cartRuleId = $this->getSharedStorage()->get($cartRuleReference);
+        } else {
+            $this->checkCartRuleWithNameExists($cartRuleReference);
+            $cartRuleId = $this->cartRules[$cartRuleReference]->id;
         }
 
-        return new CartRule($this->getSharedStorage()->get($reference));
+        return $cartRuleId;
     }
 }
