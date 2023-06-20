@@ -55,31 +55,19 @@
       {{ renderhook('displayAdminAfterHeader', {}) }}
 
       {% if display_header %}
-        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
-          'smartyTemplate': 'components/layout/error_messages.tpl',
-          'smartyVariables': {
-            'errors': errors|default([]),
-            'disableDefaultErrorOutPut': disableDefaultErrorOutPut|default(false),
-          }
-        })) }}
-        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
-          'smartyTemplate': 'components/layout/information_messages.tpl',
-          'smartyVariables': {
-            'informations': informations|default([]),
-          }
-        })) }}
-        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
-          'smartyTemplate': 'components/layout/confirmation_messages.tpl',
-          'smartyVariables': {
-            'confirmations': confirmations|default([]),
-          }
-        })) }}
-        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
-          'smartyTemplate': 'components/layout/warning_messages.tpl',
-          'smartyVariables': {
-            'warnings': warnings|default([]),
-          }
-        })) }}
+        {{ renderSmarty('components/layout/error_messages.tpl', {
+          'errors': errors|default([]),
+          'disableDefaultErrorOutPut': disableDefaultErrorOutPut|default(false),
+        }) }}
+        {{ renderSmarty('components/layout/information_messages.tpl', {
+          'informations': informations|default([]),
+        }) }}
+        {{ renderSmarty('components/layout/confirmation_messages.tpl', {
+          'confirmations': confirmations|default([]),
+        }) }}
+        {{ renderSmarty('components/layout/warning_messages.tpl', {
+          'warnings': warnings|default([]),
+        }) }}
       {% endif %}
 
       {# Page content blocks #}
@@ -93,12 +81,9 @@
   {% endif %}
 </div>
 
-{{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
-  'smartyTemplate': 'error.tpl',
-  'smartyVariables': {
-    'php_errors': php_errors|default([])
-  }
-})) }}
+{{ renderSmarty('error.tpl', {
+  'php_errors': php_errors|default([])
+}) }}
 
 {# Javascript blocks #}
 {% block javascripts %}{% endblock %}

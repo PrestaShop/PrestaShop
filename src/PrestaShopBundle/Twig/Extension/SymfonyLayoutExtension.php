@@ -28,15 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Extension;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Smarty\ConfiguratorInterface;
 use PrestaShopBundle\Bridge\SymfonyLayoutFeature;
 use PrestaShopBundle\EventListener\ContextShopListener;
+use Smarty;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
+use Twig\TwigFunction;
 
 /**
  * Handles twig variables for pure symfony layout (that replaces the old legacy layout),
@@ -102,6 +103,49 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
         ];
     }
 
+    /**
+     * Returns a list of functions to add to the existing list.
+     *
+     * @return array An array of functions
+     */
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('renderSmarty', [$this, 'renderSmarty'], ['is_safe' => ['html']]),
+        ];
+    }
+
+    /**
+     * @internal
+     * @experimental
+     *
+     * This twig function is used to render a smarty component template.
+     * Note: it is used temporarily and only as internal usage while we are performing
+     * the Symfony layout migration. It will be removed when it's not useful anymore and
+     * this will not be counted as a breaking change.
+     *
+     * {{ renderSmarty('components/layout/search_form.tpl', {
+     *   'baseAdminUrl': baseAdminUrl,
+     *   'bo_query': bo_query,
+     * }) }}
+     *
+     * @param string $smartyTemplate
+     * @param array $smartyVariables
+     *
+     * @return string
+     */
+    public function renderSmarty(string $smartyTemplate, array $smartyVariables = []): string
+    {
+        $smarty = $this->getSmarty();
+        $smarty->setTemplateDir([
+            _PS_BO_ALL_THEMES_DIR_ . 'new-theme' . DIRECTORY_SEPARATOR . 'template',
+            _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
+        ]);
+        $smarty->assign($smartyVariables);
+
+        return $smarty->fetch($smartyTemplate);
+    }
+
     private function renderSmartyContent(ControllerConfiguration $controllerConfiguration): array
     {
         $smarty = $this->context->getSmarty();
@@ -131,16 +175,19 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
      */
     private function renderModal(ControllerConfiguration $controllerConfiguration): string
     {
-        $smarty = $this->context->getSmarty();
-
         $modalRender = '';
         if (is_array($controllerConfiguration->modals) && count($controllerConfiguration->modals)) {
             foreach ($controllerConfiguration->modals as $modal) {
-                $smarty->assign($modal);
-                $modalRender .= $smarty->fetch('modal.tpl');
+                $this->getSmarty()->assign($modal);
+                $modalRender .= $this->getSmarty()->fetch('modal.tpl');
             }
         }
 
         return $modalRender;
+    }
+
+    private function getSmarty(): Smarty
+    {
+        return $this->context->getSmarty();
     }
 }
