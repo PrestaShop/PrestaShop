@@ -60,7 +60,7 @@ final class OrderInvoicePdfGenerator implements PDFGeneratorInterface
     public function generatePDF(array $orderId)
     {
         if (count($orderId) !== 1) {
-            throw new CoreException(sprintf('"%s" supports generating invoice for single order only.', get_class($this)));
+            throw new CoreException(sprintf('"%s" supports generating invoice for single order only.', self::class));
         }
 
         $orderId = reset($orderId);

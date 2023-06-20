@@ -109,7 +109,7 @@ class EmployeeProvider implements UserProviderInterface
     public function refreshUser(UserInterface $employee)
     {
         if (!$employee instanceof Employee) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($employee)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $employee::class));
         }
 
         return $this->loadUserByUsername($employee->getUsername());

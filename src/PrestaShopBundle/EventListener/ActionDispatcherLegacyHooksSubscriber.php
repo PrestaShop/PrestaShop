@@ -93,7 +93,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         ]);
 
         $requestAttributes->set('controller_type', $controllerType);
-        $requestAttributes->set('controller_name', get_class($controller));
+        $requestAttributes->set('controller_name', $controller::class);
     }
 
     public function callActionDispatcherAfterHook(ResponseEvent $event)

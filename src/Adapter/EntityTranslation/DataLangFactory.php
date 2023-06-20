@@ -134,7 +134,7 @@ class DataLangFactory
      */
     private function ensureLangSuffix(string $tableName): string
     {
-        if (substr($tableName, -5) !== '_lang') {
+        if (!str_ends_with($tableName, '_lang')) {
             $tableName .= '_lang';
         }
 

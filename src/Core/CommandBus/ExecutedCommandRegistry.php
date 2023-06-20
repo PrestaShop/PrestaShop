@@ -64,8 +64,8 @@ final class ExecutedCommandRegistry
      */
     public function register($command, $handler): void
     {
-        $commandClass = get_class($command);
-        $handlerClass = get_class($handler);
+        $commandClass = $command::class;
+        $handlerClass = $handler::class;
 
         $type = $this->commandTypeParser->parse($commandClass);
 

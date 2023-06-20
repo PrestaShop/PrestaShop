@@ -111,7 +111,7 @@ class CartRuleController extends FrameworkBundleAdminController
                 $cartRules = $this->getQueryBus()->handle(new SearchCartRules($searchPhrase));
             } catch (Exception $e) {
                 return $this->json(
-                    ['message' => $this->getFallbackErrorMessage(get_class($e), $e->getCode())],
+                    ['message' => $this->getFallbackErrorMessage($e::class, $e->getCode())],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
             }

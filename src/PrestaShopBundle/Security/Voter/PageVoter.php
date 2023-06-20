@@ -135,7 +135,7 @@ class PageVoter extends Voter
         $action = $subject;
 
         // add underscore to join if needed
-        if (substr($action, -1) !== '_') {
+        if (!str_ends_with($action, '_')) {
             $action .= '_';
         }
 

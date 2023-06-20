@@ -680,7 +680,7 @@ class CartPresenter implements PresenterInterface
         }
 
         foreach ($matches['attribute'] as $attribute) {
-            list($key, $value) = explode(':', $attribute);
+            [$key, $value] = explode(':', $attribute);
             $attributesArray[trim($key)] = ltrim($value);
         }
 

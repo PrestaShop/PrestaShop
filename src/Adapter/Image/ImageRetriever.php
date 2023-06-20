@@ -150,7 +150,7 @@ class ImageRetriever
         }
 
         // Resolve functions we will use to get image links from Link class
-        if (get_class($object) === 'Product') {
+        if ($object::class === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
             // Product images are the only exception in path structure, they are placed in folder
@@ -159,15 +159,15 @@ class ImageRetriever
                 rtrim(_PS_PRODUCT_IMG_DIR_, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
             ]);
-        } elseif (get_class($object) === 'Store') {
+        } elseif ($object::class === 'Store') {
             $type = 'stores';
             $getImageURL = 'getStoreImageLink';
             $imageFolderPath = rtrim(_PS_STORE_IMG_DIR_, DIRECTORY_SEPARATOR);
-        } elseif (get_class($object) === 'Manufacturer') {
+        } elseif ($object::class === 'Manufacturer') {
             $type = 'manufacturers';
             $getImageURL = 'getManufacturerImageLink';
             $imageFolderPath = rtrim(_PS_MANU_IMG_DIR_, DIRECTORY_SEPARATOR);
-        } elseif (get_class($object) === 'Supplier') {
+        } elseif ($object::class === 'Supplier') {
             $type = 'suppliers';
             $getImageURL = 'getSupplierImageLink';
             $imageFolderPath = rtrim(_PS_SUPP_IMG_DIR_, DIRECTORY_SEPARATOR);
@@ -217,7 +217,7 @@ class ImageRetriever
 
                 // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
-                if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
+                if ($object::class === 'Manufacturer' || $object::class === 'Supplier') {
                     $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
                 // Products, categories and stores pass both rewrite and ID
                 } else {

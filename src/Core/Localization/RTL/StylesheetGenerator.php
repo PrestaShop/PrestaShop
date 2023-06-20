@@ -108,9 +108,9 @@ class StylesheetGenerator
     private function shouldProcessFile($file, $regenerate)
     {
         return
-            strpos($file, '/node_modules/') === false
+            !str_contains($file, '/node_modules/')
             // rtl.css contains RTL override rules
-            && strpos($file, 'rtl.css') === false
+            && !str_contains($file, 'rtl.css')
             // does not end with .rtlfix
             && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them

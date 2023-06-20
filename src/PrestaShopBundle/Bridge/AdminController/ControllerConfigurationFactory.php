@@ -81,7 +81,7 @@ class ControllerConfigurationFactory
                 sprintf(
                     'Unexpected user type. Expected "%s", got "%s',
                     Employee::class,
-                    get_class($employee))
+                    $employee::class)
             );
         }
 

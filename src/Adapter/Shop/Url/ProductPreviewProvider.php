@@ -86,7 +86,7 @@ class ProductPreviewProvider implements UrlProviderInterface
             $preview_url = sprintf(
                 '%s%sadtoken=%s&id_employee=%d&preview=1',
                 $preview_url,
-                ((strpos($preview_url, '?') === false) ? '?' : '&'),
+                ((!str_contains($preview_url, '?')) ? '?' : '&'),
                 $token,
                 $this->employeeId
             );

@@ -171,7 +171,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */
         foreach ($this->transformations as $transformation) {
-            if (get_class($transformation) == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
+            if ($transformation::class == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
                 continue;
             }
             if ($templateType !== $transformation->getType()) {

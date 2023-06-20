@@ -191,6 +191,7 @@
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9.3",
         "phpunit/phpunit": "~9.6.7",
+        "rector/rector": "^0.15.17",
         "spaze/phpstan-disallowed-calls": "^2.10",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",

@@ -115,7 +115,7 @@ abstract class AbstractColumn implements ColumnInterface
             return $this->options[$name];
         }
 
-        throw new NoSuchOptionException(sprintf('Option "%s" does not exist in "%s"', $name, get_class($this)));
+        throw new NoSuchOptionException(sprintf('Option "%s" does not exist in "%s"', $name, static::class));
     }
 
     /**

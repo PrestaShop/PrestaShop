@@ -531,7 +531,7 @@ class ThemeController extends AbstractAdminController
      */
     private function handleDeleteThemeException(ThemeException $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         $errorMessages = [
             CannotDeleteThemeException::class => $this->trans(
@@ -554,7 +554,7 @@ class ThemeController extends AbstractAdminController
      */
     private function handleAdaptThemeToRTLLanguagesException(ThemeException $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         $errorMessages = [
             CannotAdaptThemeToRTLLanguagesException::class => $this->trans('Cannot adapt theme to RTL languages.', 'Admin.Design.Notification'),

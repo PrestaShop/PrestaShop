@@ -627,7 +627,7 @@ class MetaController extends FrameworkBundleAdminController
             ],
         ];
 
-        $exceptionClass = get_class($exception);
+        $exceptionClass = $exception::class;
         $exceptionCode = $exception->getCode();
         if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
             return $exceptionDictionary[$exceptionClass][$exceptionCode];
@@ -652,7 +652,7 @@ class MetaController extends FrameworkBundleAdminController
             ),
         ];
 
-        $exceptionClass = get_class($exception);
+        $exceptionClass = $exception::class;
         if (isset($exceptionDictionary[$exceptionClass])) {
             return $exceptionDictionary[$exceptionClass];
         }

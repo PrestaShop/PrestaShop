@@ -945,7 +945,7 @@ class AdminProductWrapper
 
         $admin_dir = dirname($_SERVER['PHP_SELF']);
         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-        $preview_url_deactivate = $preview_url . ((strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int) $context->employee->id . '&preview=1';
+        $preview_url_deactivate = $preview_url . ((!str_contains($preview_url, '?')) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int) $context->employee->id . '&preview=1';
 
         return $preview_url_deactivate;
     }

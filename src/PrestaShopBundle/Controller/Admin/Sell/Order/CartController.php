@@ -619,7 +619,7 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getErrorCode(Exception $e): int
     {
-        switch (get_class($e)) {
+        switch ($e::class) {
             case ProductOutOfStockException::class:
                 return Response::HTTP_CONFLICT;
         }

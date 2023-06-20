@@ -135,9 +135,9 @@ class Message
         $s = strtolower($s);
 
         return
-            false !== strpos(strtolower($this->defaultTranslation), $s)
-            || (null !== $this->fileTranslation && false !== strpos(strtolower($this->fileTranslation), $s))
-            || (null !== $this->userTranslation && false !== strpos(strtolower($this->userTranslation), $s))
+            str_contains(strtolower($this->defaultTranslation), $s)
+            || (null !== $this->fileTranslation && str_contains(strtolower($this->fileTranslation), $s))
+            || (null !== $this->userTranslation && str_contains(strtolower($this->userTranslation), $s))
         ;
     }
 }
