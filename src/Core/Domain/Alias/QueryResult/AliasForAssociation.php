@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult;
 
-use JsonSerializable;
-
 /**
  * Transfers alias data for association.
  */
