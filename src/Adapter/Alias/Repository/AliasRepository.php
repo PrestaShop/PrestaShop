@@ -219,7 +219,7 @@ class AliasRepository extends AbstractObjectModelRepository
             ->setMaxResults($limit)
             ->where($qb->expr()->like('a.search', $dbSearchPhrase))
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchFirstColumn();
 
         $aliasesForAssociation = [];
 
