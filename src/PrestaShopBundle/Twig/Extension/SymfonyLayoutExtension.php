@@ -86,13 +86,16 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
         $useSymfonyLayout = $this->symfonyLayoutFeature->isEnabled();
         $layoutVariables = [];
 
-        if ($this->symfonyLayoutFeature->isEnabled()) {
+        if ($useSymfonyLayout
+            && $this->requestStack->getCurrentRequest() !== null
+            && $this->requestStack->getCurrentRequest()->attributes->has(ContextShopListener::CONTROLLER_CONFIGURATION_ATTRIBUTE)) {
             $request = $this->requestStack->getCurrentRequest();
             $controllerConfiguration = $request->attributes->get(ContextShopListener::CONTROLLER_CONFIGURATION_ATTRIBUTE);
             if ($controllerConfiguration instanceof ControllerConfiguration) {
                 foreach ($this->configurators as $configurator) {
                     $configurator->configure($controllerConfiguration);
                 }
+
                 $layoutVariables = $controllerConfiguration->templateVars + $this->renderSmartyContent($controllerConfiguration);
             }
         }
