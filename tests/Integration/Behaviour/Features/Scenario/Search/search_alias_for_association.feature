@@ -1,8 +1,8 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s alias --tags search_alias_for_association
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s alias --tags search-alias-for-association
 @restore-aliases-before-feature
 @clear-cache-before-feature
 @clear-cache-after-feature
-@search_alias_for_association
+@search-alias-for-association
 Feature: Search alias search terms to associate them in the BO
   As a BO user
   I need to be able to search for alias search terms in the BO to associate them

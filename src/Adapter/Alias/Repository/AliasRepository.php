@@ -204,11 +204,10 @@ class AliasRepository extends AbstractObjectModelRepository
      * @param string $searchPhrase
      * @param int|null $limit
      *
-     * @return array
+     * @return array<string, string>
      */
     public function searchAliases(string $searchPhrase, ?int $limit = null): array
     {
-        $dbSearchPhrase = sprintf('"%%%s%%"', $searchPhrase);
         $qb = $this->connection->createQueryBuilder();
 
         return $qb
@@ -217,7 +216,8 @@ class AliasRepository extends AbstractObjectModelRepository
             ->addOrderBy('a.search', 'ASC')
             ->addGroupBy('a.search')
             ->setMaxResults($limit)
-            ->where($qb->expr()->like('a.search', $dbSearchPhrase))
+            ->where('a.search LIKE :searchPhrase')
+            ->setParameter('searchPhrase', '%' . $searchPhrase. '%')
             ->execute()
             ->fetchAllAssociative();
     }
