@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchAliasesForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
@@ -87,7 +88,7 @@ class SearchController extends FrameworkBundleAdminController
             ));
         } catch (AliasConstraintException $e) {
             return $this->json([
-                'message' => $e->getMessage(),
+                'message' => $this->getErrorMessage($e),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -96,5 +97,19 @@ class SearchController extends FrameworkBundleAdminController
         }
 
         return $this->json(['aliases' => $searchTerms]);
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return string
+     */
+    private function getErrorMessage(Exception $e): string
+    {
+        return $this->getFallbackErrorMessage(
+            get_class($e),
+            $e->getCode(),
+            $e->getMessage()
+        );
     }
 }
