@@ -204,7 +204,7 @@ class AliasRepository extends AbstractObjectModelRepository
      * @param string $searchPhrase
      * @param int|null $limit
      *
-     * @return array<string, string>
+     * @return array<int, array<string, string>>
      */
     public function searchAliases(string $searchPhrase, ?int $limit = null): array
     {
@@ -217,7 +217,7 @@ class AliasRepository extends AbstractObjectModelRepository
             ->addGroupBy('a.search')
             ->setMaxResults($limit)
             ->where('a.search LIKE :searchPhrase')
-            ->setParameter('searchPhrase', '%' . $searchPhrase. '%')
+            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
             ->execute()
             ->fetchAllAssociative();
     }

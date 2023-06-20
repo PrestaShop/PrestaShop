@@ -51,7 +51,7 @@ class SearchAliasForAssociationHandler implements SearchAliasesForAssociationHan
         $aliasesForAssociation = [];
 
         foreach ($searchTerms as $searchTerm) {
-            $aliasesForAssociation[] = new AliasForAssociation((string) $searchTerm['search']);
+            $aliasesForAssociation[] = new AliasForAssociation($searchTerm['search']);
         }
 
         return $aliasesForAssociation;
