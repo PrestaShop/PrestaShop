@@ -92,9 +92,9 @@ class SearchController extends FrameworkBundleAdminController
         }
 
         if (empty($searchTerms)) {
-            return $this->json([], Response::HTTP_NOT_FOUND);
+            return $this->json(['aliases' => []], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json($searchTerms);
+        return $this->json(['aliases' => $searchTerms]);
     }
 }

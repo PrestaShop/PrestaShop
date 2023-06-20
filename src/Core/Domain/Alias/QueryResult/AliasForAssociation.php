@@ -33,16 +33,9 @@ use JsonSerializable;
 /**
  * Transfers alias data for association.
  */
-class AliasForAssociation implements JsonSerializable
+class AliasForAssociation
 {
     public function __construct(public readonly string $searchTerm)
     {
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'searchTerm' => $this->searchTerm,
-        ];
     }
 }

@@ -186,7 +186,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I search for alias search term matching :search I should get following results:
+     * @When I search for alias search term matching :search I should get the following results:
      *
      * @param string $search
      * @param TableNode $tableNode
