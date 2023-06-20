@@ -24,6 +24,14 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.1.0 - (2023-06-20)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #31379: Fix disabling a module for a specific shop applied to all shops (by @matthieu-rolland and @FabienPapet)
+
+####################################
 #   v8.1-rc.1 - (2023-05-22)
 ####################################
 
