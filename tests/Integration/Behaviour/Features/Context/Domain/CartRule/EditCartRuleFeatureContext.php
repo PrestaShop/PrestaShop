@@ -176,7 +176,7 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             $command->setPriority((int) $data['priority']);
         }
         if (isset($data['valid_from'])) {
-            $command->setDateRange(
+            $command->setValidityDateRange(
                 new DateTimeImmutable($data['valid_from']),
                 new DateTimeImmutable($data['valid_to'])
             );

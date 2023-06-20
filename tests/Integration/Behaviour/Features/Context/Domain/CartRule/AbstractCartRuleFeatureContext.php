@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
-use DateTime;
+use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
@@ -67,9 +67,9 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
             if (empty($data['valid_to'])) {
                 throw new RuntimeException('When setting cart rule range "valid_from" and "valid_to" must be provided');
             }
-            $command->setValidDateRange(
-                new DateTime($data['valid_from']),
-                new DateTime($data['valid_to']),
+            $command->setValidityDateRange(
+                new DateTimeImmutable($data['valid_from']),
+                new DateTimeImmutable($data['valid_to']),
             );
         }
         if (isset($data['total_quantity'])) {

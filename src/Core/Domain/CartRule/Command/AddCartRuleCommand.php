@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
-use DateTime;
+use DateTimeImmutable;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
@@ -98,12 +98,12 @@ class AddCartRuleCommand
     private $active = true;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeImmutable|null
      */
     private $validFrom;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeImmutable|null
      */
     private $validTo;
 
@@ -213,17 +213,17 @@ class AddCartRuleCommand
         return $this;
     }
 
-    public function getValidFrom(): ?DateTime
+    public function getValidFrom(): ?DateTimeImmutable
     {
         return $this->validFrom;
     }
 
-    public function getValidTo(): ?DateTime
+    public function getValidTo(): ?DateTimeImmutable
     {
         return $this->validTo;
     }
 
-    public function setValidDateRange(DateTime $from, DateTime $to): AddCartRuleCommand
+    public function setValidityDateRange(DateTimeImmutable $from, DateTimeImmutable $to): AddCartRuleCommand
     {
         $this->assertDateRangeIsValid($from, $to);
         $this->validFrom = $from;
@@ -330,7 +330,7 @@ class AddCartRuleCommand
         return $this;
     }
 
-    private function assertDateRangeIsValid(DateTime $dateFrom, DateTime $dateTo): void
+    private function assertDateRangeIsValid(DateTimeImmutable $dateFrom, DateTimeImmutable $dateTo): void
     {
         if ($dateFrom > $dateTo) {
             throw new CartRuleConstraintException('Date from cannot be greater than date to.', CartRuleConstraintException::DATE_FROM_GREATER_THAN_DATE_TO);

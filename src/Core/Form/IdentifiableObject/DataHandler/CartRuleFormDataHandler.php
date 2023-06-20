@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use DateTime;
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule\CartRuleActionBuilder;
@@ -73,9 +73,9 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             ->setAllowPartialUse((bool) $informationData['partial_use'])
             ->setPriority((int) $informationData['priority'])
             ->setActive((bool) $informationData['active'])
-            ->setValidDateRange(
-                DateTime::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['from']),
-                DateTime::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['to'])
+            ->setValidityDateRange(
+                DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['from']),
+                DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['to'])
             )
             ->setTotalQuantity((int) $conditionsData['total_available'])
             ->setQuantityPerUser((int) $conditionsData['available_per_user'])
