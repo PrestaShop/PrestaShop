@@ -41,21 +41,9 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
-use Tests\Resources\DatabaseDump;
 
 abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @BeforeScenario @restore-cart-rules-before-scenario
-     * @AfterScenario @restore-cart-rules-after-scenario
-     *
-     * @return void
-     */
-    public static function restoreCartRules(): void
-    {
-        DatabaseDump::restoreMatchingTables('^cart_rule.*^');
-    }
-
     public function createCartRuleWithReference(string $cartRuleReference, array $data): void
     {
         $command = new AddCartRuleCommand(

@@ -36,9 +36,21 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Resources\DatabaseDump;
 
 class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
 {
+    /**
+     * @BeforeScenario @restore-cart-rules-before-scenario
+     * @AfterScenario @restore-cart-rules-after-scenario
+     *
+     * @return void
+     */
+    public static function restoreCartRules(): void
+    {
+        DatabaseDump::restoreMatchingTables('^cart_rule.*^');
+    }
+
     /**
      * @Then cart rule with reference :cartRuleReference is enabled
      *
