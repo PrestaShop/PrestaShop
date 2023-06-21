@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerInterface
 {
     public function __construct(
-        protected CartRuleRepository $cartRuleRepository
+        protected readonly CartRuleRepository $cartRuleRepository
     ) {
     }
 
