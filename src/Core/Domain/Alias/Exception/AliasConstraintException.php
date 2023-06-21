@@ -50,9 +50,4 @@ class AliasConstraintException extends AliasException
      * When alias visibility value is invalid
      */
     public const INVALID_VISIBILITY = 40;
-
-    /**
-     * Search limit must be a positive integer or null
-     */
-    public const INVALID_SEARCH_LIMIT = 50;
 }
