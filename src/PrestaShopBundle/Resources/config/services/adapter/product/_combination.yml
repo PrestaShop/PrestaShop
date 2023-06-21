@@ -7,23 +7,20 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator'
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationHandler:
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationStockAvailableHandler:
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler:
     autowire: true
@@ -31,9 +28,8 @@ services:
     arguments:
       $contextLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler:
     autowire: true
@@ -41,17 +37,15 @@ services:
     arguments:
       $combinationQueryBuilder: '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\SearchCombinationsForAssociationHandler:
     autowire: true
     public: false
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator: ~
 
@@ -93,64 +87,56 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationSuppliersHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationImagesHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUpdater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationImagesCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationImagesCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveAllCombinationImagesHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUpdater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\DeleteCombinationHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\BulkDeleteCombinationHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand
 
   PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\SearchProductCombinationsHandler:
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations
 
   PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationIdsHandler:
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFiller:
     arguments:

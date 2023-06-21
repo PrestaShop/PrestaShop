@@ -7,26 +7,26 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\DeleteAttachmentHandler'
     parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
     tags:
-      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand', method: handle }
+      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand' }
 
   prestashop.adapter.attachment.command_handler.bulk_delete_attachment_handler:
     public: true
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\BulkDeleteAttachmentsHandler'
     parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
     tags:
-      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand', method: handle }
+      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand' }
 
   prestashop.adapter.attachment.query_handler.get_attachment_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentHandler'
     arguments:
       - !php/const _PS_DOWNLOAD_DIR_
     tags:
-      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment', method: handle }
+      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment' }
 
   prestashop.adapter.contact.query_handler.get_attachment_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentForEditingHandler'
     tags:
-      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing', method: handle }
+      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing' }
 
   prestashop.adapter.attachment.uploader.attachment_file_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
@@ -47,7 +47,7 @@ services:
     arguments:
       - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
     tags:
-      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand', method: handle }
+      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand' }
 
   prestashop.adapter.attachment.command_handler.create_attachment_handler:
     public: true
@@ -56,7 +56,7 @@ services:
     arguments:
       - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
     tags:
-      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand', method: handle }
+      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand' }
 
   PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository:
     arguments:
@@ -72,15 +72,13 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation
 
   prestashop.adapter.attachment.query_handler.search_attachment_handler:
     class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\SearchAttachmentHandler
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment

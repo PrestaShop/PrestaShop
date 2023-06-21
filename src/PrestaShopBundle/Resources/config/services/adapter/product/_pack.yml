@@ -15,17 +15,15 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\RemoveAllProductsFromPackHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsHandler:
     autowire: true
@@ -34,6 +32,5 @@ services:
       $defaultLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       $translator: '@translator'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts

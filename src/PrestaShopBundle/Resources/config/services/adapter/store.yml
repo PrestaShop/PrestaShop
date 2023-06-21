@@ -14,35 +14,35 @@ services:
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing }
 
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand }
 
   prestashop.adapter.store.command_handler.bulk_toggle_store_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkUpdateStoreStatusHandler'
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand }
 
   prestashop.adapter.store.command_handler.delete_store:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\DeleteStoreHandler'
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand }
 
   prestashop.adapter.store.command_handler.bulk_delete_store_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkDeleteStoreHandler'
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand }
 
   # deprecated
   prestashop.core.domain.store.repository.store_repository:

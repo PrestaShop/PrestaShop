@@ -5,16 +5,14 @@ services:
   PrestaShop\PrestaShop\Adapter\Title\CommandHandler\AddTitleHandler:
     autowire: true
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand'
 
   PrestaShop\PrestaShop\Adapter\Title\CommandHandler\EditTitleHandler:
     autowire: true
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\EditTitleCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\EditTitleCommand'
 
   prestashop.adapter.title.title_image_thumbnail_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Title\TitleImageThumbnailProvider'
@@ -27,24 +25,21 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\DeleteTitleHandler'
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand'
 
   prestashop.adapter.title.command_handler.bulk_delete_title_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\BulkDeleteTitleHandler'
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand'
 
   PrestaShop\PrestaShop\Adapter\Title\QueryHandler\GetTitleForEditingHandler:
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing'
 
   PrestaShop\PrestaShop\Adapter\Title\Repository\TitleRepository:
     autowire: true

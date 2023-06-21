@@ -5,16 +5,14 @@ services:
   prestashop.adapter.hook.command_handler.update_hook_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Hook\CommandHandler\UpdateHookStatusCommandHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand
 
   prestashop.adapter.hook.command_handler.get_hook_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetHookStatusHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus
 
   PrestaShop\PrestaShop\Adapter\HookManager: ~
 

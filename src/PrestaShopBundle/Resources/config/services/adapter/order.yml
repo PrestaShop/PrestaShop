@@ -7,18 +7,16 @@ services:
     arguments:
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand'
 
   prestashop.adapter.order.command_handler.add_order_from_back_office_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddOrderFromBackOfficeHandler'
     arguments:
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand'
 
   prestashop.adapter.order.command_handler.add_product_to_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddProductToOrderHandler
@@ -29,16 +27,14 @@ services:
       - '@prestashop.adapter.order.product_quantity.updater'
       - '@prestashop.adapter.order.order_detail.updater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand
 
   prestashop.adapter.order.command_handler.update_order_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateOrderStatusHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand
 
   prestashop.adapter.order.command_handler.update_product_in_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateProductInOrderHandler
@@ -47,9 +43,8 @@ services:
       - '@prestashop.adapter.order.order_detail.updater'
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand
 
   prestashop.adapter.order.command_handler.change_order_delivery_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderDeliveryAddressHandler
@@ -59,9 +54,8 @@ services:
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.product_quantity.updater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand
 
   prestashop.adapter.order.command_handler.change_order_invoice_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderInvoiceAddressHandler
@@ -69,30 +63,26 @@ services:
       - '@prestashop.adapter.order.amount.updater'
       - '@prestashop.adapter.order.order_detail.updater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand
 
   prestashop.adapter.order.command_handler.change_order_currency_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderCurrencyHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand
 
   prestashop.adapter.order.command_handler.add_payment_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddPaymentHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand
 
   prestashop.adapter.order.command_handler.generate_invoice_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\GenerateInvoiceHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand
 
   prestashop.adapter.order.command_handler.update_order_shipping_details_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateOrderShippingDetailsHandler
@@ -100,9 +90,8 @@ services:
       - '@prestashop.adapter.order.amount.updater'
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand
 
   prestashop.adapter.order.command_handler.delete_cart_rule_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler
@@ -111,9 +100,8 @@ services:
       - '@prestashop.adapter.order.product_quantity.updater'
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand
 
   prestashop.adapter.order.command_handler.add_cart_rule_to_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddCartRuleToOrderHandler
@@ -121,16 +109,14 @@ services:
       - '@prestashop.adapter.order.amount.updater'
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand
 
   prestashop.adapter.order.command_handler.update_invoice_note_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateInvoiceNoteHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand
 
   prestashop.adapter.order.command_handler.issue_partial_refund_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssuePartialRefundHandler
@@ -142,9 +128,8 @@ services:
       - '@prestashop.adapter.order.refund.updater'
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
 
   prestashop.adapter.order.command_handler.issue_standard_refund_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssueStandardRefundHandler
@@ -156,9 +141,8 @@ services:
       - '@prestashop.adapter.order.refund.updater'
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand
 
   prestashop.adapter.order.command_handler.issue_return_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssueReturnProductHandler
@@ -170,9 +154,8 @@ services:
       - '@prestashop.adapter.order.refund.updater'
       - '@prestashop.adapter.context_state_manager'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand
 
   prestashop.adapter.order.refund.order_refund_calculator:
     class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator
@@ -201,16 +184,14 @@ services:
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.product_quantity.updater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
 
   prestashop.adapter.order.command_handler.bulk_change_order_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\BulkChangeOrderStatusHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand'
 
   prestashop.adapter.order.query_handler.get_order_for_viewing_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderForViewingHandler
@@ -224,9 +205,8 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.address.formatter'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing
 
   prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderProductsForViewingHandler
@@ -235,17 +215,15 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - "@prestashop.core.localization.locale.context_locale"
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing
 
 
   prestashop.adapter.order.command_handler.resend_order_email_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ResendOrderEmailHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand
 
   prestashop.adapter.order.query_handler.get_order_preview_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderPreviewHandler'
@@ -254,9 +232,8 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
       - '@prestashop.adapter.address.formatter'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
 
   prestashop.adapter.order.command_handler.send_process_order_email_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SendProcessOrderEmailHandler
@@ -264,9 +241,8 @@ services:
       - '@translator'
       - '@=service("prestashop.adapter.legacy.context").getContext().link'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand
 
   prestashop.adapter.order.command_handler.cancel_order_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\CancelOrderProductHandler
@@ -275,9 +251,8 @@ services:
       - '@logger'
       - '@translator'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
 
   prestashop.adapter.order.order_sibling_provider:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderSiblingProvider
@@ -306,9 +281,8 @@ services:
   prestashop.adapter.order.command_handler.set_internal_order_note_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SetInternalOrderNoteHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand
 
   prestashop.adapter.order.repository.order_repository:
     class: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository

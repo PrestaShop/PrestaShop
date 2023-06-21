@@ -5,23 +5,20 @@ services:
   prestashop.adapter.order_return_state.command_handler.add_order_return_state:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\AddOrderReturnStateHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\AddOrderReturnStateCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\AddOrderReturnStateCommand'
 
   prestashop.adapter.order_return_state.query_handler.get_order_return_state_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\QueryHandler\GetOrderReturnStateForEditingHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing'
 
   prestashop.adapter.order_return_state.command_handler.edit_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\EditOrderReturnStateHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\EditOrderReturnStateCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\EditOrderReturnStateCommand'
 
   prestashop.adapter.order_return_state.repository.order_return_state_repository:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository'
@@ -29,13 +26,11 @@ services:
   prestashop.adapter.order_return_state.command_handler.delete_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\DeleteOrderReturnStateHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand'
 
   prestashop.adapter.order_return_state.command_handler.bulk_delete_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\BulkDeleteOrderReturnStateHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand'

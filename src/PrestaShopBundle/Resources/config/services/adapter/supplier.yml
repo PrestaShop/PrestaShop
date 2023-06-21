@@ -29,17 +29,15 @@ services:
   prestashop.adapter.supplier.command_handler.toggle_supplier_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\ToggleSupplierStatusHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand'
 
   prestashop.adapter.supplier.command_handler.delete_supplier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\DeleteSupplierHandler'
     parent: 'prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand'
     public: true
 
   prestashop.adapter.supplier.command_handler.delete_supplier_logo_image_handler:
@@ -48,32 +46,28 @@ services:
       - !php/const _PS_SUPP_IMG_DIR_
       - !php/const _PS_TMP_IMG_DIR_
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierLogoImageCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierLogoImageCommand'
 
   prestashop.adapter.supplier.command_handler.bulk_delete_supplier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDeleteSupplierHandler'
     parent: 'prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand'
     public: true
 
   prestashop.adapter.supplier.command_handler.bulk_disable_supplier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDisableSupplierHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand'
 
   prestashop.adapter.supplier.command_handler.bulk_enable_supplier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkEnableSupplierHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand'
 
   prestashop.adapter.supplier.query_handler.get_supplier_for_viewing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler\GetSupplierForViewingHandler'
@@ -81,31 +75,27 @@ services:
       - '@prestashop.core.localization.locale.context_locale'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing'
 
   prestashop.adapter.supplier.command_handler.add_supplier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\AddSupplierHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand'
 
   prestashop.adapter.supplier.query_handler.get_supplier_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler\GetSupplierForEditingHandler'
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing'
 
   prestashop.adapter.supplier.command_handler.edit_supplier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\EditSupplierHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand'
 
   PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository: ~

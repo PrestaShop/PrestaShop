@@ -5,9 +5,8 @@ services:
   prestashop.adapter.order_return.query_handler.get_order_return_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnForEditingHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing'
     arguments:
       - '@prestashop.adapter.order_return.repository.order_return_repository'
       - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
@@ -16,9 +15,8 @@ services:
   prestashop.adapter.order_return.command_handler.update_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
     arguments:
       - '@prestashop.adapter.order_return.repository.order_return_repository'
       - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'

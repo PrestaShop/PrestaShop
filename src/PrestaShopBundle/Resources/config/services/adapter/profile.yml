@@ -9,9 +9,8 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
       - '@prestashop.adapter.data_provider.employee'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand'
 
   prestashop.adapter.profile.command_handler.bulk_delete_profile:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\BulkDeleteProfileHandler'
@@ -19,23 +18,20 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
       - '@prestashop.adapter.data_provider.employee'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand'
 
   prestashop.adapter.profile.command_handler.add_profile_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\AddProfileHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\AddProfileCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\AddProfileCommand'
 
   prestashop.adapter.profile.command_handler.edit_profile_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\EditProfileHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand'
 
   prestashop.adapter.profile.query_handler.get_profile_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\QueryHandler\GetProfileForEditingHandler'
@@ -44,16 +40,14 @@ services:
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - !php/const _PS_PROFILE_IMG_DIR_
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing'
 
   prestashop.adapter.profile.permission.command_handler.update_tab_permissions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateTabPermissionsHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand'
 
   prestashop.adapter.profile.permission.query_handler.get_permissions_for_configuration_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandler'
@@ -65,13 +59,11 @@ services:
         - 'AdminQuickAccesses'
         - 'AdminTabs'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration'
 
   prestashop.adapter.profile.permission.command_handler.update_module_permissions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateModulePermissionsHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'

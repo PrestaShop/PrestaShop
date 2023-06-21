@@ -22,17 +22,15 @@ services:
     public: false
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand'
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandler:
     public: false
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing'
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator:
     public: false

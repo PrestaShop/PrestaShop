@@ -13,32 +13,28 @@ services:
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand'
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandler:
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\GetAttributeGroupListHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList'
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandler:
     autowire: true
     public: false
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository:
     arguments:

@@ -13,30 +13,26 @@ services:
   prestashop.adapter.category.command_handler.bulk_update_categories_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkUpdateCategoriesStatusHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand
 
   prestashop.adapter.category.command_handler.bulk_enable_categories_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkUpdateCategoriesStatusHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand
 
   prestashop.adapter.category.command_handler.bulk_disable_categories_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkUpdateCategoriesStatusHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand
 
   prestashop.adapter.category.command_handler.set_category_is_enabled_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\SetCategoryIsEnabledHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand
 
   prestashop.adapter.category.command_handler.abstract_delete_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AbstractDeleteCategoryHandler
@@ -51,25 +47,23 @@ services:
     parent: prestashop.adapter.category.command_handler.abstract_delete_category_handler
     public: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand
 
   prestashop.adapter.category.command_handler.bulk_delete_categories_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkDeleteCategoriesHandler
     parent: prestashop.adapter.category.command_handler.abstract_delete_category_handler
     public: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
 
   prestashop.adapter.category.command_handler.add_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler
     public: true
     autowire: true
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand }
 
   prestashop.adapter.category.command_handler.add_root_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddRootCategoryHandler
@@ -78,32 +72,30 @@ services:
     public: true
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand
 
   prestashop.adapter.category.command_handler.edit_root_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditRootCategoryHandler
     public: true
     autowire: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand
 
   prestashop.adapter.category.command_handler.edit_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditCategoryHandler
     public: true
     autowire: true
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand }
 
   prestashop.adapter.category.query_handler.get_category_for_editing:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing }
 
   prestashop.adapter.category.command_handler.delete_category_cover_image_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryCoverImageHandler
@@ -111,9 +103,8 @@ services:
       - '@filesystem'
       - '@prestashop.adapter.legacy.configuration'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand
 
   prestashop.adapter.category.command_handler.delete_category_menu_thumbnail_image_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryMenuThumbnailImageHandler
@@ -122,23 +113,20 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
 
   prestashop.adapter.category.command_handler.update_category_position_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoryPositionHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand
 
   prestashop.adapter.category.command_handler.get_category_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryIsEnabledHandler
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled
 
   PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository:
     arguments:
@@ -162,6 +150,5 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree

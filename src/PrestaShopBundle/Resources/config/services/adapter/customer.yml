@@ -9,39 +9,34 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@prestashop.core.localization.locale.context_locale"
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'
 
   prestashop.adapter.customer.command_handler.set_private_note_about_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SetPrivateNoteAboutCustomerHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand'
 
   prestashop.adapter.customer.command_handler.transform_guest_to_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\TransformGuestToCustomerHandler'
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand'
 
   prestashop.adapter.customer.command_handler.set_required_fields_for_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SetRequiredFieldsForCustomerHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand'
 
   prestashop.adapter.customer.query_handler.get_required_fields_for_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetRequiredFieldsForCustomerHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer'
 
   prestashop.adapter.customer.command_handler.add_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\AddCustomerHandler'
@@ -49,16 +44,14 @@ services:
       - '@prestashop.core.crypto.hashing'
       - '@=service("prestashop.adapter.legacy.configuration").get("_COOKIE_KEY_")'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand'
 
   prestashop.adapter.customer.query_handler.get_customer_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerForEditingHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing'
 
   prestashop.adapter.customer.command_handler.edit_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\EditCustomerHandler'
@@ -66,29 +59,28 @@ services:
       - '@prestashop.core.crypto.hashing'
       - '@=service("prestashop.adapter.legacy.configuration").get("_COOKIE_KEY_")'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand'
 
   prestashop.adapter.customer.command_handler.bulk_enable_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\BulkEnableCustomerHandler'
     tags:
-      - { name: messenger.message_handler, handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand', method: handle }
+      - { name: messenger.cqrs_handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand' }
 
   prestashop.adapter.customer.command_handler.bulk_disable_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\BulkDisableCustomerHandler'
     tags:
-      - { name: messenger.message_handler, handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand', method: handle }
+      - { name: messenger.cqrs_handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand' }
 
   prestashop.adapter.customer.command_handler.delete_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\DeleteCustomerHandler'
     tags:
-      - { name: messenger.message_handler, handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand', method: handle }
+      - { name: messenger.cqrs_handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand' }
 
   prestashop.adapter.customer.command_handler.bulk_delete_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\BulkDeleteCustomerHandler'
     tags:
-      - { name: messenger.message_handler, handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand', method: handle }
+      - { name: messenger.cqrs_handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand' }
 
   prestashop.adapter.customer.query_handler.search_customers:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\SearchCustomersHandler'
@@ -96,34 +88,30 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers'
 
   prestashop.adapter.customer.query_handler.get_customer_carts_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerCartsHandler'
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts'
 
   prestashop.adapter.customer.query_handler.get_customer_orders_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerOrdersHandler'
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders'
 
   prestashop.adapter.customer.query_handler.get_customer_for_address_creation:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerForAddressCreationHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation'
 
   prestashop.adapter.customer.customer_data_source:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'

@@ -4,15 +4,13 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler:
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand'
 
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler:
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand'
 
   PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository:
     arguments:

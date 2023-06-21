@@ -10,27 +10,27 @@ services:
   prestashop.adapter.carrier.command_handler.toggle_carrier_status:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\ToggleCarrierStatusHandler'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\ToggleCarrierStatusCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\ToggleCarrierStatusCommand }
 
   prestashop.adapter.carrier.command_handler.toggle_carrier_is_free_status:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\ToggleCarrierIsFreeHandler'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\ToggleCarrierIsFreeCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\ToggleCarrierIsFreeCommand }
 
   prestashop.adapter.carrier.command_handler.delete_carrier:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\DeleteCarrierHandler'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\DeleteCarrierCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\DeleteCarrierCommand }
 
   prestashop.adapter.carrier.command_handler.bulk_delete_carrier:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\BulkDeleteCarrierHandler'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkDeleteCarrierCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkDeleteCarrierCommand }
 
   prestashop.adapter.carrier.command_handler.bulk_toggle_carrier_status:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\BulkToggleCarrierStatusHandler'
     tags:
-      - { name: messenger.message_handler, handles: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkToggleCarrierStatusCommand, method: handle }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkToggleCarrierStatusCommand }
 
   prestashop.adapter.carrier.carrier_module_advice_alert_checker:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierModuleAdviceAlertChecker'

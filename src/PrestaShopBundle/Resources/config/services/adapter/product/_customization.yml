@@ -22,23 +22,20 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater'
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler:
     autowire: true
     public: false
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand

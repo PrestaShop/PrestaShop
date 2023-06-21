@@ -44,6 +44,5 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
     public: true
     tags:
-      - name: messenger.message_handler
-        handles: PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand
-        method: handle
+      - name: messenger.cqrs_handler
+        command: PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand

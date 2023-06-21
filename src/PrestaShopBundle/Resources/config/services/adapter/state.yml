@@ -5,48 +5,41 @@ services:
   prestashop.adapter.state.command_handler.create_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\AddStateHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand'
 
   prestashop.adapter.state.command_handler.edit_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\EditStateHandler'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand'
-        method: handle
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand'
 
   prestashop.adapter.state.command_handler.toggle_state_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\ToggleStateStatusHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand'
 
   prestashop.adapter.state.query_handler.get_state_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateForEditingHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing'
 
   prestashop.adapter.state.command_handler.delete_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\DeleteStateHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand'
 
   prestashop.adapter.state.command_handler.bulk_delete_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\BulkDeleteStateHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStateCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStateCommand'
 
   prestashop.adapter.state.command_handler.bulk_toggle_state_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\BulkToggleStateStatusHandler'
     tags:
-      - name: messenger.message_handler
-        handles: 'PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand'
-        method: handle
+      - name: messenger.cqrs_handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand'

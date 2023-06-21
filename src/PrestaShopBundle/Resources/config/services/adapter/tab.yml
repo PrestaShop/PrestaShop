@@ -7,4 +7,4 @@ services:
     arguments:
       - '@doctrine.orm.entity_manager'
     tags:
-      - { name: 'messenger.message_handler', handles: 'PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand', method: handle }
+      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand' }

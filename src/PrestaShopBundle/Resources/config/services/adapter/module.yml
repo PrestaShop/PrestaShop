@@ -9,9 +9,8 @@ services:
       - '@prestashop.adapter.legacy.logger'
       - '@prestashop.core.cache.clearer.cache_clearer_chain'
     tags:
-      - name: 'messenger.message_handler'
-        handles: 'PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand'
-        method: 'handle'
+      - name: 'messenger.cqrs_handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand'
 
   prestashop.adapter.module.self_configurator:
     class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator

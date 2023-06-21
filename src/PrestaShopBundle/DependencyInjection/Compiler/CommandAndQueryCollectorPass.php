@@ -30,41 +30,53 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Collects all Commands & Queries and puts them into container for later processing.
+ * Aggregates and organizes all Commands & Queries, storing them in a container for future processing,
+ * while simultaneously transforming custom tags into Symfony Messenger tags.
  */
 class CommandAndQueryCollectorPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
         }
 
-        $commandsAndQueries = $this->findCommandsAndQueries($container);
+        $handlers = $container->findTaggedServiceIds('messenger.cqrs_handler');
+        $commandsAndQueries = $this->findCommandsAndQueries($handlers);
+        $this->updateMessengerTags($container, $handlers);
+
         $container->setParameter('prestashop.commands_and_queries', $commandsAndQueries);
     }
 
     /**
      * Gets command for each provided handler
      *
-     * @param ContainerBuilder $container
-     *
      * @return string[]
      */
-    private function findCommandsAndQueries(ContainerBuilder $container)
+    private function findCommandsAndQueries(array $handlers): array
     {
-        $handlers = $container->findTaggedServiceIds('messenger.message_handler');
-
         $commands = [];
         foreach ($handlers as $handler) {
-            if (isset(current($handler)['handles'])) {
-                $commands[] = current($handler)['handles'];
+            if (isset(current($handler)['command'])) {
+                $commands[] = current($handler)['command'];
             }
         }
 
         return $commands;
+    }
+
+    /**
+     * update messenger tags allowing the recognition of handlers by symfony
+     */
+    private function updateMessengerTags(ContainerBuilder $container, array $handlers): void
+    {
+        foreach ($handlers as $key => $value) {
+            $definition = $container->findDefinition($key);
+            $definition->addTag('messenger.message_handler', ['method' => 'handle', 'handles' => current($value)['command']]);
+            $definition->clearTag('messenger.cqrs_handler');
+        }
     }
 }
