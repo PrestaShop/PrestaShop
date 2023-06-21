@@ -45,7 +45,7 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand
 
-  PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\SearchAliasForAssociationHandler:
+  PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\SearchForSearchTermHandler:
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchAliasesForAssociation
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm

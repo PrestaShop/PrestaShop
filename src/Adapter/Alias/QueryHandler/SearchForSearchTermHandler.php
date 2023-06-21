@@ -24,20 +24,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchAliasesForAssociation;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
+namespace PrestaShop\PrestaShop\Adapter\Alias\QueryHandler;
 
-/**
- * Interface SearchAliasesForAssociationHandlerInterface defines contract for SearchAliasesForAssociationHandler
- */
-interface SearchAliasesForAssociationHandlerInterface
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\SearchForSearchTermHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\SearchTerm;
+
+class SearchForSearchTermHandler implements SearchForSearchTermHandlerInterface
 {
+    public function __construct(protected readonly AliasRepository $aliasRepository)
+    {
+    }
+
     /**
-     * @param SearchAliasesForAssociation $query
+     * @param SearchForSearchTerm $query
      *
-     * @return AliasForAssociation[]
+     * @return SearchTerm[]
      */
-    public function handle(SearchAliasesForAssociation $query): array;
+    public function handle(SearchForSearchTerm $query): array
+    {
+        $searchTerms = $this->aliasRepository->searchSearchTerms($query->searchTerm, $query->limit);
+
+        $aliasesForAssociation = [];
+
+        foreach ($searchTerms as $searchTerm) {
+            $aliasesForAssociation[] = new SearchTerm($searchTerm['search']);
+        }
+
+        return $aliasesForAssociation;
+    }
 }

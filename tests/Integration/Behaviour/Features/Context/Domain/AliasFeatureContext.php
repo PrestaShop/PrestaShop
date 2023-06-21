@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchAliasesForAssociation;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\SearchTerm;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
@@ -193,8 +193,8 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertSearchAliases(string $search, TableNode $tableNode): void
     {
-        /** @var AliasForAssociation[] $foundAliasesForAssociation */
-        $foundAliasesForAssociation = $this->getQueryBus()->handle(new SearchAliasesForAssociation($search));
+        /** @var SearchTerm[] $foundAliasesForAssociation */
+        $foundAliasesForAssociation = $this->getQueryBus()->handle(new SearchForSearchTerm($search));
         $expectedSearchTermsRows = $tableNode->getColumnsHash();
 
         foreach ($expectedSearchTermsRows as $expectedSearchTermRow) {

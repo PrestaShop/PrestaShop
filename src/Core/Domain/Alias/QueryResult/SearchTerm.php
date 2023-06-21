@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult;
 /**
  * Transfers alias data for association.
  */
-class AliasForAssociation
+class SearchTerm
 {
     public function __construct(public readonly string $searchTerm)
     {

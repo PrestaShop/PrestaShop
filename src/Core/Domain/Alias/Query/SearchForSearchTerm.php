@@ -26,34 +26,24 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Alias\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Query;
 
-use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchAliasesForAssociation;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\SearchAliasesForAssociationHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
-class SearchAliasForAssociationHandler implements SearchAliasesForAssociationHandlerInterface
+/**
+ * Class SearchAliasesForAssociation is responsible for searching aliases with particular search terms.
+ */
+class SearchForSearchTerm
 {
-    public function __construct(protected readonly AliasRepository $aliasRepository)
-    {
-    }
+    public const DEFAULT_ALIAS_SEARCH_LIMIT = 20;
 
     /**
-     * @param SearchAliasesForAssociation $query
-     *
-     * @return AliasForAssociation[]
+     * @throws InvalidArgumentException
      */
-    public function handle(SearchAliasesForAssociation $query): array
+    public function __construct(public readonly string $searchTerm, public readonly ?int $limit = null)
     {
-        $searchTerms = $this->aliasRepository->searchAliases($query->searchTerm, $query->limit);
-
-        $aliasesForAssociation = [];
-
-        foreach ($searchTerms as $searchTerm) {
-            $aliasesForAssociation[] = new AliasForAssociation($searchTerm['search']);
+        if (null !== $limit && $limit <= 0) {
+            throw new InvalidArgumentException('Search limit must be a positive integer or null');
         }
-
-        return $aliasesForAssociation;
     }
 }

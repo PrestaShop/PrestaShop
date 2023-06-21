@@ -206,7 +206,7 @@ class AliasRepository extends AbstractObjectModelRepository
      *
      * @return array<int, array<string, string>>
      */
-    public function searchAliases(string $searchPhrase, ?int $limit = null): array
+    public function searchSearchTerms(string $searchPhrase, ?int $limit = null): array
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('a.search')

@@ -30,8 +30,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchAliasesForAssociation;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\SearchTerm;
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -81,10 +81,10 @@ class SearchController extends FrameworkBundleAdminController
     public function searchAliasesForAssociationAction(Request $request): JsonResponse
     {
         try {
-            /** @var AliasForAssociation[] $searchTerms */
-            $searchTerms = $this->getQueryBus()->handle(new SearchAliasesForAssociation(
+            /** @var SearchTerm[] $searchTerms */
+            $searchTerms = $this->getQueryBus()->handle(new SearchForSearchTerm(
                 $request->get('query', ''),
-                (int) $request->get('limit', 20)
+                (int) $request->get('limit', SearchForSearchTerm::DEFAULT_ALIAS_SEARCH_LIMIT)
             ));
         } catch (AliasConstraintException $e) {
             return $this->json([
