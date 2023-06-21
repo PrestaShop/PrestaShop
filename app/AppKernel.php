@@ -204,24 +204,38 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(function (ContainerBuilder $container) {
-            $container->setParameter('container.autowiring.strict_mode', true);
-            $container->setParameter('container.dumper.inline_class_loader', false);
-            $container->addObjectResource($this);
-        });
+        $installedModules = $this->getActiveModules();
 
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
 
-        // Add translation paths to load into the translator. The paths are loaded by the Symfony's FrameworkExtension
-        $loader->load(function (ContainerBuilder $container) {
-            /** @var array $moduleTranslationsPaths */
-            $moduleTranslationsPaths = $container->getParameter('modules_translation_paths');
-            foreach ($this->getActiveModules() as $activeModulePath) {
-                $translationsDir = _PS_MODULE_DIR_ . $activeModulePath . '/translations';
-                if (is_dir($translationsDir)) {
-                    $moduleTranslationsPaths[] = $translationsDir;
+        $moduleTranslationsPaths = [];
+        foreach ($installedModules as $activeModulePath)
+        {
+            $modulePath = _PS_MODULE_DIR_ . $activeModulePath;
+            $translationsPath = sprintf('%s/translations', $modulePath);
+
+            $configFiles = [
+                sprintf('%s/config/services.yml', $modulePath),
+                sprintf('%s/config/admin/services.yml', $modulePath),
+                // @todo Uncomment to Load this file once we'll have a unique container
+                // sprintf('%s/config/front/services.yml', $modulePath),
+            ];
+
+            foreach ($configFiles as $file) {
+                if(is_file($file)) {
+                    $loader->load($file);
                 }
             }
+
+            if (is_dir($translationsPath)) {
+                $moduleTranslationsPaths[] = $translationsPath;
+            }
+        }
+
+        $loader->load(function (ContainerBuilder $container) use ($moduleTranslationsPaths) {
+            $container->setParameter('container.autowiring.strict_mode', true);
+            $container->setParameter('container.dumper.inline_class_loader', false);
+            $container->addObjectResource($this);
             $container->setParameter('modules_translation_paths', $moduleTranslationsPaths);
         });
     }

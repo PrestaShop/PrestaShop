@@ -286,7 +286,15 @@ parameters:
             message: 'The @template annotation is deprecated and will be removed in future versions. We should not add any usages of it. '
             disallowIn:
                 - src/PrestaShopBundle/*
-  disallowedMethodCalls: []
+  disallowedMethodCalls:
+        -
+            method: 'Psr\Container\ContainerInterface::get()'
+            message: "Please do not call the container from the controller, you can use $this->get() on the FrameworkBundleAdminController, or better, use dependency injection instead."
+            disallowIn:
+                - src/PrestaShopBundle/Controller/*
+            allowIn:
+                - src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php
+                - src/PrestaShopBundle/Controller/Admin/PrestaShopAdminController.php
   disallowedConstants:
         -
             constant:
