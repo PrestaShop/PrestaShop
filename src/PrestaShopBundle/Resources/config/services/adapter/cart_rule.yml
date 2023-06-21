@@ -8,10 +8,9 @@ services:
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand }
 
-  prestashop.adapter.cart_rule.query_handler.get_cart_rule_for_editing:
-    class: 'PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler\GetCartRuleForEditingHandler'
-    arguments:
-      - '@prestashop.core.image.parser.image_tag_source_parser'
+  PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler\GetCartRuleForEditingHandler:
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing'
@@ -53,6 +52,9 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository:
     autowire: true
     public: false
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\EditCartRuleHandler:
     autowire: true
@@ -63,3 +65,9 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\SetCartRuleRestrictionsHandler:
+    autowire: true
+    public: false
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand }

@@ -31,10 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler;
 use CartRule;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
+use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler\GetCartRuleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleActionForEditing;
@@ -44,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleInformationFo
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleMinimumForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleReductionForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleRestrictionsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
@@ -52,20 +51,22 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
 /**
  * Handles command which gets catalog price rule for editing using legacy object model
  */
-final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements GetCartRuleForEditingHandlerInterface
+class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterface
 {
+    public function __construct(
+        protected CartRuleRepository $cartRuleRepository
+    ) {
+    }
+
     /**
      * @param GetCartRuleForEditing $query
      *
      * @return CartRuleForEditing
-     *
-     * @throws CartRuleException
-     * @throws CartRuleNotFoundException
      */
     public function handle(GetCartRuleForEditing $query): CartRuleForEditing
     {
-        $cartRuleId = $query->getCartRuleId();
-        $cartRule = $this->getCartRule($cartRuleId);
+        $cartRuleId = $query->cartRuleId;
+        $cartRule = $this->cartRuleRepository->get($cartRuleId);
 
         $cartRuleInformation = $this->getCartRuleInformation($cartRule);
         $cartRuleConditions = $this->getCartRuleConditions($cartRule);
@@ -115,13 +116,14 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
             }
         }
 
+        $restrictedCartRules = [];
+        if ($cartRule->cart_rule_restriction) {
+            $restrictedCartRules = $this->cartRuleRepository->getRestrictedCartRuleIds(new CartRuleId((int) $cartRule->id));
+        }
+
         $cartRuleRestrictions = new CartRuleRestrictionsForEditing(
-            (bool) $cartRule->country_restriction,
-            (bool) $cartRule->carrier_restriction,
-            (bool) $cartRule->group_restriction,
-            (bool) $cartRule->cart_rule_restriction,
-            (bool) $cartRule->product_restriction,
-            (bool) $cartRule->shop_restriction
+            // @todo: fill other restrictions when related commands are implemented
+            $restrictedCartRules,
         );
 
         return new CartRuleConditionsForEditing(

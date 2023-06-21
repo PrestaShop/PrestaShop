@@ -26,19 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
 
-/**
- * Gets cart rule for editing in Back Office
- */
-class GetCartRuleForEditing
+interface SetCartRuleRestrictionsHandlerInterface
 {
-    public readonly CartRuleId $cartRuleId;
-
-    public function __construct(int $cartRuleId)
-    {
-        $this->cartRuleId = new CartRuleId($cartRuleId);
-    }
+    public function handle(SetCartRuleRestrictionsCommand $command): void;
 }

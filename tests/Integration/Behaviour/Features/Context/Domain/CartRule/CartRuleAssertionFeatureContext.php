@@ -98,23 +98,44 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
     }
 
     /**
-     * @Then I should get cart rule error about :errorName
+     * @Then I should get cart rule error about :error
      *
-     * @param string $errorName
+     * @param string $error
      *
      * @return void
      */
-    public function assertCartRuleConstraintError(string $errorName): void
+    public function assertCartRuleError(string $error): void
     {
         $errorMap = [
-            'required specific product' => CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT,
-            'non unique cart rule code' => CartRuleConstraintException::NON_UNIQUE_CODE,
-            'missing action' => CartRuleConstraintException::MISSING_ACTION,
+            'required specific product' => [
+                'class' => CartRuleConstraintException::class,
+                'code' => CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT,
+            ],
+            'non unique cart rule code' => [
+                'class' => CartRuleConstraintException::class,
+                'code' => CartRuleConstraintException::NON_UNIQUE_CODE,
+            ],
+            'missing action' => [
+                'class' => CartRuleConstraintException::class,
+                'code' => CartRuleConstraintException::MISSING_ACTION,
+            ],
+            'invalid cart rule restriction' => [
+                'class' => CartRuleConstraintException::class,
+                'code' => CartRuleConstraintException::INVALID_CART_RULE_RESTRICTION,
+            ],
+            'non-existing cart rule' => [
+                'class' => CartRuleNotFoundException::class,
+                'code' => 0,
+            ],
         ];
 
+        if (!isset($errorMap[$error])) {
+            throw new RuntimeException(sprintf('$error "%s" not set in error map for assertion', $error));
+        }
+
         $this->assertLastErrorIs(
-            CartRuleConstraintException::class,
-            $errorMap[$errorName]
+            $errorMap[$error]['class'],
+            $errorMap[$error]['code']
         );
     }
 
@@ -300,6 +321,15 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
                 !empty($data['gift_combination']) ? $this->getSharedStorage()->get($data['gift_combination']) : null,
                 $actions->getGiftCombinationId(),
                 'Unexpected gift_combination'
+            );
+        }
+
+        if (isset($data['restricted cart rules'])) {
+            $expectedRestrictedCartRuleIds = $this->referencesToIds($data['restricted cart rules']);
+            Assert::assertSame(
+                $expectedRestrictedCartRuleIds,
+                $editableCartRule->getConditions()->getRestrictions()->restrictedCartRuleIds,
+                'Unexpected cart rule restrictions'
             );
         }
     }

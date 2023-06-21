@@ -55,7 +55,7 @@ class AddCartRuleFeatureContext extends AbstractCartRuleFeatureContext
         try {
             $command = new AddCartRuleCommand(
                 $data['name'],
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
+                isset($data['highlight']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']),
                 (int) $data['priority'],
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['is_active']),

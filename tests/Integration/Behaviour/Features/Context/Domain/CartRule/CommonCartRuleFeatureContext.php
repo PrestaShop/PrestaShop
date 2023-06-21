@@ -26,19 +26,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Query;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use Tests\Resources\DatabaseDump;
 
-/**
- * Gets cart rule for editing in Back Office
- */
-class GetCartRuleForEditing
+class CommonCartRuleFeatureContext extends AbstractCartRuleFeatureContext
 {
-    public readonly CartRuleId $cartRuleId;
-
-    public function __construct(int $cartRuleId)
+    /**
+     * @BeforeScenario @restore-cart-rules-before-scenario
+     *
+     * @return void
+     */
+    public static function restoreCartRules(): void
     {
-        $this->cartRuleId = new CartRuleId($cartRuleId);
+        DatabaseDump::restoreMatchingTables('^cart_rule.*^');
     }
 }

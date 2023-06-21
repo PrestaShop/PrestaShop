@@ -31,12 +31,19 @@ use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
 {
+    /**
+     * This is just a random number which in theory should never be reached as cart rule id in tests
+     */
+    private const NON_EXISTING_CART_RULE_ID = 54440051;
+
     /**
      * @When /^I (enable|disable) cart rule with reference "(.+)"$/
      *
@@ -85,6 +92,57 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I restrict following cart rules for cart rule :cartRuleReference:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $tableNode
+     *
+     * @return void
+     */
+    public function restrictCartRules(string $cartRuleReference, TableNode $tableNode): void
+    {
+        $restrictedCartRuleIds = [];
+        foreach ($tableNode->getColumn(0) as $restrictedCartRuleReference) {
+            $restrictedCartRuleIds[] = $this->getSharedStorage()->get($restrictedCartRuleReference);
+        }
+
+        try {
+            $this->performCartRulesRestriction($this->getSharedStorage()->get($cartRuleReference), $restrictedCartRuleIds);
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I restrict cart rules for :cartRuleReference providing non-existing cart rules
+     *
+     * @param string $cartRuleReference
+     *
+     * @return void
+     */
+    public function restrictCartRulesProvidingNonExistingIds(string $cartRuleReference): void
+    {
+        try {
+            $this->performCartRulesRestriction(
+                $this->getSharedStorage()->get($cartRuleReference),
+                [self::NON_EXISTING_CART_RULE_ID]
+            );
+        } catch (CartRuleNotFoundException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function performCartRulesRestriction(int $cartRuleId, array $restrictedCartRuleIds): void
+    {
+        $this->getCommandBus()->handle(
+            new SetCartRuleRestrictionsCommand(
+                $cartRuleId,
+                $restrictedCartRuleIds
+            )
+        );
     }
 
     /**
