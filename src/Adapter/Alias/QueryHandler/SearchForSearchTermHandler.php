@@ -48,12 +48,12 @@ class SearchForSearchTermHandler implements SearchForSearchTermHandlerInterface
     {
         $searchTerms = $this->aliasRepository->searchSearchTerms($query->searchTerm, $query->limit);
 
-        $aliasesForAssociation = [];
+        $searchTermDtos = [];
 
         foreach ($searchTerms as $searchTerm) {
-            $aliasesForAssociation[] = new SearchTerm($searchTerm['search']);
+            $searchTermDtos[] = new SearchTerm($searchTerm['search']);
         }
 
-        return $aliasesForAssociation;
+        return $searchTermDtos;
     }
 }
