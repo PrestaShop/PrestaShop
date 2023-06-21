@@ -199,8 +199,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($expectedSearchTermsRows as $expectedSearchTermRow) {
             $expectedSearchTerms = PrimitiveUtils::castStringArrayIntoArray($expectedSearchTermRow['searchTerm']);
-            Assert::assertEquals(count($expectedSearchTerms), count($foundAliasesForAssociation));
-
+            Assert::assertCount(count($expectedSearchTerms), $foundAliasesForAssociation, 'Expected and found search terms count doesn\'t match');
             $index = 0;
             foreach ($expectedSearchTerms as $searchTerm) {
                 $foundAliasSearchTerm = $foundAliasesForAssociation[$index++];
