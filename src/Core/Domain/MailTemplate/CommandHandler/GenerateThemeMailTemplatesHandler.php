@@ -34,11 +34,11 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 
 /**
- * Class GenerateThemeMailTemplatesCommandHandler generates email templates with parameters provided
+ * Class GenerateThemeMailTemplatesHandler generates email templates with parameters provided
  * by GenerateThemeMailTemplatesCommand. If no output folders are defined by the command its output
  * folders are the default ones.
  */
-class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTemplatesCommandHandlerInterface
+class GenerateThemeMailTemplatesHandler implements GenerateThemeMailTemplatesHandlerInterface
 {
     /** @var LanguageRepositoryInterface */
     private $languageRepository;

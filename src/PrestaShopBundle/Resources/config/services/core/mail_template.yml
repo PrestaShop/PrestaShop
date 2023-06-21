@@ -35,7 +35,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
 
   prestashop.core.mail_template.command_handler.generate_theme_mails_handler:
-    class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailTemplatesCommandHandler'
+    class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailTemplatesHandler'
     arguments:
       - '@prestashop.core.admin.lang.repository'
       - '@prestashop.core.mail_template.theme_catalog'
