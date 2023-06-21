@@ -41,7 +41,6 @@
         "friendsofsymfony/jsrouting-bundle": "^3.2.1",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.3",
-        "guzzlehttp/guzzle": "^7.5",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
