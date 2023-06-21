@@ -1,47 +1,40 @@
 services:
   _defaults:
-    public: true
+    public: false
+    autowire: true
+    autoconfigure: true
     bind:
       $commandBus: '@prestashop.core.command_bus'
+      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
+      $isMultishopEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      $contextEmployeeId: '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
+      PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface $commandsBuilder: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder'
+      PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface $commandsBuilder: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
 
-  prestashop.core.form.identifiable_object.sql_request_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SqlRequestFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\:
+    resource: '../../../Core/Form/IdentifiableObject/DataHandler/*'
 
-  prestashop.core.form.identifiable_object.data_handler.customer_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       - '@prestashop.adapter.group.provider.default_groups_provider'
 
-  prestashop.core.form.identifiable_object.data_handler.language_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\LanguageFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler:
     arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.meta_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\MetaFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.currency_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+      $cacheClearerCollection:
+        - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
         - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
 
-  prestashop.core.form.identifiable_object.data_handler.webservice_key_form_data_handler:
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\WebserviceKeyFormDataHandler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\WebserviceKeyFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 
-  prestashop.core.form.identifiable_object.data_handler.category_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CategoryFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CategoryFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
@@ -49,8 +42,7 @@ services:
       - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
       - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
 
-  prestashop.core.form.identifiable_object.data_handler.root_category_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
@@ -58,29 +50,11 @@ services:
       - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
       - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
 
-  prestashop.core.form.identifiable_object.data_handler.contact_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ContactFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerFormDataHandler:
     arguments:
-      - '@prestashop.core.command_bus'
+      $imageUploader: '@prestashop.adapter.image.uploader.manufacturer_image_uploader'
 
-  prestashop.core.form.identifiable_object.data_handler.cms_page_category_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageCategoryFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.tax_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.manufacturer_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.image.uploader.manufacturer_image_uploader'
-
-  prestashop.core.form.identifiable_object.data_handler.employee_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\EmployeeFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\EmployeeFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
@@ -93,182 +67,18 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH"))'
       - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE"))'
 
-  prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler:
     arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.image.uploader.profile_image_uploader'
+      $imageUploader: '@prestashop.adapter.image.uploader.profile_image_uploader'
 
-  prestashop.core.form.identifiable_object.data_handler.cms_page_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SupplierFormDataHandler:
     arguments:
-      - '@prestashop.core.command_bus'
+      $imageUploader: '@PrestaShop\PrestaShop\Adapter\Image\Uploader\SupplierImageUploader'
 
-  prestashop.core.form.identifiable_object.data_handler.manufacturer_address_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerAddressFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CatalogPriceRuleFormDataHandler:
     arguments:
-      - '@prestashop.core.command_bus'
+      $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 
-  prestashop.core.form.identifiable_object.data_handler.supplier_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SupplierFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler:
     arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.image.uploader.supplier_image_uploader'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler:
-    autowire: true
-    public: false
-
-  prestashop.core.form.identifiable_object.data_handler.order_message_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderMessageFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.order_return_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.order_return.validator.order_return_validator'
-
-  prestashop.core.form.identifiable_object.data_handler.catalog_price_rule_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CatalogPriceRuleFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-
-  prestashop.core.form.identifiable_object.data_handler.attachment_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttachmentFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
-
-  prestashop.core.form.identifiable_object.partial_refund_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\PartialRefundFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.standard_refund_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StandardRefundFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.return_product_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ReturnProductFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.address_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.data_provider.customer'
-
-  prestashop.core.form.identifiable_object.data_handler.order_address_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderAddressFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.cart_address_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartAddressFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.cancellation_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CancellationFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.order_state_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderStateFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.order_return_state_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnStateFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.cart_summary_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartSummaryFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandler:
-    autowire: true
-    public: false
-    arguments:
-      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
-      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
-      $commandsBuilder: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductShopsFormDataHandler:
-    autowire: true
-    public: false
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler:
-    autowire: true
-    arguments:
-      $commandsBuilder: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
-      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
-      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler:
-    autowire: true
-    arguments:
-      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
-      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
-      $commandsBuilder: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler:
-    public: false
-    autowire: true
-    arguments:
-      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
-      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
-      $commandsBuilder: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler:
-    autowire: true
-    public: false
-
-  prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ZoneFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.country_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CountryFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.search_engine_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SearchEngineFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.specific_price_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SpecificPriceFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  prestashop.core.form.identifiable_object.data_handler.state_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StateFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApplicationFormDataHandler:
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxRulesGroupFormDataHandler:
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartRuleFormDataHandler:
-    autowire: true
-    public: false
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TitleFormDataHandler:
-    autowire: true
+      $customerDataProvider: '@prestashop.adapter.data_provider.customer'

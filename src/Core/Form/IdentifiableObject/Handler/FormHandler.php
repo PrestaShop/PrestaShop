@@ -38,42 +38,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class FormHandler implements FormHandlerInterface
 {
-    /**
-     * @var FormDataHandlerInterface
-     */
-    private $dataHandler;
-
-    /**
-     * @var HookDispatcherInterface
-     */
-    private $hookDispatcher;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var bool
-     */
-    private $isDemoModeEnabled;
-
-    /**
-     * @param FormDataHandlerInterface $dataHandler
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param TranslatorInterface $translator
-     * @param bool $isDemoModeEnabled
-     */
     public function __construct(
-        FormDataHandlerInterface $dataHandler,
-        HookDispatcherInterface $hookDispatcher,
-        TranslatorInterface $translator,
-        $isDemoModeEnabled
+        private readonly FormDataHandlerInterface $dataHandler,
+        private readonly HookDispatcherInterface $hookDispatcher,
+        private readonly TranslatorInterface $translator,
+        private readonly bool $isDemoModeEnabled
     ) {
-        $this->dataHandler = $dataHandler;
-        $this->hookDispatcher = $hookDispatcher;
-        $this->translator = $translator;
-        $this->isDemoModeEnabled = $isDemoModeEnabled;
     }
 
     /**

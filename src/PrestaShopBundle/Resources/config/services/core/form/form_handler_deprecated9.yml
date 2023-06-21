@@ -1,0 +1,143 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.form.identifiable_object.data_handler.customer_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.language_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\LanguageFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.meta_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\MetaFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.currency_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.webservice_key_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\WebserviceKeyFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.category_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CategoryFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.root_category_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.contact_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ContactFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.cms_page_category_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageCategoryFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.tax_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.manufacturer_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.employee_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\EmployeeFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.cms_page_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.manufacturer_address_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerAddressFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.supplier_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SupplierFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.order_message_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderMessageFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.order_return_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.catalog_price_rule_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CatalogPriceRuleFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.attachment_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttachmentFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.partial_refund_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\PartialRefundFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.standard_refund_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StandardRefundFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.return_product_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ReturnProductFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.address_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.order_address_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderAddressFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.cart_address_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartAddressFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.cancellation_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CancellationFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.order_state_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderStateFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.order_return_state_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnStateFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.cart_summary_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartSummaryFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ZoneFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.country_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CountryFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.search_engine_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SearchEngineFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.specific_price_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SpecificPriceFormDataHandler'
+    deprecated: ~
+
+  prestashop.core.form.identifiable_object.data_handler.state_form_data_handler:
+    alias: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StateFormDataHandler'
+    deprecated: ~
