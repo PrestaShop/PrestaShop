@@ -45,10 +45,10 @@ class GridFactory implements GridFactoryInterface
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
-        protected GridDefinitionFactoryInterface $definitionFactory,
-        protected GridDataFactoryInterface $dataFactory,
-        protected GridFilterFormFactoryInterface $filterFormFactory,
-        protected HookDispatcherInterface $hookDispatcher
+        protected readonly GridDefinitionFactoryInterface $definitionFactory,
+        protected readonly GridDataFactoryInterface $dataFactory,
+        protected readonly GridFilterFormFactoryInterface $filterFormFactory,
+        protected readonly HookDispatcherInterface $hookDispatcher
     ) {
     }
 

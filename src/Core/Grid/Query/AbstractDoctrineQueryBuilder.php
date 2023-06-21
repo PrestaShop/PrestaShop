@@ -34,23 +34,13 @@ use Doctrine\DBAL\Connection;
 abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInterface
 {
     /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
-     * @var string
-     */
-    protected $dbPrefix;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      */
-    public function __construct(Connection $connection, $dbPrefix)
-    {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
+    public function __construct(
+        protected readonly Connection $connection,
+        protected readonly string $dbPrefix
+    ) {
     }
 
     /**

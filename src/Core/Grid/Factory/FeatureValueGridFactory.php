@@ -64,11 +64,11 @@ class FeatureValueGridFactory extends GridFactory
      *        and FeatureValueGridFactory should be removed from phpstan-disallowed-calls.neon "allowIn" section
      */
     public function __construct(
-        protected GridDefinitionFactoryInterface $definitionFactory,
-        protected GridDataFactoryInterface $dataFactory,
-        protected GridFilterFormFactoryInterface $filterFormFactory,
-        protected HookDispatcherInterface $hookDispatcher,
-        protected FeatureRepository $featureRepository
+        GridDefinitionFactoryInterface $definitionFactory,
+        GridDataFactoryInterface $dataFactory,
+        GridFilterFormFactoryInterface $filterFormFactory,
+        HookDispatcherInterface $hookDispatcher,
+        protected readonly FeatureRepository $featureRepository
     ) {
         parent::__construct($definitionFactory, $dataFactory, $filterFormFactory, $hookDispatcher);
     }

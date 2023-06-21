@@ -50,9 +50,9 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository
 class FeatureRepository extends AbstractMultiShopObjectModelRepository
 {
     public function __construct(
-        protected Connection $connection,
-        protected string $dbPrefix,
-        protected FeatureValidator $featureValidator
+        protected readonly Connection $connection,
+        protected readonly string $dbPrefix,
+        protected readonly FeatureValidator $featureValidator
     ) {
     }
 

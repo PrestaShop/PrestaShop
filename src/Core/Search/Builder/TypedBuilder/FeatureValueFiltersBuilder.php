@@ -39,7 +39,7 @@ class FeatureValueFiltersBuilder extends AbstractFiltersBuilder implements Typed
     private Request $request;
 
     public function __construct(
-        protected ContextLanguageProviderInterface $contextLanguageProvider
+        protected readonly ContextLanguageProviderInterface $contextLanguageProvider
     ) {
     }
 

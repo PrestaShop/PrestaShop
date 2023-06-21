@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface;
 class ContextLanguageProvider implements ContextLanguageProviderInterface
 {
     public function __construct(
-        protected LegacyContext $context
+        protected readonly LegacyContext $context
     ) {
     }
 

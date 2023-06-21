@@ -34,15 +34,10 @@ use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 
 class FeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     */
     public function __construct(
         Connection $connection,
-        $dbPrefix,
-        protected DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+        string $dbPrefix,
+        protected readonly DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
     ) {
         parent::__construct($connection, $dbPrefix);
     }
