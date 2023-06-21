@@ -30,47 +30,97 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 
+/**
+ * Sets cart rule restrictions.
+ * Leaving property as NULL will cause no changes, however having an empty array will clear existing restrictions.
+ */
 class SetCartRuleRestrictionsCommand
 {
     public readonly CartRuleId $cartRuleId;
 
-    /** @var CartRuleId[] */
-    public readonly array $restrictedCartRuleIds;
+    /**
+     * @var CartRuleId[]|null
+     */
+    private ?array $restrictedCartRuleIds = null;
+
+    /**
+     * @var RestrictionRuleGroup[]|null
+     */
+    private ?array $productRestrictionRuleGroups = null;
 
     /**
      * @param int $cartRuleId
-     * @param int[] $restrictedCartRuleIds
      */
     public function __construct(
         int $cartRuleId,
-        array $restrictedCartRuleIds
     ) {
         $this->cartRuleId = new CartRuleId($cartRuleId);
-        $this->restrictedCartRuleIds = $this->assertCartRuleIds($cartRuleId, $restrictedCartRuleIds);
     }
 
     /**
-     * @param int $cartRuleId
      * @param int[] $restrictedCartRuleIds
      *
-     * @return CartRuleId[]
+     * @return self
      *
      * @throws CartRuleConstraintException
      */
-    private function assertCartRuleIds(int $cartRuleId, array $restrictedCartRuleIds): array
+    public function setRestrictedCartRuleIds(array $restrictedCartRuleIds): self
     {
-        $cartRuleIds = [];
+        $this->restrictedCartRuleIds = [];
         foreach ($restrictedCartRuleIds as $restrictedCartRuleId) {
-            if ($restrictedCartRuleId === $cartRuleId) {
+            if ($restrictedCartRuleId === $this->cartRuleId->getValue()) {
                 throw new CartRuleConstraintException(
                     'Restricted CartRule ids cannot contain id of current cart rule',
                     CartRuleConstraintException::INVALID_CART_RULE_RESTRICTION
                 );
             }
-            $cartRuleIds[] = new CartRuleId($restrictedCartRuleId);
+            $this->restrictedCartRuleIds[] = new CartRuleId($restrictedCartRuleId);
         }
 
-        return $cartRuleIds;
+        return $this;
+    }
+
+    /**
+     * @return CartRuleId[]|null
+     */
+    public function getRestrictedCartRuleIds(): ?array
+    {
+        return $this->restrictedCartRuleIds;
+    }
+
+    /**
+     * @param RestrictionRuleGroup[] $productRestrictionRuleGroups
+     *
+     * @return self
+     */
+    public function setProductRestrictionRuleGroups(array $productRestrictionRuleGroups): self
+    {
+        $this->productRestrictionRuleGroups = $productRestrictionRuleGroups;
+
+        return $this;
+    }
+
+    /**
+     * It is possible to have this command empty if none of the restrictions are modified
+     *
+     * @todo: don't forget to adapt this method when all the other restrictions are added.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return null === $this->getRestrictedCartRuleIds()
+            && null === $this->getProductRestrictionRuleGroups()
+        ;
+    }
+
+    /**
+     * @return RestrictionRuleGroup[]|null
+     */
+    public function getProductRestrictionRuleGroups(): ?array
+    {
+        return $this->productRestrictionRuleGroups;
     }
 }

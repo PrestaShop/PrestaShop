@@ -35,29 +35,27 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCo
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleProductRestrictionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
 {
     /**
+     * @var array<string, SetCartRuleRestrictionsCommand[]>
+     */
+    private array $restrictionCommandsByReference = [];
+
+    /**
+     * @var array<string, RestrictionRuleGroup[]>
+     */
+    private array $productRestrictionGroupsByReference = [];
+
+    /**
      * This is just a random number which in theory should never be reached as cart rule id in tests
      */
     private const NON_EXISTING_CART_RULE_ID = 54440051;
-
-    /**
-     * Provides string to set and retrieve certain cart rule product restrictions state from shared storage
-     *
-     * @param string $cartRuleReference
-     *
-     * @return string
-     */
-    public static function buildProductRestrictionStorageKey(string $cartRuleReference): string
-    {
-        return 'cart_rule_product_restriction_groups_' . $cartRuleReference;
-    }
 
     /**
      * @When /^I (enable|disable) cart rule with reference "(.+)"$/
@@ -97,7 +95,7 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             $cartRuleId = $this->getSharedStorage()->get($cartRuleReference);
             $command = new EditCartRuleCommand($cartRuleId);
             $data = $this->localizeByRows($tableNode);
-            $this->fillCommand($command, $data);
+            $this->fillEditCommand($command, $data);
             $this->getCommandBus()->handle($command);
 
             if (!empty($data['code'])) {
@@ -117,22 +115,24 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      *
      * @return void
      */
-    public function restrictCartRules(string $cartRuleReference, TableNode $tableNode): void
+    public function setRestrictedCartRules(string $cartRuleReference, TableNode $tableNode): void
     {
         $restrictedCartRuleIds = [];
         foreach ($tableNode->getColumn(0) as $restrictedCartRuleReference) {
             $restrictedCartRuleIds[] = $this->getSharedStorage()->get($restrictedCartRuleReference);
         }
 
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+
         try {
-            $this->performCartRulesRestriction($this->getSharedStorage()->get($cartRuleReference), $restrictedCartRuleIds);
+            $command->setRestrictedCartRuleIds($restrictedCartRuleIds);
+            $this->restrictionCommandsByReference[$cartRuleReference] = $command;
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     *
      * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s) in cart matching one of these rules:
      * @When I add a restriction for cart rule :cartRuleReference, which requires any quantity of product(s) in cart matching one of these rules:
      * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s), but I provide empty list of rules
@@ -145,7 +145,6 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      */
     public function addRestrictionRule(string $cartRuleReference, int $quantity = 0, ?TableNode $table = null): void
     {
-        $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
         $rules = [];
 
         try {
@@ -156,12 +155,12 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             }
 
             $restrictionGroups = [];
-            if ($this->getSharedStorage()->exists($restrictionsKey)) {
-                $restrictionGroups = $this->getSharedStorage()->get($restrictionsKey);
+            if (isset($this->productRestrictionGroupsByReference[$cartRuleReference])) {
+                $restrictionGroups = $this->productRestrictionGroupsByReference[$cartRuleReference];
             }
 
             $restrictionGroups[] = new RestrictionRuleGroup($quantity, $rules);
-            $this->getSharedStorage()->set($restrictionsKey, $restrictionGroups);
+            $this->productRestrictionGroupsByReference[$cartRuleReference] = $restrictionGroups;
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
         }
@@ -176,11 +175,11 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      */
     public function restrictCartRulesProvidingNonExistingIds(string $cartRuleReference): void
     {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command->setRestrictedCartRuleIds([self::NON_EXISTING_CART_RULE_ID]);
+
         try {
-            $this->performCartRulesRestriction(
-                $this->getSharedStorage()->get($cartRuleReference),
-                [self::NON_EXISTING_CART_RULE_ID]
-            );
+            $this->getCommandBus()->handle($command);
         } catch (CartRuleNotFoundException $e) {
             $this->setLastException($e);
         }
@@ -195,50 +194,77 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      */
     public function clearProductRestrictionRules(string $cartRuleReference): void
     {
-        $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command->setProductRestrictionRuleGroups([]);
 
-        $this->getCommandBus()->handle(new SetCartRuleProductRestrictionsCommand(
-            $this->getSharedStorage()->get($cartRuleReference),
-            []
-        ));
-
-        $this->getSharedStorage()->clear($restrictionsKey);
+        $this->getCommandBus()->handle($command);
+        $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+        unset($this->productRestrictionGroupsByReference[$cartRuleReference]);
     }
 
     /**
      * @When I save product restrictions for cart rule :cartRuleReference
+     * @When I save all the restrictions for cart rule :cartRuleReference
      *
      * @param string $cartRuleReference
      *
      * @return void
      */
-    public function saveProductRestrictionRules(string $cartRuleReference): void
+    public function saveRestrictionRules(string $cartRuleReference): void
     {
-        $restrictionsKey = $this::buildProductRestrictionStorageKey($cartRuleReference);
+        $command = $this->getRestrictionsCommand($cartRuleReference);
 
-        $this->getCommandBus()->handle(new SetCartRuleProductRestrictionsCommand(
-            $this->getSharedStorage()->get($cartRuleReference),
-            $this->getSharedStorage()->get($restrictionsKey)
-        ));
+        if (isset($this->productRestrictionGroupsByReference[$cartRuleReference])) {
+            // set the restrictions that (if) were added step by step before
+            $command->setProductRestrictionRuleGroups($this->productRestrictionGroupsByReference[$cartRuleReference]);
+            unset($this->productRestrictionGroupsByReference[$cartRuleReference]);
+        }
 
-        $this->getSharedStorage()->clear($restrictionsKey);
+        if ($command->isEmpty()) {
+            throw new RuntimeException(
+                sprintf(
+                    '%s is empty for cart rule referenced as "%s". Did you forget to fill the restrictions in other steps?',
+                    $command::class,
+                    $cartRuleReference
+                )
+            );
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
-    private function performCartRulesRestriction(int $cartRuleId, array $restrictedCartRuleIds): void
+    private function executeRestrictionsCommand(SetCartRuleRestrictionsCommand $command): void
     {
-        $this->getCommandBus()->handle(
-            new SetCartRuleRestrictionsCommand(
-                $cartRuleId,
-                $restrictedCartRuleIds
-            )
-        );
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function getRestrictionsCommand(string $cartRuleReference): SetCartRuleRestrictionsCommand
+    {
+        if (isset($this->restrictionCommandsByReference[$cartRuleReference])) {
+            $command = $this->restrictionCommandsByReference[$cartRuleReference];
+            if (!($command instanceof SetCartRuleRestrictionsCommand)) {
+                throw new RuntimeException(sprintf('Expected "%s" got "%s', SetCartRuleRestrictionsCommand::class, var_export($command, true)));
+            }
+        } else {
+            $command = new SetCartRuleRestrictionsCommand($this->getSharedStorage()->get($cartRuleReference));
+        }
+
+        return $command;
     }
 
     /**
      * @param EditCartRuleCommand $command
      * @param array<string, mixed> $data
      */
-    private function fillCommand(EditCartRuleCommand $command, array $data): void
+    private function fillEditCommand(EditCartRuleCommand $command, array $data): void
     {
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);

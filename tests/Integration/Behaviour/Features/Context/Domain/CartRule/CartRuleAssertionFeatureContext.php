@@ -193,7 +193,11 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
                 $actualGroup->requiredQuantityInCart,
                 'Unexpected required quantity in cart in restriction group'
             );
-            Assert::assertCount((int) $expectedDataRow['rules count'], $actualGroup->restrictionRules, 'Unexpected rules count in restriction group');
+            Assert::assertCount(
+                (int) $expectedDataRow['rules count'],
+                $actualGroup->restrictionRules,
+                sprintf('Unexpected rules count in restriction group referenced as "%s"', $expectedDataRow['groupReference'])
+            );
 
             // set group into shared storage so that following steps can assert its values more in depth
             $this->getSharedStorage()->set($expectedDataRow['groupReference'], $actualGroup);

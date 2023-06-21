@@ -1,7 +1,7 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart_rule --tags set-cart-rule-restrictions
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart_rule --tags set-cart-rule-combination-restrictions
 @restore-all-tables-before-feature
-@set-cart-rule-restrictions
-Feature: Set cart rule restrictions in BO
+@set-cart-rule-combination-restrictions
+Feature: Set cart rule combination restrictions in BO
   PrestaShop allows BO users to add and remove restrictions of cart rule combinations,
   which defines which cart rules can or cannot be compatible in the same cart
   As a BO user I must be able to edit cart rules compatibility
@@ -57,10 +57,13 @@ Feature: Set cart rule restrictions in BO
       | restricted cart rules |  |
     And cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules |  |
+    And cart rule rule_free_shipping_1 should have no product restriction rules
+    And cart rule rule_50_percent should have no product restriction rules
 
   Scenario: Restrict cart rule combinations
     When I restrict following cart rules for cart rule rule_free_shipping_1:
       | rule_50_percent |
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules | rule_50_percent |
     And cart rule "rule_50_percent" should have the following properties:
@@ -70,12 +73,15 @@ Feature: Set cart rule restrictions in BO
     When I restrict following cart rules for cart rule rule_free_shipping_1:
       | rule_50_percent |
       | rule_70_percent |
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules | rule_50_percent,rule_70_percent |
     And cart rule "rule_50_percent" should have the following properties:
       | restricted cart rules | rule_free_shipping_1 |
     And cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules | rule_free_shipping_1 |
+    And cart rule rule_free_shipping_1 should have no product restriction rules
+    And cart rule rule_50_percent should have no product restriction rules
 
   @restore-cart-rules-before-scenario
   Scenario: Provide non-existing ids for cart rule restriction

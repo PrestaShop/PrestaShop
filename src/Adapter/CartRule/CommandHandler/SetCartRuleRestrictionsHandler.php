@@ -43,28 +43,57 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
 
     public function handle(SetCartRuleRestrictionsCommand $command): void
     {
-        $cartRuleId = $command->cartRuleId;
-        $cartRule = $this->cartRuleRepository->get($cartRuleId);
-        $restrictedCartRuleIds = $command->restrictedCartRuleIds;
+        if ($command->isEmpty()) {
+            // no restrictions were modified
+            return;
+        }
+
+        $cartRule = $this->cartRuleRepository->get($command->cartRuleId);
+
+        $restrictedCartRuleIds = $command->getRestrictedCartRuleIds();
+        if (null !== $restrictedCartRuleIds) {
+            $this->setCartRuleRestrictions($cartRule, $restrictedCartRuleIds);
+            $this->updateRestrictionProperty($cartRule, 'cart_rule_restriction', !empty($restrictedCartRuleIds));
+        }
+        $productRestrictionGroups = $command->getProductRestrictionRuleGroups();
+        if (null !== $productRestrictionGroups) {
+            $this->setProductRestrictions($cartRule, $productRestrictionGroups);
+            $this->updateRestrictionProperty($cartRule, 'product_restriction', !empty($productRestrictionGroups));
+        }
+        // it would be more performant updating all restriction props at the end with one update call,
+        // but that way we might introduce cart rule state failure in case one of steps fails somewhere in the middle
+    }
+
+    private function setCartRuleRestrictions(CartRule $cartRule, array $restrictedCartRuleIds): void
+    {
+        $cartRuleId = new CartRuleId((int) $cartRule->id);
         $this->cartRuleRepository->assertAllCartRulesExists($restrictedCartRuleIds);
         $this->cartRuleRepository->restrictCartRules($cartRuleId, $restrictedCartRuleIds);
         $hasRestrictions = !empty($restrictedCartRuleIds);
 
-        $this->updateRestrictionProperty($cartRule, $hasRestrictions);
+        $this->updateRestrictionProperty($cartRule, 'cart_rule_restriction', $hasRestrictions);
 
         // update cart_rule_restriction property for all the cart rules that have been affected
         foreach ($this->cartRuleRepository->getRestrictedCartRuleIds($cartRuleId) as $restrictedCartRuleId) {
             $affectedCartRule = $this->cartRuleRepository->get(new CartRuleId($restrictedCartRuleId));
-            $this->updateRestrictionProperty($affectedCartRule, $hasRestrictions);
+            $this->updateRestrictionProperty($affectedCartRule, 'cart_rule_restriction', $hasRestrictions);
         }
     }
 
-    private function updateRestrictionProperty(CartRule $cartRule, bool $hasRestrictions): void
+    private function updateRestrictionProperty(CartRule $cartRule, string $propertyName, bool $hasRestrictions): void
     {
         $cartRule->cart_rule_restriction = $hasRestrictions;
         $this->cartRuleRepository->partialUpdate(
             $cartRule,
-            ['cart_rule_restriction']
+            [$propertyName]
         );
+    }
+
+    private function setProductRestrictions(CartRule $cartRule, array $restrictionRuleGroups): void
+    {
+        $this->cartRuleRepository->setProductRestrictions(new CartRuleId((int) $cartRule->id), $restrictionRuleGroups);
+
+        $cartRule->product_restriction = !empty($restrictionRuleGroups);
+        $this->cartRuleRepository->partialUpdate($cartRule, ['product_restriction']);
     }
 }

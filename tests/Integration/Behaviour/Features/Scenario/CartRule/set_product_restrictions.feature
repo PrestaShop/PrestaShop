@@ -39,7 +39,7 @@ Feature: Set cart rule product restrictions in BO
       | type        | standard             |
 
   # @todo: create cart rules once in first scenario, so they are not recreated before every scenario.
-  #  This step is temporary and should be replaced by step "Given there is a cart rule..." in backhround
+  #  This step is temporary and should be replaced by step "Given there is a cart rule..." in background
   #  when following PR is merged: https://github.com/PrestaShop/PrestaShop/pull/32483
   Scenario: Create cart rules for further steps
     And I create cart rule "rule_free_shipping_1" with following properties:
@@ -79,7 +79,7 @@ Feature: Set cart rule product restrictions in BO
       | products | product1   |
       | products | product2   |
       | products | product3   |
-    And I save product restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | group_nr_1     | 5        | 1           |
@@ -105,7 +105,7 @@ Feature: Set cart rule product restrictions in BO
       | type       | references |
       | attributes | S,M        |
       | attributes | L          |
-    And I save product restrictions for cart rule rule_50_percent
+    And I save all the restrictions for cart rule rule_50_percent
     Then cart rule "rule_50_percent" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | group_nr_1     | 7        | 1           |
@@ -128,7 +128,7 @@ Feature: Set cart rule product restrictions in BO
       | type       | references  |
       | categories | clothes,men |
       | categories | women       |
-    And I save product restrictions for cart rule rule_50_percent
+    And I save all the restrictions for cart rule rule_50_percent
     Then cart rule "rule_50_percent" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | group_nr_1     | 3        | 1           |
@@ -150,11 +150,11 @@ Feature: Set cart rule product restrictions in BO
     And I add a restriction for cart rule rule_50_percent, which requires at least 1 product in cart matching one of these rules:
       | type          | references    |
       | manufacturers | graphicCorner |
-    And I save product restrictions for cart rule rule_50_percent
+    And I save all the restrictions for cart rule rule_50_percent
     And I add a restriction for cart rule rule_free_shipping_1, which requires at least 4 products in cart matching one of these rules:
       | type          | references                 |
       | manufacturers | studioDesign,graphicCorner |
-    And I save product restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_50_percent" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | 50_nr_1        | 2        | 1           |
@@ -181,11 +181,11 @@ Feature: Set cart rule product restrictions in BO
     And I add a restriction for cart rule rule_50_percent, which requires at least 1 product in cart matching one of these rules:
       | type      | references          |
       | suppliers | accessoriesSupplier |
-    And I save product restrictions for cart rule rule_50_percent
+    And I save all the restrictions for cart rule rule_50_percent
     And I add a restriction for cart rule rule_free_shipping_1, which requires at least 4 products in cart matching one of these rules:
       | type      | references                          |
       | suppliers | fashionSupplier,accessoriesSupplier |
-    And I save product restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_50_percent" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | 50_nr_1        | 2        | 1           |
@@ -217,7 +217,7 @@ Feature: Set cart rule product restrictions in BO
       | type          | references                          |
       | suppliers     | fashionSupplier,accessoriesSupplier |
       | manufacturers | graphicCorner                       |
-    And I save product restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | free_nr_1      | 1        | 5           |
@@ -254,7 +254,7 @@ Feature: Set cart rule product restrictions in BO
     And I add a restriction for cart rule rule_free_shipping_1, which requires at least 100 product in cart matching one of these rules:
       | type          | references    |
       | manufacturers | graphicCorner |
-    And I save product restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | free_nr_1      | 0        | 2           |
