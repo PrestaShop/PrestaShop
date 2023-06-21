@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class RestrictionRuleGroup
 {
@@ -50,7 +49,6 @@ class RestrictionRuleGroup
      * @return void
      *
      * @throws CartRuleConstraintException
-     * @throws InvalidArgumentException
      */
     private function assertRestrictionRules(array $rules): void
     {
@@ -58,20 +56,6 @@ class RestrictionRuleGroup
             throw new CartRuleConstraintException(
                 'Restriction rules list cannot be empty',
                 CartRuleConstraintException::EMPTY_RESTRICTION_RULES
-            );
-        }
-
-        foreach ($rules as $rule) {
-            if ($rule instanceof RestrictionRule) {
-                continue;
-            }
-
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Invalid array element. Expected array of %s, but got %s',
-                    RestrictionRule::class,
-                    var_export($rule, true)
-                )
             );
         }
     }
