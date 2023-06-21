@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
  */
 class SearchForSearchTerm
 {
-    public const DEFAULT_SEARCH_TERM_LIMIT = 20;
+    public const DEFAULT_LIMIT = 20;
 
     /**
      * @throws InvalidArgumentException

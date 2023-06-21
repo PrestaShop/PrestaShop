@@ -84,7 +84,7 @@ class SearchController extends FrameworkBundleAdminController
             /** @var SearchTerm[] $searchTerms */
             $searchTerms = $this->getQueryBus()->handle(new SearchForSearchTerm(
                 $request->get('query', ''),
-                (int) $request->get('limit', SearchForSearchTerm::DEFAULT_SEARCH_TERM_LIMIT)
+                (int) $request->get('limit', SearchForSearchTerm::DEFAULT_LIMIT)
             ));
         } catch (AliasConstraintException $e) {
             return $this->json([
