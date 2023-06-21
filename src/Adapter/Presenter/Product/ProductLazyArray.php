@@ -918,7 +918,7 @@ class ProductLazyArray extends AbstractLazyArray
                 $remainingQuantityOfAlternativeCombinations = $product['quantity_all_versions'];
             }
 
-            if ($availableQuantity >= 0) {
+            if ($product['quantity'] > 0 && $availableQuantity >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($availableQuantity < $settings->lastRemainingItems) {
