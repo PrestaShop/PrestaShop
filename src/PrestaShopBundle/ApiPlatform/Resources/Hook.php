@@ -43,6 +43,26 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
         new Get(
             uriTemplate: '/hook-status/{hookId}',
             requirements: ['id' => '\d+'],
+            openapiContext: [
+                'summary' => 'Get hook status A',
+                'description' => 'Get hook status B',
+                'parameters' => [
+                    [
+                        'name' => 'hookId',
+                        'in' => 'path',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string',
+                        ],
+                        'description' => 'Id of the hook you are requesting the status from',
+                    ],
+                    [
+                        'name' => 'Authorization',
+                        'in' => 'scopes',
+                        'description' => 'read:hook-status <br> write:hook-status ',
+                    ],
+                ],
+            ],
             exceptionToStatus: [HookNotFoundException::class => 404],
             provider: QueryProvider::class,
             extraProperties: ['query' => GetHookStatus::class]
