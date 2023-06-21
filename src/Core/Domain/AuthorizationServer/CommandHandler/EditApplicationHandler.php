@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplic
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 
 /**
- * Handles command which adds new manufacturer using legacy object model
+ * Handles command which edit application
  *
  * @experimental
  */

@@ -24,38 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicationCommand;
 
 /**
- * Handles query which gets application for editing
+ * Defines contract for DeleteApplicationHandler
  *
  * @experimental
  */
-class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
+interface DeleteApplicationHandlerInterface
 {
     /**
-     * @var AuthorizedApplicationRepositoryInterface
+     * @param DeleteApplicationCommand $command
      */
-    private $applicationRepository;
-
-    public function __construct(AuthorizedApplicationRepositoryInterface $applicationRepository)
-    {
-        $this->applicationRepository = $applicationRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(GetApplicationForEditing $query)
-    {
-        $application = $this->applicationRepository->getById($query->getApplicationId());
-
-        return new EditableApplication($query->getApplicationId(), $application->getName(), $application->getDescription());
-    }
+    public function handle(DeleteApplicationCommand $command);
 }

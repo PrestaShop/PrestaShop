@@ -26,36 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception;
 
 /**
- * Handles query which gets application for editing
+ * Is thrown when application deletion failed
  *
  * @experimental
  */
-class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
+class DeleteApplicationException extends ApplicationException
 {
-    /**
-     * @var AuthorizedApplicationRepositoryInterface
-     */
-    private $applicationRepository;
-
-    public function __construct(AuthorizedApplicationRepositoryInterface $applicationRepository)
-    {
-        $this->applicationRepository = $applicationRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(GetApplicationForEditing $query)
-    {
-        $application = $this->applicationRepository->getById($query->getApplicationId());
-
-        return new EditableApplication($query->getApplicationId(), $application->getName(), $application->getDescription());
-    }
 }

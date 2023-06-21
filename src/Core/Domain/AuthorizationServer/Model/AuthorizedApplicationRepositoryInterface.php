@@ -55,16 +55,23 @@ interface AuthorizedApplicationRepositoryInterface
      *
      * @throws ApplicationNotFoundException
      *
-     * @return AuthorizedApplicationInterface|null
+     * @return AuthorizedApplicationInterface
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface;
+    public function getById(ApplicationId $applicationId): AuthorizedApplicationInterface;
 
     /**
      * @param string $name
      *
      * @throws ApplicationNotFoundException
      *
-     * @return AuthorizedApplicationInterface|null
+     * @return AuthorizedApplicationInterface
      */
-    public function getByName(string $name): ?AuthorizedApplicationInterface;
+    public function getByName(string $name): AuthorizedApplicationInterface;
+
+    /**
+     * @param AuthorizedApplicationInterface $application
+     *
+     * @return void
+     */
+    public function delete(AuthorizedApplicationInterface $application): void;
 }

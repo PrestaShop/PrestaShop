@@ -26,36 +26,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
+use PrestaShopBundle\Entity\AuthorizedApplication;
 
 /**
- * Handles query which gets application for editing
- *
  * @experimental
  */
-class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
+interface ApiAccessRepositoryInterface
 {
     /**
-     * @var AuthorizedApplicationRepositoryInterface
+     * @param AuthorizedApplication $application
+     *
+     * @return void
      */
-    private $applicationRepository;
-
-    public function __construct(AuthorizedApplicationRepositoryInterface $applicationRepository)
-    {
-        $this->applicationRepository = $applicationRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(GetApplicationForEditing $query)
-    {
-        $application = $this->applicationRepository->getById($query->getApplicationId());
-
-        return new EditableApplication($query->getApplicationId(), $application->getName(), $application->getDescription());
-    }
+    public function deleteByApplication(AuthorizedApplication $application): void;
 }

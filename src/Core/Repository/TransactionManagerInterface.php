@@ -24,34 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Repository;
 
-namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
-
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+interface TransactionManagerInterface
 {
     /**
-     * {@inheritdoc}
+     * Initiate a transaction
      */
-    public function deleteByApplication(AuthorizedApplication $application): void
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+    public function beginTransaction();
 
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
+    /**
+     * Commit a transaction
+     */
+    public function commit();
 
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
-    }
+    /**
+     * Rollback a transaction
+     */
+    public function rollback();
 }

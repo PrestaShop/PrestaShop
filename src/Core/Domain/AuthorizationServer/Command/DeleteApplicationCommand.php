@@ -26,36 +26,38 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
 /**
- * Handles query which gets application for editing
+ * Deletes application
  *
  * @experimental
  */
-class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
+class DeleteApplicationCommand
 {
     /**
-     * @var AuthorizedApplicationRepositoryInterface
+     * @var ApplicationId
      */
-    private $applicationRepository;
+    private $applicationId;
 
-    public function __construct(AuthorizedApplicationRepositoryInterface $applicationRepository)
+    /**
+     * @param $applicationId
+     *
+     * @throws ApplicationConstraintException
+     */
+    public function __construct($applicationId)
     {
-        $this->applicationRepository = $applicationRepository;
+        $this->applicationId = new ApplicationId($applicationId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return ApplicationId
      */
-    public function handle(GetApplicationForEditing $query)
+    public function getApplicationId(): ApplicationId
     {
-        $application = $this->applicationRepository->getById($query->getApplicationId());
-
-        return new EditableApplication($query->getApplicationId(), $application->getName(), $application->getDescription());
+        return $this->applicationId;
     }
 }

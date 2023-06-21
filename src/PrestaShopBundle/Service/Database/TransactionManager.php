@@ -26,36 +26,47 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
+namespace PrestaShopBundle\Service\Database;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
+use Doctrine\ORM\EntityManager;
+use PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface;
 
-/**
- * Handles query which gets application for editing
- *
- * @experimental
- */
-class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
+class TransactionManager implements TransactionManagerInterface
 {
     /**
-     * @var AuthorizedApplicationRepositoryInterface
+     * @var EntityManager
      */
-    private $applicationRepository;
+    private $entityManager;
 
-    public function __construct(AuthorizedApplicationRepositoryInterface $applicationRepository)
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
     {
-        $this->applicationRepository = $applicationRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(GetApplicationForEditing $query)
+    public function rollback(): void
     {
-        $application = $this->applicationRepository->getById($query->getApplicationId());
+        $this->entityManager->rollback();
+    }
 
-        return new EditableApplication($query->getApplicationId(), $application->getName(), $application->getDescription());
+    /**
+     * {@inheritdoc}
+     */
+    public function commit(): void
+    {
+        $this->entityManager->commit();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beginTransaction(): void
+    {
+        $this->entityManager->beginTransaction();
     }
 }

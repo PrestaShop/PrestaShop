@@ -122,3 +122,11 @@ services:
     arguments:
       $storage: "@security.csrf.token_storage"
     autowire: true
+
+  PrestaShopBundle\Service\Database\TransactionManager:
+    public: false
+    autowire: true
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
+  PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
