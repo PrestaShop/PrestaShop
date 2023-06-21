@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForAssociation;
 
 class SearchAliasForAssociationHandler implements SearchAliasesForAssociationHandlerInterface
 {
-    public function __construct(private readonly AliasRepository $aliasRepository)
+    public function __construct(protected readonly AliasRepository $aliasRepository)
     {
     }
 
