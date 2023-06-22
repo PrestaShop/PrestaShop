@@ -107,9 +107,15 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
-    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
-    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
-    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
+    And there is a cart rule CartRuleAmountOnSelectedProduct with following properties:
+      | name[en-US]               | CartRuleAmountOnSelectedProduct          |
+      | discount_amount           | 500                                      |
+      | discount_currency         | usd                                      |
+      | total_quantity            | 100                                      |
+      | quantity_per_user         | 100                                      |
+      | discount_application_type | specific_product                         |
+      | discount_includes_tax     | false                                    |
+      | discount_product          | Test Product Cart Rule On Select Product |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Select Product |
       | amount | 1                                        |

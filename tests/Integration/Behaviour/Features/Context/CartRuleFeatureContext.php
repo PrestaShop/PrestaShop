@@ -110,14 +110,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->createCartRule($cartRuleName, $percent, 0, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
     }
 
-    /**
-     * @Given /^there is a cart rule named "(.+)" that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
-     */
-    public function thereIsACartRuleWithNameAndAmountDiscountOfAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
-        $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
-    }
-
     protected function createCartRule(
         $cartRuleName,
         $percent,

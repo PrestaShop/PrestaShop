@@ -6,7 +6,8 @@ Feature: Check cart to order data copy
   I must be able to have a correct order when validating payment step
 
   Background:
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
+    And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
@@ -163,8 +164,15 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a cart rule named "cartrule5" that applies an amount discount of 500.0 with priority 5, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule5" has a discount code "foo5"
+    Given there is a cart rule cartrule5 with following properties:
+      | name[en-US]           | cartrule5 |
+      | priority              | 5         |
+      | discount_amount       | 500       |
+      | discount_currency     | usd       |
+      | discount_includes_tax | false     |
+      | code                  | foo5      |
+      | total_quantity        | 1000      |
+      | quantity_per_user     | 1000      |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"

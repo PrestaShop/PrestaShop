@@ -8,12 +8,19 @@ Feature: Apply cart rule to cart from Back Office (BO)
   Background:
     Given country "US" is enabled
     And there is customer "testCustomer" with email "pub@prestashop.com"
+    And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And customer "testCustomer" has address in "US" country
     And I am logged in as "test@prestashop.com" employee
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And the module "dummy_payment" is installed
-    And there is a cart rule named "limitedCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 2 and quantity per user 1
-    And cart rule "limitedCartRule" has a discount code "foo1"
+    And there is a cart rule limitedCartRule with following properties:
+      | name[en-US]           | limitedCartRule |
+      | discount_amount       | 1               |
+      | discount_currency     | usd             |
+      | discount_includes_tax | false           |
+      | code                  | foo1            |
+      | total_quantity        | 2               |
+      | quantity_per_user     | 1               |
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
 
   Scenario: Cart rule usage limit is detected when the cart rule is created anonymously then assigned to a customer who already used it
