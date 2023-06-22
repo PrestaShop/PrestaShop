@@ -79,19 +79,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected $categoryFeatureContext;
 
-    /**
-     * This hook can be used to perform a database cleaning of added objects
-     *
-     * @AfterScenario
-     */
-    public function cleanCartRuleFixtures()
-    {
-        foreach ($this->cartRules as $cartRule) {
-            $cartRule->delete();
-        }
-        $this->cartRules = [];
-    }
-
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
@@ -121,14 +108,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function thereIsACartRuleWithNameAndPercentDiscountOf50AndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $percent, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
         $this->createCartRule($cartRuleName, $percent, 0, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
-    }
-
-    /**
-     * @Given /^there is a cart rule named "(.+)" that applies no discount with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
-     */
-    public function thereIsACartRuleWithNameAndNoDiscountAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
-        $this->createCartRule($cartRuleName, 0, 0, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
     }
 
     /**

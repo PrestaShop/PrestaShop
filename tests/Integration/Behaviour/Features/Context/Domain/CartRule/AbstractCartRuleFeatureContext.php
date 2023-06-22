@@ -163,11 +163,11 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
                 'Unexpected valid_to'
             );
         }
-        if (isset($expectedData['total quantity'])) {
-            Assert::assertSame((int) $expectedData['total quantity'], $conditions->getQuantity(), 'Unexpected quantity');
+        if (isset($expectedData['total_quantity'])) {
+            Assert::assertSame((int) $expectedData['total_quantity'], $conditions->getQuantity(), 'Unexpected quantity');
         }
-        if (isset($expectedData['quantity per user'])) {
-            Assert::assertSame((int) $expectedData['quantity per user'], $conditions->getQuantityPerUser(), 'Unexpected quantity per user');
+        if (isset($expectedData['quantity_per_user'])) {
+            Assert::assertSame((int) $expectedData['quantity_per_user'], $conditions->getQuantityPerUser(), 'Unexpected quantity_per_user');
         }
 
         if (isset($expectedData['minimum_amount'])) {

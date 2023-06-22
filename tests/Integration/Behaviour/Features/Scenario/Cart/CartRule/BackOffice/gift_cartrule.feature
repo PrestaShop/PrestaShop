@@ -40,8 +40,13 @@ Feature: Apply cart rule to cart from Back Office (BO)
     Given shipping handling fees are set to 2.0
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
-    Given there is a cart rule named "cartrule13" that applies no discount with priority 13, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule13" offers a gift product "product4"
+    Given there is a cart rule cartrule13 with following properties:
+      | name[en-US]       | cartrule13 |
+      | priority          | 13         |
+      | free_shipping     | false      |
+      | total_quantity    | 1000       |
+      | quantity_per_user | 1000       |
+      | gift_product      | product4   |
     When I add 1 products "product1" to the cart "dummy_custom_cart"
     Then product "product1" quantity in cart "dummy_custom_cart" should be 1 excluding gift products
     And gifted product "product4" quantity in cart "dummy_custom_cart" should be 1

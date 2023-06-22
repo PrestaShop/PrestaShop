@@ -13,12 +13,20 @@ Feature: Compute correct delivery options
     Given shipping handling fees are set to 2.0
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     # Create free shipping cart rule
-    Given there is a cart rule named "free_shipping_1" that applies no discount with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "free_shipping_1" offers free shipping
-    Given cart rule "free_shipping_1" has a discount code "djbuch-12878"
+    Given there is a cart rule free_shipping_1 with following properties:
+      | name[en-US]       | free_shipping_1 |
+      | priority          | 1               |
+      | free_shipping     | true            |
+      | total_quantity    | 1000            |
+      | quantity_per_user | 1000            |
+      | code              | djbuch-12878    |
     # Standard cart rule, disabled
-    Given there is a cart rule named "bad_cart_rule" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
-    Given cart rule "bad_cart_rule" is disabled
+    Given there is a cart rule bad_cart_rule with following properties:
+      | name[en-US]         | bad_cart_rule |
+      | active              | false         |
+      | priority            | 2             |
+      | free_shipping       | true          |
+      | discount_percentage | 50            |
     # Standard location settings
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"

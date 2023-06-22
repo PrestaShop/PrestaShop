@@ -52,7 +52,7 @@ Feature: Order from Back Office (BO)
       | discount_application_type | specific_product                         |
       | discount_product          | Test Product Cart Rule On Select Product |
       | discount_includes_tax     | true                                     |
-      | quantity                  | 100                                      |
+      | total_quantity            | 100                                      |
       | quantity_per_user         | 100                                      |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Select Product |
@@ -716,8 +716,9 @@ Feature: Order from Back Office (BO)
     And there is a carrier named "carrier2"
     And carrier "carrier1" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
     And carrier "carrier2" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
-    And there is a cart rule named "FreeGift" that applies no discount with priority 1, quantity of 1 and quantity per user 1
-    And cart rule "FreeGift" offers a gift product "product1"
+    And there is a cart rule FreeGift with following properties:
+      | name[en-US]  | FreeGift |
+      | gift_product | product1 |
     And cart rule "FreeGift" is restricted to carrier "carrier1"
     When I create an empty cart "dummy_cart_freegift" for customer "testCustomer"
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_freegift"
