@@ -40,14 +40,14 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
+        $handlers = $container->findTaggedServiceIds('messenger.cqrs_handler');
+        $this->updateMessengerTags($container, $handlers);
+
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
         }
 
-        $handlers = $container->findTaggedServiceIds('messenger.cqrs_handler');
         $commandsAndQueries = $this->findCommandsAndQueries($handlers);
-        $this->updateMessengerTags($container, $handlers);
-
         $container->setParameter('prestashop.commands_and_queries', $commandsAndQueries);
     }
 
