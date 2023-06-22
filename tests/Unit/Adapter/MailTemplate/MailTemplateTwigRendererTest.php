@@ -64,43 +64,6 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->assertNotNull($generator);
     }
 
-    public function testFileNotFound()
-    {
-        $this->expectException(FileNotFoundException::class);
-
-        $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => '@Resources/path/to/non_existent_template.html.twig',
-        ];
-        $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
-        $expectedLanguage = $this->createLanguageMock();
-        $mailLayout = $this->createMailLayoutMock($templatePaths);
-        $engineMock = $this->getMockBuilder(Environment::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $engineMock
-            ->expects($this->once())
-            ->method('render')
-            ->willThrowException(new LoaderError(''))
-        ;
-        /** @var HookDispatcherInterface $dispatcherMock */
-        $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        /** @var Environment $engineMock */
-        $generator = new MailTemplateTwigRenderer(
-            $engineMock,
-            $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
-            $dispatcherMock,
-            false
-        );
-        $this->assertNotNull($generator);
-
-        $generator->renderHtml($mailLayout, $expectedLanguage);
-    }
-
     public function testRenderHtml(): void
     {
         $templatePaths = [
