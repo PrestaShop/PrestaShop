@@ -285,8 +285,8 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
             );
         }
 
-        if (isset($data['restricted cart rules'])) {
-            $expectedRestrictedCartRuleIds = $this->referencesToIds($data['restricted cart rules']);
+        if (isset($expectedData['restricted cart rules'])) {
+            $expectedRestrictedCartRuleIds = $this->referencesToIds($expectedData['restricted cart rules']);
             Assert::assertSame(
                 $expectedRestrictedCartRuleIds,
                 $conditions->getRestrictions()->restrictedCartRuleIds,

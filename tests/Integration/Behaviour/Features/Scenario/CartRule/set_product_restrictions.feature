@@ -54,19 +54,19 @@ Feature: Set cart rule product restrictions in BO
       | free_shipping     | true                 |
       | code              | rule_free_shipping_1 |
     And I create cart rule "rule_50_percent" with following properties:
-      | name[en-US]                            | Half the price         |
-      | is_active                              | true                   |
-      | allow_partial_use                      | true                   |
-      | priority                               | 2                      |
-      | valid_from                             | 2022-01-01 11:00:00    |
-      | valid_to                               | 3001-01-01 12:00:00    |
-      | total_quantity                         | 10                     |
-      | quantity_per_user                      | 12                     |
-      | free_shipping                          | false                  |
-      | code                                   | rule_50_percent        |
-      | reduction_percentage                   | 50                     |
-      | reduction_apply_to_discounted_products | false                  |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | Half the price         |
+      | is_active                    | true                   |
+      | allow_partial_use            | true                   |
+      | priority                     | 2                      |
+      | valid_from                   | 2022-01-01 11:00:00    |
+      | valid_to                     | 3001-01-01 12:00:00    |
+      | total_quantity               | 10                     |
+      | quantity_per_user            | 12                     |
+      | free_shipping                | false                  |
+      | code                         | rule_50_percent        |
+      | discount_percentage          | 50                     |
+      | apply_to_discounted_products | false                  |
+      | discount_application_type    | order_without_shipping |
     And cart rule "rule_free_shipping_1" should have no product restriction rules
     And cart rule "rule_50_percent" should have no product restriction rules
 
