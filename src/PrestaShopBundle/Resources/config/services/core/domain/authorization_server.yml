@@ -23,7 +23,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\DeleteApplicationHandler:
     tags:
-      - name: tactician.handler
+      - name: messenger.cqrs_handler
         command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicationCommand'
 
   PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory: ~

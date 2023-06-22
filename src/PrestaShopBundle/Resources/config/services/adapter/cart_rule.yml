@@ -70,4 +70,4 @@ services:
     autowire: true
     public: false
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand }
+      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand }
