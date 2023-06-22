@@ -135,11 +135,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
         }
 
-        try {
-            $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
-        } catch (LoaderError $e) {
-            throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
-        }
+        $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
 
         $templateTransformations = $this->getMailLayoutTransformations($layout, $templateType);
         /** @var TransformationInterface $transformation */
@@ -149,7 +145,6 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
                 ->apply($renderedTemplate, $layoutVariables)
             ;
         }
-
         return $renderedTemplate;
     }
 
