@@ -32,21 +32,21 @@ Feature: Order from Back Office (BO)
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice
     When I add products to order "bo_order1" to the first invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 3              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 3              |
+      | price  | 15             |
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 2              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
     And I add products to order "bo_order1" to the second invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 1              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 1              |
+      | price  | 10             |
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 5              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 5              |
+      | price  | 10             |
     Then order "bo_order1" should have 3 invoices
     And order "bo_order1" should have 13 products in total
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
@@ -98,7 +98,7 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 21.0   |
 #      | total_shipping_tax_incl  | 22.26  |
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 21.00 |
 #      | shipping_cost_tax_incl | 22.26 |
 
@@ -106,13 +106,13 @@ Feature: Order from Back Office (BO)
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 2              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
     And I add products to order "bo_order1" to the second invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 1              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 1              |
+      | price  | 10             |
     Then order "bo_order1" should have 2 invoices
     And order "bo_order1" should have 5 products in total
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
@@ -153,13 +153,13 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 14.0  |
 #      | total_shipping_tax_incl  | 14.84 |
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 14.00 |
 #      | shipping_cost_tax_incl | 14.84 |
     When I add discount to order "bo_order1" on second invoice and following details:
-      | name      | discount amount |
-      | type      | amount          |
-      | value     | 5.50            |
+      | name  | discount amount |
+      | type  | amount          |
+      | value | 5.50            |
     Then the first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
@@ -194,17 +194,17 @@ Feature: Order from Back Office (BO)
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 2              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
     And I add products to order "bo_order1" to the second invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 3              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 3              |
+      | price  | 10             |
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 5              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 5              |
+      | price  | 10             |
     Then order "bo_order1" should have 3 invoices
     And order "bo_order1" should have 12 products in total
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
@@ -255,17 +255,17 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 21.0   |
 #      | total_shipping_tax_incl  | 22.26  |
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 21.00 |
 #      | shipping_cost_tax_incl | 22.26 |
     When I add discount to order "bo_order1" on third invoice and following details:
-      | name      | discount fifty-fifty |
-      | type      | percent              |
-      | value     | 50                   |
+      | name  | discount fifty-fifty |
+      | type  | percent              |
+      | value | 50                   |
     When I add discount to order "bo_order1" on second invoice and following details:
-      | name      | discount amount |
-      | type      | amount          |
-      | value     | 5.50            |
+      | name  | discount amount |
+      | type  | amount          |
+      | value | 5.50            |
     Then the first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
@@ -276,8 +276,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl | 7.0    |
       | total_shipping_tax_incl | 7.42   |
     And the second invoice from order "bo_order1" should have following details:
-      | total_products          | 60.000 |
-      | total_products_wt       | 63.600 |
+      | total_products    | 60.000 |
+      | total_products_wt | 63.600 |
 #      | total_discount_tax_excl | 5.19   |
 #      | total_discount_tax_incl | 5.50   |
 #      | total_paid_tax_excl     | 61.81  |
@@ -285,8 +285,8 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl | 7.0    |
 #      | total_shipping_tax_incl | 7.42   |
     And the third invoice from order "bo_order1" should have following details:
-      | total_products          | 50.000 |
-      | total_products_wt       | 53.000 |
+      | total_products    | 50.000 |
+      | total_products_wt | 53.000 |
 #      | total_discount_tax_excl | 25.00  |
 #      | total_discount_tax_incl | 26.50  |
 #      | total_paid_tax_excl     | 32.00  |
@@ -294,14 +294,14 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl | 7.0    |
 #      | total_shipping_tax_incl | 7.42   |
     And order "bo_order1" should have following details:
-      | total_products           | 133.80 |
-      | total_products_wt        | 141.83 |
+      | total_products    | 133.80 |
+      | total_products_wt | 141.83 |
 #      | total_discounts_tax_excl | 30.19  |
 #      | total_discounts_tax_incl | 32.00  |
 #      | total_paid_tax_excl      | 124.61 |
 #      | total_paid_tax_incl      | 132.09 |
 #      | total_paid               | 132.09 |
-      | total_paid_real          | 0.0    |
+      | total_paid_real   | 0.0    |
 #      | total_shipping_tax_excl  | 21.0   |
 #      | total_shipping_tax_incl  | 22.26  |
 
@@ -309,13 +309,13 @@ Feature: Order from Back Office (BO)
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 2              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
     And I add products to order "bo_order1" to the second invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 1              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 1              |
+      | price  | 10             |
     Then order "bo_order1" should have 2 invoices
     And order "bo_order1" should have 5 products in total
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
@@ -356,12 +356,12 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 14.0  |
 #      | total_shipping_tax_incl  | 14.84 |
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 14.00 |
 #      | shipping_cost_tax_incl | 14.84 |
     When I add discount to order "bo_order1" on second invoice and following details:
-      | name      | discount shipping |
-      | type      | free_shipping     |
+      | name | discount shipping |
+      | type | free_shipping     |
     Then the first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
@@ -393,24 +393,30 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_incl  | 14.84 |
     #todo: should the OrderCarrier values count the shipping discount and be only 7.0 ?
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 14.00 |
 #      | shipping_cost_tax_incl | 14.84 |
 
   Scenario: I add products in two different invoices, a product has automatic discount when I move it to an order the discount is also moved
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
+      | name[en-US]               | CartRulePercentForSpecificProduct |
+      | discount_percentage       | 50                                |
+      | priority                  | 2                                 |
+      | free_shipping             | false                             |
+      | discount_application_type | specific_product                  |
+      | discount_product          | Test Product B                    |
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product B"
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 2              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
     And I add products to order "bo_order1" to the second invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 3              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 3              |
+      | price  | 10             |
     Then order "bo_order1" should have 2 invoices
     And order "bo_order1" should have 7 products in total
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
@@ -453,13 +459,13 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 14.0  |
 #      | total_shipping_tax_incl  | 14.84 |
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 14.00 |
 #      | shipping_cost_tax_incl | 14.84 |
     When I edit product "Test Product B" in second invoice from order "bo_order1" with following products details:
-      | amount        | 3                       |
-      | price         | 10                      |
-      | invoice       | first                   |
+      | amount  | 3     |
+      | price   | 10    |
+      | invoice | first |
     Then the available stock for product "Test Product A" should be 98
     And the available stock for product "Test Product B" should be 97
     And the first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
@@ -495,7 +501,7 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 14.0  |
 #      | total_shipping_tax_incl  | 14.84 |
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 14.00 |
 #      | shipping_cost_tax_incl | 14.84 |
 
@@ -503,21 +509,21 @@ Feature: Order from Back Office (BO)
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice
     When I add products to order "bo_order1" to the first invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 3              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 3              |
+      | price  | 15             |
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 2              |
-      | price         | 15             |
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
     And I add products to order "bo_order1" to the second invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 1              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 1              |
+      | price  | 10             |
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product B |
-      | amount        | 5              |
-      | price         | 10             |
+      | name   | Test Product B |
+      | amount | 5              |
+      | price  | 10             |
     Then order "bo_order1" should have 3 invoices
     And order "bo_order1" should have 13 products in total
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
@@ -527,9 +533,9 @@ Feature: Order from Back Office (BO)
     And the available stock for product "Test Product B" should be 94
     # This is the same base scenario as the first one, we don't check values here to make it shorter
     When I edit product "Test Product A" in second invoice from order "bo_order1" with following products details:
-      | amount        | 2                       |
-      | price         | 15                      |
-      | invoice       | third                   |
+      | amount  | 2     |
+      | price   | 15    |
+      | invoice | third |
     Then the first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And the first invoice from order "bo_order1" should contain 3 products "Test Product A"
     And the first invoice from order "bo_order1" should have following details:
@@ -575,13 +581,13 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 21.0   |
 #      | total_shipping_tax_incl  | 22.26  |
     And order "bo_order1" carrier should have following details:
-      | weight                 | 0.600 |
+      | weight | 0.600 |
 #      | shipping_cost_tax_excl | 21.00 |
 #      | shipping_cost_tax_incl | 22.26 |
     When I edit product "Test Product A" in third invoice from order "bo_order1" with following products details:
-      | amount        | 2                       |
-      | price         | 15                      |
-      | invoice       | first                   |
+      | amount  | 2     |
+      | price   | 15    |
+      | invoice | first |
     Then I should get error that adding duplicate product in invoice is forbidden
     And the first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And the first invoice from order "bo_order1" should contain 3 products "Test Product A"
@@ -590,9 +596,9 @@ Feature: Order from Back Office (BO)
     And the third invoice from order "bo_order1" should contain 2 products "Test Product A"
     And the third invoice from order "bo_order1" should contain 5 products "Test Product B"
     When I add products to order "bo_order1" to the third invoice and the following products details:
-      | name          | Test Product A |
-      | amount        | 1              |
-      | price         | 10             |
+      | name   | Test Product A |
+      | amount | 1              |
+      | price  | 10             |
     Then I should get error that adding duplicate product in invoice is forbidden
     And the first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And the first invoice from order "bo_order1" should contain 3 products "Test Product A"

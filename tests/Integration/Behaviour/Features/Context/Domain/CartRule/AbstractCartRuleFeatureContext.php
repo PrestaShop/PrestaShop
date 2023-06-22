@@ -75,6 +75,7 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         if (isset($data['total_quantity'])) {
             $command->setTotalQuantity((int) $data['total_quantity']);
         }
+
         if (isset($data['quantity_per_user'])) {
             $command->setQuantityPerUser((int) $data['quantity_per_user']);
         }

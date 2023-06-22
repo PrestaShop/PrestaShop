@@ -403,8 +403,6 @@ Feature: Order from Back Office (BO)
       | free_shipping             | false                              |
       | discount_percentage       | 50                                 |
       | discount_application_type | specific_product                   |
-      | quantity                  | 1000                               |
-      | quantity_per_user         | 1000                               |
       | discount_product          | Test Product With Percent Discount |
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -447,7 +445,6 @@ Feature: Order from Back Office (BO)
     When I remove product "Test Product With Percent Discount" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
-    # @todo: for some reason it still has 2 rules. The one that shouldn't exist (because product was deleted) is CartRulePercentForSpecificProduct, but after product removal, this cart rule value in order_cart_rule becomes 0 (instead of removing the cart rule completely). HOW THE F* IT WORKED BEFORE?
     Then order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.19"
     Then order "bo_order1" should have following details:
@@ -480,17 +477,12 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
       | name[en-US]               | CartRulePercentForSpecificProduct  |
       | priority                  | 1                                  |
       | free_shipping             | false                              |
       | discount_percentage       | 50                                 |
       | discount_application_type | specific_product                   |
-      | discount_application_type | specific_product                   |
-      | total_quantity            | 1000                               |
-      | quantity_per_user         | 1000                               |
       | discount_product          | Test Product With Percent Discount |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
@@ -565,7 +557,12 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
+      | name[en-US]         | CartRulePercentForSpecificProduct |
+      | priority            | 1                                 |
+      | free_shipping       | false                             |
+      | discount_percentage | 50                                |
+    # @todo: this seems to be a restriction based scenario (not specific_product), so the following step should be replaced when SetCartRuleProductRestrictions cqrs command is done
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
@@ -672,8 +669,13 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
+    And there is a cart rule "CartRulePercentForSpecificProduct1" with following properties:
+      | name[en-US]               | CartRulePercentForSpecificProduct1 |
+      | discount_percentage       | 50                                 |
+      | priority                  | 1                                  |
+      | free_shipping             | false                              |
+      | discount_application_type | specific_product                   |
+      | discount_product          | Test Product With Percent Discount |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
       | amount | 1                                  |
@@ -682,7 +684,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 2 cart rule
     Then order "bo_order1" should have cart rule "discount five-percent" with amount "$18.69"
-    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$166.25"
+    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct1" with amount "$166.25"
     Then order "bo_order1" should have following details:
       | total_products           | 373.80 |
       | total_products_wt        | 396.23 |
@@ -696,7 +698,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     When I remove cart rule "discount five-percent" from order "bo_order1"
     Then order "bo_order1" should have 1 cart rule
-    And order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
+    And order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct1" with amount "$175.00"
     And order "bo_order1" should have following details:
       | total_products           | 373.80 |
       | total_products_wt        | 396.23 |

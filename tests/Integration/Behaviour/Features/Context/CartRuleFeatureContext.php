@@ -31,14 +31,10 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use CartRule;
-use Configuration;
 use Context;
-use DateInterval;
-use DateTime;
 use Db;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use RuntimeException;
 use Validate;
@@ -103,41 +99,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a cart rule named "(.+)" that applies a percent discount of (\d+\.\d+)% with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
-     */
-    public function thereIsACartRuleWithNameAndPercentDiscountOf50AndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $percent, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
-        $this->createCartRule($cartRuleName, $percent, 0, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
-    }
-
-    protected function createCartRule(
-        $cartRuleName,
-        $percent,
-        $amount,
-        $priority,
-        $cartRuleQuantity,
-        $cartRuleQuantityPerUser
-    ) {
-        $cartRule = new CartRule();
-        $cartRule->reduction_percent = $percent;
-        $cartRule->reduction_amount = $amount;
-        $cartRule->name = [Configuration::get('PS_LANG_DEFAULT') => $cartRuleName];
-        $cartRule->description = $cartRuleName;
-        $cartRule->priority = $priority;
-        $cartRule->quantity = $cartRuleQuantity;
-        $cartRule->quantity_per_user = $cartRuleQuantityPerUser;
-        $now = new DateTime();
-        // sub 1s to avoid bad comparisons with strictly greater than
-        $now->sub(new DateInterval('P2D'));
-        $cartRule->date_from = $now->format('Y-m-d H:i:s');
-        $now->add(new DateInterval('P1Y'));
-        $cartRule->date_to = $now->format('Y-m-d H:i:s');
-        $cartRule->active = true;
-        $cartRule->add();
-        $this->getSharedStorage()->set($cartRuleName, $cartRule->id);
-    }
-
-    /**
      * @Given /^cart rule "(.+?)" is restricted to the category "(.+?)" with a quantity of (\d+)$/
      */
     public function cartRuleWithProductRuleRestriction(string $cartRuleName, string $categoryName, int $quantity)
@@ -161,28 +122,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) ' .
             'VALUES (' . (int) $idProductRuleGroup . ', ' . $category->id . ')'
         );
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" has a discount code "(.+)"$/
-     */
-    public function cartRuleNamedHasACode($cartRuleName, $cartRuleCode)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->code = $cartRuleCode;
-        $cartRule->save();
-
-        $this->getSharedStorage()->set($cartRuleCode, (int) $cartRule->id);
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" has no discount code$/
-     */
-    public function cartRuleNamedHasNoCode($cartRuleName)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->code = '';
-        $cartRule->save();
     }
 
     /**
@@ -263,37 +202,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule "(.+)" is restricted on the selection of products$/
-     */
-    public function cartRuleIsRestrictedToSelectionProducts(string $cartRuleName): void
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
-        $cartRule->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" is applied on every order$/
-     */
-    public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->product_restriction = false;
-        $cartRule->reduction_product = 0;
-        $cartRule->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" is disabled$/
-     */
-    public function cartRuleIsDisabled($cartRuleName)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->active = false;
-        $cartRule->save();
-    }
-
-    /**
      * @When /^I enable cart rule "(.+)"$/
      */
     public function enableCartRule($cartRuleName)
@@ -301,60 +209,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule = $this->loadCartRule($cartRuleName);
         $cartRule->active = true;
         $cartRule->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" does not apply to already discounted products$/
-     */
-    public function cartRuleDoesNotApplyToDiscountedProduct($cartRuleName)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->reduction_exclude_special = true;
-        $cartRule->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" offers a gift product "(.+)"$/
-     */
-    public function cartRuleNamedHasAGiftProductNamed($cartRuleName, $productName)
-    {
-        $this->productFeatureContext->checkProductWithNameExists($productName);
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->gift_product = $this->productFeatureContext->getProductWithName($productName)->id;
-        $cartRule->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" offers free shipping$/
-     */
-    public function cartRuleOffersFreeShipping($cartRuleName)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->free_shipping = true;
-        $cartRule->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" applies discount only when cart total is above (\d+\.\d+)$/
-     */
-    public function cartRuleAppliesBetween($cartRuleName, $min)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $cartRule->minimum_amount = $min;
-        $cartRule->save();
-    }
-
-    /**
-     * @Then /^cart rule "(.+)" cannot be applied to my cart$/
-     */
-    public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)
-    {
-        $cartRule = $this->loadCartRule($cartRuleName);
-        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
-
-        if ($result) {
-            throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
-        }
     }
 
     /**
@@ -422,17 +276,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             CartRuleValidityException::class,
             $this->getCartRuleValidityCodeByMessage($expectedMessage)
         );
-    }
-
-    /**
-     * @When /^at least one cart rule applies today for customer with id (\d+)$/
-     */
-    public function someCartRulesExistTodayForCustomerWithId($customerId)
-    {
-        $result = CartRule::haveCartRuleToday($customerId);
-        if (!$result) {
-            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
-        }
     }
 
     /**

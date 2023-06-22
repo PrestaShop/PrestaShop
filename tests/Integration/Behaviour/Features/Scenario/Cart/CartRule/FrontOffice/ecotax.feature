@@ -21,41 +21,57 @@ Feature: Cart rule (percent) calculation with one cart rule
     And there is a product in the catalog named "product_with_ecotax" with a price of 10.000 and 1000 items in stock
     And the product "product_with_ecotax" ecotax is 2.00
     And product "product_with_ecotax" belongs to tax group "taxRule4Percent"
+
+  @restore-cart-rules-after-scenario
+  Scenario:
+    And there is a cart rule "cartRuleFiftyPercent" with following properties:
+      | name[en-US]                  | cartRuleFiftyPercent   |
+      | priority                     | 2                      |
+      | free_shipping                | false                  |
+      | code                         | cartRuleFiftyPercent   |
+      | discount_percentage          | 50                     |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | specific_product       |
+      | discount_product             | product_without_ecotax |
+    And I select address "address1" in my cart
+    When I add 1 item of product "product_without_ecotax" in my cart
+    Then my cart total should be 10.400 tax included
+    And my cart total should be 10.000 tax excluded
+    And I apply the voucher code "cartRuleFiftyPercent"
+    And my cart total should be 5.200 tax included
+    And my cart total should be 5.000 tax excluded
+
+  @restore-cart-rules-after-scenario
+  Scenario:
     And there is a cart rule "cartRuleFiftyPercent" with following properties:
       | name[en-US]                  | cartRuleFiftyPercent |
-      | total_quantity               | 1000                 |
-      | quantity_per_user            | 1000                 |
       | priority                     | 2                    |
       | free_shipping                | false                |
       | code                         | cartRuleFiftyPercent |
       | discount_percentage          | 50                   |
       | apply_to_discounted_products | true                 |
-      | discount_application_type    | selected_products    |
-
-  Scenario:
-    Given cart rule "cartRuleFiftyPercent" is restricted to product "product_without_ecotax"
-    And I select address "address1" in my cart
-    When I add 1 item of product "product_without_ecotax" in my cart
-    Then my cart total should be 10.400 tax included
-    And my cart total should be 10.000 tax excluded
-    And I use the discount "cartRuleFiftyPercent"
-    And my cart total should be 5.200 tax included
-    And my cart total should be 5.000 tax excluded
-
-  Scenario:
-    Given cart rule "cartRuleFiftyPercent" is restricted to product "product_with_ecotax"
+      | discount_application_type    | specific_product     |
+      | discount_product             | product_with_ecotax  |
     And I select address "address1" in my cart
     When I add 1 item of product "product_with_ecotax" in my cart
     Then my cart total should be 12.400 tax included
     And my cart total should be 12.000 tax excluded
-    And I use the discount "cartRuleFiftyPercent"
+    And I apply the voucher code "cartRuleFiftyPercent"
     And my cart total should be 6.200 tax included
     And my cart total should be 6.000 tax excluded
     And I should have a voucher named "cartRuleFiftyPercent" with 6.2 of discount
 
   Scenario:
+    And there is a cart rule "cartRuleFiftyPercent" with following properties:
+      | name[en-US]                  | cartRuleFiftyPercent |
+      | priority                     | 2                    |
+      | free_shipping                | false                |
+      | code                         | cartRuleFiftyPercent |
+      | discount_percentage          | 50                   |
+      | apply_to_discounted_products | true                 |
+      | discount_application_type    | specific_product     |
+      | discount_product             | product_with_ecotax  |
     Given Ecotax belongs to tax group "taxRule4Percent"
-    And cart rule "cartRuleFiftyPercent" is restricted to product "product_with_ecotax"
     And I select address "address1" in my cart
     When I add 1 item of product "product_with_ecotax" in my cart
     And my cart total should be precisely 12.000 tax excluded

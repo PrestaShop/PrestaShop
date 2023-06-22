@@ -30,7 +30,6 @@ Feature: Apply cart rule to cart from Back Office (BO)
     Then I should have 1 different products in my cart
     And cart rule "limitedCartRule" can be applied to my cart
     When I use the discount "limitedCartRule"
-    Then at least one cart rule applies today for customer with id 0
     And I should have 1 products in my cart
     When I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |

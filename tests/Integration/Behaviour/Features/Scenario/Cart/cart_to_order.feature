@@ -11,13 +11,17 @@ Feature: Check cart to order data copy
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
+    And there is a cart rule "cartrule1" with following properties:
+      | name[en-US]         | cartrule1 |
+      | priority            | 1         |
+      | free_shipping       | false     |
+      | code                | foo1      |
+      | discount_percentage | 50        |
 
   Scenario: 1 product in cart, 1 cart rule
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -45,14 +49,17 @@ Feature: Check cart to order data copy
     Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
+  @restore-cart-rules-after-scenario
   Scenario: 1 product in cart, 2 cart rules
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
-    Given there is a cart rule named "cartrule2" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule2" has a discount code "foo2"
+    And there is a cart rule "cartrule2" with following properties:
+      | name[en-US]         | cartrule2 |
+      | priority            | 2         |
+      | free_shipping       | false     |
+      | code                | foo2      |
+      | discount_percentage | 50        |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -86,8 +93,6 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -123,10 +128,12 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
-    Given there is a cart rule named "cartrule2" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule2" has a discount code "foo2"
+    Given there is a cart rule "cartrule2" with following properties:
+      | name[en-US]         | cartrule2 |
+      | priority            | 2         |
+      | free_shipping       | false     |
+      | code                | foo2      |
+      | discount_percentage | 50        |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -171,8 +178,6 @@ Feature: Check cart to order data copy
       | discount_currency     | usd       |
       | discount_includes_tax | false     |
       | code                  | foo5      |
-      | total_quantity        | 1000      |
-      | quantity_per_user     | 1000      |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -201,6 +206,7 @@ Feature: Check cart to order data copy
     Then customer "customer1" should have 1 cart rules that apply to him
     Then cart rule for customer "customer1" in position 1 should apply a discount of 480.190000
 
+  @restore-cart-rules-after-scenario
   Scenario: 1 product in cart, 1 cart rule offering free gift
     Given I have an empty default cart
     Given email sending is disabled
@@ -209,8 +215,6 @@ Feature: Check cart to order data copy
       | name[en-US]       | cartrule13 |
       | priority          | 13         |
       | free_shipping     | false      |
-      | total_quantity    | 1000       |
-      | quantity_per_user | 1000       |
       | gift_product      | product4   |
       | code              | foo13      |
     Given there is a zone named "zone1"
@@ -241,18 +245,14 @@ Feature: Check cart to order data copy
     Then current cart order should have a discount in position 1 with an amount of 36.989680 tax included and 35.567000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
-  @restore-cart-rules-before-scenario
   Scenario: 2 product in cart, 1 cart rule offering free gift, offering same product as already existing in cart
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    # @todo: should be moved to background, but now every time product is created in background its id changes, so that needs to be resolved first
     Given there is a cart rule cartrule13 with following properties:
       | name[en-US]       | cartrule13 |
       | priority          | 13         |
       | free_shipping     | false      |
-      | total_quantity    | 1000       |
-      | quantity_per_user | 1000       |
       | gift_product      | product4   |
       | code              | foo13      |
     Given there is a zone named "zone1"
