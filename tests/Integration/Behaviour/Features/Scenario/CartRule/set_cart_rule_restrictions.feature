@@ -12,9 +12,9 @@ Feature: Set cart rule restrictions in BO
     And there is a currency named "chf" with iso code "CHF" and exchange rate of 1.25
     And currency "usd" is the default one
     And language with iso code "en" is the default one
-    And I create cart rule "rule_free_shipping_1" with following properties:
+    And there is a cart rule "rule_free_shipping_1" with following properties:
       | name[en-US]       | free shipping 1      |
-      | is_active         | true                 |
+      | active            | true                 |
       | allow_partial_use | false                |
       | priority          | 1                    |
       | valid_from        | 2022-01-01 11:00:00  |
@@ -23,34 +23,34 @@ Feature: Set cart rule restrictions in BO
       | quantity_per_user | 10                   |
       | free_shipping     | true                 |
       | code              | rule_free_shipping_1 |
-    And I create cart rule "rule_50_percent" with following properties:
-      | name[en-US]                            | Half the price         |
-      | is_active                              | true                   |
-      | allow_partial_use                      | true                   |
-      | priority                               | 2                      |
-      | valid_from                             | 2022-01-01 11:00:00    |
-      | valid_to                               | 3001-01-01 12:00:00    |
-      | total_quantity                         | 10                     |
-      | quantity_per_user                      | 12                     |
-      | free_shipping                          | false                  |
-      | code                                   | rule_50_percent        |
-      | reduction_percentage                   | 50                     |
-      | reduction_apply_to_discounted_products | false                  |
-      | discount_application_type              | order_without_shipping |
-    And I create cart rule "rule_70_percent" with following properties:
-      | name[en-US]                            | Half the price         |
-      | is_active                              | true                   |
-      | allow_partial_use                      | true                   |
-      | priority                               | 3                      |
-      | valid_from                             | 2022-01-01 11:00:00    |
-      | valid_to                               | 3001-01-01 12:00:00    |
-      | total_quantity                         | 10                     |
-      | quantity_per_user                      | 12                     |
-      | free_shipping                          | false                  |
-      | code                                   | rule_70_percent        |
-      | reduction_percentage                   | 70                     |
-      | reduction_apply_to_discounted_products | false                  |
-      | discount_application_type              | order_without_shipping |
+    And there is a cart rule "rule_50_percent" with following properties:
+      | name[en-US]                  | Half the price         |
+      | active                       | true                   |
+      | allow_partial_use            | true                   |
+      | priority                     | 2                      |
+      | valid_from                   | 2022-01-01 11:00:00    |
+      | valid_to                     | 3001-01-01 12:00:00    |
+      | total_quantity               | 10                     |
+      | quantity_per_user            | 12                     |
+      | free_shipping                | false                  |
+      | code                         | rule_50_percent        |
+      | discount_percentage          | 50                     |
+      | apply_to_discounted_products | false                  |
+      | discount_application_type    | order_without_shipping |
+    And there is a cart rule "rule_70_percent" with following properties:
+      | name[en-US]                  | Half the price         |
+      | active                       | true                   |
+      | allow_partial_use            | true                   |
+      | priority                     | 3                      |
+      | valid_from                   | 2022-01-01 11:00:00    |
+      | valid_to                     | 3001-01-01 12:00:00    |
+      | total_quantity               | 10                     |
+      | quantity_per_user            | 12                     |
+      | free_shipping                | false                  |
+      | code                         | rule_70_percent        |
+      | discount_percentage          | 70                     |
+      | apply_to_discounted_products | false                  |
+      | discount_application_type    | order_without_shipping |
     And cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules |  |
     And cart rule "rule_50_percent" should have the following properties:
