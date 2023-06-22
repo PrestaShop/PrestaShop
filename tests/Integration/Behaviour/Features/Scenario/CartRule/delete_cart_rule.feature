@@ -33,23 +33,7 @@ Feature: Add cart rule
     Then Cart rule with reference "cart_rule_1" does not exist
 
   Scenario: Delete multiple cart rules
-    When I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                      | Cart Rule 1         |
-      | highlight                        | true                |
-      | active                           | true                |
-      | allow_partial_use                | true                |
-      | priority                         | 1                   |
-      | is_active                        | true                |
-      | valid_from                       | 2019-01-01 11:05:00 |
-      | valid_to                         | 2019-12-01 00:00:00 |
-      | total_quantity                   | 10                  |
-      | quantity_per_user                | 2                   |
-      | free_shipping                    | true                |
-      | minimum_amount                   | 10                  |
-      | minimum_amount_currency          | usd                 |
-      | minimum_amount_tax_included      | true                |
-      | minimum_amount_shipping_included | true                |
-    And I create cart rule "cart_rule_2" with following properties:
+    When I create cart rule "cart_rule_2" with following properties:
       | name[en-US]                      | Cart Rule 2         |
       | highlight                        | true                |
       | active                           | true                |
@@ -65,6 +49,22 @@ Feature: Add cart rule
       | minimum_amount_currency          | usd                 |
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
-    And I bulk delete cart rules "cart_rule_1,cart_rule_2"
-    Then Cart rule with reference "cart_rule_1" does not exist
-    And Cart rule with reference "cart_rule_2" does not exist
+    And I create cart rule "cart_rule_3" with following properties:
+      | name[en-US]                      | Cart Rule 3         |
+      | highlight                        | true                |
+      | active                           | true                |
+      | allow_partial_use                | true                |
+      | priority                         | 1                   |
+      | is_active                        | true                |
+      | valid_from                       | 2019-01-01 11:05:00 |
+      | valid_to                         | 2019-12-01 00:00:00 |
+      | total_quantity                   | 10                  |
+      | quantity_per_user                | 2                   |
+      | free_shipping                    | true                |
+      | minimum_amount                   | 10                  |
+      | minimum_amount_currency          | usd                 |
+      | minimum_amount_tax_included      | true                |
+      | minimum_amount_shipping_included | true                |
+    And I bulk delete cart rules "cart_rule_2,cart_rule_3"
+    Then Cart rule with reference "cart_rule_2" does not exist
+    And Cart rule with reference "cart_rule_3" does not exist

@@ -163,8 +163,8 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
         if (isset($data['allow_partial_use'])) {
             $command->setAllowPartialUse(PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']));
         }
-        if (isset($data['enabled'])) {
-            $command->setEnabled(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
         }
         if (isset($data['code'])) {
             $command->setCode($data['code']);
@@ -176,7 +176,7 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             $command->setPriority((int) $data['priority']);
         }
         if (isset($data['valid_from'])) {
-            $command->setDateRange(
+            $command->setValidityDateRange(
                 new DateTimeImmutable($data['valid_from']),
                 new DateTimeImmutable($data['valid_to'])
             );

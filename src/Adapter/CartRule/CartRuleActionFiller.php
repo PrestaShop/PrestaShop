@@ -102,8 +102,7 @@ class CartRuleActionFiller
 
         if ($amountDiscount) {
             $this->fillAmountDiscount($cartRule, $amountDiscount);
-        }
-        if ($percentageDiscount) {
+        } else {
             $this->fillPercentageDiscount($cartRule, $percentageDiscount);
         }
 

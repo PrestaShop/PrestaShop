@@ -170,12 +170,12 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle(
                 new AddProductToCartCommand(
-                    SharedStorage::getStorage()->get($cartReference),
+                    $this->getSharedStorage()->get($cartReference),
                     $productId,
                     $quantity
                 )
             );
-            SharedStorage::getStorage()->set($productName, $productId);
+            $this->getSharedStorage()->set($productName, $productId);
 
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
@@ -583,7 +583,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function useDiscountByCodeOnCart(string $voucherCode, string $cartReference)
     {
-        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cartId = $this->getSharedStorage()->get($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         $this->getCommandBus()->handle(
@@ -612,7 +612,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new AddCartRuleToCartCommand(
-                SharedStorage::getStorage()->get($cartReference),
+                $this->getSharedStorage()->get($cartReference),
                 $cartRuleId
             )
         );
@@ -878,6 +878,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function addGiftPlusFreeShippingCartRule(string $voucherCode, string $giftProductName, string $cartReference)
     {
         $productId = $this->getProductIdByName($giftProductName);
+
+        if (!(new Product($productId))->id) {
+            throw new RuntimeException(sprintf('Product %d was not found', $productId));
+        }
         $cartRule = $this->createCommonCartRule($voucherCode);
         $cartRule->free_shipping = true;
         $cartRule->gift_product = $productId;

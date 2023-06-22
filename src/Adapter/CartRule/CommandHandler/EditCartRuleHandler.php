@@ -134,8 +134,9 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
             $cartRule->date_to = $command->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
             $updatableProperties[] = 'date_to';
         }
-        if (null !== $command->getMinimumAmount()) {
-            $minimumAmount = $command->getMinimumAmount();
+
+        $minimumAmount = $command->getMinimumAmount();
+        if (null !== $minimumAmount) {
             $cartRule->minimum_amount = (float) (string) $minimumAmount->getAmount();
             $cartRule->minimum_amount_currency = $minimumAmount->getCurrencyId()->getValue();
             $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();

@@ -163,6 +163,17 @@ class CartRuleActionBuilderTest extends TestCase
                 ],
             ],
         ];
+
+        yield 'discount application not provided' => [
+            [
+                'discount' => [
+                    'reduction' => [
+                        'value' => '144',
+                        'type' => Reduction::TYPE_AMOUNT,
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function getUnsupportedData(): iterable
@@ -193,17 +204,6 @@ class CartRuleActionBuilderTest extends TestCase
                         'value' => '144',
                     ],
                     'discount_application' => DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
-                ],
-            ],
-        ];
-
-        yield 'missing discount application' => [
-            [
-                'discount' => [
-                    'reduction' => [
-                        'value' => '144',
-                        'type' => Reduction::TYPE_AMOUNT,
-                    ],
                 ],
             ],
         ];
@@ -646,6 +646,26 @@ class CartRuleActionBuilderTest extends TestCase
             new CartRuleAction(
                 false,
                 new GiftProduct(15, 32),
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('50'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
+            ),
+        ];
+
+        yield 'percent action with missing discount application' => [
+            [
+                'discount' => [
+                    'reduction' => [
+                        'type' => Reduction::TYPE_PERCENTAGE,
+                        'value' => '50',
+                    ],
+                ],
+            ],
+            new CartRuleAction(
+                false,
+                null,
                 Discount::buildPercentageDiscount(
                     new DecimalNumber('50'),
                     false,

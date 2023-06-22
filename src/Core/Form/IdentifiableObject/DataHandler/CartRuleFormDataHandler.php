@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use DateTime;
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule\CartRuleActionBuilder;
@@ -64,18 +64,22 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         $command = new AddCartRuleCommand(
             $informationData['name'],
-            isset($informationData['highlight']) && (bool) $informationData['highlight'],
-            (bool) $informationData['partial_use'],
-            (int) $informationData['priority'],
-            (bool) $informationData['active'],
-            DateTime::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['from']),
-            DateTime::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['to']),
-            (int) $conditionsData['total_available'],
-            (int) $conditionsData['available_per_user'],
             $this->cartRuleActionBuilder->build($data['actions'])
         );
 
-        $command->setCode($informationData['code']);
+        $command
+            ->setCode($informationData['code'])
+            ->setHighlightInCart(isset($informationData['highlight']) && (bool) $informationData['highlight'])
+            ->setAllowPartialUse((bool) $informationData['partial_use'])
+            ->setPriority((int) $informationData['priority'])
+            ->setActive((bool) $informationData['active'])
+            ->setValidityDateRange(
+                DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['from']),
+                DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['to'])
+            )
+            ->setTotalQuantity((int) $conditionsData['total_available'])
+            ->setQuantityPerUser((int) $conditionsData['available_per_user'])
+        ;
 
         if (!empty($conditionsData['minimum_amount']['amount'])) {
             $amountData = $conditionsData['minimum_amount'];

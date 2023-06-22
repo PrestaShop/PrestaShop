@@ -68,14 +68,14 @@ class CartRuleReductionForEditing
         bool $tax,
         ?int $currencyId,
         ?int $productId,
-        bool $excludeSpecial
+        bool $applyToDiscountedProducts
     ) {
         $this->percent = $percent;
         $this->amount = $amount;
         $this->tax = $tax;
         $this->currencyId = $currencyId;
         $this->productId = $productId;
-        $this->applyToDiscountedProducts = $excludeSpecial;
+        $this->applyToDiscountedProducts = $applyToDiscountedProducts;
     }
 
     /**
