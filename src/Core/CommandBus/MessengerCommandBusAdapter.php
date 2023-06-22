@@ -27,17 +27,21 @@
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\Exception\LogicException;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 /**
  * Class MessengerCommandBusAdapter is the Symfony Messenger CommandsBus implementation for PrestaShop's contract.
  */
 final class MessengerCommandBusAdapter implements CommandBusInterface
 {
-    public function __construct(private readonly MessageBusInterface $commandBus)
+    use HandleTrait {
+        HandleTrait::handle as process;
+    }
+
+    public function __construct(MessageBusInterface $messageBus)
     {
+        $this->messageBus = $messageBus;
     }
 
     /**
@@ -46,23 +50,7 @@ final class MessengerCommandBusAdapter implements CommandBusInterface
     public function handle($command)
     {
         try {
-            $envelope = $this->commandBus->dispatch($command);
-            /** @var HandledStamp[] $handledStamps */
-            $handledStamps = $envelope->all(HandledStamp::class);
-
-            if (!$handledStamps) {
-                throw new LogicException(sprintf('Message of type "%s" was handled zero times. Exactly one handler is expected when using "%s::%s()".', get_debug_type($envelope->getMessage()), MessengerCommandBusAdapter::class, __FUNCTION__));
-            }
-
-            if (\count($handledStamps) > 1) {
-                $handlers = implode(', ', array_map(function (HandledStamp $stamp): string {
-                    return sprintf('"%s"', $stamp->getHandlerName());
-                }, $handledStamps));
-
-                throw new LogicException(sprintf('Message of type "%s" was handled multiple times. Only one handler is expected when using "%s::%s()", got %d: %s.', get_debug_type($envelope->getMessage()), MessengerCommandBusAdapter::class, __FUNCTION__, \count($handledStamps), $handlers));
-            }
-
-            return $handledStamps[0]->getResult();
+            return $this->process($command);
         } catch (HandlerFailedException $exception) {
             throw $exception->getPrevious();
         }
