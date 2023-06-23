@@ -63,7 +63,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     /**
      * {@inheritdoc}
      */
-    final public function getDefinition()
+    public function getDefinition()
     {
         $definition = new GridDefinition(
             $this->getId(),

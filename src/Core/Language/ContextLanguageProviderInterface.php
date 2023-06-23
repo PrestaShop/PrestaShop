@@ -24,39 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query;
+declare(strict_types=1);
 
-use Doctrine\DBAL\Connection;
+namespace PrestaShop\PrestaShop\Core\Language;
 
 /**
- * Class AbstractDoctrineQueryBuilder provides most common dependencies of doctrine query builders.
+ * @experimental This will be refactored once the Context replacement architecture has been decided
  */
-abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInterface
+interface ContextLanguageProviderInterface
 {
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
-    public function __construct(
-        protected readonly Connection $connection,
-        protected readonly string $dbPrefix
-    ) {
-    }
-
-    /**
-     * Escape percent in query for LIKE query
-     *      '20%' => '20\%'
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function escapePercent(string $value): string
-    {
-        return str_replace(
-            '%',
-            '\%',
-            $value
-        );
-    }
+    public function getLanguageId(): int;
 }

@@ -36,28 +36,8 @@ use Symfony\Component\DependencyInjection\Container;
 /**
  * Class GridFactory is responsible for creating final Grid instance.
  */
-final class GridFactory implements GridFactoryInterface
+class GridFactory implements GridFactoryInterface
 {
-    /**
-     * @var GridDefinitionFactoryInterface
-     */
-    private $definitionFactory;
-
-    /**
-     * @var GridDataFactoryInterface
-     */
-    private $dataFactory;
-
-    /**
-     * @var GridFilterFormFactoryInterface
-     */
-    private $filterFormFactory;
-
-    /**
-     * @var HookDispatcherInterface
-     */
-    private $hookDispatcher;
-
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataFactoryInterface $dataFactory
@@ -65,21 +45,17 @@ final class GridFactory implements GridFactoryInterface
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
-        GridDefinitionFactoryInterface $definitionFactory,
-        GridDataFactoryInterface $dataFactory,
-        GridFilterFormFactoryInterface $filterFormFactory,
-        HookDispatcherInterface $hookDispatcher
+        protected readonly GridDefinitionFactoryInterface $definitionFactory,
+        protected readonly GridDataFactoryInterface $dataFactory,
+        protected readonly GridFilterFormFactoryInterface $filterFormFactory,
+        protected readonly HookDispatcherInterface $hookDispatcher
     ) {
-        $this->definitionFactory = $definitionFactory;
-        $this->dataFactory = $dataFactory;
-        $this->filterFormFactory = $filterFormFactory;
-        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getGrid(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria): GridInterface
     {
         $definition = $this->definitionFactory->getDefinition();
         $data = $this->dataFactory->getData($searchCriteria);

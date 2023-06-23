@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,39 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query;
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
-use Doctrine\DBAL\Connection;
+const {$} = window;
 
-/**
- * Class AbstractDoctrineQueryBuilder provides most common dependencies of doctrine query builders.
- */
-abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInterface
-{
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
-    public function __construct(
-        protected readonly Connection $connection,
-        protected readonly string $dbPrefix
-    ) {
-    }
+$(() => {
+  const grid = new Grid('feature_value');
 
-    /**
-     * Escape percent in query for LIKE query
-     *      '20%' => '20\%'
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function escapePercent(string $value): string
-    {
-        return str_replace(
-            '%',
-            '\%',
-            $value
-        );
-    }
-}
+  grid.addExtension(new ExportToSqlManagerExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new ReloadListActionExtension());
+  grid.addExtension(new SortingExtension());
+  grid.addExtension(new SubmitRowActionExtension());
+});

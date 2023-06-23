@@ -54,3 +54,7 @@ services:
   prestashop.core.search.builder.typed_builder.product_combination_filters_builder:
     class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFiltersBuilder'
     tags: [ 'core.typed_filters_builder' ]
+
+  PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\FeatureValueFiltersBuilder:
+    autowire: true
+    tags: [ 'core.typed_filters_builder' ]

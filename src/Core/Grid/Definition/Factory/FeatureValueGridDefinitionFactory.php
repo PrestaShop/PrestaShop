@@ -31,30 +31,40 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\Request;
 
-class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
+/**
+ * @see FeatureValueGridFactory - it modifies grid definition to adapt values which depends on request filters (like name and some filter columns)
+ */
+class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    use BulkDeleteActionTrait;
-    use DeleteActionTrait;
+    public const GRID_ID = 'feature_value';
 
-    public const GRID_ID = 'feature';
+    public function getDefinition(): GridDefinitionInterface
+    {
+        return new GridDefinition(
+            $this->getId(),
+            $this->getName(),
+            $this->getColumns(),
+            $this->getFilters(),
+            $this->getGridActions(),
+            $this->getBulkActions(),
+            $this->getViewOptions()
+        );
+    }
 
     /**
      * {@inheritdoc}
@@ -69,7 +79,8 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Features', [], 'Admin.Catalog.Feature');
+        // the name is overriden in FeatureValueGridFactory to be the dynamic Feature name instead
+        return 'Features';
     }
 
     /**
@@ -78,76 +89,21 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
-            ->setOptions([
-                'bulk_field' => 'id_feature',
-            ])
-            )
-            ->add((new DataColumn('id_feature'))
+            ->add((new DataColumn('id_feature_value'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
-                'field' => 'id_feature',
+                'field' => 'id_feature_value',
             ])
             )
-            ->add((new DataColumn('name'))
-            ->setName($this->trans('Name', [], 'Admin.Global'))
+            ->add((new DataColumn('value'))
+            ->setName($this->trans('Value', [], 'Admin.Global'))
             ->setOptions([
-                'field' => 'name',
-            ])
-            )
-            ->add((new DataColumn('values_count'))
-            ->setName($this->trans('Values', [], 'Admin.Catalog.Feature'))
-            ->setOptions([
-                'field' => 'values_count',
-            ])
-            )
-            // @todo: position action is not implemented yet
-            //        Uncomment Position column and delete position DataColumn when its done.
-            ->add((new DataColumn('position'))
-            ->setName($this->trans('Position', [], 'Admin.Global'))
-            ->setOptions(['field' => 'position'])
-            )
-            ->add((new PositionColumn('position'))
-            ->setName($this->trans('Position', [], 'Admin.Global'))
-            ->setOptions([
-                'id_field' => 'id_feature',
-                'position_field' => 'position',
-                'update_method' => 'POST',
-                'update_route' => 'admin_features_update_position',
+                'field' => 'value',
             ])
             )
             ->add((new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('view'))
-                    ->setName($this->trans('View', [], 'Admin.Actions'))
-                    ->setIcon('zoom_in')
-                    ->setOptions([
-                        'route' => 'admin_feature_values_index',
-                        'route_param_name' => 'featureId',
-                        'route_param_field' => 'id_feature',
-                        'clickable_row' => true,
-                    ])
-                     )
-                    ->add((new LinkRowAction('edit'))
-                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                    ->setIcon('edit')
-                    ->setOptions([
-                        'route' => 'admin_features_edit',
-                        'route_param_name' => 'featureId',
-                        'route_param_field' => 'id_feature',
-                    ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_features_delete',
-                            'featureId',
-                            'id_feature',
-                            Request::METHOD_DELETE
-                        )
-                    ),
-            ])
+            // @todo: actions will be added in dedicated PR
             );
     }
 
@@ -193,44 +149,25 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getFilters(): FilterCollectionInterface
     {
+        // some filters (which depends on request filters) are added inside FeatureValueGridFactory
         return (new FilterCollection())
-            ->add((new Filter('id_feature', NumberType::class))
+            ->add((new Filter('id_feature_value', NumberType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
                     'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                 ],
             ])
-            ->setAssociatedColumn('id_feature')
+            ->setAssociatedColumn('id_feature_value')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add((new Filter('value', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    'placeholder' => $this->trans('Search value', [], 'Admin.Actions'),
                 ],
             ])
-            ->setAssociatedColumn('name')
-            )
-            ->add((new Filter('position', NumberType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('position')
-            )
-            ->add((new Filter('actions', SearchAndResetType::class))
-            ->setAssociatedColumn('actions')
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_features_index',
-            ])
-            ->setAssociatedColumn('actions')
+            ->setAssociatedColumn('value')
             );
     }
 
@@ -239,8 +176,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
-        return (new BulkActionCollection())
-            ->add($this->buildBulkDeleteAction('admin_features_bulk_delete'))
-         ;
+        // @todo: bulk actions will be added in dedicated PR
+        return new BulkActionCollection();
     }
 }

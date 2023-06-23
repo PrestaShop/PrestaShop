@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,41 +21,21 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query;
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-use Doctrine\DBAL\Connection;
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-/**
- * Class AbstractDoctrineQueryBuilder provides most common dependencies of doctrine query builders.
- */
-abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInterface
-{
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
-    public function __construct(
-        protected readonly Connection $connection,
-        protected readonly string $dbPrefix
-    ) {
-    }
+{% block content %}
+  {% block feature_values_listing %}
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureValueGrid} %}
+  {% endblock %}
+{% endblock %}
 
-    /**
-     * Escape percent in query for LIKE query
-     *      '20%' => '20\%'
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function escapePercent(string $value): string
-    {
-        return str_replace(
-            '%',
-            '\%',
-            $value
-        );
-    }
-}
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/feature_value.bundle.js') }}"></script>
+{% endblock %}

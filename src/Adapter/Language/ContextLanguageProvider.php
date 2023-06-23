@@ -24,39 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query;
+declare(strict_types=1);
 
-use Doctrine\DBAL\Connection;
+namespace PrestaShop\PrestaShop\Adapter\Language;
+
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface;
 
 /**
- * Class AbstractDoctrineQueryBuilder provides most common dependencies of doctrine query builders.
+ * @experimental This will be refactored once the Context replacement architecture is decided
  */
-abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInterface
+class ContextLanguageProvider implements ContextLanguageProviderInterface
 {
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
     public function __construct(
-        protected readonly Connection $connection,
-        protected readonly string $dbPrefix
+        protected readonly LegacyContext $context
     ) {
     }
 
-    /**
-     * Escape percent in query for LIKE query
-     *      '20%' => '20\%'
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function escapePercent(string $value): string
+    public function getLanguageId(): int
     {
-        return str_replace(
-            '%',
-            '\%',
-            $value
-        );
+        $langId = (int) $this->context->getContext()->language->id;
+
+        if (!$langId) {
+            throw new CoreException('Context language is missing');
+        }
+
+        return $langId;
     }
 }

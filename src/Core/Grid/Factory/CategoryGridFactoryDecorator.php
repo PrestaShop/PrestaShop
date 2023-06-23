@@ -67,7 +67,7 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getGrid(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria): GridInterface
     {
         $categoryGrid = $this->categoryGridFactory->getGrid($searchCriteria);
 

@@ -11,3 +11,5 @@ services:
     arguments:
       - 'fa': 'Tahoma'
         'ar': 'Tahoma'
+
+  PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface: '@PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider'

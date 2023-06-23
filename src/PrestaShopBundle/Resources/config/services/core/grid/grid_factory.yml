@@ -512,6 +512,13 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+  PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory:
+    autowire: true
+    arguments:
+      $definitionFactory: '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory'
+      $dataFactory: '@prestashop.core.grid.data.factory.feature_value'
+      $filterFormFactory: '@prestashop.core.grid.filter.form_factory'
+
   prestashop.core.grid.grid_factory.store:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
