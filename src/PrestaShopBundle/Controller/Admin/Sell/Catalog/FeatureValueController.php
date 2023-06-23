@@ -29,8 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -40,6 +38,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FeatureValueController extends FrameworkBundleAdminController
 {
+    /**
+     * Button name which when submitted indicates that after form submission
+     * user wants to be redirected to ADD NEW form to add additional value
+     */
+    private const SAVE_AND_ADD_BUTTON_NAME = 'save-and-add-new';
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
@@ -83,6 +87,14 @@ class FeatureValueController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
+                    return $this->redirectToRoute('admin_feature_values_add', [
+                        'featureId' => $featureId,
+                    ]);
+                }
+
                 return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
@@ -104,17 +116,8 @@ class FeatureValueController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction(int $featureValueId, Request $request): Response
+    public function editAction(int $featureId, int $featureValueId, Request $request): Response
     {
-        try {
-            /** @var EditableFeatureValue $featureValueForEditing */
-            $featureValueForEditing = $this->getQueryBus()->handle(new GetFeatureValueForEditing($featureValueId));
-        } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-
-            return $this->redirectToRoute('admin_features_index');
-        }
-
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
 
@@ -127,8 +130,14 @@ class FeatureValueController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
+                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
+                    return $this->redirectToRoute('admin_feature_values_add', [
+                        'featureId' => $featureId,
+                    ]);
+                }
+
                 return $this->redirectToRoute('admin_feature_values_index', [
-                    'featureId' => $featureValueForEditing->getFeatureId()->getValue(),
+                    'featureId' => $featureId,
                 ]);
             }
         } catch (Exception $e) {
@@ -136,7 +145,7 @@ class FeatureValueController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/edit.html.twig', [
-            'featureId' => $featureValueForEditing->getFeatureId()->getValue(),
+            'featureId' => $featureId,
             'featureValueForm' => $featureValueForm->createView(),
             'layoutTitle' => $this->trans(
                 'Feature value',
