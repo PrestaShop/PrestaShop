@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -57,5 +59,45 @@ class FeatureValueController extends FrameworkBundleAdminController
             //                ],
             //            ],
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param int $featureId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(int $featureId, Request $request): Response
+    {
+        $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
+        $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
+
+        $featureValueForm = $featureValueFormBuilder->getForm();
+        $featureValueForm->handleRequest($request);
+
+        try {
+            $handlerResult = $featureValueFormHandler->handle($featureValueForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_features_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/create.html.twig', [
+            'featureValueForm' => $featureValueForm->createView(),
+            'layoutTitle' => $this->trans('New Feature Value', 'Admin.Navigation.Menu'),
+        ]);
+    }
+
+    private function getErrorMessages(): array
+    {
+        //@todo:
+        return [];
     }
 }

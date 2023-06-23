@@ -4,7 +4,6 @@ services:
     bind:
       $queryBus: '@prestashop.core.query_bus'
 
-
   prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
     arguments:
@@ -117,6 +116,10 @@ services:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FeatureValueFormDataProvider:
+    autowire: true
+    public: false
 
   prestashop.core.form.identifiable_object.data_provider.order_message_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderMessageFormDataProvider'
