@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Integration\PrestaShopBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Handler\HandlerFactory;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -63,14 +63,13 @@ class FeatureFlagCommandTest extends KernelTestCase
         $kernel = self::bootKernel();
         /** @var FeatureFlagRepository $featureFlagRepository */
         $featureFlagRepository = $kernel->getContainer()->get(FeatureFlagRepository::class);
+        $featureFlagService = $kernel->getContainer()->get(FeatureFlagService::class);
         $featureFlags = $featureFlagRepository->findAll();
         /** @var FeatureFlag $featureFlag */
         foreach ($featureFlags as $featureFlag) {
-            // Get Handler
-            $handler = HandlerFactory::getHandler($featureFlag);
             // This method is based on the output of the list action so it indirectly tests it
             $flagState = $this->getFeatureFlagState($kernel, $featureFlag->getName());
-            $this->assertEquals($flagState, $handler->isEnabled());
+            $this->assertEquals($flagState, $featureFlagService->isEnabled($featureFlag->getName()));
         }
     }
 

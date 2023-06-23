@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
@@ -45,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Shop;
 use Smarty;
@@ -293,8 +293,8 @@ class AdminControllerTest extends TestCase
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
                 }
-                if ($param === 'prestashop.core.admin.feature_flag.repository' || $param === FeatureFlagRepository::class) {
-                    return $this->getMockedFeatureFlagRepository();
+                if ($param === 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService' || $param === FeatureFlagService::class) {
+                    return $this->getMockedFeatureFlagService();
                 }
             });
 
@@ -375,15 +375,15 @@ class AdminControllerTest extends TestCase
         return $mockAvifExtensionChecker;
     }
 
-    private function getMockedFeatureFlagRepository(): FeatureFlagRepository
+    private function getMockedFeatureFlagService(): FeatureFlagService
     {
-        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+        $mockFeatureFlagService = $this->getMockBuilder(FeatureFlagService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
+        $mockFeatureFlagService->method('isEnabled')->willReturn(false);
 
-        return $mockFeatureFlagRepository;
+        return $mockFeatureFlagService;
     }
 
     private function getMockNumberSpecification(): NumberSpecification
