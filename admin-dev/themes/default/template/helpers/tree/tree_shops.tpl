@@ -85,7 +85,7 @@
 		);
 
 		{if isset($selected_shops)}
-			{assign var=imploded_selected_shops value=implode(',', $selected_shops)}
+			{assign var=imploded_selected_shops value=implode('","', $selected_shops)}
 			var selected_shops = new Array("{$imploded_selected_shops}");
 
 			$("#{$id|escape:'html':'UTF-8'}").find(".tree-item :input").each(

@@ -28,7 +28,7 @@
 
 <script type="text/javascript">
 {if isset($selected_categories) && !empty($selected_categories)}
-	{assign var=imploded_selected_categories value=implode(',', $selected_categories)}
+	{assign var=imploded_selected_categories value=implode('","', $selected_categories)}
 	var selected_categories = new Array("{$imploded_selected_categories}");
 
 	$('#{$id_tree}').tree('collapseAll');
