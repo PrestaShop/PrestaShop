@@ -28,20 +28,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\OrderState\Exception;
 
 /**
- * Is thrown when order state constraint is violated
+ * Class OrderStateUploadFailedException
  */
-class OrderStateConstraintException extends OrderStateException
+class OrderStateUploadFailedException extends OrderStateException
 {
-    /**
-     * @var int Code is used when invalid name is provided for order state
-     */
-    public const INVALID_NAME = 1;
-    /**
-     * @var int Code is used when empty name is provided for order state
-     */
-    public const EMPTY_NAME = 2;
-    /**
-     * @var int
-     */
-    public const INVALID_FILE_SIZE = 3;
 }

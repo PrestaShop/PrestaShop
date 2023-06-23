@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\EditOrderStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\MissingOrderStateRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateFileUploaderInterface;
 
 /**
  * Handles commands which edits given order state with provided data.
@@ -42,6 +43,19 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
 #[AsCommandHandler]
 final class EditOrderStateHandler extends AbstractOrderStateHandler implements EditOrderStateHandlerInterface
 {
+    /**
+     * @var OrderStateFileUploaderInterface
+     */
+    protected $fileUploader;
+
+    /**
+     * @param OrderStateFileUploaderInterface $fileUploader
+     */
+    public function __construct(OrderStateFileUploaderInterface $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -62,6 +76,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (false === $orderState->update()) {
             throw new OrderStateException('Failed to update order state');
+        }
+
+        if ($command->getFilePathName()) {
+            $this->fileUploader->upload($command->getFilePathName(), $orderStateId->getValue(), $command->getFileSize());
         }
     }
 

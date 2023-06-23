@@ -38,6 +38,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -133,8 +134,13 @@ class OrderStateType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('icon', FileType::class, [
+                'required' => false,
+                'label' => $this->trans('Icon', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Upload an icon from your computer (File type: .gif, suggested size: 16x16).', 'Admin.Shopparameters.Help'),
+            ])
             ->add('color', ColorPickerType::class, [
-                'required' => true,
+                'required' => false,
                 'label' => $this->trans('Color', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Status will be highlighted in this color. HTML colors only.', 'Admin.Shopparameters.Help'),
             ])
@@ -202,7 +208,7 @@ class OrderStateType extends TranslatorAwareType
                 ],
             ])
             ->add('template', TranslatableChoiceType::class, [
-                'label' => $this->trans('Email template', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Template', 'Admin.Shopparameters.Feature'),
                 'hint' => sprintf(
                     '%s<br>%s',
                     $this->trans('Only letters, numbers and underscores ("_") are allowed.', 'Admin.Shopparameters.Help'),

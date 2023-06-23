@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\AddOrderStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateFileUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 
 /**
@@ -42,6 +43,19 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 #[AsCommandHandler]
 final class AddOrderStateHandler extends AbstractOrderStateHandler implements AddOrderStateHandlerInterface
 {
+    /**
+     * @var OrderStateFileUploaderInterface
+     */
+    protected $fileUploader;
+
+    /**
+     * @param OrderStateFileUploaderInterface $fileUploader
+     */
+    public function __construct(OrderStateFileUploaderInterface $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,6 +71,9 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         }
 
         $orderState->add();
+        if ($command->getFilePathName()) {
+            $this->fileUploader->upload($command->getFilePathName(), (int) $orderState->id, $command->getFileSize());
+        }
 
         return new OrderStateId((int) $orderState->id);
     }

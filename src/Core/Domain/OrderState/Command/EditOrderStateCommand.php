@@ -107,6 +107,26 @@ class EditOrderStateCommand
     private $template;
 
     /**
+     * @var string|null
+     */
+    protected $pathName;
+
+    /**
+     * @var int|null
+     */
+    protected $fileSize;
+
+    /**
+     * @var string|null
+     */
+    protected $mimeType;
+
+    /**
+     * @var string|null
+     */
+    protected $originalName;
+
+    /**
      * @param int $orderStateId
      */
     public function __construct($orderStateId)
@@ -338,5 +358,55 @@ class EditOrderStateCommand
         $this->template = $template;
 
         return $this;
+    }
+
+    /**
+     * @param string $pathName
+     * @param int $fileSize
+     * @param string $mimeType
+     * @param string $originalName
+     */
+    public function setFileInformation(
+        string $pathName,
+        int $fileSize,
+        string $mimeType,
+        string $originalName
+    ): void {
+        $this->pathName = $pathName;
+        $this->fileSize = $fileSize;
+        $this->mimeType = $mimeType;
+        $this->originalName = $originalName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFilePathName(): ?string
+    {
+        return $this->pathName;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFileSize(): ?int
+    {
+        return $this->fileSize;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMimeType(): ?string
+    {
+        return $this->mimeType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOriginalName(): ?string
+    {
+        return $this->originalName;
     }
 }

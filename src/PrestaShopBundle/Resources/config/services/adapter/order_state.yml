@@ -5,6 +5,8 @@ services:
   prestashop.adapter.order_state.command_handler.add_order_state:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\AddOrderStateHandler'
     autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\File\Uploader\OrderStateFileUploader'
 
   prestashop.adapter.order_state.query_handler.get_order_state_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\QueryHandler\GetOrderStateForEditingHandler'
@@ -13,6 +15,8 @@ services:
   prestashop.adapter.order_state.command_handler.edit_order_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\EditOrderStateHandler'
     autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\File\Uploader\OrderStateFileUploader'
 
   prestashop.adapter.order_state.command_handler.delete_order_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\DeleteOrderStateHandler'
@@ -21,3 +25,7 @@ services:
   prestashop.adapter.order_state.command_handler.bulk_delete_order_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\BulkDeleteOrderStateHandler'
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\File\Uploader\OrderStateFileUploader:
+    arguments:
+      - '@prestashop.core.configuration.upload_size_configuration'

@@ -72,7 +72,7 @@ class OrderReturnStateType extends TranslatorAwareType
             ->add('color', ColorPickerType::class, [
                 'label' => $this->trans('Color', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Status will be highlighted in this color. HTML colors only.', 'Admin.Shopparameters.Help'),
-                'required' => true,
+                'required' => false,
             ])
         ;
     }

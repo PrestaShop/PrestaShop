@@ -23,25 +23,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\OrderState\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderState;
 
-/**
- * Is thrown when order state constraint is violated
- */
-class OrderStateConstraintException extends OrderStateException
+interface OrderStateFileUploaderInterface
 {
     /**
-     * @var int Code is used when invalid name is provided for order state
+     * @param string $filePath
+     * @param int $id
+     * @param int $fileSize
      */
-    public const INVALID_NAME = 1;
-    /**
-     * @var int Code is used when empty name is provided for order state
-     */
-    public const EMPTY_NAME = 2;
-    /**
-     * @var int
-     */
-    public const INVALID_FILE_SIZE = 3;
+    public function upload(string $filePath, int $id, int $fileSize): void;
 }
