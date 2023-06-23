@@ -300,7 +300,7 @@ describe('Product quick view', async () => {
 
   // 7 - Select color on hover from product list
   describe('Select color on hover on product list', async () => {
-    it('should select color on hover on product list and check it on product page', async function () {
+    it('should go to the home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
 
       await cartPage.goToHomePage(page);
@@ -319,7 +319,7 @@ describe('Product quick view', async () => {
     });
 
     it('should get product image Url and go back to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getImageURL', baseContext);
 
       imageFirstColor = await productPage.getProductImageUrls(page);
       await productPage.goToHomePage(page);
