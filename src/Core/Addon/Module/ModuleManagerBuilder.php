@@ -101,7 +101,7 @@ class ModuleManagerBuilder
         if (null === self::$moduleManager) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
-                self::$moduleManager = $sfContainer->get('prestashop.module.manager');
+                self::$moduleManager = $sfContainer->get(ModuleManager::class);
             } else {
                 self::$moduleManager = new ModuleManager(
                     $this->buildRepository(),
@@ -128,7 +128,7 @@ class ModuleManagerBuilder
         if (null === self::$modulesRepository) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
-                self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
+                self::$modulesRepository = $sfContainer->get(ModuleRepository::class);
             } else {
                 self::$modulesRepository = new ModuleRepository(
                     self::$moduleDataProvider,

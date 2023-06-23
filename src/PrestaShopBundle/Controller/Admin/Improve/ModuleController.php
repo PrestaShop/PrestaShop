@@ -33,7 +33,10 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
@@ -65,7 +68,7 @@ class ModuleController extends ModuleAbstractController
     public function manageAction()
     {
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $moduleRepository = $this->get(ModuleRepository::class);
 
         $installedProducts = $moduleRepository->getList();
 
@@ -118,7 +121,7 @@ class ModuleController extends ModuleAbstractController
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
         $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextProvider->getContext();
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $moduleRepository = $this->get(ModuleRepository::class);
         // Get accessed module object
         $moduleAccessed = $moduleRepository->getModule($module_name);
 
@@ -198,8 +201,8 @@ class ModuleController extends ModuleAbstractController
 
         $moduleName = $request->get('module_name');
         $source = $request->query->get('source');
-        $moduleManager = $this->get('prestashop.module.manager');
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $moduleManager = $this->get(ModuleManager::class);
+        $moduleRepository = $this->get(ModuleRepository::class);
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $response = [$moduleName => []];
 
@@ -323,8 +326,8 @@ class ModuleController extends ModuleAbstractController
             return $deniedAccess;
         }
 
-        $moduleManager = $this->get('prestashop.module.manager');
-        $zipSource = $this->get('prestashop.module.sourcehandler.zip');
+        $moduleManager = $this->get(ModuleManager::class);
+        $zipSource = $this->get(ZipSourceHandler::class);
         $serverParams = new ServerParams();
         $moduleName = '';
 
@@ -400,7 +403,7 @@ class ModuleController extends ModuleAbstractController
                     'Admin.Modules.Notification',
                     ['%module%' => $moduleName]
                 );
-                $installationResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
+                $installationResponse['is_configurable'] = (bool) $this->get(ModuleRepository::class)
                     ->getModule($moduleName)
                     ->attributes
                     ->get('is_configurable');

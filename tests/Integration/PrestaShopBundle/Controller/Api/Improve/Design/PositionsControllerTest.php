@@ -36,6 +36,7 @@ use Hook;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -101,8 +102,8 @@ class PositionsControllerTest extends TestCase
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
 
         /** @var ModuleManager */
-        $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
-        $moduleRepository = self::$kernel->getContainer()->get('prestashop.core.admin.module.repository');
+        $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);
+        $moduleRepository = self::$kernel->getContainer()->get(ModuleRepository::class);
         // We use modules present in tests/resources/modules to be independent with the external API
         // We install two modules that are not present in the test db to be sure every step of the install performs correctly
         // And both modules have a common hook displayHome

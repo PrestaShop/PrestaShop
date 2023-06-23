@@ -84,7 +84,7 @@ class ModuleControllerTest extends WebTestCase
 
         $moduleRepository = $this->createMock(ModuleRepository::class);
         $moduleRepository->method('getList')->willReturn(new ModuleCollection());
-        self::$kernel->getContainer()->set('prestashop.core.admin.module.repository', $moduleRepository);
+        self::$kernel->getContainer()->set(ModuleRepository::class, $moduleRepository);
     }
 
     public function testModuleAction(): void

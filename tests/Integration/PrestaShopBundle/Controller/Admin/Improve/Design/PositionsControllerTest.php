@@ -70,7 +70,7 @@ class PositionsControllerTest extends WebTestCase
 
         $this->client = self::createClient();
         /** @var ModuleManager */
-        $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+        $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);
         if (!$moduleManager->isInstalled('ps_emailsubscription')) {
             $moduleManager->install('ps_emailsubscription');
         }
