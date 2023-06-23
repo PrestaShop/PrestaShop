@@ -334,7 +334,7 @@ describe('Product quick view', async () => {
       await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
     });
 
-    it('should check that the second product image is different than the second', async function () {
+    it('should check that the second product image is different than the first', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getProductImage2', baseContext);
 
       const imageSecondColor = await productPage.getProductImageUrls(page);
