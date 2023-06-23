@@ -226,7 +226,7 @@ class Home extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isQuickViewProductModalVisible(page) {
+  async isQuickViewProductModalVisible(page) {
     return this.elementVisible(page, this.quickViewModalDiv, 2000);
   }
 
