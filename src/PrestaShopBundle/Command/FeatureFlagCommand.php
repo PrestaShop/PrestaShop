@@ -58,7 +58,7 @@ class FeatureFlagCommand extends Command
 
     public function __construct(
         private readonly FeatureFlagRepository $featureFlagRepository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly FeatureFlagService $featureFlagService
     ) {
         parent::__construct();
     }
@@ -98,11 +98,10 @@ class FeatureFlagCommand extends Command
         $table->setHeaders(['Feature flag', 'Type', 'State']);
         /** @var FeatureFlag $featureFlag */
         foreach ($featureFlags as $featureFlag) {
-            $handler = HandlerFactory::getHandler($featureFlag);
             $table->addRow([
                 $featureFlag->getName(),
-                $this->getTypeRow($handler),
-                $handler->isEnabled() ? 'Enabled' : 'Disabled',
+                $this->getTypeRow($featureFlag),
+                $this->featureFlagService->isEnabled($featureFlag->getName()) ? 'Enabled' : 'Disabled',
             ]);
         }
         $table->render();
@@ -110,12 +109,12 @@ class FeatureFlagCommand extends Command
         return self::SUCCESS_RETURN_CODE;
     }
 
-    private function getTypeRow(TypeHandlerInterface $handler): string
+    private function getTypeRow(FeatureFlag $featureFlag): string
     {
         $out = [];
 
-        foreach ($handler->getFeatureFlag()->getTypeOrder() as $type) {
-            if ($handler->getTypeName() === $type) {
+        foreach ($featureFlag->getTypeOrder() as $type) {
+            if ($this->featureFlagService->getTypeUsed($featureFlag->getName()) === $type) {
                 $out[] = "[$type]";
             } else {
                 $out[] = $type;
@@ -144,22 +143,19 @@ class FeatureFlagCommand extends Command
             return self::INVALID_ARGUMENTS_RETURN_CODE;
         }
 
-        $handler = HandlerFactory::getHandler($featureFlag);
-
         if ($expectedState) {
-            $handler->enable();
+            $this->featureFlagService->enable($featureFlagArgument);
             $output->writeln(sprintf(
                 '<info>Feature flag %s was enabled</info>',
                 $featureFlagArgument
             ));
         } else {
-            $handler->disable();
+            $this->featureFlagService->disable($featureFlagArgument);
             $output->writeln(sprintf(
                 '<info>Feature flag %s was disabled</info>',
                 $featureFlagArgument
             ));
         }
-        $this->entityManager->flush();
 
         return self::SUCCESS_RETURN_CODE;
     }

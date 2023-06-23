@@ -168,6 +168,6 @@ class QuickAccessCore extends ObjectModel
      */
     private static function productPageV2Enabled(): bool
     {
-        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+        return SymfonyContainer::getInstance()->get('PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 }

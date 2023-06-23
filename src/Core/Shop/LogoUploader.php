@@ -30,9 +30,9 @@ use Configuration;
 use Context;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfigurationInterface;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopException;
 use Shop;
 use Tools;
@@ -43,40 +43,16 @@ use Tools;
 class LogoUploader
 {
     /**
-     * @var Shop
-     */
-    private $shop;
-
-    /**
      * @var array
      */
     private $errors = [];
 
-    /**
-     * @var ImageFormatConfigurationInterface
-     */
-    private $imageFormatConfiguration;
-
-    /**
-     * @var string
-     */
-    private $imageDirection;
-
-    /**
-     * @var FeatureFlagRepository
-     */
-    private $featureFlagRepository;
-
     public function __construct(
-        Shop $shop,
-        ImageFormatConfigurationInterface $imageFormatConfiguration,
-        FeatureFlagRepository $featureFlagRepository,
-        string $imageDirection
+        private Shop $shop,
+        private ImageFormatConfigurationInterface $imageFormatConfiguration,
+        private FeatureFlagService $featureFlagService,
+        private string $imageDirection
     ) {
-        $this->shop = $shop;
-        $this->imageFormatConfiguration = $imageFormatConfiguration;
-        $this->imageDirection = $imageDirection;
-        $this->featureFlagRepository = $featureFlagRepository;
     }
 
     public function updateHeader()
@@ -160,7 +136,7 @@ class LogoUploader
                     *
                     * In case of .jpg images, the actual format inside is decided by ImageManager.
                     */
-                    if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+                    if ($this->featureFlagService->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
                         $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
                     } else {
                         $configuredImageFormats = ['jpg'];
