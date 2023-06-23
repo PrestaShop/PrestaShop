@@ -420,6 +420,12 @@ services:
     public: true
 
   # deprecated services
+  # Alias for this abstract definition causes tests in vendor fail for some reason, so we stick to full definition instead
   prestashop.core.grid.definition.factory.abstract_grid_definition:
-    alias: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+    abstract: true
+    arguments:
+      - '@prestashop.core.hook.dispatcher'
+    calls:
+      - [ setTranslator, [ '@translator' ] ]
     deprecated: ~
