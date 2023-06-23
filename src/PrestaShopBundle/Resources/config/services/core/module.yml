@@ -35,7 +35,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler:
     autowire: true
-    public: false
     arguments:
       $modulePath: '%modules_dir%'
     tags: [ core.module.source_handler ]

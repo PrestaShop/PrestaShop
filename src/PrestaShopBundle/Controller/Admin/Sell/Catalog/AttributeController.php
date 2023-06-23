@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
@@ -72,7 +73,7 @@ class AttributeController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_attribute_groups_index');
         }
 
-        $attributeGroupViewDataProvider = $this->get('prestashop.adapter.product.attribute_group.attribute_group_view_data_provider');
+        $attributeGroupViewDataProvider = $this->get(AttributeGroupViewDataProvider::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
             'attributeGrid' => $this->presentGrid($attributeGrid),

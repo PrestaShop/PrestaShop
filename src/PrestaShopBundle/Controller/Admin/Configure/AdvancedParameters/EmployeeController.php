@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
 use ImageManager;
+use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
@@ -466,7 +467,7 @@ class EmployeeController extends FrameworkBundleAdminController
     public function getAccessibleTabsAction(Request $request)
     {
         $profileId = $request->query->get('profileId');
-        $tabsDataProvider = $this->get('prestashop.adapter.data_provider.tab');
+        $tabsDataProvider = $this->get(TabDataProvider::class);
         $contextEmployeeProvider = $this->get('prestashop.adapter.data_provider.employee');
 
         return $this->json(
