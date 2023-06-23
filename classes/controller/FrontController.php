@@ -1655,8 +1655,10 @@ class FrontControllerCore extends Controller
         return $shop;
     }
 
-    private static function configuredImageUrl(string $configKey, $psImageUrl) {
+    private static function configuredImageUrl(string $configKey, $psImageUrl)
+    {
         $image = Configuration::get($configKey);
+
         return $image ? $psImageUrl . $image : '';
     }
 
