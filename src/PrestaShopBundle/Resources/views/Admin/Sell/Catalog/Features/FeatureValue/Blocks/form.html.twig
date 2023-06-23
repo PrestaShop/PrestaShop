@@ -39,13 +39,22 @@
     </div>
 
     <div class="card-footer">
-{# @todo: redirect to feature view page #}
-      <a href="{{ path('admin_features_index') }}" class="btn btn-outline-secondary">
+      <a href="{{ path('admin_features_index', {'featureId': featureId}) }}" class="btn btn-outline-secondary">
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
-      <button class="btn btn-primary float-right" id="save-button">
+      <div class="float-right">
+        {# render save-and-add-new button only in edit page #}
+        {# @todo: how to identify and redirect to add page based if this button was submitted?#}
+        {% if featureValueForm.vars.data.feature_value_id is defined %}
+          <button class="btn btn-primary" id="save-and-add-new-button">
+            {{ 'Save then add another value'|trans({}, 'Admin.Catalog.Feature') }}
+          </button>
+        {% endif %}
+      <button class="btn btn-primary" id="save-button">
         {{ 'Save'|trans({}, 'Admin.Actions') }}
       </button>
+      </div>
+
     </div>
   </div>
   {{ form_end(featureValueForm) }}

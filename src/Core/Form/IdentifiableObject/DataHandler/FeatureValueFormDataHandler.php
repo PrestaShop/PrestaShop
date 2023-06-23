@@ -58,7 +58,6 @@ class FeatureValueFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data): void
     {
         $command = (new EditFeatureValueCommand($id))
-            ->setFeatureId($data['feature_id'])
             ->setLocalizedValues($data['value'])
         ;
 

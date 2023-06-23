@@ -116,3 +116,14 @@ admin_feature_values_add:
     _legacy_feature_flag: feature
     redirectQueryParamsToKeep:
       - 'featureId'
+
+admin_feature_values_edit:
+  path: /{featureId}/values/{featureValueId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::editAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:updatefeature_value
+    _legacy_feature_flag: feature
+    redirectQueryParamsToKeep:
+      - 'featureId'

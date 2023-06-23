@@ -29,7 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -50,14 +51,13 @@ class FeatureValueController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featureValueGrid' => $this->presentGrid($featureValueGridFactory->getGrid($filters)),
-            // @todo: uncomment when add action is migrated
-            //            'layoutHeaderToolbarBtn' => [
-            //                'add_feature_value' => [
-            //                    'href' => $this->generateUrl('admin_feature_values_add', ['featureId' => $featureId]),
-            //                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
-            //                    'icon' => 'add_circle_outline',
-            //                ],
-            //            ],
+            'layoutHeaderToolbarBtn' => [
+                'add_feature_value' => [
+                    'href' => $this->generateUrl('admin_feature_values_add', ['featureId' => $filters->getFeatureId()]),
+                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
         ]);
     }
 
@@ -74,7 +74,7 @@ class FeatureValueController extends FrameworkBundleAdminController
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
 
-        $featureValueForm = $featureValueFormBuilder->getForm();
+        $featureValueForm = $featureValueFormBuilder->getForm(['feature_id' => $featureId]);
         $featureValueForm->handleRequest($request);
 
         try {
@@ -90,8 +90,58 @@ class FeatureValueController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/create.html.twig', [
+            'featureId' => $featureId,
             'featureValueForm' => $featureValueForm->createView(),
             'layoutTitle' => $this->trans('New Feature Value', 'Admin.Navigation.Menu'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $featureValueId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(int $featureValueId, Request $request): Response
+    {
+        try {
+            /** @var EditableFeatureValue $featureValueForEditing */
+            $featureValueForEditing = $this->getQueryBus()->handle(new GetFeatureValueForEditing($featureValueId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_features_index');
+        }
+
+        $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
+        $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
+
+        $featureValueForm = $featureValueFormBuilder->getFormFor($featureValueId);
+        $featureValueForm->handleRequest($request);
+
+        try {
+            $handlerResult = $featureValueFormHandler->handleFor((int) $featureValueId, $featureValueForm);
+
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_feature_values_index', [
+                    'featureId' => $featureValueForEditing->getFeatureId()->getValue(),
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/edit.html.twig', [
+            'featureId' => $featureValueForEditing->getFeatureId()->getValue(),
+            'featureValueForm' => $featureValueForm->createView(),
+            'layoutTitle' => $this->trans(
+                'Feature value',
+                'Admin.Navigation.Menu',
+            ),
         ]);
     }
 

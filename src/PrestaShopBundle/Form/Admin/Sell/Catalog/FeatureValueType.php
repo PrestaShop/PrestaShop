@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -56,23 +56,28 @@ class FeatureValueType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('feature_value_id', HiddenType::class)
             ->add('feature_id', ChoiceType::class, [
                 'choices' => $this->featureChoiceProvider->getChoices(),
                 'label' => $this->trans('Feature', 'Admin.Global'),
+                'data' => $builder->getData()['feature_id'] ?? null,
+                'attr' => [
+                    // disable feature id choices when editing feature value and only allow changing them when creating new one
+                    'disabled' => isset($builder->getData()['feature_value_id']),
+                ],
             ])
             ->add('value', TranslatableType::class, [
                 'label' => $this->trans('Value', 'Admin.Global'),
-                'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
-                    //@todo: replace with constant
-                    new Length(['max' => 255]),
                 ],
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
                             'type' => 'generic_name',
                         ]),
+                        //@todo: replace with constant
+                        new Length(['max' => 255]),
                     ],
                 ],
                 'help' => $this->trans('Invalid characters: %chars%', 'Admin.Notifications.Info', ['%chars%' => '<>={}']),

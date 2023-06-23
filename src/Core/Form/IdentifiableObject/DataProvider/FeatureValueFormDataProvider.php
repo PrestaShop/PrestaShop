@@ -26,17 +26,33 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
+
 /**
  * @todo: unfinished
  */
 class FeatureValueFormDataProvider implements FormDataProviderInterface
 {
+    public function __construct(
+        private readonly CommandBusInterface $queryBus
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getData($id): array
     {
-        return [];
+        /** @var EditableFeatureValue $featureValueForEditing */
+        $featureValueForEditing = $this->queryBus->handle(new GetFeatureValueForEditing($id));
+
+        return [
+            'feature_id' => $featureValueForEditing->getFeatureId()->getValue(),
+            'feature_value_id' => $featureValueForEditing->getFeatureValueId()->getValue(),
+            'value' => $featureValueForEditing->getLocalizedValues(),
+        ];
     }
 
     /**

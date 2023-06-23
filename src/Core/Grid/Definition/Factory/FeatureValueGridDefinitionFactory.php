@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -103,8 +105,24 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
             )
             ->add((new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
-            // @todo: actions will be added in dedicated PR
-            );
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add(
+                        (new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_feature_values_edit',
+                                'route_param_name' => 'featureValueId',
+                                'route_param_field' => 'id_feature_value',
+                                'extra_route_params' => [
+                                    'featureId' => 'id_feature',
+                                ],
+                            ])
+                    ),
+            ])
+            )
+        ;
     }
 
     /**
