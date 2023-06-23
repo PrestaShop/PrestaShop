@@ -11,7 +11,6 @@ services:
       - '@prestashop.adapter.module.payment_module_provider'
 
   PrestaShop\PrestaShop\Core\Module\ModuleRepository:
-    public: false
     lazy: true
     arguments:
       - '@prestashop.adapter.data_provider.module'
@@ -30,7 +29,6 @@ services:
       - { name: kernel.event_subscriber }
 
   PrestaShop\PrestaShop\Core\Module\ModuleManager:
-    public: false
     autowire: true
     arguments:
       $moduleDataProvider: '@prestashop.adapter.data_provider.module'
