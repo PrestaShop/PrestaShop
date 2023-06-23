@@ -692,10 +692,10 @@ class FrontControllerCore extends Controller
         }
 
         if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION['notifications'])) {
-            $notifications = array_merge($notifications, json_decode($_SESSION['notifications'], true));
+            $notifications = array_merge_recursive($notifications, json_decode($_SESSION['notifications'], true));
             unset($_SESSION['notifications']);
         } elseif (isset($_COOKIE['notifications'])) {
-            $notifications = array_merge($notifications, json_decode($_COOKIE['notifications'], true));
+            $notifications = array_merge_recursive($notifications, json_decode($_COOKIE['notifications'], true));
             unset($_COOKIE['notifications']);
         }
 
