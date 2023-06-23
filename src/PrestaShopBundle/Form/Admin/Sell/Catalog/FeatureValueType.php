@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValueSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -76,8 +77,7 @@ class FeatureValueType extends TranslatorAwareType
                         new TypedRegex([
                             'type' => 'generic_name',
                         ]),
-                        //@todo: replace with constant
-                        new Length(['max' => 255]),
+                        new Length(['max' => FeatureValueSettings::VALUE_MAX_LENGTH]),
                     ],
                 ],
                 'help' => $this->trans('Invalid characters: %chars%', 'Admin.Notifications.Info', ['%chars%' => '<>={}']),

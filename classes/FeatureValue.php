@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValueSettings;
+
 /**
  * Class FeatureValueCore.
  */
@@ -50,7 +52,7 @@ class FeatureValueCore extends ObjectModel
             'custom' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
-            'value' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'value' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => FeatureValueSettings::VALUE_MAX_LENGTH],
         ],
     ];
 
