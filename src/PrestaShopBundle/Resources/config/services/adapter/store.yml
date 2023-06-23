@@ -11,38 +11,33 @@ services:
 
   prestashop.adapter.store.query_handler.get_store_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing }
 
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand }
 
   prestashop.adapter.store.command_handler.bulk_toggle_store_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkUpdateStoreStatusHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand }
 
   prestashop.adapter.store.command_handler.delete_store:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\DeleteStoreHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand }
 
   prestashop.adapter.store.command_handler.bulk_delete_store_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkDeleteStoreHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand }
 
   # deprecated
   prestashop.core.domain.store.repository.store_repository:

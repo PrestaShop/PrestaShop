@@ -10,21 +10,18 @@ services:
 
   prestashop.adapter.contact.query_handler.get_contact_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\QueryHandler\GetContactForEditingHandler'
+    autoconfigure: true
     arguments:
       - '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing' }
 
   prestashop.adapter.contact.command_handler.edit_contact:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\EditContactHandler'
+    autoconfigure: true
     arguments:
       - '@validator'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand' }
 
   prestashop.adapter.contact.command_handler.add_contact:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\AddContactHandler'
+    autoconfigure: true
     arguments:
       - '@validator'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand' }

@@ -43,6 +43,4 @@ services:
       - '%kernel.project_dir%/mails'
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
     public: true
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand
+    autoconfigure: true

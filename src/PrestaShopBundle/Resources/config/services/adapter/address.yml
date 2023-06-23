@@ -6,79 +6,57 @@ services:
 
   prestashop.adapter.address.command_handler.delete_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\DeleteAddressHandler'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand' }
+    autoconfigure: true
 
   prestashop.adapter.address.command_handler.bulk_delete_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\BulkDeleteAddressHandler'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand' }
+    autoconfigure: true
 
   prestashop.adapter.address.command_handler.add_manufacturer_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\AddManufacturerAddressHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand'
+    autoconfigure: true
 
   prestashop.adapter.address.command_handler.edit_manufacturer_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditManufacturerAddressHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand'
+    autoconfigure: true
 
   prestashop.adapter.address.query_handler.get_manufacturer_address_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetManufacturerAddressForEditingHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing'
+    autoconfigure: true
 
   prestashop.adapter.address.query_handler.get_required_fields_for_address:
     class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetRequiredFieldsForAddressHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress'
+    autoconfigure: true
 
   prestashop.adapter.address.command_handler.set_required_fields_for_address:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\SetRequiredFieldsForAddressHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand'
+    autoconfigure: true
 
   prestashop.adapter.address.command_handler.add_customer_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\AddCustomerAddressHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand'
+    autoconfigure: true
 
   prestashop.adapter.address.query_handler.get_customer_address_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetCustomerAddressForEditingHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing'
+    autoconfigure: true
 
   prestashop.adapter.address.command_handler.edit_customer_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditCustomerAddressHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand'
+    autoconfigure: true
 
   prestashop.adapter.address.command_handler.edit_order_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditOrderAddressHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.address.command_handler.edit_customer_address_handler'
       - '@prestashop.adapter.order.command_handler.change_order_delivery_address_handler'
       - '@prestashop.adapter.order.command_handler.change_order_invoice_address_handler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand'
 
   prestashop.adapter.address.command_handler.edit_cart_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditCartAddressHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.address.command_handler.edit_customer_address_handler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand'
 
   prestashop.adapter.address.formatter:
     class: 'PrestaShop\PrestaShop\Adapter\Address\AddressFormatter'

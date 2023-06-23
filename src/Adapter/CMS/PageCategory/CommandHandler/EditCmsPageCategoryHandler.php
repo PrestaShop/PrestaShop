@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\EditCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotUpdateCmsPageCategoryException;
@@ -38,6 +39,7 @@ use PrestaShopException;
 /**
  * Edits cms page category.
  */
+#[AsCommandHandler]
 final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler implements EditCmsPageCategoryHandlerInterface
 {
     /**

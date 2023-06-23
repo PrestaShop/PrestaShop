@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Hook\QueryHandler;
 
 use Hook;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookStatusHandlerInterface;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 /**
  * @internal
  */
+#[AsQueryHandler]
 final class GetHookStatusHandler implements GetHookStatusHandlerInterface
 {
     /**

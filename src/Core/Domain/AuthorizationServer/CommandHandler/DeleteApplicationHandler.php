@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DeleteApplicationException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
@@ -40,6 +41,7 @@ use PrestaShopBundle\Entity\AuthorizedApplication;
  *
  * @experimental
  */
+#[AsCommandHandler]
 class DeleteApplicationHandler implements DeleteApplicationHandlerInterface
 {
     /**

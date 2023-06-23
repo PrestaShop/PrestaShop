@@ -14,104 +14,91 @@ services:
 
   prestashop.adapter.currency.command_handler.toggle_currency_status:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ToggleCurrencyStatusHandler'
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand' }
 
   prestashop.adapter.currency.command_handler.delete_currency:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\DeleteCurrencyHandler'
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand' }
 
   prestashop.adapter.currency.command_handler.create_currency:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddOfficialCurrencyHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.localization.cldr.locale_repository'
       - "@=service('prestashop.core.admin.lang.repository').findAll()"
       - "@prestashop.adapter.currency.command_handler.command_validator"
       - '@prestashop.adapter.data_provider.currency'
       - '@prestashop.core.localization.currency.pattern_transformer'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand' }
 
   prestashop.adapter.currency.command_handler.create_unofficial_currency:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddUnofficialCurrencyHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.localization.cldr.locale_repository'
       - "@=service('prestashop.core.admin.lang.repository').findAll()"
       - "@prestashop.adapter.currency.command_handler.command_validator"
       - '@prestashop.adapter.data_provider.currency'
       - '@prestashop.core.localization.currency.pattern_transformer'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand' }
 
   prestashop.adapter.currency.command_handler.update_official_currency:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditOfficialCurrencyHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.localization.cldr.locale_repository'
       - "@=service('prestashop.core.admin.lang.repository').findAll()"
       - "@prestashop.adapter.currency.command_handler.command_validator"
       - "@prestashop.core.localization.currency.pattern_transformer"
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand' }
 
   prestashop.adapter.currency.command_handler.update_unofficial_currency:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditUnofficialCurrencyHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.localization.cldr.locale_repository'
       - "@=service('prestashop.core.admin.lang.repository').findAll()"
       - "@prestashop.adapter.currency.command_handler.command_validator"
       - "@prestashop.core.localization.currency.pattern_transformer"
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand' }
 
   prestashop.adapter.currency.command_handler.update_exchange_rates:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\RefreshExchangeRatesHandler'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand' }
+    autoconfigure: true
 
   prestashop.adapter.currency.command_handler.bulk_toggle_currencies_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\BulkToggleCurrenciesStatusHandler'
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-    tags:
-      - { name: messenger.cqrs_handler, command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatusCommand' }
 
   prestashop.adapter.currency.command_handler.bulk_delete_currencies_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\BulkDeleteCurrenciesHandler'
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-    tags:
-      - { name: messenger.cqrs_handler, command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkDeleteCurrenciesCommand' }
-
 
   # Query handlers
 
   prestashop.adapter.currency.query_handler.get_currency_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyForEditingHandler'
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@prestashop.core.localization.currency.pattern_transformer'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing' }
 
   prestashop.adapter.currency.query_handler.get_currency_exchange_rate:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyExchangeRateHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.exchange_rate.provider'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate' }
 
   prestashop.adapter.currency.query_handler.get_reference_currency:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetReferenceCurrencyHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.localization.cldr.locale_repository'
       - '@=service("prestashop.core.admin.lang.repository").findAll()'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }
 
   PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository: ~
 

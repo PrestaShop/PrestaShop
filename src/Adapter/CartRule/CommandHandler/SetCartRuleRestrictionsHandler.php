@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\SetCartRuleRestrictionsHandlerInterface;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 
+#[AsCommandHandler]
 class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerInterface
 {
     public function __construct(

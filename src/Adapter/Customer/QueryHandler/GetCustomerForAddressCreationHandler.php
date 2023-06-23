@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
@@ -37,6 +38,7 @@ use PrestaShopDatabaseException;
 /**
  * Handles finding customer by email
  */
+#[AsQueryHandler]
 final class GetCustomerForAddressCreationHandler implements GetCustomerForAddressCreationHandlerInterface
 {
     /**

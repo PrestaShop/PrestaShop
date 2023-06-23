@@ -31,6 +31,7 @@ use Db;
 use ImageManager;
 use ImageType;
 use PDO;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -44,6 +45,7 @@ use Shop;
 /**
  * Class GetCategoryForEditingHandler.
  */
+#[AsQueryHandler]
 final class GetCategoryForEditingHandler implements GetCategoryForEditingHandlerInterface
 {
     /**

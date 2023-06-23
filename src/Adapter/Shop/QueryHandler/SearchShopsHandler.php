@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler\SearchShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
@@ -38,6 +39,7 @@ use PrestaShopBundle\Entity\Repository\ShopRepository;
 /**
  * Responsible for getting shops for a given search term.
  */
+#[AsQueryHandler]
 final class SearchShopsHandler implements SearchShopsHandlerInterface
 {
     /**

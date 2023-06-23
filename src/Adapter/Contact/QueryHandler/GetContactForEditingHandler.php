@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Contact\QueryHandler;
 
 use Contact;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
@@ -40,6 +41,7 @@ use Symfony\Component\Form\DataTransformerInterface;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetContactForEditingHandler implements GetContactForEditingHandlerInterface
 {
     /**

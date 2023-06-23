@@ -30,6 +30,7 @@ use Configuration;
 use CustomizationField;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -46,6 +47,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Handles @var AddCustomizationCommand using legacy object model.
  */
+#[AsCommandHandler]
 final class AddCustomizationHandler extends AbstractCartHandler implements AddCustomizationHandlerInterface
 {
     /**

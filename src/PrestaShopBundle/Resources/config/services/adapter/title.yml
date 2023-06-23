@@ -4,15 +4,11 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Title\CommandHandler\AddTitleHandler:
     autowire: true
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Title\CommandHandler\EditTitleHandler:
     autowire: true
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\EditTitleCommand'
+    autoconfigure: true
 
   prestashop.adapter.title.title_image_thumbnail_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Title\TitleImageThumbnailProvider'
@@ -24,22 +20,16 @@ services:
   prestashop.adapter.title.command_handler.delete_title_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\DeleteTitleHandler'
     autowire: true
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand'
+    autoconfigure: true
 
   prestashop.adapter.title.command_handler.bulk_delete_title_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\BulkDeleteTitleHandler'
     autowire: true
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Title\QueryHandler\GetTitleForEditingHandler:
     autowire: true
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Title\Repository\TitleRepository:
     autowire: true

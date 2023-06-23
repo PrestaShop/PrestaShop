@@ -30,6 +30,7 @@ use CartRule;
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
@@ -39,6 +40,7 @@ use PrestaShopException;
 /**
  * Handles adding new cart rule using legacy logic.
  */
+#[AsCommandHandler]
 class AddCartRuleHandler implements AddCartRuleHandlerInterface
 {
     /**

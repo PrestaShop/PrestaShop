@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFillerInterface;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdate
 /**
  * Handles the @see UpdateCombinationCommand using legacy object model
  */
+#[AsCommandHandler]
 class UpdateCombinationHandler implements UpdateCombinationHandlerInterface
 {
     /**

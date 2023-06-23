@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use Db;
 use PHPSQLParser\PHPSQLParser;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
@@ -41,6 +42,7 @@ use RequestSql;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutionResultHandlerInterface
 {
     /**

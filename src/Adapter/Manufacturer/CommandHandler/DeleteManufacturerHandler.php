@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\DeleteManufacturerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerE
 /**
  * Handles command which deletes manufacturer using legacy object model
  */
+#[AsCommandHandler]
 final class DeleteManufacturerHandler extends AbstractManufacturerCommandHandler implements DeleteManufacturerHandlerInterface
 {
     /**

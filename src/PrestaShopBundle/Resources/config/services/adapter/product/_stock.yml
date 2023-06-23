@@ -21,22 +21,18 @@ services:
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetProductStockMovementsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetCombinationStockMovementsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater:
     autowire: true

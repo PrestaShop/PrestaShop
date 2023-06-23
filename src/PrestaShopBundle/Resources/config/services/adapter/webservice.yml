@@ -12,18 +12,12 @@ services:
 
   prestashop.adapter.webservice.query_handler.get_webservice_key_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Webservice\QueryHandler\GetWebserviceKeyForEditingHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Webservice\Query\GetWebserviceKeyForEditing'
+    autoconfigure: true
 
   prestashop.adapter.webservice.command_handler.add_webservice_key_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Webservice\CommandHandler\AddWebserviceKeyHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Webservice\Command\AddWebserviceKeyCommand'
+    autoconfigure: true
 
   prestashop.adapter.webservice.command_handler.edit_webservice_key_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Webservice\CommandHandler\EditWebserviceKeyHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Webservice\Command\EditWebserviceKeyCommand'
+    autoconfigure: true

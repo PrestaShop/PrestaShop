@@ -66,32 +66,24 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler:
     autowire: true
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler:
+    autoconfigure: true
     arguments:
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().language.id'
       - '@PrestaShop\PrestaShop\Core\Localization\LocaleInterface'
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface'
       - '@PrestaShop\PrestaShop\Adapter\ContextStateManager'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForAssociationHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductIsEnabledHandler:
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator:
     arguments:
@@ -126,104 +118,76 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler:
     autowire: true
     public: false
+    autoconfigure: true
     arguments:
       $countryId: '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_COUNTRY_DEFAULT")'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductTagsHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductsPositionsHandler:
+    autoconfigure: true
     arguments:
       - '@prestashop.core.grid.product.position_definition'
       - '@PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface'
       - '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductTagsHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductCategoriesHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandler:
     autowire: true
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetCarriersHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSupplierOptionsHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\QueryHandler\GetAssociatedSuppliersHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetSuppliersHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetProductDefaultSupplierHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\UpdateProductSuppliersHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater:
     autowire: true
@@ -246,43 +210,31 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDuplicateProductHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkUpdateProductStatusHandler:
     autowire: true
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler\SetAssociatedProductAttachmentsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler\RemoveAllAssociatedProductAttachmentsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator:
     autowire: true
@@ -305,25 +257,19 @@ services:
     public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetRelatedProductsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllRelatedProductsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\TagRepository:
     arguments:
@@ -340,11 +286,9 @@ services:
     public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
     autowire: true
@@ -354,11 +298,9 @@ services:
       $productImageSystemPathFactory: '@prestashop.adapter.product.image.product_image_filesystem_path_factory'
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTypeHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater:
     arguments:
@@ -376,25 +318,19 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\SetProductShopsHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler:
     autowire: true
     public: false
+    autoconfigure: true
     arguments:
       $productUpdatablePropertyFiller: '@PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockAvailableHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller:
     arguments:

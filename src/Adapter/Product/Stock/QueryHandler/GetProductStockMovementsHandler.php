@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetProductStockMovementsHandlerInterface;
 
 /**
  * Handles @see GetProductStockMovements using the adapter repositories.
  */
+#[AsQueryHandler]
 class GetProductStockMovementsHandler extends AbstractGetStockMovementsHandler implements GetProductStockMovementsHandlerInterface
 {
     /**

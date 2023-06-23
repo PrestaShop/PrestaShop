@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\OrderMessage\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\OrderMessage\AbstractOrderMessageHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler\BulkDeleteOrderMessageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageException;
@@ -37,6 +38,7 @@ use PrestaShopException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class BulkDeleteOrderMessageHandler extends AbstractOrderMessageHandler implements BulkDeleteOrderMessageHandlerInterface
 {
     /**

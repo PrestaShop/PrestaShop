@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler;
 
 use OrderState;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\AddOrderStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddOrderStateHandler extends AbstractOrderStateHandler implements AddOrderStateHandlerInterface
 {
     /**

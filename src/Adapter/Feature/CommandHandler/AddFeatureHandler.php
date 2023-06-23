@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\AddFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 /**
  * Handles adding of features using legacy logic.
  */
+#[AsCommandHandler]
 class AddFeatureHandler extends AbstractObjectModelHandler implements AddFeatureHandlerInterface
 {
     /**

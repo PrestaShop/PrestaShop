@@ -7,24 +7,16 @@ services:
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface: '@PrestaShopBundle\Entity\Repository\ApiAccessRepository'
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\AddApplicationHandler:
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\EditApplicationHandler:
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler\GetApplicationForEditingHandler:
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\DeleteApplicationHandler:
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicationCommand'
+    autoconfigure: true
 
   PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory: ~
 

@@ -5,45 +5,34 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\AddCartRuleHandler:
     autowire: true
     public: false
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand }
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler\GetCartRuleForEditingHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing'
+    autoconfigure: true
 
   prestashop.adapter.cart_rule.query_handler.search_cart_rules_handler:
     class: PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler\SearchCartRulesHandler
+    autoconfigure: true
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules }
 
   prestashop.adapter.cart_rule.command_handler.delete_cart_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\DeleteCartRuleHandler'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand'
+    autoconfigure: true
 
   prestashop.adapter.cart_rule.command_handler.bulk_delete_cart_rule_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\BulkDeleteCartRuleHandler'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand'
+    autoconfigure: true
 
   prestashop.adapter.cart_rule.command_handler.toggle_cart_rule_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\ToggleCartRuleStatusHandler'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand'
+    autoconfigure: true
 
   prestashop.adapter.cart_rule.command_handler.bulk_toggle_cart_rule_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\BulkToggleCartRuleStatusHandler'
-    tags:
-      - { name: 'messenger.cqrs_handler', command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand' }
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator:
     autowire: true
@@ -59,8 +48,7 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\EditCartRuleHandler:
     autowire: true
     public: false
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand }
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller:
     autowire: true
@@ -69,5 +57,4 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\SetCartRuleRestrictionsHandler:
     autowire: true
     public: false
-    tags:
-      - { name: messenger.cqrs_handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand }
+    autoconfigure: true

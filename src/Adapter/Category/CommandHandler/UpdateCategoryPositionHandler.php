@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\UpdateCategoryPositionHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 /**
  * Updates category position using legacy object model
  */
+#[AsCommandHandler]
 final class UpdateCategoryPositionHandler implements UpdateCategoryPositionHandlerInterface
 {
     /**

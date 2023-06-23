@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler;
 
 use OrderState;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\EditOrderStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\MissingOrderStateRequiredFieldsException;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditOrderStateHandler extends AbstractOrderStateHandler implements EditOrderStateHandlerInterface
 {
     /**

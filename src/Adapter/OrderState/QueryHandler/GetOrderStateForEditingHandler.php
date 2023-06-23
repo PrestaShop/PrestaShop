@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderState\QueryHandler;
 
 use OrderState;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\QueryHandler\GetOrderStateForEditingHandlerInterface;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\QueryResult\EditableOrderState;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetOrderStateForEditingHandler implements GetOrderStateForEditingHandlerInterface
 {
     /**

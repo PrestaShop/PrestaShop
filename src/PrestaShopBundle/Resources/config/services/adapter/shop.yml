@@ -4,12 +4,11 @@ services:
 
   prestashop.adapter.shop.command_handler.upload_logos_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\UploadLogosHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.shop.logo_uploader'
       - '@prestashop.core.hook.dispatcher'
-    tags:
-      - { name: messenger.cqrs_handler, command: 'PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand' }
 
   prestashop.adapter.shop.url.base_url_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'
@@ -48,21 +47,17 @@ services:
 
   prestashop.adapter.shop.query_handler.get_logos_paths_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetLogosPathsHandler'
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_")'
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_DIR_")'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths
 
   prestashop.adapter.shop.query_handler.search_shops_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\SearchShopsHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.core.admin.shop.repository'
       - '@prestashop.core.admin.shop_group.repository'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
 
   prestashop.adapter.shop.url.product_image_folder_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider'

@@ -30,6 +30,7 @@ use Cart;
 use Context;
 use Customer;
 use Mail;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SendCartToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\SendCartToCustomerHanlderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -40,6 +41,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterface
 {
     /**

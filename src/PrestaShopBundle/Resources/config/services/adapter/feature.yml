@@ -8,57 +8,41 @@ services:
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Feature\QueryHandler\GetFeatureForEditingHandler:
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureValueHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository'
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureValueHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand
 
   PrestaShop\PrestaShop\Adapter\Feature\QueryHandler\GetFeatureValueForEditingHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\BulkDeleteFeatureHandler:
     autowire: true
     public: false
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureValueHandler:
     autowire: true

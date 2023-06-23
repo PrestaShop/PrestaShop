@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Zone\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\BulkToggleZoneStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\CommandHandler\BulkToggleZoneStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\CannotToggleZoneStatusException;
@@ -39,6 +40,7 @@ use Zone;
 /**
  * Handles command that toggles zones status in bulk action
  */
+#[AsCommandHandler]
 final class BulkToggleZoneStatusHandler implements BulkToggleZoneStatusHandlerInterface
 {
     /**

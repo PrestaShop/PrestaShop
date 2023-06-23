@@ -4,51 +4,39 @@ services:
 
   prestashop.adapter.security.command_handler.delete_customer_session_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\DeleteCustomerSessionHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.security.repository.customer_session_repository'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand'
 
   prestashop.adapter.security.command_handler.clear_customer_session_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\ClearOutdatedCustomerSessionHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.security.repository.customer_session_repository'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedCustomerSessionCommand'
 
   prestashop.adapter.security.command_handler.delete_employee_session_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\DeleteEmployeeSessionHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.security.repository.employee_session_repository'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand'
 
   prestashop.adapter.security.command_handler.clear_employee_session_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\ClearOutdatedEmployeeSessionHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.security.repository.employee_session_repository'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedEmployeeSessionCommand'
 
   prestashop.adapter.security.command_handler.bulk_delete_employees_sessions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeeSessionsHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.security.repository.employee_session_repository'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand'
 
   prestashop.adapter.security.command_handler.bulk_delete_customers_sessions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteCustomerSessionsHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.security.repository.customer_session_repository'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand'
 
   prestashop.adapter.security.repository.customer_session_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository'

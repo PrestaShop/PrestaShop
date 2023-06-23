@@ -3,14 +3,10 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler:
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler:
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository:
     arguments:

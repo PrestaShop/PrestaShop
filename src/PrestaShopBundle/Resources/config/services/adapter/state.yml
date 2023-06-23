@@ -4,42 +4,28 @@ services:
 
   prestashop.adapter.state.command_handler.create_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\AddStateHandler'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand'
+    autoconfigure: true
 
   prestashop.adapter.state.command_handler.edit_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\EditStateHandler'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand'
+    autoconfigure: true
 
   prestashop.adapter.state.command_handler.toggle_state_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\ToggleStateStatusHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand'
+    autoconfigure: true
 
   prestashop.adapter.state.query_handler.get_state_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateForEditingHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing'
+    autoconfigure: true
 
   prestashop.adapter.state.command_handler.delete_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\DeleteStateHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand'
+    autoconfigure: true
 
   prestashop.adapter.state.command_handler.bulk_delete_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\BulkDeleteStateHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStateCommand'
+    autoconfigure: true
 
   prestashop.adapter.state.command_handler.bulk_toggle_state_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\BulkToggleStateStatusHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand'
+    autoconfigure: true

@@ -12,25 +12,19 @@ services:
     public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\SetPackProductsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\RemoveAllProductsFromPackHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsHandler:
     autowire: true
     public: false
+    autoconfigure: true
     arguments:
       $defaultLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       $translator: '@translator'
-    tags:
-      - name: messenger.cqrs_handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts

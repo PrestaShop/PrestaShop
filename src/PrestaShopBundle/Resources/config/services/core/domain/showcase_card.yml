@@ -9,20 +9,16 @@ services:
 
   prestashop.core.showcase_card.command_handler.close_showcase_card:
     class: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\CommandHandler\CloseShowcaseCardHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.showcase_card.configuration_map'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand'
 
   # Query handlers
 
   prestashop.core.domain.showcase_card.query_handler.get_showcase_card_is_closed_handler:
     class: PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\QueryHandler\GetShowcaseCardIsClosedHandler
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.showcase_card.configuration_map'
-    tags:
-      - name: 'messenger.cqrs_handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed'

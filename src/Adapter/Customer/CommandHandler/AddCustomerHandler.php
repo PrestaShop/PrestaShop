@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddCustomerHandler extends AbstractCustomerHandler implements AddCustomerHandlerInterface
 {
     /**

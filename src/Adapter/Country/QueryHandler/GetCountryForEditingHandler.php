@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 /**
  * Handles editable country query
  */
+#[AsQueryHandler]
 class GetCountryForEditingHandler implements GetCountryForEditingHandlerInterface
 {
     /**

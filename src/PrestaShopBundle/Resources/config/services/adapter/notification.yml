@@ -5,14 +5,10 @@ services:
 
   prestashop.adapter.notification.command_handler.update_employee_notification_last_element_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Notification\CommandHandler\UpdateEmployeeNotificationLastElementHandler'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand'
+    autoconfigure: true
 
   prestashop.adapter.notification.query_handler.get_notification_last_elements_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Notification\QueryHandler\GetNotificationLastElementsHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.notifications.configuration'
-    tags:
-      - name: messenger.cqrs_handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements'
