@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Security\OAuth2\Repository;
 
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use PrestaShopBundle\Security\OAuth2\Entity\Client;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -48,11 +48,11 @@ class ClientRepository implements ClientRepositoryInterface
     private $userProvider;
 
     /**
-     * @var UserPasswordEncoderInterface
+     * @var UserPasswordHasherInterface
      */
     private $passwordEncoder;
 
-    public function __construct(UserProviderInterface $userProvider, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserProviderInterface $userProvider, UserPasswordHasherInterface $passwordEncoder)
     {
         $this->userProvider = $userProvider;
         $this->passwordEncoder = $passwordEncoder;
@@ -67,7 +67,7 @@ class ClientRepository implements ClientRepositoryInterface
         }
 
         $client = new Client();
-        $client->setIdentifier($user->getUsername());
+        $client->setIdentifier($user->getUserIdentifier());
 
         return $client;
     }
@@ -85,7 +85,7 @@ class ClientRepository implements ClientRepositoryInterface
     private function getUser($clientIdentifier): ?UserInterface
     {
         try {
-            return $this->userProvider->loadUserByUsername($clientIdentifier);
+            return $this->userProvider->loadUserByIdentifier($clientIdentifier);
         } catch (UserNotFoundException $exception) {
             return null;
         }

@@ -120,6 +120,11 @@ class Employee implements UserInterface, EquatableInterface
         return $this->username;
     }
 
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
+    }
+
     /**
      * Get the id of the current employee.
      *

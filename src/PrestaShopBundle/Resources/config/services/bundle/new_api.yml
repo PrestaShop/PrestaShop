@@ -5,7 +5,7 @@ services:
   PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
     arguments:
       - '@security.user.provider.concrete.oauth2'
-      - '@security.user_password_encoder.generic'
+      - '@security.user_password_hasher'
 
   PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
 

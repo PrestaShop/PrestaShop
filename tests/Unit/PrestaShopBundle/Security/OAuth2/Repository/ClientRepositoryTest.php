@@ -29,10 +29,10 @@ namespace Tests\Unit\PrestaShopBundle\Security\OAuth2\Repository;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Security\OAuth2\Repository\ClientRepository;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
-use Symfony\Component\Security\Core\User\User;
 
 class ClientRepositoryTest extends TestCase
 {
@@ -43,8 +43,8 @@ class ClientRepositoryTest extends TestCase
         $userProvider = new InMemoryUserProvider(['myclientid' => ['password' => 'myclientsecret']]);
         $this->clientRepository = new ClientRepository(
             $userProvider,
-            new UserPasswordEncoder(new EncoderFactory([
-                User::class => ['algorithm' => 'plaintext', 'ignore_case' => false],
+            new UserPasswordHasher(new PasswordHasherFactory([
+                InMemoryUser::class => ['algorithm' => 'plaintext', 'ignore_case' => false],
             ]))
         );
         parent::setUp();
