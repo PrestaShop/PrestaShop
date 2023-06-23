@@ -1,24 +1,34 @@
 services:
   _defaults:
-    public: true
+    public: false
+    autowire: true
+    autoconfigure: true
 
-  prestashop.core.crypto.hashing:
-    class: 'PrestaShop\PrestaShop\Core\Crypto\Hashing'
-
-  prestashop.core.security.folder_guard.vendor:
-    class: 'PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard'
+  PrestaShop\PrestaShop\Core\Crypto\Hashing: ~
+  PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard:
     arguments:
       - '%kernel.project_dir%/app/Resources/security/.htaccess.dist'
 
   PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface:
     alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
-    public: false
   PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface:
     alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
-    public: false
 
   PrestaShop\PrestaShop\Core\Security\TokenAuthenticator:
-    public: false
     arguments:
       - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
       - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
+
+  prestashop.core.crypto.hashing:
+    alias: 'PrestaShop\PrestaShop\Core\Crypto\Hashing'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.security.folder_guard.vendor:
+    alias: 'PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0

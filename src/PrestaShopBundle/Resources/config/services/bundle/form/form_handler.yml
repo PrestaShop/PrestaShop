@@ -255,7 +255,7 @@ services:
     arguments:
       - '@form.factory'
       - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.adapter.logs.form_provider'
+      - '@PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider'
       - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
       - 'LogsPage'
 

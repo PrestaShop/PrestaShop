@@ -70,7 +70,7 @@ services:
   prestashop.adapter.performance.smarty.form_provider:
     class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
     arguments:
-      - '@prestashop.adapter.smarty_cache.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
   prestashop.adapter.performance.debug_mode.form_provider:
     class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
     arguments:
@@ -111,22 +111,32 @@ services:
   prestashop.adapter.administration.upload_quota.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider'
     arguments:
-      - '@prestashop.adapter.upload_quota.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
 
   prestashop.adapter.administration.notifications.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
     arguments:
-      - '@prestashop.adapter.notifications.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
+
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesFormDataProvider:
+    public: false
+    autowire: true
 
   prestashop.adapter.preferences.form_provider:
-    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesFormDataProvider'
-    arguments:
-      - '@prestashop.adapter.preferences.configuration'
+    alias: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesFormDataProvider'
+    deprecated:
+      package: PrestaShop
+      version: 9.0
 
   prestashop.adapter.logs.form_provider:
-    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider'
-    arguments:
-      - '@prestashop.adapter.logs.configuration'
+    alias: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider'
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider:
+    autowire: true
+    public: false
 
   prestashop.admin.import.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
@@ -171,8 +181,8 @@ services:
   prestashop.admin.geolocation.by_ip_address.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressFormDataProvider'
     arguments:
-      - '@prestashop.adapter.geolocation_by_ip_address.configuration'
-      - '@prestashop.core.geolocation.geo_lite_city.checker'
+      - '@PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
+      - '@PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityCheckerInterface'
 
   prestashop.admin.geolocation.whitelist.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationWhitelistFormDataProvider'
@@ -220,7 +230,7 @@ services:
     arguments:
       - '@prestashop.adapter.meta.shop_url.configuration'
       - '@translator'
-      - '@prestashop.adapter.validate'
+      - '@PrestaShop\PrestaShop\Adapter\Validate'
 
   prestashop.admin.traffic_seo.meta_settings.url_schema.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsUrlSchemaFormDataProvider'

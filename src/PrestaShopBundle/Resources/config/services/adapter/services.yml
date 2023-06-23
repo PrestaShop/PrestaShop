@@ -5,6 +5,9 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation:
+    public: false
+
   prestashop.adapter.hosting_information:
     class: 'PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation'
 
@@ -22,7 +25,7 @@ services:
   prestashop.adapter.system_information:
     class: 'PrestaShop\PrestaShop\Adapter\System\SystemInformation'
     arguments:
-      - '@prestashop.adapter.hosting_information'
+      - '@PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation'
       - '@prestashop.adapter.mailing_information'
       - '@prestashop.adapter.shop_information'
 

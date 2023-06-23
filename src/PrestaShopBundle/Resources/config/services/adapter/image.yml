@@ -51,7 +51,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator:
     arguments:
       - '@=service("prestashop.core.configuration.upload_size_configuration").getMaxUploadSizeInBytes()'
-      - '@prestashop.adapter.upload_quota.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
 
   prestashop.adapter.image.image_validator:
     alias: PrestaShop\PrestaShop\Adapter\Image\ImageValidator

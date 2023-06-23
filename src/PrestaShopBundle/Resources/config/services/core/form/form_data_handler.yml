@@ -87,7 +87,7 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
       - '@prestashop.adapter.employee.form_access_checker'
       - '@prestashop.adapter.employee.data_provider'
-      - '@prestashop.core.crypto.hashing'
+      - '@PrestaShop\PrestaShop\Core\Crypto\Hashing'
       - '@prestashop.adapter.image.uploader.employee_image_uploader'
       - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH"))'
       - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH"))'
@@ -145,7 +145,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttachmentFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
+      - '@PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
 
   prestashop.core.form.identifiable_object.partial_refund_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\PartialRefundFormDataHandler'

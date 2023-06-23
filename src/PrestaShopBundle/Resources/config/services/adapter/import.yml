@@ -45,7 +45,7 @@ services:
       - '%database_prefix%'
       - '@prestashop.adapter.legacy.configuration'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.getAddress()'
-      - '@prestashop.adapter.validate'
+      - '@PrestaShop\PrestaShop\Adapter\Validate'
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@prestashop.adapter.import.image_copier'
 
@@ -64,7 +64,7 @@ services:
       - '@prestashop.adapter.database'
       - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
       - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.validate'
+      - '@PrestaShop\PrestaShop\Adapter\Validate'
       - '@prestashop.adapter.import.image_copier'
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@doctrine.dbal.default_connection'

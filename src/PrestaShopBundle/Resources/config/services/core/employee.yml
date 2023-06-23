@@ -1,15 +1,29 @@
 services:
   _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+
+  # public alias remains as used inside a contorller
+  prestashop.core.team.employee.configuration.options_checker:
+    alias: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker'
     public: true
 
-  prestashop.core.team.employee.configuration.options_checker:
-    class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker'
+  PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsCheckerInterface: '@PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker'
+  PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker:
     arguments:
-      - '@prestashop.adapter.multistore_feature'
-      - '@prestashop.adapter.shop.context'
+      $multistoreFeature: '@prestashop.adapter.multistore_feature'
 
-  prestashop.core.employee.profile_access_checker:
-    class: 'PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessChecker'
+  PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface: '@PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessChecker'
+  PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessChecker:
     arguments:
       - '@prestashop.adapter.employee.data_provider'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+
+  prestashop.core.employee.profile_access_checker:
+    alias: 'PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0

@@ -42,6 +42,8 @@ services:
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
       $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
 
+  PrestaShopBundle\Form\Admin\Sell\Customer\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Customer/*"
   PrestaShopBundle\Form\Admin\Sell\CartRule\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
   PrestaShopBundle\Form\Admin\Sell\Product\:
@@ -272,10 +274,6 @@ services:
     arguments:
       $categoryDeleteModelChoices: '@=service("prestashop.core.form.choice_provider.category_delete_mode").getChoices()'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType:
-    arguments:
-      $canOptionsBeChanged: '@=service("prestashop.core.team.employee.configuration.options_checker").canBeChanged()'
-
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsType:
 
   PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType:
@@ -315,7 +313,6 @@ services:
     arguments:
       $customerRequiredFieldsChoices: '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
 
-  PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType:
   PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType:
     arguments:
       $riskChoices: '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
@@ -402,9 +399,6 @@ services:
     arguments:
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
 
-  PrestaShopBundle\Form\Admin\Sell\Customer\GroupType:
-  PrestaShopBundle\Form\Admin\Sell\Customer\GenderType:
-  PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType:
     arguments:

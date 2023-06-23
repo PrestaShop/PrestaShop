@@ -103,7 +103,7 @@ services:
   prestashop.bundle.event_listener.module_guard_listener:
     class: PrestaShopBundle\EventListener\ModuleGuardListener
     arguments:
-      - '@prestashop.core.security.folder_guard.vendor'
+      - '@PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard'
       - '%modules_dir%'
       - '@logger'
     tags:

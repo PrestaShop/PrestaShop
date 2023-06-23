@@ -445,7 +445,6 @@ class MetaController extends FrameworkBundleAdminController
 
         $tools = $this->get(Tools::class);
         $urlFileChecker = $this->get(UrlFileCheckerInterface::class);
-        $hostingInformation = $this->get('prestashop.adapter.hosting_information');
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
         $helperBlockLinkProvider = $this->get(DocumentationLinkProviderInterface::class);
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');

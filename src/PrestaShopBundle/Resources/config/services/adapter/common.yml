@@ -27,7 +27,10 @@ services:
       - !php/const _PS_MODE_DEV_
 
   prestashop.adapter.validate:
-    class: PrestaShop\PrestaShop\Adapter\Validate
+    alias: PrestaShop\PrestaShop\Adapter\Validate
+
+  PrestaShop\PrestaShop\Adapter\Validate:
+    public: false
 
   PrestaShop\PrestaShop\Adapter\ContextStateManager:
     arguments:

@@ -1,0 +1,91 @@
+imports:
+  - { resource: domain/*.yml }
+  - { resource: form/*.yml }
+
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\:
+    resource: "../../../Core/{B2b,Configuration,Webservice,Validation,Stock,Foundation,Geolocation,Help,Image,Export}/*"
+
+  PrestaShop\PrestaShop\Core\ConfigurationInterface: '@PrestaShop\PrestaShop\Adapter\Configuration'
+  PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface: '@PrestaShop\PrestaShop\Adapter\Configuration'
+
+  PrestaShop\PrestaShop\Core\Foundation\Version:
+    arguments:
+      - !php/const PrestaShop\PrestaShop\Core\Version::VERSION
+      - !php/const PrestaShop\PrestaShop\Core\Version::MAJOR_VERSION_STRING
+      - !php/const PrestaShop\PrestaShop\Core\Version::MAJOR_VERSION
+      - !php/const PrestaShop\PrestaShop\Core\Version::MINOR_VERSION
+      - !php/const PrestaShop\PrestaShop\Core\Version::RELEASE_VERSION
+
+  PrestaShop\PrestaShop\Core\Help\Documentation:
+    public: true
+    arguments:
+      $host: "https://help.prestashop-project.org/"
+
+  # public aliases needed for controllers
+
+  prestashop.core.configuration.ini_configuration:
+    alias: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
+    public: true
+
+  prestashop.core.configuration.upload_size_configuration:
+    alias: 'PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfiguration'
+    public: true
+
+  prestashop.core.configuration.php_extension_checker:
+    alias: 'PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker'
+    public: true
+
+  prestashop.core.webservice.server_requirements_checker:
+    alias: 'PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsChecker'
+    public: true
+
+
+  # Deprecated services
+
+  prestashop.core.foundation.version:
+    alias: PrestaShop\PrestaShop\Core\Foundation\Version
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.validation.validator:
+    alias: 'PrestaShop\PrestaShop\Core\Validation\ValidatorInterface'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.geolocation.geo_lite_city.checker:
+    alias: 'PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityChecker'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.b2b.b2b_feature:
+    alias: 'PrestaShop\PrestaShop\Core\B2b\B2bFeature'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.export.dir:
+    alias: 'PrestaShop\PrestaShop\Core\Export\ExportDirectory'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.export.file_writer.export_csv_file_writer:
+    alias: 'PrestaShop\PrestaShop\Core\Export\FileWriter\ExportCsvFileWriter'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0

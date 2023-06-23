@@ -17,10 +17,9 @@ services:
 
   prestashop.core.mail_template.variables_builder:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilder'
+    autowire: true
     arguments:
-      - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.core.language.language_default_fonts_catalog'
-      - mailThemesUrl: "@=service('prestashop.adapter.legacy.context').getMailThemesUrl()"
+      $defaultVariables: { mailThemesUrl: "@=service('prestashop.adapter.legacy.context').getMailThemesUrl()" }
 
   prestashop.core.mail_template.generator:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator'

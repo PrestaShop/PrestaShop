@@ -1,15 +1,27 @@
 services:
   _defaults:
-    public: true
-
-  prestashop.core.language.pack.loader.remote:
-    class: 'PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader'
+    public: false
     autowire: true
+    autoconfigure: true
 
-  prestashop.core.language.language_default_fonts_catalog:
-    class: 'PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog'
+  PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader: ~
+  PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog:
     arguments:
       - 'fa': 'Tahoma'
         'ar': 'Tahoma'
 
   PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface: '@PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider'
+
+  prestashop.core.language.pack.loader.remote:
+    alias: 'PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.language.language_default_fonts_catalog:
+    alias: 'PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0

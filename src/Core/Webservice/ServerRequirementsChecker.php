@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Webservice;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
 use PrestaShop\PrestaShop\Core\Configuration\PhpExtensionCheckerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use RuntimeException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -48,7 +48,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     private $translator;
 
     /**
-     * @var Configuration
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
@@ -64,13 +64,13 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
 
     /**
      * @param TranslatorInterface $translator
-     * @param Configuration $configuration
+     * @param ShopConfigurationInterface $configuration
      * @param HostingInformation $hostingInformation
      * @param PhpExtensionCheckerInterface $phpExtensionChecker
      */
     public function __construct(
         TranslatorInterface $translator,
-        Configuration $configuration,
+        ShopConfigurationInterface $configuration,
         HostingInformation $hostingInformation,
         PhpExtensionCheckerInterface $phpExtensionChecker
     ) {

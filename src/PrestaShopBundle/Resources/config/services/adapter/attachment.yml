@@ -28,11 +28,11 @@ services:
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing' }
 
+  PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader:
+    public: false
+    autowire: true
   prestashop.adapter.attachment.uploader.attachment_file_uploader:
-    class: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.core.configuration.upload_size_configuration'
+    alias: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
 
   prestashop.adapter.attachment.command_handler.abstract_attachment_handler:
     abstract: true
@@ -45,7 +45,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\EditAttachmentHandler'
     parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
     arguments:
-      - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
+      - '@PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand' }
 
@@ -54,7 +54,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\AddAttachmentHandler'
     parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
     arguments:
-      - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
+      - '@PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand' }
 

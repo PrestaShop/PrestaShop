@@ -95,28 +95,33 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
 
-  prestashop.adapter.preferences.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
+  PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationIpAddressWhitelistConfiguration:
+    public: false
     autowire: true
 
-  prestashop.adapter.upload_quota.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+  PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration:
+    public: false
+    autowire: true
 
-  prestashop.adapter.notifications.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+  PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration:
+    public: false
+    autowire: true
 
-  prestashop.adapter.smarty_cache.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+  PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration:
+    public: false
+    autowire: true
 
-  prestashop.adapter.logs.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@translator'
-      - '@prestashop.adapter.validate'
+  PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration:
+    public: false
+    autowire: true
 
   prestashop.adapter.order.delivery.slip.options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
@@ -178,12 +183,10 @@ services:
       - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.geolocation_by_ip_address.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    alias: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
 
   prestashop.adapter.geolocation_ip_address_whitelist.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationIpAddressWhitelistConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    alias: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationIpAddressWhitelistConfiguration'
 
   prestashop.adapter.geolocation_options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration'
@@ -255,9 +258,7 @@ services:
 
   prestashop.core.team.employee.configuration.employee_options_configuration:
     class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.core.team.employee.configuration.options_checker'
+    autowire: true
 
   prestashop.core.tax.tax_options_configuration:
     class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
@@ -294,3 +295,34 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+
+  prestashop.adapter.upload_quota.configuration:
+    alias: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
+    deprecated:
+      package: PrestaShop
+      version: 9
+
+  prestashop.adapter.notifications.configuration:
+    alias: 'PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
+    deprecated:
+      package: PrestaShop
+      version: 9
+
+  prestashop.adapter.smarty_cache.configuration:
+    alias: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
+    deprecated:
+      package: PrestaShop
+      version: 9
+
+  prestashop.adapter.logs.configuration:
+    alias: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
+    deprecated:
+      package: PrestaShop
+      version: 9
+
+  prestashop.adapter.preferences.configuration:
+    alias: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
+    deprecated:
+      package: PrestaShop
+      version: 9

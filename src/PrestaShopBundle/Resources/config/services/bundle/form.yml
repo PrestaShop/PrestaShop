@@ -14,7 +14,7 @@ services:
       $flashBag: '@session.flash_bag'
       $locale: '@prestashop.core.localization.locale.context_locale'
       $multistoreController: '@prestashop.core.admin.multistore'
-      $validate: "@prestashop.adapter.validate"
+      $validate: '@PrestaShop\PrestaShop\Adapter\Validate'
       $multiStoreContext: '@prestashop.adapter.shop.context'
       $themeRepository: '@prestashop.core.addon.theme.repository'
       $shopThemeName: '@=service("prestashop.adapter.legacy.context").getContext().shop.theme.getName()'

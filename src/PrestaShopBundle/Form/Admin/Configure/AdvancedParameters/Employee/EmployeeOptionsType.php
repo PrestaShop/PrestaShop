@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
+use PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -38,23 +39,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class EmployeeOptionsType extends TranslatorAwareType
 {
     /**
-     * @var bool
-     */
-    private $canOptionsBeChanged;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param bool $canOptionsBeChanged
+     * @param OptionsCheckerInterface $optionsChecker
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        $canOptionsBeChanged
+        private readonly OptionsCheckerInterface $optionsChecker,
     ) {
         parent::__construct($translator, $locales);
-
-        $this->canOptionsBeChanged = $canOptionsBeChanged;
     }
 
     /**
@@ -63,7 +57,7 @@ class EmployeeOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $optionsLock = [];
-        if (!$this->canOptionsBeChanged) {
+        if (!$this->optionsChecker->canBeChanged()) {
             $optionsLock = [
                 'disabled' => true,
                 'alert_type' => 'warning',

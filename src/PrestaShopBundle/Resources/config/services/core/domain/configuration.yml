@@ -1,5 +1,0 @@
-services:
-  _defaults:
-    public: false
-
-  PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface: '@PrestaShop\PrestaShop\Adapter\Configuration'
