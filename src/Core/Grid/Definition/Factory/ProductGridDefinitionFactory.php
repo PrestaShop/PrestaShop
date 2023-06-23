@@ -694,7 +694,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             $routeParams = [];
             $bulkEnableLabel = $this->trans('Activate selection for all stores', [], 'Admin.Actions');
             $bulkDisableLabel = $this->trans('Deactivate selection for all stores', [], 'Admin.Actions');
-            $bulkDuplicateLabel = $this->trans('Duplicate selection for all stores', [], 'Admin.Actions');
+            $bulkDuplicateLabel = $this->trans('Duplicate selection for associated stores', [], 'Admin.Actions');
             $bulkDeleteLabel = $this->trans('Delete selection for all stores', [], 'Admin.Actions');
         }
 
