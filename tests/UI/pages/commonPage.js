@@ -323,6 +323,20 @@ class CommonPage {
   }
 
   /**
+   * Wait for title to be filled
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async waitForPageTitleToLoad(page) {
+    let isTitleEmpty = true;
+
+    for (let i = 0; i < 20 && isTitleEmpty; i++) {
+      isTitleEmpty = (await this.getPageTitle(page) === '');
+      await page.waitForTimeout(100);
+    }
+  }
+
+  /**
    * Navigate to the previous page in history
    * @param page {Page} Browser tab
    * @param waitUntil {string} The event to wait after click (load/networkidle/domcontentloaded)

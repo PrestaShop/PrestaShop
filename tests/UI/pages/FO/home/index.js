@@ -222,6 +222,15 @@ class Home extends FOBasePage {
   }
 
   /**
+   * Is quick view product modal visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isQuickViewProductModalVisible(page) {
+    return this.elementVisible(page, this.quickViewModalDiv, 2000);
+  }
+
+  /**
    * Close quick view modal
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
@@ -267,7 +276,7 @@ class Home extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
 
-    await this.waitForSelectorAndClick(page, this.productColorLink(id, color));
+    await this.clickAndWaitForNavigation(page, this.productColorLink(id, color));
   }
 
   // Block cart modal methods
