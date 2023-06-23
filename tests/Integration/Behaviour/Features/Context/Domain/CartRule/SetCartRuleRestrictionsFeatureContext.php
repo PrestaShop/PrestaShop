@@ -166,7 +166,7 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
             unset($this->productRestrictionGroupsByReference[$cartRuleReference]);
         }
 
-        if ($command->isEmpty()) {
+        if (null === $command->getRestrictedCartRuleIds() && null === $command->getProductRestrictionRuleGroups()) {
             throw new RuntimeException(
                 sprintf(
                     '%s is empty for cart rule referenced as "%s". Did you forget to fill the restrictions in other steps?',

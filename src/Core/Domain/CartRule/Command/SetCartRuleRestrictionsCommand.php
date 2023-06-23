@@ -103,20 +103,6 @@ class SetCartRuleRestrictionsCommand
     }
 
     /**
-     * It is possible to have this command empty if none of the restrictions are modified
-     *
-     * @todo: don't forget to adapt this method when all the other restrictions are added.
-     *
-     * @return bool
-     */
-    public function isEmpty(): bool
-    {
-        return null === $this->getRestrictedCartRuleIds()
-            && null === $this->getProductRestrictionRuleGroups()
-        ;
-    }
-
-    /**
      * @return RestrictionRuleGroup[]|null
      */
     public function getProductRestrictionRuleGroups(): ?array

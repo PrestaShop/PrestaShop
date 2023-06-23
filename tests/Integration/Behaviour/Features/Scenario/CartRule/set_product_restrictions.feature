@@ -37,12 +37,7 @@ Feature: Set cart rule product restrictions in BO
     And I add product "product3" with following information:
       | name[en-US] | Shirt - Dom & Jquery |
       | type        | standard             |
-
-  # @todo: create cart rules once in first scenario, so they are not recreated before every scenario.
-  #  This step is temporary and should be replaced by step "Given there is a cart rule..." in background
-  #  when following PR is merged: https://github.com/PrestaShop/PrestaShop/pull/32483
-  Scenario: Create cart rules for further steps
-    And I create cart rule "rule_free_shipping_1" with following properties:
+    And there is a cart rule "rule_free_shipping_1" with following properties:
       | name[en-US]       | free shipping 1      |
       | is_active         | true                 |
       | allow_partial_use | false                |
@@ -53,7 +48,7 @@ Feature: Set cart rule product restrictions in BO
       | quantity_per_user | 10                   |
       | free_shipping     | true                 |
       | code              | rule_free_shipping_1 |
-    And I create cart rule "rule_50_percent" with following properties:
+    And there is a cart rule "rule_50_percent" with following properties:
       | name[en-US]                  | Half the price         |
       | is_active                    | true                   |
       | allow_partial_use            | true                   |
@@ -67,6 +62,8 @@ Feature: Set cart rule product restrictions in BO
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | false                  |
       | discount_application_type    | order_without_shipping |
+    And I clear all product restrictions for cart rule rule_free_shipping_1
+    And I clear all product restrictions for cart rule rule_50_percent
     And cart rule "rule_free_shipping_1" should have no product restriction rules
     And cart rule "rule_50_percent" should have no product restriction rules
 
@@ -97,7 +94,6 @@ Feature: Set cart rule product restrictions in BO
     Then cart rule "rule_free_shipping_1" should have no product restriction rules
 
   Scenario: Restrict cart rule products by defining attribute matching rules
-    Given I clear all product restrictions for cart rule rule_50_percent
     When I add a restriction for cart rule rule_50_percent, which requires at least 7 products in cart matching one of these rules:
       | type       | references |
       | attributes | S,M        |
@@ -120,7 +116,6 @@ Feature: Set cart rule product restrictions in BO
     And cart rule "rule_free_shipping_1" should have no product restriction rules
 
   Scenario: Restrict cart rule products by defining category matching rules
-    Given I clear all product restrictions for cart rule rule_50_percent
     When I add a restriction for cart rule rule_50_percent, which requires at least 3 products in cart matching one of these rules:
       | type       | references |
       | categories | home       |
@@ -142,8 +137,6 @@ Feature: Set cart rule product restrictions in BO
       | categories | women       |
 
   Scenario: Restrict cart rule products by defining manufacturer matching rules
-    Given I clear all product restrictions for cart rule rule_50_percent
-    And I clear all product restrictions for cart rule rule_free_shipping_1
     When I add a restriction for cart rule rule_50_percent, which requires at least 2 products in cart matching one of these rules:
       | type          | references   |
       | manufacturers | studioDesign |
@@ -173,8 +166,6 @@ Feature: Set cart rule product restrictions in BO
       | manufacturers | studioDesign,graphicCorner |
 
   Scenario: Restrict cart rule products by defining manufacturer matching rules
-    Given I clear all product restrictions for cart rule rule_50_percent
-    And I clear all product restrictions for cart rule rule_free_shipping_1
     When I add a restriction for cart rule rule_50_percent, which requires at least 2 products in cart matching one of these rules:
       | type      | references      |
       | suppliers | fashionSupplier |
@@ -204,8 +195,6 @@ Feature: Set cart rule product restrictions in BO
       | suppliers | fashionSupplier,accessoriesSupplier |
 
   Scenario: Restrict cart rule products by defining mixed rules
-    Given I clear all product restrictions for cart rule rule_50_percent
-    And I clear all product restrictions for cart rule rule_free_shipping_1
     When I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
       | type       | references        |
       | products   | product1,product2 |
@@ -235,7 +224,6 @@ Feature: Set cart rule product restrictions in BO
       | manufacturers | graphicCorner                       |
 
   Scenario: Provide restrictions with empty list of rules
-    Given I clear all product restrictions for cart rule rule_free_shipping_1
     When I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
       | type     | references |
       | products |            |
@@ -243,7 +231,6 @@ Feature: Set cart rule product restrictions in BO
     And cart rule rule_free_shipping_1 should have no product restriction rules
 
   Scenario: Rule to require any quantity of product matching certain rules
-    Given I clear all product restrictions for cart rule rule_free_shipping_1
     When I add a restriction for cart rule rule_free_shipping_1, which requires any quantity of product in cart matching one of these rules:
       | type       | references  |
       | products   | product1    |
@@ -272,7 +259,6 @@ Feature: Set cart rule product restrictions in BO
       | manufacturers | graphicCorner |
 
   Scenario: Provide restriction group with empty list of restrictions
-    Given I clear all product restrictions for cart rule rule_50_percent
     When I add a restriction for cart rule rule_50_percent, which requires at least 1 product, but I provide empty list of rules
     Then I should get cart rule error about "empty restriction rules"
     And cart rule rule_50_percent should have no product restriction rules
