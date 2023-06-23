@@ -14,6 +14,7 @@
  * to license@prestashop.com so we can send you a copy immediately.
  *
  * DISCLAIMER
+ *Lassana sissoko
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
