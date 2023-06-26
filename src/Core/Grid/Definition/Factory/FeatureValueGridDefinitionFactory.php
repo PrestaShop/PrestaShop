@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
@@ -45,12 +46,16 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @see FeatureValueGridFactory - it modifies grid definition to adapt values which depends on request filters (like name and some filter columns)
  */
 class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     public const GRID_ID = 'feature_value';
 
     public function getDefinition(): GridDefinitionInterface
@@ -89,6 +94,11 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
     protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
+            ->add((new BulkActionColumn('bulk'))
+            ->setOptions([
+                'bulk_field' => 'id_feature_value',
+            ])
+            )
             ->add((new DataColumn('id_feature_value'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
@@ -117,6 +127,25 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
                                     'featureId' => 'id_feature',
                                 ],
                             ])
+                    )
+                    ->add((new LinkRowAction('view'))
+                    ->setName($this->trans('View', [], 'Admin.Actions'))
+                    ->setIcon('zoom_in')
+                    ->setOptions([
+                        'route' => 'admin_feature_values_index',
+                        'route_param_name' => 'featureId',
+                        'route_param_field' => 'id_feature',
+                        'clickable_row' => true,
+                    ])
+                    )
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_feature_values_delete',
+                            'featureValueId',
+                            'id_feature_value',
+                            Request::METHOD_DELETE,
+                            ['featureId' => 'id_feature'],
+                        )
                     ),
             ])
             )
@@ -164,7 +193,6 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
-        // @todo: bulk actions will be added in dedicated PR
         return new BulkActionCollection();
     }
 }

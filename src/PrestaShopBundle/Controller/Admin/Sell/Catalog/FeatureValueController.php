@@ -29,17 +29,24 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureValueException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class FeatureValueController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * Button name which when submitted indicates that after form submission
      * user wants to be redirected to ADD NEW form to add additional value
@@ -190,6 +197,52 @@ class FeatureValueController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $featureId
+     * @param int $featureValueId
+     *
+     * @return Response
+     */
+    public function deleteAction(int $featureId, int $featureValueId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteFeatureValueCommand($featureValueId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_feature_values_index', [
+            'featureId' => $featureId,
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $featureid
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function bulkDeleteAction(int $featureId, Request $request): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteFeatureValueCommand($this->getBulkActionIds($request, 'feature_value_bulk')));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_feature_values_index', [
+            'featureId' => $featureId,
+        ]);
+    }
+
+    /**
      * @return array<string, string|array<int, string>>
      */
     private function getErrorMessages(): array
@@ -197,6 +250,16 @@ class FeatureValueController extends FrameworkBundleAdminController
         return [
             FeatureValueNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
+            BulkFeatureValueException::class => [
+                BulkFeatureValueException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CannotDeleteFeatureValueException::class => $this->trans(
+                'An error occurred while deleting the object.',
                 'Admin.Notifications.Error'
             ),
         ];

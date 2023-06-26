@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BulkDeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -55,6 +56,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class FeatureValueGridFactory extends GridFactory
 {
+    use BulkDeleteActionTrait;
+
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataFactoryInterface $dataFactory
@@ -125,6 +128,7 @@ class FeatureValueGridFactory extends GridFactory
 
         $this->addFilters($definition, $featureValueFilters);
         $this->addGridActions($definition, $featureValueFilters);
+        $this->addBulkActions($definition, $featureValueFilters);
     }
 
     /**
@@ -198,5 +202,27 @@ class FeatureValueGridFactory extends GridFactory
             ->setName($this->translator->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             );
+    }
+
+    /**
+     * Adds bulk actions which requires featureId value from filters
+     *
+     * @param GridDefinition $definition
+     * @param FeatureValueFilters $featureValueFilters
+     *
+     * @return void
+     */
+    protected function addBulkActions(GridDefinition $definition, FeatureValueFilters $featureValueFilters): void
+    {
+        $definition->getBulkActions()->add($this->buildBulkDeleteAction('admin_feature_values_bulk_delete', [
+            'route_params' => [
+                'featureId' => $featureValueFilters->getFeatureId(),
+            ],
+        ]));
+    }
+
+    protected function trans($id, array $options, $domain): string
+    {
+        return $this->translator->trans($id, $options, $domain);
     }
 }
