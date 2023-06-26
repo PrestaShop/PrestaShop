@@ -45,7 +45,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  *
- * @deprecated since 9.0 to be removed in future versions (10+ at least, when it will not be used anymore)
+ * @deprecated since 9.0 to be removed in future versions (10+ at least, when it will not be used anymore),
+ * should stop using it in favor of PrestaShopAdminController.
  */
 class FrameworkBundleAdminController extends AbstractController implements ContainerAwareInterface
 {
