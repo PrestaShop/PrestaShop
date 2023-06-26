@@ -1769,3 +1769,14 @@ parameters:
 			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
 			path: src/PrestaShopBundle/Twig/LayoutExtension.php
+
+		-
+			message: "#^Parameter \\#2 \\$configurator of method Symfony\\\\Component\\\\DependencyInjection\\\\ContainerBuilder::registerAttributeForAutoconfiguration\\(\\) expects callable#"
+			count: 2
+			path: src/PrestaShopBundle/DependencyInjection/Compiler/CommandAndQueryCollectorPass.php
+
+		-
+			message: "#^Call to an undefined method ReflectionType::getName\\(\\)#"
+			count: 1
+			path: src/PrestaShopBundle/DependencyInjection/Compiler/CommandAndQueryCollectorPass.php
+
