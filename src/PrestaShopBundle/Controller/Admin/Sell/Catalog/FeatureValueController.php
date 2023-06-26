@@ -222,7 +222,7 @@ class FeatureValueController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
-     * @param int $featureid
+     * @param int $featureId
      * @param Request $request
      *
      * @return Response

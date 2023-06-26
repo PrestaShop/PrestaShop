@@ -42,7 +42,7 @@ class BulkFeatureValueException extends FeatureValueException implements BulkCom
      */
     public function __construct(
         private readonly array $exceptions,
-        string $message = 'Errors occurred during Feature bulk action',
+        string $message = 'Errors occurred during Feature value bulk action',
         int $code = 0,
         Throwable $previous = null
     ) {
