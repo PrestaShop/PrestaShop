@@ -60,6 +60,20 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand
 
+  PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureValueHandler:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand
+
+  PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\BulkDeleteFeatureValueHandler:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand
+
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository:
     autowire: true
     public: false

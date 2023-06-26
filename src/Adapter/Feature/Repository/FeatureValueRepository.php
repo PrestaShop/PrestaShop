@@ -33,6 +33,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureValueException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
@@ -202,6 +203,11 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         ;
 
         return (int) $qb->execute()->fetch()['total_feature_values'];
+    }
+
+    public function delete(FeatureValueId $featureValueId): void
+    {
+        $this->deleteObjectModel($this->get($featureValueId), CannotDeleteFeatureValueException::class);
     }
 
     /**
