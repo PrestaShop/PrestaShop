@@ -32,6 +32,8 @@ use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueException;
@@ -85,6 +87,30 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         } catch (FeatureValueException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I delete feature value :featureValueReference
+     *
+     * @param string $featureValueReference
+     *
+     * @return void
+     */
+    public function deleteFeatureValue(string $featureValueReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteFeatureValueCommand($this->getSharedStorage()->get($featureValueReference)));
+    }
+
+    /**
+     * @When I bulk delete feature values :featureValueReferences
+     *
+     * @param string $featureValueReferences
+     *
+     * @return void
+     */
+    public function bulkDeleteFeatureValues(string $featureValueReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkDeleteFeatureValueCommand($this->referencesToIds($featureValueReferences)));
     }
 
     /**
