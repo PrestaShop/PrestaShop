@@ -9,7 +9,7 @@ services:
   mysql:
     image: mysql:5
     ports:
-      - "3306"
+      - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
     environment:
@@ -25,8 +25,8 @@ services:
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
     environment:
-      DISABLE_MAKE: ${DISABLE_MAKE:-0}
-      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
+      DISABLE_MAKE: ${DISABLE_MAKE:-1}
+      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-0}
       DB_PASSWD: ${DB_PASSWD:-prestashop}
       DB_NAME: ${DB_NAME:-prestashop}
       DB_SERVER: ${DB_SERVER:-mysql}
@@ -36,7 +36,7 @@ services:
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
       PS_LANGUAGE: ${PS_LANGUAGE:-fr}
-      PS_DEV_MODE: ${PS_DEV_MODE:-0}
+      PS_DEV_MODE: ${PS_DEV_MODE:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-prestashop_demo}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
