@@ -15,3 +15,42 @@ updates:
       - "develop"
       - "E2E Tests"
       - "TE"
+  - package-ecosystem: npm
+    directory: "/themes"
+    schedule:
+      interval: daily
+      time: "04:00"
+    open-pull-requests-limit: 0
+    target-branch: develop
+    reviewers:
+      - "PrestaShop/committers"
+    labels:
+      - "FO"
+      - "dependencies"
+      - "develop"
+  - package-ecosystem: npm
+    directory: "/admin-dev/themes/default"
+    schedule:
+      interval: daily
+      time: "04:00"
+    open-pull-requests-limit: 0
+    target-branch: develop
+    reviewers:
+      - "PrestaShop/committers"
+    labels:
+      - "BO"
+      - "dependencies"
+      - "develop"
+  - package-ecosystem: npm
+    directory: "/admin-dev/themes/new-theme"
+    schedule:
+      interval: daily
+      time: "04:00"
+    open-pull-requests-limit: 0
+    target-branch: develop
+    reviewers:
+      - "PrestaShop/committers"
+    labels:
+      - "BO"
+      - "dependencies"
+      - "develop"
