@@ -116,7 +116,7 @@
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
     "@types/mochawesome": "^6.2.1",
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.55.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.36.0",
