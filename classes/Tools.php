@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
@@ -662,46 +661,6 @@ class ToolsCore
     }
 
     /**
-     * Return price with currency sign for a given product.
-     *
-     * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
-     * @see PrestaShop\PrestaShop\Core\Localization\Locale
-     *
-     * @param float $price Product price
-     * @param int|Currency|array|null $currency Current currency (object, id_currency, NULL => context currency)
-     * @param bool $no_utf8 Not used anymore
-     * @param Context|null $context
-     *
-     * @return string Price correctly formatted (sign, decimal separator...)
-     *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-     *
-     * @throws LocalizationException
-     */
-    public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
-    {
-        @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.6.0. Use ' . Locale::class . '::formatPrice() instead.',
-            E_USER_DEPRECATED
-        );
-
-        if (!is_numeric($price)) {
-            return $price;
-        }
-
-        $context = $context ?: Context::getContext();
-        $currency = $currency ?: $context->currency;
-
-        if (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance($currency);
-        }
-
-        $locale = static::getContextLocale($context);
-        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
-
-        return $locale->formatPrice($price, $currencyCode);
-    }
-
-    /**
      * Return current locale
      *
      * @param Context $context
@@ -730,33 +689,6 @@ class ToolsCore
         );
 
         return $locale;
-    }
-
-    /**
-     * Returns a well formatted number.
-     *
-     * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
-     * @see Locale
-     *
-     * @param int|float|string $number The number to format
-     * @param null $currency not used anymore
-     *
-     * @return string The formatted number
-     *
-     * @throws Exception
-     * @throws LocalizationException
-     */
-    public static function displayNumber($number, $currency = null)
-    {
-        @trigger_error(
-            'Tools::displayNumber() is deprecated since version 1.7.5.0. Use ' . Locale::class . ' instead.',
-            E_USER_DEPRECATED
-        );
-
-        $context = Context::getContext();
-        $locale = static::getContextLocale($context);
-
-        return $locale->formatNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)
