@@ -119,7 +119,7 @@ class ProductImageUploader extends AbstractImageUploader
         $this->createDestinationDirectory($imageId, $productId);
         $destinationPath = $this->productImagePathFactory->getPath($imageId);
         $this->uploadFromTemp($filePath, $destinationPath);
-        $this->imageGenerator->generateImagesByTypes($destinationPath, $this->productImageRepository->getProductImageTypes());
+        $this->imageGenerator->generateImagesByTypes($destinationPath, $this->productImageRepository->getProductImageTypes(), $imageId->getValue());
 
         $this->hookDispatcher->dispatchWithParameters(
             'actionWatermark',

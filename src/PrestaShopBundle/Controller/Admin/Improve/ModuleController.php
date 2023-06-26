@@ -68,6 +68,11 @@ class ModuleController extends ModuleAbstractController
 
         $installedProducts = $moduleRepository->getList();
 
+        $moduleErrors = $installedProducts->getErrors();
+        foreach ($moduleErrors as $moduleError) {
+            $this->addFlash('warning', $moduleError->getMessage());
+        }
+
         $categories = $this->getCategories($modulesProvider, $installedProducts);
         $bulkActions = [
             'bulk-install' => $this->trans('Install', 'Admin.Actions'),

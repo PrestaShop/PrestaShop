@@ -18,7 +18,7 @@ export default {
    * @param {string} xml
    * @return {string}
    */
-  getWSRootNodeName(xml: string): string {
+  getRootNodeName(xml: string): string {
     const xmlDocument = this.getXmlDocument(xml);
     const docElement: HTMLElement = xmlDocument.documentElement;
 
@@ -31,7 +31,7 @@ export default {
    * @param {string} path
    * @return {string}
    */
-  getWSNodes(xml: string, path: string): Element[] {
+  getNodes(xml: string, path: string): Element[] {
     const xmlDocument = this.getXmlDocument(xml);
 
     return xpath.select(path, xmlDocument) as Element[];
@@ -43,7 +43,7 @@ export default {
    * @param {string} path
    * @return {string}
    */
-  getWSNode(xml: string, path: string): Element {
+  getNode(xml: string, path: string): Element {
     const xmlDocument = this.getXmlDocument(xml);
 
     return xpath.select1(path, xmlDocument) as Element;
@@ -55,7 +55,7 @@ export default {
    * @param {string} path
    * @return {string}
    */
-  getWSNodeValue(xml: string, path: string): string {
+  getNodeValue(xml: string, path: string): string {
     const xmlDocument = this.getXmlDocument(xml);
 
     return xpath.select1(`string(${path})`, xmlDocument) as string;

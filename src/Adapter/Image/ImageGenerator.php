@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
+use Configuration;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
@@ -61,19 +62,20 @@ class ImageGenerator
     /**
      * @param string $imagePath
      * @param ImageType[] $imageTypes
+     * @param int $imageId
      *
      * @return bool
      *
      * @throws ImageOptimizationException
      * @throws ImageUploadException
      */
-    public function generateImagesByTypes(string $imagePath, array $imageTypes): bool
+    public function generateImagesByTypes(string $imagePath, array $imageTypes, int $imageId = 0): bool
     {
         $resized = true;
 
         try {
             foreach ($imageTypes as $imageType) {
-                $resized &= $this->resize($imagePath, $imageType);
+                $resized &= $this->resize($imagePath, $imageType, $imageId);
             }
         } catch (PrestaShopException $e) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
@@ -91,10 +93,11 @@ class ImageGenerator
      *
      * @param string $filePath
      * @param ImageType $imageType
+     * @param int $imageId
      *
      * @return bool
      */
-    protected function resize(string $filePath, ImageType $imageType): bool
+    protected function resize(string $filePath, ImageType $imageType, int $imageId = 0): bool
     {
         if (!is_file($filePath)) {
             throw new ImageUploadException(sprintf('File "%s" does not exist', $filePath));
@@ -111,7 +114,7 @@ class ImageGenerator
         } else {
             $configuredImageFormats = ['jpg'];
         }
-
+        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
         $result = true;
 
         foreach ($configuredImageFormats as $imageFormat) {
@@ -120,9 +123,19 @@ class ImageGenerator
             $forceFormat = ($imageFormat !== 'jpg');
             if (!ImageManager::resize(
                 $filePath,
-                sprintf('%s-%s.%s', rtrim($filePath, '.' . $imageFormat), stripslashes($imageType->name), $imageFormat),
+                sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name), $imageFormat),
                 $imageType->width,
                 $imageType->height,
+                $imageFormat,
+                $forceFormat
+            )) {
+                $result = false;
+            }
+            if ($generate_high_dpi_images && !ImageManager::resize(
+                $filePath,
+                sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name) . '2x', $imageFormat),
+                $imageType->width * 2,
+                $imageType->height * 2,
                 $imageFormat,
                 $forceFormat
             )) {

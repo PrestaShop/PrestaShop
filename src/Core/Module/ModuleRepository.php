@@ -90,7 +90,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     public function getList(): ModuleCollection
     {
-        $modules = [];
+        $modules = new ModuleCollection();
         $modulesDirsList = (new Finder())->directories()
             ->in($this->modulePath)
             ->depth('== 0')
@@ -103,10 +103,10 @@ class ModuleRepository implements ModuleRepositoryInterface
                 continue;
             }
 
-            $modules[] = $this->getModule($moduleName);
+            $modules->add($this->getModule($moduleName));
         }
 
-        return ModuleCollection::createFrom($this->addModulesFromHook($modules));
+        return $this->addModulesFromHook($modules);
     }
 
     public function getInstalledModules(): ModuleCollection
@@ -292,13 +292,19 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * @param Module[] $modules
+     * @param ModuleCollection $modules
      *
-     * @return Module[]
+     * @return ModuleCollection
      */
-    protected function addModulesFromHook(array $modules): array
+    protected function addModulesFromHook(ModuleCollection $modules): ModuleCollection
     {
-        $externalModules = $this->getModulesFromHook();
+        try {
+            $externalModules = $this->getModulesFromHook();
+        } catch (\Throwable $e) {
+            $modules->addError($e);
+
+            return $modules;
+        }
 
         foreach ($externalModules as $externalModule) {
             $merged = false;
@@ -323,7 +329,12 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
     {
-        $modulesFromHook = $this->getModulesFromHook();
+        try {
+            $modulesFromHook = $this->getModulesFromHook();
+        } catch (\Throwable $e) {
+            return $module;
+        }
+
         foreach ($modulesFromHook as $moduleFromHook) {
             if ($module->get('name') === $moduleFromHook['name']) {
                 $module->getAttributes()->add($moduleFromHook);

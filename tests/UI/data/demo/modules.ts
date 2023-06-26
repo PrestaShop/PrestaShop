@@ -13,6 +13,11 @@ export default {
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
   }),
+  psFacetedSearch: new ModuleData({
+    tag: 'ps_facetedsearch',
+    name: 'Faceted search',
+    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.12.1/ps_facetedsearch.zip',
+  }),
   contactForm: new ModuleData({
     tag: 'contactform',
     name: 'Contact form',
@@ -32,5 +37,6 @@ export default {
   keycloak: new ModuleData({
     tag: 'keycloak_connector_demo',
     name: 'Keycloak OAuth2 connector demo',
+    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.2/keycloak_connector_demo.zip',
   }),
 };

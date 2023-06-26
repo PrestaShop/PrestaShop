@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -398,9 +399,10 @@ class ContextCore
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
             $this->translator = $sfContainer->get('translator');
+            $locale = $this->language->locale ?? $sfContainer->get(LocaleInterface::class)->getCode();
             // We need to set the locale here because in legacy BO pages, the translator is used
             // before the TranslatorListener does its job of setting the locale according to the Request object
-            $this->translator->setLocale($this->language->locale);
+            $this->translator->setLocale($locale);
         }
 
         return $this->translator;

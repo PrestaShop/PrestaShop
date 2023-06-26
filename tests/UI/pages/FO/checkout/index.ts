@@ -723,6 +723,7 @@ class Checkout extends FOBasePage {
     if (await this.elementVisible(page, this.addressStepAliasInput)) {
       await this.setValue(page, this.addressStepAliasInput, address.alias);
     }
+    await this.setValue(page, this.addressStepPhoneInput, address.phone);
     await this.setValue(page, this.addressStepCompanyInput, address.company);
     // Contact
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
