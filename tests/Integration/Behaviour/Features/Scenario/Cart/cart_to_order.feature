@@ -1,15 +1,27 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags cart-to-order
 @restore-all-tables-before-feature
+@cart-to-order
 Feature: Check cart to order data copy
   As a customer
   I must be able to have a correct order when validating payment step
+
+  Background:
+    Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
+    And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
+    And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
+    And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
+    And there is a cart rule "cartrule1" with following properties:
+      | name[en-US]         | cartrule1 |
+      | priority            | 1         |
+      | free_shipping       | false     |
+      | code                | foo1      |
+      | discount_percentage | 50        |
 
   Scenario: 1 product in cart, 1 cart rule
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -37,15 +49,17 @@ Feature: Check cart to order data copy
     Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
+  @restore-cart-rules-after-scenario
   Scenario: 1 product in cart, 2 cart rules
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
-    Given there is a cart rule named "cartrule2" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule2" has a discount code "foo2"
+    And there is a cart rule "cartrule2" with following properties:
+      | name[en-US]         | cartrule2 |
+      | priority            | 2         |
+      | free_shipping       | false     |
+      | code                | foo2      |
+      | discount_percentage | 50        |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -79,11 +93,6 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
-    Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -119,13 +128,12 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
-    Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
-    Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule1" has a discount code "foo1"
-    Given there is a cart rule named "cartrule2" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule2" has a discount code "foo2"
+    Given there is a cart rule "cartrule2" with following properties:
+      | name[en-US]         | cartrule2 |
+      | priority            | 2         |
+      | free_shipping       | false     |
+      | code                | foo2      |
+      | discount_percentage | 50        |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -163,9 +171,13 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a cart rule named "cartrule5" that applies an amount discount of 500.0 with priority 5, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule5" has a discount code "foo5"
+    Given there is a cart rule cartrule5 with following properties:
+      | name[en-US]           | cartrule5 |
+      | priority              | 5         |
+      | discount_amount       | 500       |
+      | discount_currency     | usd       |
+      | discount_includes_tax | false     |
+      | code                  | foo5      |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -194,15 +206,17 @@ Feature: Check cart to order data copy
     Then customer "customer1" should have 1 cart rules that apply to him
     Then cart rule for customer "customer1" in position 1 should apply a discount of 480.190000
 
+  @restore-cart-rules-after-scenario
   Scenario: 1 product in cart, 1 cart rule offering free gift
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
-    Given there is a cart rule named "cartrule13" that applies no discount with priority 13, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule13" has a discount code "foo13"
-    Given cart rule "cartrule13" offers a gift product "product4"
+    Given there is a cart rule cartrule13 with following properties:
+      | name[en-US]       | cartrule13 |
+      | priority          | 13         |
+      | free_shipping     | false      |
+      | gift_product      | product4   |
+      | code              | foo13      |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
@@ -235,11 +249,12 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
-    Given there is a cart rule named "cartrule13" that applies no discount with priority 13, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule13" has a discount code "foo13"
-    Given cart rule "cartrule13" offers a gift product "product4"
+    Given there is a cart rule cartrule13 with following properties:
+      | name[en-US]       | cartrule13 |
+      | priority          | 13         |
+      | free_shipping     | false      |
+      | gift_product      | product4   |
+      | code              | foo13      |
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"

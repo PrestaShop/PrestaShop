@@ -44,6 +44,7 @@ Feature: Cart calculation with country specific cart rules
     And cart shipping fees should be 14.3 tax included
     And my cart total should be 96.6 tax included
 
+  @restore-cart-rules-before-scenario
   Scenario: Cart with a Product And adress not restricted by cart rule
     When I select address "address-us" in my cart
     And I select carrier "carrier1" in my cart

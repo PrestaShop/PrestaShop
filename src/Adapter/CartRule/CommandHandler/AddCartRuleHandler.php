@@ -68,7 +68,6 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
      */
     public function handle(AddCartRuleCommand $command): CartRuleId
     {
-        //@todo: restrictions are missing. We should consider dedicated command for restrictions
         $cartRule = $this->cartRuleRepository->add($this->buildCartRuleFromCommandData($command));
 
         return new CartRuleId((int) $cartRule->id);
