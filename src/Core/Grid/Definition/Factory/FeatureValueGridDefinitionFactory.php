@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -130,36 +128,8 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
      */
     protected function getGridActions(): GridActionCollectionInterface
     {
-        return (new GridActionCollection())
-            ->add((new LinkGridAction('import'))
-            ->setName($this->trans('Import', [], 'Admin.Actions'))
-            ->setIcon('cloud_upload')
-            ->setOptions([
-                'route' => 'admin_import',
-                'route_params' => [
-                    'import_type' => 'features',
-                ],
-            ])
-            )
-            ->add((new LinkGridAction('export'))
-            ->setName($this->trans('Export', [], 'Admin.Actions'))
-            ->setIcon('cloud_download')
-            ->setOptions([
-                'route' => 'admin_features_export',
-            ])
-            )
-            ->add((new SimpleGridAction('common_refresh_list'))
-            ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-            ->setIcon('refresh')
-            )
-            ->add((new SimpleGridAction('common_show_query'))
-            ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-            ->setIcon('code')
-            )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-            ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-            ->setIcon('storage')
-            );
+        // actions are filled in FeatureValueGridFactory
+        return new GridActionCollection();
     }
 
     /**

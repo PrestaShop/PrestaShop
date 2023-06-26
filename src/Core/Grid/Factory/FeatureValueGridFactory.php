@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
@@ -45,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This class allows adapting the feature value grid definition with dynamic values
@@ -68,7 +71,8 @@ class FeatureValueGridFactory extends GridFactory
         GridDataFactoryInterface $dataFactory,
         GridFilterFormFactoryInterface $filterFormFactory,
         HookDispatcherInterface $hookDispatcher,
-        protected readonly FeatureRepository $featureRepository
+        protected readonly FeatureRepository $featureRepository,
+        protected readonly TranslatorInterface $translator
     ) {
         parent::__construct($definitionFactory, $dataFactory, $filterFormFactory, $hookDispatcher);
     }
@@ -104,15 +108,37 @@ class FeatureValueGridFactory extends GridFactory
         );
     }
 
-    private function modifyDefinition(GridDefinition $definition, FeatureValueFilters $featureValueFilters): void
+    /**
+     * Some modifications are needed in order to fill some required dynamic values coming from request (which are in filters like the $featureId)
+     *
+     * @param GridDefinition $definition
+     * @param FeatureValueFilters $featureValueFilters
+     *
+     * @return void
+     */
+    protected function modifyDefinition(GridDefinition $definition, FeatureValueFilters $featureValueFilters): void
     {
         $definition->setName($this->featureRepository->getFeatureName(
             new FeatureId($featureValueFilters->getFeatureId()),
             new LanguageId($featureValueFilters->getLanguageId())
         ));
 
+        $this->addFilters($definition, $featureValueFilters);
+        $this->addGridActions($definition, $featureValueFilters);
+    }
+
+    /**
+     * Add filter rows which requires dynamic values from request such as $featureId.
+     *
+     * @param GridDefinition $definition
+     * @param FeatureValueFilters $featureValueFilters
+     *
+     * @return void
+     */
+    protected function addFilters(GridDefinition $definition, FeatureValueFilters $featureValueFilters): void
+    {
         $definition->getFilters()->add((new Filter('actions', SearchAndResetType::class))
-            // action options are added in FeatureValueGridFactory, because they are dynamic and depend on filters
+            // these action options are added in FeatureValueGridFactory, because they are dynamic and depend on filters
             ->setAssociatedColumn('actions')
             ->setAssociatedColumn('actions')
             ->setTypeOptions([
@@ -126,5 +152,51 @@ class FeatureValueGridFactory extends GridFactory
                 ],
             ])
         );
+    }
+
+    /**
+     * Most of these actions could have been added statically in definition factory, but the export action requires
+     * $featureId which comes from filters, therefore to maintain actions order and avoid complication we fill all of those actions here.
+     *
+     * @param GridDefinition $definition
+     * @param FeatureValueFilters $featureValueFilters
+     *
+     * @return void
+     */
+    protected function addGridActions(GridDefinition $definition, FeatureValueFilters $featureValueFilters): void
+    {
+        $definition->getGridActions()
+            ->add((new LinkGridAction('import'))
+            ->setName($this->translator->trans('Import', [], 'Admin.Actions'))
+            ->setIcon('cloud_upload')
+            ->setOptions([
+                'route' => 'admin_import',
+                'route_params' => [
+                    'import_type' => 'features',
+                ],
+            ])
+            )
+            ->add((new LinkGridAction('export'))
+            ->setName($this->translator->trans('Export', [], 'Admin.Actions'))
+            ->setIcon('cloud_download')
+            ->setOptions([
+                'route' => 'admin_feature_values_export',
+                'route_params' => [
+                    'featureId' => $featureValueFilters->getFeatureId(),
+                ],
+            ])
+            )
+            ->add((new SimpleGridAction('common_refresh_list'))
+            ->setName($this->translator->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->setIcon('refresh')
+            )
+            ->add((new SimpleGridAction('common_show_query'))
+            ->setName($this->translator->trans('Show SQL query', [], 'Admin.Actions'))
+            ->setIcon('code')
+            )
+            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->setName($this->translator->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->setIcon('storage')
+            );
     }
 }

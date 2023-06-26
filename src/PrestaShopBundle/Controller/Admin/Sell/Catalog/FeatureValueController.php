@@ -32,6 +32,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -153,6 +154,39 @@ class FeatureValueController extends FrameworkBundleAdminController
                 'Admin.Navigation.Menu',
             ),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param FeatureValueFilters $filters
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(FeatureValueFilters $filters): CsvResponse
+    {
+        $filters = new FeatureValueFilters(['limit' => null] + $filters->all());
+
+        $gridFactory = $this->get(FeatureValueGridFactory::class);
+
+        $headers = [
+            'id_feature_value' => $this->trans('ID', 'Admin.Global'),
+            'value' => $this->trans('Value', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($gridFactory->getGrid($filters)->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_feature_value' => $record['id_feature_value'],
+                'value' => $record['value'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('feature_' . $filters->getFeatureId() . '_values_' . date('Y-m-d_His') . '.csv');
     }
 
     /**

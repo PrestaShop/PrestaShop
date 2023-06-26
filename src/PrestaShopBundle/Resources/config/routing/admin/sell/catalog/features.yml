@@ -127,3 +127,10 @@ admin_feature_values_edit:
     _legacy_feature_flag: feature
     redirectQueryParamsToKeep:
       - 'featureId'
+
+admin_feature_values_export:
+  path: /{featureId}/values/export
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::exportAction
+    _legacy_controller: AdminFeatures
