@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -78,16 +79,13 @@ class FeatureValueController extends FrameworkBundleAdminController
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
 
-        $featureValueForm = $featureValueFormBuilder->getForm(['feature_id' => $featureId]);
-        $featureValueForm->handleRequest($request);
-
         try {
+            $featureValueForm = $featureValueFormBuilder->getForm(['feature_id' => $featureId]);
+            $featureValueForm->handleRequest($request);
             $handlerResult = $featureValueFormHandler->handle($featureValueForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
-
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
                     return $this->redirectToRoute('admin_feature_values_add', [
@@ -99,6 +97,8 @@ class FeatureValueController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_features_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/create.html.twig', [
@@ -121,10 +121,9 @@ class FeatureValueController extends FrameworkBundleAdminController
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
 
-        $featureValueForm = $featureValueFormBuilder->getFormFor($featureValueId);
-        $featureValueForm->handleRequest($request);
-
         try {
+            $featureValueForm = $featureValueFormBuilder->getFormFor($featureValueId);
+            $featureValueForm->handleRequest($request);
             $handlerResult = $featureValueFormHandler->handleFor((int) $featureValueId, $featureValueForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -142,6 +141,8 @@ class FeatureValueController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_features_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/edit.html.twig', [
@@ -154,9 +155,16 @@ class FeatureValueController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @return array<string, string|array<int, string>>
+     */
     private function getErrorMessages(): array
     {
-        //@todo:
-        return [];
+        return [
+            FeatureValueNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }

@@ -30,9 +30,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
 
-/**
- * @todo: unfinished
- */
 class FeatureValueFormDataProvider implements FormDataProviderInterface
 {
     public function __construct(
