@@ -36,11 +36,13 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationN
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DeleteApplicationException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApplicationNameException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\ViewableApplication;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessesFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,15 +76,6 @@ class ApplicationController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => $this->getApplicationToolbarButtons(),
             'grid' => $this->presentGrid($grid),
         ]);
-    }
-
-    /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
-     */
-    public function viewAction(): void
-    {
-        // TODO: Implement viewAction() method in view PR.
-        throw new NotImplementedException();
     }
 
     /**
@@ -179,6 +172,31 @@ class ApplicationController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_authorized_applications_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     */
+    public function viewAction(ApiAccessesFilters $filters, int $applicationId): Response
+    {
+        $gridAuthorizedApplicationFactory = $this->get('prestashop.core.grid.factory.api_access');
+        $grid = $gridAuthorizedApplicationFactory->getGrid($filters);
+
+        try {
+            /** @var ViewableApplication $viewableApplication */
+            $viewableApplication = $this->getQueryBus()->handle(new GetApplicationForViewing($applicationId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_authorized_applications_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/Application/view.html.twig', [
+            'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
+            'enableSidebar' => true,
+            'viewableApplication' => $viewableApplication,
+            'grid' => $this->presentGrid($grid),
+        ]);
     }
 
     /**
