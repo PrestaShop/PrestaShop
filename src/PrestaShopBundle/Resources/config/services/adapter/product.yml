@@ -72,7 +72,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler:
     arguments:
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().language.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       - '@PrestaShop\PrestaShop\Core\Localization\LocaleInterface'
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface'

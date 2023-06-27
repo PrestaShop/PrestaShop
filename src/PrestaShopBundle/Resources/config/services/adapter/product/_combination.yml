@@ -26,7 +26,7 @@ services:
     autowire: true
     public: false
     arguments:
-      $contextLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      $contextLanguageId: '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing

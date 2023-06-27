@@ -21,6 +21,9 @@ services:
   prestashop.adapter.legacy.context:
     alias: PrestaShop\PrestaShop\Adapter\LegacyContext
 
+  PrestaShop\PrestaShop\Core\Link\LinkInterface:
+    alias: PrestaShop\PrestaShop\Adapter\LegacyContext
+
   prestashop.adapter.environment:
     class: PrestaShop\PrestaShop\Adapter\Environment
     arguments:

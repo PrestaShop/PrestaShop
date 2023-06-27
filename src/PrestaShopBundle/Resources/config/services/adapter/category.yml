@@ -8,7 +8,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.feature.multistore'
       - '@prestashop.adapter.shop.context'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
 
   prestashop.adapter.category.command_handler.bulk_update_categories_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkUpdateCategoriesStatusHandler

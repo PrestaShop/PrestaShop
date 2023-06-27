@@ -32,6 +32,7 @@ use Context;
 use Currency;
 use Employee;
 use Language;
+use PrestaShop\PrestaShop\Adapter\Language\LanguageAdapter;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
@@ -62,10 +63,12 @@ class LegacyContext
      */
     public function __construct(
         $mailThemesUri = null,
-        Tools $tools = null
+        Tools $tools = null,
+        private ?LanguageAdapter $languageAdapter = null,
     ) {
         $this->mailThemesUri = $mailThemesUri;
         $this->tools = null !== $tools ? $tools : new Tools();
+        $this->languageAdapter = null !== $languageAdapter ? $languageAdapter : new LanguageAdapter();
     }
 
     /**
@@ -124,6 +127,8 @@ class LegacyContext
      * @param bool $withToken
      * @param array<string> $extraParams
      *
+     * @deprecated since 9.0 to be removed in 10.0 Use the link service instead
+     *
      * @return string
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = [])
@@ -132,7 +137,9 @@ class LegacyContext
     }
 
     /**
-     * Returns the controller link in its legacy form, without trying to convert it in symfony url.
+     * Returns the controller link in its legacy form, without trying to convert it in symfony url. Used only in legacy product controller pages
+     *
+     * @deprecated since 9.0 to be removed in 10.0
      *
      * @param string $controller
      * @param bool $withToken
@@ -147,6 +154,8 @@ class LegacyContext
 
     /**
      * Adapter to get Front controller HTTP link.
+     *
+     * @deprecated since 9.0 to be removed in 10.0
      *
      * @param string $controller the controller name
      *
@@ -320,6 +329,8 @@ class LegacyContext
     /**
      * Get employee's default tab name.
      *
+     * @deprecated since 9.0 to be removed in 10.0
+     *
      * @return string Default tab name for employee
      *
      * @throws RuntimeException Throws exception if employee does not exist in context
@@ -347,11 +358,13 @@ class LegacyContext
     }
 
     /**
+     * @deprecated since 9.0 to be removed in 10.0 Use the link service instead
+     *
      * @return array Returns both enabled and disabled languages
      */
     public function getAvailableLanguages()
     {
-        return $this->getLegacyLanguages(false);
+        return $this->languageAdapter->getInstalledLanguages();
     }
 
     /**
@@ -363,7 +376,7 @@ class LegacyContext
      */
     private function getLegacyLanguages(bool $active = true, $id_shop = false, bool $ids_only = false): array
     {
-        return Language::getLanguages($active, $id_shop, $ids_only);
+        return $this->languageAdapter->getLanguages($active, $id_shop, $ids_only);
     }
 
     /**

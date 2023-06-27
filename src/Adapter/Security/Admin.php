@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -41,11 +42,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class Admin
 {
-    /**
-     * @var LegacyContext
-     */
-    private $context;
-
     /**
      * @var \Context
      */
@@ -67,12 +63,12 @@ class Admin
     private $security;
 
     public function __construct(
+        private readonly LinkInterface $link,
         LegacyContext $context,
         TokenStorageInterface $securityTokenStorage,
         UserProviderInterface $userProvider,
         Security $security
     ) {
-        $this->context = $context;
         $this->legacyContext = $context->getContext();
         $this->securityTokenStorage = $securityTokenStorage;
         $this->userProvider = $userProvider;
@@ -123,7 +119,7 @@ class Admin
         }
 
         //redirect to admin home page
-        header('Location: ' . $this->context->getAdminLink('', false));
+        header('Location: ' . $this->link->getAdminLink('', false));
         exit();
     }
 }

@@ -112,9 +112,8 @@ class DeliveryController extends FrameworkBundleAdminController
                 $pdf = $form->getData();
 
                 return $this->redirect(
-                    $this->get('prestashop.adapter.legacy.context')->getAdminLink(
+                    $this->getAdminLink(
                         'AdminPdf',
-                        true,
                         [
                             'date_from' => $pdf['date_from'],
                             'date_to' => $pdf['date_to'],

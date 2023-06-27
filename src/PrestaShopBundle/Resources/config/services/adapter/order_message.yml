@@ -35,4 +35,4 @@ services:
   prestashop.adapter.order_message.order_message_provider:
     class: 'PrestaShop\PrestaShop\Adapter\OrderMessage\OrderMessageProvider'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'

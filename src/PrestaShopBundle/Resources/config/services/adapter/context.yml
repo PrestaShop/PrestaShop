@@ -3,13 +3,10 @@ services:
     public: true
 
   # SECURITY
-  prestashop.adapter.security.admin:
-    class: "%AdapterSecurityAdminClass%"
+  PrestaShop\PrestaShop\Adapter\Security\Admin:
+    autowire: true
     arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@security.token_storage"
-      - "@prestashop.security.admin.provider"
-      - "@security.helper"
+      $userProvider: "@prestashop.security.admin.provider"
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

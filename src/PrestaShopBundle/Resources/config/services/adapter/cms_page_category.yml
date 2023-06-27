@@ -61,7 +61,7 @@ services:
   prestashop.adapter.cms_page.query_handler.get_cms_page_categories_for_breadcrumbs:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbHandler
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb
@@ -81,13 +81,13 @@ services:
   prestashop.adapter.cms_page.categories_provider:
     class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CategoriesProvider'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
   prestashop.adapter.cms_page.query_handler.get_cms_page_category_name_for_listing:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoryNameForListingHandler
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       - '@request_stack'
     tags:
       - name: tactician.handler

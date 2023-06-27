@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerForViewingHandler'
     arguments:
       - '@translator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       - "@prestashop.core.localization.locale.context_locale"
     tags:
       - name: tactician.handler
@@ -21,7 +21,7 @@ services:
   prestashop.adapter.customer.command_handler.transform_guest_to_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\TransformGuestToCustomerHandler'
     arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand'
@@ -86,7 +86,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\SearchCustomersHandler'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers'

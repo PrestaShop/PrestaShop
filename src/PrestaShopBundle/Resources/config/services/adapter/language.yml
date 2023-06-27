@@ -74,6 +74,9 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand'
 
+  PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider
+    public: false
   PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider:
     autowire: true
     public: false

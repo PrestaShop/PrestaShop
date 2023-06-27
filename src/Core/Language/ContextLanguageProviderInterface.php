@@ -34,4 +34,6 @@ namespace PrestaShop\PrestaShop\Core\Language;
 interface ContextLanguageProviderInterface
 {
     public function getLanguageId(): int;
+    public function getDateFormatFull(): string;
+    public function getDateFormatLite(): string;
 }

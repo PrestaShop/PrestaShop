@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -43,23 +43,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class GeneralType extends TranslatorAwareType
 {
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param LegacyContext $legacyContext
-     */
     public function __construct(
+        private readonly LinkInterface $link,
         TranslatorInterface $translator,
         array $locales,
-        LegacyContext $legacyContext
     ) {
         parent::__construct($translator, $locales);
-        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -87,7 +76,7 @@ class GeneralType extends TranslatorAwareType
                         [
                             '[1]' => sprintf(
                                 '<a target="_blank" href="%s">',
-                                $this->legacyContext->getAdminLink('AdminGroups')
+                                $this->link->getAdminLink('AdminGroups')
                             ),
                             '[/1]' => '</a>',
                         ]

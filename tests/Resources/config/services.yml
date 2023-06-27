@@ -39,7 +39,7 @@ services:
       class: 'Tests\Integration\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerDecorator'
       arguments:
         - '@test.integration.utility.authorization_checker'
-        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+        - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
         -
           - 'AdminLogin'
           - 'AdminQuickAccesses'

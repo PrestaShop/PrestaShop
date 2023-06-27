@@ -52,4 +52,14 @@ class ContextLanguageProvider implements ContextLanguageProviderInterface
 
         return $langId;
     }
+
+    public function getDateFormatFull(): string
+    {
+        return $this->context->getContext()->language->date_format_full;
+    }
+
+    public function getDateFormatLite(): string
+    {
+        return $this->context->getContext()->language->date_format_lite;
+    }
 }

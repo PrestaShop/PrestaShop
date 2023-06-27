@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Toolbar;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\HelpProvider;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -61,23 +61,17 @@ class ProductToolbarButtonsProvider implements ToolbarButtonsProviderInterface
      */
     private $moduleDataProvider;
 
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
     public function __construct(
         TranslatorInterface $translator,
         RouterInterface $router,
         HelpProvider $helpUrlProvider,
         ModuleDataProvider $moduleDataProvider,
-        LegacyContext $legacyContext
+        private readonly LinkInterface $link,
     ) {
         $this->translator = $translator;
         $this->router = $router;
         $this->helpUrlProvider = $helpUrlProvider;
         $this->moduleDataProvider = $moduleDataProvider;
-        $this->legacyContext = $legacyContext;
     }
 
     public function getToolbarButtonsOptions(array $parameters): array
@@ -118,7 +112,7 @@ class ProductToolbarButtonsProvider implements ToolbarButtonsProviderInterface
         if (!empty($parameters['productId'])) {
             $statsModule = $this->moduleDataProvider->findByName('statsproduct');
             if (!empty($statsModule['active'])) {
-                $statsLink = $this->legacyContext->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $parameters['productId']]);
+                $statsLink = $this->link->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $parameters['productId']]);
 
                 $toolbarButtons = array_merge([
                     'stats_link' => [

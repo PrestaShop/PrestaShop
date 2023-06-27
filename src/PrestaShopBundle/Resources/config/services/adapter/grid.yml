@@ -16,4 +16,4 @@ services:
   prestashop.adapter.grid.action.row.accessibility_checker.category_for_view:
     class: 'PrestaShop\PrestaShop\Adapter\Grid\Action\Row\AccessibilityChecker\CategoryForViewAccessibilityChecker'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'

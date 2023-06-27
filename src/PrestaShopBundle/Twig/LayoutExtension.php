@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -54,6 +55,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      */
     public function __construct(
         private readonly LegacyContext $context,
+        private readonly LinkInterface $link,
         private readonly string $environment,
         private readonly ShopConfigurationInterface $configuration,
         private readonly CurrencyDataProvider $currencyDataProvider
@@ -218,7 +220,7 @@ EOF;
         $header = explode('</head>', $explodedLayout[0]);
         $footer = explode('</body>', $explodedLayout[1]);
 
-        return $this->escapeSmarty(str_replace('var currentIndex = \'index.php\';', 'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';', $header[0]))
+        return $this->escapeSmarty(str_replace('var currentIndex = \'index.php\';', 'var currentIndex = \'' . $this->link->getAdminLink($controllerName) . '\';', $header[0]))
             . '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>'
             . $this->escapeSmarty($header[1])
             . '{% block content_header %}{% endblock %}'
@@ -254,7 +256,7 @@ EOF;
      */
     public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
     {
-        return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
+        return $this->link->getAdminLink($controllerName, $withToken, $extraParams);
     }
 
     /**

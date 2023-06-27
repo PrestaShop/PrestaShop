@@ -116,14 +116,13 @@ class PositionsController extends FrameworkBundleAdminController
             $hooks[$key]['position'] = $hookProvider->isDisplayHookName($hook['name']);
         }
 
-        $legacyContextService = $this->get('prestashop.adapter.legacy.context');
         $saveUrlParams = [
             'addToHook' => '',
         ];
         if ($this->selectedModule) {
             $saveUrlParams['show_modules'] = $this->selectedModule;
         }
-        $saveUrl = $legacyContextService->getAdminLink('AdminModulesPositions', true, $saveUrlParams);
+        $saveUrl = $this->getAdminLink('AdminModulesPositions', $saveUrlParams);
 
         return $this->render('@PrestaShop/Admin/Improve/Design/positions.html.twig', [
             'layoutHeaderToolbarBtn' => [

@@ -54,7 +54,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler\GetCmsPageForEditingHandler
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().link"
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing

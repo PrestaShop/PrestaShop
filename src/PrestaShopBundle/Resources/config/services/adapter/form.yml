@@ -5,7 +5,7 @@ services:
   prestashop.adapter.form.choice_provider.profile_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ProfileByIdChoiceProvider'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
 
   prestashop.adapter.form.choice_provider.category_tree_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider'
@@ -23,7 +23,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider:
     autowire: true
     arguments:
-      $contextLangId: '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      $contextLangId: '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
 
   prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
     alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
@@ -69,7 +69,7 @@ services:
   prestashop.adapter.form.choice_provider.order_return_state:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderReturnStateChoiceProvider'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
 
   prestashop.adapter.form.choice_provider.features_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
@@ -95,7 +95,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
       - '@PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
 
   prestashop.adapter.form.choice_provider.combination_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CombinationIdChoiceProvider'
@@ -103,7 +103,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
 
 
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider:

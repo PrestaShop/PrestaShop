@@ -3,7 +3,7 @@ services:
     public: false
     autowire: true
     bind:
-      $langId: '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      $langId: '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       $themeCollection: '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\:

@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\Toolbar;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\HelpProvider;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider;
 use Symfony\Component\Routing\RouterInterface;
@@ -131,9 +131,7 @@ class ProductToolbarButtonsProviderTest extends TestCase
         $moduleDataProviderMock = $this->getMockBuilder(ModuleDataProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $linkMock = $this->createMock(LinkInterface::class);
 
         if ($withStats) {
             $moduleDataProviderMock
@@ -142,7 +140,7 @@ class ProductToolbarButtonsProviderTest extends TestCase
                 ->with('statsproduct')
                 ->willReturn(['active' => true])
             ;
-            $legacyContextMock
+            $linkMock
                 ->expects($this->once())
                 ->method('getAdminLink')
                 ->with('AdminStats', true, ['module' => 'statsproduct', 'id_product' => self::PRODUCT_ID])
@@ -153,7 +151,7 @@ class ProductToolbarButtonsProviderTest extends TestCase
                 ->expects($this->never())
                 ->method('findByName')
             ;
-            $legacyContextMock
+            $linkMock
                 ->expects($this->never())
                 ->method('getAdminLink')
             ;
@@ -164,7 +162,7 @@ class ProductToolbarButtonsProviderTest extends TestCase
             $routerMock,
             $helpProviderMock,
             $moduleDataProviderMock,
-            $legacyContextMock
+            $linkMock
         );
     }
 }

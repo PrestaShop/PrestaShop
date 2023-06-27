@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -41,24 +41,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CatalogPriceRulesType extends TranslatorAwareType
 {
     /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
      * PricingType constructor.
      *
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param LegacyContext $legacyContext
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        LegacyContext $legacyContext
+        private readonly LinkInterface $link,
     ) {
         parent::__construct($translator, $locales);
-        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -72,12 +65,12 @@ class CatalogPriceRulesType extends TranslatorAwareType
          * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds unneeded stuff to % while creating url
          * That's why catalog_price_rule_id is used and then string replaced.
          */
-        $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink(
+        $catalogPriceRuleEditLink = $this->link->getAdminLink(
             'AdminSpecificPriceRule',
             true,
             ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']
         );
-        $catalogPriceRuleIndexLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule');
+        $catalogPriceRuleIndexLink = $this->link->getAdminLink('AdminSpecificPriceRule');
         /** Adding % to make link more unique */
         $catalogPriceRuleEditLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);
 

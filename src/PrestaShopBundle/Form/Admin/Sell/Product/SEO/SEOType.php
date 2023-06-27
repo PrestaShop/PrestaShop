@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -60,17 +61,11 @@ class SEOType extends TranslatorAwareType
     private $forceFriendlyUrl;
 
     /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
      * @param bool $friendlyUrlEnabled
      * @param bool $forceFriendlyUrl
-     * @param LegacyContext $legacyContext
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -78,13 +73,12 @@ class SEOType extends TranslatorAwareType
         RouterInterface $router,
         bool $friendlyUrlEnabled,
         bool $forceFriendlyUrl,
-        LegacyContext $legacyContext
+        private readonly LinkInterface $link,
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->friendlyUrlEnabled = $friendlyUrlEnabled;
         $this->forceFriendlyUrl = $forceFriendlyUrl;
-        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -187,7 +181,7 @@ class SEOType extends TranslatorAwareType
                     $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
                 ),
                 'external_link' => [
-                    'href' => $this->legacyContext->getAdminLink('AdminTags', true),
+                    'href' => $this->link->getAdminLink('AdminTags', true),
                     'text' => $this->trans('[1]Manage all tags[/1]', 'Admin.Catalog.Feature'),
                 ],
                 'options' => [

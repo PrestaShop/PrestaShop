@@ -24,7 +24,7 @@ services:
       - '@translator'
       - '@validator'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
     tags:
       - name: tactician.handler

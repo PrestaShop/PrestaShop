@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Link\LinkInterface;
 use ReflectionClass;
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -44,26 +44,10 @@ use Symfony\Component\Routing\Router;
  */
 class UrlGenerator implements UrlGeneratorInterface
 {
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
-     * @var Router
-     */
-    private $router;
-
-    /**
-     * Constructor.
-     *
-     * @param LegacyContext $legacyContext
-     * @param Router $router
-     */
-    public function __construct(LegacyContext $legacyContext, Router $router)
-    {
-        $this->legacyContext = $legacyContext;
-        $this->router = $router;
+    public function __construct(
+        private readonly LinkInterface $link,
+        private readonly Router $router
+    ) {
     }
 
     /**
@@ -82,7 +66,7 @@ class UrlGenerator implements UrlGeneratorInterface
         // resolve route & legacy mapping
         [$legacyController, $legacyParameters] = $this->getLegacyOptions($name, $parameters);
 
-        return $this->legacyContext->getAdminLink($legacyController, true, $legacyParameters);
+        return $this->link->getAdminLink($legacyController, true, $legacyParameters);
     }
 
     /**

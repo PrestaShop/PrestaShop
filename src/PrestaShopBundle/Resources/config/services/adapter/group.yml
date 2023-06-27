@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Group\Provider\DefaultGroupsProvider'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository: ~
 

@@ -326,6 +326,8 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
     /**
      * Redirect employee to default page.
      *
+     * @deprecated since 9.0 to be removed in 10.0
+     *
      * @return RedirectResponse
      */
     protected function redirectToDefaultPage()

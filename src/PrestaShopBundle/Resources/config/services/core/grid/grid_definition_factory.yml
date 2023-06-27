@@ -296,7 +296,7 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 

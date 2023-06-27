@@ -104,7 +104,6 @@ class TranslationsController extends FrameworkBundleAdminController
     public function showSettingsAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
         $modifyTranslationsForm = $this->getModifyTranslationsFormHandler()->getForm();
         $addUpdateLanguageForm = $this->getAddUpdateLanguageTranslationsFormHandler()->getForm();
@@ -120,7 +119,7 @@ class TranslationsController extends FrameworkBundleAdminController
             'exportCataloguesForm' => $exportCataloguesForm->createView(),
             'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
             'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
-            'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
+            'addLanguageUrl' => $this->getAdminLink('AdminLanguages', ['addlang' => '']),
         ]);
     }
 

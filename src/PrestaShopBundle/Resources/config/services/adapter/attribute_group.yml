@@ -4,7 +4,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider:
     arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Language\\ContextLanguageProvider").getLanguageId()'
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   prestashop.adapter.product.attribute_group.attribute_group_view_data_provider:
