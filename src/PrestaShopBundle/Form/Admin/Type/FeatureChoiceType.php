@@ -48,8 +48,8 @@ class FeatureChoiceType extends TranslatorAwareType
         $resolver->setDefaults([
             'choices' => $this->featureChoiceProvider->getChoices(),
             'label' => $this->trans('Feature', 'Admin.Catalog.Feature'),
+            'autocomplete' => true,
             'attr' => [
-                'data-toggle' => 'select2',
                 'class' => 'feature-selector',
             ],
         ]);
