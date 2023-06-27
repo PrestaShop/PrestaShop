@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\SetCartRuleRestrictionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
@@ -43,7 +44,10 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
 
     public function handle(SetCartRuleRestrictionsCommand $command): void
     {
-        if (null === $command->getRestrictedCartRuleIds() && null === $command->getProductRestrictionRuleGroups()) {
+        if (null === $command->getRestrictedCartRuleIds()
+            && null === $command->getProductRestrictionRuleGroups()
+            && null === $command->getRestrictedCarrierIds()
+        ) {
             // no restrictions were modified
             return;
         }
@@ -57,6 +61,10 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
         $productRestrictionGroups = $command->getProductRestrictionRuleGroups();
         if (null !== $productRestrictionGroups) {
             $this->setProductRestrictions($cartRule, $productRestrictionGroups);
+        }
+        $restrictedCarrierIds = $command->getRestrictedCarrierIds();
+        if (null !== $restrictedCarrierIds) {
+            $this->setCarrierRestrictions($cartRule, $restrictedCarrierIds);
         }
         // it would be more performant updating all restriction props at the end with one update call,
         // but that way we might introduce cart rule state failure in case one of steps fails somewhere in the middle
@@ -86,5 +94,19 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
 
         $cartRule->product_restriction = !empty($restrictionRuleGroups);
         $this->cartRuleRepository->partialUpdate($cartRule, ['product_restriction']);
+    }
+
+    /**
+     * @param CartRule $cartRule
+     * @param CarrierId[] $restrictedCarrierIds
+     *
+     * @return void
+     */
+    private function setCarrierRestrictions(CartRule $cartRule, array $restrictedCarrierIds): void
+    {
+        $this->cartRuleRepository->setCarrierRestrictions(new CartRuleId((int) $cartRule->id), $restrictedCarrierIds);
+
+        $cartRule->carrier_restriction = !empty($restrictedCarrierIds);
+        $this->cartRuleRepository->partialUpdate($cartRule, ['carrier_restriction']);
     }
 }

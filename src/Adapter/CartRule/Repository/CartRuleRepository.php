@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\Repository;
 use CartRule;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
@@ -326,6 +327,76 @@ class CartRuleRepository extends AbstractObjectModelRepository
                 implode(',', $insertValues)
             )
         );
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     * @param CarrierId[] $restrictedCarrierIds
+     *
+     * @return void
+     */
+    public function setCarrierRestrictions(CartRuleId $cartRuleId, array $restrictedCarrierIds): void
+    {
+        $this->removeCarrierRestrictions($cartRuleId);
+
+        if (empty($restrictedCarrierIds)) {
+            return;
+        }
+
+        $checkedIds = [];
+        $insertValues = [];
+        foreach ($restrictedCarrierIds as $restrictedCarrierId) {
+            // skip duplicate ids if for some reason they exist
+            if (in_array($restrictedCarrierId, $checkedIds, true)) {
+                continue;
+            }
+            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCarrierId->getValue());
+            $checkedIds[] = $restrictedCarrierId;
+        }
+
+        $this->connection->executeStatement(
+            sprintf(
+                'INSERT INTO %s (`id_cart_rule`, `id_carrier`) VALUES %s',
+                $this->dbPrefix . 'cart_rule_carrier',
+                implode(',', $insertValues)
+            )
+        );
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     *
+     * @return int[]
+     */
+    public function getRestrictedCarrierIds(CartRuleId $cartRuleId): array
+    {
+        $cartRuleIdValue = $cartRuleId->getValue();
+        $results = $this->connection->createQueryBuilder()
+            ->select('crc.id_carrier')
+            ->from($this->dbPrefix . 'cart_rule_carrier', 'crc')
+            ->where('crc.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleIdValue)
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(static function (array $result): int {
+            return (int) $result['id_carrier'];
+        }, $results);
+    }
+
+    private function removeCarrierRestrictions(CartRuleId $cartRuleId): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_carrier', 'crc')
+            ->where('crc.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
     }
 
     private function removeRestrictedCartRules(CartRuleId $cartRuleId): void

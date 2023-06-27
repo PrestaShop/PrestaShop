@@ -293,6 +293,14 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
                 'Unexpected cart rule restrictions'
             );
         }
+
+        if (isset($expectedData['restricted carriers'])) {
+            Assert::assertSame(
+                $this->referencesToIds($expectedData['restricted carriers']),
+                $conditions->getRestrictions()->getRestrictedCarrierIds(),
+                'Unexpected restricted carriers'
+            );
+        }
     }
 
     protected function getCartRuleActionBuilder(): CartRuleActionBuilder

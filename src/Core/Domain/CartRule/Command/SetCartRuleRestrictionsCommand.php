@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
@@ -51,12 +52,34 @@ class SetCartRuleRestrictionsCommand
     private ?array $productRestrictionRuleGroups = null;
 
     /**
+     * @var CarrierId[]|null
+     */
+    private ?array $restrictedCarrierIds = null;
+
+    /**
      * @param int $cartRuleId
      */
     public function __construct(
         int $cartRuleId,
     ) {
         $this->cartRuleId = new CartRuleId($cartRuleId);
+    }
+
+    public function setRestrictedCarrierIds(array $restrictedCarrierIds): self
+    {
+        $this->restrictedCarrierIds = array_map(static function ($carrierId): CarrierId {
+            return new CarrierId($carrierId);
+        }, $restrictedCarrierIds);
+
+        return $this;
+    }
+
+    /**
+     * @return CarrierId[]|null
+     */
+    public function getRestrictedCarrierIds(): ?array
+    {
+        return $this->restrictedCarrierIds;
     }
 
     /**
