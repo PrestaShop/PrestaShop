@@ -74,18 +74,27 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+<<<<<<< HEAD
      * @When I restrict following carriers for cart rule :cartRuleReference:
+=======
+     * @When I restrict following groups for cart rule :cartRuleReference:
+>>>>>>> 81815d6434 ( implement customer group restrictions for cart rule)
      *
      * @param string $cartRuleReference
      * @param TableNode $tableNode
      *
      * @return void
      */
+<<<<<<< HEAD
     public function setRestrictedCarriers(string $cartRuleReference, TableNode $tableNode): void
+=======
+    public function setRestrictedGroups(string $cartRuleReference, TableNode $tableNode): void
+>>>>>>> 81815d6434 ( implement customer group restrictions for cart rule)
     {
         $command = $this->getRestrictionsCommand($cartRuleReference);
 
         try {
+<<<<<<< HEAD
             $command->setRestrictedCarrierIds($this->referencesToIds($tableNode->getRowsHash()['restricted carriers']));
             $this->restrictionCommandsByReference[$cartRuleReference] = $command;
         } catch (CartRuleConstraintException $e) {
@@ -107,6 +116,9 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
 
         try {
             $command->setRestrictedCountryIds($this->referencesToIds($tableNode->getRowsHash()['restricted countries']));
+=======
+            $command->setRestrictedGroupIds($this->referencesToIds($tableNode->getRowsHash()['restricted groups']));
+>>>>>>> 81815d6434 ( implement customer group restrictions for cart rule)
             $this->restrictionCommandsByReference[$cartRuleReference] = $command;
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
@@ -200,12 +212,17 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+<<<<<<< HEAD
      * @When I clear all carrier restrictions for cart rule :cartRuleReference
+=======
+     * @When I clear all group restrictions for cart rule :cartRuleReference
+>>>>>>> 81815d6434 ( implement customer group restrictions for cart rule)
      *
      * @param string $cartRuleReference
      *
      * @return void
      */
+<<<<<<< HEAD
     public function clearCartRuleCarrierRestrictions(string $cartRuleReference): void
     {
         $command = $this->getRestrictionsCommand($cartRuleReference);
@@ -225,6 +242,12 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     {
         $command = $this->getRestrictionsCommand($cartRuleReference);
         $command->setRestrictedCountryIds([]);
+=======
+    public function clearCartRuleGroupRestrictions(string $cartRuleReference): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command->setRestrictedGroupIds([]);
+>>>>>>> 81815d6434 ( implement customer group restrictions for cart rule)
 
         $this->restrictionCommandsByReference[$cartRuleReference] = $command;
     }
@@ -248,8 +271,12 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
 
         if (null === $command->getRestrictedCartRuleIds()
             && null === $command->getProductRestrictionRuleGroups()
+<<<<<<< HEAD
             && null === $command->getRestrictedCarrierIds()
             && null === $command->getRestrictedCountryIds()
+=======
+            && null === $command->getRestrictedGroupIds()
+>>>>>>> 81815d6434 ( implement customer group restrictions for cart rule)
         ) {
             throw new RuntimeException(
                 sprintf(
