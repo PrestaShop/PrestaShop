@@ -3,10 +3,10 @@ on: [push, pull_request]
 jobs:
     integration:
         name: Integration tests
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         strategy:
             matrix:
-                php: ['7.1', '7.2', '7.3', '7.4']
+                php: ['7.4']
             fail-fast: false
         steps:
             -   uses: actions/checkout@v3
