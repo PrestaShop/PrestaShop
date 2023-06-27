@@ -101,7 +101,9 @@ class FeatureValueController extends FrameworkBundleAdminController
                     ]);
                 }
 
-                return $this->redirectToRoute('admin_features_index');
+                return $this->redirectToRoute('admin_feature_values_index', [
+                    'featureId' => $featureId,
+                ]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -119,6 +121,7 @@ class FeatureValueController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
+     * @param int $featureId
      * @param int $featureValueId
      * @param Request $request
      *
