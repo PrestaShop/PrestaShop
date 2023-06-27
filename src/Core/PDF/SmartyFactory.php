@@ -32,8 +32,7 @@ use Smarty;
 use SmartyLazyRegister;
 
 /**
- * Purpose of this class is to get smarty that is ready for PDF generation.
- * This is still mostly legacy code since eventually smarty be replaced by twig
+ * Get smarty that is ready for PDF generation.
  */
 class SmartyFactory
 {

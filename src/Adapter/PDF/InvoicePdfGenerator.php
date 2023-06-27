@@ -62,8 +62,6 @@ final class InvoicePdfGenerator implements PDFGeneratorSingleObjectInterface
             throw new RuntimeException('The invoice cannot be found within your database.');
         }
 
-        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [$orderInvoice]]);
-
         $template = $this->templateFactory->getTemplate(PDFTemplateInvoiceSmarty::TEMPLATE_NAME, ['invoice' => $orderInvoice]);
         $this->pdfTemplateRenderer->render($template);
     }

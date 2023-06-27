@@ -28,9 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\PDF\Template;
 
+use Hook;
 use HTMLTemplateInvoice;
 use PrestaShop\PrestaShop\Core\PDF\SmartyFactory;
 
+/**
+ * PDFTemplateInvoiceSmarty is a class responsible for rendering invoice PDF using Smarty.
+ */
 class PDFTemplateInvoiceSmarty implements PDFTemplate
 {
     private ?HTMLTemplateInvoice $legacyTemplate;
@@ -45,7 +49,9 @@ class PDFTemplateInvoiceSmarty implements PDFTemplate
 
     public function init(array $data): void
     {
-        $this->legacyTemplate = new HTMLTemplateInvoice($data['invoice'], $this->smartyFactory->getSmarty());
+        $invoice = $data['invoice'];
+        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [$invoice]]);
+        $this->legacyTemplate = new HTMLTemplateInvoice($invoice, $this->smartyFactory->getSmarty());
     }
 
     public function getHeader(): string

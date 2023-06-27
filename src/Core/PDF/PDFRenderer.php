@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\PDF;
 use Exception;
 use TCPDF;
 
+
 class PDFRenderer extends TCPDF
 {
     public const DEFAULT_FONT = 'helvetica';

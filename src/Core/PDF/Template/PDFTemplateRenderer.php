@@ -30,6 +30,10 @@ namespace PrestaShop\PrestaShop\Core\PDF\Template;
 
 use PrestaShop\PrestaShop\Core\PDF\PDFRenderer;
 
+/**
+ * This class is responsible for rendering PDF templates in PrestaShop.
+ * It takes a PDFTemplate object and uses it as a template that is shown in browser
+ */
 class PDFTemplateRenderer
 {
     protected PDFTemplateFactory $templateFactory;

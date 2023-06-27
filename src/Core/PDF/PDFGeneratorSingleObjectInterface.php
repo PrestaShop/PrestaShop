@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\PDF;
 
+/**
+ * This interface defines the contract for generating a PDF for a single object.
+ */
 interface PDFGeneratorSingleObjectInterface
 {
     public function generatePDF(int $objectId): void;

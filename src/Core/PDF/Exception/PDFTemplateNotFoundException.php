@@ -24,36 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\PDF\Template;
-
-use IteratorAggregate;
-use PrestaShop\PrestaShop\Core\PDF\Exception\PDFTemplateNotFoundException;
+namespace PrestaShop\PrestaShop\Core\PDF\Exception;
 
 /**
- * PDFTemplateFactory is responsible for instantiating the correct PDFTemplate based on the given template name.
+ * Throw when PDF template is not found
  */
-class PDFTemplateFactory
+class PDFTemplateNotFoundException extends PdfException
 {
-    private IteratorAggregate $templates;
-
-    public function __construct(IteratorAggregate $templates)
-    {
-         $this->templates = $templates;
-    }
-
-    public function getTemplate(string $templateName, array $data): PDFTemplate
-    {
-        foreach ($this->templates as $template) {
-            if ($templateName === $template->getTemplateName()) {
-                $template->init($data);
-                return $template;
-            }
-        }
-
-        throw new PDFTemplateNotFoundException(
-            sprintf('PDFTemplate not found for the given name: %s.', $templateName)
-        );
-    }
 }
