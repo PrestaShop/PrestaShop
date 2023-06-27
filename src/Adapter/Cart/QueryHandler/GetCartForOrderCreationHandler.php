@@ -359,7 +359,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         $deliveryAddress = (int) $cart->id_address_delivery;
 
         //Check if there is any delivery options available for cart delivery address
-        if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress)) {
+        if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress) && !$cart->isVirtualCart()) {
             return null;
         }
 
@@ -374,7 +374,8 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             (int) $carrier->id ?: $this->defaultCarrierId ?: null,
             (bool) $cart->gift,
             (bool) $cart->recyclable,
-            $cart->gift_message
+            $cart->gift_message,
+            $cart->isVirtualCart()
         );
     }
 
@@ -389,6 +390,9 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private function fetchCartDeliveryOptions(array $deliveryOptionsByAddress, int $deliveryAddressId)
     {
         $deliveryOptions = [];
+        if (empty($deliveryOptionsByAddress)) {
+            return $deliveryOptions;
+        }
         // legacy multishipping feature allowed to split cart shipping to multiple addresses.
         // now when the multishipping feature is removed
         // the list of carriers should be shared across whole cart for single delivery address
