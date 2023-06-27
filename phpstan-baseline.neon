@@ -1773,10 +1773,10 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$configurator of method Symfony\\\\Component\\\\DependencyInjection\\\\ContainerBuilder::registerAttributeForAutoconfiguration\\(\\) expects callable#"
 			count: 2
-			path: src/PrestaShopBundle/DependencyInjection/Compiler/CommandAndQueryCollectorPass.php
+			path: src/PrestaShopBundle/DependencyInjection/Compiler/CommandAndQueryRegisterPass.php
 
 		-
 			message: "#^Call to an undefined method ReflectionType::getName\\(\\)#"
 			count: 1
-			path: src/PrestaShopBundle/DependencyInjection/Compiler/CommandAndQueryCollectorPass.php
+			path: src/PrestaShopBundle/DependencyInjection/Compiler/CommandAndQueryRegisterPass.php
 

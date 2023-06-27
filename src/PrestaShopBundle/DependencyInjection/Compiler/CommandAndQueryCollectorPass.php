@@ -28,15 +28,13 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use ReflectionAttribute;
 use ReflectionClass;
-use RuntimeException;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Aggregates and organizes all Commands & Queries, storing them in a container for future processing,
- * while simultaneously transforming custom tags into Symfony Messenger tags.
+ * Aggregates and organizes all Commands & Queries and storing them in a container for future processing
  */
 class CommandAndQueryCollectorPass implements CompilerPassInterface
 {
@@ -45,8 +43,6 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $this->registerMessengerTags($container);
-
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
         }
@@ -62,42 +58,51 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      */
     private function findCommandsAndQueries(ContainerBuilder $container): array
     {
-        $handlers = $container->findTaggedServiceIds('messenger.cqrs_handler');
+        $handlers = $container->findTaggedServiceIds('messenger.message_handler');
         $commands = [];
-        foreach ($handlers as $handler) {
-            if (isset(current($handler)['command'])) {
-                $commands[] = current($handler)['command'];
+        foreach ($handlers as $key => $value) {
+            if (count(current($value)) == 0) {
+                continue;
             }
+
+            $className = $container->getDefinition($key)->getClass();
+            $handlerAttributes = $this->getHandlerAttributes($className);
+            $this->processHandlerAttributes($handlerAttributes, $value, $commands);
         }
 
         return $commands;
     }
 
     /**
-     * register messenger tags allowing the recognition of handlers by symfony
+     * Get the attributes of a message handler using reflection.
+     *
+     * @return ReflectionAttribute[]
      */
-    private function registerMessengerTags(ContainerBuilder $container): void
+    private function getHandlerAttributes(string $handlerClassName): array
     {
-        $container->registerAttributeForAutoconfiguration(AsCommandHandler::class, static function (ChildDefinition $definition, AsCommandHandler $attribute, ReflectionClass $reflector): void {
-            $definition->addTag('messenger.message_handler', ['method' => $attribute->method, 'handles' => self::guessHandledClasses($reflector, $attribute->method)]);
-        });
+        $handler = new ReflectionClass($handlerClassName);
 
-        $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition, AsQueryHandler $attribute, ReflectionClass $reflector): void {
-            $definition->addTag('messenger.message_handler', ['method' => $attribute->method, 'handles' => self::guessHandledClasses($reflector, $attribute->method)]);
-        });
+        return $handler->getAttributes();
     }
 
-    private static function guessHandledClasses(ReflectionClass $class, string $method): ?string
+    /**
+     * Process the handler attributes and add commands and queries to the result.
+     *
+     * @param ReflectionAttribute[] $handlerAttributes
+     * @param array $value
+     * @param string[] $commands
+     *
+     * @return void
+     */
+    private function processHandlerAttributes(array $handlerAttributes, array $value, array &$commands): void
     {
-        $reflectionMethod = $class->getMethod($method);
-        $parameters = $reflectionMethod->getParameters();
+        foreach ($handlerAttributes as $handlerAttribute) {
+            $isCommandHandler = $handlerAttribute->getName() === AsCommandHandler::class;
+            $isQueryHandler = $handlerAttribute->getName() === AsQueryHandler::class;
 
-        if (count($parameters) != 1) {
-            throw new RuntimeException(sprintf('Invalid handler service "%s": number of argument "$%s" in method "%s" must be 1 , "%s" given.', $class->getName(), $parameters[0]->getName(), $method, count($parameters)));
+            if (($isCommandHandler || $isQueryHandler) && isset(current($value)['handles'])) {
+                $commands[] = current($value)['handles'];
+            }
         }
-
-        $firstParameter = $parameters[0];
-
-        return $firstParameter->getType()->getName();
     }
 }

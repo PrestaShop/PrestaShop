@@ -27,6 +27,7 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
+use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryRegisterPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\GridDefinitionServiceIdsCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\IdentifiableObjectFormTypesCollectorPass;
@@ -75,7 +76,8 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
-        $container->addCompilerPass(new CommandAndQueryCollectorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, self::LOAD_MODULE_SERVICES_PASS_PRIORITY);
+        $container->addCompilerPass(new CommandAndQueryRegisterPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, self::LOAD_MODULE_SERVICES_PASS_PRIORITY);
+        $container->addCompilerPass(new CommandAndQueryCollectorPass());
         $container->addCompilerPass(new OptionsFormHookNameCollectorPass());
         $container->addCompilerPass(new GridDefinitionServiceIdsCollectorPass());
         $container->addCompilerPass(new IdentifiableObjectFormTypesCollectorPass());
