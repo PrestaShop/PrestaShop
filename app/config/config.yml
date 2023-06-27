@@ -100,5 +100,9 @@ api_platform:
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
-
+  swagger:
+    api_keys:
+      JWT:
+        name: Authorization
+        type: header
   metadata_backward_compatibility_layer: false
