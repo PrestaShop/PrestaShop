@@ -128,16 +128,6 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
                                 ],
                             ])
                     )
-                    ->add((new LinkRowAction('view'))
-                    ->setName($this->trans('View', [], 'Admin.Actions'))
-                    ->setIcon('zoom_in')
-                    ->setOptions([
-                        'route' => 'admin_feature_values_index',
-                        'route_param_name' => 'featureId',
-                        'route_param_field' => 'id_feature',
-                        'clickable_row' => true,
-                    ])
-                    )
                     ->add(
                         $this->buildDeleteAction(
                             'admin_feature_values_delete',
