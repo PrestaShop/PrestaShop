@@ -57,7 +57,8 @@ class CartRuleRestrictionsForEditing
     public function __construct(
         array $restrictedCartRuleIds,
         array $productRestrictionRuleGroups,
-        array $restrictedCarrierIds
+        array $restrictedCarrierIds,
+        public readonly array $restrictedCountryIds
     ) {
         $this->restrictedCartRuleIds = $restrictedCartRuleIds;
         $this->productRestrictionRuleGroups = $productRestrictionRuleGroups;

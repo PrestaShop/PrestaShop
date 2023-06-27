@@ -425,6 +425,32 @@ class CartRuleRepository extends AbstractObjectModelRepository
         }, $results);
     }
 
+    /**
+     * @param CartRuleId $cartRuleId
+     *
+     * @return CountryId[]
+     */
+    public function getRestrictedCountryIds(CartRuleId $cartRuleId): array
+    {
+        $cartRuleIdValue = $cartRuleId->getValue();
+        $results = $this->connection->createQueryBuilder()
+            ->select('crc.id_country')
+            ->from($this->dbPrefix . 'cart_rule_country', 'crc')
+            ->where('crc.id_cart_rule_1 = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleIdValue)
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(static function (array $result): CountryId {
+            return new CountryId((int) $result['id_country']);
+        }, $results);
+    }
+
     private function removeCarrierRestrictions(CartRuleId $cartRuleId): void
     {
         $this->connection->createQueryBuilder()
