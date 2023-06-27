@@ -61,10 +61,9 @@ class FeatureValueType extends TranslatorAwareType
             ->add('feature_id', ChoiceType::class, [
                 'choices' => $this->featureChoiceProvider->getChoices(),
                 'label' => $this->trans('Feature', 'Admin.Global'),
-                'data' => $builder->getData()['feature_id'] ?? null,
                 'attr' => [
                     // disable feature id choices when editing feature value and only allow changing them when creating new one
-                    'disabled' => isset($builder->getData()['feature_value_id']),
+                    'disabled' => !empty($builder->getData()['feature_value_id']),
                 ],
             ])
             ->add('value', TranslatableType::class, [
