@@ -302,6 +302,8 @@ class CartRuleRepository extends AbstractObjectModelRepository
      */
     public function restrictCartRules(CartRuleId $cartRuleId, array $restrictedCartRuleIds): void
     {
+        $this->removeRestrictedCartRules($cartRuleId);
+
         if (empty($restrictedCartRuleIds)) {
             return;
         }
@@ -317,7 +319,6 @@ class CartRuleRepository extends AbstractObjectModelRepository
             $checkedIds[] = $restrictedCartRuleId;
         }
 
-        $this->removeRestrictedCartRules($cartRuleId);
         $this->connection->executeStatement(
             sprintf(
                 'INSERT INTO %s (`id_cart_rule_1`, `id_cart_rule_2`) VALUES %s',

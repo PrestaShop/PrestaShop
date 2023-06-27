@@ -85,8 +85,7 @@ Feature: Set cart rule restrictions in BO
 
   Scenario: Restrict cart rule combinations and various products restrictions
     When I restrict following cart rules for cart rule rule_free_shipping_1:
-      | rule_50_percent |
-      | rule_70_percent |
+      | restricted cart rules | rule_50_percent,rule_70_percent |
     And I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
       | type          | references                 |
       | products      | product1                   |

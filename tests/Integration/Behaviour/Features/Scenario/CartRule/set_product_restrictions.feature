@@ -64,6 +64,8 @@ Feature: Set cart rule product restrictions in BO
       | discount_application_type    | order_without_shipping |
     And I clear all product restrictions for cart rule rule_free_shipping_1
     And I clear all product restrictions for cart rule rule_50_percent
+    And I save all the restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_50_percent
     And cart rule "rule_free_shipping_1" should have no product restriction rules
     And cart rule "rule_50_percent" should have no product restriction rules
 
@@ -91,6 +93,7 @@ Feature: Set cart rule product restrictions in BO
       | products | product3   |
     And cart rule "rule_50_percent" should have no product restriction rules
     When I clear all product restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have no product restriction rules
 
   Scenario: Restrict cart rule products by defining attribute matching rules

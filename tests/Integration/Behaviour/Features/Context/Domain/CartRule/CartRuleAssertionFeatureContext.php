@@ -154,7 +154,7 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
     {
         $this->assertCartRuleProperties(
             $this->getCartRuleForEditing($cartRuleReference),
-            $this->localizeByColumns($tableNode)
+            $this->localizeByRows($tableNode)
         );
     }
 

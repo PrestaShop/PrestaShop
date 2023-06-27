@@ -63,15 +63,10 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
      */
     public function setRestrictedCartRules(string $cartRuleReference, TableNode $tableNode): void
     {
-        $restrictedCartRuleIds = [];
-        foreach ($tableNode->getColumn(0) as $restrictedCartRuleReference) {
-            $restrictedCartRuleIds[] = $this->getSharedStorage()->get($restrictedCartRuleReference);
-        }
-
         $command = $this->getRestrictionsCommand($cartRuleReference);
 
         try {
-            $command->setRestrictedCartRuleIds($restrictedCartRuleIds);
+            $command->setRestrictedCartRuleIds($this->referencesToIds($tableNode->getRowsHash()['restricted cart rules']));
             $this->restrictionCommandsByReference[$cartRuleReference] = $command;
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
@@ -143,13 +138,26 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
         $command = $this->getRestrictionsCommand($cartRuleReference);
         $command->setProductRestrictionRuleGroups([]);
 
-        $this->getCommandBus()->handle($command);
         $this->restrictionCommandsByReference[$cartRuleReference] = $command;
-        unset($this->productRestrictionGroupsByReference[$cartRuleReference]);
+        $this->productRestrictionGroupsByReference[$cartRuleReference] = [];
     }
 
     /**
-     * @When I save product restrictions for cart rule :cartRuleReference
+     * @When I clear cart rule combination restrictions for cart rule :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     *
+     * @return void
+     */
+    public function clearCartRuleCombinationRestrictions(string $cartRuleReference): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command->setRestrictedCartRuleIds([]);
+
+        $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+    }
+
+    /**
      * @When I save all the restrictions for cart rule :cartRuleReference
      *
      * @param string $cartRuleReference

@@ -62,7 +62,7 @@ Feature: Set cart rule combination restrictions in BO
 
   Scenario: Restrict cart rule combinations
     When I restrict following cart rules for cart rule rule_free_shipping_1:
-      | rule_50_percent |
+      | restricted cart rules | rule_50_percent |
     And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules | rule_50_percent |
@@ -71,8 +71,7 @@ Feature: Set cart rule combination restrictions in BO
     And cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules |  |
     When I restrict following cart rules for cart rule rule_free_shipping_1:
-      | rule_50_percent |
-      | rule_70_percent |
+      | restricted cart rules | rule_50_percent,rule_70_percent |
     And I save all the restrictions for cart rule rule_free_shipping_1
     Then cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules | rule_50_percent,rule_70_percent |
@@ -80,6 +79,10 @@ Feature: Set cart rule combination restrictions in BO
       | restricted cart rules | rule_free_shipping_1 |
     And cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules | rule_free_shipping_1 |
+    When I clear cart rule combination restrictions for cart rule rule_70_percent
+    And I save all the restrictions for cart rule rule_70_percent
+    Then cart rule "rule_70_percent" should have the following properties:
+      | restricted cart rules |  |
     And cart rule rule_free_shipping_1 should have no product restriction rules
     And cart rule rule_50_percent should have no product restriction rules
 
@@ -95,8 +98,7 @@ Feature: Set cart rule combination restrictions in BO
     Given cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules |  |
     When I restrict following cart rules for cart rule rule_70_percent:
-      | rule_50_percent |
-      | rule_70_percent |
+      | restricted cart rules | rule_50_percent,rule_70_percent |
     Then I should get cart rule error about "invalid cart rule restriction"
     And cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules |  |
