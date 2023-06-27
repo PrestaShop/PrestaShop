@@ -101,12 +101,6 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'field' => 'values_count',
             ])
             )
-            // @todo: position action is not implemented yet
-            //        Uncomment Position column and delete position DataColumn when its done.
-            ->add((new DataColumn('position'))
-            ->setName($this->trans('Position', [], 'Admin.Global'))
-            ->setOptions(['field' => 'position'])
-            )
             ->add((new PositionColumn('position'))
             ->setName($this->trans('Position', [], 'Admin.Global'))
             ->setOptions([

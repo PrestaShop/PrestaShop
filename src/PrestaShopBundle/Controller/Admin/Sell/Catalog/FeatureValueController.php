@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -37,6 +39,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FeatureValueController extends FrameworkBundleAdminController
 {
+    /**
+     * Button name which when submitted indicates that after form submission
+     * user wants to be redirected to ADD NEW form to add additional value
+     */
+    private const SAVE_AND_ADD_BUTTON_NAME = 'save-and-add-new';
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
@@ -48,14 +56,115 @@ class FeatureValueController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featureValueGrid' => $this->presentGrid($featureValueGridFactory->getGrid($filters)),
-            // @todo: uncomment when add action is migrated
-            //            'layoutHeaderToolbarBtn' => [
-            //                'add_feature_value' => [
-            //                    'href' => $this->generateUrl('admin_feature_values_add', ['featureId' => $featureId]),
-            //                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
-            //                    'icon' => 'add_circle_outline',
-            //                ],
-            //            ],
+            'layoutHeaderToolbarBtn' => [
+                'add_feature_value' => [
+                    'href' => $this->generateUrl('admin_feature_values_add', ['featureId' => $filters->getFeatureId()]),
+                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param int $featureId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(int $featureId, Request $request): Response
+    {
+        $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
+        $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
+
+        try {
+            $featureValueForm = $featureValueFormBuilder->getForm(['feature_id' => $featureId]);
+            $featureValueForm->handleRequest($request);
+            $handlerResult = $featureValueFormHandler->handle($featureValueForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
+                    return $this->redirectToRoute('admin_feature_values_add', [
+                        'featureId' => $featureId,
+                    ]);
+                }
+
+                return $this->redirectToRoute('admin_features_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_features_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/create.html.twig', [
+            'featureId' => $featureId,
+            'featureValueForm' => $featureValueForm->createView(),
+            'layoutTitle' => $this->trans('New Feature Value', 'Admin.Navigation.Menu'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $featureValueId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(int $featureId, int $featureValueId, Request $request): Response
+    {
+        $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
+        $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
+
+        try {
+            $featureValueForm = $featureValueFormBuilder->getFormFor($featureValueId);
+            $featureValueForm->handleRequest($request);
+            $handlerResult = $featureValueFormHandler->handleFor((int) $featureValueId, $featureValueForm);
+
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
+                    return $this->redirectToRoute('admin_feature_values_add', [
+                        'featureId' => $featureId,
+                    ]);
+                }
+
+                return $this->redirectToRoute('admin_feature_values_index', [
+                    'featureId' => $featureId,
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_features_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/edit.html.twig', [
+            'featureId' => $featureId,
+            'featureValueForm' => $featureValueForm->createView(),
+            'layoutTitle' => $this->trans(
+                'Feature value',
+                'Admin.Navigation.Menu',
+            ),
+        ]);
+    }
+
+    /**
+     * @return array<string, string|array<int, string>>
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            FeatureValueNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }

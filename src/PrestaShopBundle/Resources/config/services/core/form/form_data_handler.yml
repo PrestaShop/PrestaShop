@@ -119,6 +119,10 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureValueFormDataHandler:
+    autowire: true
+    public: false
+
   prestashop.core.form.identifiable_object.data_handler.order_message_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderMessageFormDataHandler'
     arguments:

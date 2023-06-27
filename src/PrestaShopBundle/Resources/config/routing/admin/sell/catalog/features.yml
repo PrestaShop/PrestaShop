@@ -105,3 +105,25 @@ admin_feature_values_search:
       - 'featureId'
   requirements:
     featureId: \d+
+
+admin_feature_values_add:
+  path: /{featureId}/values/new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::createAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:addfeature_value
+    _legacy_feature_flag: feature
+    redirectQueryParamsToKeep:
+      - 'featureId'
+
+admin_feature_values_edit:
+  path: /{featureId}/values/{featureValueId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::editAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:updatefeature_value
+    _legacy_feature_flag: feature
+    redirectQueryParamsToKeep:
+      - 'featureId'

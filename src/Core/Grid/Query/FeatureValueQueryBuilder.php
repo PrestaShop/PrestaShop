@@ -48,7 +48,7 @@ class FeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
-            ->select('fv.id_feature_value, fvl.value')
+            ->select('fv.id_feature, fv.id_feature_value, fvl.value')
             ->groupBy('fv.id_feature_value')
         ;
 
