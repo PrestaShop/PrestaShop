@@ -49,7 +49,7 @@ class PDFTemplateFactory
                 /**
                  * Allow modifying or completely overriding data or template
                  */
-                Hook::exec('actionPDFRender', [
+                Hook::exec('actionGetPDFTemplate', [
                     'data' => &$data,
                     'template' => &$template,
                     'templateName' => $templateName,
