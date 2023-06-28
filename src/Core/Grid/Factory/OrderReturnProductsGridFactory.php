@@ -38,13 +38,13 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
  * Gets data for order return products grid
