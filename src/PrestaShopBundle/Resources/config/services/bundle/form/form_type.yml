@@ -431,10 +431,7 @@ services:
       $installedPaymentModulesChoiceProvider: '@prestashop.adapter.form.choice_provider.installed_payment_modules'
 
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType: ~
-  PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType:
-    arguments:
-      $featureChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
-
+  PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
       $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'

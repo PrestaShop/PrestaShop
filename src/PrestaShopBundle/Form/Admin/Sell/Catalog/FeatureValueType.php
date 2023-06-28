@@ -31,26 +31,16 @@ namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValueSettings;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\FeatureChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeatureValueType extends TranslatorAwareType
 {
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        protected readonly FormChoiceProviderInterface $featureChoiceProvider
-    ) {
-        parent::__construct($translator, $locales);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -58,9 +48,7 @@ class FeatureValueType extends TranslatorAwareType
     {
         $builder
             ->add('feature_value_id', HiddenType::class)
-            ->add('feature_id', ChoiceType::class, [
-                'choices' => $this->featureChoiceProvider->getChoices(),
-                'label' => $this->trans('Feature', 'Admin.Global'),
+            ->add('feature_id', FeatureChoiceType::class, [
                 'attr' => [
                     // disable feature id choices when editing feature value and only allow changing them when creating new one
                     'disabled' => !empty($builder->getData()['feature_value_id']),
