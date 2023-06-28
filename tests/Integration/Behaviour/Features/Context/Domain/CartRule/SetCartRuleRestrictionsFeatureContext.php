@@ -116,13 +116,15 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
      */
     public function restrictCartRulesProvidingNonExistingIds(string $cartRuleReference): void
     {
-        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command = new SetCartRuleRestrictionsCommand($this->getSharedStorage()->get($cartRuleReference));
         $command->setRestrictedCartRuleIds([self::NON_EXISTING_CART_RULE_ID]);
 
         try {
             $this->getCommandBus()->handle($command);
         } catch (CartRuleNotFoundException $e) {
             $this->setLastException($e);
+        } finally {
+            unset($this->restrictionCommandsByReference[$cartRuleReference]);
         }
     }
 
