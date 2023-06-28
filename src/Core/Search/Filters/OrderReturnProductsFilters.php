@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Provides default filters for order returns grid.
@@ -37,6 +38,24 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 final class OrderReturnProductsFilters extends Filters
 {
     protected $filterId = OrderReturnProductsGridDefinitionFactory::GRID_ID;
+
+    protected $orderReturnId;
+
+    public function __construct(array $filters = [])
+    {
+        if (!isset($filters['filters']['order_return_id'])) {
+            throw new InvalidArgumentException(sprintf('%s filters expect a order_return_id filter', static::class));
+        }
+
+        $this->orderReturnId = (int) $filters['filters']['order_return_id'];
+
+        parent::__construct($filters, $this->filterId);
+    }
+
+    public function getOrderReturnId(): int
+    {
+        return $this->orderReturnId;
+    }
 
     /**
      * {@inheritdoc}

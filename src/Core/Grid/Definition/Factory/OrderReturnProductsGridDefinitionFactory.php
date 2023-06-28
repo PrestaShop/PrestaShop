@@ -28,10 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -42,9 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\TemplateColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class OrderReturnGridDefinitionFactory builds grid definition for order returns grid.
@@ -57,42 +52,15 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
     public const GRID_ID = 'order_return_products';
 
     /**
-     * @var int
-     */
-    private $orderReturnId;
-
-    /**
      * OrderReturnProductsGridDefinitionFactory constructor.
      *
      * @param HookDispatcherInterface $hookDispatcher
-     * @param RequestStack $requestStack
      *
-     * @throws OrderReturnProductException
      */
     public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        RequestStack $requestStack
+        HookDispatcherInterface $hookDispatcher
     ) {
         parent::__construct($hookDispatcher);
-        $this->setOrderReturnId($requestStack);
-    }
-
-    /**
-     * Sets order return id directly from request attribute. On not found case throws exception.
-     *
-     * @param RequestStack $requestStack
-     *
-     * @throws OrderReturnProductException
-     */
-    private function setOrderReturnId(RequestStack $requestStack): void
-    {
-        $request = $requestStack->getCurrentRequest();
-
-        if (null !== $request && $request->attributes->has('orderReturnId')) {
-            $this->orderReturnId = $request->attributes->get('orderReturnId');
-        } else {
-            throw new OrderReturnProductException('orderReturnId attribute does not exist');
-        }
     }
 
     /**
@@ -211,22 +179,8 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                         ],
                     ])
                     ->setAssociatedColumn('product_quantity')
-            )
-            ->add(
-                (new Filter('actions', SearchAndResetType::class))
-                    ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
-                        'reset_route_params' => [
-                            'filterId' => self::GRID_ID,
-                            'orderReturnId' => $this->orderReturnId,
-                        ],
-                        'redirect_route' => 'admin_order_returns_edit',
-                        'redirect_route_params' => [
-                            'orderReturnId' => $this->orderReturnId,
-                        ],
-                    ])
-                    ->setAssociatedColumn('actions')
             );
+
     }
 
     /**
@@ -234,22 +188,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
      */
     protected function getBulkActions()
     {
-        return (new BulkActionCollection())
-            ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selection', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_order_returns_delete_product_bulk',
-                        'route_params' => [
-                            'orderReturnId' => $this->orderReturnId,
-                        ],
-                        'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
-                        'modal_options' => new ModalOptions([
-                            'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
-                            'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                            'confirm_button_class' => 'btn-danger',
-                        ]),
-                    ])
-            );
+        return (new BulkActionCollection());
     }
 }

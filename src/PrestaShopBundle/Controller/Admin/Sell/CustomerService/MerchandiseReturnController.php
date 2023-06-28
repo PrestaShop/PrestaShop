@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstrain
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
@@ -100,13 +101,17 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * )
      *
      * @param int $orderReturnId
+     * @param OrderReturnProductsFilters $filters
      * @param Request $request
      *
      * @return Response
+     * @throws InvalidArgumentException
      */
     public function editAction(int $orderReturnId, OrderReturnProductsFilters $filters, Request $request): Response
     {
-        $gridFactory = $this->get('PrestaShop\Core\Grid\Factory\OrderReturnProducts');
+        dump($filters);
+        die;
+        $gridFactory = $this->get('PrestaShop\PrestaShop\Core\Grid\Factory\OrderReturnProductsGridFactory');
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_return_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
 
