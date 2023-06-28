@@ -35,18 +35,23 @@ class BulkDeleteFeatureValueCommand
     /**
      * @var FeatureValueId[]
      */
-    public readonly array $featureValueIds;
+    private readonly array $featureValueIds;
 
     /**
      * @param int[] $featureValueIds
      */
     public function __construct(array $featureValueIds)
     {
-        $ids = [];
-        foreach ($featureValueIds as $featureValueId) {
-            $ids[] = new FeatureValueId($featureValueId);
-        }
+        $this->featureValueIds = array_map(static function ($id): FeatureValueId {
+            return new FeatureValueId((int) $id);
+        }, $featureValueIds);
+    }
 
-        $this->featureValueIds = $ids;
+    /**
+     * @return FeatureValueId[]
+     */
+    public function getFeatureValueIds(): array
+    {
+        return $this->featureValueIds;
     }
 }

@@ -41,6 +41,6 @@ class DeleteFeatureValueHandler implements DeleteFeatureValueHandlerInterface
 
     public function handle(DeleteFeatureValueCommand $command): void
     {
-        $this->featureValueRepository->delete($command->featureValueId);
+        $this->featureValueRepository->delete($command->getFeatureValueId());
     }
 }

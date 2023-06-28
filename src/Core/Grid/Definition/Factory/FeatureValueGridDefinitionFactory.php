@@ -53,7 +53,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
     public const GRID_ID = 'feature_value';

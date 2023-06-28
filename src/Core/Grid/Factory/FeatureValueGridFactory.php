@@ -144,7 +144,6 @@ class FeatureValueGridFactory extends GridFactory
         $definition->getFilters()->add((new Filter('actions', SearchAndResetType::class))
             // these action options are added in FeatureValueGridFactory, because they are dynamic and depend on filters
             ->setAssociatedColumn('actions')
-            ->setAssociatedColumn('actions')
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
                 'reset_route_params' => [

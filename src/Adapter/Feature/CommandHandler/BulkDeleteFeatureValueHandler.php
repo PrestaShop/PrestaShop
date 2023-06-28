@@ -46,7 +46,7 @@ class BulkDeleteFeatureValueHandler extends AbstractBulkCommandHandler implement
 
     public function handle(BulkDeleteFeatureValueCommand $command): void
     {
-        $this->handleBulkAction($command->featureValueIds, FeatureValueException::class);
+        $this->handleBulkAction($command->getFeatureValueIds(), FeatureValueException::class);
     }
 
     /**
