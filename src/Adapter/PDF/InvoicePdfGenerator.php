@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use Hook;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorSingleObjectInterface;
 use PrestaShop\PrestaShop\Core\PDF\Template\PDFTemplateFactory;
@@ -41,15 +40,10 @@ use Validate;
  * Generates invoice by invoice ID. */
 final class InvoicePdfGenerator implements PDFGeneratorSingleObjectInterface
 {
-    private PDFTemplateFactory $templateFactory;
-    private PDFTemplateRenderer $pdfTemplateRenderer;
-
     public function __construct(
-        PDFTemplateFactory  $templateFactory,
-        PDFTemplateRenderer $pdfTemplateRenderer,
+        private readonly PDFTemplateFactory  $templateFactory,
+        private readonly PDFTemplateRenderer $pdfTemplateRenderer,
     ) {
-        $this->templateFactory = $templateFactory;
-        $this->pdfTemplateRenderer = $pdfTemplateRenderer;
     }
     /**
      * {@inheritdoc}

@@ -36,11 +36,9 @@ use SmartyLazyRegister;
  */
 class SmartyFactory
 {
-    private Smarty $smarty;
 
-    public function __construct(Smarty $smarty)
+    public function __construct(private readonly Smarty $smarty)
     {
-        $this->smarty = $smarty;
     }
 
     public function getSmarty(): Smarty

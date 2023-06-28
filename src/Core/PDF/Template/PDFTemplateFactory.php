@@ -36,11 +36,9 @@ use PrestaShop\PrestaShop\Core\PDF\Exception\PDFTemplateNotFoundException;
  */
 class PDFTemplateFactory
 {
-    private IteratorAggregate $templates;
 
-    public function __construct(IteratorAggregate $templates)
+    public function __construct(private IteratorAggregate $templates)
     {
-         $this->templates = $templates;
     }
 
     public function getTemplate(string $templateName, array $data): PDFTemplate

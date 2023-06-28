@@ -36,16 +36,10 @@ use PrestaShop\PrestaShop\Core\PDF\PDFRenderer;
  */
 class PDFTemplateRenderer
 {
-    protected PDFTemplateFactory $templateFactory;
-
-    protected PDFRenderer $pdfRenderer;
-
     public function __construct(
-        PDFTemplateFactory $templateFactory,
-        PDFRenderer        $pdfRenderer
+        protected PDFTemplateFactory $templateFactory,
+        protected PDFRenderer $pdfRenderer
     ) {
-        $this->templateFactory = $templateFactory;
-        $this->pdfRenderer = $pdfRenderer;
     }
 
     public function render(PDFTemplate $template, string $display = 'D'): string

@@ -38,13 +38,11 @@ use PrestaShop\PrestaShop\Core\PDF\SmartyFactory;
 class PDFTemplateInvoiceSmarty implements PDFTemplate
 {
     private ?HTMLTemplateInvoice $legacyTemplate;
-    private SmartyFactory $smartyFactory;
 
     public const TEMPLATE_NAME = 'invoice';
 
-    public function __construct(SmartyFactory $smartyFactory)
+    public function __construct(private SmartyFactory $smartyFactory)
     {
-        $this->smartyFactory = $smartyFactory;
     }
 
     public function init(array $data): void
