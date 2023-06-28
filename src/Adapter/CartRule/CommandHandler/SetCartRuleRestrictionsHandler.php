@@ -48,6 +48,7 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
         if (null === $command->getRestrictedCartRuleIds()
             && null === $command->getProductRestrictionRuleGroups()
             && null === $command->getRestrictedCarrierIds()
+            && null === $command->getRestrictedCountryIds()
         ) {
             // no restrictions were modified
             return;

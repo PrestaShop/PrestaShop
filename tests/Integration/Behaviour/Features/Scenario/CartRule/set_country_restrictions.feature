@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart_rule --tags set-country-restrictions
 @restore-all-tables-before-feature
-@set-product-restrictions
+@set-country-restrictions
 Feature: Set cart rule country restrictions in BO
   PrestaShop allows BO users to add and remove country restrictions of cart rule,
   which defines whether or not the cart rule should be applicable in a specific country
@@ -12,10 +12,34 @@ Feature: Set cart rule country restrictions in BO
     And currency "usd" is the default one
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
-    And there is a zone named "Europe"
-    And there is a zone named "America"
-    And there is a country named "France" and iso code "FR" in zone "Europe"
-    And there is a country named "United_states" and iso code "US" in zone "America"
+    When I add new country "France" with following properties:
+      | name[en-US]                | France          |
+      | iso_code                   | FR              |
+      | call_prefix                | 123             |
+      | default_currency           | 1               |
+      | zone                       | 1               |
+      | need_zip_code              | true            |
+      | zip_code_format            | 1 NL            |
+      | address_format             | not implemented |
+      | is_enabled                 | true            |
+      | contains_states            | false           |
+      | need_identification_number | false           |
+      | display_tax_label          | true            |
+      | shop_association           | 1               |
+    When I add new country "United_states" with following properties:
+      | name[en-US]                | United States   |
+      | iso_code                   | US              |
+      | call_prefix                | 1234            |
+      | default_currency           | 1               |
+      | zone                       | 2               |
+      | need_zip_code              | true            |
+      | zip_code_format            | 1 NL            |
+      | address_format             | not implemented |
+      | is_enabled                 | true            |
+      | contains_states            | false           |
+      | need_identification_number | false           |
+      | display_tax_label          | true            |
+      | shop_association           | 1               |
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
@@ -52,29 +76,36 @@ Feature: Set cart rule country restrictions in BO
       | apply_to_discounted_products | false                  |
       | discount_application_type    | order_without_shipping |
       | restricted countries         |                        |
+    And I clear all country restrictions for cart rule rule_free_shipping_1
+    And I clear all country restrictions for cart rule rule_50_percent
+    And cart rule "rule_free_shipping_1" should have the following properties:
+      | restricted countries |  |
+    And cart rule "rule_50_percent" should have the following properties:
+      | restricted countries |  |
 
   Scenario: Restrict cart rule countries and clear the restrictions
-    #@todo: most of steps are not implemented yet and blocked by PR #32556
     When I restrict following countries for cart rule rule_free_shipping_1:
-      | France        |
-      | United_states |
+      | restricted countries | France,United_states |
     And I save all the restrictions for cart rule rule_free_shipping_1
     And I restrict following countries for cart rule rule_50_percent:
-      | France |
+      | restricted countries | France |
     And I save all the restrictions for cart rule rule_50_percent
     Then cart rule rule_free_shipping_1 should have the following properties:
       | restricted countries | France,United_states |
     And cart rule rule_50_percent should have the following properties:
       | restricted countries | France |
     When I restrict following countries for cart rule rule_free_shipping_1:
-      | United_states |
-    Then cart rule rule_free_shipping_1 should have the following properties:
       | restricted countries | United_states |
     And I save all the restrictions for cart rule rule_free_shipping_1
-    When I clear all country restrictions for cart rule rule_50_percent
+    And I clear all country restrictions for cart rule rule_50_percent
+    And I save all the restrictions for cart rule rule_50_percent
+    Then cart rule rule_free_shipping_1 should have the following properties:
+      | restricted countries | United_states |
     Then cart rule rule_50_percent should have the following properties:
       | restricted countries |  |
-    When I restrict following countries for cart rule rule_free_shipping_1:
-      |  |
+    And I clear all country restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
+    Then cart rule rule_50_percent should have the following properties:
+      | restricted countries |  |
     Then cart rule rule_50_percent should have the following properties:
       | restricted countries |  |

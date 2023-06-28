@@ -428,7 +428,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
     /**
      * @param CartRuleId $cartRuleId
      *
-     * @return CountryId[]
+     * @return int[]
      */
     public function getRestrictedCountryIds(CartRuleId $cartRuleId): array
     {
@@ -436,7 +436,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $results = $this->connection->createQueryBuilder()
             ->select('crc.id_country')
             ->from($this->dbPrefix . 'cart_rule_country', 'crc')
-            ->where('crc.id_cart_rule_1 = :cartRuleId')
+            ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
             ->execute()
             ->fetchAllAssociative()
@@ -446,8 +446,8 @@ class CartRuleRepository extends AbstractObjectModelRepository
             return [];
         }
 
-        return array_map(static function (array $result): CountryId {
-            return new CountryId((int) $result['id_country']);
+        return array_map(static function (array $result): int {
+            return (int) $result['id_country'];
         }, $results);
     }
 
