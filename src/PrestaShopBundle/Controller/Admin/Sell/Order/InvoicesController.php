@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
