@@ -33,14 +33,42 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\Restricti
 class CartRuleRestrictionsForEditing
 {
     /**
+     * @var int[]
+     */
+    private array $restrictedCartRuleIds;
+
+    /**
+     * @var RestrictionRuleGroup[]
+     */
+    private array $productRestrictionRuleGroups;
+
+    /**
      * @todo: fill other restrictions when related commands are implemented
      *
      * @param int[] $restrictedCartRuleIds
      * @param RestrictionRuleGroup[] $productRestrictionRuleGroups
      */
     public function __construct(
-        public readonly array $restrictedCartRuleIds,
-        public readonly array $productRestrictionRuleGroups
+        array $restrictedCartRuleIds,
+        array $productRestrictionRuleGroups
     ) {
+        $this->restrictedCartRuleIds = $restrictedCartRuleIds;
+        $this->productRestrictionRuleGroups = $productRestrictionRuleGroups;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getRestrictedCartRuleIds(): array
+    {
+        return $this->restrictedCartRuleIds;
+    }
+
+    /**
+     * @return RestrictionRuleGroup[]
+     */
+    public function getProductRestrictionRuleGroups(): array
+    {
+        return $this->productRestrictionRuleGroups;
     }
 }

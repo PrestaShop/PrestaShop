@@ -166,7 +166,7 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
     public function assertNoProductRestrictionRules(string $cartRuleReference): void
     {
         Assert::assertEmpty(
-            $this->getCartRuleForEditing($cartRuleReference)->getConditions()->getRestrictions()->productRestrictionRuleGroups,
+            $this->getCartRuleForEditing($cartRuleReference)->getConditions()->getRestrictions()->getProductRestrictionRuleGroups(),
             'Cart rule was expecting to have empty product restriction rule groups'
         );
     }
@@ -181,7 +181,7 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
         $actualRestrictionGroups = $this->getCartRuleForEditing($cartRuleReference)
             ->getConditions()
             ->getRestrictions()
-            ->productRestrictionRuleGroups
+            ->getProductRestrictionRuleGroups()
         ;
         $expectedDataRows = $tableNode->getColumnsHash();
         Assert::assertCount(count($expectedDataRows), $actualRestrictionGroups, 'Unexpected product restriction groups count');
@@ -190,12 +190,12 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
             $actualGroup = $actualRestrictionGroups[$key];
             Assert::assertEquals(
                 $expectedDataRow['quantity'],
-                $actualGroup->requiredQuantityInCart,
+                $actualGroup->getRequiredQuantityInCart(),
                 'Unexpected required quantity in cart in restriction group'
             );
             Assert::assertCount(
                 (int) $expectedDataRow['rules count'],
-                $actualGroup->restrictionRules,
+                $actualGroup->getRestrictionRules(),
                 sprintf('Unexpected rules count in restriction group referenced as "%s"', $expectedDataRow['groupReference'])
             );
 
@@ -224,7 +224,7 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
         $group = $this->getSharedStorage()->get($restrictionGroupReference);
         Assert::assertInstanceOf(RestrictionRuleGroup::class, $group);
 
-        $actualRules = $group->restrictionRules;
+        $actualRules = $group->getRestrictionRules();
         $expectedDataRows = $tableNode->getColumnsHash();
 
         Assert::assertCount(count($expectedDataRows), $actualRules, 'Unexpected product restriction rules count in group');
@@ -232,8 +232,8 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
         foreach ($expectedDataRows as $key => $expectedRow) {
             /** @var RestrictionRule $actualRule */
             $actualRule = $actualRules[$key];
-            Assert::assertSame($expectedRow['type'], $actualRule->type);
-            Assert::assertSame($this->referencesToIds($expectedRow['references']), $actualRule->ids);
+            Assert::assertSame($expectedRow['type'], $actualRule->getType());
+            Assert::assertSame($this->referencesToIds($expectedRow['references']), $actualRule->getEntityIds());
         }
     }
 }

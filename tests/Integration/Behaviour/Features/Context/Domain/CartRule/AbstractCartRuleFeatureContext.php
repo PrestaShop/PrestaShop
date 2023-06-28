@@ -289,7 +289,7 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
             $expectedRestrictedCartRuleIds = $this->referencesToIds($expectedData['restricted cart rules']);
             Assert::assertSame(
                 $expectedRestrictedCartRuleIds,
-                $conditions->getRestrictions()->restrictedCartRuleIds,
+                $conditions->getRestrictions()->getRestrictedCartRuleIds(),
                 'Unexpected cart rule restrictions'
             );
         }

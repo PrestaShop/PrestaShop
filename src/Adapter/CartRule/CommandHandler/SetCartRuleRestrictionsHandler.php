@@ -48,7 +48,7 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
             return;
         }
 
-        $cartRule = $this->cartRuleRepository->get($command->cartRuleId);
+        $cartRule = $this->cartRuleRepository->get($command->getCartRuleId());
 
         $restrictedCartRuleIds = $command->getRestrictedCartRuleIds();
         if (null !== $restrictedCartRuleIds) {

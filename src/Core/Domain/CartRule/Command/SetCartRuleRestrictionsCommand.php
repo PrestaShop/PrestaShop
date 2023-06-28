@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\Restricti
  */
 class SetCartRuleRestrictionsCommand
 {
-    public readonly CartRuleId $cartRuleId;
+    private readonly CartRuleId $cartRuleId;
 
     /**
      * @var CartRuleId[]|null
@@ -60,6 +60,14 @@ class SetCartRuleRestrictionsCommand
     }
 
     /**
+     * @return CartRuleId
+     */
+    public function getCartRuleId(): CartRuleId
+    {
+        return $this->cartRuleId;
+    }
+
+    /**
      * @param int[] $restrictedCartRuleIds
      *
      * @return self
@@ -70,7 +78,7 @@ class SetCartRuleRestrictionsCommand
     {
         $this->restrictedCartRuleIds = [];
         foreach ($restrictedCartRuleIds as $restrictedCartRuleId) {
-            if ($restrictedCartRuleId === $this->cartRuleId->getValue()) {
+            if ($restrictedCartRuleId === $this->getCartRuleId()->getValue()) {
                 throw new CartRuleConstraintException(
                     'Restricted CartRule ids cannot contain id of current cart rule',
                     CartRuleConstraintException::INVALID_CART_RULE_RESTRICTION

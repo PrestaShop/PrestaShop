@@ -45,16 +45,42 @@ class RestrictionRule
         self::TYPE_SUPPLIER => self::TYPE_SUPPLIER,
     ];
 
+    private readonly string $type;
+
+    /**
+     * @var int[] Ids of product, attributes, categories, manufacturers or suppliers, depending on restriction rule type
+     */
+    private readonly array $entityIds;
+
     /**
      * @param string $type
-     * @param int[] $ids Ids of product, attributes, categories, manufacturers or suppliers, depending on restriction rule type
+     * @param int[] $entityIds
      */
     public function __construct(
-        public readonly string $type,
-        public readonly array $ids
+        string $type,
+        array $entityIds
     ) {
         $this->assertType($type);
-        $this->assertIds($ids);
+        $this->assertIds($entityIds);
+
+        $this->type = $type;
+        $this->entityIds = $entityIds;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getEntityIds(): array
+    {
+        return $this->entityIds;
     }
 
     /**
