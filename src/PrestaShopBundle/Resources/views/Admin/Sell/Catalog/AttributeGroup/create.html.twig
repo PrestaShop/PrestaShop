@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,29 +21,20 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-declare(strict_types=1);
+{% set layoutTitle = 'Add a new attribute group'|trans({}, 'Admin.Catalog.attribute') %}
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-/**
- * Is thrown when attribute group constraints are violated
- */
-class AttributeGroupConstraintException extends AttributeGroupException
-{
-    /**
-     * When attribute group Id contains invalid values
-     */
-    public const INVALID_ID = 10;
+{% block content %}
+    {% include '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/Blocks/form.html.twig' with {
+      attributeId: null,
+      attributeForm: attributeGroupForm
+    } %}
+{% endblock %}
 
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 1;
-
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 2;
-}
+{% block javascripts %}
+  {{ parent() }}
+  {% include '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/Blocks/form_javascripts.html.twig' %}
+{% endblock %}

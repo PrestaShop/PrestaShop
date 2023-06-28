@@ -26,25 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Is thrown when attribute group constraints are violated
+ * Retrieves attribute group data for editing
  */
-class AttributeGroupConstraintException extends AttributeGroupException
+class GetAttributeGroupForEditing
 {
     /**
-     * When attribute group Id contains invalid values
+     * @var AttributeGroupId
      */
-    public const INVALID_ID = 10;
+    private $attributeGroupId;
 
     /**
-     * Code is used when feature does not have name.
+     * @param int $attributeGroupId
      */
-    public const EMPTY_NAME = 1;
+    public function __construct(int $attributeGroupId)
+    {
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
+    }
 
     /**
-     * Used when feature name is invalid.
+     * @return AttributeGroupId
      */
-    public const INVALID_NAME = 2;
+    public function getAttributeGroupId(): AttributeGroupId
+    {
+        return $this->attributeGroupId;
+    }
 }

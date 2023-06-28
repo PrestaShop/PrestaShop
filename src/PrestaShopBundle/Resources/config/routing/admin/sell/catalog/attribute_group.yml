@@ -24,7 +24,7 @@ admin_attribute_groups_create:
   methods: [ GET, POST ]
   defaults:
     # todo: implement create
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::indexAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::createAction'
     _legacy_controller: AdminAttributesGroups
     _legacy_link: AdminAttributeGroups:addattribute_group
     _legacy_feature_flag: attribute_group

@@ -140,6 +140,38 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function createAction(int $attributeGroupId)
     {
+        $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
+        $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
+
+        $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
+        $categoryForm->handleRequest($request);
+
+        try {
+            $handlerResult = $categoryFormHandler->handle($categoryForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_categories_index', [
+                    'categoryId' => $categoryForm->getData()['id_parent'],
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => true,
+                'categoryForm' => $categoryForm->createView(),
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => null,
+            ]
+        );
+
         // @todo: implement in another pr
         return $this->redirectToRoute('admin_attributes_index', [
             'attributeGroupId' => $attributeGroupId,

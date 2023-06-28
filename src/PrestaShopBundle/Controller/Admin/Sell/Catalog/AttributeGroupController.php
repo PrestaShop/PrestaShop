@@ -27,6 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotUpdateAttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
@@ -80,12 +84,36 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *     message="You do not have permission to create this."
      * )
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request): Response
     {
-        //@todo: implement in antoher pr
-        return $this->redirectToRoute('admin_attribute_groups_index');
+        $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
+        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
+
+        $attributeGroupForm = $attributeGroupFormBuilder->getForm();
+        $attributeGroupForm->handleRequest($request);
+
+        try {
+            $handlerResult = $attributeFormHandler->handle($attributeGroupForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attribute_groups_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/create.html.twig',
+            [
+                'attributeGroupForm' => $attributeGroupForm->createView(),
+            ]
+        );
     }
 
     /**
@@ -98,10 +126,37 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function editAction(int $attributeGroupId)
+    public function editAction(Request $request, int $attributeGroupId): Response
     {
-        //@todo: implement in antoher pr
-        return $this->redirectToRoute('admin_attribute_groups_index');
+        $editableAttributeGroup = $this->getQueryBus()->handle(new GetAttributeGroupForEditing($attributeGroupId));
+        $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
+        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
+
+        $attributeGroupForm = $attributeGroupFormBuilder->getFormFor($attributeGroupId);
+        $attributeGroupForm->handleRequest($request);
+
+        try {
+            $handlerResult = $attributeFormHandler->handleFor($attributeGroupId, $attributeGroupForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attribute_groups_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $contextLangId = $this->getConfiguration()->get('PS_LANG_DEFAULT');
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/edit.html.twig',
+            [
+                'attributeGroupForm' => $attributeGroupForm->createView(),
+                'attributeGroupId' => $attributeGroupId,
+                'attributeGroupName' => $editableAttributeGroup->getName()[$contextLangId],
+            ]
+        );
     }
 
     /**
@@ -237,6 +292,27 @@ class AttributeGroupController extends FrameworkBundleAdminController
             AttributeGroupNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
+            ),
+            AttributeGroupConstraintException::class => [
+                AttributeGroupConstraintException::EMPTY_NAME => $this->trans(
+                    'The field %field_name% is required at least in your default language.',
+                    'Admin.Notifications.Error',
+                    ['%field_name%' => $this->trans('Name', 'Admin.Global')]
+                ),
+                AttributeGroupConstraintException::INVALID_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
+                ),
+            ],
+
+            CannotAddAttributeGroupException::class => $this->trans(
+                'An error occurred while creating the attribute group.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotUpdateAttributeGroupException::class => $this->trans(
+                'The error occoured while updating the attribute group.',
+                'Admin.Catalog.Notification'
             ),
             DeleteAttributeGroupException::class => [
                 DeleteAttributeGroupException::FAILED_DELETE => $this->trans(

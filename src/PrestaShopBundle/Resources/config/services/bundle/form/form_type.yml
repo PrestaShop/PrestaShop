@@ -432,6 +432,15 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType: ~
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType:
+    autowire: true
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+    parent: 'form.type.translatable.aware'
+    tags:
+      - { name: form.type }
+
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
       $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'

@@ -111,6 +111,9 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.supplier_image_uploader'
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeGroupFormDataHandler:
+    autowire: true
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler:
     autowire: true
     public: false

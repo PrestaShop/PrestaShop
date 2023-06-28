@@ -24,12 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Base exception for attribute group subdomain
+ * Thrown in Attribute Group context.
  */
 class AttributeGroupException extends DomainException
 {

@@ -53,4 +53,13 @@ $(() => {
 
   const showcaseCard = new ShowcaseCard('attributesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
+
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+    ],
+  );
+
+  new window.prestashop.component.ChoiceTree('#attribute_group_shop_association').enableAutoCheckChildren();
 });

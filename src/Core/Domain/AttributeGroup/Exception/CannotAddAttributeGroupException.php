@@ -28,23 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
-/**
- * Is thrown when attribute group constraints are violated
- */
-class AttributeGroupConstraintException extends AttributeGroupException
+class CannotAddAttributeGroupException extends AttributeGroupException
 {
-    /**
-     * When attribute group Id contains invalid values
-     */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 1;
-
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 2;
 }

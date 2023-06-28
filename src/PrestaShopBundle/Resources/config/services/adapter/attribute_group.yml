@@ -2,6 +2,29 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\AddAttributeGroupHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand
+
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\EditAttributeGroupHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand
+
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\GetAttributeGroupForEditingHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing
+
+  PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AttributeGroupViewDataProvider:
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
+
   PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider:
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
