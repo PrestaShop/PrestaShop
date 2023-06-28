@@ -35,7 +35,14 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
  */
 class UpdateAliasCommand
 {
-    public readonly AliasId $aliasId;
+    private AliasId $aliasId;
+
+    /**
+     * @var string[]
+     */
+    private array $aliases;
+
+    private string $searchTerm;
 
     /**
      * @param int $aliasId
@@ -44,9 +51,35 @@ class UpdateAliasCommand
      */
     public function __construct(
         int $aliasId,
-        public readonly array $aliases,
-        public readonly string $searchTerm,
+        array $aliases,
+        string $searchTerm,
     ) {
         $this->aliasId = new AliasId($aliasId);
+        $this->aliases = $aliases;
+        $this->searchTerm = $searchTerm;
+    }
+
+    /**
+     * @return AliasId
+     */
+    public function getAliasId(): AliasId
+    {
+        return $this->aliasId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAliases(): array
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchTerm(): string
+    {
+        return $this->searchTerm;
     }
 }
