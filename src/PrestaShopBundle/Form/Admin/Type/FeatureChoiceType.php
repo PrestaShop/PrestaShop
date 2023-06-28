@@ -26,40 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FeaturesChoiceProvider implements FormChoiceProviderInterface
+class FeatureChoiceType extends TranslatorAwareType
 {
     public function __construct(
-        protected readonly FeatureRepository $featureRepository,
-        protected readonly LegacyContext $legacyContext,
-        protected readonly ConfigurationInterface $configuration
+        TranslatorInterface $translator,
+        array $locales,
+        protected readonly FormChoiceProviderInterface $featureChoiceProvider
     ) {
+        parent::__construct($translator, $locales);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getChoices()
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $defaultLangId = (int) $this->configuration->get('PS_LANG_DEFAULT');
-        $contextLangId = (int) $this->legacyContext->getLanguage()->getId();
+        $resolver->setDefaults([
+            'choices' => $this->featureChoiceProvider->getChoices(),
+            'label' => $this->trans('Feature', 'Admin.Catalog.Feature'),
+            'autocomplete' => true,
+            'attr' => [
+                'class' => 'feature-selector',
+            ],
+        ]);
+    }
 
-        $choices = [];
-        foreach ($this->featureRepository->getFeatures() as $feature) {
-            if (!empty($feature['localized_names'][$contextLangId])) {
-                $featureName = $feature['localized_names'][$contextLangId];
-            } else {
-                $featureName = $feature['localized_names'][$defaultLangId];
-            }
-            $choices[$featureName] = $feature['id_feature'];
-        }
-
-        return $choices;
+    public function getParent(): string
+    {
+        return ChoiceType::class;
     }
 }

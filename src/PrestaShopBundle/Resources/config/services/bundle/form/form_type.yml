@@ -507,7 +507,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
     arguments:
-      $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
       $featureValueListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType:
@@ -660,7 +659,9 @@ services:
       $permissionChoices: '@=service("prestashop.core.form.choice_provider.permissions_choice_provider").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
-
+  PrestaShopBundle\Form\Admin\Type\FeatureChoiceType:
+    arguments:
+      $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:
