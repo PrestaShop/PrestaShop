@@ -168,7 +168,7 @@ Feature: Set cart rule product restrictions in BO
       | type          | references                 |
       | manufacturers | studioDesign,graphicCorner |
 
-  Scenario: Restrict cart rule products by defining manufacturer matching rules
+  Scenario: Restrict cart rule products by defining supplier matching rules
     When I add a restriction for cart rule rule_50_percent, which requires at least 2 products in cart matching one of these rules:
       | type      | references      |
       | suppliers | fashionSupplier |

@@ -35,7 +35,7 @@ Feature: Set cart rule restrictions in BO
     And I add product "product3" with following information:
       | name[en-US] | Shirt - Dom & Jquery |
       | type        | standard             |
-    And I create cart rule "rule_free_shipping_1" with following properties:
+    And there is a cart rule "rule_free_shipping_1" with following properties:
       | name[en-US]       | free shipping 1      |
       | is_active         | true                 |
       | allow_partial_use | false                |
@@ -46,7 +46,7 @@ Feature: Set cart rule restrictions in BO
       | quantity_per_user | 10                   |
       | free_shipping     | true                 |
       | code              | rule_free_shipping_1 |
-    And I create cart rule "rule_50_percent" with following properties:
+    And there is a cart rule "rule_50_percent" with following properties:
       | name[en-US]                  | Half the price         |
       | is_active                    | true                   |
       | allow_partial_use            | true                   |
@@ -60,7 +60,7 @@ Feature: Set cart rule restrictions in BO
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | false                  |
       | discount_application_type    | order_without_shipping |
-    And I create cart rule "rule_70_percent" with following properties:
+    And there is a cart rule "rule_70_percent" with following properties:
       | name[en-US]                  | Half the price         |
       | is_active                    | true                   |
       | allow_partial_use            | true                   |
@@ -74,6 +74,12 @@ Feature: Set cart rule restrictions in BO
       | discount_percentage          | 70                     |
       | apply_to_discounted_products | false                  |
       | discount_application_type    | order_without_shipping |
+    And I clear cart rule combination restrictions for cart rule rule_free_shipping_1
+    And I clear all product restrictions for cart rule rule_free_shipping_1
+    And I clear cart rule combination restrictions for cart rule rule_50_percent
+    And I clear all product restrictions for cart rule rule_50_percent
+    And I clear cart rule combination restrictions for cart rule rule_70_percent
+    And I clear all product restrictions for cart rule rule_70_percent
     And cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules |  |
     And cart rule "rule_50_percent" should have the following properties:
@@ -82,6 +88,7 @@ Feature: Set cart rule restrictions in BO
       | restricted cart rules |  |
     And cart rule rule_free_shipping_1 should have no product restriction rules
     And cart rule rule_50_percent should have no product restriction rules
+    And cart rule rule_70_percent should have no product restriction rules
 
   Scenario: Restrict cart rule combinations and various products restrictions
     When I restrict following cart rules for cart rule rule_free_shipping_1:
