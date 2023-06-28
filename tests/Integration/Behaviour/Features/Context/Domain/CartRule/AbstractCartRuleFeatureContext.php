@@ -305,7 +305,7 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         if (isset($expectedData['restricted countries'])) {
             Assert::assertSame(
                 $this->referencesToIds($expectedData['restricted countries']),
-                $conditions->getRestrictions()->restrictedCountryIds,
+                $conditions->getRestrictions()->getRestrictedCountryIds(),
                 'Unexpected restricted countries'
             );
         }

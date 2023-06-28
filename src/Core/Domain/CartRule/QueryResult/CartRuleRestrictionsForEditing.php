@@ -48,21 +48,28 @@ class CartRuleRestrictionsForEditing
     private array $restrictedCarrierIds;
 
     /**
+     * @var int[]
+     */
+    private array $restrictedCountryIds;
+
+    /**
      * @todo: fill other restrictions when related commands are implemented
      *
      * @param int[] $restrictedCartRuleIds
      * @param RestrictionRuleGroup[] $productRestrictionRuleGroups
      * @param int[] $restrictedCarrierIds
+     * @param int[] $restrictedCountryIds
      */
     public function __construct(
         array $restrictedCartRuleIds,
         array $productRestrictionRuleGroups,
         array $restrictedCarrierIds,
-        public readonly array $restrictedCountryIds
+        array $restrictedCountryIds
     ) {
         $this->restrictedCartRuleIds = $restrictedCartRuleIds;
         $this->productRestrictionRuleGroups = $productRestrictionRuleGroups;
         $this->restrictedCarrierIds = $restrictedCarrierIds;
+        $this->restrictedCountryIds = $restrictedCountryIds;
     }
 
     /**
@@ -87,5 +94,13 @@ class CartRuleRestrictionsForEditing
     public function getRestrictedCarrierIds(): array
     {
         return $this->restrictedCarrierIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getRestrictedCountryIds(): array
+    {
+        return $this->restrictedCountryIds;
     }
 }
