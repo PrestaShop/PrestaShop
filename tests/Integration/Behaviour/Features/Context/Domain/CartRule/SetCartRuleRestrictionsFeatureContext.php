@@ -188,6 +188,8 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
             $this->getCommandBus()->handle($command);
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
+        } finally {
+            unset($this->restrictionCommandsByReference[$cartRuleReference]);
         }
     }
 
