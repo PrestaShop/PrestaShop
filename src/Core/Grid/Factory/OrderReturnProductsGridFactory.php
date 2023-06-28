@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
  * Gets data for order return products grid
@@ -73,7 +74,7 @@ class OrderReturnProductsGridFactory extends GridFactory
         $this->translator = $translator;
     }
 
-    public function getGrid(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria): GridInterface
     {
         if (!$searchCriteria instanceof OrderReturnProductsFilters) {
             throw new InvalidArgumentException(sprintf('Invalid search criteria. Expected "%s"', OrderReturnProductsFilters::class));
