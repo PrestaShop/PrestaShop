@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\PDF\Template;
 
+use Hook;
 use IteratorAggregate;
 use PrestaShop\PrestaShop\Core\PDF\Exception\PDFTemplateNotFoundException;
 
@@ -45,6 +46,14 @@ class PDFTemplateFactory
     {
         foreach ($this->templates as $template) {
             if ($templateName === $template->getTemplateName()) {
+                /**
+                 * Allow modifying or completely overriding data or template
+                 */
+                Hook::exec('actionPDFRender', [
+                    'data' => &$data,
+                    'template' => &$template,
+                    'templateName' => $templateName,
+                ]);
                 $template->init($data);
                 return $template;
             }
