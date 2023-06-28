@@ -164,19 +164,6 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    protected function getKernelParameters()
-    {
-        $kernelParameters = parent::getKernelParameters();
-
-        return array_merge(
-            $kernelParameters,
-            array('kernel.active_modules' => $this->getActiveModules())
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getRootDir()
     {
         return __DIR__;
@@ -206,7 +193,6 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $installedModules = $this->getActiveModules();
-
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
 
         $moduleTranslationsPaths = [];
@@ -233,9 +219,13 @@ class AppKernel extends Kernel
             }
         }
 
-        $loader->load(function (ContainerBuilder $container) use ($moduleTranslationsPaths) {
+        $loader->load(function (ContainerBuilder $container) use ($moduleTranslationsPaths, $installedModules) {
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->setParameter('container.dumper.inline_class_loader', false);
+            $container->setParameter('prestashop.module_dir', _PS_MODULE_DIR_);
+            /** @deprecated kernel.active_modules is deprecated. Use prestashop.installed_modules instead. */
+            $container->setParameter('kernel.active_modules', $installedModules);
+            $container->setParameter('prestashop.installed_modules', $installedModules);
             $container->addObjectResource($this);
             $container->setParameter('modules_translation_paths', $moduleTranslationsPaths);
         });

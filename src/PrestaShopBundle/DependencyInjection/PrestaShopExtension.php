@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\DependencyInjection;
 
-use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -38,13 +37,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class PrestaShopExtension extends Extension implements PrependExtensionInterface
 {
-    private $activeModulesPaths;
-
-    public function __construct()
-    {
-        $this->activeModulesPaths = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModulesPaths();
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -84,7 +76,11 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     public function preprendApiConfig(ContainerBuilder $container)
     {
         $paths = [];
-        foreach ($this->activeModulesPaths as $modulePath) {
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        $moduleDir = $container->getParameter('prestashop.module_dir');
+
+        foreach ($installedModules as $moduleName) {
+            $modulePath = $moduleDir . $moduleName;
             // Load YAML definition from the config/api_platform folder in the module
             $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
             if (file_exists($moduleConfigPath)) {

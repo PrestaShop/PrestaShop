@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
-use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -46,11 +45,6 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
     private $configPath;
 
     /**
-     * @var array
-     */
-    private $activeModulesPaths;
-
-    /**
      * Used to identify which scope of services need to be loaded (front services, admin
      * services or generic ones)
      *
@@ -59,7 +53,6 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
     public function __construct($containerName = '')
     {
         $this->configPath = '/config/' . (empty($containerName) ? '' : trim($containerName, '/') . '/');
-        $this->activeModulesPaths = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModulesPaths();
     }
 
     /**
@@ -67,11 +60,11 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (empty($this->activeModulesPaths)) {
-            return;
-        }
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        $moduleDir = $container->getParameter('prestashop.module_dir');
 
-        foreach ($this->activeModulesPaths as $modulePath) {
+        foreach ($installedModules as $moduleName) {
+            $modulePath = $moduleDir . $moduleName;
             $moduleConfigPath = $modulePath . $this->configPath;
             if (file_exists($moduleConfigPath . 'services.yml')) {
                 $fileLocator = new FileLocator($moduleConfigPath);
