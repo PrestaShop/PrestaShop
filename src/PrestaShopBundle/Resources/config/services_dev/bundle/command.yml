@@ -48,7 +48,8 @@ services:
     arguments:
       - '@prestashop.core.provider.command_definition_provider'
       - '%prestashop.commands_and_queries%'
-      - '@router'
+      - '@api_platform.metadata.resource.name_collection_factory.attributes'
+      - '@api_platform.metadata.resource.metadata_collection_factory.attributes'
     tags:
       - 'console.command'
 

@@ -26,48 +26,38 @@
 
 namespace PrestaShopBundle\Command;
 
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinition;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser;
+use PrestaShopBundle\Exception\DomainClassNameMalformedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Lists all commands and queries definitions
  */
 class ListCommandsAndQueriesCommand extends Command
 {
-    private CommandDefinitionParser $commandDefinitionParser;
-
-    /**
-     * @var string[]
-     */
-    private array $commandAndQueries;
-
     private bool $isFormatSimple;
 
     /**
-     * @var Route[]
+     * @var ResourceMetadataCollection[]
      */
     private array $apiResourcesList;
 
-    private RouterInterface $router;
-
     public function __construct(
-        CommandDefinitionParser $commandDefinitionParser,
-        array $commandAndQueries,
-        RouterInterface $router
+        private CommandDefinitionParser $commandDefinitionParser,
+        private array $commandAndQueries,
+        private ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory,
+        private ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory
     ) {
         parent::__construct();
-        $this->commandDefinitionParser = $commandDefinitionParser;
-        $this->commandAndQueries = $commandAndQueries;
         $this->isFormatSimple = false;
-        $this->router = $router;
     }
 
     /**
@@ -99,7 +89,6 @@ class ListCommandsAndQueriesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
         $this->apiResourcesList = $this->getResourceList();
         $this->handleOptions($input);
 
@@ -108,15 +97,15 @@ class ListCommandsAndQueriesCommand extends Command
 
         foreach ($this->commandAndQueries as $key => $commandName) {
             $commandDefinition = $this->commandDefinitionParser->parseDefinition($commandName);
-            $CQRSEndpointURI = $this->getCQRSEndpointURI($commandDefinition);
+            $cqrsEndpointURI = $this->getCQRSEndpointURI($commandDefinition);
 
             if ($this->isFormatSimple) {
-                $output->writeln('<info>' . $commandDefinition->getClassName() . (!empty($CQRSEndpointURI) ? ' OK' : ' NOT OK') . '</info>');
+                $output->writeln('<info>' . $commandDefinition->getClassName() . (!empty($cqrsEndpointURI) ? ' OK' : ' NOT OK') . '</info>');
             } else {
                 $output->writeln(++$key . '.');
                 $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');
                 $output->writeln('<blue>Type: </blue><info>' . $commandDefinition->getCommandType() . '</info>');
-                $output->writeln('<blue>API: </blue><info>' . $CQRSEndpointURI . '</info>');
+                $output->writeln('<blue>API: </blue><info>' . $cqrsEndpointURI . '</info>');
                 $output->writeln('<comment>' . $commandDefinition->getDescription() . '</comment>');
                 $output->writeln('');
             }
@@ -154,17 +143,18 @@ class ListCommandsAndQueriesCommand extends Command
     }
 
     /**
-     * This method takes the list of all routes on the project and filters out all the api-platform endpoints.
+     * This method rebuild the resources from the api platform attributes.
      *
-     * @return Route[]
+     * @return ResourceMetadataCollection[]
      */
     private function getResourceList(): array
     {
-        return array_filter($this->router->getRouteCollection()->all(), function ($value, $key) {
-            if (preg_match('/^_api_/', $key) === 1) {
-                return $value;
-            }
-        }, ARRAY_FILTER_USE_BOTH);
+        $resourceMetadataCollection = [];
+        foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
+            $resourceMetadataCollection[] = $this->resourceMetadataFactory->create($resourceClass);
+        }
+
+        return $resourceMetadataCollection;
     }
 
     /**
@@ -173,28 +163,38 @@ class ListCommandsAndQueriesCommand extends Command
      */
     private function getCQRSEndpointURI(CommandDefinition $commandDefinition): string
     {
-        foreach ($this->apiResourcesList as $resource) {
-            $apiResourceClass = explode('\\', $resource->getDefault('_api_resource_class'));
-            if (preg_match('/' . str_replace('/', '', end($apiResourceClass)) . '/i', $commandDefinition->getClassName()) === 1
-                && $this->doesMethodsMatchType($resource->getMethods(), $commandDefinition->getCommandType())
-            ) {
-                return $resource->getPath();
+        $domainArray = explode('\\', $commandDefinition->getClassName());
+        if (count($domainArray) >= 5) {
+            $domain = $domainArray[4];
+        } else {
+            throw new DomainClassNameMalformedException();
+        }
+
+        foreach ($this->apiResourcesList as $apiResources) {
+            foreach ($apiResources as $resource) {
+                if ($resource->getShortName() !== $domain) {
+                    return '';
+                }
+
+                $apiResourceOperations = $resource->getOperations();
+                foreach ($apiResourceOperations as $operation) {
+                    if ($this->doesMethodsMatchType($operation->getMethod(), $commandDefinition->getCommandType())) {
+                        return $operation->getUriTemplate();
+                    }
+                }
             }
         }
 
         return '';
     }
 
-    /**
-     * @param string[] $methods
-     */
-    private function doesMethodsMatchType(array $methods, string $commandType): bool
+    private function doesMethodsMatchType(string $method, string $commandType): bool
     {
         switch ($commandType) {
             case 'Command':
-                return in_array('POST', $methods) || in_array('PUT', $methods) || in_array('PATCH', $methods);
+                return $method === 'POST' || $method === 'PUT';
             case 'Query':
-                return in_array('GET', $methods) || in_array('DELETE', $methods);
+                return $method === 'GET' || $method === 'DELETE';
             default:
                 return false;
         }

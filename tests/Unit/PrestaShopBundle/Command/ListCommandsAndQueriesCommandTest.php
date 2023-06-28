@@ -29,30 +29,42 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Command;
 
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use ApiPlatform\Metadata\Resource\ResourceNameCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser;
 use PrestaShopBundle\Command\ListCommandsAndQueriesCommand;
+use PrestaShopBundle\Exception\DomainClassNameMalformedException;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RouterInterface;
 
 class ListCommandsAndQueriesCommandTest extends TestCase
 {
     /** @var CommandTester */
     private $commandTester;
 
-    /** @var RouterInterface|MockObject */
-    private $routerMock;
+    /**
+     * @var ResourceNameCollectionFactoryInterface|MockObject
+     */
+    private $resourceNameCollectionMock;
+
+    /**
+     * @var ResourceMetadataCollectionFactoryInterface|MockObject
+     */
+    private $resourceMetadataCollectionMock;
 
     public function setUp(): void
     {
-        $this->routerMock = $this->createMock(RouterInterface::class);
+        $this->resourceNameCollectionMock = $this->createMock(ResourceNameCollectionFactoryInterface::class);
+        $this->resourceMetadataCollectionMock = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
 
         $command = new ListCommandsAndQueriesCommand(
             new CommandDefinitionParser(),
             $this->getListOfCQRSCommands(),
-            $this->routerMock
+            $this->resourceNameCollectionMock,
+            $this->resourceMetadataCollectionMock
         );
 
         $this->commandTester = new CommandTester($command);
@@ -65,21 +77,33 @@ class ListCommandsAndQueriesCommandTest extends TestCase
      */
     public function testExecute(array $options, string $result): void
     {
-        $routeCollectionMock = $this->createMock(RouteCollection::class);
-        $routeCollectionMock
-            ->method('all')
-            ->willReturn([])
-        ;
-        $this->routerMock
-            ->method('getRouteCollection')
-            ->willReturn($routeCollectionMock)
-        ;
+        $this->resourceNameCollectionMock->method('create')->willReturn(new ResourceNameCollection());
+
+        $this->resourceMetadataCollectionMock->method('create')->willReturn(new ResourceMetadataCollection(''));
 
         $this->commandTester->execute($options);
 
         static::assertEquals($result,
             $this->commandTester->getDisplay()
         );
+    }
+
+    public function testExecuteWithWrongClass(): void
+    {
+        $this->resourceNameCollectionMock->method('create')->willReturn(new ResourceNameCollection());
+        $this->resourceMetadataCollectionMock->method('create')->willReturn(new ResourceMetadataCollection(''));
+
+        $command = new ListCommandsAndQueriesCommand(
+            new CommandDefinitionParser(),
+            ["PrestaShop\PrestaShop\Adapter\HookManager"],
+            $this->resourceNameCollectionMock,
+            $this->resourceMetadataCollectionMock
+        );
+
+        $commandTester = new CommandTester($command);
+
+        $this->expectException(DomainClassNameMalformedException::class);
+        $commandTester->execute([]);
     }
 
     public function optionsProvider(): array
