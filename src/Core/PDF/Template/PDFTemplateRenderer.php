@@ -42,7 +42,7 @@ class PDFTemplateRenderer
     ) {
     }
 
-    public function render(PDFTemplate $template, string $display = 'D'): string
+    public function render(PDFTemplateInterface $template, string $display = 'D'): string
     {
         $this->pdfRenderer->startPageGroup();
 

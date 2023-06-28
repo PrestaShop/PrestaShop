@@ -60,7 +60,7 @@ class PDFTemplateFactory
         }
 
         throw new PDFTemplateNotFoundException(
-            sprintf('PDFTemplate not found for the given name: %s.', $templateName)
+            sprintf('PDF template not found for the given name: %s.', $templateName)
         );
     }
 }

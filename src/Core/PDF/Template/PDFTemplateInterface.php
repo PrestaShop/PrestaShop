@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\PDF\Template;
 
 /**
- * Interface PDFTemplate is used to define template for PDF generating.
+ * Interface PDFTemplateInterface is used to define template for PDF generating.
  */
-interface PDFTemplate
+interface PDFTemplateInterface
 {
     public function getHeader(): string;
 
