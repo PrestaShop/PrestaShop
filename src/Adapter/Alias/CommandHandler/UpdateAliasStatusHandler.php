@@ -53,8 +53,8 @@ class UpdateAliasStatusHandler implements UpdateAliasStatusHandlerInterfaces
      */
     public function handle(UpdateAliasStatusCommand $command): void
     {
-        $alias = $this->aliasRepository->get($command->aliasId);
-        $alias->active = $command->enabled;
+        $alias = $this->aliasRepository->get($command->getAliasId());
+        $alias->active = $command->isEnabled();
         $this->aliasRepository->partialUpdate($alias, ['active'], CannotUpdateAliasException::class);
     }
 }
