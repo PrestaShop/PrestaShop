@@ -33,7 +33,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult;
  */
 class SearchTerm
 {
-    public function __construct(public readonly string $searchTerm)
+    private string $searchTerm;
+
+    public function __construct(string $searchTerm)
     {
+        $this->searchTerm = $searchTerm;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchTerm(): string
+    {
+        return $this->searchTerm;
     }
 }
