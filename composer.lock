@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94d6aa77d7f11d70e8f0c478ff8ec2c5",
+    "content-hash": "641341a247962639b8e804ac9db38c37",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5244,16 +5244,16 @@
         },
         {
             "name": "prestashop/blockwishlist",
-            "version": "v2.1.2",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockwishlist.git",
-                "reference": "5d84188d2c37f8df66438eaae643bd192781c208"
+                "reference": "d42091134c5b7060e195fa9d60dda63396c06d64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/5d84188d2c37f8df66438eaae643bd192781c208",
-                "reference": "5d84188d2c37f8df66438eaae643bd192781c208",
+                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/d42091134c5b7060e195fa9d60dda63396c06d64",
+                "reference": "d42091134c5b7060e195fa9d60dda63396c06d64",
                 "shasum": ""
             },
             "require-dev": {
@@ -5283,9 +5283,9 @@
             "description": "PrestaShop module blockwishlist",
             "homepage": "https://github.com/PrestaShop/blockwishlist",
             "support": {
-                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.2"
+                "source": "https://github.com/PrestaShop/blockwishlist/tree/v3.0.0"
             },
-            "time": "2022-08-01T14:47:51+00:00"
+            "time": "2023-02-23T10:22:22+00:00"
         },
         {
             "name": "prestashop/circuit-breaker",
@@ -5550,16 +5550,16 @@
         },
         {
             "name": "prestashop/dashtrends",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashtrends.git",
-                "reference": "c0ffb850abf1896ae8650522c8c8f4cff1c1dd80"
+                "reference": "e2cbdb088241a17118a8c4424b468a36216f8316"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/c0ffb850abf1896ae8650522c8c8f4cff1c1dd80",
-                "reference": "c0ffb850abf1896ae8650522c8c8f4cff1c1dd80",
+                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/e2cbdb088241a17118a8c4424b468a36216f8316",
+                "reference": "e2cbdb088241a17118a8c4424b468a36216f8316",
                 "shasum": ""
             },
             "require": {
@@ -5587,9 +5587,9 @@
             "description": "PrestaShop module dashtrends",
             "homepage": "https://github.com/PrestaShop/dashtrends",
             "support": {
-                "source": "https://github.com/PrestaShop/dashtrends/tree/v2.1.1"
+                "source": "https://github.com/PrestaShop/dashtrends/tree/v2.1.2"
             },
-            "time": "2023-03-24T13:19:08+00:00"
+            "time": "2023-06-19T13:25:37+00:00"
         },
         {
             "name": "prestashop/decimal",
@@ -6812,23 +6812,23 @@
         },
         {
             "name": "prestashop/ps_imageslider",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "c5980fe4e99ba6aa5139b4e0755540be42c52b88"
+                "reference": "36f848c1943f84f1dc0c41813f07c0e9b70ae8b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/c5980fe4e99ba6aa5139b4e0755540be42c52b88",
-                "reference": "c5980fe4e99ba6aa5139b4e0755540be42c52b88",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/36f848c1943f84f1dc0c41813f07c0e9b70ae8b0",
+                "reference": "36f848c1943f84f1dc0c41813f07c0e9b70ae8b0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -6849,9 +6849,9 @@
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_imageslider/tree/v3.1.2"
+                "source": "https://github.com/PrestaShop/ps_imageslider/tree/v3.1.3"
             },
-            "time": "2023-03-15T17:45:19+00:00"
+            "time": "2023-06-08T12:48:16+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
@@ -6899,23 +6899,23 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v5.0.5",
+            "version": "v6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "f27df3c4b7035557544bb3d8366024c6b175b2c8"
+                "reference": "66bd879f99c665f1fac8aab820f02b17c64df7c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/f27df3c4b7035557544bb3d8366024c6b175b2c8",
-                "reference": "f27df3c4b7035557544bb3d8366024c6b175b2c8",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/66bd879f99c665f1fac8aab820f02b17c64df7c9",
+                "reference": "66bd879f99c665f1fac8aab820f02b17c64df7c9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=7.2.5"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -6940,9 +6940,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v5.0.5"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v6.0.2"
             },
-            "time": "2022-09-02T15:51:11+00:00"
+            "time": "2023-05-23T17:09:26+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
