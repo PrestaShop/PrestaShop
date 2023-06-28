@@ -136,7 +136,7 @@ class QueryProviderTest extends TestCase
                     10,
                     '',
                     true
-                )
+                ),
             ];
         }
 
