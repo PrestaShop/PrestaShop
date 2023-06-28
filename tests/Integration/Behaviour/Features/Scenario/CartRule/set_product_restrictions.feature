@@ -225,6 +225,23 @@ Feature: Set cart rule product restrictions in BO
       | type          | references                          |
       | suppliers     | fashionSupplier,accessoriesSupplier |
       | manufacturers | graphicCorner                       |
+    # We add some restrictions again to already existing rule to see if all previously added rules are replaced correctly
+    When I add a restriction for cart rule rule_free_shipping_1, which requires at least 4 products in cart matching one of these rules:
+      | type       | references        |
+      | products   | product3          |
+      | categories | women             |
+    And I save all the restrictions for cart rule rule_free_shipping_1
+    Then cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
+      | groupReference | quantity | rules count |
+      | free_nr_1      | 4        | 2           |
+    And the cart rule restriction group "free_nr_1" should have the following rules:
+      | type       | references        |
+      | products   | product3          |
+      | categories | women             |
+    # Checking that previous product restrictions can be removed
+    And I clear all product restrictions for cart rule rule_free_shipping_1
+    And I save all the restrictions for cart rule rule_free_shipping_1
+    Then cart rule "rule_free_shipping_1" should have no product restriction rules
 
   Scenario: Provide restrictions with empty list of rules
     When I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
