@@ -32,16 +32,19 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class CartRuleRepository extends AbstractObjectModelRepository
 {
     public function __construct(
-        protected CartRuleValidator $cartRuleValidator,
-        protected Connection $connection,
-        protected string $dbPrefix
+        protected readonly CartRuleValidator $cartRuleValidator,
+        protected readonly Connection $connection,
+        protected readonly string $dbPrefix
     ) {
     }
 
@@ -85,6 +88,162 @@ class CartRuleRepository extends AbstractObjectModelRepository
         );
 
         return $cartRule;
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     * @param RestrictionRuleGroup[] $restrictionRuleGroups
+     *
+     * @return void
+     */
+    public function setProductRestrictions(CartRuleId $cartRuleId, array $restrictionRuleGroups): void
+    {
+        // first remove all product restrictions concerning provided cart rule
+        $this->removeProductRestrictions($cartRuleId);
+
+        foreach ($restrictionRuleGroups as $restrictionRuleGroup) {
+            $this->connection->createQueryBuilder()
+                ->insert($this->dbPrefix . 'cart_rule_product_rule_group')
+                ->values([
+                    'id_cart_rule' => $cartRuleId->getValue(),
+                    'quantity' => $restrictionRuleGroup->getRequiredQuantityInCart(),
+                ])
+                ->execute()
+            ;
+
+            $productRuleGroupId = $this->connection->lastInsertId();
+
+            foreach ($restrictionRuleGroup->getRestrictionRules() as $restrictionRule) {
+                $this->connection->createQueryBuilder()
+                    ->insert($this->dbPrefix . 'cart_rule_product_rule')
+                    ->values([
+                        'id_product_rule_group' => ':productRuleGroupId',
+                        'type' => ':type',
+                    ])
+                    ->setParameter('productRuleGroupId', $productRuleGroupId)
+                    ->setParameter('type', $restrictionRule->getType())
+                    ->execute()
+                ;
+
+                $productRuleId = $this->connection->lastInsertId();
+                $productRuleValues = [];
+                $checkedIds = [];
+                foreach ($restrictionRule->getEntityIds() as $id) {
+                    if (in_array($id, $checkedIds, true)) {
+                        // skip in case there are duplicates
+                        continue;
+                    }
+                    $productRuleValues[] = sprintf('(%d, %d)', $productRuleId, $id);
+                    $checkedIds[] = $id;
+                }
+
+                $this->connection->prepare('
+                    INSERT INTO ' . $this->dbPrefix . 'cart_rule_product_rule_value (id_product_rule, id_item)
+                    VALUES ' . implode(',', $productRuleValues)
+                )->executeStatement();
+            }
+        }
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     *
+     * @return RestrictionRuleGroup[]
+     */
+    public function getProductRestrictions(CartRuleId $cartRuleId): array
+    {
+        // retrieve all item ids based on cart rule
+        $ruleValues = $this->connection->createQueryBuilder()
+            ->select('crprv.id_product_rule, crprv.id_item')
+            ->from($this->dbPrefix . 'cart_rule_product_rule_value', 'crprv')
+            ->innerJoin(
+                'crprv',
+                $this->dbPrefix . 'cart_rule_product_rule',
+                'crpr',
+                'crprv.id_product_rule = crpr.id_product_rule'
+            )
+            ->innerJoin(
+                'crpr',
+                $this->dbPrefix . 'cart_rule_product_rule_group',
+                'crprg',
+                'crpr.id_product_rule_group = crprg.id_product_rule_group'
+            )
+            ->where('crprg.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        // retrieve all rules based on cart rule
+        $rules = $this->connection->createQueryBuilder()
+            ->select('crpr.id_product_rule, crpr.id_product_rule_group, crpr.type')
+            ->from($this->dbPrefix . 'cart_rule_product_rule', 'crpr')
+            ->innerJoin(
+                'crpr',
+                $this->dbPrefix . 'cart_rule_product_rule_group',
+                'crprg',
+                'crpr.id_product_rule_group = crprg.id_product_rule_group'
+            )
+            ->where('crprg.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        // retrieve all rule groups based on cart rule
+        $groups = $this->connection->createQueryBuilder()
+            ->select('id_product_rule_group, id_cart_rule, quantity')
+            ->from($this->dbPrefix . 'cart_rule_product_rule_group')
+            ->where('id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        // put quantities under related group
+        $quantityForGroups = [];
+        foreach ($groups as $group) {
+            $productRuleGroupId = (int) $group['id_product_rule_group'];
+            $quantityForGroups[$productRuleGroupId] = (int) $group['quantity'];
+        }
+
+        // put types under related group and product rules
+        $typesForRules = [];
+        foreach ($rules as $rule) {
+            $productRuleId = (int) $rule['id_product_rule'];
+            $typesForRules[$rule['id_product_rule_group']][$productRuleId] = $rule['type'];
+        }
+
+        // put ids under related product rules
+        $ruleItemIdsForRules = [];
+        foreach ($ruleValues as $ruleValue) {
+            $productRuleId = (int) $ruleValue['id_product_rule'];
+            $ruleItemIdsForRules[$productRuleId][] = (int) $ruleValue['id_item'];
+        }
+
+        // finally build the complex restriction rule groups by retrieving related values by array keys structured above
+        $restrictionRuleGroups = [];
+        foreach ($quantityForGroups as $groupId => $quantity) {
+            if (!isset($typesForRules[$groupId])) {
+                throw new CartRuleException(
+                    sprintf('Unexpected state of cart rule product restrictions. Failed to retrieve types for rules of group %d', $groupId)
+                );
+            }
+
+            $restrictionRules = [];
+            foreach ($typesForRules[$groupId] as $productRuleId => $type) {
+                if (!isset($ruleItemIdsForRules[$productRuleId])) {
+                    throw new CartRuleException(
+                        sprintf('Unexpected state of cart rule product restrictions. Failed to retrieve item ids for rule %d', $productRuleId)
+                    );
+                }
+                $restrictionRules[] = new RestrictionRule($type, $ruleItemIdsForRules[$productRuleId]);
+            }
+
+            $restrictionRuleGroups[] = new RestrictionRuleGroup($quantity, $restrictionRules);
+        }
+
+        return $restrictionRuleGroups;
     }
 
     /**
@@ -143,6 +302,8 @@ class CartRuleRepository extends AbstractObjectModelRepository
      */
     public function restrictCartRules(CartRuleId $cartRuleId, array $restrictedCartRuleIds): void
     {
+        $this->removeRestrictedCartRules($cartRuleId);
+
         if (empty($restrictedCartRuleIds)) {
             return;
         }
@@ -158,7 +319,6 @@ class CartRuleRepository extends AbstractObjectModelRepository
             $checkedIds[] = $restrictedCartRuleId;
         }
 
-        $this->removeRestrictedCartRules($cartRuleId);
         $this->connection->executeStatement(
             sprintf(
                 'INSERT INTO %s (`id_cart_rule_1`, `id_cart_rule_2`) VALUES %s',
@@ -173,6 +333,38 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->connection->createQueryBuilder()
             ->delete($this->dbPrefix . 'cart_rule_combination', 'crc')
             ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
+    }
+
+    private function removeProductRestrictions(CartRuleId $cartRuleId): void
+    {
+        //delete records from cart_rule_product_rule_value for this cart rule
+        $this->connection->prepare('
+            DELETE crprv
+            FROM ' . $this->dbPrefix . 'cart_rule_product_rule_value AS crprv
+            INNER JOIN ' . $this->dbPrefix . 'cart_rule_product_rule AS crpr ON crprv.id_product_rule = crpr.id_product_rule
+            INNER JOIN ' . $this->dbPrefix . 'cart_rule_product_rule_group AS crprg ON crpr.id_product_rule_group = crprg.id_product_rule_group
+            WHERE crprg.id_cart_rule = :cartRuleId
+        ')->executeStatement([
+            ':cartRuleId' => $cartRuleId->getValue(),
+        ]);
+
+        // delete records from cart_rule_product_rule for this cart rule
+        $this->connection->prepare('
+            DELETE crpr
+            FROM  ' . $this->dbPrefix . 'cart_rule_product_rule AS crpr
+            INNER JOIN  ' . $this->dbPrefix . 'cart_rule_product_rule_group AS crprg ON crpr.id_product_rule_group = crprg.id_product_rule_group
+            WHERE crprg.id_cart_rule = :cartRuleId
+        ')->executeStatement([
+            ':cartRuleId' => $cartRuleId->getValue(),
+        ]);
+
+        // and finally delete records from cart_rule_product_rule_group for this cart rule
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_product_rule_group')
+            ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()
         ;

@@ -284,6 +284,15 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
                 'Unexpected gift_combination'
             );
         }
+
+        if (isset($expectedData['restricted cart rules'])) {
+            $expectedRestrictedCartRuleIds = $this->referencesToIds($expectedData['restricted cart rules']);
+            Assert::assertSame(
+                $expectedRestrictedCartRuleIds,
+                $conditions->getRestrictions()->getRestrictedCartRuleIds(),
+                'Unexpected cart rule restrictions'
+            );
+        }
     }
 
     protected function getCartRuleActionBuilder(): CartRuleActionBuilder
@@ -341,11 +350,11 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         return $formattedData;
     }
 
-    protected function getCartRuleForEditing(int $cartRuleId): CartRuleForEditing
+    protected function getCartRuleForEditing(string $cartRuleReference): CartRuleForEditing
     {
         /** @var CartRuleForEditing $cartRuleForEditing */
         $cartRuleForEditing = $this->getQueryBus()->handle(
-            new GetCartRuleForEditing($cartRuleId)
+            new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference))
         );
 
         return $cartRuleForEditing;

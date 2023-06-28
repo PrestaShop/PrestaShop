@@ -47,7 +47,7 @@ class AddCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             try {
                 // if cart rule already exists we assert all its expected properties
                 $this->assertCartRuleProperties(
-                    $this->getCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)),
+                    $this->getCartRuleForEditing($cartRuleReference),
                     $data
                 );
 
