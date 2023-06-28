@@ -206,11 +206,11 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
                 Assert::assertEquals(
                     $searchTerm,
-                    $foundAliasSearchTerm->searchTerm,
+                    $foundAliasSearchTerm->getSearchTerm(),
                     sprintf(
                         'Invalid Alias Search Term, expected %d but got %d instead.',
                         $searchTerm,
-                        $foundAliasSearchTerm->searchTerm
+                        $foundAliasSearchTerm->getSearchTerm()
                     )
                 );
             }
