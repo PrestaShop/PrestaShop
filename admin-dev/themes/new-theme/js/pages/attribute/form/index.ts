@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,25 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
+import AttributeFormMap from '@pages/attribute/form/attribute-form-map';
 
-/**
- * Is thrown when attribute constraints are violated
- */
-class AttributeConstraintException extends AttributeException
-{
-    /**
-     * When attribute id contains invalid values
-     */
-    public const INVALID_ID = 10;
+const {$} = window;
 
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 20;
+$(() => {
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+    ],
+  );
 
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 30;
-}
+  new window.prestashop.component.ChoiceTree(AttributeFormMap.attributeShopAssociationInput).enableAutoCheckChildren();
+});

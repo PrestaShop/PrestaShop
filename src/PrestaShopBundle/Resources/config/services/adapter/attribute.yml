@@ -1,6 +1,7 @@
 services:
   _defaults:
-    public: true
+    public: false
+    autowire: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler:
     autoconfigure: true
@@ -12,3 +13,20 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\AddAttributeHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand
+
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand
+
+  PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing
+
+  PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator:

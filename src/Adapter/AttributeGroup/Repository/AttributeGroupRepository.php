@@ -31,6 +31,7 @@ use AttributeGroup;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupShopAssociationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
@@ -114,6 +115,29 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
     {
         $this->validator->validate($attributeGroup);
         $this->updateObjectModel($attributeGroup, CannotAddAttributeGroupException::class, $errorCode);
+    }
+
+    /**
+     * @param AttributeGroupId $attributeGroupId
+     * @param ShopId $shopId
+     *
+     * @return AttributeGroup
+     *
+     * @throws ShopAssociationNotFound
+     * @throws CoreException
+     */
+    public function get(AttributeGroupId $attributeGroupId, ShopId $shopId): AttributeGroup
+    {
+        /** @var AttributeGroup $attributeGroup */
+        $attributeGroup = $this->getObjectModelForShop(
+            $attributeGroupId->getValue(),
+            AttributeGroup::class,
+            AttributeGroupNotFoundException::class,
+            $shopId,
+            AttributeGroupShopAssociationNotFoundException::class
+        );
+
+        return $attributeGroup;
     }
 
     /**

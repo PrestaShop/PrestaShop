@@ -1,4 +1,3 @@
-# @todo: add legacy links after page is fully migrated
 admin_attributes_index:
   path: /
   methods: GET
@@ -20,10 +19,10 @@ admin_attributes_search:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminAttributesGroups
-    _legacy_link: AdminAttributesGroups:submitFilterattribute
-    _legacy_feature_flag: attribute_group
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attribute
     redirectRoute: admin_attributes_index
+    _legacy_link: AdminAttributesGroups:submitFilterattribute_values
+    _legacy_feature_flag: attribute_group
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
 
@@ -33,10 +32,10 @@ admin_attributes_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::createAction'
     _legacy_controller: AdminAttributesGroups
-    _legacy_link: AdminAttributesGroups:addattribute
-    _legacy_feature_flag: attribute_group
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
+    _legacy_link: AdminAttributesGroups:addattribute_group
+    _legacy_feature_flag: attribute_group
 
 admin_attributes_edit:
   path: /{attributeId}/edit
@@ -74,9 +73,12 @@ admin_attributes_bulk_delete:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::bulkDeleteAction'
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
-    _legacy_link: AdminAttributesGroups:submitBulkdeleteattribute
     _legacy_controller: AdminAttributesGroups
+    _legacy_link: AdminAttributesGroups:bulkdeleteattribute
     _legacy_feature_flag: attribute_group
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+      id_attribute: attributeId
 
 admin_attributes_update_position:
   path: /update-position
@@ -84,3 +86,5 @@ admin_attributes_update_position:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::updatePositionAction'
     _legacy_controller: AdminAttributesGroups
+    _legacy_link: AdminAttributesGroups:updateAttributesPositions
+    _legacy_feature_flag: attribute_group

@@ -24,25 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
- * Is thrown when attribute constraints are violated
+ * Retrieves attribute group data for editing
  */
-class AttributeConstraintException extends AttributeException
+class GetAttributeForEditing
 {
     /**
-     * When attribute id contains invalid values
+     * @var AttributeId
      */
-    public const INVALID_ID = 10;
+    private $attributeId;
 
     /**
-     * Code is used when feature does not have name.
+     * @param int $attributeId
      */
-    public const EMPTY_NAME = 20;
+    public function __construct(int $attributeId)
+    {
+        $this->attributeId = new AttributeId($attributeId);
+    }
 
     /**
-     * Used when feature name is invalid.
+     * @return AttributeId
      */
-    public const INVALID_NAME = 30;
+    public function getAttributeId(): AttributeId
+    {
+        return $this->attributeId;
+    }
 }

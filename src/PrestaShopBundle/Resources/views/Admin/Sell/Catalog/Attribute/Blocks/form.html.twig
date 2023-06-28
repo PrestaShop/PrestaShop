@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,27 +21,33 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
+{% form_theme attributeForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
-/**
- * Is thrown when attribute constraints are violated
- */
-class AttributeConstraintException extends AttributeException
-{
-    /**
-     * When attribute id contains invalid values
-     */
-    public const INVALID_ID = 10;
+{% block attribute_group_form_block %}
+  {{ form_start(attributeForm) }}
 
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 20;
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'Attribute value'|trans({}, 'Admin.Catalog.Attribute') }}
+    </h3>
 
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 30;
-}
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(attributeForm) }}
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <a href="{{ path('admin_attributes_index', {'attributeGroupId': attributeGroupId}) }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+
+  {{ form_end(attributeForm) }}
+{% endblock %}

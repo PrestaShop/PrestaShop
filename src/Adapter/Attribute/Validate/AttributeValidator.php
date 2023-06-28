@@ -24,25 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Adapter\Attribute\Validate;
+
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use ProductAttribute;
 
 /**
- * Is thrown when attribute constraints are violated
+ * Validates attribute properties using legacy object model
  */
-class AttributeConstraintException extends AttributeException
+class AttributeValidator extends AbstractObjectModelValidator
 {
     /**
-     * When attribute id contains invalid values
+     * @param ProductAttribute $attribute
+     *
+     * @throws CoreException
      */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 20;
-
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 30;
+    public function validate(ProductAttribute $attribute): void
+    {
+        $this->validateObjectModelLocalizedProperty($attribute, 'name', AttributeConstraintException::class, AttributeConstraintException::INVALID_NAME);
+    }
 }

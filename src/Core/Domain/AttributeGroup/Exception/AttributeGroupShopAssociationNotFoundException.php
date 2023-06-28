@@ -24,25 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
 /**
- * Is thrown when attribute constraints are violated
+ * Is thrown when required attribute group cannot be found
  */
-class AttributeConstraintException extends AttributeException
+class AttributeGroupShopAssociationNotFoundException extends AttributeGroupException
 {
-    /**
-     * When attribute id contains invalid values
-     */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 20;
-
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 30;
 }

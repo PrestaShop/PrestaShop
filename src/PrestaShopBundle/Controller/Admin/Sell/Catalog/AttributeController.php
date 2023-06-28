@@ -134,16 +134,38 @@ class AttributeController extends FrameworkBundleAdminController
      *     message="You do not have permission to create this."
      * )
      *
-     * @param int $attributeGroupId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function createAction(int $attributeGroupId)
+    public function createAction(Request $request, int $attributeGroupId): Response
     {
-        // @todo: implement in another pr
-        return $this->redirectToRoute('admin_attributes_index', [
-            'attributeGroupId' => $attributeGroupId,
-        ]);
+        $attributeFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder');
+        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler');
+
+        $attributeForm = $attributeFormBuilder->getForm(['attribute_group' => $attributeGroupId]);
+        $attributeForm->handleRequest($request);
+
+        try {
+            $handlerResult = $attributeFormHandler->handle($attributeForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attributes_index', ['attributeGroupId' => $attributeGroupId]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Attribute/create.html.twig',
+            [
+                'layoutTitle' => $this->trans('New attribute value', 'Admin.Navigation.Menu'),
+                'attributeForm' => $attributeForm->createView(),
+                'attributeGroupId' => $attributeGroupId,
+            ]
+        );
     }
 
     /**
@@ -155,14 +177,43 @@ class AttributeController extends FrameworkBundleAdminController
      * @param int $attributeId
      * @param int $attributeGroupId
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction(int $attributeId, int $attributeGroupId)
+    public function editAction(Request $request, int $attributeId, int $attributeGroupId): Response
     {
-        // @todo: implement in another pr
-        return $this->redirectToRoute('admin_attributes_index', [
-            'attributeGroupId' => $attributeGroupId,
-        ]);
+        $attributeFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder');
+        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler');
+
+        $attributeForm = $attributeFormBuilder->getFormFor($attributeId, ['attribute_group' => $attributeGroupId])
+            ->handleRequest($request);
+        //$attributeForm;
+        $formData = $attributeForm->getData();
+        $attributeName = $formData['value'][$this->getContextLangId()] ?? reset($formData['value']);
+
+        try {
+            $handlerResult = $attributeFormHandler->handleFor($attributeId, $attributeForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attributes_index', ['attributeGroupId' => $attributeGroupId]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Attribute/edit.html.twig',
+            [
+                'layoutTitle' => $this->trans(
+                    'Editing attribute %name%',
+                    'Admin.Navigation.Menu',
+                    ['%name%' => $attributeName]
+                ),
+                'attributeForm' => $attributeForm->createView(),
+                'attributeGroupId' => $attributeGroupId,
+            ]
+        );
     }
 
     /**

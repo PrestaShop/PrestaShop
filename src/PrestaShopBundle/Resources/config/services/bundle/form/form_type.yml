@@ -353,6 +353,15 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
   PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType: ~
 
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeType:
+    public: true
+    arguments:
+      $attributeGroupRepository: '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
+      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $contextLangId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    tags:
+      - { name: form.type }
+
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
       $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'

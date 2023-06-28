@@ -24,25 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
- * Is thrown when attribute constraints are violated
+ * Describes add attribute command handler
  */
-class AttributeConstraintException extends AttributeException
+interface AddAttributeHandlerInterface
 {
     /**
-     * When attribute id contains invalid values
+     * @param AddAttributeCommand $command
+     *
+     * @return AttributeId
      */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 20;
-
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 30;
+    public function handle(AddAttributeCommand $command): AttributeId;
 }
