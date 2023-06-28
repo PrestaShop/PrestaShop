@@ -47,11 +47,11 @@ class QueryProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $query = $operation->getExtraProperties()['query'] ?? null;
+        $queryClass = $operation->getExtraProperties()['query'] ?? null;
         $converters = $operation->getExtraProperties()['paramConverters'] ?? [];
         $queryParams = $this->requestStack->getCurrentRequest()->query->all();
 
-        if (null === $query) {
+        if (null === $queryClass) {
             throw new NoExtraPropertiesFoundException();
         }
 
@@ -75,7 +75,7 @@ class QueryProvider implements ProviderInterface
         $params = array_values($uriVariables);
 
         //Add optionnal parameters in construct from query params
-        $reflectionMethod = new \ReflectionMethod($query, '__construct');
+        $reflectionMethod = new \ReflectionMethod($queryClass, '__construct');
         $constructParameters = $reflectionMethod->getParameters();
         foreach ($constructParameters as $parameter) {
             if (array_key_exists($parameter->name, $queryParams)) {
@@ -84,7 +84,7 @@ class QueryProvider implements ProviderInterface
             }
         }
 
-        $query = new $query(...$params);
+        $query = new $queryClass(...$params);
 
         //Try to call setter on additional query params
         if (count($queryParams)) {
