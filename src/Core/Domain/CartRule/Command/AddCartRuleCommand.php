@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
@@ -117,12 +118,24 @@ class AddCartRuleCommand
      */
     private $quantityPerUser = 1;
 
+    /**
+     * @var ShopId[]
+     */
+    private array $associatedShopIds;
+
+    /**
+     * @param array<int, string> $localizedNames
+     * @param CartRuleAction $cartRuleAction
+     * @param int[] $associatedShopIds
+     */
     public function __construct(
         array $localizedNames,
-        CartRuleAction $cartRuleAction
+        CartRuleAction $cartRuleAction,
+        array $associatedShopIds
     ) {
         $this->setLocalizedNames($localizedNames);
         $this->cartRuleAction = $cartRuleAction;
+        $this->setAssociatedShopIds($associatedShopIds);
     }
 
     public function getDescription(): string
@@ -317,6 +330,14 @@ class AddCartRuleCommand
     }
 
     /**
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIds(): array
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
      * @param array<int, string> $localizedNames
      *
      * @return AddCartRuleCommand
@@ -335,5 +356,19 @@ class AddCartRuleCommand
         if ($dateFrom > $dateTo) {
             throw new CartRuleConstraintException('Date from cannot be greater than date to.', CartRuleConstraintException::DATE_FROM_GREATER_THAN_DATE_TO);
         }
+    }
+
+    /**
+     * @param int[] $associatedShopIds
+     */
+    private function setAssociatedShopIds(array $associatedShopIds): void
+    {
+        if (empty($associatedShopIds)) {
+            throw new CartRuleConstraintException('Shop association cannot be empty', CartRuleConstraintException::INVALID_SHOP_ASSOCIATION);
+        }
+
+        $this->associatedShopIds = array_map(static function (int $shopId): ShopId {
+            return new ShopId($shopId);
+        }, $associatedShopIds);
     }
 }

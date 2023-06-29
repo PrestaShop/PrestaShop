@@ -68,7 +68,10 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
      */
     public function handle(AddCartRuleCommand $command): CartRuleId
     {
-        $cartRule = $this->cartRuleRepository->add($this->buildCartRuleFromCommandData($command));
+        $cartRule = $this->cartRuleRepository->add(
+            $this->buildCartRuleFromCommandData($command),
+            $command->getAssociatedShopIds()
+        );
 
         return new CartRuleId((int) $cartRule->id);
     }

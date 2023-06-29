@@ -77,4 +77,5 @@ class CartRuleConstraintException extends CartRuleException
     public const INVALID_RESTRICTION_RULE_ID = 41;
     public const EMPTY_RESTRICTION_RULE_IDS = 42;
     public const EMPTY_RESTRICTION_RULES = 43;
+    public const INVALID_SHOP_ASSOCIATION = 44;
 }

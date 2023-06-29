@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class CartRuleFormDataProvider implements FormDataProviderInterface
@@ -47,12 +48,16 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
      */
     private $configuration;
 
+    private ShopContextInterface $shopContext;
+
     public function __construct(
         CommandBusInterface $queryBus,
-        ShopConfigurationInterface $configuration
+        ShopConfigurationInterface $configuration,
+        ShopContextInterface $shopContext
     ) {
         $this->queryBus = $queryBus;
         $this->configuration = $configuration;
+        $this->shopContext = $shopContext;
     }
 
     /**
@@ -100,6 +105,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
                 'available_per_user' => 1,
                 'restrictions' => [],
                 'customer' => [],
+                'shop_association' => $this->shopContext->getContextShopIds(),
             ],
             'actions' => [
                 'free_shipping' => false,

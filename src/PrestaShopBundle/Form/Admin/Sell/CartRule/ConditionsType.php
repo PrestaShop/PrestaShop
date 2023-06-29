@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
 use PrestaShopBundle\Form\Admin\Type\CustomerSearchType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -62,6 +63,9 @@ class ConditionsType extends TranslatorAwareType
                     'A customer will only be able to use the cart rule "X" time(s).',
                     'Admin.Catalog.Help'
                 ),
+            ])
+            ->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Store association', 'Admin.Global'),
             ])
             //@todo: Restrictions not handled. Will be in separate PR.
         ;

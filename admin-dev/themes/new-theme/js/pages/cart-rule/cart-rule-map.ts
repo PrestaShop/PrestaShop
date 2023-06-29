@@ -41,4 +41,5 @@ export default {
   reductionValueSymbol: `${discountContainer} .price-reduction-value .input-group .input-group-append .input-group-text, .price-reduction-value .input-group .input-group-prepend .input-group-text`,
   specificProductSearchComponent: '#cart_rule_actions_discount_specific_product',
   specificProductSearchContainer: '.specific-product-search-container',
+  shopAssociationTree: '#cart_rule_conditions_shop_association',
 };

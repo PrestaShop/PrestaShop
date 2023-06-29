@@ -37,9 +37,11 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use Shop;
 
-class CartRuleRepository extends AbstractObjectModelRepository
+class CartRuleRepository extends AbstractMultiShopObjectModelRepository
 {
     public function __construct(
         protected readonly CartRuleValidator $cartRuleValidator,
@@ -48,10 +50,21 @@ class CartRuleRepository extends AbstractObjectModelRepository
     ) {
     }
 
-    public function add(CartRule $cartRule): CartRule
+    /**
+     * @param CartRule $cartRule
+     * @param ShopId[] $associatedShopIds
+     *
+     * @return CartRule
+     */
+    public function add(CartRule $cartRule, array $associatedShopIds): CartRule
     {
+        // cart rule works well with cart_rule_shop table as all the other entities when we add the table association
+        // except it uses "shop_restrictions" property for some reason, so we force it to true to avoid breaking legacy code
+        Shop::addTableAssociation('cart_rule', ['type' => 'shop']);
+        $cartRule->shop_restriction = true;
+
         $this->cartRuleValidator->validate($cartRule);
-        $this->addObjectModel($cartRule, CannotAddCartRuleException::class);
+        $this->addObjectModelToShops($cartRule, $associatedShopIds, CannotAddCartRuleException::class);
 
         return $cartRule;
     }

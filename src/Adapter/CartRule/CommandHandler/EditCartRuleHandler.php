@@ -30,11 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\EditCartRuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
-class EditCartRuleHandler implements EditCartRuleHandlerInterface
+class EditCartRuleHandler extends AbstractObjectModelHandler implements EditCartRuleHandlerInterface
 {
     /**
      * @var CartRuleRepository
@@ -64,6 +66,12 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
         }
 
         $this->cartRuleRepository->partialUpdate($cartRule, $updatableProperties);
+
+        if (null !== $command->getAssociatedShopIds()) {
+            $this->associateWithShops($cartRule, array_map(static function (ShopId $shopId) {
+                return $shopId->getValue();
+            }, $command->getAssociatedShopIds()));
+        }
     }
 
     /**

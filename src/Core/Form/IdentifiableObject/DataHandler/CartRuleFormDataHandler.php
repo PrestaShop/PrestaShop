@@ -64,7 +64,8 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         $command = new AddCartRuleCommand(
             $informationData['name'],
-            $this->cartRuleActionBuilder->build($data['actions'])
+            $this->cartRuleActionBuilder->build($data['actions']),
+            $data['conditions']['shop_association']
         );
 
         $command

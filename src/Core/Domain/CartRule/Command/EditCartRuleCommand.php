@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 class EditCartRuleCommand
@@ -120,6 +121,11 @@ class EditCartRuleCommand
      * @var CartRuleAction|null
      */
     private $cartRuleAction;
+
+    /**
+     * @var ShopId[]|null
+     */
+    private $associatedShopIds;
 
     public function __construct(
         int $cartRuleId
@@ -334,6 +340,32 @@ class EditCartRuleCommand
         $this->cartRuleAction = $cartRuleAction;
 
         return $this;
+    }
+
+    /**
+     * @param int[] $associatedShopIds
+     *
+     * @return EditCartRuleCommand
+     */
+    public function setAssociatedShopIds(array $associatedShopIds): EditCartRuleCommand
+    {
+        if (empty($associatedShopIds)) {
+            throw new CartRuleConstraintException('Shop association cannot be empty', CartRuleConstraintException::INVALID_SHOP_ASSOCIATION);
+        }
+
+        $this->associatedShopIds = array_map(static function (int $shopId): ShopId {
+            return new ShopId($shopId);
+        }, $associatedShopIds);
+
+        return $this;
+    }
+
+    /**
+     * @return ShopId[]|null
+     */
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds;
     }
 
     private function assertDateRangeIsValid(DateTimeImmutable $dateFrom, DateTimeImmutable $dateTo): void

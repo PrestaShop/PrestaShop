@@ -30,6 +30,7 @@ import CartRuleEventMap from '@pages/cart-rule/cart-rule-event-map';
 import CustomerSearchInput from '@components/form/customer-search-input';
 import DiscountManager from '@pages/cart-rule/form/discount-manager';
 import ProductSearchInput from '@components/form/product-search-input';
+import ChoiceTree from '@components/form/choice-tree';
 
 $(() => {
   window.prestashop.component.initComponents([
@@ -46,6 +47,7 @@ $(() => {
     'DisablingSwitch',
   ]);
 
+  new ChoiceTree(CartRuleMap.shopAssociationTree).enableAutoCheckChildren();
   new GeneratableInput().attachOn(CartRuleMap.codeGeneratorBtn);
   new FormFieldToggler({
     disablingInputSelector: CartRuleMap.codeInput,

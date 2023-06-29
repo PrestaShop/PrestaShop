@@ -48,7 +48,10 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
     {
         $command = new AddCartRuleCommand(
             $data['name'],
-            $this->getCartRuleActionBuilder()->build($this->formatDataForActionBuilder($data))
+            $this->getCartRuleActionBuilder()->build($this->formatDataForActionBuilder($data)),
+            isset($localizedData['associated shops']) ?
+                $this->referencesToIds($localizedData['associated shops']) :
+                $this->getDefaultShopId()
         );
 
         if (isset($data['highlight'])) {
