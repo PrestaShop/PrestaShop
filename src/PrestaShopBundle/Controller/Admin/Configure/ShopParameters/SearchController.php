@@ -31,6 +31,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -64,5 +66,18 @@ class SearchController extends FrameworkBundleAdminController
                 ],
             ],
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_search_index")
+     *
+     * @param Request $request
+     *
+     * @return Response|RedirectResponse
+     */
+    public function processIndexingAction(Request $request): Response|RedirectResponse
+    {
+
     }
 }
