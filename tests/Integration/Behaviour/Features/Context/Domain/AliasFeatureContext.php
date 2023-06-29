@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\SearchTerm;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
@@ -193,24 +192,24 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertSearchAliases(string $search, TableNode $tableNode): void
     {
-        /** @var SearchTerm[] $foundAliasesForAssociation */
+        /** @var string[] $foundAliasesForAssociation */
         $foundAliasesForAssociation = $this->getQueryBus()->handle(new SearchForSearchTerm($search));
         $expectedSearchTermsRows = $tableNode->getColumnsHash();
 
         foreach ($expectedSearchTermsRows as $expectedSearchTermRow) {
             $expectedSearchTerms = PrimitiveUtils::castStringArrayIntoArray($expectedSearchTermRow['searchTerm']);
             Assert::assertCount(count($expectedSearchTerms), $foundAliasesForAssociation, 'Expected and found search terms count doesn\'t match');
-            $index = 0;
-            foreach ($expectedSearchTerms as $searchTerm) {
-                $foundAliasSearchTerm = $foundAliasesForAssociation[$index++];
+
+            foreach ($expectedSearchTerms as $index => $searchTerm) {
+                $foundAliasSearchTerm = $foundAliasesForAssociation[$index];
 
                 Assert::assertEquals(
                     $searchTerm,
-                    $foundAliasSearchTerm->getSearchTerm(),
+                    $foundAliasSearchTerm,
                     sprintf(
                         'Invalid Alias Search Term, expected %d but got %d instead.',
                         $searchTerm,
-                        $foundAliasSearchTerm->getSearchTerm()
+                        $foundAliasSearchTerm
                     )
                 );
             }
