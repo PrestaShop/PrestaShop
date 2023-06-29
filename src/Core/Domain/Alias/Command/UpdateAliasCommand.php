@@ -46,7 +46,7 @@ class UpdateAliasCommand
 
     /**
      * @param int $aliasId
-     * @param string[] $aliases
+     * @param string[] $aliases this input is array of string aliases that are returned from the form input
      * @param string $searchTerm
      */
     public function __construct(
@@ -68,7 +68,9 @@ class UpdateAliasCommand
     }
 
     /**
-     * @return array
+     * Returns array of string aliases that are used in the alias form input.
+     *
+     * @return string[]
      */
     public function getAliases(): array
     {
