@@ -31,7 +31,6 @@ namespace PrestaShopBundle\ApiPlatform\Resources;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use PrestaShopBundle\ApiPlatform\Converters\StringToIntConverter;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
@@ -77,10 +76,6 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             provider: QueryProvider::class,
             extraProperties: [
                 'query' => SearchProducts::class,
-                'paramConverters' => [
-                    'resultsLimit' => StringToIntConverter::class,
-                    'orderId' => StringToIntConverter::class,
-                ],
             ]
         ),
     ]

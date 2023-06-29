@@ -34,4 +34,9 @@ class StringToIntConverter implements ConverterInterface
     {
         return (int) $value;
     }
+
+    public function supports($type): bool
+    {
+        return 'int' === $type;
+    }
 }

@@ -31,4 +31,6 @@ namespace PrestaShopBundle\ApiPlatform\Converters;
 interface ConverterInterface
 {
     public function convert($value);
+
+    public function supports($type);
 }

@@ -31,6 +31,7 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
@@ -40,57 +41,55 @@ class QueryProvider implements ProviderInterface
 {
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly RequestStack $requestStack,
-        private readonly Serializer $apiPlatformSerializer
+        private readonly Serializer $apiPlatformSerializer,
+        private readonly iterable $converters,
+        private readonly RequestStack $requestStack
     ) {
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         $queryClass = $operation->getExtraProperties()['query'] ?? null;
-        $converters = $operation->getExtraProperties()['paramConverters'] ?? [];
         $queryParams = $this->requestStack->getCurrentRequest()->query->all();
-
-        if (null === $queryClass) {
-            throw new NoExtraPropertiesFoundException();
-        }
-
-        //Convert uri params
-        foreach ($uriVariables as $variable => $value) {
-            if (array_key_exists($variable, $converters)) {
-                $converter = new $converters[$variable]();
-                $uriVariables[$variable] = $converter->convert($value);
-            }
-        }
-
-        //Convert query params
-        foreach ($queryParams as $variable => $value) {
-            if (array_key_exists($variable, $converters)) {
-                $converter = new $converters[$variable]();
-                $queryParams[$variable] = $converter->convert($value);
-            }
-        }
-
-        //Reset param array with orderer array
-        $params = array_values($uriVariables);
+        $uriVariables = array_merge($uriVariables, $queryParams);
 
         //Add optionnal parameters in construct from query params
         $reflectionMethod = new \ReflectionMethod($queryClass, '__construct');
         $constructParameters = $reflectionMethod->getParameters();
+
+        $params = [];
+
         foreach ($constructParameters as $parameter) {
-            if (array_key_exists($parameter->name, $queryParams)) {
-                $params[$parameter->getPosition()] = $queryParams[$parameter->name];
-                unset($queryParams[$parameter->name]);
+            if (!isset($uriVariables[$parameter->name]) && !$parameter->isDefaultValueAvailable()) {
+                throw new \Exception(sprintf('Required parameter %s is not present', $parameter->name));
             }
+
+            $uriValue = $uriVariables[$parameter->name];
+            //Transform parameter type if needed
+            if ($parameter->getType() instanceof \ReflectionNamedType && $parameter->getType()->getName() !== gettype($uriValue)) {
+                $uriValue = $this->findConverter($parameter->getType()->getName())->convert($uriValue);
+            }
+            $params[$parameter->getPosition()] = $uriValue;
+
+            unset($uriVariables[$parameter->name]);
         }
 
         $query = new $queryClass(...$params);
 
         //Try to call setter on additional query params
-        if (count($queryParams)) {
-            $propertyAccessor = PropertyAccess::createPropertyAccessor();
-            foreach ($queryParams as $param => $value) {
-                $propertyAccessor->setValue($query, $param, $value);
+        if (count($uriVariables)) {
+            foreach ($uriVariables as $param => $value) {
+                if ($reflectionMethod = $this->findSetterMethod($param, $queryClass)) {
+                    $methodParameter = $reflectionMethod->getParameters()[0];
+                    if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($value)) {
+                        $value = $this->findConverter($methodParameter->getType()->getName())->convert($value);
+                    }
+                    $reflectionMethod->invoke($query, $value);
+                }
             }
         }
 
@@ -98,5 +97,45 @@ class QueryProvider implements ProviderInterface
         $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
 
         return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
+    }
+
+    /**
+     * @param $type
+     *
+     * @return ConverterInterface
+     *
+     * @throws \Exception
+     */
+    private function findConverter($type): ConverterInterface
+    {
+        foreach ($this->converters as $converter) {
+            if ($converter->supports($type)) {
+                return $converter;
+            }
+        }
+
+        throw new \Exception(sprintf('Converter for type %s not found', $type));
+    }
+
+    /**
+     * @param $propertyName
+     * @param $queryClass
+     *
+     * @return false|\ReflectionMethod
+     */
+    private function findSetterMethod($propertyName, $queryClass): bool|\ReflectionMethod
+    {
+        $reflectionClass = new \ReflectionClass($queryClass);
+
+        foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if (str_starts_with($method->getName(), 'set')) {
+                $methodName = lcfirst(substr($method->getName(), 3));
+                if ($methodName === $propertyName) {
+                    return $method;
+                }
+            }
+        }
+
+        return false;
     }
 }
