@@ -47,16 +47,12 @@ services:
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureValueHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\BulkDeleteFeatureValueHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository:
     autowire: true

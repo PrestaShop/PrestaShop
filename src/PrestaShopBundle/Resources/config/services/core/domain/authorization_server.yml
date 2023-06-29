@@ -23,9 +23,7 @@ services:
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationFactoryInterface: '@PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory'
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler\GetApplicationForViewingHandler:
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForViewing'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ApiAccessFiltersBuilder:
     class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ApiAccessFiltersBuilder'
