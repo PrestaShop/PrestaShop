@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Alias\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\SearchForSearchTermHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\SearchTerm;
 
 class SearchForSearchTermHandler implements SearchForSearchTermHandlerInterface
 {
@@ -42,7 +41,7 @@ class SearchForSearchTermHandler implements SearchForSearchTermHandlerInterface
     /**
      * @param SearchForSearchTerm $query
      *
-     * @return SearchTerm[]
+     * @return string[]
      */
     public function handle(SearchForSearchTerm $query): array
     {
@@ -51,7 +50,7 @@ class SearchForSearchTermHandler implements SearchForSearchTermHandlerInterface
         $searchTermDtos = [];
 
         foreach ($searchTerms as $searchTerm) {
-            $searchTermDtos[] = new SearchTerm($searchTerm['search']);
+            $searchTermDtos[] = $searchTerm['search'];
         }
 
         return $searchTermDtos;

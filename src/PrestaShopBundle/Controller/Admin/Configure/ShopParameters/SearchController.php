@@ -81,7 +81,7 @@ class SearchController extends FrameworkBundleAdminController
     public function searchAliasesForAssociationAction(Request $request): JsonResponse
     {
         try {
-            /** @var SearchTerm[] $searchTerms */
+            /** @var string[] $searchTerms */
             $searchTerms = $this->getQueryBus()->handle(new SearchForSearchTerm(
                 $request->get('query', ''),
                 (int) $request->get('limit', SearchForSearchTerm::DEFAULT_LIMIT)
