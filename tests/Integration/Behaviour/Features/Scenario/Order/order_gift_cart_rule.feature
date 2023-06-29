@@ -1344,7 +1344,11 @@ Feature: Order from Back Office (BO)
       | total_quantity    | 100              |
       | quantity_per_user | 100              |
       | gift_product      | Gift product     |
-    And cart rule "cartRuleFreeGift" is restricted to country "US"
+    And I restrict following countries for cart rule cartRuleFreeGift:
+      | restricted countries | US |
+    And I save all the restrictions for cart rule cartRuleFreeGift
+    And cart rule cartRuleFreeGift should have the following properties:
+      | restricted countries | US |
     # Make an order
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
