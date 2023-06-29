@@ -61,19 +61,20 @@ class ImageGenerator
     /**
      * @param string $imagePath
      * @param ImageType[] $imageTypes
+     * @param int $imageId
      *
      * @return bool
      *
      * @throws ImageOptimizationException
      * @throws ImageUploadException
      */
-    public function generateImagesByTypes(string $imagePath, array $imageTypes): bool
+    public function generateImagesByTypes(string $imagePath, array $imageTypes, int $imageId = 0): bool
     {
         $resized = true;
 
         try {
             foreach ($imageTypes as $imageType) {
-                $resized &= $this->resize($imagePath, $imageType);
+                $resized &= $this->resize($imagePath, $imageType, $imageId);
             }
         } catch (PrestaShopException $e) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
@@ -91,10 +92,11 @@ class ImageGenerator
      *
      * @param string $filePath
      * @param ImageType $imageType
+     * @param int $imageId
      *
      * @return bool
      */
-    protected function resize(string $filePath, ImageType $imageType): bool
+    protected function resize(string $filePath, ImageType $imageType, int $imageId = 0): bool
     {
         if (!is_file($filePath)) {
             throw new ImageUploadException(sprintf('File "%s" does not exist', $filePath));
@@ -120,7 +122,7 @@ class ImageGenerator
             $forceFormat = ($imageFormat !== 'jpg');
             if (!ImageManager::resize(
                 $filePath,
-                sprintf('%s-%s.%s', rtrim($filePath, '.' . $imageFormat), stripslashes($imageType->name), $imageFormat),
+                sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name), $imageFormat),
                 $imageType->width,
                 $imageType->height,
                 $imageFormat,

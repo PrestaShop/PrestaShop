@@ -22,9 +22,6 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const link: string = 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.2/'
-    + 'keycloak_connector_demo.zip';
-
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +40,7 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
   it(`should download the zip of the module '${Modules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-    await files.downloadFile(link, 'module.zip');
+    await files.downloadFile(Modules.keycloak.releaseZip, 'module.zip');
 
     const found = await files.doesFileExist('module.zip');
     await expect(found).to.be.true;

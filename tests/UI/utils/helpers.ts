@@ -54,7 +54,7 @@ export default {
   async createAPIContext(url: string): Promise<APIRequestContext> {
     return request.newContext({
       baseURL: url,
-      // @todo : Remove it when Puppeteer will accept self signed certificates
+      // @todo : Remove it when Playwright will accept self signed certificates
       ignoreHTTPSErrors: true,
     });
   },

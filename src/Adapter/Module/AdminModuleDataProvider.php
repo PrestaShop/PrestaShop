@@ -260,11 +260,13 @@ class AdminModuleDataProvider implements ModuleInterface
                 if (!$module->isConfigurable()) {
                     unset($urls['configure']);
                 }
-            } else {
+            } elseif ($module->isUninstalled()) {
                 $urls = [
                     'install' => $urls['install'],
                     'delete' => $urls['delete'],
                 ];
+            } else {
+                $urls = ['install' => $urls['install']];
             }
 
             // Go through the actions and remove all actions that the current environment

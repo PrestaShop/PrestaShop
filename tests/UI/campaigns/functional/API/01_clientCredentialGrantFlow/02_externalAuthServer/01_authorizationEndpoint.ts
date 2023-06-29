@@ -20,7 +20,7 @@ describe('API : External Auth Server - Authorization Endpoint', async () => {
     });
     if (!global.GENERATE_FAILED_STEPS) {
       apiContextKeycloak = await request.newContext({
-        baseURL: global.keycloakConfig.keycloakServer,
+        baseURL: global.keycloakConfig.keycloakExternalUrl,
         // @todo : Remove it when Puppeteer will accept self signed certificates
         ignoreHTTPSErrors: true,
       });
