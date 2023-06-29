@@ -44,10 +44,10 @@ class UpdateAliasStatusCommand
      * @param bool $enabled
      */
     public function __construct(
-        AliasId $aliasId,
+        int$aliasId,
         bool $enabled
     ) {
-        $this->aliasId = $aliasId;
+        $this->aliasId = new AliasId($aliasId);
         $this->enabled = $enabled;
     }
 

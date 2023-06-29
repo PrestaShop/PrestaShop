@@ -37,9 +37,9 @@ class DeleteAliasCommand
 {
     private AliasId $aliasId;
 
-    public function __construct(AliasId $aliasId)
+    public function __construct(int $aliasId)
     {
-        $this->aliasId = $aliasId;
+        $this->aliasId = new AliasId($aliasId);
     }
 
     /**
