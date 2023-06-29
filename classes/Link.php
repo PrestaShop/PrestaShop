@@ -925,7 +925,7 @@ class LinkCore
             } else {
                 $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             }
-            list($domainSSL, $domain) = $this->getShopDomainActive($shop, $idShop);
+            list($domainSSL, $domain) = $this->getShopDomainMatchingHost($shop, $idShop);
         } else {
             $shop = Context::getContext()->shop;
             $domainSSL = $shop->domain_ssl;
@@ -1396,7 +1396,7 @@ class LinkCore
             $shop = Context::getContext()->shop;
         }
 
-        list($domainSSL, $domain) = $this->getShopDomainActive($shop, $idShop);
+        list($domainSSL, $domain) = $this->getShopDomainMatchingHost($shop, $idShop);
 
         if ($relativeProtocol) {
             $base = '//' . ($ssl && $this->ssl_enable ? $domainSSL : $domain);
@@ -1635,7 +1635,7 @@ class LinkCore
      *                       0 => Secure domain name of the shop
      *                       1 => Unsecured domain name of the shop
      */
-    private function getShopDomainActive(Shop $shop, ?int $idShop): array
+    private function getShopDomainMatchingHost(Shop $shop, ?int $idShop): array
     {
         $domainSSL = $shop->domain_ssl;
         $domain = $shop->domain;
