@@ -127,3 +127,30 @@ admin_feature_values_edit:
     _legacy_feature_flag: feature
     redirectQueryParamsToKeep:
       - 'featureId'
+
+admin_feature_values_export:
+  path: /{featureId}/values/export
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::exportAction
+    _legacy_controller: AdminFeatures
+
+admin_feature_values_delete:
+  path: /{featureId}/values/{featureValueId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::deleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+    featureValueId: \d+
+
+admin_feature_values_bulk_delete:
+  path: /{featureId}/values/bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::bulkDeleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+    featureValueId: \d+

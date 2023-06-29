@@ -30,6 +30,8 @@ import Grid from '@components/grid/grid';
 import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 
 const {$} = window;
 
@@ -42,4 +44,6 @@ $(() => {
   grid.addExtension(new ReloadListActionExtension());
   grid.addExtension(new SortingExtension());
   grid.addExtension(new SubmitRowActionExtension());
+  grid.addExtension(new SubmitBulkExtension());
+  grid.addExtension(new BulkActionCheckboxExtension());
 });
