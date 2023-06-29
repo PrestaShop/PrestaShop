@@ -95,7 +95,15 @@ class EntityMapper
                 foreach ($object_datas as $key => $value) {
                     if (array_key_exists($key, $entity_defs['fields'])
                         || array_key_exists($key, $objectVars)) {
-                        $entity->{$key} = $value;
+                        if (in_array($entity_defs['fields'][$key]['type'], [
+                            \ObjectModel::TYPE_INT,
+                            \ObjectModel::TYPE_BOOL,
+                            \ObjectModel::TYPE_FLOAT,
+                        ])) {
+                            $entity->{$key} = (string) $value;
+                        } else {
+                            $entity->{$key} = $value;
+                        }
                     } else {
                         unset($object_datas[$key]);
                     }
