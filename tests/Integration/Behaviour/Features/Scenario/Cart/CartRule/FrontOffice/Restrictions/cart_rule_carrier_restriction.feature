@@ -30,23 +30,31 @@ Feature: Cart calculation with carrier specific cart rules
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a cart rule "cartrule1" with following properties:
-      | name[en-US]                  | cartrule1              |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
-      | priority                     | 1                      |
-      | free_shipping                | false                  |
-      | code                         | foo                    |
-      | discount_percentage          | 50                     |
-    And cart rule "cartrule1" is restricted to carrier "carrier2"
+      | name[en-US]         | cartrule1 |
+      | total_quantity      | 1000      |
+      | quantity_per_user   | 1000      |
+      | priority            | 1         |
+      | free_shipping       | false     |
+      | code                | foo       |
+      | discount_percentage | 50        |
+    And I restrict following carriers for cart rule cartrule1:
+      | restricted carriers | carrier2 |
+    And I save all the restrictions for cart rule cartrule1
+    And cart rule cartrule1 should have the following properties:
+      | restricted carriers | carrier2 |
     And there is a cart rule "cartrule2" with following properties:
-      | name[en-US]                  | cartrule2              |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
-      | priority                     | 2                      |
-      | free_shipping                | false                  |
-      | code                         | bar                    |
-      | discount_percentage          | 50                     |
-    And cart rule "cartrule2" is restricted to carrier "carrier1"
+      | name[en-US]         | cartrule2 |
+      | total_quantity      | 1000      |
+      | quantity_per_user   | 1000      |
+      | priority            | 2         |
+      | free_shipping       | false     |
+      | code                | bar       |
+      | discount_percentage | 50        |
+    And I restrict following carriers for cart rule cartrule2:
+      | restricted carriers | carrier1 |
+    And I save all the restrictions for cart rule cartrule2
+    And cart rule cartrule2 should have the following properties:
+      | restricted carriers | carrier1 |
 
   Scenario: I cannot use voucher when it is restricted to specific carrier and that carrier is not selected
     When I add 1 items of product "product1" in my cart
@@ -68,7 +76,11 @@ Feature: Cart calculation with carrier specific cart rules
       | quantity_per_user | 1000       |
       | priority          | 1          |
       | free_shipping     | true       |
-    And cart rule "cartrule10" is restricted to carrier "carrier2"
+    And I restrict following carriers for cart rule cartrule10:
+      | restricted carriers | carrier2 |
+    And I save all the restrictions for cart rule cartrule10
+    And cart rule cartrule10 should have the following properties:
+      | restricted carriers | carrier2 |
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     And I select carrier "carrier1" in my cart
@@ -81,13 +93,17 @@ Feature: Cart calculation with carrier specific cart rules
   @restore-cart-rules-after-scenario
   Scenario: Percentage cart rule without code is applied to cart automatically when restricted carrier is selected
     Given there is a cart rule "cartrule11" with following properties:
-      | name[en-US]                  | cartrule11             |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
-      | priority                     | 1                      |
-      | free_shipping                | false                  |
-      | discount_percentage          | 55                     |
-    And cart rule "cartrule11" is restricted to carrier "carrier2"
+      | name[en-US]         | cartrule11 |
+      | total_quantity      | 1000       |
+      | quantity_per_user   | 1000       |
+      | priority            | 1          |
+      | free_shipping       | false      |
+      | discount_percentage | 55         |
+    And I restrict following carriers for cart rule cartrule11:
+      | restricted carriers | carrier2 |
+    And I save all the restrictions for cart rule cartrule11
+    And cart rule cartrule11 should have the following properties:
+      | restricted carriers | carrier2 |
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
@@ -100,15 +116,19 @@ Feature: Cart calculation with carrier specific cart rules
   @restore-cart-rules-after-scenario
   Scenario: Amount cart rule without code is applied to cart automatically when restricted carrier is selected
     Given there is a cart rule "cartrule12" with following properties:
-      | name[en-US]                  | cartrule12             |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
-      | priority                     | 1                      |
-      | free_shipping                | false                  |
-      | discount_amount              | 10                     |
-      | discount_currency            | usd                    |
-      | discount_includes_tax        | false                  |
-    And cart rule "cartrule12" is restricted to carrier "carrier2"
+      | name[en-US]           | cartrule12 |
+      | total_quantity        | 1000       |
+      | quantity_per_user     | 1000       |
+      | priority              | 1          |
+      | free_shipping         | false      |
+      | discount_amount       | 10         |
+      | discount_currency     | usd        |
+      | discount_includes_tax | false      |
+    And I restrict following carriers for cart rule cartrule12:
+      | restricted carriers | carrier2 |
+    And I save all the restrictions for cart rule cartrule12
+    And cart rule cartrule12 should have the following properties:
+      | restricted carriers | carrier2 |
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
@@ -130,7 +150,11 @@ Feature: Cart calculation with carrier specific cart rules
       | discount_percentage          | 55                     |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
-    And cart rule "cartrule3" is restricted to carrier "carrier3"
+    And I restrict following carriers for cart rule cartrule3:
+      | restricted carriers | carrier3 |
+    And I save all the restrictions for cart rule cartrule3
+    And cart rule cartrule3 should have the following properties:
+      | restricted carriers | carrier3 |
     When I add 1 items of product "product1" in my cart
     When I select address "address1" in my cart
     When I select carrier "carrier2" in my cart

@@ -168,7 +168,11 @@ Feature: Cart calculation with cart rules and different carriers
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
-    And cart rule "cartrule7" is restricted to carrier "carrier2"
+    And I restrict following carriers for cart rule cartrule7:
+      | restricted carriers | carrier2 |
+    And I save all the restrictions for cart rule cartrule7
+    And cart rule cartrule7 should have the following properties:
+      | restricted carriers | carrier2 |
     And there is a cart rule "cartrule8" with following properties:
       | name[en-US]                  | cartrule8              |
       | total_quantity               | 1000                   |
@@ -179,7 +183,11 @@ Feature: Cart calculation with cart rules and different carriers
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
-    And cart rule "cartrule8" is restricted to carrier "carrier1"
+    And I restrict following carriers for cart rule cartrule8:
+      | restricted carriers | carrier1 |
+    And I save all the restrictions for cart rule cartrule8
+    And cart rule cartrule8 should have the following properties:
+      | restricted carriers | carrier1 |
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     And I select carrier "carrier2" in my cart
@@ -195,15 +203,27 @@ Feature: Cart calculation with cart rules and different carriers
   @restore-cart-rules-after-scenario
   Scenario: one product in cart, quantity 1, cart rule without code correctly (un)applied on corresponding carrier
     Given there is a cart rule "cartrule9" with following properties:
-      | name[en-US]                  | cartrule9              |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
-      | priority                     | 3                      |
-      | free_shipping                | false                  |
-      | discount_percentage          | 55                     |
-    And cart rule "cartrule9" is restricted to carrier "carrier3"
-    And cart rule "cartrule5" is restricted to carrier "carrier2"
-    And cart rule "cartrule2" is restricted to carrier "carrier1"
+      | name[en-US]         | cartrule9 |
+      | total_quantity      | 1000      |
+      | quantity_per_user   | 1000      |
+      | priority            | 3         |
+      | free_shipping       | false     |
+      | discount_percentage | 55        |
+    And I restrict following carriers for cart rule cartrule9:
+      | restricted carriers | carrier3 |
+    And I save all the restrictions for cart rule cartrule9
+    And cart rule cartrule9 should have the following properties:
+      | restricted carriers | carrier3 |
+    And I restrict following carriers for cart rule cartrule5:
+      | restricted carriers | carrier2 |
+    And I save all the restrictions for cart rule cartrule5
+    And cart rule cartrule5 should have the following properties:
+      | restricted carriers | carrier2 |
+    And I restrict following carriers for cart rule cartrule2:
+      | restricted carriers | carrier1 |
+    And I save all the restrictions for cart rule cartrule2
+    And cart rule cartrule2 should have the following properties:
+      | restricted carriers | carrier1 |
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     And I select carrier "carrier2" in my cart

@@ -727,7 +727,11 @@ Feature: Order from Back Office (BO)
     And there is a cart rule FreeGift with following properties:
       | name[en-US]  | FreeGift |
       | gift_product | product1 |
-    And cart rule "FreeGift" is restricted to carrier "carrier1"
+    And I restrict following carriers for cart rule FreeGift:
+      | restricted carriers | carrier1 |
+    And I save all the restrictions for cart rule FreeGift
+    And cart rule FreeGift should have the following properties:
+      | restricted carriers | carrier1 |
     When I create an empty cart "dummy_cart_freegift" for customer "testCustomer"
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_freegift"
     And I add 1 products "product2" to the cart "dummy_cart_freegift"
