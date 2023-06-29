@@ -49,9 +49,9 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         $command = new AddCartRuleCommand(
             $data['name'],
             $this->getCartRuleActionBuilder()->build($this->formatDataForActionBuilder($data)),
-            isset($localizedData['associated shops']) ?
-                $this->referencesToIds($localizedData['associated shops']) :
-                $this->getDefaultShopId()
+            isset($data['associated shops']) ?
+                $this->referencesToIds($data['associated shops']) :
+                [$this->getDefaultShopId()]
         );
 
         if (isset($data['highlight'])) {
@@ -294,6 +294,14 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
                 $expectedRestrictedCartRuleIds,
                 $conditions->getRestrictions()->getRestrictedCartRuleIds(),
                 'Unexpected cart rule restrictions'
+            );
+        }
+
+        if (isset($expectedData['associated shops'])) {
+            Assert::assertSame(
+                $this->referencesToIds($expectedData['associated shops']),
+                $conditions->getAssociatedShopIds(),
+                'Unexpected cart rule associated shop ids'
             );
         }
     }

@@ -361,3 +361,33 @@ Feature: Add cart rule
     When I bulk disable cart rules "cart_rule_4,cart_rule_5"
     Then cart rule with reference "cart_rule_4" is disabled
     And cart rule with reference "cart_rule_5" is disabled
+
+  Scenario: Update cart rule shop association when multishop feature is on
+    Given I enable multishop feature
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
+    And single shop context is loaded
+    When I create cart rule "cart_rule_6" with following properties:
+      | name[en-US]   | Cart Rule 6 |
+      | free_shipping | true        |
+    Then cart rule cart_rule_6 should have the following properties:
+      | active           | true  |
+      | associated shops | shop1 |
+    When I edit cart rule cart_rule_6 with following properties:
+      | active | false |
+    Then cart rule cart_rule_6 should have the following properties:
+      | active           | false |
+      | associated shops | shop1 |
+    When I edit cart rule cart_rule_6 with following properties:
+      | associated shops | shop1,shop2 |
+    Then cart rule cart_rule_6 should have the following properties:
+      | associated shops | shop1,shop2 |
+    When I edit cart rule cart_rule_6 with following properties:
+      | associated shops | shop2 |
+    Then cart rule cart_rule_6 should have the following properties:
+      | associated shops | shop2 |
+    When I edit cart rule cart_rule_6 with following properties:
+      | associated shops |  |
+    Then I should get cart rule error about "invalid shop association"
+    And cart rule cart_rule_6 should have the following properties:
+      | associated shops | shop2 |

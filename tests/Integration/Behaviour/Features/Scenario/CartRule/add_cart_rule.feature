@@ -56,6 +56,7 @@ Feature: Add cart rule
       | discount_currency                | usd                    |
       | discount_includes_tax            | true                   |
       | discount_application_type        | order_without_shipping |
+      | associated shops                 | shop1                  |
 
   Scenario: Create a cart rule with percentage discount
     When I create cart rule "cart_rule_2" with following properties:
@@ -149,3 +150,43 @@ Feature: Add cart rule
       | free_shipping     | true                |
       | code              | testcode1           |
     Then I should get cart rule error about "non unique cart rule code"
+
+  Scenario: Add cart rule and associate it to different shops when multishop is enabled
+    Given I enable multishop feature
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
+    And single shop context is loaded
+    When I create cart rule "cart_rule_5" with following properties:
+      | name[en-US]   | Promotion   |
+      | free_shipping | true        |
+      | code          | cart_rule_5 |
+    And cart rule "cart_rule_5" should have the following properties:
+      | name[en-US]      | Promotion   |
+      | free_shipping    | true        |
+      | code             | cart_rule_5 |
+      | associated shops | shop1       |
+    When I create cart rule "cart_rule_6" with following properties:
+      | name[en-US]      | Promotion 6 |
+      | free_shipping    | true        |
+      | code             | cart_rule_6 |
+      | associated shops | shop1,shop2 |
+    And cart rule "cart_rule_6" should have the following properties:
+      | name[en-US]      | Promotion 6 |
+      | free_shipping    | true        |
+      | code             | cart_rule_6 |
+      | associated shops | shop1,shop2 |
+    When I create cart rule "cart_rule_7" with following properties:
+      | name[en-US]      | Promotion 7 |
+      | free_shipping    | true        |
+      | code             | cart_rule_7 |
+      | associated shops | shop2       |
+    And cart rule "cart_rule_7" should have the following properties:
+      | name[en-US]      | Promotion 7 |
+      | free_shipping    | true        |
+      | code             | cart_rule_7 |
+      | associated shops | shop2       |
+    When I create cart rule "cart_rule_8" with following properties:
+      | name[en-US]      | Promotion 8 |
+      | free_shipping    | true        |
+      | associated shops |             |
+    Then I should get cart rule error about "invalid shop association"

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\EditCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use Shop;
 
 class EditCartRuleHandler extends AbstractObjectModelHandler implements EditCartRuleHandlerInterface
 {
@@ -68,6 +69,10 @@ class EditCartRuleHandler extends AbstractObjectModelHandler implements EditCart
         $this->cartRuleRepository->partialUpdate($cartRule, $updatableProperties);
 
         if (null !== $command->getAssociatedShopIds()) {
+            // by default table shop association doesn't exist because legacy used to handle it differently,
+            // but it seems to work just fine handling it as all other entities shop associations
+            Shop::addTableAssociation('cart_rule', ['type' => 'shop']);
+
             $this->associateWithShops($cartRule, array_map(static function (ShopId $shopId) {
                 return $shopId->getValue();
             }, $command->getAssociatedShopIds()));
@@ -110,6 +115,10 @@ class EditCartRuleHandler extends AbstractObjectModelHandler implements EditCart
         if (null !== $command->isActive()) {
             $cartRule->active = $command->isActive();
             $propertiesToUpdate[] = 'active';
+        }
+        if (null !== $command->getAssociatedShopIds()) {
+            $cartRule->shop_restriction = true;
+            $propertiesToUpdate[] = 'shop_restriction';
         }
 
         $conditionsToUpdate = $this->fillConditions($cartRule, $command);

@@ -134,8 +134,8 @@ class AddCartRuleCommand
         array $associatedShopIds
     ) {
         $this->setLocalizedNames($localizedNames);
-        $this->cartRuleAction = $cartRuleAction;
         $this->setAssociatedShopIds($associatedShopIds);
+        $this->cartRuleAction = $cartRuleAction;
     }
 
     public function getDescription(): string

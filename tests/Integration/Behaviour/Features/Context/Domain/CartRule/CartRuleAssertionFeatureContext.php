@@ -132,6 +132,10 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
                 'class' => CartRuleNotFoundException::class,
                 'code' => 0,
             ],
+            'invalid shop association' => [
+                'class' => CartRuleConstraintException::class,
+                'code' => CartRuleConstraintException::INVALID_SHOP_ASSOCIATION,
+            ],
         ];
 
         if (!isset($errorMap[$error])) {

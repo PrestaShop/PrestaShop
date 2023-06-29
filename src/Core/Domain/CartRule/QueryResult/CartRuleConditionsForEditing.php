@@ -68,6 +68,11 @@ class CartRuleConditionsForEditing
      */
     private $restrictions;
 
+    /**
+     * @var int[]
+     */
+    private array $associatedShopIds;
+
     public function __construct(
         CustomerIdInterface $customerId,
         ?DateTime $dateFrom,
@@ -75,7 +80,8 @@ class CartRuleConditionsForEditing
         int $quantity,
         int $quantityPerUser,
         ?CartRuleMinimumForEditing $minimum,
-        CartRuleRestrictionsForEditing $restrictions
+        CartRuleRestrictionsForEditing $restrictions,
+        array $associatedShopIds
     ) {
         $this->customerId = $customerId;
         $this->dateFrom = $dateFrom;
@@ -84,6 +90,7 @@ class CartRuleConditionsForEditing
         $this->quantityPerUser = $quantityPerUser;
         $this->minimum = $minimum;
         $this->restrictions = $restrictions;
+        $this->associatedShopIds = $associatedShopIds;
     }
 
     /**
@@ -140,5 +147,13 @@ class CartRuleConditionsForEditing
     public function getRestrictions(): CartRuleRestrictionsForEditing
     {
         return $this->restrictions;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedShopIds(): array
+    {
+        return $this->associatedShopIds;
     }
 }

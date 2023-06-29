@@ -138,6 +138,10 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             );
         }
 
+        if (isset($data['associated shops'])) {
+            $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
+        }
+
         $cartRuleActionBuilder = $this->getCartRuleActionBuilder();
         $formattedActionData = $this->formatDataForActionBuilder($data);
 

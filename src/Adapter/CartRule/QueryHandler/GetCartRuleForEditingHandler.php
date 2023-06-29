@@ -134,7 +134,8 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
             (int) $cartRule->quantity,
             (int) $cartRule->quantity_per_user,
             $cartRuleMinimum,
-            $cartRuleRestrictions
+            $cartRuleRestrictions,
+            $cartRule->getAssociatedShops()
         );
     }
 
