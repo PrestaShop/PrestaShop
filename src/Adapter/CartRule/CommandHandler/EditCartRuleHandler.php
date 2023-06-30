@@ -76,6 +76,9 @@ class EditCartRuleHandler extends AbstractObjectModelHandler implements EditCart
             $this->associateWithShops($cartRule, array_map(static function (ShopId $shopId) {
                 return $shopId->getValue();
             }, $command->getAssociatedShopIds()));
+
+            // revert back the default shop table associations in case cartRule is created using legacy method
+            Shop::removeTableAssociation('cart_rule');
         }
     }
 

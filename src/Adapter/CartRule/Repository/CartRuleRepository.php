@@ -72,6 +72,9 @@ class CartRuleRepository extends AbstractMultiShopObjectModelRepository
         $this->cartRuleValidator->validate($cartRule);
         $this->addObjectModelToShops($cartRule, $associatedShopIds, CannotAddCartRuleException::class);
 
+        // revert back the default shop table associations in case cartRule is created using legacy method
+        Shop::removeTableAssociation('cart_rule');
+
         return $cartRule;
     }
 
