@@ -76,12 +76,12 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'b!name', filterValue: Titles.Mrs.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: Titles.Mrs.name,
         },
       },
       {
         args: {
-          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'a!type', filterValue: Titles.Mrs.gender,
+          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'type', filterValue: Titles.Mrs.gender,
         },
       },
     ];

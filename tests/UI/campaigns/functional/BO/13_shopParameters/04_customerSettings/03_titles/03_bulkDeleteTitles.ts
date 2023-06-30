@@ -106,13 +106,13 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async 
     it('should filter list by title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await titlesPage.filterTitles(page, 'input', 'b!name', 'todelete');
+      await titlesPage.filterTitles(page, 'input', 'name', 'todelete');
 
       const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
       await expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
 
       for (let i = 1; i <= numberOfTitlesAfterFilter; i++) {
-        const textColumn = await titlesPage.getTextColumn(page, i, 'b!name');
+        const textColumn = await titlesPage.getTextColumn(page, i, 'name');
         await expect(textColumn).to.contains('todelete');
       }
     });
