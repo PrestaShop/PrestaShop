@@ -109,11 +109,22 @@ class DemoModeEnabledListener
         }
 
         [$controllerObject, $methodName] = $controller;
-        $demoRestricted = $this->getAnnotation($controllerObject, $methodName);
 
-        if (!$demoRestricted instanceof DemoRestricted) {
+        $method = new \ReflectionMethod($controllerObject, $methodName);
+        if ($method->getAttributes(DemoRestricted::class)) {
             return;
         }
+
+        $attributes = $method->getAttributes(DemoRestricted::class);
+
+        if ([] === $attributes) {
+            return;
+        }
+
+        $attribute = $attributes[0];
+
+        /** @var DemoRestricted $value */
+        $demoRestricted = $attribute->newInstance();
 
         $this->showNotificationMessage($demoRestricted);
 
