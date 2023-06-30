@@ -43,7 +43,6 @@ class QueryProvider implements ProviderInterface
         private readonly CommandBusInterface $queryBus,
         private readonly Serializer $apiPlatformSerializer,
         private readonly iterable $converters,
-        private readonly RequestStack $requestStack
     ) {
     }
 
@@ -54,8 +53,12 @@ class QueryProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         $queryClass = $operation->getExtraProperties()['query'] ?? null;
-        $queryParams = $this->requestStack->getCurrentRequest()->query->all();
-        $uriVariables = array_merge($uriVariables, $queryParams);
+        $filters = $context['filters'] ?? [];
+        $uriVariables = array_merge($uriVariables, $filters);
+
+        if (null === $queryClass) {
+            throw new NoExtraPropertiesFoundException();
+        }
 
         $reflectionMethod = new \ReflectionMethod($queryClass, '__construct');
         $constructParameters = $reflectionMethod->getParameters();

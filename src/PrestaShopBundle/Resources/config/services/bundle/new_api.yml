@@ -53,4 +53,4 @@ services:
 
   PrestaShopBundle\ApiPlatform\Converters\:
     resource: "../../../../ApiPlatform/Converters/*"
-    tags: ['prestashop.api.converters']
+    tags: [ 'prestashop.api.converters' ]
