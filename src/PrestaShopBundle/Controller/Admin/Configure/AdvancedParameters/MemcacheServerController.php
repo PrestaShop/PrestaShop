@@ -54,12 +54,12 @@ class MemcacheServerController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
      *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_servers_test')]
     public function testAction(Request $request)
     {
         $queryValues = $request->query;
@@ -79,12 +79,12 @@ class MemcacheServerController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="Access denied.")
-     * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
      *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_servers_test')]
     public function addAction(Request $request)
     {
         if (!in_array(
@@ -138,12 +138,12 @@ class MemcacheServerController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
-     * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
      *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_servers_test')]
     public function deleteAction(Request $request)
     {
         if (!in_array(

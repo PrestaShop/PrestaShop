@@ -285,7 +285,6 @@ class CustomerController extends AbstractAdminController
      * View customer information.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_customers_index")
-     * @DemoRestricted(redirectRoute="admin_customers_index")
      *
      * @param int $customerId
      * @param Request $request
@@ -298,6 +297,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function viewAction(
         $customerId,
         Request $request,

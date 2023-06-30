@@ -113,12 +113,12 @@ class StateController extends FrameworkBundleAdminController
      * Deletes state
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function deleteAction(int $stateId): RedirectResponse
     {
         try {
@@ -231,12 +231,12 @@ class StateController extends FrameworkBundleAdminController
      * Toggles state status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
      *
      * @return JsonResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function toggleStatusAction(int $stateId): JsonResponse
     {
         try {
@@ -294,12 +294,12 @@ class StateController extends FrameworkBundleAdminController
      * Enables states on bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function bulkEnableAction(Request $request): RedirectResponse
     {
         $stateIds = $this->getBulkStatesFromRequest($request);
@@ -322,12 +322,12 @@ class StateController extends FrameworkBundleAdminController
      * Disables states on bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         $stateIds = $this->getBulkStatesFromRequest($request);

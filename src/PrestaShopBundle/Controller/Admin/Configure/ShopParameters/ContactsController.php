@@ -212,12 +212,11 @@ class ContactsController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_contacts_index")
-     *
      * @param int $contactId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     public function deleteAction($contactId)
     {
         $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
@@ -243,12 +242,11 @@ class ContactsController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_contacts_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     public function deleteBulkAction(Request $request)
     {
         $contactIds = $request->request->all('contact_bulk');

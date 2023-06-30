@@ -120,12 +120,12 @@ class ProfileController extends FrameworkBundleAdminController
      * Show profile's create page
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function createAction(Request $request)
     {
         $form = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder')->getForm();
@@ -164,13 +164,13 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param int $profileId
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function editAction($profileId, Request $request)
     {
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
@@ -228,12 +228,12 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param int $profileId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function deleteAction($profileId)
     {
         try {
@@ -256,12 +256,12 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function bulkDeleteAction(Request $request)
     {
         $profileIds = $request->request->all('profile_bulk');

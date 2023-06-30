@@ -106,7 +106,6 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Save employee options.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
      * )
@@ -115,6 +114,7 @@ class EmployeeController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function saveOptionsAction(Request $request)
     {
         $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
@@ -139,13 +139,13 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Toggle given employee status.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_employees_index")
      *
      * @param int $employeeId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function toggleStatusAction($employeeId)
     {
         try {
@@ -165,13 +165,13 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Bulk enables employee status action.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function bulkStatusEnableAction(Request $request)
     {
         $employeeIds = $request->request->all('employee_employee_bulk');
@@ -195,13 +195,13 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Bulk disables employee status action.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function bulkStatusDisableAction(Request $request)
     {
         $employeeIds = $request->request->all('employee_employee_bulk');
@@ -225,13 +225,13 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Delete employee.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $employeeId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function deleteAction($employeeId)
     {
         try {
@@ -248,13 +248,13 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Delete employees in bulk actions.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function bulkDeleteAction(Request $request)
     {
         $employeeIds = $request->request->all('employee_employee_bulk');
@@ -276,13 +276,13 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show employee creation form page and handle it's submit.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function createAction(Request $request)
     {
         $employeeForm = $this->getEmployeeFormBuilder()->getForm();
@@ -316,13 +316,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show Employee edit page.
      *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
-     *
      * @param int $employeeId
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     public function editAction($employeeId, Request $request)
     {
         $contextEmployeeProvider = $this->get('prestashop.adapter.data_provider.employee');

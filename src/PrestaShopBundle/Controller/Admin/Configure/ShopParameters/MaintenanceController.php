@@ -74,10 +74,10 @@ class MaintenanceController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_maintenance")
-     * @DemoRestricted(redirectRoute="admin_maintenance")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_maintenance')]
     public function processFormAction(Request $request)
     {
         $redirectResponse = $this->redirectToRoute('admin_maintenance');

@@ -84,12 +84,12 @@ class TaxController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function saveOptionsAction(Request $request)
     {
         $taxOptionsFormHandler = $this->getTaxOptionsFormHandler();
@@ -265,12 +265,12 @@ class TaxController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @param int $taxId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function deleteAction($taxId)
     {
         try {
@@ -294,10 +294,10 @@ class TaxController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function toggleStatusAction($taxId)
     {
         try {
@@ -324,10 +324,10 @@ class TaxController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function bulkEnableStatusAction(Request $request)
     {
         $taxIds = $request->request->all('tax_bulk');
@@ -353,10 +353,10 @@ class TaxController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function bulkDisableStatusAction(Request $request)
     {
         $taxIds = $request->request->all('tax_bulk');
@@ -382,10 +382,10 @@ class TaxController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function bulkDeleteAction(Request $request)
     {
         $taxIds = $request->request->all('tax_bulk');
