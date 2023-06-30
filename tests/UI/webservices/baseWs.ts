@@ -51,7 +51,7 @@ export default class BaseWS {
    * @param url {string}
    * @param authorization {string}
    */
-  protected static getAll(
+  protected static async getAll(
     apiContext: APIRequestContext,
     url: string,
     authorization: string,
