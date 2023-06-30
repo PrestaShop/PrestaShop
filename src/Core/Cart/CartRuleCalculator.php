@@ -158,6 +158,8 @@ class CartRuleCalculator
                             ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                             || !$cartRule->reduction_exclude_special
                         ) && (
+                            $cartRow->getInitialUnitPrice()->getTaxIncluded() > 0
+                        ) && (
                             $cartRowCheapest === null
                             || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()->getTaxIncluded()
                         )
