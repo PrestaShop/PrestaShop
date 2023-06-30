@@ -59,11 +59,6 @@ class DemoModeEnabledListener
     private $session;
 
     /**
-     * @var Reader
-     */
-    private $annotationReader;
-
-    /**
      * @var bool
      */
     private $isDemoModeEnabled;
@@ -74,20 +69,17 @@ class DemoModeEnabledListener
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
      * @param Session $session
-     * @param Reader $annotationReader
      * @param bool $isDemoModeEnabled
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
         Session $session,
-        Reader $annotationReader,
         $isDemoModeEnabled
     ) {
         $this->router = $router;
         $this->translator = $translator;
         $this->session = $session;
-        $this->annotationReader = $annotationReader;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
     }
 
@@ -155,33 +147,6 @@ class DemoModeEnabledListener
                 $demoRestricted->getDomain()
             )
         );
-    }
-
-    /**
-     * Retrieve DemoRestricted Annotation.
-     *
-     * @param object $controllerObject
-     * @param string $methodName
-     *
-     * @return DemoRestricted|null
-     */
-    private function getAnnotation($controllerObject, $methodName)
-    {
-        $tokenAnnotation = DemoRestricted::class;
-
-        $classAnnotation = $this->annotationReader->getClassAnnotation(
-            new ReflectionClass(ClassUtils::getClass($controllerObject)),
-            $tokenAnnotation
-        );
-
-        if ($classAnnotation) {
-            return null;
-        }
-
-        $controllerReflectionObject = new ReflectionObject($controllerObject);
-        $reflectionMethod = $controllerReflectionObject->getMethod($methodName);
-
-        return $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
     }
 
     /**
