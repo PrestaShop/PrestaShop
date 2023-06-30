@@ -507,6 +507,8 @@ services:
       - '@prestashop.core.grid.data.factory.alias'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+    tags:
+      - { name: 'prestashop.grid_factory', grid: 'alias' }
 
   prestashop.core.grid.grid_factory.feature:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'

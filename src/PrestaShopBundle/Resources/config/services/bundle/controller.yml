@@ -3,9 +3,6 @@ services:
     public: false
     autoconfigure: true
     autowire: true
-    bind:
-      $titleFormBuilder: '@prestashop.core.form.identifiable_object.builder.title_form_builder'
-      $titleFormHandler: '@prestashop.core.form.identifiable_object.handler.title_form_handler'
 
   prestashop.core.admin.multistore:
     class: PrestaShopBundle\Controller\Admin\MultistoreController

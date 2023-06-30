@@ -1,7 +1,7 @@
 # legacy controller services definition, moved from controller.yml
 services:
   _defaults:
-      public: true
+    public: true
 
   # Legacy controllers don't extend the base controller, so we need to inject the container manually.
   PrestaShopBundle\Controller\Api\ApiController:

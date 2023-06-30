@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Controller responsible for "Configure > Shop Parameters > Search" page.
  */
-class SearchController extends FrameworkBundleAdminController
+class SearchController extends PrestaShopAdminController
 {
     /**
      * Shows index Search page.
@@ -51,8 +51,7 @@ class SearchController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, AliasFilters $filters): Response
     {
-        $aliasGridFactory = $this->get('prestashop.core.grid.factory.alias');
-        $aliasGrid = $aliasGridFactory->getGrid($filters);
+        $aliasGrid = $this->getGrid('alias', $filters);
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/index.html.twig', [
             'aliasGrid' => $this->presentGrid($aliasGrid),
