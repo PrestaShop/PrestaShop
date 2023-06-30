@@ -455,7 +455,7 @@ class CartRuleCore extends ObjectModel
             if ($cart_rule['shop_restriction']) {
                 $cartRuleShops = Db::getInstance()->executeS('SELECT id_shop FROM ' . _DB_PREFIX_ . 'cart_rule_shop WHERE id_cart_rule = ' . (int) $cart_rule['id_cart_rule']);
                 foreach ($cartRuleShops as $cartRuleShop) {
-                    if (Shop::isFeatureActive() && ($cartRuleShop['id_shop'] == Context::getContext()->shop->id)) {
+                    if ($cartRuleShop['id_shop'] == Context::getContext()->shop->id) {
                         continue 2;
                     }
                 }
@@ -1679,7 +1679,7 @@ class CartRuleCore extends ObjectModel
 		)
 		AND (
 			cr.`shop_restriction` = 0
-			' . ((Shop::isFeatureActive() && $context->shop->id) ? 'OR crs.id_shop = ' . (int) $context->shop->id : '') . '
+			' . ($context->shop->id ? 'OR crs.id_shop = ' . (int) $context->shop->id : '') . '
 		)
 		AND (
 			cr.`group_restriction` = 0
