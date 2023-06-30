@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
-use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShopBundle\Service\Controller\ErrorFormatter;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -519,29 +519,6 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
      */
     protected function getErrorMessageForException(Exception $e, array $messages)
     {
-        if ($e instanceof ModuleErrorInterface) {
-            return $e->getMessage();
-        }
-
-        $exceptionType = $e::class;
-        $exceptionCode = $e->getCode();
-
-        if (isset($messages[$exceptionType])) {
-            $message = $messages[$exceptionType];
-
-            if (is_string($message)) {
-                return $message;
-            }
-
-            if (is_array($message) && isset($message[$exceptionCode])) {
-                return $message[$exceptionCode];
-            }
-        }
-
-        return $this->getFallbackErrorMessage(
-            $exceptionType,
-            $exceptionCode,
-            $e->getMessage()
-        );
+        return $this->get(ErrorFormatter::class)->getErrorMessageForException($e, $messages);
     }
 }

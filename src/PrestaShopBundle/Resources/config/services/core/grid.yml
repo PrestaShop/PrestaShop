@@ -8,10 +8,12 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter:
+    autowire: true
+    public: false
+
   prestashop.core.grid.presenter.grid_presenter:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
-    arguments:
-      - '@prestashop.core.hook.dispatcher'
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
 
   prestashop.core.grid.query.doctrine_query_parser:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'

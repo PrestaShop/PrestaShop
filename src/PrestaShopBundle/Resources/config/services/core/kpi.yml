@@ -36,8 +36,8 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - 'customers'
 
-  prestashop.core.kpi_row.factory.cart:
-    class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
+  PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory:
+    public: false
     arguments:
       - - '@prestashop.adapter.kpi.shopping_cart_total_kpi'
       - '@prestashop.core.hook.dispatcher'
@@ -52,3 +52,10 @@ services:
         - '@prestashop.adapter.kpi.net_profit_per_visit'
       - '@prestashop.core.hook.dispatcher'
       - 'orders'
+
+  prestashop.core.kpi_row.factory.cart:
+    alias: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0

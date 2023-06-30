@@ -130,3 +130,8 @@ services:
       - '@doctrine.orm.entity_manager'
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
+
+  # This should be public as long as there is the FrameworkBundleAdminController
+  PrestaShopBundle\Service\Controller\ErrorFormatter:
+    public: true
+    autowire: true

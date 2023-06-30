@@ -143,6 +143,8 @@ services:
       - '@prestashop.core.grid.factory.language_decorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+    tags:
+      - { name: 'prestashop.grid_factory', grid: 'language' }
 
   prestashop.core.grid.factory.supplier:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -471,6 +473,8 @@ services:
       - '@prestashop.core.grid.factory.title_decorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+    tags:
+      - { name: 'prestashop.grid_factory', grid: 'title' }
 
   prestashop.core.grid.factory.customer_thread:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'

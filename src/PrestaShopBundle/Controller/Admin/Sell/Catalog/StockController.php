@@ -26,22 +26,28 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the Stock pages.
  */
-class StockController extends FrameworkBundleAdminController
+class StockController extends PrestaShopAdminController
 {
+    public function __construct(
+        private readonly MultistoreContextCheckerInterface $multistoreContextChecker
+    ) {
+    }
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function overviewAction()
+    public function overviewAction(): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Stock/overview.html.twig', [
-            'is_shop_context' => (new Context())->isShopContext(),
+            'is_shop_context' => $this->multistoreContextChecker->isSingleShopContext(),
             'layoutTitle' => $this->trans('Stock', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('stock'),

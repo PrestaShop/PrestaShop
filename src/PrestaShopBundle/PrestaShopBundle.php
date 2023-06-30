@@ -29,6 +29,7 @@ namespace PrestaShopBundle;
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\GridDefinitionServiceIdsCollectorPass;
+use PrestaShopBundle\DependencyInjection\Compiler\GridFactoryPass;
 use PrestaShopBundle\DependencyInjection\Compiler\IdentifiableObjectFormTypesCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
@@ -42,6 +43,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveInstanceofConditionalsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class PrestaShopBundle extends Bundle
@@ -59,7 +61,7 @@ class PrestaShopBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         return new PrestaShopExtension();
     }
@@ -79,5 +81,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new OptionsFormHookNameCollectorPass());
         $container->addCompilerPass(new GridDefinitionServiceIdsCollectorPass());
         $container->addCompilerPass(new IdentifiableObjectFormTypesCollectorPass());
+        $container->addCompilerPass(new GridFactoryPass());
     }
 }

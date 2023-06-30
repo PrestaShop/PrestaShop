@@ -1,17 +1,31 @@
 services:
   _defaults:
-    public: true
-
-  prestashop.core.configuration.ini_configuration:
-    class: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
-
-  prestashop.core.configuration.php_extension_checker:
-    class: 'PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker'
-    public: true
-
-  prestashop.core.configuration.upload_size_configuration:
-    class: 'PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfiguration'
-    arguments:
-      - '@prestashop.core.configuration.ini_configuration'
+    public: false
+    autowire: true
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\ConfigurationInterface: '@PrestaShop\PrestaShop\Adapter\Configuration'
+  PrestaShop\PrestaShop\Core\Configuration\IniConfiguration: ~
+  PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfiguration: ~
+  PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker: ~
+
+  prestashop.core.configuration.ini_configuration:
+    alias: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.configuration.php_extension_checker:
+    alias: 'PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0
+
+  prestashop.core.configuration.upload_size_configuration:
+    alias: 'PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfiguration'
+    public: true
+    deprecated:
+      package: PrestaShop
+      version: 9.0

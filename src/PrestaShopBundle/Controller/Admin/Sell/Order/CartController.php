@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Configuration\IniConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
@@ -47,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
@@ -55,14 +57,22 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\Customizat
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CartController extends FrameworkBundleAdminController
+class CartController extends PrestaShopAdminController
 {
+    public function __construct(
+        private readonly ShopConfigurationInterface $configuration,
+        private readonly IniConfiguration $iniConfiguration,
+        private readonly HookableKpiRowFactory $kpiRowFactory,
+    ) {
+    }
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
@@ -74,18 +84,17 @@ class CartController extends FrameworkBundleAdminController
     public function viewAction(Request $request, $cartId)
     {
         try {
-            $cartView = $this->getQueryBus()->handle(new GetCartForViewing((int) $cartId));
+            $cartView = $this->dispatchCommand(new GetCartForViewing((int) $cartId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirect($this->getAdminLink('AdminCarts', [], true));
         }
 
-        $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.cart');
-        $kpiRowFactory->setOptions([
+        $this->kpiRowFactory->setOptions([
             'cart_id' => $cartId,
         ]);
-        $kpiRow = $kpiRowFactory->build();
+        $kpiRow = $this->kpiRowFactory->build();
         $kpiRow->setAllowRefresh(false);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/view.html.twig', [
@@ -109,10 +118,10 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getInfoAction(int $cartId)
+    public function getInfoAction(int $cartId): JsonResponse
     {
         try {
-            $cartInfo = $this->getQueryBus()->handle(
+            $cartInfo = $this->dispatchQuery(
                 (new GetCartForOrderCreation($cartId))
                     ->setHideDiscounts(true)
             );
@@ -139,7 +148,7 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $customerId = $request->request->getInt('customerId');
-            $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
+            $cartId = $this->dispatchCommand(new CreateEmptyCustomerCartCommand($customerId))->getValue();
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -166,7 +175,7 @@ class CartController extends FrameworkBundleAdminController
         $deliveryAddressId = $request->request->getInt('deliveryAddressId');
 
         try {
-            $this->getCommandBus()->handle(new UpdateCartAddressesCommand(
+            $this->dispatchCommand(new UpdateCartAddressesCommand(
                 $cartId,
                 $deliveryAddressId,
                 $invoiceAddressId
@@ -192,7 +201,7 @@ class CartController extends FrameworkBundleAdminController
     public function editCurrencyAction(int $cartId, Request $request): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new UpdateCartCurrencyCommand(
+            $this->dispatchCommand(new UpdateCartCurrencyCommand(
                 $cartId,
                 $request->request->getInt('currencyId')
             ));
@@ -217,7 +226,7 @@ class CartController extends FrameworkBundleAdminController
     public function editLanguageAction(int $cartId, Request $request): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new UpdateCartLanguageCommand(
+            $this->dispatchCommand(new UpdateCartLanguageCommand(
                 $cartId,
                 $request->request->getInt('languageId')
             ));
@@ -243,7 +252,7 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $carrierId = (int) $request->request->get('carrierId');
-            $this->getCommandBus()->handle(new UpdateCartCarrierCommand(
+            $this->dispatchCommand(new UpdateCartCarrierCommand(
                 $cartId,
                 $carrierId
             ));
@@ -267,12 +276,11 @@ class CartController extends FrameworkBundleAdminController
      */
     public function updateDeliverySettingsAction(Request $request, int $cartId)
     {
-        $configuration = $this->getConfiguration();
-        $recycledPackagingEnabled = (bool) $configuration->get('PS_RECYCLABLE_PACK');
-        $giftSettingsEnabled = (bool) $configuration->get('PS_GIFT_WRAPPING');
+        $recycledPackagingEnabled = $this->configuration->getBoolean('PS_RECYCLABLE_PACK');
+        $giftSettingsEnabled = $this->configuration->getBoolean('PS_GIFT_WRAPPING');
 
         try {
-            $this->getCommandBus()->handle(new UpdateCartDeliverySettingsCommand(
+            $this->dispatchCommand(new UpdateCartDeliverySettingsCommand(
                 $cartId,
                 $request->request->getBoolean('freeShipping'),
                 ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', false) : null),
@@ -303,7 +311,7 @@ class CartController extends FrameworkBundleAdminController
     {
         $cartRuleId = $request->request->getInt('cartRuleId');
         try {
-            $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
+            $this->dispatchCommand(new AddCartRuleToCartCommand($cartId, $cartRuleId));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -327,7 +335,7 @@ class CartController extends FrameworkBundleAdminController
     public function deleteCartRuleAction(int $cartId, int $cartRuleId)
     {
         try {
-            $this->getCommandBus()->handle(new RemoveCartRuleFromCartCommand($cartId, $cartRuleId));
+            $this->dispatchCommand(new RemoveCartRuleFromCartCommand($cartId, $cartRuleId));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -362,7 +370,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $this->assertAllUploadedFilesReachedRequest($request->headers->get('file-sizes'), $fileCustomizations);
 
-            $this->getCommandBus()->handle(new AddProductToCartCommand(
+            $this->dispatchCommand(new AddProductToCartCommand(
                 $cartId,
                 $productId,
                 $quantity,
@@ -393,8 +401,6 @@ class CartController extends FrameworkBundleAdminController
      */
     public function editProductPriceAction(Request $request, int $cartId, int $productId): JsonResponse
     {
-        $commandBus = $this->getCommandBus();
-
         try {
             $addSpecificPriceCommand = new UpdateProductPriceInCartCommand(
                 $cartId,
@@ -404,7 +410,7 @@ class CartController extends FrameworkBundleAdminController
             );
 
             // add new specific price
-            $commandBus->handle($addSpecificPriceCommand);
+            $this->dispatchCommand($addSpecificPriceCommand);
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -426,7 +432,7 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function editProductQuantityAction(Request $request, int $cartId, int $productId)
+    public function editProductQuantityAction(Request $request, int $cartId, int $productId): JsonResponse
     {
         try {
             $newQty = $request->request->getInt('newQty');
@@ -434,7 +440,7 @@ class CartController extends FrameworkBundleAdminController
 
             $giftedQuantity = $this->getProductGiftedQuantity($cartId, $productId, $attributeId);
 
-            $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
+            $this->dispatchCommand(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
                 $newQty + $giftedQuantity,
@@ -472,7 +478,7 @@ class CartController extends FrameworkBundleAdminController
             $attributeId = $request->request->getInt('attributeId');
             $customizationId = $request->request->getInt('customizationId');
 
-            $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
+            $this->dispatchCommand(new RemoveProductFromCartCommand(
                 $cartId,
                 $productId,
                 $attributeId ?: null,
@@ -497,7 +503,7 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getCartInfo(int $cartId): CartForOrderCreation
     {
-        return $this->getQueryBus()->handle(
+        return $this->dispatchQuery(
             (new GetCartForOrderCreation($cartId))
                 ->setHideDiscounts(true)
         );
@@ -533,7 +539,6 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
-        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
         $minimalQuantity = $e instanceof MinimalQuantityException ? $e->getMinimalQuantity() : 0;
 
         return [
@@ -591,7 +596,7 @@ class CartController extends FrameworkBundleAdminController
             FileUploadException::class => [
                 UPLOAD_ERR_INI_SIZE => $this->trans(
                     'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
-                        $iniConfig->getUploadMaxSizeInBytes(),
+                        $this->iniConfiguration->getUploadMaxSizeInBytes(),
                     ]),
                 UPLOAD_ERR_EXTENSION => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
