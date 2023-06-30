@@ -63,7 +63,7 @@ class DeleteManufacturerLogoImageHandler extends AbstractManufacturerCommandHand
 
         $imageTypes = ImageType::getImagesTypes('manufacturers');
 
-        /** @var PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
+        /** @var \PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
         $imageFormatConfiguration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
         $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
 
