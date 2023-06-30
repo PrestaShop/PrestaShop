@@ -57,7 +57,6 @@ class QueryProvider implements ProviderInterface
         $queryParams = $this->requestStack->getCurrentRequest()->query->all();
         $uriVariables = array_merge($uriVariables, $queryParams);
 
-        //Add optionnal parameters in construct from query params
         $reflectionMethod = new \ReflectionMethod($queryClass, '__construct');
         $constructParameters = $reflectionMethod->getParameters();
 
@@ -68,14 +67,16 @@ class QueryProvider implements ProviderInterface
                 throw new \Exception(sprintf('Required parameter %s is not present', $parameter->name));
             }
 
-            $uriValue = $uriVariables[$parameter->name];
-            //Transform parameter type if needed
-            if ($parameter->getType() instanceof \ReflectionNamedType && $parameter->getType()->getName() !== gettype($uriValue)) {
-                $uriValue = $this->findConverter($parameter->getType()->getName())->convert($uriValue);
-            }
-            $params[$parameter->getPosition()] = $uriValue;
+            if (isset($uriVariables[$parameter->name])) {
+                $uriValue = $uriVariables[$parameter->name];
+                //Transform parameter type if needed
+                if ($parameter->getType() instanceof \ReflectionNamedType && $parameter->getType()->getName() !== gettype($uriValue)) {
+                    $uriValue = $this->findConverter($parameter->getType()->getName())->convert($uriValue);
+                }
+                $params[$parameter->getPosition()] = $uriValue;
 
-            unset($uriVariables[$parameter->name]);
+                unset($uriVariables[$parameter->name]);
+            }
         }
 
         $query = new $queryClass(...$params);

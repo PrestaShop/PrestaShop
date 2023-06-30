@@ -108,7 +108,7 @@ class QueryProviderTest extends TestCase
 
     public function testProvideHookStatus(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, $this->requestStack);
+        $hookStatusProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->requestStack);
         $get = new Get();
         $get = $get->withExtraProperties(['query' => GetHookStatus::class]);
         /** @var HookStatus $hookStatus */
@@ -149,7 +149,7 @@ class QueryProviderTest extends TestCase
 
     public function testSearchProduct(): void
     {
-        $searchProductProvider = new QueryProvider($this->queryBus, $this->requestStack);
+        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->requestStack);
         $get = new Get();
         $get = $get->withExtraProperties([
             'query' => SearchProducts::class,
@@ -162,7 +162,7 @@ class QueryProviderTest extends TestCase
         self::assertCount(1, $searchProducts);
 
         $this->requestStack->getCurrentRequest()->query = new InputBag(['orderId' => 1]);
-        $searchProductProvider = new QueryProvider($this->queryBus, $this->requestStack);
+        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->requestStack);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'search with order id', 'resultsLimit' => 10, 'isoCode' => 'EUR']);
         self::assertCount(0, $searchProducts);
     }
