@@ -21,7 +21,7 @@ This repository contains the source code of PrestaShop, which is intended for de
 
 
 About the 'develop' branch
---------
+-----------
 
 The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop.
 
