@@ -117,9 +117,10 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
             }
         }
 
+        $cartRuleId = new CartRuleId((int) $cartRule->id);
         $restrictedCartRules = [];
         if ($cartRule->cart_rule_restriction) {
-            $restrictedCartRules = $this->cartRuleRepository->getRestrictedCartRuleIds(new CartRuleId((int) $cartRule->id));
+            $restrictedCartRules = $this->cartRuleRepository->getRestrictedCartRuleIds($cartRuleId);
         }
 
         $cartRuleRestrictions = new CartRuleRestrictionsForEditing(
@@ -135,7 +136,7 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
             (int) $cartRule->quantity_per_user,
             $cartRuleMinimum,
             $cartRuleRestrictions,
-            $cartRule->getAssociatedShops()
+            $this->cartRuleRepository->getAssociatedShopIds($cartRuleId)
         );
     }
 

@@ -350,6 +350,27 @@ class CartRuleRepository extends AbstractMultiShopObjectModelRepository
         );
     }
 
+    /**
+     * @param CartRuleId $cartRuleId
+     *
+     * @return int[]
+     */
+    public function getAssociatedShopIds(CartRuleId $cartRuleId): array
+    {
+        $results = $this->connection->createQueryBuilder()
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'cart_rule_shop')
+            ->where('id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        return array_map(static function (array $result): int {
+            return (int) $result['id_shop'];
+        }, $results);
+    }
+
     private function removeRestrictedCartRules(CartRuleId $cartRuleId): void
     {
         $this->connection->createQueryBuilder()
