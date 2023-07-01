@@ -346,12 +346,13 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $checkedIds = [];
         $insertValues = [];
         foreach ($restrictedCarrierIds as $restrictedCarrierId) {
+            $restrictedCarrierIdValue = $restrictedCarrierId->getValue();
             // skip duplicate ids if for some reason they exist
-            if (in_array($restrictedCarrierId, $checkedIds, true)) {
+            if (in_array($restrictedCarrierIdValue, $checkedIds, true)) {
                 continue;
             }
-            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCarrierId->getValue());
-            $checkedIds[] = $restrictedCarrierId;
+            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCarrierIdValue);
+            $checkedIds[] = $restrictedCarrierIdValue;
         }
 
         $this->connection->executeStatement(
