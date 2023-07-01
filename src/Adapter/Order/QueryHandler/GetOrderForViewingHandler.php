@@ -224,7 +224,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getLinkedOrders($order),
             $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery)),
             $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice)),
-            (string) $order->note
+            (string) $order->note,
+            (bool) $order->invoice
         );
     }
 

@@ -34,6 +34,9 @@ class OrderCore extends ObjectModel
     /** @var int Delivery address id */
     public $id_address_delivery;
 
+    /** @var bool True if customer wants an invoice */
+    public $invoice = true;
+
     /** @var int Invoice address id */
     public $id_address_invoice;
 
@@ -192,6 +195,7 @@ class OrderCore extends ObjectModel
         'primary' => 'id_order',
         'fields' => [
             'id_address_delivery' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_address_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
