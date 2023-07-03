@@ -77,15 +77,15 @@ class FeatureValueController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
-     * @param int $featureId
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(int $featureId, Request $request): Response
+    public function createAction(Request $request): Response
     {
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
+        $featureId = $request->query->getInt('featureId');
 
         try {
             $featureValueForm = $featureValueFormBuilder->getForm(['feature_id' => $featureId]);
@@ -101,9 +101,7 @@ class FeatureValueController extends FrameworkBundleAdminController
                     ]);
                 }
 
-                return $this->redirectToRoute('admin_feature_values_index', [
-                    'featureId' => $featureId,
-                ]);
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

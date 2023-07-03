@@ -104,16 +104,12 @@ admin_feature_values_search:
     featureId: \d+
 
 admin_feature_values_add:
-  path: /{featureId}/values/new
+  path: /new-value
   methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::createAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures:addfeature_value
-    _legacy_parameters:
-      id_feature: featureId
-    redirectQueryParamsToKeep:
-      - 'featureId'
 
 admin_feature_values_edit:
   path: /{featureId}/values/{featureValueId}/edit

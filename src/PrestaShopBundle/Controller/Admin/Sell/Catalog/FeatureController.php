@@ -80,6 +80,11 @@ class FeatureController extends FrameworkBundleAdminController
                     'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
+                'add_feature_value' => [
+                    'href' => $this->generateUrl('admin_feature_values_add'),
+                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
             ],
         ]);
     }
