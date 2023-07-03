@@ -130,7 +130,7 @@ class Files extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewFilePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newAttachmentLink);
+    await this.clickAndWaitForURL(page, this.newAttachmentLink);
   }
 
   /* Column Methods */
@@ -141,7 +141,7 @@ class Files extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditFilePage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+    await this.clickAndWaitForURL(page, this.editRowLink(row));
   }
 
   /**
@@ -201,7 +201,8 @@ class Files extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -236,7 +237,7 @@ class Files extends BOBasePage {
   async filterTable(page: Page, filterBy: string, value: string = ''): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -273,7 +274,7 @@ class Files extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteFiles(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForLoadState(page, this.confirmDeleteButton);
   }
 
   // Sort methods
@@ -308,7 +309,7 @@ class Files extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -342,7 +343,7 @@ class Files extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
 
@@ -352,7 +353,7 @@ class Files extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
 }

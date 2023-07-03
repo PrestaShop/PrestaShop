@@ -14,6 +14,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
+    project: './tsconfig.json',
   },
   rules: {
     'no-plusplus': [2, {allowForLoopAfterthoughts: true}],
@@ -56,7 +57,7 @@ module.exports = {
     {
       files: ['*.ts'],
       parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint'],
+      plugins: ['@typescript-eslint', 'deprecation'],
       extends: ['plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended'],
       rules: {
         'spaced-comment': 0,
@@ -72,6 +73,7 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': ['error', {allowArgumentsExplicitlyTypedAsAny: true}],
         'func-names': 0,
         'no-new': 0,
+        'deprecation/deprecation': 'error',
       },
     },
   ],

@@ -172,13 +172,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
-      );
-
-      await dashboardPage.closeSfToolBar(page);
+      await emailPage.reloadPage(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
       await expect(pageTitle).to.contains(emailPage.pageTitle);

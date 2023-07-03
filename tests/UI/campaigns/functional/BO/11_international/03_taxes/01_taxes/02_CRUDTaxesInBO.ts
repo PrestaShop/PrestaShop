@@ -85,19 +85,6 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
 
   // 2 : Update Tax with data generated with faker
   describe('Update Tax Created', async () => {
-    it('should go to tax page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxPageToUpdate', baseContext);
-
-      await taxesPage.goToSubMenu(
-        page,
-        taxesPage.internationalParentLink,
-        taxesPage.taxesLink,
-      );
-
-      const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
-    });
-
     it('should filter list by tax name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToUpdate', baseContext);
 
@@ -152,19 +139,6 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
 
   // 3 : Delete Tax created from dropdown Menu
   describe('Delete Tax', async () => {
-    it('should go to \'International > Taxes\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxPageToDelete', baseContext);
-
-      await taxesPage.goToSubMenu(
-        page,
-        taxesPage.internationalParentLink,
-        taxesPage.taxesLink,
-      );
-
-      const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
-    });
-
     it('should filter list by Tax name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToDelete', baseContext);
 

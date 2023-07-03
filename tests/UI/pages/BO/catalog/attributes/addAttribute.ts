@@ -75,7 +75,7 @@ class AddAttribute extends BOBasePage {
     await this.selectByVisibleText(page, this.attributeTypeSelect, attributeData.attributeType);
 
     // Save attribute
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

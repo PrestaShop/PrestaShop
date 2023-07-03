@@ -7,12 +7,14 @@ import {Page} from 'playwright';
  * @return {Promise<void>}
  */
 const loginBO = async function (page: Page): Promise<void> {
+  const currentUrl: string = page.url();
+
   await page.type('#email', global.BO.EMAIL);
   await page.type('#passwd', global.BO.PASSWD);
 
   await Promise.all([
     page.click('#submit_login'),
-    page.waitForNavigation({waitUntil: 'networkidle'}),
+    page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
   ]);
 
   const block = await page.$('button.onboarding-button-shut-down');
@@ -30,14 +32,14 @@ const loginBO = async function (page: Page): Promise<void> {
  * @return {Promise<void>}
  */
 const loginFO = async function (page: Page): Promise<void> {
+  const currentUrl: string = page.url();
+
   await page.type('#login-form input[name=email]', Customers.johnDoe.email);
   await page.type('#login-form input[name=password]', Customers.johnDoe.password);
 
   await Promise.all([
     page.click('#submit-login'),
-    page.waitForNavigation({
-      waitUntil: 'networkidle',
-    }),
+    page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
   ]);
 };
 

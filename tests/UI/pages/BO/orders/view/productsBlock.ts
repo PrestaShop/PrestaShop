@@ -243,7 +243,7 @@ class ProductsBlock extends ViewOrderBasePage {
     if (shipping !== 0) {
       await this.setValue(page, this.refundShippingCost(productRow), shipping);
     }
-    await this.clickAndWaitForNavigation(page, this.partialRefundSubmitButton);
+    await this.clickAndWaitForLoadState(page, this.partialRefundSubmitButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -580,7 +580,8 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
 
     await this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`);
-    await this.clickAndWaitForNavigation(page, this.addOrderCartRuleAddButton);
+    await page.click(this.addOrderCartRuleAddButton);
+    await this.waitForVisibleSelector(page, this.alertBlock);
 
     return this.getTextContent(page, this.alertBlock);
   }

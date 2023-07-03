@@ -143,7 +143,7 @@ class AddAddress extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveAddress(page: Frame|Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveAddressButton);
+    await this.clickAndWaitForURL(page, this.saveAddressButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

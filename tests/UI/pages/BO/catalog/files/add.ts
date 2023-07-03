@@ -72,7 +72,7 @@ class AddFile extends BOBasePage {
     }
 
     // Save Supplier
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

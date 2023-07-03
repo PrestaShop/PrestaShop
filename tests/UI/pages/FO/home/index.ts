@@ -280,7 +280,7 @@ class HomePage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToProductPage(page: Page, id: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.productImg(id));
+    await this.clickAndWaitForURL(page, this.productImg(id));
   }
 
   /**
@@ -309,7 +309,7 @@ class HomePage extends FOBasePage {
    * @return {Promise<void>}
    */
   async goToAllProductsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.allProductLink);
+    await this.clickAndWaitForURL(page, this.allProductLink);
   }
 
   /**
@@ -407,7 +407,7 @@ class HomePage extends FOBasePage {
         throw new Error(`Block ${blockID} was not found`);
     }
 
-    await this.clickAndWaitForNavigation(page, columnSelector);
+    await this.clickAndWaitForURL(page, columnSelector);
   }
 
   /**
@@ -714,7 +714,7 @@ class HomePage extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
 
-    await this.clickAndWaitForNavigation(page, this.productColorLink(id, color));
+    await this.clickAndWaitForURL(page, this.productColorLink(id, color));
   }
 
   /**
@@ -786,7 +786,7 @@ class HomePage extends FOBasePage {
    * @return {Promise<void>}
    */
   async proceedToCheckout(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.cartModalCheckoutLink);
+    await this.clickAndWaitForURL(page, this.cartModalCheckoutLink);
     await page.waitForLoadState('domcontentloaded');
   }
 

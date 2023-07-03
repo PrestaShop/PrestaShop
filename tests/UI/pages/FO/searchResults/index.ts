@@ -82,7 +82,7 @@ class SearchResults extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToProductPage(page: Page, id: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.productImg(id));
+    await this.clickAndWaitForURL(page, this.productImg(id));
   }
 
   /**

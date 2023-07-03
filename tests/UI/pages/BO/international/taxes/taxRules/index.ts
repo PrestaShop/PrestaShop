@@ -162,7 +162,7 @@ class TaxRules extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewTaxRulesGroupPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewTaxRulesGroupLink);
+    await this.clickAndWaitForURL(page, this.addNewTaxRulesGroupLink);
   }
 
   /**
@@ -172,7 +172,7 @@ class TaxRules extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditTaxRulePage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+    await this.clickAndWaitForURL(page, this.editRowLink(row));
   }
 
   /**
@@ -182,7 +182,7 @@ class TaxRules extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -261,7 +261,8 @@ class TaxRules extends BOBasePage {
         throw new Error(`Filter ${filterBy} was not found`);
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.click(this.filterSearchButton);
+    await this.elementVisible(page, this.filterResetButton, 2000);
   }
 
   /**
@@ -274,9 +275,9 @@ class TaxRules extends BOBasePage {
     // Click on dropDown
     await page.click(this.toggleDropDown(row));
     // Click on delete
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    await this.clickAndWaitForURL(page, this.deleteRowLink(row));
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockContent(page);
@@ -325,7 +326,7 @@ class TaxRules extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   /* Pagination methods */
@@ -346,7 +347,7 @@ class TaxRules extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -357,7 +358,7 @@ class TaxRules extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -368,7 +369,7 @@ class TaxRules extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -402,7 +403,7 @@ class TaxRules extends BOBasePage {
     await page.click(this.bulkActionMenuButton);
 
     // Click on delete
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     return this.getAlertSuccessBlockContent(page);
   }
@@ -421,7 +422,7 @@ class TaxRules extends BOBasePage {
     await page.click(this.bulkActionMenuButton);
 
     // Click to change status
-    await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
+    await this.clickAndWaitForURL(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -447,10 +448,8 @@ class TaxRules extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await Promise.all([
-        page.$eval(`${this.tableColumnActive(row)} i`, (el: HTMLElement) => el.click()),
-        page.waitForNavigation({waitUntil: 'networkidle'}),
-      ]);
+      await page.$eval(`${this.tableColumnActive(row)} i`, (el: HTMLElement) => el.click());
+
       return true;
     }
     return false;

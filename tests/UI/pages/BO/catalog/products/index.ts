@@ -115,6 +115,8 @@ class Products extends BOBasePage {
 
   private readonly filterByCategoriesCategoryLabel: string;
 
+  private readonly filterByCategoriesResetButton: string;
+
   private readonly addProductButton: string;
 
   private readonly catalogDeletionModalDialog: string;
@@ -203,6 +205,7 @@ class Products extends BOBasePage {
     this.filterByCategoriesExpandButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_expand`;
     this.filterByCategoriesUnselectButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_reset`;
     this.filterByCategoriesCategoryLabel = `${this.treeCategoriesBloc} label.category-label`;
+    this.filterByCategoriesResetButton = `${this.treeCategoriesBloc} button[type="reset"][name="categories_filter_reset"]`;
 
     // HEADER buttons
     this.addProductButton = '#page-header-desc-configuration-add';
@@ -236,7 +239,8 @@ class Products extends BOBasePage {
   async filterIDProducts(page: Page, idMin: number, idMax: number): Promise<void> {
     await page.type(this.productFilterIDMinInput, idMin.toString());
     await page.type(this.productFilterIDMaxInput, idMax.toString());
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.click(this.filterSearchButton);
+    await this.elementVisible(page, this.filterResetButton, 2000);
   }
 
   /**
@@ -289,7 +293,8 @@ class Products extends BOBasePage {
   async filterPriceProducts(page: Page, priceMin: number, priceMax: number): Promise<void> {
     await page.type(this.productFilterPriceMinInput, priceMin.toString());
     await page.type(this.productFilterPriceMaxInput, priceMax.toString());
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.click(this.filterSearchButton);
+    await this.elementVisible(page, this.filterResetButton, 2000);
   }
 
   /**
@@ -318,7 +323,8 @@ class Products extends BOBasePage {
   async filterQuantityProducts(page: Page, quantityMin: number, quantityMax: number): Promise<void> {
     await page.type(this.productFilterQuantityMinInput, quantityMin.toString());
     await page.type(this.productFilterQuantityMaxInput, quantityMax.toString());
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.click(this.filterSearchButton);
+    await this.elementVisible(page, this.filterResetButton, 2000);
   }
 
   /**
@@ -386,7 +392,7 @@ class Products extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForLoadState(page, this.filterSearchButton);
   }
 
   /**
@@ -480,7 +486,7 @@ class Products extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -531,7 +537,7 @@ class Products extends BOBasePage {
     if (!found) {
       throw new Error(`${categoryName} not found as a category`);
     }
-    await page.waitForNavigation();
+    await this.elementVisible(page, this.filterByCategoriesResetButton, 2000);
   }
 
   /**
@@ -545,7 +551,7 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
 
     // Unselect all categories
-    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.clickAndWaitForURL(page, this.filterByCategoriesUnselectButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
   }
 
@@ -555,7 +561,7 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddProductPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addProductButton);
+    await this.clickAndWaitForURL(page, this.addProductButton);
   }
 
   /**
@@ -565,7 +571,7 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditProductPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.productRowEditLink(row));
+    await this.clickAndWaitForURL(page, this.productRowEditLink(row));
   }
 
   /**
@@ -606,7 +612,7 @@ class Products extends BOBasePage {
     await this.openProductDropdown(page, row);
 
     // Duplicate product and go to add product page
-    await this.clickAndWaitForNavigation(page, this.dropdownMenuDuplicateLink(row));
+    await this.clickAndWaitForURL(page, this.dropdownMenuDuplicateLink(row));
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -632,7 +638,7 @@ class Products extends BOBasePage {
       page.click(this.dropdownMenuDeleteLink(1)),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
+    await this.clickAndWaitForURL(page, this.modalDialogDeleteNowButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -642,10 +648,8 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async selectAllProducts(page: Page): Promise<void> {
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.productBulkMenuButton),
-      page.$eval(this.selectAllBulkCheckboxLabel, (el: HTMLElement) => el.click()),
-    ]);
+    await this.waitForSelector(page, this.selectAllBulkCheckboxLabel, 'attached');
+    await page.$eval(this.selectAllBulkCheckboxLabel, (el: HTMLElement) => el.click());
   }
 
   /**
@@ -666,7 +670,7 @@ class Products extends BOBasePage {
       page.click(this.productBulkDeleteLink),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
+    await this.clickAndWaitForURL(page, this.modalDialogDeleteNowButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -683,7 +687,7 @@ class Products extends BOBasePage {
       page.click(this.productBulkMenuButton),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.productBulkDuplicateLink);
+    await this.clickAndWaitForURL(page, this.productBulkDuplicateLink);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -694,10 +698,7 @@ class Products extends BOBasePage {
    * @return {Promise<string>}
    */
   async bulkSetStatus(page: Page, status: boolean): Promise<string> {
-    if (await this.elementVisible(page, this.alertSuccessBlockParagraph, 1000)) {
-      await this.waitForSelectorAndClick(page, this.alertBlockCloseButton);
-    }
-
+    await this.closeAlertBlock(page);
     await this.selectAllProducts(page);
 
     await Promise.all([
@@ -705,7 +706,7 @@ class Products extends BOBasePage {
       page.click(this.productBulkMenuButton),
     ]);
 
-    await this.clickAndWaitForNavigation(page, status ? this.productBulkEnableLink : this.productBulkDisableLink);
+    await this.clickAndWaitForURL(page, status ? this.productBulkEnableLink : this.productBulkDisableLink);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -721,7 +722,7 @@ class Products extends BOBasePage {
     const actualValue = await this.getProductStatusFromList(page, row);
 
     if (actualValue !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.productsListTableColumnStatus(row));
+      await page.click(this.productsListTableColumnStatus(row));
       return true;
     }
 
@@ -736,7 +737,7 @@ class Products extends BOBasePage {
    */
   async goToProductPage(page: Page, row: number = 1): Promise<void> {
     await this.waitForVisibleSelector(page, this.productsListTableColumnName(row));
-    await this.clickAndWaitForNavigation(page, this.productsListTableColumnName(row));
+    await this.clickAndWaitForURL(page, this.productsListTableColumnName(row));
   }
 
   /* Sort methods */
@@ -754,7 +755,7 @@ class Products extends BOBasePage {
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -789,7 +790,7 @@ class Products extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -800,7 +801,7 @@ class Products extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

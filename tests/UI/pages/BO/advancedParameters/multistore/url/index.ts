@@ -160,7 +160,7 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewUrl(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewUrlButton);
+    await this.clickAndWaitForURL(page, this.addNewUrlButton);
   }
 
   /* Filter methods */
@@ -181,7 +181,7 @@ class ShopURLSettings extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
   }
 
@@ -204,15 +204,17 @@ class ShopURLSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
         ]);
         break;
@@ -299,7 +301,7 @@ class ShopURLSettings extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -310,7 +312,7 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -321,7 +323,7 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -341,7 +343,7 @@ class ShopURLSettings extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -376,7 +378,7 @@ class ShopURLSettings extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   // Quick edit methods
@@ -444,7 +446,7 @@ class ShopURLSettings extends BOBasePage {
       this.waitForVisibleSelector(page, this.bulkEnableLink),
     ]);
 
-    await this.clickAndWaitForNavigation(
+    await this.clickAndWaitForURL(
       page,
       wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
     );

@@ -138,19 +138,21 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
       },
     ].forEach((arg: {baseFormat: string, product: ProductData, extOriginal: string, extGenerated: string}, index: number) => {
       describe(`Base Format : ${arg.baseFormat.toUpperCase()} - Image Extension : ${arg.extOriginal.toUpperCase()}`, async () => {
-        it('should go to \'Design > Image Settings\' page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToImageSettingsPage${index}`, baseContext);
+        if (index !== 0) {
+          it('should go to \'Design > Image Settings\' page', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', `goToImageSettingsPage${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
-            page,
-            dashboardPage.designParentLink,
-            dashboardPage.imageSettingsLink,
-          );
-          await imageSettingsPage.closeSfToolBar(page);
+            await dashboardPage.goToSubMenu(
+              page,
+              dashboardPage.designParentLink,
+              dashboardPage.imageSettingsLink,
+            );
+            await imageSettingsPage.closeSfToolBar(page);
 
-          const pageTitle = await imageSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
-        });
+            const pageTitle = await imageSettingsPage.getPageTitle(page);
+            await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+          });
+        }
 
         it(`should enable ${arg.baseFormat.toUpperCase()} as Base Format in Image Generation Options`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `setBaseFormatImageGenerationOptions${index}`, baseContext);

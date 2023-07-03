@@ -78,6 +78,6 @@ export default class EmployeeBasePage extends BOBasePage {
    * @returns {Promise<void>}
    */
   async cancel(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.cancelButton);
+    await this.clickAndWaitForURL(page, this.cancelButton);
   }
 };

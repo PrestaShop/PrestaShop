@@ -77,7 +77,7 @@ class MyProfile extends EmployeeBasePage {
     await this.setValue(page, this.confirmPasswordInput, newEmployeeData.password);
     await this.selectByVisibleText(page, this.languageSelect, newEmployeeData.language);
     await this.selectDefaultPage(page, newEmployeeData.defaultPage);
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
   }
 
   /**

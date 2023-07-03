@@ -67,7 +67,8 @@ class PasswordReminder extends FOBasePage {
    */
   async sendResetPasswordLink(page: Page, email: string): Promise<void> {
     await this.setValue(page, this.emailFormField, email);
-    await this.clickAndWaitForNavigation(page, this.sendResetLinkButton);
+    await this.clickAndWaitForLoadState(page, this.sendResetLinkButton);
+    await this.elementNotVisible(page, this.sendResetLinkButton, 2000);
   }
 
   /**

@@ -85,7 +85,7 @@ class AdminSearchControllerCoreTest extends KernelTestCase
                     'features' => [
                         'Orders' => [
                             [
-                                'link' => 'http://localhost/admin-dev/index.php?controller=AdminOrders',
+                                'link' => 'http://localhost/admin-dev/index.php?controller=AdminOrders&bo_query=orders',
                             ],
                         ],
                     ],

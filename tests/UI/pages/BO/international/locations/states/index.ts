@@ -203,7 +203,7 @@ class States extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewStatePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewStateLink);
+    await this.clickAndWaitForURL(page, this.addNewStateLink);
   }
 
   /* Filter Methods */
@@ -214,7 +214,7 @@ class States extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -257,18 +257,24 @@ class States extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterStates(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
     let textValue: string = value;
 
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         if (filterBy === 'active') {
           textValue = value === '1' ? 'Yes' : 'No';
         }
-        await this.selectByVisibleText(page, this.filterColumn(filterBy), textValue);
+        await Promise.all([
+          this.selectByVisibleText(page, this.filterColumn(filterBy), textValue),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
+        ]);
+
         break;
 
       default:
@@ -364,7 +370,7 @@ class States extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditStatePage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.columnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.columnActionsEditLink(row));
   }
 
   /**
@@ -387,7 +393,7 @@ class States extends BOBasePage {
       page.click(this.columnActionsDeleteLink(row)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -443,7 +449,7 @@ class States extends BOBasePage {
       page.click(this.deleteSelectionButton),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -464,7 +470,7 @@ class States extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status
-    await this.clickAndWaitForNavigation(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
+    await this.clickAndWaitForURL(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -516,7 +522,7 @@ class States extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -540,7 +546,8 @@ class States extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
-    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -551,7 +558,7 @@ class States extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -562,7 +569,7 @@ class States extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

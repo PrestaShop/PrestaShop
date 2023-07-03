@@ -161,7 +161,7 @@ class Currencies extends LocalizationBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewCurrencyPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newCurrencyLink);
+    await this.clickAndWaitForURL(page, this.newCurrencyLink);
   }
 
   /* filter Method */
@@ -185,7 +185,8 @@ class Currencies extends LocalizationBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.click(this.filterSearchButton);
+    await this.elementVisible(page, this.filterResetButton);
   }
 
   /* Reset Methods */
@@ -196,7 +197,8 @@ class Currencies extends LocalizationBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -294,7 +296,8 @@ class Currencies extends LocalizationBasePage {
    */
   async setStatus(page: Page, row: number = 1, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
+      await this.clickAndWaitForLoadState(page, this.statusColumn(row));
+      await this.elementVisible(page, this.alertTextBlock);
       return true;
     }
 
@@ -336,7 +339,8 @@ class Currencies extends LocalizationBasePage {
       page.click(this.deleteSelectionButton),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForLoadState(page, this.confirmDeleteButton);
+    await this.elementNotVisible(page, this.confirmDeleteModal);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -373,7 +377,7 @@ class Currencies extends LocalizationBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteCurrency(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
   }
 
   /**
@@ -383,7 +387,7 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<void>}
    */
   async goToEditCurrencyPage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+    await this.clickAndWaitForURL(page, this.editRowLink(row));
   }
 
   /**
@@ -392,7 +396,7 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.updateExchangeRatesButton);
+    await page.click(this.updateExchangeRatesButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -414,9 +418,11 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page);
@@ -428,7 +434,7 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -439,7 +445,7 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -459,7 +465,7 @@ class Currencies extends LocalizationBasePage {
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 

@@ -46,7 +46,7 @@ class AddUrl extends BOBasePage {
   async setVirtualUrl(page: Page, shopData: ShopData): Promise<string> {
     await this.setValue(page, this.virtualUrlInput, shopData.name);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton, 'networkidle', 60000);
+    await this.clickAndWaitForURL(page, this.saveButton, 'networkidle', 60000);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }

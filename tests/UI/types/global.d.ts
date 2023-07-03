@@ -65,7 +65,8 @@ type GlobalMaildevConfig = {
 }
 
 type GlobalKeycloakConfig = {
-  keycloakServer: string
+  keycloakExternalUrl: string
+  keycloakInternalUrl: string
   keycloakAdminUser: string
   keycloakAdminPass: string
   keycloakClientId: string

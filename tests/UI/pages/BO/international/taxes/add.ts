@@ -86,7 +86,7 @@ class AddTax extends BOBasePage {
     await this.setValue(page, this.rateInput, taxData.rate);
     await this.setChecked(page, this.statusToggleInput(taxData.enabled ? 1 : 0));
     // Save Tax
-    await this.clickAndWaitForNavigation(page, this.saveTaxButton);
+    await this.clickAndWaitForURL(page, this.saveTaxButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

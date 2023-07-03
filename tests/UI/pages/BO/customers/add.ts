@@ -161,7 +161,7 @@ class AddCustomer extends BOBasePage {
 
     // Save Customer
     if (waitForNavigation) {
-      await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
+      await this.clickAndWaitForURL(page, this.saveCustomerButton);
       return this.getAlertSuccessBlockParagraphContent(page);
     }
     await this.waitForSelectorAndClick(page, this.saveCustomerButton);
@@ -179,7 +179,7 @@ class AddCustomer extends BOBasePage {
     await this.fillB2BCustomerForm(page, customerData);
 
     // Save Customer
-    await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
+    await this.clickAndWaitForURL(page, this.saveCustomerButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

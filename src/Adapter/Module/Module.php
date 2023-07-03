@@ -231,6 +231,11 @@ class Module implements ModuleInterface
         return (bool) $this->database->get('installed');
     }
 
+    public function isUninstalled(): bool
+    {
+        return !$this->isInstalled() && $this->disk->get('is_present');
+    }
+
     public function isConfigurable(): bool
     {
         return (bool) $this->attributes->get('is_configurable');

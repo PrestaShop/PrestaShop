@@ -1,19 +1,16 @@
 // Import utils
 import helper from '@utils/helpers';
-import loginCommon from '@commonTests/BO/loginBO';
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import testContext from '@utils/testContext';
 
 // Import common tests
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
-
-// Import test context
-import testContext from '@utils/testContext';
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import statsPage from '@pages/BO/stats';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
@@ -28,6 +25,9 @@ import newCustomerPage from '@pages/BO/customers/add';
 // Import data
 import QuickAccessData from '@data/faker/quickAccess';
 
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
 const baseContext: string = 'functional_BO_header_quickAccess';
 
 describe('BO - Header : Quick access links', async () => {
@@ -41,7 +41,7 @@ describe('BO - Header : Quick access links', async () => {
   });
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {

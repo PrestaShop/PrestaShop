@@ -52,19 +52,21 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
 
   tests.forEach((test, index: number) => {
     describe(`Update number of product displayed to ${test.args.numberOfProductsPerPage}`, async () => {
-      it('should go to \'Shop parameters > Product Settings\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
+      if (index === 0) {
+        it('should go to \'Shop parameters > Product Settings\' page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.productSettingsLink,
-        );
-        await productSettingsPage.closeSfToolBar(page);
+          await dashboardPage.goToSubMenu(
+            page,
+            dashboardPage.shopParametersParentLink,
+            dashboardPage.productSettingsLink,
+          );
+          await productSettingsPage.closeSfToolBar(page);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-      });
+          const pageTitle = await productSettingsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        });
+      }
 
       it(
         `should set number of products displayed per page to '${test.args.numberOfProductsPerPage}'`,

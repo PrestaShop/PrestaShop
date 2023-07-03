@@ -85,7 +85,7 @@ class AddBrandAddress extends BOBasePage {
     await this.setValue(page, this.otherInput, brandAddressData.other);
 
     // Click on Save button and successful message
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

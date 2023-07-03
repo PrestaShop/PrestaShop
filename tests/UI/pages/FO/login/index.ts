@@ -71,7 +71,8 @@ class LoginPage extends FOBasePage {
     await this.setValue(page, this.emailInput, customer.email);
     await this.setValue(page, this.passwordInput, customer.password);
     if (waitForNavigation) {
-      await this.clickAndWaitForNavigation(page, this.signInButton);
+      await this.clickAndWaitForLoadState(page, this.signInButton);
+      await this.elementNotVisible(page, this.signInButton, 2000);
     } else {
       await page.click(this.signInButton);
     }
@@ -112,7 +113,7 @@ class LoginPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToCreateAccountPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.displayRegisterFormLink);
+    await this.clickAndWaitForURL(page, this.displayRegisterFormLink);
   }
 
   /**
@@ -121,7 +122,7 @@ class LoginPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToPasswordReminderPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.passwordReminderLink);
+    await this.clickAndWaitForURL(page, this.passwordReminderLink);
   }
 }
 

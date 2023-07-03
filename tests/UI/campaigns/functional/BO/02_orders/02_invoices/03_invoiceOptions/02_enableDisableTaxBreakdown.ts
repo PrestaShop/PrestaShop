@@ -7,12 +7,13 @@ import testContext from '@utils/testContext';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import addProductPage from '@pages/BO/catalog/products/add';
 import boProductsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
@@ -76,7 +77,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   });
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_dnableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_dnableNewProduct`);
 
   // before and after functions
   before(async function () {

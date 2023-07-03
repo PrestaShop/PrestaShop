@@ -170,7 +170,7 @@ class ProductComments extends ModuleConfiguration {
   * @returns {Promise<void>}
   */
   async approveReview(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.approveWaitingReviewButton('waiting-approval', row));
+    await this.clickAndWaitForURL(page, this.approveWaitingReviewButton('waiting-approval', row));
   }
 
   /**
@@ -182,7 +182,7 @@ class ProductComments extends ModuleConfiguration {
    */
   async deleteReview(page: Page, table: string, row: number = 1): Promise<void> {
     await page.click(this.deleteReviewButton(table, row));
-    await this.clickAndWaitForNavigation(page, this.confirmReviewDeletionButton);
+    await this.clickAndWaitForURL(page, this.confirmReviewDeletionButton);
   }
 
   /**

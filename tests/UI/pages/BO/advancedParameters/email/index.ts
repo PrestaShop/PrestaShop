@@ -169,8 +169,9 @@ class Email extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page: Page): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await page.click(this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -199,7 +200,8 @@ class Email extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page: Page): Promise<number> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
     return this.getTotalElementInGrid(page);
   }
@@ -225,7 +227,8 @@ class Email extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.click(this.filterSearchButton);
+    await this.elementVisible(page, this.filterResetButton, 2000);
   }
 
   /**
@@ -250,7 +253,7 @@ class Email extends BOBasePage {
     await page.type(this.emailFilterColumnInput('date_add_from'), dateFrom);
     await page.type(this.emailFilterColumnInput('date_add_to'), dateTo);
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -265,7 +268,7 @@ class Email extends BOBasePage {
       this.waitForSelectorAndClick(page, this.deleteRowLink(row)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -292,7 +295,7 @@ class Email extends BOBasePage {
       this.waitForSelectorAndClick(page, this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForLoadState(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -325,7 +328,7 @@ class Email extends BOBasePage {
     await this.setValue(page, this.smtpPortFormField, port);
     await this.selectByVisibleText(page, this.smtpEncryptionFormField, encryption);
     // Click on Save button
-    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveEmailFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -341,7 +344,7 @@ class Email extends BOBasePage {
     await this.waitForHiddenSelector(page, this.smtpServerFormField);
 
     // Click on Save button
-    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveEmailFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -367,7 +370,7 @@ class Email extends BOBasePage {
   async setLogEmails(page: Page, toEnable: boolean): Promise<string> {
     await this.setChecked(page, this.logEmailsToggleInput(toEnable ? 1 : 0));
     await page.$eval(this.saveEmailFormButton, (el: HTMLElement) => el.click());
-    await page.waitForNavigation();
+    await page.waitForURL('');
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -386,7 +389,7 @@ class Email extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
+  async getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -397,10 +400,8 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
-    await Promise.all([
-      this.selectByVisibleText(page, this.paginationLimitSelect, number.toString()),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
-    ]);
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number.toString());
+    await page.click(this.paginationLabel);
 
     return this.getPaginationLabel(page);
   }
@@ -411,7 +412,7 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await page.click(this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -422,7 +423,7 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await page.click(this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -460,7 +461,7 @@ class Email extends BOBasePage {
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await page.click(sortColumnSpanButton);
       i += 1;
     }
 

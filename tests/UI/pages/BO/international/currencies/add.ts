@@ -216,7 +216,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {Promise<string>}
    */
   async saveCurrencyForm(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

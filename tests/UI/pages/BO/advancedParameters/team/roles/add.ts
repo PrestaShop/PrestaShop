@@ -46,7 +46,7 @@ class AddRole extends BOBasePage {
    */
   async createEditRole(page: Page, roleData: RoleData): Promise<string> {
     await this.setValue(page, this.nameInput, roleData.name);
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

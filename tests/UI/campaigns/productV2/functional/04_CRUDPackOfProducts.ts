@@ -1,6 +1,3 @@
-import type {BrowserContext, Page} from 'playwright';
-import {expect} from 'chai';
-
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -8,7 +5,15 @@ import date from '@utils/date';
 import files from '@utils/files';
 import basicHelper from '@utils/basicHelper';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+import {
+  resetNewProductPageAsDefault,
+  setFeatureFlag,
+} from '@commonTests/BO/advancedParameters/newFeatures';
+
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
@@ -16,18 +21,14 @@ import packTab from '@pages/BO/catalog/productsV2/add/packTab';
 import pricingTab from '@pages/BO/catalog/productsV2/add/pricingTab';
 import foProductPage from '@pages/FO/product';
 
-// Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
-import {
-  enableNewProductPageTest,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
-
 // Import data
 import ProductData from '@data/faker/product';
 import Employees from '@data/demo/employees';
 import Products from '@data/demo/products';
 import {ProductPackOptions} from '@data/types/product';
+
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
 
 const baseContext: string = 'productV2_functional_CRUDPackOfProducts';
 
@@ -83,7 +84,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
   });
 
   // Pre-condition: Enable new product page
-  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {

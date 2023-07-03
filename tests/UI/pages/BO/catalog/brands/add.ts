@@ -109,7 +109,7 @@ class AddBrand extends BOBasePage {
     await this.setChecked(page, this.statusToggleInput(brandData.enabled ? 1 : 0));
 
     // Save Created brand
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

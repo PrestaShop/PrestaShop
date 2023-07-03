@@ -111,7 +111,7 @@ class AddCategory extends BOBasePage {
     await this.selectAllGroups(page);
 
     // Save Category
-    await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
+    await this.clickAndWaitForURL(page, this.saveCategoryButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -130,7 +130,7 @@ class AddCategory extends BOBasePage {
     await this.setValue(page, this.rootCategoryMetaDescriptionTextarea, categoryData.metaDescription);
     await this.selectAllGroups(page);
     // Save Category
-    await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
+    await this.clickAndWaitForURL(page, this.saveCategoryButton);
     return this.getPageTitle(page);
   }
 }

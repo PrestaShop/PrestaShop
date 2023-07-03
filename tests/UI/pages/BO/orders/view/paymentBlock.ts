@@ -109,7 +109,7 @@ class PaymentBlock extends ViewOrderBasePage {
       await this.selectByVisibleText(page, this.paymentInvoiceSelect, invoice);
     }
 
-    await this.clickAndWaitForNavigation(page, this.paymentAddButton);
+    await page.click(this.paymentAddButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

@@ -98,7 +98,7 @@ class AddGroup extends BOBasePage {
     await this.setChecked(page, this.showPricesToggle(groupData.shownPrices ? 'on' : 'off'));
 
     // Save group
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -114,7 +114,7 @@ class AddGroup extends BOBasePage {
     await this.selectByVisibleText(page, this.priceDisplayMethodSelect, priceDisplayMethod);
 
     // Save customer group
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

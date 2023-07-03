@@ -200,7 +200,7 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToCreateOrderPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.createNewOrderButton);
+    await this.clickAndWaitForURL(page, this.createNewOrderButton);
   }
 
   /**
@@ -243,21 +243,22 @@ class Order extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
+    await page.waitForURL(`**/?order**filters**${filterBy}**`, {waitUntil: 'domcontentloaded'});
   }
 
   /**
    * Filter orders by date from and date to
    * @param page {Page} Browser tab
    * @param dateFrom {string} Date from to filter with
-   * @param dateTo {string} Date to to filter with
+   * @param dateTo {string} Date to filter with
    * @returns {Promise<void>}
    */
   async filterOrdersByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
     await page.type(this.filterColumn('date_add_from'), dateFrom);
     await page.type(this.filterColumn('date_add_to'), dateTo);
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -266,8 +267,15 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page: Page): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      const currentUrl: string = page.url();
+
+      if (currentUrl.indexOf('filters') === -1) {
+        await page.locator(this.filterResetButton).click();
+        await page.waitForResponse(async (response) => response.url().indexOf('common/reset_search/order') !== -1);
+      } else {
+        await this.clickAndWaitForURL(page, this.filterResetButton);
+      }
     }
   }
 
@@ -297,7 +305,7 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToOrder(page: Page, orderRow: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.viewRowLink(orderRow));
+    await this.clickAndWaitForURL(page, this.viewRowLink(orderRow));
   }
 
   /**
@@ -411,7 +419,9 @@ class Order extends BOBasePage {
       page.click(this.updateStatusInTableButton(row)),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.updateStatusInTableDropdownChoice(row, status.id));
+    await page.click(this.updateStatusInTableDropdownChoice(row, status.id));
+    await this.elementNotVisible(page, this.updateStatusInTableDropdownChoice(row, status.id), 2000);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -547,7 +557,7 @@ class Order extends BOBasePage {
 
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
-    await this.clickAndWaitForNavigation(page, this.updateOrdersStatusModalButton);
+    await page.click(this.updateOrdersStatusModalButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -565,7 +575,7 @@ class Order extends BOBasePage {
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -589,9 +599,11 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page);
@@ -603,7 +615,7 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -614,7 +626,7 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -696,7 +708,7 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async openOrderDetails(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.previewOrderButton);
+    await this.clickAndWaitForURL(page, this.previewOrderButton);
   }
 }
 

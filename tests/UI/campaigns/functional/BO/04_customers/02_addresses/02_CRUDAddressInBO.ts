@@ -86,19 +86,6 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
 
   // 2 : Update address
   describe('Update address', async () => {
-    it('should go to \'Customers > Addresses\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToUpdate', baseContext);
-
-      await addressesPage.goToSubMenu(
-        page,
-        addressesPage.customersParentLink,
-        addressesPage.addressesLink,
-      );
-
-      const pageTitle = await addressesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addressesPage.pageTitle);
-    });
-
     it('should filter list by first name and last name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
@@ -135,19 +122,6 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
 
   // 3 : Delete address from BO
   describe('Delete address', async () => {
-    it('should go to \'Customers > Addresses\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDelete', baseContext);
-
-      await addressesPage.goToSubMenu(
-        page,
-        addressesPage.customersParentLink,
-        addressesPage.addressesLink,
-      );
-
-      const pageTitle = await addressesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addressesPage.pageTitle);
-    });
-
     it('should filter list by first name and last name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 

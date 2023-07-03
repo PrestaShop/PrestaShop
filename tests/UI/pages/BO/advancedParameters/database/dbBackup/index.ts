@@ -114,7 +114,7 @@ class DbBackup extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToSqlManagerPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.sqlManagerSubTabLink);
+    await this.clickAndWaitForURL(page, this.sqlManagerSubTabLink);
   }
 
   /* Form and grid methods */
@@ -178,7 +178,7 @@ class DbBackup extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteDbBackups(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
   }
 
   /**
@@ -226,9 +226,10 @@ class DbBackup extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page);
@@ -240,7 +241,7 @@ class DbBackup extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -251,7 +252,7 @@ class DbBackup extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

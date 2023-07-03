@@ -586,7 +586,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    */
   async goToDashboardPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.dashboardLink);
+    await this.clickAndWaitForURL(page, this.dashboardLink);
   }
 
   /**
@@ -597,7 +597,7 @@ export default class BOBasePage extends CommonPage {
    */
   async quickAccessToPage(page: Page, linkId: number): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
+    await this.clickAndWaitForURL(page, this.quickAccessLink(linkId));
     await this.waitForPageTitleToLoad(page);
   }
 
@@ -645,7 +645,7 @@ export default class BOBasePage extends CommonPage {
    */
   async goToManageQuickAccessPage(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.clickAndWaitForNavigation(page, this.manageYourQuickAccessLink);
+    await this.clickAndWaitForURL(page, this.manageYourQuickAccessLink);
   }
 
   /**
@@ -658,7 +658,7 @@ export default class BOBasePage extends CommonPage {
   async goToSubMenu(page: Page, parentSelector: string, linkSelector: string): Promise<void> {
     await this.clickSubMenu(page, parentSelector);
     await this.scrollTo(page, linkSelector);
-    await this.clickAndWaitForNavigation(page, linkSelector);
+    await this.clickAndWaitForURL(page, linkSelector);
     if (await this.isSidebarCollapsed(page)) {
       await this.waitForHiddenSelector(page, `${linkSelector}.link-active`);
     } else {
@@ -810,7 +810,7 @@ export default class BOBasePage extends CommonPage {
    * @param row {number} row in notification tab
    */
   async clickOnNotification(page: Page, tabName: string, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.notificationRowInTab(tabName, row));
+    await this.clickAndWaitForURL(page, this.notificationRowInTab(tabName, row));
   }
 
   /**
@@ -829,7 +829,7 @@ export default class BOBasePage extends CommonPage {
     } else {
       await this.waitForVisibleSelector(page, this.userProfileYourProfileLinkNonMigratedPages);
     }
-    await this.clickAndWaitForNavigation(page, this.userProfileYourProfileLink);
+    await this.clickAndWaitForURL(page, this.userProfileYourProfileLink);
   }
 
   /**
@@ -859,7 +859,7 @@ export default class BOBasePage extends CommonPage {
       await page.click(this.userProfileIconNonMigratedPages);
     }
     await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
-    await this.clickAndWaitForNavigation(page, this.userProfileLogoutLink);
+    await this.clickAndWaitForURL(page, this.userProfileLogoutLink);
   }
 
   /**
@@ -965,11 +965,23 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Close alert block
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async closeAlertBlock(page: Page): Promise<void> {
+    if (await this.elementVisible(page, this.alertBlockCloseButton, 1000)) {
+      await this.waitForSelectorAndClick(page, this.alertBlockCloseButton);
+    }
+  }
+
+  /**
    * Get error message from alert danger block
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertDangerBlockParagraphContent(page: Page): Promise<string> {
+  async getAlertDangerBlockParagraphContent(page: Page): Promise<string> {
+    await this.elementVisible(page, this.alertDangerBlockParagraph, 2000);
     return this.getTextContent(page, this.alertDangerBlockParagraph);
   }
 
@@ -979,6 +991,7 @@ export default class BOBasePage extends CommonPage {
    * @return {Promise<string>}
    */
   async getAlertBlockContent(page: Page): Promise<string> {
+    await this.elementVisible(page, this.alertTextBlock, 2000);
     return this.getTextContent(page, this.alertTextBlock);
   }
 
@@ -987,7 +1000,8 @@ export default class BOBasePage extends CommonPage {
    * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockContent(page: Frame|Page): Promise<string> {
+  async getAlertSuccessBlockContent(page: Frame|Page): Promise<string> {
+    await this.elementVisible(page, this.alertSuccessBlock, 2000);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
@@ -996,7 +1010,8 @@ export default class BOBasePage extends CommonPage {
    * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockParagraphContent(page: Frame|Page): Promise<string> {
+  async getAlertSuccessBlockParagraphContent(page: Frame|Page): Promise<string> {
+    await this.elementVisible(page, this.alertSuccessBlockParagraph, 2000);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -1005,12 +1020,13 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertInfoBlockParagraphContent(page: Page): Promise<string> {
+  async getAlertInfoBlockParagraphContent(page: Page): Promise<string> {
+    await this.elementVisible(page, this.alertInfoBlockParagraph, 2000);
     return this.getTextContent(page, this.alertInfoBlockParagraph);
   }
 
   /**
-   * Navigate to Bo page without token
+   * Navigate to BO page without token
    * @param page {Page} Browser tab
    * @param url {string} Url to BO page
    * @param continueToPage {boolean} True to continue false to cancel and return to dashboard page
@@ -1019,7 +1035,7 @@ export default class BOBasePage extends CommonPage {
   async navigateToPageWithInvalidToken(page: Page, url: string, continueToPage: boolean = true): Promise<void> {
     await this.goTo(page, url);
     if (await this.elementVisible(page, this.invalidTokenContinueLink, 10000)) {
-      await this.clickAndWaitForNavigation(
+      await this.clickAndWaitForURL(
         page,
         continueToPage ? this.invalidTokenContinueLink : this.invalidTokenCancelLink,
       );
@@ -1035,7 +1051,7 @@ export default class BOBasePage extends CommonPage {
   async search(page: Page, query: string): Promise<void> {
     await this.setValue(page, this.navbarSearchInput, query);
     await page.keyboard.press('Enter');
-    await page.waitForNavigation({waitUntil: 'networkidle'});
+    await page.waitForSelector(this.navbarSearchInput);
   }
 
   /**

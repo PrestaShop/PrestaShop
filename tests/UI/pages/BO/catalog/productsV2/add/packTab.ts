@@ -201,7 +201,7 @@ class PackTab extends BOBasePage {
    * @param productInList {number} The row of product in pack
    */
   async saveAndGetProductInPackErrorMessage(page: Page, productInList: number): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveProductButton);
+    await page.click(this.saveProductButton);
 
     return this.getTextContent(page, this.alertDangerProductInPack(productInList));
   }

@@ -140,7 +140,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   it('should check \'Logo\' link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-    await homePage.clickOnHeaderLink(page, 'Logo');
+    await homePage.clickOnHeaderLink(page, 'Logo', false);
 
     const pageTitle = await homePage.getPageTitle(page);
     await expect(pageTitle).to.equal(homePage.pageTitle);

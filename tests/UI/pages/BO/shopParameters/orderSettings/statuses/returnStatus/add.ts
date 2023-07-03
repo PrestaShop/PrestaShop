@@ -53,7 +53,7 @@ class AddOrderReturnStatus extends BOBasePage {
     await this.setValue(page, this.colorInput, orderReturnStatusData.color);
 
     // Save order return status
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);

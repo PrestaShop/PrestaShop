@@ -2,10 +2,15 @@
 import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
 
-// Import login steps
+// Import commonTests
+import {
+  resetNewProductPageAsDefault,
+  setFeatureFlag,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
@@ -15,10 +20,6 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {
-  disableNewProductPageTest,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_productsBO_deleteProduct';
 
@@ -33,7 +34,7 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
   });
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
