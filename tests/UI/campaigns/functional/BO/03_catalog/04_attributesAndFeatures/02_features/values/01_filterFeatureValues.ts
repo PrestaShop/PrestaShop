@@ -66,9 +66,9 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await testContext.addContextItem(this, 'testIdentifier', 'filterFeatures', baseContext);
 
     await featuresPage.resetFilter(page);
-    await featuresPage.filterTable(page, 'b!name', Features.composition.name);
+    await featuresPage.filterTable(page, 'name', Features.composition.name);
 
-    const textColumn = await featuresPage.getTextColumn(page, 1, 'b!name');
+    const textColumn = await featuresPage.getTextColumn(page, 1, 'name');
     await expect(textColumn).to.contains(Features.composition.name);
   });
 

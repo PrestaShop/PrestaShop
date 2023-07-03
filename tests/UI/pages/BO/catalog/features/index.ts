@@ -18,9 +18,11 @@ class Features extends BOBasePage {
 
   private readonly gridForm: string;
 
+  private readonly gridPanel: string;
+
   private readonly gridTableHeaderTitle: string;
 
-  private readonly gridTableNumberOfTitlesSpan: string;
+  private readonly gridHeaderTitle: string;
 
   private readonly gridTable: string;
 
@@ -98,7 +100,7 @@ class Features extends BOBasePage {
     this.pageTitle = 'Features • ';
 
     // Header selectors
-    this.addNewFeatureLink = 'a[data-role=page-header-desc-feature-link]';
+    this.addNewFeatureLink = 'a#page-header-desc-configuration-add_feature[title="Add new feature"]';
 
     // Help card selectors
     this.helpCardLink = '#toolbar-nav a.btn-help';
@@ -106,17 +108,18 @@ class Features extends BOBasePage {
 
     // Form selectors
     this.gridForm = '#form-feature';
+    this.gridPanel = '#feature_grid_panel';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
-    this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
+    this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
 
     // Table selectors
-    this.gridTable = '#table-feature';
+    this.gridTable = '#feature_grid';
 
     // Filter selectors
-    this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='featureFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtonfeature';
-    this.filterResetButton = 'button[name=\'submitResetfeature\']';
+    this.filterRow = `${this.gridTable} tr.column-filters`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='feature[${filterBy}]']`;
+    this.filterSearchButton = `${this.filterRow} button[name="feature[actions][search]"]`;
+    this.filterResetButton = `${this.filterRow} button[name="feature[actions][reset]"]`;
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
@@ -132,7 +135,7 @@ class Features extends BOBasePage {
 
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a.grid-view-row-link`;
     this.tableColumnActionsDropDownButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
     this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} li a.edit`;
     this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActions(row)} li a.delete`;
@@ -192,8 +195,8 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
   /**
@@ -234,7 +237,7 @@ class Features extends BOBasePage {
         columnSelector = this.tableColumnId(row);
         break;
 
-      case 'b!name':
+      case 'name':
         columnSelector = this.tableColumnName(row);
         break;
 
@@ -242,7 +245,7 @@ class Features extends BOBasePage {
         columnSelector = this.tableColumnValues(row);
         break;
 
-      case 'a!position':
+      case 'position':
         columnSelector = this.tableColumnPosition(row);
         break;
 

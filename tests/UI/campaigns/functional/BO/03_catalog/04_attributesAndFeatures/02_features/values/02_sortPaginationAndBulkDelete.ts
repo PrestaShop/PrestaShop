@@ -76,9 +76,9 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
   it('should filter list of features by name \'Composition\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
-    await featuresPage.filterTable(page, 'b!name', 'Composition');
+    await featuresPage.filterTable(page, 'name', 'Composition');
 
-    const textColumn = await featuresPage.getTextColumn(page, 1, 'b!name');
+    const textColumn = await featuresPage.getTextColumn(page, 1, 'name');
     await expect(textColumn).to.contains('Composition');
   });
 

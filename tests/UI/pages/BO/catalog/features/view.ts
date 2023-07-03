@@ -87,10 +87,10 @@ class ViewFeature extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Features >';
+    this.pageTitle = 'Features';
 
     // Header selectors
-    this.addNewValueLink = '#page-header-desc-feature_value-new_feature_value';
+    this.addNewValueLink = 'a#page-header-desc-configuration-add_feature_value[title="Add new feature value"]';
 
     // Form selectors
     this.gridForm = '#form-feature_value';

@@ -33,18 +33,16 @@ class AddValue extends BOBasePage {
   constructor() {
     super();
 
-    this.createPageTitle = 'Features > Add New Feature •';
+    this.createPageTitle = `New Feature Value • ${global.INSTALL.SHOP_NAME}`;
     this.editPageTitle = 'Features > Edit New Feature •';
 
-    this.alertSuccessBlockParagraph = '.alert-success';
-
     // Form selectors
-    this.featureSelect = '#id_feature';
-    this.valueInput = '#value_1';
+    this.featureSelect = '#feature_value_feature_id';
+    this.valueInput = '#feature_value_value_1';
     this.urlInput = 'input[name=\'url_name_1\']';
     this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.saveButton = '#feature_value_form_submit_btn';
-    this.saveAndStayButton = 'button[name=\'submitAddfeature_valueAndStay\']';
+    this.saveButton = '#save-button';
+    this.saveAndStayButton = 'button[name=\'save-and-add-new\']';
   }
 
   /**
@@ -67,10 +65,9 @@ class AddValue extends BOBasePage {
     // Save value
     if (saveAndStay) {
       await page.click(this.saveAndStayButton);
-      // Return successful message
-      return this.getAlertSuccessBlockContent(page);
+    } else {
+      await this.clickAndWaitForURL(page, this.saveButton);
     }
-    await this.clickAndWaitForURL(page, this.saveButton);
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
   }

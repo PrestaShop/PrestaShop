@@ -77,13 +77,13 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
       },
       {
         args: {
-          testIdentifier: 'filterName', filterBy: 'b!name', filterValue: Features.composition.name,
+          testIdentifier: 'filterName', filterBy: 'name', filterValue: Features.composition.name,
         },
       },
       {
         args: {
           testIdentifier: 'filterPosition',
-          filterBy: 'a!position',
+          filterBy: 'position',
           filterValue: Features.composition.position - 1,
         },
       },

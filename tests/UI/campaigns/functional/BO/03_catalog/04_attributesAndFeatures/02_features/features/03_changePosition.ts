@@ -84,14 +84,14 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     await testContext.addContextItem(this, 'testIdentifier', 'changeFeaturePosition', baseContext);
 
     // Get first row feature name
-    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'b!name');
+    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'name');
 
     // Change position and check successful message
     const textResult = await featuresPage.changePosition(page, 1, 2);
     await expect(textResult, 'Unable to change position').to.contains(featuresPage.successfulUpdateMessage);
 
     // Get second row feature name and check if is equal the first row feature name before changing position
-    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'b!name');
+    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name');
     await expect(secondRowFeatureName, 'Changing position was done wrongly').to.equal(firstRowFeatureName);
   });
 
@@ -99,14 +99,14 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     await testContext.addContextItem(this, 'testIdentifier', 'resetFeaturePosition', baseContext);
 
     // Get third row feature name
-    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'b!name');
+    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name');
 
     // Change position and check successful message
     const textResult = await featuresPage.changePosition(page, 2, 1);
     await expect(textResult, 'Unable to change position').to.contains(featuresPage.successfulUpdateMessage);
 
     // Get first row feature name and check if is equal the first row feature name before changing position
-    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'b!name');
+    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'name');
     await expect(firstRowFeatureName, 'Changing position was done wrongly').to.equal(secondRowFeatureName);
   });
 });
