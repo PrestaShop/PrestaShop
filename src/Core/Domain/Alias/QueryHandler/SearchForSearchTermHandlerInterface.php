@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\SearchTerm;
 
 /**
  * Interface SearchAliasesForAssociationHandlerInterface defines contract for SearchAliasesForAssociationHandler
@@ -37,7 +36,7 @@ interface SearchForSearchTermHandlerInterface
     /**
      * @param SearchForSearchTerm $query
      *
-     * @return SearchTerm[]
+     * @return string[]
      */
     public function handle(SearchForSearchTerm $query): array;
 }

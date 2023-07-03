@@ -45,14 +45,9 @@ class SearchForSearchTermHandler implements SearchForSearchTermHandlerInterface
      */
     public function handle(SearchForSearchTerm $query): array
     {
-        $searchTerms = $this->aliasRepository->searchSearchTerms($query->getSearchTerm(), $query->getLimit());
-
-        $searchTermDtos = [];
-
-        foreach ($searchTerms as $searchTerm) {
-            $searchTermDtos[] = $searchTerm['search'];
-        }
-
-        return $searchTermDtos;
+       return array_column(
+           $this->aliasRepository->searchSearchTerms($query->getSearchTerm(), $query->getLimit()),
+           'search'
+       );
     }
 }
