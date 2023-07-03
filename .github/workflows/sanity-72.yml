@@ -29,7 +29,7 @@ jobs:
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql version: '5.7'
+          mysql version: '8.0'
           mysql database: 'prestashop'
           mysql root password: 'password'
 
@@ -76,6 +76,9 @@ jobs:
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
+
+      - name: Change MySQL authentication method
+        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
 
       - name: Run tests
         run: |

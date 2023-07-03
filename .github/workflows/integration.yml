@@ -19,7 +19,7 @@ jobs:
             -   name: Setup MySQL
                 uses: mirromutth/mysql-action@v1.1
                 with:
-                    mysql version: '5.7'
+                    mysql version: '8.0'
                     mysql database: 'prestashop'
                     mysql root password: 'password'
 
@@ -55,12 +55,14 @@ jobs:
 
             -   name: Composer Install
                 run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
-
             -   name: Build assets
                 run: make assets
 
             -   name: Prepare PrestaShop parameters
                 run: cp .github/workflows/phpunit/parameters.php app/config/parameters.php
+
+            -   name: Change MySQL authentication method
+                run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
 
             -   name: Run integration-tests
                 run: composer run-script integration-tests --timeout=0
