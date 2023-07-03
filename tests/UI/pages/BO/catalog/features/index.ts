@@ -133,9 +133,9 @@ class Features extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a.grid-view-row-link`;
-    this.tableColumnActionsDropDownButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} li a.edit`;
-    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActions(row)} li a.delete`;
+    this.tableColumnActionsDropDownButton = (row: number) => `${this.tableColumnActions(row)} a.dropdown-toggle`;
+    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.grid-edit-row-link`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActions(row)} a.grid-delete-row-link`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
@@ -161,7 +161,7 @@ class Features extends BOBasePage {
     this.growlMessageBlock = '#growls .growl-message';
 
     // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
+    this.deleteModalButtonYes = '#feature-grid-confirm-modal button.btn-confirm-submit';
   }
 
   /* Header methods */
@@ -282,11 +282,11 @@ class Features extends BOBasePage {
    */
   async deleteFeature(page: Page, row: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.tableColumnActionsDropDownButton(row));
-    await this.clickAndWaitForURL(page, this.tableColumnActionsDeleteLink(row));
+    await this.waitForSelectorAndClick(page, this.tableColumnActionsDeleteLink(row));
 
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Helper card methods */

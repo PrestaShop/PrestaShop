@@ -31,8 +31,6 @@ class EditFeature extends BOBasePage {
 
     this.editPageTitle = 'Edit:';
 
-    this.alertSuccessBlockParagraph = '.alert-success';
-
     // Form selectors
     this.nameInput = '#name_1';
     this.urlInput = 'input[name=\'url_name_1\']';

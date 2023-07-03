@@ -146,7 +146,7 @@ class ViewFeature extends BOBasePage {
     this.deleteModalButtonYes = '#feature_value-grid-confirm-modal button.btn-confirm-submit';
 
     // Footer selectors
-    this.backToListButton = '#desc-feature_value-back';
+    this.backToListButton = `${this.gridPanel} .card-footer a`;
   }
 
   /* Header methods */
