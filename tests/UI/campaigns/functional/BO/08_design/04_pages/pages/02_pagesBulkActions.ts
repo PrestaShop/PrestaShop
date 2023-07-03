@@ -23,7 +23,7 @@ const baseContext: string = 'functional_BO_design_pages_pages_pagesBulkActions';
 Create 2 new pages
 Enable/Disable/Delete pages by bulk actions
  */
-describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', async () => {
+describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfPages: number = 0;

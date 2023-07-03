@@ -62,7 +62,7 @@ class AddTag extends BOBasePage {
     await this.selectByVisibleText(page, this.productSelect, tagData.products);
     await this.waitForSelectorAndClick(page, this.moveToRightButton);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockContent(page);
   }
 }

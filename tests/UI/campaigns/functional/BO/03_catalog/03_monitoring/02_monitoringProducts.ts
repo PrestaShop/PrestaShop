@@ -5,11 +5,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
@@ -42,7 +43,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
   const productWithoutDescription: ProductData = new ProductData({type: 'Standard product', description: '', summary: ''});
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -113,26 +114,28 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
     },
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index: number) => {
     describe(`Create product ${test.args.productType} in BO`, async () => {
-      it('should go to \'Catalog > Products\' page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `${test.args.testIdentifier}_goToProductsPage`,
-          baseContext,
-        );
+      if (index === 0) {
+        it('should go to \'Catalog > Products\' page', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${test.args.testIdentifier}_goToProductsPage`,
+            baseContext,
+          );
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
-        );
-        await productsPage.closeSfToolBar(page);
+          await dashboardPage.goToSubMenu(
+            page,
+            dashboardPage.catalogParentLink,
+            dashboardPage.productsLink,
+          );
+          await productsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
-      });
+          const pageTitle = await productsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productsPage.pageTitle);
+        });
+      }
 
       it('should reset all filters and get number of products in BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}_resetFirst`, baseContext);

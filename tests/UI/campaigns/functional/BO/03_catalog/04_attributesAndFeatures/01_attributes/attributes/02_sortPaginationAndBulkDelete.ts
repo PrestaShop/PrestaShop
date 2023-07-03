@@ -26,7 +26,7 @@ Pagination next and previous
 Sort attributes table by ID, Name and Position
 Delete the created attributes by bulk actions
  */
-describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delete attributes', async () => {
+describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delete attributes', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfAttributes: number = 0;

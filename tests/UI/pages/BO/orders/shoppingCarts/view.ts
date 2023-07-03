@@ -182,7 +182,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async createOrderFromThisCart(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.orderInformationButtonCreateOrder);
+    await this.clickAndWaitForURL(page, this.orderInformationButtonCreateOrder);
   }
 
   /**
@@ -191,7 +191,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToOrderPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.orderInformationLinkOrder);
+    await this.clickAndWaitForURL(page, this.orderInformationLinkOrder);
   }
 }
 

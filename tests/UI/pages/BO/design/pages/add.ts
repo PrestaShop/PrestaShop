@@ -75,7 +75,7 @@ class AddPage extends BOBasePage {
     await this.setChecked(page, this.displayedToggleInput(pageData.displayed ? 1 : 0));
 
     // Save form
-    await this.clickAndWaitForNavigation(page, this.savePageButton);
+    await this.clickAndWaitForURL(page, this.savePageButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -96,7 +96,7 @@ class AddPage extends BOBasePage {
    * @return {Promise<void>}
    */
   async cancelPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.cancelButton);
+    await this.clickAndWaitForURL(page, this.cancelButton);
   }
 }
 export default new AddPage();

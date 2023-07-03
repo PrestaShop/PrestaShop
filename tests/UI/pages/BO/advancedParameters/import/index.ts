@@ -158,7 +158,7 @@ class Import extends BOBasePage {
    */
   async closeImportModal(page: Page): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.importProgressModalCloseButton);
-    await this.clickAndWaitForNavigation(page, this.importProgressModalCloseButton);
+    await this.clickAndWaitForURL(page, this.importProgressModalCloseButton);
 
     return this.elementNotVisible(page, this.importProgressModalCloseButton, 1000);
   }

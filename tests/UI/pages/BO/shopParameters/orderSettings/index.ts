@@ -84,7 +84,8 @@ class OrderSettings extends BOBasePage {
    */
   async setFinalSummaryStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableFinalSummaryToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    await page.click(this.saveGeneralFormButton);
+    await this.elementNotVisible(page, this.enableFinalSummaryToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -97,7 +98,8 @@ class OrderSettings extends BOBasePage {
    */
   async setGuestCheckoutStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableGuestCheckoutToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    await page.click(this.saveGeneralFormButton);
+    await this.elementNotVisible(page, this.enableGuestCheckoutToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -110,7 +112,8 @@ class OrderSettings extends BOBasePage {
    */
   async setReorderOptionStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.disableReorderingToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    await page.click(this.saveGeneralFormButton);
+    await this.elementNotVisible(page, this.disableReorderingToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -123,7 +126,7 @@ class OrderSettings extends BOBasePage {
    */
   async setMinimumPurchaseRequiredTotal(page: Page, value: number): Promise<string> {
     await this.setValue(page, this.minimumPurchaseRequiredValue, value.toString());
-    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    await page.click(this.saveGeneralFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -140,7 +143,7 @@ class OrderSettings extends BOBasePage {
     if (toEnable) {
       await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
-    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    await page.click(this.saveGeneralFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -168,7 +171,7 @@ class OrderSettings extends BOBasePage {
     }
 
     await this.setChecked(page, this.recycledPackagingToggleInput(recyclePackagingStatus ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
+    await page.click(this.saveGiftOptionsFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -179,7 +182,7 @@ class OrderSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToStatusesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.statusesTab);
+    await this.clickAndWaitForURL(page, this.statusesTab);
   }
 }
 

@@ -133,7 +133,8 @@ class ProductSettings extends BOBasePage {
    */
   async changeCatalogModeStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.catalogModeToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveProductGeneralFormButton);
+    await this.elementNotVisible(page, this.catalogModeToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -145,7 +146,8 @@ class ProductSettings extends BOBasePage {
    */
   async setShowPricesStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.showPricesToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveProductGeneralFormButton);
+    await this.elementNotVisible(page, this.showPricesToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -157,7 +159,7 @@ class ProductSettings extends BOBasePage {
    */
   async updateNumberOfDays(page: Page, numberOfDays: number): Promise<string> {
     await this.setValue(page, this.newDaysNumberInput, numberOfDays.toString());
-    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    await page.click(this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -169,7 +171,7 @@ class ProductSettings extends BOBasePage {
    */
   async UpdateMaxSizeOfSummary(page: Page, size: number): Promise<string> {
     await this.setValue(page, this.maxSizeShortDescriptionInput, size.toString());
-    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    await page.click(this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -181,7 +183,8 @@ class ProductSettings extends BOBasePage {
    */
   async setForceUpdateFriendlyURLStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.forceUpdateFriendlyUrlToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    await page.click(this.saveProductGeneralFormButton);
+    await this.elementNotVisible(page, this.forceUpdateFriendlyUrlToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -193,7 +196,8 @@ class ProductSettings extends BOBasePage {
    */
   async setDefaultActivationStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.defaultActivationStatusToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    await page.click(this.saveProductGeneralFormButton);
+    await this.elementNotVisible(page, this.defaultActivationStatusToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -205,7 +209,7 @@ class ProductSettings extends BOBasePage {
    */
   async chooseQuantityDiscountsBasedOn(page: Page, basedOn: string): Promise<string> {
     await this.selectByVisibleText(page, this.quantityDiscountBasedOnSelect, basedOn);
-    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    await page.click(this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -216,8 +220,9 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayAvailableQuantitiesStatus(page: Page, toEnable: boolean = true): Promise<string> {
+    await this.closeAlertBlock(page);
     await this.setChecked(page, this.displayAvailableQuantitiesToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    await page.click(this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -228,8 +233,9 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayRemainingQuantities(page: Page, quantity: number): Promise<string> {
+    await this.closeAlertBlock(page);
     await this.setValue(page, this.remainingQuantityInput, quantity.toString());
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -241,7 +247,8 @@ class ProductSettings extends BOBasePage {
    */
   async setDisplayUnavailableProductAttributesStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displayUnavailableAttributesToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
+    await this.elementNotVisible(page, this.displayUnavailableAttributesToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -253,7 +260,7 @@ class ProductSettings extends BOBasePage {
    */
   async setSeparatorOfAttributeOnProductLink(page: Page, separator: string): Promise<string> {
     await this.selectByVisibleText(page, this.separatorAttributeOnProductPageSelect, separator);
-    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    await page.click(this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -265,7 +272,8 @@ class ProductSettings extends BOBasePage {
    */
   async setAllowOrderingOutOfStockStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.allowOrderingOosToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
+    await this.elementNotVisible(page, this.allowOrderingOosToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -280,7 +288,8 @@ class ProductSettings extends BOBasePage {
     if (toEnable) {
       await this.setChecked(page, this.allowOrderingOosToggleInput(0));
     }
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
+    await this.elementNotVisible(page, this.enableStockManagementToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -292,7 +301,7 @@ class ProductSettings extends BOBasePage {
    */
   async setProductsDisplayedPerPage(page: Page, numberOfProducts: number): Promise<string> {
     await this.setValue(page, this.productsPerPageInput, numberOfProducts);
-    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    await page.click(this.savePaginationFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -326,7 +335,7 @@ class ProductSettings extends BOBasePage {
     // Fill label in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.labelInStock(2), label);
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -338,7 +347,7 @@ class ProductSettings extends BOBasePage {
    */
   async setDeliveryTimeInStock(page: Page, deliveryTimeText: string): Promise<string> {
     await this.setValue(page, this.deliveryTimeInStockInput, deliveryTimeText);
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -350,7 +359,8 @@ class ProductSettings extends BOBasePage {
    */
   async setDisplayDiscountedPriceStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displayDiscountedPriceToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    await page.click(this.saveProductPageFormButton);
+    await this.elementNotVisible(page, this.displayDiscountedPriceToggleInput(!toEnable ? 1 : 0), 2000);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -364,7 +374,7 @@ class ProductSettings extends BOBasePage {
   async setDefaultProductsOrder(page: Page, orderBy: string, orderMethod:string = 'Ascending'): Promise<string> {
     await this.selectByVisibleText(page, this.productsDefaultOrderBySelect, orderBy);
     await this.selectByVisibleText(page, this.productsDefaultOrderMethodSelect, orderMethod);
-    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    await page.click(this.savePaginationFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -376,7 +386,7 @@ class ProductSettings extends BOBasePage {
    */
   async setDeliveryTimeOutOfStock(page: Page, deliveryTimeText: string = ''): Promise<string> {
     await this.setValue(page, this.deliveryTimeOutOfStockInput, deliveryTimeText);
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -393,7 +403,7 @@ class ProductSettings extends BOBasePage {
     // Fill label in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.oosAllowedBackordersLabel(2), label);
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -410,7 +420,7 @@ class ProductSettings extends BOBasePage {
     // Fill label in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.oosDeniedBackordersLabel(2), label);
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -422,7 +432,7 @@ class ProductSettings extends BOBasePage {
    */
   async setDefaultPackStockManagement(page: Page, option: string): Promise<string> {
     await this.selectByVisibleText(page, this.defaultPackStockManagementSelect, option);
-    await this.clickAndWaitForNavigation(page, this.saveProductsStockFormButton);
+    await page.click(this.saveProductsStockFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

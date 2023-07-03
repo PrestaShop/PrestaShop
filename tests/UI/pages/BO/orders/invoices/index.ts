@@ -191,7 +191,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveInvoiceOptions(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveInvoiceOptionsButton);
+    await page.click(this.saveInvoiceOptionsButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

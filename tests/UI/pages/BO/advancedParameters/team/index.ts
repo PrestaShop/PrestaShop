@@ -144,7 +144,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async goToPermissionsTab(page: Page): Promise<boolean> {
-    await this.clickAndWaitForNavigation(page, this.permissionsTab);
+    await this.clickAndWaitForURL(page, this.permissionsTab);
     return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
   }
 
@@ -155,7 +155,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewEmployeePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewEmployeeLink);
+    await this.clickAndWaitForURL(page, this.addNewEmployeeLink);
   }
 
   // Tab methods
@@ -165,7 +165,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToProfilesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.profilesTab);
+    await this.clickAndWaitForURL(page, this.profilesTab);
   }
 
   // Columns methods
@@ -185,7 +185,8 @@ class Employees extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page: Page): Promise<number> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
     return this.getNumberOfElementInGrid(page);
   }
@@ -208,7 +209,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditEmployeePage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.employeesListTableEditLink(row));
+    await this.clickAndWaitForURL(page, this.employeesListTableEditLink(row));
   }
 
   /**
@@ -231,7 +232,7 @@ class Employees extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -261,7 +262,7 @@ class Employees extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.employeesListTableStatusColumn(row));
+      await this.clickAndWaitForURL(page, this.employeesListTableStatusColumn(row));
       return true;
     }
 
@@ -322,7 +323,8 @@ class Employees extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteEmployees(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await page.click(this.confirmDeleteButton);
+    await this.elementNotVisible(page, this.confirmDeleteModal, 2000);
   }
 
   /**
@@ -343,7 +345,8 @@ class Employees extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await this.elementNotVisible(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton, 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -411,7 +414,7 @@ class Employees extends BOBasePage {
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -437,7 +440,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getTextContent(page, this.paginationLabel);
   }
@@ -448,7 +451,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getTextContent(page, this.paginationLabel);
   }

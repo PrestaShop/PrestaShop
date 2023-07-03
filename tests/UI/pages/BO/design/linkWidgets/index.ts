@@ -63,7 +63,7 @@ class LinkList extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToNewLinkWidgetPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newBlockLink);
+    await this.clickAndWaitForURL(page, this.newBlockLink);
   }
 
   /* Table methods */
@@ -90,7 +90,7 @@ class LinkList extends BOBasePage {
       page.click(this.dropdownToggleButton(hookName, row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(hookName, row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(hookName, row));
+    await page.click(this.deleteRowLink(hookName, row));
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

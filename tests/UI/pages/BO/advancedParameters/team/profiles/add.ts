@@ -45,7 +45,7 @@ class AddProfile extends BOBasePage {
    */
   async createEditProfile(page: Page, profileData: ProfileData): Promise<string> {
     await this.setValue(page, this.nameInput, profileData.name);
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

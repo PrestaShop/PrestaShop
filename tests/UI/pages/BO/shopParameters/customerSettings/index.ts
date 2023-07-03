@@ -60,7 +60,7 @@ class CustomerSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToTitlesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.titlesSubtab);
+    await this.clickAndWaitForURL(page, this.titlesSubtab);
   }
 
   /**
@@ -69,7 +69,7 @@ class CustomerSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToGroupsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.groupsSubtab);
+    await this.clickAndWaitForURL(page, this.groupsSubtab);
   }
 
   /**
@@ -102,7 +102,8 @@ class CustomerSettings extends BOBasePage {
         throw new Error(`${option} was not found`);
     }
     await this.setChecked(page, selector(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    await page.click(this.saveGeneralFormButton);
+    await this.elementNotVisible(page, selector(!toEnable ? 1 : 0));
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

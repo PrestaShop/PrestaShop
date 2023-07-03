@@ -89,7 +89,7 @@ class AddContact extends BOBasePage {
     await this.setValue(page, this.descriptionTextareaFR, contactData.description);
     await this.setChecked(page, this.enableSaveMessagesToggleInput(contactData.saveMessage ? 1 : 0));
     // Save Contact
-    await this.clickAndWaitForNavigation(page, this.saveContactButton);
+    await this.clickAndWaitForURL(page, this.saveContactButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

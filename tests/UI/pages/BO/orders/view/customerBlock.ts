@@ -98,7 +98,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @returns {Promise<void>}
    */
   async goToViewFullDetails(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.ViewAllDetailsLink);
+    await this.clickAndWaitForURL(page, this.ViewAllDetailsLink);
   }
 
   /**

@@ -7,11 +7,12 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 import {createOrderSpecificProductTest} from '@commonTests/FO/order';
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import ordersPage from '@pages/BO/orders';
@@ -69,7 +70,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
   });
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // Pre-condition: Create first product
   createProductTest(product, baseContext);

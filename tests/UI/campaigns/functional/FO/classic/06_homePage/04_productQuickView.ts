@@ -5,10 +5,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
+// Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import categoryPage from '@pages/FO/category';
@@ -60,7 +62,7 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest`);

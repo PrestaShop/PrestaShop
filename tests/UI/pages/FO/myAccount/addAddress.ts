@@ -127,7 +127,7 @@ class AddAddress extends FOBasePage {
     }
 
     // Save address
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }

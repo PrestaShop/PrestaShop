@@ -71,7 +71,7 @@ class PreviewEmailTheme extends BOBasePage {
    * @return {Promise<void>}
    */
   async goBackToEmailThemesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.backToConfigurationLink);
+    await this.clickAndWaitForURL(page, this.backToConfigurationLink);
   }
 
   /**

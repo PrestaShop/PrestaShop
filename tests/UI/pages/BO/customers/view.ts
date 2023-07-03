@@ -267,7 +267,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditCustomerPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.personnalInformationEditButton);
+    await this.clickAndWaitForURL(page, this.personnalInformationEditButton);
   }
 
   /**
@@ -294,7 +294,7 @@ class ViewCustomer extends BOBasePage {
         throw new Error(`${cardTitle} was not found`);
     }
 
-    return this.clickAndWaitForNavigation(page, selector(row));
+    return this.clickAndWaitForURL(page, selector(row));
   }
 
   /**

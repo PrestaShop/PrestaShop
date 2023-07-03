@@ -2,6 +2,14 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {
+  setFeatureFlag,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
+
+// Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
@@ -12,10 +20,6 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {
-  disableNewProductPageTest,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_cartFO_editCheckCart';
 
@@ -33,7 +37,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
   let itemsNumber: number = 0;
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {

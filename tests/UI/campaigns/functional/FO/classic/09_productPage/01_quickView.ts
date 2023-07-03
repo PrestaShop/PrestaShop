@@ -6,21 +6,21 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+// BO
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
+import boDashboardPage from '@pages/BO/dashboard';
+import boProductsPage from '@pages/BO/catalog/products';
+import boAddProductPage from '@pages/BO/catalog/products/add';
 // FO
 import {homePage} from '@pages/FO/home';
 import cartPage from '@pages/FO/cart';
 import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
-
-// BO
-import boDashboardPage from '@pages/BO/dashboard';
-import boProductsPage from '@pages/BO/catalog/products';
-import boAddProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
 import Products from '@data/demo/products';
@@ -106,7 +106,7 @@ describe('FO - product page : Product quick view', async () => {
   ];
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {

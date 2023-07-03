@@ -175,7 +175,7 @@ class ViewAttribute extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewValuePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewValueLink);
+    await this.clickAndWaitForURL(page, this.addNewValueLink);
   }
 
   /* Filter methods */
@@ -186,7 +186,7 @@ class ViewAttribute extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.gridForm, 2000);
   }
@@ -219,7 +219,7 @@ class ViewAttribute extends BOBasePage {
    */
   async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /* Column methods */
@@ -266,7 +266,7 @@ class ViewAttribute extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditValuePage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditLink(row));
   }
 
   /**
@@ -284,7 +284,7 @@ class ViewAttribute extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -297,7 +297,7 @@ class ViewAttribute extends BOBasePage {
    * @constructor
    */
   async backToAttributesList(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.backToListLink);
+    await this.clickAndWaitForURL(page, this.backToListLink);
   }
 
   /**
@@ -344,7 +344,7 @@ class ViewAttribute extends BOBasePage {
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -368,7 +368,7 @@ class ViewAttribute extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -379,7 +379,7 @@ class ViewAttribute extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -390,7 +390,7 @@ class ViewAttribute extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -428,7 +428,7 @@ class ViewAttribute extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   /**

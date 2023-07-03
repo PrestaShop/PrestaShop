@@ -145,7 +145,7 @@ class Languages extends LocalizationBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewLanguage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewLanguageLink);
+    await this.clickAndWaitForURL(page, this.addNewLanguageLink);
   }
 
   /* Reset methods */
@@ -156,7 +156,8 @@ class Languages extends LocalizationBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -201,7 +202,7 @@ class Languages extends LocalizationBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /* Table methods */
@@ -241,7 +242,7 @@ class Languages extends LocalizationBasePage {
    * @return {Promise<void>}
    */
   async goToEditLanguage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+    await this.clickAndWaitForURL(page, this.editRowLink(row));
   }
 
   /**
@@ -296,7 +297,7 @@ class Languages extends LocalizationBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
+      await page.click(this.statusColumn(row));
 
       return true;
     }
@@ -323,7 +324,8 @@ class Languages extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.click(toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await this.elementNotVisible(page, toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -360,7 +362,8 @@ class Languages extends LocalizationBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteLanguages(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await page.click(this.confirmDeleteButton);
+    await this.elementNotVisible(page, this.confirmDeleteButton, 2000);
   }
 
   /* Sort functions */
@@ -377,7 +380,7 @@ class Languages extends LocalizationBasePage {
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -401,9 +404,11 @@ class Languages extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page);
@@ -416,7 +421,7 @@ class Languages extends LocalizationBasePage {
    */
   async paginationNext(page: Page): Promise<string> {
     await this.scrollTo(page, this.paginationNextLink);
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -428,7 +433,7 @@ class Languages extends LocalizationBasePage {
    */
   async paginationPrevious(page: Page): Promise<string> {
     await this.scrollTo(page, this.paginationPreviousLink);
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

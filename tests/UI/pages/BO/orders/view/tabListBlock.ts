@@ -211,7 +211,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @returns {Promise<string>}
    */
   async clickOnUpdateStatus(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.secondUpdateStatusButton);
+    await page.click(this.secondUpdateStatusButton);
 
     return this.getAlertDangerBlockParagraphContent(page);
   }
@@ -224,7 +224,7 @@ class TabListBlock extends ViewOrderBasePage {
    */
   async updateOrderStatus(page: Page, status: string): Promise<string> {
     await this.selectByVisibleText(page, this.secondOrderStatusesSelect, status);
-    await this.clickAndWaitForNavigation(page, this.secondUpdateStatusButton);
+    await page.click(this.secondUpdateStatusButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -322,7 +322,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isGenerateInvoiceButtonVisible(page: Page): Promise<boolean> {
+  async isGenerateInvoiceButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.generateInvoiceButton, 1000);
   }
 
@@ -331,7 +331,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getDocumentsNumber(page: Page): Promise<number> {
+  async getDocumentsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, `${this.documentTab} .count`);
   }
 
@@ -352,7 +352,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @returns {Promise<string>}
    */
   async generateInvoice(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.generateInvoiceButton);
+    await page.click(this.generateInvoiceButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -559,7 +559,7 @@ class TabListBlock extends ViewOrderBasePage {
     await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
     await page.click(this.carrierSelect);
     await this.waitForSelectorAndClick(page, this.carrierToSelect(shippingData.carrierID));
-    await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
+    await page.click(this.updateCarrierButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

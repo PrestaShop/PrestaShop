@@ -121,7 +121,7 @@ class Profiles extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewProfilePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewProfileLink);
+    await this.clickAndWaitForURL(page, this.addNewProfileLink);
   }
 
   /**
@@ -151,7 +151,8 @@ class Profiles extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page: Page): Promise<number> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
     return this.getNumberOfElementInGrid(page);
   }
@@ -164,7 +165,7 @@ class Profiles extends BOBasePage {
    */
   async goToEditProfilePage(page: Page, row: number): Promise<void> {
     // Click on edit
-    await this.clickAndWaitForNavigation(page, this.profilesListTableEditLink(row));
+    await this.clickAndWaitForURL(page, this.profilesListTableEditLink(row));
   }
 
   /**
@@ -187,7 +188,7 @@ class Profiles extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -220,7 +221,7 @@ class Profiles extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteProfiles(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
   }
 
   /**
@@ -268,7 +269,7 @@ class Profiles extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.pagesPaginationNextLink);
+    await this.clickAndWaitForURL(page, this.pagesPaginationNextLink);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
   }
@@ -279,7 +280,7 @@ class Profiles extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.pagesPaginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.pagesPaginationPreviousLink);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
   }
@@ -316,7 +317,7 @@ class Profiles extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 

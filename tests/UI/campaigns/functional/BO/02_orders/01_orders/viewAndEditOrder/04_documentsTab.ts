@@ -226,7 +226,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
 
   // 6 - Check documents tab
   describe('Check documents tab', async () => {
-    it('should click on \'DocumentS\' tab', async function () {
+    it('should click on \'Documents\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab2', baseContext);
 
       const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);

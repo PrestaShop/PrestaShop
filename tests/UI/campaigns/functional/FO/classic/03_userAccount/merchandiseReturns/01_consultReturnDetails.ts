@@ -128,7 +128,7 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderDate', baseContext);
 
         orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
-        orderDate = orderDate.substr(0, 10);
+        orderDate = orderDate.substring(0, 10);
         await expect(orderDate).to.not.be.null;
       });
 

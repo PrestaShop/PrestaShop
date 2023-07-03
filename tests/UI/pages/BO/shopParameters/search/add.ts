@@ -47,7 +47,7 @@ class AddAlias extends BOBasePage {
     await this.setValue(page, this.aliasInput, aliasData.alias);
     await this.setValue(page, this.resultInput, aliasData.result);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockContent(page);
   }
 }

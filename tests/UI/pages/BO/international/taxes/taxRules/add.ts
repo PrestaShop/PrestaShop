@@ -80,7 +80,7 @@ class AddTaxRules extends BOBasePage {
     await this.setValue(page, this.nameInput, taxRuleGroupData.name);
     await this.setChecked(page, this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
-    await this.clickAndWaitForNavigation(page, this.saveTaxButton);
+    await this.clickAndWaitForURL(page, this.saveTaxButton);
 
     return this.getAlertSuccessBlockContent(page);
   }
@@ -97,7 +97,7 @@ class AddTaxRules extends BOBasePage {
     await this.selectByVisibleText(page, this.taxSelect, taxRuleData.name);
     await this.setValue(page, this.descriptionInput, taxRuleData.description);
     // Save Tax rules
-    await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+    await page.click(this.saveAndStayButton);
 
     return this.getAlertSuccessBlockContent(page);
   }

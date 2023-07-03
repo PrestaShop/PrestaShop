@@ -59,7 +59,7 @@ class EditFeature extends BOBasePage {
     await this.setChecked(page, this.indexableToggle(featureData.indexable ? '1' : '0'));
 
     // Save feature
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

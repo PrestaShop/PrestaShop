@@ -258,7 +258,8 @@ class Cart extends FOBasePage {
    */
   async clickOnProceedToCheckout(page: Page): Promise<void> {
     await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
-    await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
+    await this.clickAndWaitForLoadState(page, this.proceedToCheckoutButton);
+    await this.elementNotVisible(page, this.proceedToCheckoutButton, 2000);
   }
 
   /**

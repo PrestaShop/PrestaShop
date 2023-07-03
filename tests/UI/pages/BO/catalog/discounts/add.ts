@@ -500,7 +500,7 @@ class AddCartRule extends BOBasePage {
 
     if (waitForNavigation) {
       // Save and return successful message
-      await this.clickAndWaitForNavigation(page, this.saveButton);
+      await this.clickAndWaitForURL(page, this.saveButton);
       return this.getAlertSuccessBlockContent(page);
     }
 
@@ -539,7 +539,7 @@ class AddCartRule extends BOBasePage {
    * @return {Promise<void>}
    */
   async clickOnCancelButton(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.cancelButton);
+    await this.clickAndWaitForURL(page, this.cancelButton);
   }
 }
 

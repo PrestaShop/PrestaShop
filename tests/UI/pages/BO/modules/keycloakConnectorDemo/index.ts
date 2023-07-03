@@ -39,7 +39,7 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
   async setKeycloakEndpoint(page: Page, endpoint: string): Promise<string> {
     await page.fill(this.formKeycloakEndpoint, endpoint);
 
-    await this.clickAndWaitForNavigation(page, this.formKeycloakButtonSubmit);
+    await this.clickAndWaitForLoadState(page, this.formKeycloakButtonSubmit);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
