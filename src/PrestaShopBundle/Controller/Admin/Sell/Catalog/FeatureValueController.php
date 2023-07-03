@@ -101,6 +101,12 @@ class FeatureValueController extends FrameworkBundleAdminController
                     ]);
                 }
 
+                if ($featureId) {
+                    return $this->redirectToRoute('admin_feature_values_index', [
+                        'featureId' => $featureId,
+                    ]);
+                }
+
                 return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
