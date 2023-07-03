@@ -34,7 +34,7 @@ class AddValue extends BOBasePage {
     super();
 
     this.createPageTitle = `New Feature Value • ${global.INSTALL.SHOP_NAME}`;
-    this.editPageTitle = 'Features > Edit New Feature •';
+    this.editPageTitle = `Feature value • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
     this.featureSelect = '#feature_value_feature_id';
@@ -55,12 +55,14 @@ class AddValue extends BOBasePage {
   // eslint-disable-next-line consistent-return
   async addEditValue(page: Page, valueData: FeatureValueData, saveAndStay: boolean = false): Promise<string | void> {
     // Set group and value
-    await this.selectByVisibleText(page, this.featureSelect, valueData.featureName);
+    if (!(await this.isDisabled(page, this.featureSelect))) {
+      await this.selectByVisibleText(page, this.featureSelect, valueData.featureName);
+    }
     await this.setValue(page, this.valueInput, valueData.value);
 
     // Set Url and meta title
-    await this.setValue(page, this.urlInput, valueData.url);
-    await this.setValue(page, this.metaTitleInput, valueData.metaTitle);
+    //await this.setValue(page, this.urlInput, valueData.url);
+    //await this.setValue(page, this.metaTitleInput, valueData.metaTitle);
 
     // Save value
     if (saveAndStay) {

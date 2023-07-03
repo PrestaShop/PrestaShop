@@ -20,8 +20,6 @@ class Features extends BOBasePage {
 
   private readonly gridPanel: string;
 
-  private readonly gridTableHeaderTitle: string;
-
   private readonly gridHeaderTitle: string;
 
   private readonly gridTable: string;
@@ -107,13 +105,12 @@ class Features extends BOBasePage {
     this.helpContainerBlock = '#help-container';
 
     // Form selectors
-    this.gridForm = '#form-feature';
+    this.gridForm = '#feature_value_filter_form';
     this.gridPanel = '#feature_grid_panel';
-    this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
 
     // Table selectors
-    this.gridTable = '#feature_grid';
+    this.gridTable = '#feature_grid_table';
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.column-filters`;

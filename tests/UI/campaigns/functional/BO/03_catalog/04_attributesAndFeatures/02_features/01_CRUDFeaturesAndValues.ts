@@ -164,10 +164,8 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should view feature and check number of values after creation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeature1', baseContext);
 
-      await featuresPage.viewFeature(page, 1);
-
       const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${createFeatureData.name}`);
+      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} • ${global.INSTALL.SHOP_NAME}`);
 
       const numberOfValuesAfterCreation = await viewFeaturePage.resetAndGetNumberOfLines(page);
       await expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 2);
@@ -181,7 +179,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await viewFeaturePage.goToEditValuePage(page, 2);
 
       const pageTitle = await addValuePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addValuePage.editPageTitle);
+      await expect(pageTitle).to.eq(addValuePage.editPageTitle);
     });
 
     it('should update the second value', async function () {
