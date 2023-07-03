@@ -40,7 +40,7 @@ class UpdateAliasStatusCommand
     private bool $enabled;
 
     /**
-     * @param AliasId $aliasId
+     * @param int $aliasId
      * @param bool $enabled
      */
     public function __construct(
