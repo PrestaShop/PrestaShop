@@ -130,16 +130,6 @@ class ImageGenerator
             )) {
                 $result = false;
             }
-            if ($generate_high_dpi_images && !ImageManager::resize(
-                $filePath,
-                sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name) . '2x', $imageFormat),
-                $imageType->width * 2,
-                $imageType->height * 2,
-                $imageFormat,
-                $forceFormat
-            )) {
-                $result = false;
-            }
         }
 
         return $result;
