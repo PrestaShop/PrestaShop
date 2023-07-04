@@ -170,9 +170,7 @@ class FeatureController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_features_edit', [
-                    'featureId' => $featureId,
-                ]);
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
