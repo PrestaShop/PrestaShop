@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,33 +27,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Hook\QueryHandler;
+namespace PrestaShopBundle\ApiPlatform\Exception;
 
-use Hook;
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * @internal
+ * Is thrown when the query provider does not match any extra properties.
  */
-#[AsQueryHandler]
-final class GetHookStatusHandler implements GetHookStatusHandlerInterface
+class NoExtraPropertiesFoundException extends DomainException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(GetHookStatus $query)
-    {
-        $hookId = $query->getId()->getValue();
-        $hook = new Hook($hookId);
-
-        if ($hook->id !== $hookId) {
-            throw new HookNotFoundException(sprintf('Hook with id "%d" was not found.', $hookId));
-        }
-
-        return new HookStatus($hook->id, (bool) $hook->active);
-    }
 }

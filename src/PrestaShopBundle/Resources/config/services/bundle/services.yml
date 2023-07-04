@@ -108,8 +108,6 @@ services:
     tags: [ 'api_platform.state_provider' ]
     public: false
     autowire: true
-    arguments:
-      - '@prestashop.core.query_bus'
 
   PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
     tags: [ 'api_platform.state_processor' ]

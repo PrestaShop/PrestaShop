@@ -34,21 +34,23 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
         new Get(
-            uriTemplate: '/hook-status/{hookId}',
+            uriTemplate: '/hook-status/{id}',
             requirements: ['id' => '\d+'],
             openapiContext: [
                 'summary' => 'Get hook status A',
                 'description' => 'Get hook status B',
                 'parameters' => [
                     [
-                        'name' => 'hookId',
+                        'name' => 'id',
                         'in' => 'path',
                         'required' => true,
                         'schema' => [
@@ -72,18 +74,35 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             processor: CommandProcessor::class,
             extraProperties: ['command' => UpdateHookStatusCommand::class]
         ),
-    ]
+        new Get(
+          uriTemplate: '/hooks/{id}',
+            requirements: ['id' => '\d+'],
+            exceptionToStatus: [HookNotFoundException::class => 404],
+            normalizationContext: [
+                'groups' => [
+                    'hook-status:read',
+                ],
+            ],
+            provider: QueryProvider::class,
+            extraProperties: [
+                'dto' => GetHook::class,
+                'denormalizer' => Hook::class,
+            ]
+        ),
+    ],
 )]
 class Hook
 {
-    /**
-     * @var int
-     */
     #[ApiProperty(identifier: true)]
-    public int $hookId;
+    #[Groups(['hook-status:read'])]
+    public int $id;
 
-    /**
-     * @var bool
-     */
-    public bool $status;
+    #[Groups(['hook-status:read'])]
+    public bool $active;
+
+    public string $name;
+
+    public string $title;
+
+    public string $description;
 }

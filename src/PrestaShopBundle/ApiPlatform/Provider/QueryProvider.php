@@ -31,20 +31,41 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class QueryProvider implements ProviderInterface
 {
-    private $queryBus;
-
-    public function __construct(CommandBusInterface $queryBus)
+    public function __construct(private CommandBusInterface $queryBus, private DenormalizerInterface $serializer)
     {
-        $this->queryBus = $queryBus;
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $query = $operation->getExtraProperties()['query'];
+        $extraProperties = $operation->getExtraProperties();
 
-        return $this->queryBus->handle(new $query(...$uriVariables));
+        $query = array_key_exists('query', $extraProperties) ? $extraProperties['query'] : null;
+        $command = array_key_exists('command', $extraProperties) ? $extraProperties['command'] : null;
+        $dto = array_key_exists('dto', $extraProperties) ? $extraProperties['dto'] : null;
+
+        if (null !== $query) {
+            return $this->queryBus->handle(new $query(...$uriVariables));
+        } elseif (null !== $command) {
+            // the command case has yet to be implemented.
+            return null;
+        } elseif (null !== $dto) {
+            $coreObject = $this->queryBus->handle(new $dto(...$uriVariables));
+            // We use get_object_var to convert the ObjectModel into an array and then denormalize it into the DTO.
+            // We handle things this way because we are unable to normalize an ObjectModel
+            // directly with the symfony serializer.
+            return $this->serializer->denormalize(
+                get_object_vars($coreObject),
+                $extraProperties['denormalizer'],
+                context: [ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true]
+            );
+        } else {
+            throw new NoExtraPropertiesFoundException();
+        }
     }
 }

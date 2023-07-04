@@ -80,7 +80,7 @@ class GetHookStatusTest extends ApiTestCase
         $bearerToken = $this->getBearerToken();
         static::createClient()->request('PUT', '/new-api/hook-status', [
             'auth_bearer' => $bearerToken,
-            'json' => ['hookId' => (int) $hook->id, 'status' => false],
+            'json' => ['id' => (int) $hook->id, 'active' => false],
         ]);
         self::assertResponseStatusCodeSame(200);
 
@@ -99,7 +99,7 @@ class GetHookStatusTest extends ApiTestCase
         $bearerToken = $this->getBearerToken();
         static::createClient()->request('PUT', '/new-api/hook-status', [
             'auth_bearer' => $bearerToken,
-            'json' => ['hookId' => (int) $hook->id, 'status' => true],
+            'json' => ['id' => (int) $hook->id, 'active' => true],
         ]);
         self::assertResponseStatusCodeSame(200);
 

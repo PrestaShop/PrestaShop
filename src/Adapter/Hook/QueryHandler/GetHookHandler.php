@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,36 +27,26 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Hook\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Hook\QueryHandler;
 
 use Hook;
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Hook\CommandHandler\UpdateHookStatusCommandHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\CannotUpdateHookException;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
+use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookHandlerInterface;
 
-/**
- * @internal
- */
-#[AsCommandHandler]
-class UpdateHookStatusCommandHandler implements UpdateHookStatusCommandHandlerInterface
+#[AsQueryHandler]
+final class GetHookHandler implements GetHookHandlerInterface
 {
-    /**
-     * @param UpdateHookStatusCommand $command
-     */
-    public function handle(UpdateHookStatusCommand $command)
+    public function handle(GetHook $query)
     {
-        $hookId = $command->getHookId()->getValue();
+        $hookId = $query->getId()->getValue();
         $hook = new Hook($hookId);
 
         if ($hook->id !== $hookId) {
-            throw new HookNotFoundException(sprintf('Hook with id "%d" was not found', $hookId));
+            throw new HookNotFoundException(sprintf('Hook with id "%d" was not found.', $hookId));
         }
 
-        $hook->active = $command->isActive();
-        if (!$hook->save()) {
-            throw new CannotUpdateHookException(sprintf('Cannot update status for hook with id "%d"', $hookId));
-        }
+        return $hook;
     }
 }
