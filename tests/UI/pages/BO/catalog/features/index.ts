@@ -58,13 +58,11 @@ class Features extends BOBasePage {
 
   private readonly tableColumnActionsDeleteLink: (row: number) => string;
 
-  private readonly paginationActiveLabel: string;
-
   private readonly paginationDiv: string;
 
-  private readonly paginationDropdownButton: string;
+  private readonly paginationSelect: string;
 
-  private readonly paginationItems: (number: number) => string;
+  private readonly paginationLabel: string;
 
   private readonly paginationPreviousLink: string;
 
@@ -72,9 +70,9 @@ class Features extends BOBasePage {
 
   private readonly tableHead: string;
 
-  private readonly sortColumnDiv: (column: number) => string;
+  private readonly sortColumnDiv: (column: string) => string;
 
-  private readonly sortColumnSpanButton: (column: number) => string;
+  private readonly sortColumnSpanButton: (column: string) => string;
 
   private readonly bulkActionBlock: string;
 
@@ -138,17 +136,16 @@ class Features extends BOBasePage {
     this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActions(row)} a.grid-delete-row-link`;
 
     // Pagination selectors
-    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
-    this.paginationDiv = `${this.gridForm} .pagination`;
-    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
-    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
-    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+    this.paginationDiv = `${this.gridPanel} .pagination-block`;
+    this.paginationSelect = `${this.paginationDiv} #paginator_select_page_limit`;
+    this.paginationLabel = `${this.paginationDiv} .col-form-label`;
+    this.paginationPreviousLink = `${this.paginationDiv} a[data-role="previous-page-link"]`;
+    this.paginationNextLink = `${this.paginationDiv} a[data-role="next-page-link"]`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -328,21 +325,39 @@ class Features extends BOBasePage {
   /**
    * Get pagination label
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @return {Promise<number>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
-    return this.getTextContent(page, this.paginationActiveLabel);
+  async getPaginationLabel(page: Page): Promise<number> {
+    const found = await this.elementVisible(page, this.paginationNextLink, 1000);
+
+    // In case we filter products and there is only one page, link next from pagination does not appear
+    if (!found) {
+      return (await page.$$(this.tableBodyRows)).length;
+    }
+
+    const footerText = await this.getTextContent(page, this.paginationLabel);
+    const regexMatch: RegExpMatchArray|null = footerText.match(/page ([0-9]+)/);
+
+    if (regexMatch === null) {
+      return 0;
+    }
+    const regexResult: RegExpExecArray|null = /\d+/g.exec(regexMatch.toString());
+
+    if (regexResult === null) {
+      return 0;
+    }
+
+    return parseInt(regexResult.toString(), 10);
   }
 
   /**
    * Select pagination limit
    * @param page {Page} Browser tab
    * @param number {number} Pagination limit number to select
-   * @returns {Promise<string>}
+   * @returns {Promise<number>}
    */
-  async selectPaginationLimit(page: Page, number: number): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForURL(page, this.paginationItems(number));
+  async selectPaginationLimit(page: Page, number: number): Promise<number> {
+    await this.selectByVisibleText(page, this.paginationSelect, number);
 
     return this.getPaginationLabel(page);
   }
@@ -350,9 +365,9 @@ class Features extends BOBasePage {
   /**
    * Click on next
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<number>}
    */
-  async paginationNext(page: Page): Promise<string> {
+  async paginationNext(page: Page): Promise<number> {
     await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -361,9 +376,9 @@ class Features extends BOBasePage {
   /**
    * Click on previous
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<number>}
    */
-  async paginationPrevious(page: Page): Promise<string> {
+  async paginationPrevious(page: Page): Promise<number> {
     await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -378,27 +393,16 @@ class Features extends BOBasePage {
    * @return {Promise<void>}
    */
   async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
-    let columnSelector: string;
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    switch (sortBy) {
-      case 'id_feature':
-        columnSelector = this.sortColumnDiv(2);
-        break;
-
-      case 'b!name':
-        columnSelector = this.sortColumnDiv(3);
-        break;
-
-      case 'a!position':
-        columnSelector = this.sortColumnDiv(5);
-        break;
-
-      default:
-        throw new Error(`Column ${sortBy} was not found`);
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await page.click(sortColumnSpanButton);
+      i += 1;
     }
 
-    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForURL(page, sortColumnButton);
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /**

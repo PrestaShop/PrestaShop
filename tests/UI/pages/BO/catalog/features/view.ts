@@ -62,17 +62,11 @@ class ViewFeature extends BOBasePage {
 
   private readonly confirmDeleteButton: string;
 
-  private readonly paginationActiveLabel: string;
-
   private readonly paginationDiv: string;
 
   private readonly paginationSelect: string;
 
   private readonly paginationLabel: string;
-
-  private readonly paginationDropdownButton: string;
-
-  private readonly paginationItems: (number: number) => string;
 
   private readonly paginationPreviousLink: string;
 
@@ -136,12 +130,9 @@ class ViewFeature extends BOBasePage {
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Pagination selectors
-    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridPanel} .pagination-block`;
     this.paginationSelect = `${this.paginationDiv} #paginator_select_page_limit`;
     this.paginationLabel = `${this.paginationDiv} .col-form-label`;
-    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.paginationDiv} a[data-role="previous-page-link"]`;
     this.paginationNextLink = `${this.paginationDiv} a[data-role="next-page-link"]`;
 

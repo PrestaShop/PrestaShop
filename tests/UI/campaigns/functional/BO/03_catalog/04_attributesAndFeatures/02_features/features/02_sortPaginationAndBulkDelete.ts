@@ -37,8 +37,10 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   // PRE-condition : Create 19 features
   const creationTests: number[] = new Array(19).fill(0, 0, 19);
   creationTests.forEach((test: number, index: number) => {
-    const createFeatureData: FeatureData = new FeatureData({name: `toDelete${index}`});
-    createFeatureTest(createFeatureData, `${baseContext}_preTest${index}`);
+    if (index > 18) {
+      const createFeatureData: FeatureData = new FeatureData({name: `toDelete${index}`});
+      createFeatureTest(createFeatureData, `${baseContext}_preTest${index}`);
+    }
   });
 
   // before and after functions
@@ -87,28 +89,28 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await featuresPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.equal(1);
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await featuresPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.equal(2);
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await featuresPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.equal(1);
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await featuresPage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.equal(1);
     });
   });
 
@@ -117,32 +119,32 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_feature', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_feature', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionAsc', sortBy: 'a!position', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionDesc', sortBy: 'a!position', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_feature', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_feature', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -157,13 +159,16 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
 
         const sortedTable = await featuresPage.getAllRowsColumnContent(page, test.args.sortBy);
 
+        console.log(nonSortedTable);
+        console.log(sortedTable);
+
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -171,7 +176,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             await expect(sortedTable).to.deep.equal(expectedResult.reverse());
