@@ -25,7 +25,9 @@ const baseContext: string = 'functional_BO_advancedParameters_multistore_editUrl
 Pre-condition:
 - Enable multistore
 Scenario:
-- Disable option "Is it the main URL for this shop?" and Disable the shop
+- Disable option "Is it the main URL for this shop?" and Disable the shop url
+- Create new shop URL
+- Enable option "Is it the main URL for this shop?" and enable the shop url
 Post-condition:
 -Disable multistore
  */
@@ -118,6 +120,15 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       await expect(textResult).to.contains(editShopUrlPage.successfulCreationMessage);
     });
 
+    it('should disable the shop URL for the created url', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableSHopURL', baseContext);
+
+      await shopUrlPage.setStatus(page, 2, '6', false);
+
+      const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
+      await expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
+    });
+
     it('should enable the main URL for the created url', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableSHopURL', baseContext);
 
@@ -128,22 +139,8 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
         await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
       }
 
-      const carrierStatus = await shopUrlPage.getStatus(page, 1, '6');
-      await expect(carrierStatus).to.be.true;
-    });
-
-    it('should disable the shop URL for the created url', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableSHopURL', baseContext);
-
-      const isActionPerformed = await shopUrlPage.setStatus(page, 2, '6', false);
-
-      if (isActionPerformed) {
-        const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
-        await expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
-      }
-
       const status = await shopUrlPage.getStatus(page, 1, '6');
-      await expect(status).to.be.false;
+      await expect(status).to.be.true;
     });
 
     it('should enable the main URL for the first url', async function () {
@@ -161,10 +158,10 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
 
   // Post-condition : Delete created shop URL
   describe('POST-TEST: Delete created shop URL', async () => {
-    it('should delete the shop', async function () {
+    it('should delete the created shop url', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteShop', baseContext);
 
-      const textResult = await shopPage.deleteShop(page, 2);
+      const textResult = await shopUrlPage.deleteShopURL(page, 2);
       await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
     });
   });
