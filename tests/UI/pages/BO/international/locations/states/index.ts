@@ -257,31 +257,25 @@ class States extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterStates(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
-    const currentUrl: string = page.url();
     let textValue: string = value;
 
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         if (filterBy === 'active') {
           textValue = value === '1' ? 'Yes' : 'No';
         }
-        await Promise.all([
-          this.selectByVisibleText(page, this.filterColumn(filterBy), textValue),
-          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
-        ]);
-
+        await this.selectByVisibleText(page, this.filterColumn(filterBy), textValue);
         break;
 
       default:
         throw new Error(`Filter ${filterBy} was not found`);
     }
 
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /* Column methods */
@@ -546,8 +540,7 @@ class States extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForURL(page, this.paginationItems(number));
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
 
     return this.getPaginationLabel(page);
   }

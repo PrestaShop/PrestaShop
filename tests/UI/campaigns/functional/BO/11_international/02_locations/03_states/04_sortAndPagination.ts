@@ -96,7 +96,7 @@ describe('BO - International - States : Sort and pagination', async () => {
 
   // 2 : Sort states table
   describe('Sort states table', async () => {
-    it('should reset all filters', async function () {
+    it(`should filter by country '${Countries.canada.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBeforeSort', baseContext);
 
       await statesPage.filterStates(page, 'select', 'id_country', Countries.canada.name);
