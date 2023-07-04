@@ -108,7 +108,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     public function updateAliasStatus(bool $enable, string $aliasReference): void
     {
         $this->getCommandBus()->handle(new UpdateAliasStatusCommand(
-            (int) $this->getSharedStorage()->get($aliasReference),
+            $this->getSharedStorage()->get($aliasReference),
             $enable
         ));
     }
@@ -162,11 +162,11 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteAlias(string $reference): void
     {
-        /** @var string[] $aliasId */
+        /** @var int $aliasId */
         $aliasId = $this->getSharedStorage()->get($reference);
 
         try {
-            $this->getCommandBus()->handle(new DeleteAliasCommand((int) $aliasId));
+            $this->getCommandBus()->handle(new DeleteAliasCommand(($aliasId)));
         } catch (AliasException $e) {
             $this->setLastException($e);
         }
