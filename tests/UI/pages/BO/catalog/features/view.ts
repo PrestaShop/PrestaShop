@@ -24,6 +24,8 @@ class ViewFeature extends BOBasePage {
 
   private readonly filterRow: string;
 
+  private readonly filterSelectAll: string;
+
   private readonly filterColumn: (filterBy: string) => string;
 
   private readonly filterSearchButton: string;
@@ -52,19 +54,21 @@ class ViewFeature extends BOBasePage {
 
   private readonly tableColumnActionsDeleteLink: (row: number) => string;
 
-  private readonly bulkActionBlock: string;
+  private readonly bulkActionsToggleButton: string;
 
-  private readonly bulkActionMenuButton: string;
+  private readonly bulkActionsDeleteButton: string;
 
-  private readonly bulkActionDropdownMenu: string;
+  private readonly confirmDeleteModal: string;
 
-  private readonly selectAllLink: string;
-
-  private readonly bulkDeleteLink: string;
+  private readonly confirmDeleteButton: string;
 
   private readonly paginationActiveLabel: string;
 
   private readonly paginationDiv: string;
+
+  private readonly paginationSelect: string;
+
+  private readonly paginationLabel: string;
 
   private readonly paginationDropdownButton: string;
 
@@ -76,9 +80,9 @@ class ViewFeature extends BOBasePage {
 
   private readonly tableHead: string;
 
-  private readonly sortColumnDiv: (column: number) => string;
+  private readonly sortColumnDiv: (column: string) => string;
 
-  private readonly deleteModalButtonYes: string;
+  private readonly sortColumnSpanButton: (column: string) => string;
 
   /**
    * @constructs
@@ -88,6 +92,7 @@ class ViewFeature extends BOBasePage {
     super();
 
     this.pageTitle = 'Features';
+    this.successfulMultiDeleteMessage = 'Successful deletion';
 
     // Header selectors
     this.addNewValueLink = 'a#page-header-desc-configuration-add_feature_value[title="Add new feature value"]';
@@ -102,6 +107,7 @@ class ViewFeature extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.column-filters`;
+    this.filterSelectAll = `${this.filterRow} .grid_bulk_action_select_all`;
     this.filterColumn = (filterBy: string) => `${this.filterRow} [name='feature_value[${filterBy}]']`;
     this.filterSearchButton = `${this.filterRow} button[name="feature_value[actions][search]"]`;
     this.filterResetButton = `${this.filterRow} button[name="feature_value[actions][reset]"]`;
@@ -124,26 +130,25 @@ class ViewFeature extends BOBasePage {
     this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.grid-delete-row-link`;
 
     // Bulk actions selectors
-    this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = '#bulk_action_menu_feature_value';
-    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
-    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = '#feature_value_grid_bulk_action_delete_selection';
+    this.confirmDeleteModal = '#feature_value-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
-    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDiv = `${this.gridPanel} .pagination-block`;
+    this.paginationSelect = `${this.paginationDiv} #paginator_select_page_limit`;
+    this.paginationLabel = `${this.paginationDiv} .col-form-label`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
     this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
-    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
-    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+    this.paginationPreviousLink = `${this.paginationDiv} a[data-role="previous-page-link"]`;
+    this.paginationNextLink = `${this.paginationDiv} a[data-role="next-page-link"]`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
-
-    // Confirmation modal
-    this.deleteModalButtonYes = '#feature_value-grid-confirm-modal button.btn-confirm-submit';
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Footer selectors
     this.backToListButton = `${this.gridPanel} .card-footer a`;
@@ -188,7 +193,7 @@ class ViewFeature extends BOBasePage {
   async deleteValue(page: Page, row: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.tableColumnActionsToggleButton(row));
     await this.waitForSelectorAndClick(page, this.tableColumnActionsDeleteLink(row));
-    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -271,51 +276,65 @@ class ViewFeature extends BOBasePage {
    * @return {Promise<string>}
    */
   async bulkDeleteValues(page: Page): Promise<string> {
-    // To confirm bulk delete action with dialog
-    await this.dialogListener(page, true);
-
-    // Select all rows
+    // Click on Select All
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
-      this.waitForVisibleSelector(page, this.selectAllLink),
+      page.$eval(this.filterSelectAll, (el: HTMLElement) => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
+    // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.selectAllLink),
-      this.waitForHiddenSelector(page, this.selectAllLink),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
     ]);
 
-    // Perform delete
+    // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
-      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
+    await page.click(this.confirmDeleteButton);
 
-    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
-
-    // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @return {Promise<number>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
-    return this.getTextContent(page, this.paginationActiveLabel);
+  async getPaginationLabel(page: Page): Promise<number> {
+    const found = await this.elementVisible(page, this.paginationNextLink, 1000);
+
+    // In case we filter products and there is only one page, link next from pagination does not appear
+    if (!found) {
+      return (await page.$$(this.tableBodyRows)).length;
+    }
+
+    const footerText = await this.getTextContent(page, this.paginationLabel);
+    const regexMatch: RegExpMatchArray|null = footerText.match(/page ([0-9]+)/);
+
+    if (regexMatch === null) {
+      return 0;
+    }
+    const regexResult: RegExpExecArray|null = /\d+/g.exec(regexMatch.toString());
+
+    if (regexResult === null) {
+      return 0;
+    }
+
+    return parseInt(regexResult.toString(), 10);
   }
 
   /**
    * Select pagination limit
    * @param page {Page} Browser tab
    * @param number {number} Pagination number to select
-   * @returns {Promise<string>}
+   * @returns {Promise<number>}
    */
-  async selectPaginationLimit(page: Page, number: number): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForURL(page, this.paginationItems(number));
+  async selectPaginationLimit(page: Page, number: number): Promise<number> {
+    await this.selectByVisibleText(page, this.paginationSelect, number);
 
     return this.getPaginationLabel(page);
   }
@@ -323,9 +342,9 @@ class ViewFeature extends BOBasePage {
   /**
    * Click on next
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<number>}
    */
-  async paginationNext(page: Page): Promise<string> {
+  async paginationNext(page: Page): Promise<number> {
     await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -334,9 +353,9 @@ class ViewFeature extends BOBasePage {
   /**
    * Click on previous
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<number>}
    */
-  async paginationPrevious(page: Page): Promise<string> {
+  async paginationPrevious(page: Page): Promise<number> {
     await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -351,23 +370,16 @@ class ViewFeature extends BOBasePage {
    * @return {Promise<void>}
    */
   async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
-    let columnSelector: string;
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    switch (sortBy) {
-      case 'id_feature_value':
-        columnSelector = this.sortColumnDiv(2);
-        break;
-
-      case 'value':
-        columnSelector = this.sortColumnDiv(3);
-        break;
-
-      default:
-        throw new Error(`Column ${sortBy} was not found`);
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await page.click(sortColumnSpanButton);
+      i += 1;
     }
 
-    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForURL(page, sortColumnButton);
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /**
