@@ -83,7 +83,7 @@ class CartRuleCore extends ObjectModel
     /** @var bool */
     public $product_restriction;
     /** @var bool */
-    public $shop_restriction;
+    public $shop_restriction = true;
     /** @var bool */
     public $free_shipping;
     public $reduction_percent;
@@ -260,9 +260,6 @@ class CartRuleCore extends ObjectModel
      */
     public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
     {
-        Db::getInstance()->execute('
-		INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_shop` (`id_cart_rule`, `id_shop`)
-		(SELECT ' . (int) $id_cart_rule_destination . ', id_shop FROM `' . _DB_PREFIX_ . 'cart_rule_shop` WHERE `id_cart_rule` = ' . (int) $id_cart_rule_source . ')');
         Db::getInstance()->execute('
 		INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_carrier` (`id_cart_rule`, `id_carrier`)
 		(SELECT ' . (int) $id_cart_rule_destination . ', id_carrier FROM `' . _DB_PREFIX_ . 'cart_rule_carrier` WHERE `id_cart_rule` = ' . (int) $id_cart_rule_source . ')');
@@ -802,7 +799,7 @@ class CartRuleCore extends ObjectModel
         }
 
         // Check if the cart rules appliy to the shop browsed by the customer
-        if ($this->shop_restriction && $context->shop->id && Shop::isFeatureActive()) {
+        if ($this->shop_restriction && $context->shop->id) {
             $id_cart_rule = (int) Db::getInstance()->getValue('
 			SELECT crs.id_cart_rule
 			FROM ' . _DB_PREFIX_ . 'cart_rule_shop crs

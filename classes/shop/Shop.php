@@ -162,6 +162,7 @@ class ShopCore extends ObjectModel
         $asso_tables = [
             'carrier' => ['type' => 'shop'],
             'carrier_lang' => ['type' => 'fk_shop'],
+            'cart_rule' => ['type' => 'shop'],
             'category' => ['type' => 'shop'],
             'category_lang' => ['type' => 'fk_shop'],
             'cms' => ['type' => 'shop'],

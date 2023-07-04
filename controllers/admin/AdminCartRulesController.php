@@ -208,7 +208,7 @@ class AdminCartRulesControllerCore extends AdminController
             }
 
             // If the restriction is checked, but no item is selected, raise an error
-            foreach (['country', 'carrier', 'group', 'shop'] as $type) {
+            foreach (['country', 'carrier', 'group'] as $type) {
                 if (Tools::getValue($type . '_restriction') && empty(Tools::getValue($type . '_select'))) {
                     switch ($type) {
                         case 'country':
@@ -217,12 +217,8 @@ class AdminCartRulesControllerCore extends AdminController
                         case 'carrier':
                             $restriction_name = $this->trans('Carrier selection', [], 'Admin.Catalog.Feature');
                             break;
-                        case 'group':
-                            $restriction_name = $this->trans('Customer group selection', [], 'Admin.Catalog.Feature');
-                            break;
-                        case 'shop':
                         default:
-                            $restriction_name = $this->trans('Store selection', [], 'Admin.Catalog.Feature');
+                            $restriction_name = $this->trans('Customer group selection', [], 'Admin.Catalog.Feature');
                             break;
                     }
                     $this->errors[] = $this->trans('The "%s" restriction is checked, but no item is selected.', [$restriction_name], 'Admin.Catalog.Notification');
@@ -277,6 +273,11 @@ class AdminCartRulesControllerCore extends AdminController
         return $res;
     }
 
+    protected function updateAssoShop($id_object)
+    {
+        //@todo:Now we override so the cart_rule_shop table is not cleaned up every time. But need to back to this to check employee access to shops
+    }
+
     /**
      * @param $current_object
      *
@@ -288,7 +289,7 @@ class AdminCartRulesControllerCore extends AdminController
     {
         // All the associations are deleted for an update, then recreated when we call the "afterAdd" method
         $id_cart_rule = Tools::getValue('id_cart_rule');
-        foreach (['country', 'carrier', 'group', 'product_rule_group', 'shop'] as $type) {
+        foreach (['country', 'carrier', 'group', 'product_rule_group'] as $type) {
             Db::getInstance()->delete('cart_rule_' . $type, '`id_cart_rule` = ' . (int) $id_cart_rule);
         }
 
@@ -318,6 +319,23 @@ class AdminCartRulesControllerCore extends AdminController
     }
 
     /**
+     * @param CartRule $cartRule
+     *
+     * @return bool
+     */
+    protected function beforeAdd($cartRule)
+    {
+        $selectedShopIds = Tools::getValue('shop_select');
+        if (Tools::getValue('shop_restriction') && is_array($selectedShopIds)) {
+            $cartRule->id_shop_list = array_map(static function ($shopId): int {
+                return (int) $shopId;
+            }, $selectedShopIds);
+        }
+
+        return true;
+    }
+
+    /**
      * @TODO Move this function into CartRule
      *
      * @param ObjectModel $currentObject
@@ -328,23 +346,8 @@ class AdminCartRulesControllerCore extends AdminController
      */
     protected function afterAdd($currentObject)
     {
-        // Add shop restrictions if employee has not access to all shops
-        $context = Context::getContext();
-        $all_shops = Shop::getCompleteListOfShopsID();
-        if ($context->employee->isSuperAdmin()) {
-            $employee_shops = $all_shops;
-        } else {
-            $employee_shops = $context->employee->getAssociatedShops();
-        }
-        if (count($all_shops) > count($employee_shops) && Tools::getValue('shop_restriction') == '0') {
-            $values = [];
-            foreach ($employee_shops as $id) {
-                $values[] = '(' . (int) $currentObject->id . ',' . (int) $id . ')';
-            }
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_shop` (`id_cart_rule`, `id_shop`) VALUES ' . implode(',', $values));
-        }
         // Add restrictions for generic entities like country, carrier and group
-        foreach (['country', 'carrier', 'group', 'shop'] as $type) {
+        foreach (['country', 'carrier', 'group'] as $type) {
             if (Tools::getValue($type . '_restriction') && is_array($array = Tools::getValue($type . '_select')) && count($array)) {
                 $values = [];
                 foreach ($array as $id) {

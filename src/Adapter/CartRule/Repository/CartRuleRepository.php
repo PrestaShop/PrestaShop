@@ -66,14 +66,14 @@ class CartRuleRepository extends AbstractMultiShopObjectModelRepository
         //       so can we just make sure new code always puts related shops into cart_rule_shop table (even if its single shop context)
         //       and eventually we can get rid of shop_restriction prop?
         //       also the shopTableAssociaton could be moved to Shop:init(), so we don't need to do it in handlers anymore (not sure how would it affect legacy code)
-        Shop::addTableAssociation('cart_rule', ['type' => 'shop']);
+//        Shop::addTableAssociation('cart_rule', ['type' => 'shop']);
         $cartRule->shop_restriction = true;
 
         $this->cartRuleValidator->validate($cartRule);
         $this->addObjectModelToShops($cartRule, $associatedShopIds, CannotAddCartRuleException::class);
 
         // revert back the default shop table associations in case cartRule is created using legacy method
-        Shop::removeTableAssociation('cart_rule');
+//        Shop::removeTableAssociation('cart_rule');
 
         return $cartRule;
     }
