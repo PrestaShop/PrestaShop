@@ -12,10 +12,6 @@ class Features extends BOBasePage {
 
   private readonly addNewFeatureLink: string;
 
-  private readonly helpCardLink: string;
-
-  private readonly helpContainerBlock: string;
-
   private readonly gridForm: string;
 
   private readonly gridPanel: string;
@@ -25,6 +21,8 @@ class Features extends BOBasePage {
   private readonly gridTable: string;
 
   private readonly filterRow: string;
+
+  private readonly filterSelectAll: string;
 
   private readonly filterColumn: (filterBy: string) => string;
 
@@ -40,13 +38,15 @@ class Features extends BOBasePage {
 
   private readonly tableBodyColumn: (row: number) => string;
 
-  private readonly tableColumnId: (row: number) => string;
+  private readonly tableColumnDrag: (row: number) => string;
 
-  private readonly tableColumnName: (row: number) => string;
+  private readonly tableColumnId: (row: number, hasDragColumn: boolean) => string;
 
-  private readonly tableColumnValues: (row: number) => string;
+  private readonly tableColumnName: (row: number, hasDragColumn: boolean) => string;
 
-  private readonly tableColumnPosition: (row: number) => string;
+  private readonly tableColumnValues: (row: number, hasDragColumn: boolean) => string;
+
+  private readonly tableColumnPosition: (row: number, hasDragColumn: boolean) => string;
 
   private readonly tableColumnActions: (row: number) => string;
 
@@ -74,17 +74,13 @@ class Features extends BOBasePage {
 
   private readonly sortColumnSpanButton: (column: string) => string;
 
-  private readonly bulkActionBlock: string;
+  private readonly bulkActionsToggleButton: string;
 
-  private readonly bulkActionMenuButton: string;
+  private readonly bulkActionsDeleteButton: string;
 
-  private readonly bulkActionDropdownMenu: string;
+  private readonly confirmDeleteModal: string;
 
-  private readonly selectAllLink: string;
-
-  private readonly bulkDeleteLink: string;
-
-  private readonly deleteModalButtonYes: string;
+  private readonly confirmDeleteButton: string;
 
   /**
    * @constructs
@@ -94,13 +90,10 @@ class Features extends BOBasePage {
     super();
 
     this.pageTitle = 'Features • ';
+    this.successfulMultiDeleteMessage = 'Successful deletion';
 
     // Header selectors
     this.addNewFeatureLink = 'a#page-header-desc-configuration-add_feature[title="Add new feature"]';
-
-    // Help card selectors
-    this.helpCardLink = '#toolbar-nav a.btn-help';
-    this.helpContainerBlock = '#help-container';
 
     // Form selectors
     this.gridForm = '#feature_value_filter_form';
@@ -112,6 +105,7 @@ class Features extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.column-filters`;
+    this.filterSelectAll = `${this.filterRow} .grid_bulk_action_select_all`;
     this.filterColumn = (filterBy: string) => `${this.filterRow} [name='feature[${filterBy}]']`;
     this.filterSearchButton = `${this.filterRow} button[name="feature[actions][search]"]`;
     this.filterResetButton = `${this.filterRow} button[name="feature[actions][reset]"]`;
@@ -123,10 +117,15 @@ class Features extends BOBasePage {
     this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnValues = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnPosition = (row: number) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnDrag = (row: number) => `${this.tableBodyColumn(row)}.js-drag-handle`;
+    this.tableColumnId = (row: number, hasDragColumn: boolean) => `${
+      this.tableBodyColumn(row)}:nth-child(${hasDragColumn ? 3 : 2})`;
+    this.tableColumnName = (row: number, hasDragColumn: boolean) => `${
+      this.tableBodyColumn(row)}:nth-child(${hasDragColumn ? 4 : 3})`;
+    this.tableColumnValues = (row: number, hasDragColumn: boolean) => `${
+      this.tableBodyColumn(row)}:nth-child(${hasDragColumn ? 5 : 4})`;
+    this.tableColumnPosition = (row: number, hasDragColumn: boolean) => `${
+      this.tableBodyColumn(row)}:nth-child(${hasDragColumn ? 6 : 5})`;
 
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -148,17 +147,10 @@ class Features extends BOBasePage {
     this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk actions selectors
-    this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = '#bulk_action_menu_feature';
-    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
-    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
-
-    // Growl message
-    this.growlMessageBlock = '#growls .growl-message';
-
-    // Confirmation modal
-    this.deleteModalButtonYes = '#feature-grid-confirm-modal button.btn-confirm-submit';
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = '#feature_grid_bulk_action_delete_selection';
+    this.confirmDeleteModal = '#feature-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header methods */
@@ -221,26 +213,27 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Feature row in table
    * @param columnName {string} Column name to get
+   * @param sortColumnName {string} Sorted Column name
    * @return {Promise<string>}
    */
-  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
+  async getTextColumn(page: Page, row: number, columnName: string, sortColumnName: string = ''): Promise<string> {
     let columnSelector: string;
 
     switch (columnName) {
       case 'id_feature':
-        columnSelector = this.tableColumnId(row);
+        columnSelector = this.tableColumnId(row, sortColumnName === 'position');
         break;
 
       case 'name':
-        columnSelector = this.tableColumnName(row);
+        columnSelector = this.tableColumnName(row, sortColumnName === 'position');
         break;
 
       case 'values':
-        columnSelector = this.tableColumnValues(row);
+        columnSelector = this.tableColumnValues(row, sortColumnName === 'position');
         break;
 
       case 'position':
-        columnSelector = this.tableColumnPosition(row);
+        columnSelector = this.tableColumnPosition(row, sortColumnName === 'position');
         break;
 
       default:
@@ -281,44 +274,9 @@ class Features extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.tableColumnActionsDropDownButton(row));
     await this.waitForSelectorAndClick(page, this.tableColumnActionsDeleteLink(row));
 
-    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
-  }
-
-  /* Helper card methods */
-  /**
-   * @override
-   * Open help sidebar
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async openHelpSideBar(page: Page): Promise<boolean> {
-    await page.click(this.helpCardLink);
-
-    return this.elementVisible(page, this.helpContainerBlock, 4000);
-  }
-
-  /**
-   * @override
-   * Close help sidebar
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeHelpSideBar(page: Page): Promise<boolean> {
-    await page.click(this.helpCardLink);
-
-    return this.elementNotVisible(page, this.helpContainerBlock, 2000);
-  }
-
-  /**
-   * @override
-   * Get help card URL
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  async getHelpDocumentURL(page: Page): Promise<string> {
-    return this.getAttributeContent(page, this.helpCardLink, 'href');
   }
 
   /* Pagination methods */
@@ -409,14 +367,15 @@ class Features extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name to get all content
+   * @param sortColumnName {string} Column name to sort
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
+  async getAllRowsColumnContent(page: Page, columnName: string, sortColumnName: string = ''): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable: string[] = [];
 
     for (let i: number = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(page, i, columnName);
+      const rowContent = await this.getTextColumn(page, i, columnName, sortColumnName);
       allRowsContentTable.push(rowContent);
     }
 
@@ -430,29 +389,26 @@ class Features extends BOBasePage {
    * @return {Promise<string>}
    */
   async bulkDeleteFeatures(page: Page): Promise<string> {
-    // To confirm bulk delete action with dialog
-    await this.dialogListener(page, true);
-
-    // Select all rows
+    // Click on Select All
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
-      this.waitForVisibleSelector(page, this.selectAllLink),
+      page.$eval(this.filterSelectAll, (el: HTMLElement) => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
+    // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.selectAllLink),
-      this.waitForHiddenSelector(page, this.selectAllLink),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
     ]);
 
+    // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
-      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
-    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
-
-    // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -465,11 +421,11 @@ class Features extends BOBasePage {
   async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string | null> {
     await this.dragAndDrop(
       page,
-      this.tableColumnPosition(actualPosition),
-      this.tableColumnPosition(newPosition),
+      this.tableColumnDrag(actualPosition),
+      this.tableColumnDrag(newPosition),
     );
 
-    return page.textContent(this.growlMessageBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

@@ -66,11 +66,11 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
   it('should sort by \'position\' \'asc\' And check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sortByPosition', baseContext);
 
-    const nonSortedTable = await featuresPage.getAllRowsColumnContent(page, 'a!position');
+    const nonSortedTable = await featuresPage.getAllRowsColumnContent(page, 'position', 'id_feature');
 
-    await featuresPage.sortTable(page, 'a!position', 'up');
+    await featuresPage.sortTable(page, 'position', 'asc');
 
-    const sortedTable = await featuresPage.getAllRowsColumnContent(page, 'a!position');
+    const sortedTable = await featuresPage.getAllRowsColumnContent(page, 'position', 'position');
 
     const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
     const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
@@ -84,29 +84,32 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     await testContext.addContextItem(this, 'testIdentifier', 'changeFeaturePosition', baseContext);
 
     // Get first row feature name
-    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'name');
+    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'name', 'position');
 
     // Change position and check successful message
     const textResult = await featuresPage.changePosition(page, 1, 2);
     await expect(textResult, 'Unable to change position').to.contains(featuresPage.successfulUpdateMessage);
 
     // Get second row feature name and check if is equal the first row feature name before changing position
-    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name');
+    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name', 'position');
     await expect(secondRowFeatureName, 'Changing position was done wrongly').to.equal(firstRowFeatureName);
   });
 
   it('should reset second feature position to 1', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFeaturePosition', baseContext);
 
+    // Close alert
+    await featuresPage.closeAlertParagraph(page);
+
     // Get third row feature name
-    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name');
+    const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name', 'position');
 
     // Change position and check successful message
     const textResult = await featuresPage.changePosition(page, 2, 1);
     await expect(textResult, 'Unable to change position').to.contains(featuresPage.successfulUpdateMessage);
 
     // Get first row feature name and check if is equal the first row feature name before changing position
-    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'name');
+    const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'name', 'position');
     await expect(firstRowFeatureName, 'Changing position was done wrongly').to.equal(secondRowFeatureName);
   });
 });

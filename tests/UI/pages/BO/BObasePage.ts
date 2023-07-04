@@ -1030,6 +1030,17 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Close alert
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async closeAlertParagraph(page: Page): Promise<void> {
+    if (await this.elementVisible(page, this.alertBlockCloseButton, 1000)) {
+      await this.waitForSelectorAndClick(page, this.alertBlockCloseButton);
+    }
+  }
+
+  /**
    * Navigate to BO page without token
    * @param page {Page} Browser tab
    * @param url {string} Url to BO page
