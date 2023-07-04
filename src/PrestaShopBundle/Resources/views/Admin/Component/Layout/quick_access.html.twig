@@ -1,0 +1,82 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<div class="dropdown quick-accesses">
+  <button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="quick_select">
+    {{ 'Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+  </button>
+  <div class="dropdown-menu">
+    {% for quick in quickAccess %}
+      <a class="
+        dropdown-item quick-row-link
+        {% if quick.class is defined %}{{ quick.class}}{% endif %}
+        {% if link.matchQuickLink(quick.link) %}
+          {% set matchQuickLink = quick.id_quick_access %}
+          active
+        {% endif %}
+      "
+      href="{{ quick.link|escape('html') }}"
+      {% if quick.new_window %} target="_blank"{% endif %}
+      data-item="{{ quick.name }}"
+      >{{ quick.name }}</a>
+    {% endfor %}
+    <div class="dropdown-divider"></div>
+    {% if matchQuickLink is defined %}
+      <a id="quick-remove-link"
+         class="dropdown-item js-quick-link"
+         href="#"
+         data-method="remove"
+         data-quicklink-id="{{ matchQuickLink }}"
+         data-rand="{{ random(1, 200) }}"
+         data-icon="{{ quickAccessCurrentLinkIcon }}"
+         data-url="{{ link.getQuickLink(app.request.uri|escape('js')) }}"
+         data-post-link="{{ link.getAdminLink('AdminQuickAccesses') }}"
+         data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('js') }}"
+         data-link="{{ quickAccessCurrentLinkName|truncate(32) }}"
+      >
+        <i class="material-icons">remove_circle_outline</i>
+        {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+      </a>
+    {% else %}
+    <a id="quick-add-link"
+       class="dropdown-item js-quick-link"
+       href="#"
+       data-rand="{{ random(1, 200) }}"
+       data-icon="{{ quickAccessCurrentLinkIcon }}"
+       data-method="add"
+       data-url="{{ link.getQuickLink(app.request.uri|escape('js')) }}"
+       data-post-link="{{ link.getAdminLink('AdminQuickAccesses') }}"
+       data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('js')}}"
+       data-link="{{ quickAccessCurrentLinkName|truncate(32) }}"
+    >
+      <i class="material-icons">add_circle</i>
+      {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
+    </a>
+    {% endif %}
+    <a id="quick-manage-link" class="dropdown-item" href="{{ link.getAdminLink("AdminQuickAccesses")|addslashes }}">
+    <i class="material-icons">settings</i>
+    {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
+    </a>
+  </div>
+</div>

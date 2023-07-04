@@ -172,6 +172,7 @@
         "symfony/templating": "5.4.*",
         "symfony/translation": "5.4.*",
         "symfony/twig-bundle": "5.4.*",
+        "symfony/ux-twig-component": "^2.9",
         "symfony/validator": "5.4.*",
         "symfony/var-dumper": "5.4.*",
         "symfony/var-exporter": "5.4.*",

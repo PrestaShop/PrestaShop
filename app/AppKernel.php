@@ -67,6 +67,7 @@ class AppKernel extends Kernel
             new TranslationToolsBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Symfony\UX\TwigComponent\TwigComponentBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
