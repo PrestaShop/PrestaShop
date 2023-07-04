@@ -661,11 +661,6 @@ class ShopCore extends ObjectModel
         return true;
     }
 
-    public static function removeTableAssociation(string $tableName): void
-    {
-        unset(Shop::$asso_tables[$tableName]);
-    }
-
     /**
      * Check if given table is associated to shop.
      *

@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\Restricti
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
-use Shop;
 
 class CartRuleRepository extends AbstractMultiShopObjectModelRepository
 {
@@ -58,22 +57,8 @@ class CartRuleRepository extends AbstractMultiShopObjectModelRepository
      */
     public function add(CartRule $cartRule, array $associatedShopIds): CartRule
     {
-        // cart rule works well with cart_rule_shop table as all the other entities when we add the table association
-        // except it uses "shop_restrictions" property for some reason, so we force it to true to avoid breaking legacy code
-        //@todo: need to confirm. Is it ok that we always force the shop_restriction = true?
-        //       in legacy code shop_restriction = false means rule can be used in all shops
-        //       (and it is same if we add all the shops into cart_rule_shop table)
-        //       so can we just make sure new code always puts related shops into cart_rule_shop table (even if its single shop context)
-        //       and eventually we can get rid of shop_restriction prop?
-        //       also the shopTableAssociaton could be moved to Shop:init(), so we don't need to do it in handlers anymore (not sure how would it affect legacy code)
-//        Shop::addTableAssociation('cart_rule', ['type' => 'shop']);
-        $cartRule->shop_restriction = true;
-
         $this->cartRuleValidator->validate($cartRule);
         $this->addObjectModelToShops($cartRule, $associatedShopIds, CannotAddCartRuleException::class);
-
-        // revert back the default shop table associations in case cartRule is created using legacy method
-//        Shop::removeTableAssociation('cart_rule');
 
         return $cartRule;
     }

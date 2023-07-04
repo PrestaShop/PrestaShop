@@ -141,6 +141,34 @@
 		{l s='Restrictions' d='Admin.Catalog.Feature'}
 	</label>
 	<div class="col-lg-9">
+    {if ($all_shops|@count) > 1}
+      <div id="shop_restriction_div">
+        <br/>
+        <table class="table">
+          <tr>
+            <td>
+              <p>{l s='Unselected shops' d='Admin.Catalog.Feature'}</p>
+              <select id="shop_select_1" multiple>
+                  {foreach from=$shops.unselected item='shop'}
+                    <option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
+                  {/foreach}
+              </select>
+              <a id="shop_select_add" class="btn btn-default btn-block clearfix" >{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
+            </td>
+            <td>
+              <p>{l s='Selected shops' d='Admin.Catalog.Feature'}</p>
+              <select name="shop_select[]" id="shop_select_2" multiple>
+                  {foreach from=$shops.selected item='shop'}
+                    <option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
+                  {/foreach}
+              </select>
+              <a id="shop_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove' d='Admin.Actions'}</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    {/if}
+
 		{if ($countries.unselected|@count) + ($countries.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
@@ -293,39 +321,5 @@
 					<i class="icon-plus-sign"></i> {l s='Product selection' d='Admin.Catalog.Feature'}
 				</a>
 			</div>
-
-		{if ($all_shops|@count) > 1}
-			<p class="checkbox">
-				<label>
-					<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.selected|@count || ($shops.selected|@count + $shops.unselected|@count < $all_shops|@count)}checked="checked"{/if} />
-					{l s='Store selection' d='Admin.Catalog.Feature'}
-				</label>
-			</p>
-			<div id="shop_restriction_div">
-				<br/>
-				<table class="table">
-					<tr>
-						<td>
-							<p>{l s='Unselected shops' d='Admin.Catalog.Feature'}</p>
-							<select id="shop_select_1" multiple>
-								{foreach from=$shops.unselected item='shop'}
-									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
-								{/foreach}
-							</select>
-							<a id="shop_select_add" class="btn btn-default btn-block clearfix" >{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
-						</td>
-						<td>
-							<p>{l s='Selected shops' d='Admin.Catalog.Feature'}</p>
-							<select name="shop_select[]" id="shop_select_2" multiple>
-								{foreach from=$shops.selected item='shop'}
-									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
-								{/foreach}
-							</select>
-							<a id="shop_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove' d='Admin.Actions'}</a>
-						</td>
-					</tr>
-				</table>
-			</div>
-		{/if}
 	</div>
 </div>

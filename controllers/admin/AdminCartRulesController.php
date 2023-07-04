@@ -225,6 +225,10 @@ class AdminCartRulesControllerCore extends AdminController
                 }
             }
 
+            if (empty(Tools::getValue('shop_select'))) {
+                $this->errors[] = $this->trans('The associated stores must be selected.', [], 'Admin.Catalog.Notification');
+            }
+
             // Remove the gift if the radio button is set to "no"
             if (!(int) Tools::getValue('free_gift')) {
                 $_POST['gift_product'] = 0;
@@ -273,9 +277,21 @@ class AdminCartRulesControllerCore extends AdminController
         return $res;
     }
 
-    protected function updateAssoShop($id_object)
+    /**
+     * {@inheritDoc}
+     */
+    protected function getSelectedAssoShop($table): array
     {
-        //@todo:Now we override so the cart_rule_shop table is not cleaned up every time. But need to back to this to check employee access to shops
+        $selectedShopIds = Tools::getValue('shop_select');
+
+        // fallback to context shop id, in case its empty (e.g. when multishop feature is off we still want to insert cart_rule_shop row)
+        if (!is_array($selectedShopIds)) {
+            return [(int) $this->context->shop->id];
+        }
+
+        return array_map(static function ($shopId): int {
+            return (int) $shopId;
+        }, $selectedShopIds);
     }
 
     /**
@@ -316,23 +332,6 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         return $cart_rule;
-    }
-
-    /**
-     * @param CartRule $cartRule
-     *
-     * @return bool
-     */
-    protected function beforeAdd($cartRule)
-    {
-        $selectedShopIds = Tools::getValue('shop_select');
-        if (Tools::getValue('shop_restriction') && is_array($selectedShopIds)) {
-            $cartRule->id_shop_list = array_map(static function ($shopId): int {
-                return (int) $shopId;
-            }, $selectedShopIds);
-        }
-
-        return true;
     }
 
     /**

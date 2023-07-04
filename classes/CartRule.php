@@ -82,7 +82,12 @@ class CartRuleCore extends ObjectModel
     public $cart_rule_restriction;
     /** @var bool */
     public $product_restriction;
-    /** @var bool */
+
+    /**
+     * @deprecated this property is always forced to true, so and cart_rule_shop table must always be filled with shop association
+     *
+     * @var bool
+     */
     public $shop_restriction = true;
     /** @var bool */
     public $free_shipping;
@@ -180,6 +185,9 @@ class CartRuleCore extends ObjectModel
             $this->reduction_currency = Currency::getDefaultCurrencyId();
         }
 
+        // force shop_restriction to always be truthy, so that cart_rule_shop table is always considered
+        // and can work as simple shop association as in any other entity
+        $this->shop_restriction = true;
         if (!parent::add($autodate, $null_values)) {
             return false;
         }
@@ -207,6 +215,9 @@ class CartRuleCore extends ObjectModel
             $this->reduction_currency = Currency::getDefaultCurrencyId();
         }
 
+        // force shop_restriction to always be truthy, so that cart_rule_shop table is always considered
+        // and can work as simple shop association as in any other entity
+        $this->shop_restriction = true;
         if (!parent::update($null_values)) {
             return false;
         }
