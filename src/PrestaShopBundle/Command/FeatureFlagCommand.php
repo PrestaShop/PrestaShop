@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Component\Console\Command\Command;
@@ -58,7 +58,7 @@ class FeatureFlagCommand extends Command
 
     public function __construct(
         private readonly FeatureFlagRepository $featureFlagRepository,
-        private readonly FeatureFlagService $featureFlagService
+        private readonly FeatureFlagManager $featureFlagManager
     ) {
         parent::__construct();
     }
@@ -101,7 +101,7 @@ class FeatureFlagCommand extends Command
             $table->addRow([
                 $featureFlag->getName(),
                 $this->getTypeRow($featureFlag),
-                $this->featureFlagService->isEnabled($featureFlag->getName()) ? 'Enabled' : 'Disabled',
+                $this->featureFlagManager->isEnabled($featureFlag->getName()) ? 'Enabled' : 'Disabled',
             ]);
         }
         $table->render();
@@ -113,8 +113,8 @@ class FeatureFlagCommand extends Command
     {
         $out = [];
 
-        foreach ($featureFlag->getTypeOrder() as $type) {
-            if ($this->featureFlagService->getTypeUsed($featureFlag->getName()) === $type) {
+        foreach ($featureFlag->getOrderedTypes() as $type) {
+            if ($this->featureFlagManager->getUsedType($featureFlag->getName()) === $type) {
                 $out[] = "[$type]";
             } else {
                 $out[] = $type;
@@ -144,13 +144,13 @@ class FeatureFlagCommand extends Command
         }
 
         if ($expectedState) {
-            $this->featureFlagService->enable($featureFlagArgument);
+            $this->featureFlagManager->enable($featureFlagArgument);
             $output->writeln(sprintf(
                 '<info>Feature flag %s was enabled</info>',
                 $featureFlagArgument
             ));
         } else {
-            $this->featureFlagService->disable($featureFlagArgument);
+            $this->featureFlagManager->disable($featureFlagArgument);
             $output->writeln(sprintf(
                 '<info>Feature flag %s was disabled</info>',
                 $featureFlagArgument

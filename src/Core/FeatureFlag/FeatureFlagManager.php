@@ -28,14 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\Handler\DbHandler;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Handler\DotEnvHandler;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Handler\EnvHandler;
+use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DbLayer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DotEnvLayer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\EnvLayer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\QueryLayer;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-class FeatureFlagService implements ServiceSubscriberInterface
+class FeatureFlagManager implements ServiceSubscriberInterface, FeatureFlagStateCheckerInterface
 {
     public function __construct(
         private readonly ContainerInterface $locator,
@@ -51,20 +52,21 @@ class FeatureFlagService implements ServiceSubscriberInterface
     public static function getSubscribedServices(): array
     {
         return [
-            FeatureFlagSettings::TYPE_ENV => EnvHandler::class,
-            FeatureFlagSettings::TYPE_DOTENV => DotEnvHandler::class,
-            FeatureFlagSettings::TYPE_DB => DbHandler::class,
+            FeatureFlagSettings::TYPE_ENV => EnvLayer::class,
+            FeatureFlagSettings::TYPE_QUERY => QueryLayer::class,
+            FeatureFlagSettings::TYPE_DOTENV => DotEnvLayer::class,
+            FeatureFlagSettings::TYPE_DB => DbLayer::class,
         ];
     }
 
     /**
-     * Get used handle for the feature flag.
+     * Get used layer for the feature flag.
      */
-    private function getHandler(string $featureFlagName): TypeHandlerInterface
+    private function getLayer(string $featureFlagName): TypeLayerInterface
     {
         $featureFlag = $this->featureFlagRepository->getByName($featureFlagName);
         if (null !== $featureFlag) {
-            foreach ($featureFlag->getTypeOrder() as $type) {
+            foreach ($featureFlag->getOrderedTypes() as $type) {
                 if ($this->locator->has($type)) {
                     $handler = $this->locator->get($type);
                     if ($handler->canBeUsed($featureFlagName)) {
@@ -80,9 +82,9 @@ class FeatureFlagService implements ServiceSubscriberInterface
     /**
      * Get type of handler used by this feature flag.
      */
-    public function getTypeUsed(string $featureFlagName): string
+    public function getUsedType(string $featureFlagName): string
     {
-        return $this->getHandler($featureFlagName)->getTypeName();
+        return $this->getLayer($featureFlagName)->getTypeName();
     }
 
     /**
@@ -90,7 +92,7 @@ class FeatureFlagService implements ServiceSubscriberInterface
      */
     public function isReadonly(string $featureFlagName): bool
     {
-        return $this->getHandler($featureFlagName)->isReadonly();
+        return $this->getLayer($featureFlagName)->isReadonly();
     }
 
     /**
@@ -98,7 +100,7 @@ class FeatureFlagService implements ServiceSubscriberInterface
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return $this->getHandler($featureFlagName)->isEnabled($featureFlagName);
+        return $this->getLayer($featureFlagName)->isEnabled($featureFlagName);
     }
 
     /**
@@ -114,7 +116,7 @@ class FeatureFlagService implements ServiceSubscriberInterface
      */
     public function enable(string $featureFlagName): void
     {
-        $this->getHandler($featureFlagName)->enable($featureFlagName);
+        $this->getLayer($featureFlagName)->enable($featureFlagName);
     }
 
     /**
@@ -122,6 +124,6 @@ class FeatureFlagService implements ServiceSubscriberInterface
      */
     public function disable(string $featureFlagName): void
     {
-        $this->getHandler($featureFlagName)->disable($featureFlagName);
+        $this->getLayer($featureFlagName)->disable($featureFlagName);
     }
 }

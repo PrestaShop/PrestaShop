@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
@@ -43,7 +43,7 @@ use PrestaShopException;
 class ImageGenerator
 {
     public function __construct(
-        private readonly FeatureFlagService $featureFlagService,
+        private readonly FeatureFlagManager $featureFlagManager,
         private readonly ImageFormatConfiguration $imageFormatConfiguration
     ) {
     }
@@ -96,7 +96,7 @@ class ImageGenerator
          *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
-        if ($this->featureFlagService->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+        if ($this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
             $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
         } else {
             $configuredImageFormats = ['jpg'];

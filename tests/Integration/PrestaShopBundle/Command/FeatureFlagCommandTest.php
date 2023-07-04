@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Integration\PrestaShopBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -63,13 +63,13 @@ class FeatureFlagCommandTest extends KernelTestCase
         $kernel = self::bootKernel();
         /** @var FeatureFlagRepository $featureFlagRepository */
         $featureFlagRepository = $kernel->getContainer()->get(FeatureFlagRepository::class);
-        $featureFlagService = $kernel->getContainer()->get(FeatureFlagService::class);
+        $featureFlagStateChecker = $kernel->getContainer()->get(FeatureFlagStateCheckerInterface::class);
         $featureFlags = $featureFlagRepository->findAll();
         /** @var FeatureFlag $featureFlag */
         foreach ($featureFlags as $featureFlag) {
             // This method is based on the output of the list action so it indirectly tests it
             $flagState = $this->getFeatureFlagState($kernel, $featureFlag->getName());
-            $this->assertEquals($flagState, $featureFlagService->isEnabled($featureFlag->getName()));
+            $this->assertEquals($flagState, $featureFlagStateChecker->isEnabled($featureFlag->getName()));
         }
     }
 
@@ -117,6 +117,8 @@ class FeatureFlagCommandTest extends KernelTestCase
         $regexp = sprintf('/\|[ ]+%s[ ]+\|[ ]+([^ ]+)[ ]+\|[ ]+([^ ]+)[ ]+\|/', $featureFlag);
         $matches = [];
         preg_match($regexp, $output, $matches);
+        $type = $matches[1];
+        $this->assertEquals($type, 'env,dotenv,[db]');
         $state = $matches[2];
         $this->assertTrue(in_array($state, ['Enabled', 'Disabled']));
 

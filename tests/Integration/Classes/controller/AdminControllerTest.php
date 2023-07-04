@@ -36,7 +36,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
@@ -293,8 +293,8 @@ class AdminControllerTest extends TestCase
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
                 }
-                if ($param === 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService' || $param === FeatureFlagService::class) {
-                    return $this->getMockedFeatureFlagService();
+                if ($param === FeatureFlagStateCheckerInterface::class) {
+                    return $this->getMockedFeatureFlagStateCheckerInterface();
                 }
             });
 
@@ -375,15 +375,15 @@ class AdminControllerTest extends TestCase
         return $mockAvifExtensionChecker;
     }
 
-    private function getMockedFeatureFlagService(): FeatureFlagService
+    private function getMockedFeatureFlagStateCheckerInterface(): FeatureFlagStateCheckerInterface
     {
-        $mockFeatureFlagService = $this->getMockBuilder(FeatureFlagService::class)
+        $mockFeatureFlagStateChecker = $this->getMockBuilder(FeatureFlagStateCheckerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockFeatureFlagService->method('isEnabled')->willReturn(false);
+        $mockFeatureFlagStateChecker->method('isEnabled')->willReturn(false);
 
-        return $mockFeatureFlagService;
+        return $mockFeatureFlagStateChecker;
     }
 
     private function getMockNumberSpecification(): NumberSpecification

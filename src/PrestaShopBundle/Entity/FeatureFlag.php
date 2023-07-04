@@ -61,7 +61,7 @@ class FeatureFlag
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=64, options={"default":"db"})
+     * @ORM\Column(name="type", type="string", length=64, options={"default": FeatureFlagSettings::TYPE_DEFAULT})
      */
     private $type;
 
@@ -116,7 +116,7 @@ class FeatureFlag
             throw new InvalidArgumentException('Feature flag name cannot be empty');
         }
         $this->name = $name;
-        $this->type = FeatureFlagSettings::TYPE_DB;
+        $this->type = FeatureFlagSettings::TYPE_DEFAULT;
         $this->state = false;
         $this->descriptionWording = '';
         $this->descriptionDomain = '';
@@ -282,7 +282,7 @@ class FeatureFlag
      *
      * @return array
      */
-    public function getTypeOrder(): array
+    public function getOrderedTypes(): array
     {
         return explode(',', $this->type);
     }

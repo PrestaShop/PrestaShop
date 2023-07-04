@@ -26,14 +26,14 @@
 
 namespace PrestaShopBundle\Routing\Converter;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteFactory
 {
     public function __construct(
-        private readonly FeatureFlagService $featureFlagService
+        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ) {
     }
 
@@ -56,7 +56,7 @@ class LegacyRouteFactory
 
         if (isset($routeDefaults[RouterProvider::LEGACY_LINK_ROUTE_ATTRIBUTE])) {
             if (isset($routeDefaults[RouterProvider::FEATURE_FLAG_NAME])) {
-                return $this->featureFlagService->isEnabled($routeDefaults[RouterProvider::FEATURE_FLAG_NAME]);
+                return $this->featureFlagStateChecker->isEnabled($routeDefaults[RouterProvider::FEATURE_FLAG_NAME]);
             }
 
             return true;

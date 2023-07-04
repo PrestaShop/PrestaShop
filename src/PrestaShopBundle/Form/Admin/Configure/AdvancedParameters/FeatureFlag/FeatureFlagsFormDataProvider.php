@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
@@ -51,7 +51,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
         protected EntityManagerInterface $doctrineEntityManager,
         protected readonly string $stability,
         private CacheCleanerInterface $cacheCleaner,
-        private FeatureFlagService $featureFlagService
+        private FeatureFlagManager $featureFlagManager
     ) {
     }
 
@@ -63,16 +63,16 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
         foreach ($featureFlags as $featureFlag) {
             $flagName = $featureFlag->getName();
             $featureFlagsData[$flagName] = [
-                'enabled' => $this->featureFlagService->isEnabled($flagName),
+                'enabled' => $this->featureFlagManager->isEnabled($flagName),
                 'name' => $featureFlag->getName(),
                 'label' => $featureFlag->getLabelWording(),
                 'label_domain' => $featureFlag->getLabelDomain(),
                 'description' => $featureFlag->getDescriptionWording(),
                 'description_domain' => $featureFlag->getDescriptionDomain(),
-                'type' => $featureFlag->getTypeOrder(),
-                'type_used' => $this->featureFlagService->getTypeUsed($flagName),
-                'disabled' => $this->featureFlagService->isReadOnly($flagName),
-                'forced_by_env' => $this->featureFlagService->getTypeUsed($flagName) === FeatureFlagSettings::TYPE_ENV,
+                'type' => $featureFlag->getOrderedTypes(),
+                'type_used' => $this->featureFlagManager->getUsedType($flagName),
+                'disabled' => $this->featureFlagManager->isReadOnly($flagName),
+                'forced_by_env' => $this->featureFlagManager->getUsedType($flagName) === FeatureFlagSettings::TYPE_ENV,
             ];
         }
 
@@ -93,15 +93,15 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 throw new InvalidArgumentException(sprintf('Invalid feature flag configuration submitted, flag %s does not exist', $flagName));
             }
 
-            if ($this->featureFlagService->isReadonly($flagName)) {
+            if ($this->featureFlagManager->isReadonly($flagName)) {
                 continue;
             }
 
             $flagState = $flagData['enabled'] ?? false;
             if ($flagState) {
-                $this->featureFlagService->enable($flagName);
+                $this->featureFlagManager->enable($flagName);
             } else {
-                $this->featureFlagService->disable($flagName);
+                $this->featureFlagManager->disable($flagName);
             }
         }
 

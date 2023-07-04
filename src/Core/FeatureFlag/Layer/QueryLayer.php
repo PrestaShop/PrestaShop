@@ -26,18 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag\Handler;
+namespace PrestaShop\PrestaShop\Core\FeatureFlag\Layer;
 
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\TypeLayerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class EnvHandler extends AbstractHandler
+class QueryLayer implements TypeLayerInterface
 {
+    public function __construct(
+        private EnvironmentInterface $environment,
+        private RequestStack $requestStack,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getTypeName(): string
     {
-        return FeatureFlagSettings::TYPE_ENV;
+        return FeatureFlagSettings::TYPE_QUERY;
     }
 
     /**
@@ -45,16 +54,16 @@ class EnvHandler extends AbstractHandler
      */
     public function isReadonly(): bool
     {
-        // It's always NOT editable via Env!
+        // It's always NOT editable via Query layer!
         return true;
     }
 
     /**
-     * Retrieve the const name of this feature flag.
+     * Retrieve the var name of this feature flag.
      */
-    public function getConstName(string $featureFlagName): string
+    public function getVarName(string $featureFlagName): string
     {
-        return 'PS_FF_' . strtoupper($featureFlagName);
+        return FeatureFlagSettings::PREFIX . strtoupper($featureFlagName);
     }
 
     /**
@@ -62,8 +71,13 @@ class EnvHandler extends AbstractHandler
      */
     public function canBeUsed(string $featureFlagName): bool
     {
-        // Check if PS_FF_{featureFlag's name} is on Env variable.
-        return getenv($this->getConstName($featureFlagName)) !== false;
+        // Only for debug environment.
+        if (!$this->environment->isDebug()) {
+            return false;
+        }
+
+        // Check if PS_FF_{featureFlag's name} is on query variable.
+        return null !== $this->requestStack->getMainRequest()?->query->get($this->getVarName($featureFlagName));
     }
 
     /**
@@ -71,7 +85,11 @@ class EnvHandler extends AbstractHandler
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return $this->canBeUsed($featureFlagName) && strtoupper(getenv($this->getConstName($featureFlagName))) === 'TRUE';
+        return $this->canBeUsed($featureFlagName) &&
+            filter_var(
+                $this->requestStack->getMainRequest()?->query->get($this->getVarName($featureFlagName)),
+                \FILTER_VALIDATE_BOOLEAN
+            );
     }
 
     /**
@@ -79,7 +97,7 @@ class EnvHandler extends AbstractHandler
      */
     public function enable(string $featureFlagName): void
     {
-        throw new \InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
+        throw new \InvalidArgumentException(sprintf('We cannot change status of the query feature flag %s.', $featureFlagName));
     }
 
     /**
@@ -87,6 +105,6 @@ class EnvHandler extends AbstractHandler
      */
     public function disable(string $featureFlagName): void
     {
-        throw new \InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
+        throw new \InvalidArgumentException(sprintf('We cannot change status of the query feature flag %s.', $featureFlagName));
     }
 }

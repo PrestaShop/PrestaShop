@@ -28,7 +28,7 @@ namespace Tests\Unit\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;
 use PrestaShopBundle\Routing\Converter\LegacyRouteFactory;
@@ -59,7 +59,7 @@ class RouterProviderTest extends TestCase
 
         $routerProvider = new RouterProvider(
             $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagService::class))
+            new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))
         );
 
         $legacyRoutes = $routerProvider->getLegacyRoutes();
@@ -108,7 +108,7 @@ class RouterProviderTest extends TestCase
         ]);
         $routerProvider = new RouterProvider(
             $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagService::class))
+            new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))
         );
         $controllersActions = $routerProvider->getControllersActions();
         $this->assertCount(2, $controllersActions);
@@ -153,7 +153,7 @@ class RouterProviderTest extends TestCase
 
         $routerProvider = new RouterProvider(
             $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagService::class))
+            new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))
         );
 
         $controllerActions = $routerProvider->getActionsByController('AdminProducts');
@@ -189,7 +189,7 @@ class RouterProviderTest extends TestCase
 
         $routerProvider = new RouterProvider(
             $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagService::class))
+            new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))
         );
 
         $controllerActions = $routerProvider->getActionsByController('adminproducts');
@@ -245,7 +245,7 @@ class RouterProviderTest extends TestCase
 
         $routerProvider = new RouterProvider(
             $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagService::class))
+            new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))
         );
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'index');
@@ -323,7 +323,7 @@ class RouterProviderTest extends TestCase
 
         $routerProvider = new RouterProvider(
             $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagService::class))
+            new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))
         );
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('adminproducts', 'index');
@@ -362,7 +362,7 @@ class RouterProviderTest extends TestCase
 
         $routerProvider = new RouterProvider(
             $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagService::class))
+            new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))
         );
 
         $caughtException = null;

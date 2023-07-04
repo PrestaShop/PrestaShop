@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\FeatureFlagSwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Event\PreSetDataEvent;
@@ -56,7 +56,7 @@ class FeatureFlagType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('enabled', SwitchType::class, [
+            ->add('enabled', FeatureFlagSwitchType::class, [
                 'choices' => [
                     $this->trans('Disabled', 'Admin.Global') => false,
                     $this->trans('Enabled', 'Admin.Global') => true,
@@ -72,35 +72,13 @@ class FeatureFlagType extends TranslatorAwareType
         $featureFlagData = $event->getData();
         $form = $event->getForm();
         $form->add($this->formCloner->cloneForm($form->get('enabled'), [
-            'label' => $this->trans($featureFlagData['label'], $featureFlagData['label_domain']) . $this->getHandlerLabel($featureFlagData),
-            'help' => $this->trans($featureFlagData['description'], $featureFlagData['description_domain']) . $this->getForcedByEnvMessage($featureFlagData),
+            'label' => $this->trans($featureFlagData['label'], $featureFlagData['label_domain']),
+            'help' => $this->trans($featureFlagData['description'], $featureFlagData['description_domain']),
             'attr' => ['disabled' => $featureFlagData['disabled']],
+            'types' => $featureFlagData['type'],
+            'used_type' => $featureFlagData['type_used'],
+            'forced_by_env' => $featureFlagData['forced_by_env'],
         ]));
-    }
-
-    private function getHandlerLabel(array $featureFlagData): string
-    {
-        $template = '<br><small class="form-text">%s</small>';
-
-        $htmlType = [];
-        foreach ($featureFlagData['type'] as $type) {
-            if ($type === $featureFlagData['type_used']) {
-                $htmlType[] = sprintf('<strong>%s</strong>', addslashes($type));
-            } else {
-                $htmlType[] = $type;
-            }
-        }
-
-        return sprintf($template, implode(', ', $htmlType));
-    }
-
-    private function getForcedByEnvMessage(array $featureFlagData): string
-    {
-        if ($featureFlagData['forced_by_env']) {
-            return '<br/><strong>' . $this->trans('This FeatureFlag is forced by Env.', 'Admin.Advparameters.Help') . '</strong>';
-        }
-
-        return '';
     }
 
     public function configureOptions(OptionsResolver $resolver)

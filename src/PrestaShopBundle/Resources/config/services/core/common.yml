@@ -1,2 +1,6 @@
 imports:
   - { resource: ./circuit_breaker.yml }
+
+services:
+  PrestaShop\PrestaShop\Core\EnvironmentInterface:
+    alias: prestashop.adapter.environment

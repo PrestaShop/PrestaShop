@@ -26,12 +26,29 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag\Handler;
+namespace PrestaShop\PrestaShop\Core\FeatureFlag\Layer;
 
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\TypeLayerInterface;
 
-class DotEnvHandler extends AbstractHandler
+class DotEnvLayer implements TypeLayerInterface
 {
+    public function __construct(
+        private EnvironmentInterface $environment,
+        private string $rootDir,
+    ) {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isReadonly(): bool
+    {
+        // It's always editable via DotEnv layer!
+        return false;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +62,7 @@ class DotEnvHandler extends AbstractHandler
      */
     public function getVarName(string $featureFlagName): string
     {
-        return 'PS_FF_' . strtoupper($featureFlagName);
+        return FeatureFlagSettings::PREFIX . strtoupper($featureFlagName);
     }
 
     /**
@@ -53,7 +70,8 @@ class DotEnvHandler extends AbstractHandler
      */
     public function canBeUsed(string $featureFlagName): bool
     {
-        return isset($_ENV['SYMFONY_DOTENV_VARS']) && str_contains($_ENV['SYMFONY_DOTENV_VARS'], $this->getVarName($featureFlagName));
+        return isset($_ENV['SYMFONY_DOTENV_VARS']) &&
+            str_contains($_ENV['SYMFONY_DOTENV_VARS'], $this->getVarName($featureFlagName));
     }
 
     /**
@@ -61,7 +79,8 @@ class DotEnvHandler extends AbstractHandler
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return isset($_ENV[$this->getVarName($featureFlagName)]) && strtoupper($_ENV[$this->getVarName($featureFlagName)]) === 'TRUE';
+        return isset($_ENV[$this->getVarName($featureFlagName)]) &&
+            filter_var($_ENV[$this->getVarName($featureFlagName)], \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -85,11 +104,11 @@ class DotEnvHandler extends AbstractHandler
      */
     private function locateDotEnvFile(string $featureFlagName): string
     {
-        $env = _PS_ENV_;
+        $env = $this->environment->getName();
         $filesToCheck = [".env.$env.local", ".env.$env", '.env'];
 
         foreach ($filesToCheck as $file) {
-            $path = _PS_ROOT_DIR_ . '/' . $file;
+            $path = $this->rootDir . '/' . $file;
             if (file_exists($path) && str_contains(file_get_contents($path), $this->getVarName($featureFlagName))) {
                 return $path;
             }
@@ -106,9 +125,9 @@ class DotEnvHandler extends AbstractHandler
         if ($pathDotenv = $this->locateDotEnvFile($featureFlagName)) {
             file_put_contents(
                 $pathDotenv,
-                str_ireplace(
-                    "{$this->getVarName($featureFlagName)}=" . $this->boolLabel($this->isEnabled($featureFlagName)),
-                    "{$this->getVarName($featureFlagName)}=" . $this->boolLabel($status),
+                preg_replace(
+                    "/({$this->getVarName($featureFlagName)})=(.*)/",
+                    "$1={$this->boolLabel($status)}",
                     file_get_contents($pathDotenv)
                 )
             );
@@ -124,6 +143,6 @@ class DotEnvHandler extends AbstractHandler
      */
     private function boolLabel(bool $status): string
     {
-        return $status ? 'TRUE' : 'FALSE';
+        return $status ? 'true' : 'false';
     }
 }

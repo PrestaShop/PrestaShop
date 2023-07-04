@@ -30,8 +30,8 @@ use Configuration;
 use Context;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagService;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfigurationInterface;
 use PrestaShopException;
 use Shop;
@@ -50,7 +50,7 @@ class LogoUploader
     public function __construct(
         private Shop $shop,
         private ImageFormatConfigurationInterface $imageFormatConfiguration,
-        private FeatureFlagService $featureFlagService,
+        private FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private string $imageDirection
     ) {
     }
@@ -136,7 +136,7 @@ class LogoUploader
                     *
                     * In case of .jpg images, the actual format inside is decided by ImageManager.
                     */
-                    if ($this->featureFlagService->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
                         $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
                     } else {
                         $configuredImageFormats = ['jpg'];

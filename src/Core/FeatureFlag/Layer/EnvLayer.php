@@ -26,24 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag\Handler;
+namespace PrestaShop\PrestaShop\Core\FeatureFlag\Layer;
 
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
+use PrestaShop\PrestaShop\Core\FeatureFlag\TypeLayerInterface;
 
-class DbHandler extends AbstractHandler
+class EnvLayer implements TypeLayerInterface
 {
-    public function __construct(
-        protected readonly FeatureFlagRepository $featureFlagRepository
-    ) {
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getTypeName(): string
     {
-        return FeatureFlagSettings::TYPE_DB;
+        return FeatureFlagSettings::TYPE_ENV;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isReadonly(): bool
+    {
+        // It's always NOT editable via Env layer!
+        return true;
+    }
+
+    /**
+     * Retrieve the const name of this feature flag.
+     */
+    public function getConstName(string $featureFlagName): string
+    {
+        return FeatureFlagSettings::PREFIX . strtoupper($featureFlagName);
     }
 
     /**
@@ -51,8 +63,8 @@ class DbHandler extends AbstractHandler
      */
     public function canBeUsed(string $featureFlagName): bool
     {
-        // It's always possible via DB!
-        return true;
+        // Check if PS_FF_{featureFlag's name} is on Env variable.
+        return getenv($this->getConstName($featureFlagName)) !== false;
     }
 
     /**
@@ -60,7 +72,8 @@ class DbHandler extends AbstractHandler
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return $this->featureFlagRepository->isEnabled($featureFlagName);
+        return $this->canBeUsed($featureFlagName) &&
+            filter_var(getenv($this->getConstName($featureFlagName)), \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -68,7 +81,7 @@ class DbHandler extends AbstractHandler
      */
     public function enable(string $featureFlagName): void
     {
-        $this->featureFlagRepository->enable($featureFlagName);
+        throw new \InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
     }
 
     /**
@@ -76,6 +89,6 @@ class DbHandler extends AbstractHandler
      */
     public function disable(string $featureFlagName): void
     {
-        $this->featureFlagRepository->disable($featureFlagName);
+        throw new \InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
     }
 }
