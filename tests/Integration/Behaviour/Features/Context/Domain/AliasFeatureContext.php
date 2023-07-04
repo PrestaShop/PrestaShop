@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
@@ -180,6 +181,38 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
             $this->getCommandBus()->handle(new BulkDeleteAliasCommand($this->referencesToIds($aliasReferences)));
         } catch (AliasException $e) {
             $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I search for alias search term matching :search I should get the following results:
+     *
+     * @param string $search
+     * @param TableNode $tableNode
+     */
+    public function assertSearchAliases(string $search, TableNode $tableNode): void
+    {
+        /** @var string[] $foundAliasesForAssociation */
+        $foundAliasesForAssociation = $this->getQueryBus()->handle(new SearchForSearchTerm($search));
+        $expectedSearchTermsRows = $tableNode->getColumnsHash();
+
+        foreach ($expectedSearchTermsRows as $expectedSearchTermRow) {
+            $expectedSearchTerms = PrimitiveUtils::castStringArrayIntoArray($expectedSearchTermRow['searchTerm']);
+            Assert::assertCount(count($expectedSearchTerms), $foundAliasesForAssociation, 'Expected and found search terms count doesn\'t match');
+
+            foreach ($expectedSearchTerms as $index => $searchTerm) {
+                $foundAliasSearchTerm = $foundAliasesForAssociation[$index];
+
+                Assert::assertEquals(
+                    $searchTerm,
+                    $foundAliasSearchTerm,
+                    sprintf(
+                        'Invalid Alias Search Term, expected %d but got %d instead.',
+                        $searchTerm,
+                        $foundAliasSearchTerm
+                    )
+                );
+            }
         }
     }
 

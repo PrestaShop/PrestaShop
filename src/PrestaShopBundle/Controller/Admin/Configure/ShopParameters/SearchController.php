@@ -28,9 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -64,5 +68,47 @@ class SearchController extends FrameworkBundleAdminController
                 ],
             ],
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function searchAliasesForAssociationAction(Request $request): JsonResponse
+    {
+        try {
+            /** @var string[] $searchTerms */
+            $searchTerms = $this->getQueryBus()->handle(new SearchForSearchTerm(
+                $request->get('query', ''),
+                (int) $request->get('limit', SearchForSearchTerm::DEFAULT_LIMIT)
+            ));
+        } catch (AliasConstraintException $e) {
+            return $this->json([
+                'message' => $this->getErrorMessage($e),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($searchTerms)) {
+            return $this->json(['searchTerms' => []], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json(['searchTerms' => $searchTerms]);
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return string
+     */
+    private function getErrorMessage(Exception $e): string
+    {
+        return $this->getFallbackErrorMessage(
+            get_class($e),
+            $e->getCode(),
+            $e->getMessage()
+        );
     }
 }

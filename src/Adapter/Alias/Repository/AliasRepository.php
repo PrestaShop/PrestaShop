@@ -199,4 +199,24 @@ class AliasRepository extends AbstractObjectModelRepository
             );
         }
     }
+
+    /**
+     * @param string $searchPhrase
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, string>>
+     */
+    public function searchSearchTerms(string $searchPhrase, ?int $limit = null): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('a.search')
+            ->from($this->dbPrefix . 'alias', 'a')
+            ->addOrderBy('a.search', 'ASC')
+            ->addGroupBy('a.search')
+            ->setMaxResults($limit)
+            ->where('a.search LIKE :searchPhrase')
+            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
+            ->execute()
+            ->fetchAllAssociative();
+    }
 }
