@@ -457,8 +457,9 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->connection->createQueryBuilder()
             ->delete($this->dbPrefix . 'cart_rule_carrier', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
-            ->setParameter('cartRuleId', $cartRuleId->getValue()
-        );
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
     }
 
     private function removeCountryRestrictions(CartRuleId $cartRuleId): void
