@@ -44,10 +44,10 @@ class UpdateAliasHandler implements UpdateAliasHandlerInterface
      */
     public function handle(UpdateAliasCommand $command): void
     {
-        $existingAlias = $this->aliasRepository->get($command->aliasId);
+        $existingAlias = $this->aliasRepository->get($command->getAliasId());
 
         // We need to delete existing aliases to add new alias entries
         $this->aliasRepository->deleteAliasesBySearchTerm($existingAlias->search);
-        $this->aliasRepository->create($command->searchTerm, $command->aliases);
+        $this->aliasRepository->create($command->getSearchTerm(), $command->getAliases());
     }
 }

@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
-use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -108,7 +107,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     public function updateAliasStatus(bool $enable, string $aliasReference): void
     {
         $this->getCommandBus()->handle(new UpdateAliasStatusCommand(
-            new AliasId((int) $this->getSharedStorage()->get($aliasReference)),
+            $this->getSharedStorage()->get($aliasReference),
             $enable
         ));
     }
@@ -162,11 +161,11 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteAlias(string $reference): void
     {
-        /** @var string[] $aliasId */
+        /** @var int $aliasId */
         $aliasId = $this->getSharedStorage()->get($reference);
 
         try {
-            $this->getCommandBus()->handle(new DeleteAliasCommand(new AliasId((int) $aliasId)));
+            $this->getCommandBus()->handle(new DeleteAliasCommand(($aliasId)));
         } catch (AliasException $e) {
             $this->setLastException($e);
         }

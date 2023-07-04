@@ -35,13 +35,35 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
  */
 class UpdateAliasStatusCommand
 {
+    private AliasId $aliasId;
+
+    private bool $enabled;
+
     /**
-     * @param AliasId $aliasId
+     * @param int $aliasId
      * @param bool $enabled
      */
     public function __construct(
-        public readonly AliasId $aliasId,
-        public readonly bool $enabled
+        int $aliasId,
+        bool $enabled
     ) {
+        $this->aliasId = new AliasId($aliasId);
+        $this->enabled = $enabled;
+    }
+
+    /**
+     * @return AliasId
+     */
+    public function getAliasId(): AliasId
+    {
+        return $this->aliasId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
     }
 }

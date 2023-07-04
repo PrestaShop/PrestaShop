@@ -35,18 +35,53 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
  */
 class UpdateAliasCommand
 {
-    public readonly AliasId $aliasId;
+    private AliasId $aliasId;
+
+    /**
+     * @var string[]
+     */
+    private array $aliases;
+
+    private string $searchTerm;
 
     /**
      * @param int $aliasId
-     * @param string[] $aliases
+     * @param string[] $aliases this input is array of string aliases that are returned from the form input
      * @param string $searchTerm
      */
     public function __construct(
         int $aliasId,
-        public readonly array $aliases,
-        public readonly string $searchTerm,
+        array $aliases,
+        string $searchTerm,
     ) {
         $this->aliasId = new AliasId($aliasId);
+        $this->aliases = $aliases;
+        $this->searchTerm = $searchTerm;
+    }
+
+    /**
+     * @return AliasId
+     */
+    public function getAliasId(): AliasId
+    {
+        return $this->aliasId;
+    }
+
+    /**
+     * Returns array of string aliases that are used in the alias form input.
+     *
+     * @return string[]
+     */
+    public function getAliases(): array
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchTerm(): string
+    {
+        return $this->searchTerm;
     }
 }
