@@ -3858,6 +3858,16 @@ exit;
 
         return $array;
     }
+
+    /**
+     * Get the current URL of the page
+     *
+     * @return string
+     */
+    public static function getCurrentPageURL()
+    {
+        return self::getHttpHost().$_SERVER['REQUEST_URI'];
+    }
 }
 
 /**
