@@ -8,7 +8,6 @@ import {disableMultiStoreTest, enableMultiStoreTest} from '@commonTests/BO/advan
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import generalPage from '@pages/BO/shopParameters/general';
 import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';

@@ -9,7 +9,6 @@ import {disableMultiStoreTest, enableMultiStoreTest} from '@commonTests/BO/advan
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import generalPage from '@pages/BO/shopParameters/general';
 import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
@@ -92,7 +91,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       const shopCreate: ShopData = new ShopData({
         name: `Todelete${index + 1}`,
         shopGroup: 'Default',
-        categoryRoot: 'Home'
+        categoryRoot: 'Home',
       });
       it('should go to add new shop page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopsPage${index}`, baseContext);
