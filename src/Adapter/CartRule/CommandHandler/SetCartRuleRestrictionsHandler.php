@@ -110,7 +110,7 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
      */
     private function setCarrierRestrictions(CartRule $cartRule, array $restrictedCarrierIds): void
     {
-        $this->cartRuleRepository->setCarrierRestrictions(new CartRuleId((int)$cartRule->id), $restrictedCarrierIds);
+        $this->cartRuleRepository->setCarrierRestrictions(new CartRuleId((int) $cartRule->id), $restrictedCarrierIds);
 
         $cartRule->carrier_restriction = !empty($restrictedCarrierIds);
         $this->cartRuleRepository->partialUpdate($cartRule, ['carrier_restriction']);

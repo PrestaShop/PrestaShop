@@ -364,6 +364,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             )
         );
     }
+
     /**
      * @param CartRuleId $cartRuleId
      * @param CountryId[] $restrictedCountryIds
