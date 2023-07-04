@@ -104,7 +104,7 @@ class SearchController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash(
                 'error',
-                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+                $this->getErrorMessageForException($e, [$this->getErrorMessage($e)])
             );
         }
 
