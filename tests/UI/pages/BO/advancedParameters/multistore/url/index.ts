@@ -166,6 +166,12 @@ class ShopURLSettings extends BOBasePage {
     await this.clickAndWaitForURL(page, this.addNewUrlButton);
   }
 
+  /**
+   * Go to edit shop url
+   * @param page {Page} Browser tab
+   * @param row {number} Row number to edit
+   * @returns {Promise<void>}
+   */
   async goToEditShopURLPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditButton(row));
   }
