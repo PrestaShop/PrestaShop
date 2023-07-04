@@ -161,26 +161,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule "(.+)" is restricted to carrier "(.+)"$/
-     */
-    public function cartRuleNamedIsRestrictedToCarrierNamed($cartRuleName, $carrierName)
-    {
-        $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
-        $cartRuleId = $this->getCartRuleId($cartRuleName);
-        $cartRule = new CartRule($cartRuleId);
-        $cartRule->carrier_restriction = true;
-        $cartRule->save();
-        $this->cartRules[$cartRuleName] = $cartRule;
-
-        Db::getInstance()->execute('
-          INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
-          VALUES('" . $cartRuleId . "',
-          '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
-        ");
-        Cache::clear();
-    }
-
-    /**
      * @Given /^cart rule "(.+)" is restricted to country "(.+)"$/
      */
     public function cartRuleNamedIsRestrictedToCountryNamed(string $cartRuleName, string $country)

@@ -74,6 +74,26 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+     * @When I restrict following carriers for cart rule :cartRuleReference:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $tableNode
+     *
+     * @return void
+     */
+    public function setRestrictedCarriers(string $cartRuleReference, TableNode $tableNode): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+
+        try {
+            $command->setRestrictedCarrierIds($this->referencesToIds($tableNode->getRowsHash()['restricted carriers']));
+            $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s) in cart matching one of these rules:
      * @When I add a restriction for cart rule :cartRuleReference, which requires any quantity of product(s) in cart matching one of these rules:
      * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s), but I provide empty list of rules
@@ -160,6 +180,21 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+     * @When I clear all carrier restrictions for cart rule :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     *
+     * @return void
+     */
+    public function clearCartRuleCarrierRestrictions(string $cartRuleReference): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command->setRestrictedCarrierIds([]);
+
+        $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+    }
+
+    /**
      * @When I save all the restrictions for cart rule :cartRuleReference
      *
      * @param string $cartRuleReference
@@ -176,7 +211,10 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
             unset($this->productRestrictionGroupsByReference[$cartRuleReference]);
         }
 
-        if (null === $command->getRestrictedCartRuleIds() && null === $command->getProductRestrictionRuleGroups()) {
+        if (null === $command->getRestrictedCartRuleIds()
+            && null === $command->getProductRestrictionRuleGroups()
+            && null === $command->getRestrictedCarrierIds()
+        ) {
             throw new RuntimeException(
                 sprintf(
                     '%s is empty for cart rule referenced as "%s". Did you forget to fill the restrictions in other steps?',

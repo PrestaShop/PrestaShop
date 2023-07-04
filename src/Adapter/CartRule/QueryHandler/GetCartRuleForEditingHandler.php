@@ -50,7 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
 
 /**
- * Handles command which gets catalog price rule for editing using legacy object model
+ * Handles command which gets cart rule for editing using legacy object model
  */
 class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterface
 {
@@ -117,14 +117,22 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
             }
         }
 
+        $cartRuleId = new CartRuleId((int) $cartRule->id);
+
         $restrictedCartRules = [];
         if ($cartRule->cart_rule_restriction) {
-            $restrictedCartRules = $this->cartRuleRepository->getRestrictedCartRuleIds(new CartRuleId((int) $cartRule->id));
+            $restrictedCartRules = $this->cartRuleRepository->getRestrictedCartRuleIds($cartRuleId);
+        }
+
+        $restrictedCarrierIds = [];
+        if ($cartRule->carrier_restriction) {
+            $restrictedCarrierIds = $this->cartRuleRepository->getRestrictedCarrierIds($cartRuleId);
         }
 
         $cartRuleRestrictions = new CartRuleRestrictionsForEditing(
             $restrictedCartRules,
-            $this->getRestrictionRuleGroups($cartRule)
+            $this->getRestrictionRuleGroups($cartRule),
+            $restrictedCarrierIds
         );
 
         return new CartRuleConditionsForEditing(
