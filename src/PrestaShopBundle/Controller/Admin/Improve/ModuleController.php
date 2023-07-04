@@ -217,7 +217,7 @@ class ModuleController extends ModuleAbstractController
                 $args[] = $source;
             }
             if ($action === ModuleAdapter::ACTION_UNINSTALL) {
-                $args[] = (bool) ($request->request->all('actionParams', [])['deletion'] ?? false);
+                $args[] = (bool) ($request->request->all('actionParams')['deletion'] ?? false);
                 $moduleInstance = $moduleRepository->getModule($moduleName);
                 $response[$moduleName]['refresh_needed'] = $this->moduleNeedsReload($moduleInstance);
                 $response[$moduleName]['has_download_url'] = $moduleInstance->attributes->has('download_url');

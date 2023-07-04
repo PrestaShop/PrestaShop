@@ -77,10 +77,6 @@ function smartyTranslate($params, $smarty)
         $sprintf = $params['sprintf'];
     }
 
-    if (($htmlEntities || $addSlashes)) {
-        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
-    }
-
     if ($isInPDF && empty($params['d'])) {
         return Translate::postProcessTranslation(
             Translate::getPdfTranslation(
@@ -93,7 +89,7 @@ function smartyTranslate($params, $smarty)
 
     // If the template is part of a module
     if ($isInModule && empty($params['d'])) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getModuleTranslation(
                 $params['mod'],
                 $params['s'],

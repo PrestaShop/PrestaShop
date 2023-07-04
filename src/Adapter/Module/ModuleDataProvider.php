@@ -344,7 +344,7 @@ class ModuleDataProvider
      */
     private function isModuleActive(int $id, array $id_shops): bool
     {
-        $result = Db::getInstance()->getRow('SELECT m.`active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
+        $result = Db::getInstance()->getRow('SELECT m.`active`, ms.`id_module` as `shop_active`
             FROM `' . _DB_PREFIX_ . 'module` m
             LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
             WHERE m.`id_module` = ' . $id . '
