@@ -38,6 +38,8 @@ class AddressFormatCore extends ObjectModel
     /** @var int Country ID */
     public $id_country;
 
+    public $testPropery = false;
+
     /** @var string Format */
     public $format;
 
