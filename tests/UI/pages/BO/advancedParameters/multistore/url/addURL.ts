@@ -66,6 +66,12 @@ class AddUrl extends BOBasePage {
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
+  /**
+   * Set main URL
+   * @param page {Page} Browser tab
+   * @param status {string} Main url status
+   * @returns {Promise<string>}
+   */
   async setMainURL(page: Page, status: string): Promise<string> {
     await this.setChecked(page, this.mainURLButton(status));
     await this.clickAndWaitForNavigation(page, this.saveButton);
@@ -73,6 +79,12 @@ class AddUrl extends BOBasePage {
     return this.getTextContent(page, this.alertBlock);
   }
 
+  /**
+   * Set shop url status
+   * @param page {Page} Browser tab
+   * @param status {string} shop url status
+   * @returns {Promise<string>}
+   */
   async setShopStatus(page: Page, status: string): Promise<string> {
     await this.setChecked(page, this.enabledButton(status));
     await this.clickAndWaitForNavigation(page, this.saveButton);
