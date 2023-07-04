@@ -3864,7 +3864,7 @@ exit;
      *
      * @return string
      */
-    public static function getCurrentPageURL()
+    public static function getCurrentPageURL(): string
     {
         return self::getHttpHost() . $_SERVER['REQUEST_URI'];
     }
