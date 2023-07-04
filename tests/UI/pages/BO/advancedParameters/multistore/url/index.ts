@@ -38,6 +38,8 @@ class ShopURLSettings extends BOBasePage {
 
   private readonly tableColumnActionsEditLink: (row: number) => string;
 
+  private readonly tableColumnActionsEditButton: (row: number) => string;
+
   private readonly tableColumnActionsToggleButton: (row: number) => string;
 
   private readonly tableColumnActionsDropdownMenu: (row: number) => string;
@@ -117,6 +119,7 @@ class ShopURLSettings extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsEditButton = (row: number) => `${this.tableBodyColumn(row)} a.edit`;
     this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
     this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
@@ -161,6 +164,10 @@ class ShopURLSettings extends BOBasePage {
    */
   async goToAddNewUrl(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.addNewUrlButton);
+  }
+
+  async goToEditShopURLPage(page: Page, row: number): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditButton(row));
   }
 
   /* Filter methods */
