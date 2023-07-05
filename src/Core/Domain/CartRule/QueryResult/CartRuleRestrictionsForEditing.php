@@ -33,33 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\Restricti
 class CartRuleRestrictionsForEditing
 {
     /**
-     * @var int[]
-     */
-    private array $restrictedCartRuleIds;
-
-    /**
-     * @var RestrictionRuleGroup[]
-     */
-    private array $productRestrictionRuleGroups;
-
-    /**
-     * @var int[]
-     */
-    private array $restrictedCarrierIds;
-
-    /**
-     * @var int[]
-     */
-    private array $restrictedCountryIds;
-
-    /**
-     * @var int[]
-     */
-    private array $restrictedGroupIds;
-
-    /**
-     * @todo: fill other restrictions when related commands are implemented
-     *
      * @param int[] $restrictedCartRuleIds
      * @param RestrictionRuleGroup[] $productRestrictionRuleGroups
      * @param int[] $restrictedCarrierIds
@@ -67,17 +40,12 @@ class CartRuleRestrictionsForEditing
      * @param int[] $restrictedGroupIds
      */
     public function __construct(
-        array $restrictedCartRuleIds,
-        array $productRestrictionRuleGroups,
-        array $restrictedCarrierIds,
-        array $restrictedCountryIds,
-        array $restrictedGroupIds
+        private readonly array $restrictedCartRuleIds,
+        private readonly array $productRestrictionRuleGroups,
+        private readonly array $restrictedCarrierIds,
+        private readonly array $restrictedCountryIds,
+        private readonly array $restrictedGroupIds
     ) {
-        $this->restrictedCartRuleIds = $restrictedCartRuleIds;
-        $this->productRestrictionRuleGroups = $productRestrictionRuleGroups;
-        $this->restrictedCarrierIds = $restrictedCarrierIds;
-        $this->restrictedCountryIds = $restrictedCountryIds;
-        $this->restrictedGroupIds = $restrictedGroupIds;
     }
 
     /**
