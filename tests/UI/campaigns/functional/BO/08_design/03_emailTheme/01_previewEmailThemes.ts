@@ -62,7 +62,7 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
 
         await emailThemesPage.previewEmailTheme(page, test.args.emailThemeName);
 
-        const pageTitle = await emailThemesPage.getPageTitle(page);
+        const pageTitle = await previewEmailThemesPage.getPageTitle(page);
         await expect(pageTitle).to.contains(
           `${previewEmailThemesPage.pageTitle} ${test.args.emailThemeName}`,
         );

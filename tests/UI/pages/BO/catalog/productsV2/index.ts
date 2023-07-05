@@ -447,7 +447,7 @@ class Products extends BOBasePage {
     const modalBulkActionsProductsProgress = this.modalBulkActionsProductsProgress(
       (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
     );
-    await this.clickAndWaitForNavigation(page, modalBulkActionsProductsCloseButton);
+    await this.clickAndWaitForLoadState(page, modalBulkActionsProductsCloseButton);
 
     return this.elementNotVisible(page, modalBulkActionsProductsProgress, 1000);
   }
@@ -488,9 +488,7 @@ class Products extends BOBasePage {
     if (!found) {
       throw new Error(`${categoryName} not found as a category`);
     }
-    await page.waitForNavigation({
-      waitUntil: 'networkidle',
-    });
+    await this.waitForHiddenSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
   }
 
   /**
@@ -498,7 +496,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getFilterByCategoryButtonName(page: Page): Promise<string> {
+  async getFilterByCategoryButtonName(page: Page): Promise<string> {
     return this.getTextContent(page, this.filterByCategoriesButton);
   }
 
@@ -513,7 +511,7 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
 
     // Unselect all categories
-    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.clickAndWaitForURL(page, this.filterByCategoriesUnselectButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
   }
 
@@ -522,7 +520,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isClearFilterLinkVisible(page: Page): Promise<boolean> {
+  async isClearFilterLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.clearFilterButton, 2000);
   }
 
@@ -532,7 +530,7 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnClearFilterLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.clearFilterButton);
+    await page.click(this.clearFilterButton);
   }
 
   /**
@@ -630,7 +628,7 @@ class Products extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForLoadState(page, this.filterSearchButton, 'networkidle', 10000);
   }
 
   /**
@@ -640,7 +638,7 @@ class Products extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
     }
   }
 

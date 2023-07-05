@@ -135,8 +135,9 @@ class Addresses extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page: Page): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await page.click(this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -179,7 +180,7 @@ class Addresses extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -217,7 +218,7 @@ class Addresses extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewAddressPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewAddressLink);
+    await this.clickAndWaitForURL(page, this.addNewAddressLink);
   }
 
   /**
@@ -227,7 +228,7 @@ class Addresses extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditAddressPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addressesListTableEditLink(row));
+    await this.clickAndWaitForURL(page, this.addressesListTableEditLink(row));
   }
 
   /**
@@ -293,7 +294,7 @@ class Addresses extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -327,7 +328,7 @@ class Addresses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
 
@@ -337,7 +338,7 @@ class Addresses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
 
@@ -362,7 +363,7 @@ class Addresses extends BOBasePage {
     await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
 
     // Save setting
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await page.click(this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

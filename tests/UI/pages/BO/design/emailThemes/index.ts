@@ -58,7 +58,7 @@ class EmailTheme extends BOBasePage {
    */
   async selectDefaultEmailTheme(page: Page, emailTheme: string): Promise<string> {
     await this.selectByVisibleText(page, this.defaultEmailThemeSelect, emailTheme);
-    await this.clickAndWaitForNavigation(page, this.configurationFormSaveButton);
+    await this.clickAndWaitForLoadState(page, this.configurationFormSaveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -81,7 +81,7 @@ class EmailTheme extends BOBasePage {
         /* eslint-disable no-loop-func */
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, (el: HTMLElement) => el.click()),
-          page.waitForNavigation(),
+          page.waitForURL('**/mail_theme/preview/**'),
         ]);
         /* eslint-enable no-loop-func */
         found = true;

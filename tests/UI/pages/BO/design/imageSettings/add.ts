@@ -80,7 +80,7 @@ class AddImageType extends BOBasePage {
     await this.setChecked(page, this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
 
     // Save image type
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

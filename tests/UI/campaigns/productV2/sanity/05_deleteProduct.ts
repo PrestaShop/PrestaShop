@@ -1,6 +1,3 @@
-import type {BrowserContext, Page} from 'playwright';
-import {expect} from 'chai';
-
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -8,17 +5,21 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  enableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 
 // Import data
 import ProductData from '@data/faker/product';
+
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
 
 const baseContext: string = 'productV2_sanity_deleteProduct';
 
@@ -36,7 +37,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
   });
 
   // Pre-condition: Enable new product page
-  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {

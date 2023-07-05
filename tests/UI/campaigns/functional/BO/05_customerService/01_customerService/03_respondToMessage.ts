@@ -139,12 +139,6 @@ describe('BO - Customer Service : Respond to message', async () => {
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
-      );
-
       const textResult = await customerServicePage.deleteMessage(page, 1);
       await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });

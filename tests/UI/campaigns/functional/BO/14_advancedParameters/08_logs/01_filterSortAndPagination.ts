@@ -104,7 +104,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should go to \'Advanced parameters > Logs\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToFilter', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
+      await logsPage.reloadPage(page);
 
       const pageTitle = await logsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(logsPage.pageTitle);

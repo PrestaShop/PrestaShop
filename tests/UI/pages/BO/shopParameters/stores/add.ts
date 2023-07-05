@@ -120,7 +120,7 @@ class AddStore extends BOBasePage {
     }
 
     // Save store
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

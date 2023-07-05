@@ -82,11 +82,15 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
         it('should go to Orders > Orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
-            page,
-            dashboardPage.ordersParentLink,
-            dashboardPage.ordersLink,
-          );
+          if (index === 0) {
+            await dashboardPage.goToSubMenu(
+              page,
+              dashboardPage.ordersParentLink,
+              dashboardPage.ordersLink,
+            );
+          } else {
+            await ordersPage.reloadPage(page);
+          }
 
           const pageTitle = await ordersPage.getPageTitle(page);
           await expect(pageTitle).to.contains(ordersPage.pageTitle);

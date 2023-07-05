@@ -74,7 +74,7 @@ class MyAccountPage extends FOBasePage {
    * @return {Promise<void>}
    */
   async goToInformationPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.accountInformationLink);
+    await this.clickAndWaitForURL(page, this.accountInformationLink);
   }
 
   /**
@@ -83,7 +83,7 @@ class MyAccountPage extends FOBasePage {
    * @return {Promise<void>}
    */
   async goToCreditSlipsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.orderSlipsLink);
+    await this.clickAndWaitForURL(page, this.orderSlipsLink);
   }
 
   /**
@@ -92,7 +92,7 @@ class MyAccountPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToHistoryAndDetailsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.accountHistoryLink);
+    await this.clickAndWaitForURL(page, this.accountHistoryLink);
   }
 
   /**
@@ -111,9 +111,9 @@ class MyAccountPage extends FOBasePage {
    */
   async goToAddressesPage(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.accountFirstAddressLink, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
+      await this.clickAndWaitForURL(page, this.accountFirstAddressLink);
     } else {
-      await this.clickAndWaitForNavigation(page, this.accountAddressesLink);
+      await this.clickAndWaitForURL(page, this.accountAddressesLink);
     }
   }
 
@@ -123,7 +123,7 @@ class MyAccountPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToVouchersPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.accountVouchersLink);
+    await this.clickAndWaitForURL(page, this.accountVouchersLink);
   }
 
   /**
@@ -132,7 +132,7 @@ class MyAccountPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToMerchandiseReturnsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.merchandiseReturnsLink);
+    await this.clickAndWaitForURL(page, this.merchandiseReturnsLink);
   }
 
   /**
@@ -141,7 +141,7 @@ class MyAccountPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async logout(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.logoutFooterLink);
+    await this.clickAndWaitForURL(page, this.logoutFooterLink);
   }
 
   /**
@@ -150,7 +150,7 @@ class MyAccountPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToMyGDPRPersonalDataPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.psgdprLink);
+    await this.clickAndWaitForURL(page, this.psgdprLink);
   }
 }
 

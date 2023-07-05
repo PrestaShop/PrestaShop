@@ -1200,7 +1200,7 @@ class AddOrder extends BOBasePage {
    */
   async clickOnCreateOrderButton(page: Page, waitForNavigation: boolean = true): Promise<boolean> {
     if (waitForNavigation) {
-      await this.clickAndWaitForNavigation(page, this.createOrderButton);
+      await this.clickAndWaitForURL(page, this.createOrderButton);
     } else {
       await this.waitForSelectorAndClick(page, this.createOrderButton);
     }
@@ -1260,7 +1260,7 @@ class AddOrder extends BOBasePage {
     await this.setOrderStatus(page, orderToMake.status);
 
     // Create the order
-    await this.clickAndWaitForNavigation(page, this.createOrderButton);
+    await this.clickAndWaitForURL(page, this.createOrderButton);
   }
 }
 

@@ -174,7 +174,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveProductButton);
+    await this.clickAndWaitForLoadState(page, this.saveProductButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -199,7 +199,7 @@ class CreateProduct extends BOBasePage {
     const textBody = await this.getTextContent(newPage, 'body');
 
     if (textBody.includes('[Debug] This page has moved')) {
-      await this.clickAndWaitForNavigation(newPage, 'a');
+      await this.clickAndWaitForURL(newPage, 'a');
     }
     return newPage;
   }
@@ -213,7 +213,7 @@ class CreateProduct extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.footerProductDropDown);
     await this.waitForSelectorAndClick(page, this.deleteProductButton);
     await this.waitForVisibleSelector(page, this.deleteProductFooterModal);
-    await this.clickAndWaitForNavigation(page, this.deleteProductSubmitButton);
+    await this.clickAndWaitForURL(page, this.deleteProductSubmitButton);
 
     return productsPage.getAlertSuccessBlockParagraphContent(page);
   }
@@ -224,7 +224,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToCatalogPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
+    await this.clickAndWaitForURL(page, this.goToCatalogButton);
   }
 
   /**
@@ -260,9 +260,11 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async chooseProductType(page: Page, productType: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     await productsPage.selectProductType(page, productType);
     await productsPage.clickOnAddNewProduct(page);
-    await page.waitForNavigation({waitUntil: 'networkidle'});
+    await page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'});
   }
 
   /**

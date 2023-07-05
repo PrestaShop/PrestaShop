@@ -136,7 +136,7 @@ class DeliverySlips extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveDeliverySlipOptions(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveDeliverySlipOptionsButton);
+    await page.click(this.saveDeliverySlipOptionsButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

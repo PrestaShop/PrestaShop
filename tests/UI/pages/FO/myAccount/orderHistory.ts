@@ -132,7 +132,7 @@ class OrderHistoryPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnReorderLink(page: Page, orderRow: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.reorderLink(orderRow));
+    await this.clickAndWaitForURL(page, this.reorderLink(orderRow));
   }
 
   /**
@@ -181,7 +181,7 @@ class OrderHistoryPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToDetailsPage(page: Page, orderRow: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.detailsLink(orderRow));
+    await this.clickAndWaitForURL(page, this.detailsLink(orderRow));
   }
 
   /**
@@ -191,7 +191,7 @@ class OrderHistoryPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToOrderDetailsPage(page: Page, orderID: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.orderDetailsLink(orderID));
+    await this.clickAndWaitForURL(page, this.orderDetailsLink(orderID));
   }
 
   /**
@@ -199,7 +199,7 @@ class OrderHistoryPage extends FOBasePage {
    * @param page {Page} Browser tab
    */
   async clickOnBackToYourAccountLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.backToYourAccountLink);
+    await this.clickAndWaitForURL(page, this.backToYourAccountLink);
   }
 
   /**
@@ -207,7 +207,7 @@ class OrderHistoryPage extends FOBasePage {
    * @param page {Page} Browser tab
    */
   async clickOnHomeLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.homeLink);
+    await this.clickAndWaitForURL(page, this.homeLink);
   }
 
   // Methods for box messages
@@ -253,7 +253,7 @@ class OrderHistoryPage extends FOBasePage {
     }
 
     await this.setValue(page, this.messageTextarea, messageText.message);
-    await this.clickAndWaitForNavigation(page, this.sendMessageButton);
+    await this.clickAndWaitForURL(page, this.sendMessageButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }

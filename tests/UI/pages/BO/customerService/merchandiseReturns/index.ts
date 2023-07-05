@@ -77,7 +77,7 @@ class MerchandiseReturns extends BOBasePage {
     if (await this.elementVisible(page, this.filterColumn(filterBy), 2000)) {
       await this.setValue(page, this.filterColumn(filterBy), value);
       // click on search
-      await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+      await this.clickAndWaitForURL(page, this.filterSearchButton);
     }
   }
 
@@ -99,7 +99,7 @@ class MerchandiseReturns extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToMerchandiseReturnPage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumn(row, 'id_order_return'));
+    await this.clickAndWaitForURL(page, this.tableColumn(row, 'id_order_return'));
   }
 
   /**
@@ -110,7 +110,7 @@ class MerchandiseReturns extends BOBasePage {
    */
   async setOrderReturnStatus(page: Page, status: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableOrderReturnLabel(status ? 'on' : 'off'));
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
@@ -122,7 +122,7 @@ class MerchandiseReturns extends BOBasePage {
    */
   async setReturnsPrefix(page: Page, prefix: string): Promise<string> {
     await this.setValue(page, this.returnsPrefixInput, prefix);
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }

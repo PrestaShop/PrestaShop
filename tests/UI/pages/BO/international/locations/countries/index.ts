@@ -174,7 +174,7 @@ class Countries extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewCountryPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewCountryButton);
+    await this.clickAndWaitForURL(page, this.addNewCountryButton);
   }
 
   /**
@@ -184,7 +184,7 @@ class Countries extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -215,7 +215,7 @@ class Countries extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditCountryPage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+    await this.clickAndWaitForURL(page, this.editRowLink(row));
   }
 
   /**
@@ -265,12 +265,13 @@ class Countries extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
     let textValue: string = value;
 
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
@@ -279,7 +280,7 @@ class Countries extends BOBasePage {
         }
         await Promise.all([
           this.selectByVisibleText(page, this.filterColumn(filterBy), textValue),
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
         ]);
 
         break;
@@ -308,7 +309,7 @@ class Countries extends BOBasePage {
    */
   async setCountryStatus(page: Page, row: number, wantedStatus: boolean): Promise<void> {
     if (wantedStatus !== await this.getCountryStatus(page, row)) {
-      await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
+      await page.click(this.tableColumnStatusLink(row));
     }
   }
 
@@ -365,7 +366,7 @@ class Countries extends BOBasePage {
     await page.click(this.bulkActionMenuButton);
 
     // Click on delete
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
     return this.getAlertSuccessBlockContent(page);
   }
 
@@ -385,7 +386,7 @@ class Countries extends BOBasePage {
       this.waitForVisibleSelector(page, this.bulkEnableLink),
     ]);
 
-    await this.clickAndWaitForNavigation(
+    await this.clickAndWaitForURL(
       page,
       wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
     );
@@ -429,7 +430,7 @@ class Countries extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   /* Pagination methods */
@@ -450,7 +451,7 @@ class Countries extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -461,7 +462,7 @@ class Countries extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -472,7 +473,7 @@ class Countries extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -486,7 +487,8 @@ class Countries extends BOBasePage {
    */
   async setCountriesRestrictions(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await page.click(this.saveButton);
+    await this.elementNotVisible(page, this.enableRestrictCountriesToggleLabel(!toEnable ? 'on' : 'off'));
 
     return this.getAlertSuccessBlockContent(page);
   }

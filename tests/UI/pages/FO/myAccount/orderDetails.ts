@@ -145,7 +145,7 @@ class OrderDetails extends FOBasePage {
   ): Promise<void> {
     await this.chooseProductsToReturn(page, productsNumber, returnData);
     await this.setValue(page, this.returnTextarea, messageText);
-    await this.clickAndWaitForNavigation(page, this.requestReturnButton);
+    await this.clickAndWaitForURL(page, this.requestReturnButton);
   }
 
   /**
@@ -173,7 +173,7 @@ class OrderDetails extends FOBasePage {
   async addAMessage(page: Page, messageOption: string, messageText: string): Promise<string> {
     await this.selectByVisibleText(page, this.productIdSelect, messageOption);
     await this.setValue(page, this.messageTextarea, messageText);
-    await this.clickAndWaitForNavigation(page, this.submitMessageButton);
+    await this.clickAndWaitForURL(page, this.submitMessageButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -216,7 +216,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnReorderLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.reorderLink);
+    await this.clickAndWaitForURL(page, this.reorderLink);
   }
 
   /**

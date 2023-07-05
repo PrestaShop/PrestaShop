@@ -51,7 +51,7 @@ class AddSearchEngine extends BOBasePage {
     await this.setValue(page, this.queryKeyInput, searchEngineData.queryKey);
 
     // Save form
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     // Get successful message
     return this.getAlertSuccessBlockParagraphContent(page);

@@ -195,8 +195,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const registration = await customersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
 
-        registrationDate = `${registration.substr(6, 4)}-${registration.substr(0, 2)}-`
-          + `${registration.substr(3, 2)}${registration.substr(11, 8)}`;
+        registrationDate = `${registration.substring(6, 10)}-${registration.substring(0, 2)}-`
+          + `${registration.substring(3, 5)}${registration.substring(11, 19)}`;
         await expect(registrationDate).to.contains(date.getFullYear());
       });
 
@@ -204,8 +204,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate1', baseContext);
 
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
-        lastVisitDate = `${lastVisit.substr(6, 4)}-${lastVisit.substr(0, 2)}-`
-          + `${lastVisit.substr(3, 2)}${lastVisit.substr(11, 8)}`;
+        lastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
+          + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
         await expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
@@ -449,8 +449,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
         shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
-        shoppingCartDate = `${shoppingCartDate.substr(6, 4)}-${shoppingCartDate.substr(0, 2)}-`
-          + `${shoppingCartDate.substr(3, 2)}${shoppingCartDate.substr(11, 8)}`;
+        shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
+          + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
 
         shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
         await expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
@@ -595,8 +595,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         totalPaid = await ordersPage.getOrderATIPrice(page);
         orderDate = await ordersPage.getTextColumn(page, 'date_add');
-        orderDate = `${orderDate.substr(6, 4)}-${orderDate.substr(0, 2)}-${orderDate.substr(3, 2)}`
-          + `${orderDate.substr(11, 8)}`;
+        orderDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-${orderDate.substring(3, 5)}`
+          + `${orderDate.substring(11, 19)}`;
       });
 
       it('should reset all filters', async function () {
@@ -613,7 +613,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await files.isTextInFile(
           filePath,
-          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"MyAddress"${addressData.company}`
+          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
           + `"${addressData.phone}"${addressData.country}"`,
           true,
@@ -743,8 +743,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
         messageDate = await customerServicePage.getTextColumn(page, 1, 'date');
-        messageDate = `${messageDate.substr(6, 4)}-${messageDate.substr(0, 2)}-`
-          + `${messageDate.substr(3, 2)}${messageDate.substr(11, 8)}`;
+        messageDate = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
+          + `${messageDate.substring(3, 5)}${messageDate.substring(11, 19)}`;
         await expect(messageDate).to.not.be.null;
       });
     });
@@ -755,7 +755,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await files.isTextInFile(
           filePath,
-          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"MyAddress"${addressData.company}`
+          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
           + `"${addressData.phone}"${addressData.country}"`,
           true,
@@ -901,8 +901,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate2', baseContext);
 
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
-        secondLastVisitDate = `${lastVisit.substr(6, 4)}-${lastVisit.substr(0, 2)}-`
-          + `${lastVisit.substr(3, 2)}${lastVisit.substr(11, 8)}`;
+        secondLastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
+          + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
         await expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
@@ -938,7 +938,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await files.isTextInFile(
           filePath,
-          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"MyAddress"${addressData.company}`
+          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
           + `"${addressData.phone}"${addressData.country}"`,
           true,

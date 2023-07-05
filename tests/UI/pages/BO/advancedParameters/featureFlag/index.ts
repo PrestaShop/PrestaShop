@@ -81,7 +81,7 @@ class FeatureFlag extends BOBasePage {
     // The confirmation modal is only displayed for experimental/beta feature flags
     if (toEnable && !isStable) {
       await this.waitForVisibleSelector(page, this.modalSubmitFeatureFlag);
-      await this.clickAndWaitForNavigation(page, this.enableExperimentalfeatureButton);
+      await this.clickAndWaitForURL(page, this.enableExperimentalfeatureButton);
     }
 
     return this.getTextContent(page, this.alertSuccess);

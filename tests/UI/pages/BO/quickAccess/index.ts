@@ -100,7 +100,7 @@ class QuickAccess extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewQuickAccessPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewQuickAccessButton);
+    await this.clickAndWaitForURL(page, this.addNewQuickAccessButton);
   }
 
   /**
@@ -146,15 +146,17 @@ class QuickAccess extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy:string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
         ]);
         break;
@@ -190,7 +192,7 @@ class QuickAccess extends BOBasePage {
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);

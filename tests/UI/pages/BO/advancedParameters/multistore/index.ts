@@ -145,7 +145,7 @@ class MultiStoreSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToNewShopGroupPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newShopGroupLink);
+    await this.clickAndWaitForURL(page, this.newShopGroupLink);
   }
 
   /**
@@ -154,7 +154,7 @@ class MultiStoreSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToNewShopPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newShopLink);
+    await this.clickAndWaitForURL(page, this.newShopLink);
   }
 
   /* Filter methods */
@@ -175,7 +175,7 @@ class MultiStoreSettings extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
   }
 
@@ -198,7 +198,7 @@ class MultiStoreSettings extends BOBasePage {
    */
   async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -208,7 +208,7 @@ class MultiStoreSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditShopGroupPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditLink(row));
   }
 
   /**
@@ -226,7 +226,7 @@ class MultiStoreSettings extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -249,7 +249,7 @@ class MultiStoreSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToShopPage(page: Page, id: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.shopLink(id));
+    await this.clickAndWaitForURL(page, this.shopLink(id));
   }
 
   /**
@@ -259,7 +259,7 @@ class MultiStoreSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToShopURLPage(page: Page, id: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.shopUrlLink(id));
+    await this.clickAndWaitForURL(page, this.shopUrlLink(id));
   }
 
   /**
@@ -324,7 +324,7 @@ class MultiStoreSettings extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await page.click(this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -335,7 +335,7 @@ class MultiStoreSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -346,7 +346,7 @@ class MultiStoreSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -376,7 +376,7 @@ class MultiStoreSettings extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 }
 

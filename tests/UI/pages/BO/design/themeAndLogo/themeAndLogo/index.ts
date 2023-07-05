@@ -46,7 +46,7 @@ class ThemeAndLogo extends themeAndLogoBasePage {
    * @returns {Promise<void>}
    */
   async goToNewThemePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewThemeButton);
+    await this.clickAndWaitForURL(page, this.addNewThemeButton);
   }
 
   /**

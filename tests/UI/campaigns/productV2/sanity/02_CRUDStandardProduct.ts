@@ -1,26 +1,28 @@
-import type {BrowserContext, Page} from 'playwright';
-import {expect} from 'chai';
-
 // Import utils
 import helper from '@utils/helpers';
 import basicHelper from '@utils/basicHelper';
 import testContext from '@utils/testContext';
 
-// Import pages
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+import {
+  resetNewProductPageAsDefault,
+  setFeatureFlag,
+} from '@commonTests/BO/advancedParameters/newFeatures';
+
+// Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
+// Import FO pages
 import foProductPage from '@pages/FO/product';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 
-// Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
-import {
-  enableNewProductPageTest,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
-
 // Import data
 import ProductData from '@data/faker/product';
+
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
 
 const baseContext: string = 'productV2_sanity_CRUDStandardProduct';
 
@@ -45,7 +47,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
   });
 
   // Pre-condition: Enable new product page
-  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {

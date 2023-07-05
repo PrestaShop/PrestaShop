@@ -388,12 +388,19 @@ export default class ModuleCard {
         const alteredSelector = this.moduleItemListSelector.replace('.', '');
         let mainElement = null;
 
-        if (action === 'uninstall') {
+        if (action === 'delete' && !result[moduleTechName].has_download_url) {
+          mainElement = jqElementObj.closest(`.${alteredSelector}`);
+          this.eventEmitter.emit('Module Delete', mainElement);
+        } else if (action === 'uninstall') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.attr('data-installed', '0');
           mainElement.attr('data-active', '0');
 
-          this.eventEmitter.emit('Module Uninstalled', mainElement);
+          if ((forceDeletion === 'true' || forceDeletion === true) && !result[moduleTechName].has_download_url) {
+            this.eventEmitter.emit('Module Delete', mainElement);
+          } else {
+            this.eventEmitter.emit('Module Uninstalled', mainElement);
+          }
         } else if (action === 'disable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.addClass(`${alteredSelector}-isNotActive`);
@@ -417,7 +424,7 @@ export default class ModuleCard {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
 
           this.eventEmitter.emit('Module Upgraded', mainElement);
-        };
+        }
 
         // Since we replace the DOM content
         // we need to update the jquery object reference to target the new content,

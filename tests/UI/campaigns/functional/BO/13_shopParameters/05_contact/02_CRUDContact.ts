@@ -86,19 +86,6 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
 
   // 2 : Update contact
   describe('Update contact created', async () => {
-    it('should go to \'Shop parameters>Contact\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPageForUpdate', baseContext);
-
-      await contactsPage.goToSubMenu(
-        page,
-        contactsPage.shopParametersParentLink,
-        contactsPage.contactLink,
-      );
-
-      const pageTitle = await contactsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(contactsPage.pageTitle);
-    });
-
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
@@ -131,19 +118,6 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
 
   // 3 : Delete contact from BO
   describe('Delete contact', async () => {
-    it('should go to \'Shop parameters>Contact\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPageForDelete', baseContext);
-
-      await contactsPage.goToSubMenu(
-        page,
-        contactsPage.shopParametersParentLink,
-        contactsPage.contactLink,
-      );
-
-      const pageTitle = await contactsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(contactsPage.pageTitle);
-    });
-
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 

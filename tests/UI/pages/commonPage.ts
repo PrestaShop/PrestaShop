@@ -85,7 +85,7 @@ export default class CommonPage {
   }
 
   /**
-   * Wait for selector to be visible
+   * Wait for selector to be hidden
    * @param page {Page} Browser tab
    * @param selector {string} selector to wait
    * @param timeout {number} Time to wait on milliseconds before throwing an error
@@ -325,21 +325,43 @@ export default class CommonPage {
   }
 
   /**
-   * Go to Page and wait for navigation
+   * Go to Page and wait for load State
+   * @param page {Frame|Page} Browser tab
+   * @param selector {string} String to locate the element
+   * @param state {'load'|'domcontentloaded'|'networkidle'} The event to wait after click
+   * @param timeout {number} Time to wait for navigation
+   * @return {Promise<void>}
+   */
+  async clickAndWaitForLoadState(
+    page: Frame|Page,
+    selector: string,
+    state: 'load'|'domcontentloaded'|'networkidle' = 'networkidle',
+    timeout: number = 30000,
+  ): Promise<void> {
+    await Promise.all([
+      page.waitForLoadState(state, {timeout}),
+      page.click(selector),
+    ]);
+  }
+
+  /**
+   * Go to Page and wait for change URL
    * @param page {Frame|Page} Browser tab
    * @param selector {string} String to locate the element
    * @param waitUntil {WaitForNavigationWaitUntil} The event to wait after click
    * @param timeout {number} Time to wait for navigation
    * @return {Promise<void>}
    */
-  async clickAndWaitForNavigation(
+  async clickAndWaitForURL(
     page: Frame|Page,
     selector: string,
     waitUntil: WaitForNavigationWaitUntil = 'networkidle',
     timeout: number = 30000,
   ): Promise<void> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
-      page.waitForNavigation({waitUntil, timeout}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil, timeout}),
       page.click(selector),
     ]);
   }
@@ -360,7 +382,7 @@ export default class CommonPage {
    * @param selector {string} String to locate the checkbox
    * @return {Promise<boolean>}
    */
-  isDisabled(page: Page, selector: string): Promise<boolean> {
+  async isDisabled(page: Page, selector: string): Promise<boolean> {
     return page.isDisabled(selector);
   }
 
@@ -370,7 +392,7 @@ export default class CommonPage {
    * @param selector {string} String to locate the checkbox
    * @return {Promise<boolean>}
    */
-  isChecked(page: Frame|Page, selector: string): Promise<boolean> {
+  async isChecked(page: Frame|Page, selector: string): Promise<boolean> {
     return page.isChecked(selector);
   }
 
@@ -493,7 +515,7 @@ export default class CommonPage {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     if (targetBlank) {
-      await page.$eval(selector, (el: HTMLLinkElement) => el.target = '');
+      await page.$eval(selector, (el: HTMLLinkElement) => el.setAttribute('target', ''));
     }
     /* eslint-enable no-return-assign, no-param-reassign */
 

@@ -351,11 +351,6 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to credit slips page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage4', baseContext);
 
-        await homePage.goToMyAccountPage(page);
-
-        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
-        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
-
         await myAccountPage.goToCreditSlipsPage(page);
 
         const creditSlipsPageTitle = await creditSlipsPage.getPageTitle(page);

@@ -95,7 +95,7 @@ class SiteMap extends FOBasePage {
    * @return {Promise<void>}
    */
   async viewCreatedCategory(page: Page, categoryID: number): Promise<void> {
-    return this.clickAndWaitForNavigation(page, this.categoryPageLink(categoryID));
+    return this.clickAndWaitForURL(page, this.categoryPageLink(categoryID));
   }
 }
 

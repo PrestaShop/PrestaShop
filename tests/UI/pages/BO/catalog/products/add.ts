@@ -455,7 +455,7 @@ class AddProduct extends BOBasePage {
     const textBody = await this.getTextContent(newPage, 'body');
 
     if (textBody.includes('[Debug] This page has moved')) {
-      await this.clickAndWaitForNavigation(newPage, 'a');
+      await this.clickAndWaitForURL(newPage, 'a');
     }
     return newPage;
   }
@@ -470,7 +470,7 @@ class AddProduct extends BOBasePage {
       this.waitForVisibleSelector(page, this.modalDialog),
       page.click(this.productDeleteLink),
     ]);
-    await this.clickAndWaitForNavigation(page, this.modalDialogYesButton);
+    await this.clickAndWaitForURL(page, this.modalDialogYesButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -680,7 +680,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToCatalogPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
+    await this.clickAndWaitForURL(page, this.goToCatalogButton);
   }
 
   /**
@@ -689,7 +689,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddProductPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewProductButton);
+    await this.clickAndWaitForURL(page, this.addNewProductButton);
   }
 
   /**

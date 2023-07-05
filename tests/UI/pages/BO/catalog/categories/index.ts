@@ -164,7 +164,7 @@ class Categories extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewCategoryPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewCategoryLink);
+    await this.clickAndWaitForURL(page, this.addNewCategoryLink);
   }
 
   /**
@@ -173,8 +173,9 @@ class Categories extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page: Page): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await page.click(this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -217,7 +218,7 @@ class Categories extends BOBasePage {
         throw new Error(`Filter ${filterBy} was not found`);
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -318,7 +319,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.categoriesListTableEditLink(row, 'actions')),
     ]);
     // Click on edit
-    await this.clickAndWaitForNavigation(page, this.categoriesListTableEditLink(row, 'actions'));
+    await this.clickAndWaitForURL(page, this.categoriesListTableEditLink(row, 'actions'));
   }
 
   /**
@@ -331,9 +332,9 @@ class Categories extends BOBasePage {
     if (
       await this.elementVisible(page, this.categoriesListTableViewLink(row, 'actions'), 100)
     ) {
-      await this.clickAndWaitForNavigation(page, this.categoriesListTableViewLink(row, 'actions'));
+      await this.clickAndWaitForURL(page, this.categoriesListTableViewLink(row, 'actions'));
     } else {
-      await this.clickAndWaitForNavigation(page, `${this.categoriesListTableColumn(row, 'name')} a`);
+      await this.clickAndWaitForURL(page, `${this.categoriesListTableColumn(row, 'name')} a`);
     }
   }
 
@@ -371,7 +372,7 @@ class Categories extends BOBasePage {
    */
   async chooseOptionAndDelete(page: Page, modeID: number): Promise<void> {
     await this.setChecked(page, this.deleteCategoryModalModeInput(modeID));
-    await this.clickAndWaitForNavigation(page, this.deleteCategoryModalDeleteButton);
+    await this.clickAndWaitForURL(page, this.deleteCategoryModalDeleteButton);
     await this.waitForVisibleSelector(page, this.alertSuccessBlockParagraph);
   }
 
@@ -395,7 +396,7 @@ class Categories extends BOBasePage {
     ]);
 
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -460,7 +461,7 @@ class Categories extends BOBasePage {
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -509,7 +510,7 @@ class Categories extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditHomeCategoryPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editHomeCategoryButton);
+    await this.clickAndWaitForURL(page, this.editHomeCategoryButton);
   }
 
   /* Pagination methods */
@@ -529,9 +530,11 @@ class Categories extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page);
@@ -543,7 +546,7 @@ class Categories extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
 
@@ -553,7 +556,7 @@ class Categories extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
 }

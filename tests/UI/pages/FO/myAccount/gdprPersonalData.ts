@@ -62,7 +62,7 @@ class GDPRPersonalData extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToContactUsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.contactUsHyperLink);
+    await this.clickAndWaitForURL(page, this.contactUsHyperLink);
   }
 
   /**

@@ -12,11 +12,12 @@ import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/order';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
@@ -164,7 +165,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   enableEcoTaxTest(`${baseContext}_preTest_2`);
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -1118,7 +1119,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
               filePath,
               `${productWithEcoTax.name}, ,`
               + `€${productWithEcoTax.price.toFixed(2)},,`
-              + `ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,`
+              + `Ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,`
               + '1, ,'
               + `€${productWithEcoTax.price.toFixed(2)}`,
             );

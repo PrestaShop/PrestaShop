@@ -75,6 +75,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const dateNow: Date = new Date();
   const addressData: AddressData = new AddressData({
+    alias: 'My Address',
     firstName: 'Marc',
     lastName: 'Beier',
     country: 'France',
@@ -197,8 +198,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getRegistrationDate', baseContext);
 
         const registration = await customersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
-        registrationDate = `${registration.substr(6, 4)}-${registration.substr(0, 2)}-`
-          + `${registration.substr(3, 2)} ${registration.substr(11, 8)}`;
+        registrationDate = `${registration.substring(6, 10)}-${registration.substring(0, 2)}-`
+          + `${registration.substring(3, 5)} ${registration.substring(11, 19)}`;
         await expect(registrationDate).to.contains(dateNow.getFullYear());
       });
 
@@ -206,8 +207,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate1', baseContext);
 
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
-        lastVisitDate = `${lastVisit.substr(6, 4)}-${lastVisit.substr(0, 2)}-`
-          + `${lastVisit.substr(3, 2)} ${lastVisit.substr(11, 8)}`;
+        lastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
+          + `${lastVisit.substring(3, 5)} ${lastVisit.substring(11, 19)}`;
         await expect(lastVisitDate).to.contains(dateNow.getFullYear());
       });
 
@@ -430,8 +431,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Carts table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty2', baseContext);
 
-        shoppingCartDate = `${shoppingCartDate.substr(6, 4)}-${shoppingCartDate.substr(0, 2)}-`
-          + `${shoppingCartDate.substr(3, 2)} ${shoppingCartDate.substr(11, 8)}`;
+        shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
+          + `${shoppingCartDate.substring(3, 5)} ${shoppingCartDate.substring(11, 19)}`;
 
         const isVisible = await files.isTextInPDF(filePath, `Carts,,Id, ,Total products, ,Date,,#${shoppingCartID}`
           + `, ,1, ,${shoppingCartDate},,Product(s) in the cart :,,Reference, ,Name, ,Quantity,,`
@@ -576,7 +577,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable1', baseContext);
 
         const isVisible = await files.isTextInPDF(filePath, 'Addresses,,Alias, ,Company, ,Name, ,Address, ,'
-          + `Phone(s), ,Country, ,Date,,My Address, ,${addressData.company}, ,${addressData.firstName} `
+          + `Phone(s), ,Country, ,Date,,${addressData.alias}, ,${addressData.company}, ,${addressData.firstName} `
           + `${addressData.lastName}, ,${addressData.address},${addressData.postalCode} ${addressData.city},`
           + `${addressData.phone}, ,${addressData.country}`);
         await expect(isVisible, 'Data in Addresses table is not correct!').to.be.true;
@@ -585,8 +586,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable1', baseContext);
 
-        const orderCreateDate = `${orderDate.substr(6, 4)}-${orderDate.substr(0, 2)}-`
-          + `${orderDate.substr(3, 2)} ${orderDate.substr(11, 8)}`;
+        const orderCreateDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-`
+          + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, 'Orders,,Reference, ,Payment, ,Order state, ,Total paid,'
           + ` ,Date,,${orderReference}, ,Bank transfer, ,Awaiting bank wire,payment,${totalPaid} EUR, ,`
           + `${orderCreateDate},,Product(s) in the order :,,Reference, ,Name, ,Quantity,,${Products.demo_1.reference}`
@@ -713,8 +714,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable2', baseContext);
 
-        const orderCreateDate = `${orderDate.substr(6, 4)}-${orderDate.substr(0, 2)}-`
-          + `${orderDate.substr(3, 2)} ${orderDate.substr(11, 8)}`;
+        const orderCreateDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-`
+          + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, 'Orders,,Reference, ,Payment, ,Order state, ,Total paid,'
           + ` ,Date,,${orderReference}, ,Bank transfer, ,Awaiting bank wire,payment,${totalPaid} EUR, ,`
           + `${orderCreateDate},,Product(s) in the order :,,Reference, ,Name, ,Quantity,,${Products.demo_1.reference}`
@@ -732,8 +733,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable1', baseContext);
 
-        const dateString = `${messageDate.substr(6, 4)}-${messageDate.substr(0, 2)}-`
-          + `${messageDate.substr(3, 2)} ${messageDate.substr(11, 8)}`;
+        const dateString = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
+          + `${messageDate.substring(3, 5)} ${messageDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, `Messages,,IP, ,Message, ,Date,,1 / 2 ${today},,`
           + `${contactUsData.firstName} ${contactUsData.lastName},,${ipAddress}, ,${contactUsData.message}, ,${
             dateString}`);
@@ -837,8 +838,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate2', baseContext);
 
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
-        secondLastVisitDate = `${lastVisit.substr(6, 4)}-${lastVisit.substr(0, 2)}-`
-          + `${lastVisit.substr(3, 2)} ${lastVisit.substr(11, 8)}`;
+        secondLastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
+          + `${lastVisit.substring(3, 5)} ${lastVisit.substring(11, 19)}`;
         await expect(lastVisitDate).to.contains(dateNow.getFullYear());
       });
 
@@ -878,8 +879,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable3', baseContext);
 
-        const orderCreateDate = `${orderDate.substr(6, 4)}-${orderDate.substr(0, 2)}-`
-          + `${orderDate.substr(3, 2)} ${orderDate.substr(11, 8)}`;
+        const orderCreateDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-`
+          + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, 'Orders,,Reference, ,Payment, ,Order state, ,Total paid,'
           + ` ,Date,,${orderReference}, ,Bank transfer, ,Awaiting bank wire,payment,${totalPaid} EUR, ,`
           + `${orderCreateDate},,Product(s) in the order :,,Reference, ,Name, ,Quantity,,${Products.demo_1.reference}`
@@ -897,8 +898,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable2', baseContext);
 
-        const dateString = `${messageDate.substr(6, 4)}-${messageDate.substr(0, 2)}-`
-          + `${messageDate.substr(3, 2)} ${messageDate.substr(11, 8)}`;
+        const dateString = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
+          + `${messageDate.substring(3, 5)} ${messageDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, `Messages,,IP, ,Message, ,Date,,1 / 2 ${today},,`
           + `${contactUsData.firstName} ${contactUsData.lastName},,${ipAddress}, ,${contactUsData.message}, ,${
             dateString}`);
