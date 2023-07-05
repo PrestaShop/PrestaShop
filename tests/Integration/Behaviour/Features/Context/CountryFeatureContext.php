@@ -59,6 +59,8 @@ class CountryFeatureContext extends AbstractPrestaShopFeatureContext
         $country = new Country($countryId);
         $country->active = true;
         $country->save();
+
+        $this->getSharedStorage()->set($countryIsoCode, (int) $countryId);
     }
 
     /**

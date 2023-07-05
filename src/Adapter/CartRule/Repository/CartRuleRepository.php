@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class CartRuleRepository extends AbstractObjectModelRepository
@@ -366,6 +367,41 @@ class CartRuleRepository extends AbstractObjectModelRepository
 
     /**
      * @param CartRuleId $cartRuleId
+     * @param CountryId[] $restrictedCountryIds
+     *
+     * @return void
+     */
+    public function setCountryRestrictions(CartRuleId $cartRuleId, array $restrictedCountryIds): void
+    {
+        $this->removeCountryRestrictions($cartRuleId);
+
+        if (empty($restrictedCountryIds)) {
+            return;
+        }
+
+        $checkedIds = [];
+        $insertValues = [];
+        foreach ($restrictedCountryIds as $restrictedCountryId) {
+            $restrictedCountryIdValue = $restrictedCountryId->getValue();
+            // skip duplicate ids if for some reason they exist
+            if (in_array($restrictedCountryIdValue, $checkedIds, true)) {
+                continue;
+            }
+            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCountryIdValue);
+            $checkedIds[] = $restrictedCountryIdValue;
+        }
+
+        $this->connection->executeStatement(
+            sprintf(
+                'INSERT INTO %s (`id_cart_rule`, `id_country`) VALUES %s',
+                $this->dbPrefix . 'cart_rule_country',
+                implode(',', $insertValues)
+            )
+        );
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
      *
      * @return int[]
      */
@@ -390,10 +426,46 @@ class CartRuleRepository extends AbstractObjectModelRepository
         }, $results);
     }
 
+    /**
+     * @param CartRuleId $cartRuleId
+     *
+     * @return int[]
+     */
+    public function getRestrictedCountryIds(CartRuleId $cartRuleId): array
+    {
+        $cartRuleIdValue = $cartRuleId->getValue();
+        $results = $this->connection->createQueryBuilder()
+            ->select('crc.id_country')
+            ->from($this->dbPrefix . 'cart_rule_country', 'crc')
+            ->where('crc.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleIdValue)
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(static function (array $result): int {
+            return (int) $result['id_country'];
+        }, $results);
+    }
+
     private function removeCarrierRestrictions(CartRuleId $cartRuleId): void
     {
         $this->connection->createQueryBuilder()
             ->delete($this->dbPrefix . 'cart_rule_carrier', 'crc')
+            ->where('crc.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
+    }
+
+    private function removeCountryRestrictions(CartRuleId $cartRuleId): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_country', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()

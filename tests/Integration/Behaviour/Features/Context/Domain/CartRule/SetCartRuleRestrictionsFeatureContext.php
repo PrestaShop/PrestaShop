@@ -94,6 +94,26 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+     * @When I restrict following countries for cart rule :cartRuleReference:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $tableNode
+     *
+     * @return void
+     */
+    public function setRestrictedCountries(string $cartRuleReference, TableNode $tableNode): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+
+        try {
+            $command->setRestrictedCountryIds($this->referencesToIds($tableNode->getRowsHash()['restricted countries']));
+            $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s) in cart matching one of these rules:
      * @When I add a restriction for cart rule :cartRuleReference, which requires any quantity of product(s) in cart matching one of these rules:
      * @When I add a restriction for cart rule :cartRuleReference, which requires at least :quantity product(s), but I provide empty list of rules
@@ -195,6 +215,21 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+     * @When I clear all country restrictions for cart rule :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     *
+     * @return void
+     */
+    public function clearCartRuleCountryRestrictions(string $cartRuleReference): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command->setRestrictedCountryIds([]);
+
+        $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+    }
+
+    /**
      * @When I save all the restrictions for cart rule :cartRuleReference
      *
      * @param string $cartRuleReference
@@ -214,6 +249,7 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
         if (null === $command->getRestrictedCartRuleIds()
             && null === $command->getProductRestrictionRuleGroups()
             && null === $command->getRestrictedCarrierIds()
+            && null === $command->getRestrictedCountryIds()
         ) {
             throw new RuntimeException(
                 sprintf(

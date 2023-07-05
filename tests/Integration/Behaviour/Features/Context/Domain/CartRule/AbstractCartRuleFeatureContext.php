@@ -301,6 +301,14 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
                 'Unexpected restricted carriers'
             );
         }
+
+        if (isset($expectedData['restricted countries'])) {
+            Assert::assertSame(
+                $this->referencesToIds($expectedData['restricted countries']),
+                $conditions->getRestrictions()->getRestrictedCountryIds(),
+                'Unexpected restricted countries'
+            );
+        }
     }
 
     protected function getCartRuleActionBuilder(): CartRuleActionBuilder

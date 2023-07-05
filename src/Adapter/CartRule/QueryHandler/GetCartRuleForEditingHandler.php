@@ -128,11 +128,16 @@ class GetCartRuleForEditingHandler implements GetCartRuleForEditingHandlerInterf
         if ($cartRule->carrier_restriction) {
             $restrictedCarrierIds = $this->cartRuleRepository->getRestrictedCarrierIds($cartRuleId);
         }
+        $restrictedCountryIds = [];
+        if ($cartRule->country_restriction) {
+            $restrictedCountryIds = $this->cartRuleRepository->getRestrictedCountryIds($cartRuleId);
+        }
 
         $cartRuleRestrictions = new CartRuleRestrictionsForEditing(
             $restrictedCartRules,
             $this->getRestrictionRuleGroups($cartRule),
-            $restrictedCarrierIds
+            $restrictedCarrierIds,
+            $restrictedCountryIds
         );
 
         return new CartRuleConditionsForEditing(

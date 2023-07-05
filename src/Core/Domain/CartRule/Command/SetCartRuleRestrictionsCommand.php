@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
  * Sets cart rule restrictions.
@@ -57,6 +58,11 @@ class SetCartRuleRestrictionsCommand
     private ?array $restrictedCarrierIds = null;
 
     /**
+     * @var CountryId[]|null
+     */
+    private ?array $restrictedCountryIds = null;
+
+    /**
      * @param int $cartRuleId
      */
     public function __construct(
@@ -74,12 +80,29 @@ class SetCartRuleRestrictionsCommand
         return $this;
     }
 
+    public function setRestrictedCountryIds(array $restrictedCountryIds): self
+    {
+        $this->restrictedCountryIds = array_map(static function ($countryId): CountryId {
+            return new CountryId($countryId);
+        }, $restrictedCountryIds);
+
+        return $this;
+    }
+
     /**
      * @return CarrierId[]|null
      */
     public function getRestrictedCarrierIds(): ?array
     {
         return $this->restrictedCarrierIds;
+    }
+
+    /**
+     * @return CountryId[]|null
+     */
+    public function getRestrictedCountryIds(): ?array
+    {
+        return $this->restrictedCountryIds;
     }
 
     /**

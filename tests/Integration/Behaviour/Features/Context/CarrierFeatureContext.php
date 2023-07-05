@@ -132,6 +132,8 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $country->id_zone = $this->zones[$zoneName]->id;
         $country->active = true;
         $country->save();
+
+        $this->getSharedStorage()->set($countryName, (int) $countryId);
     }
 
     /**

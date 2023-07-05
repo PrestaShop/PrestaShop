@@ -28,6 +28,20 @@ Feature: Set cart rule restrictions in BO
     And supplier accessoriesSupplier named "Accessories supplier" exists
     And there is a carrier named "carrier1"
     And there is a carrier named "carrier2"
+    And I add new country "France" with following properties:
+      | name[en-US]                | France          |
+      | iso_code                   | FR              |
+      | call_prefix                | 123             |
+      | default_currency           | 1               |
+      | zone                       | 1               |
+      | need_zip_code              | true            |
+      | zip_code_format            | 1 NL            |
+      | address_format             | not implemented |
+      | is_enabled                 | true            |
+      | contains_states            | false           |
+      | need_identification_number | false           |
+      | display_tax_label          | true            |
+      | shop_association           | 1               |
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
@@ -103,6 +117,8 @@ Feature: Set cart rule restrictions in BO
       | restricted cart rules | rule_50_percent,rule_70_percent |
     And I restrict following carriers for cart rule rule_free_shipping_1:
       | restricted carriers | carrier1,carrier2 |
+    And I restrict following countries for cart rule rule_free_shipping_1:
+      | restricted countries | France |
     And I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
       | type          | references                 |
       | products      | product1                   |
@@ -121,6 +137,7 @@ Feature: Set cart rule restrictions in BO
     Then cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules | rule_50_percent,rule_70_percent |
       | restricted carriers   | carrier1,carrier2               |
+      | restricted countries  | France                          |
     And cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | group_nr_1     | 1        | 5           |

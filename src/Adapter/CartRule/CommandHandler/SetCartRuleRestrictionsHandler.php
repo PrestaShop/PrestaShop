@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\SetCartRuleRestrictionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerInterface
 {
@@ -47,6 +48,7 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
         if (null === $command->getRestrictedCartRuleIds()
             && null === $command->getProductRestrictionRuleGroups()
             && null === $command->getRestrictedCarrierIds()
+            && null === $command->getRestrictedCountryIds()
         ) {
             // no restrictions were modified
             return;
@@ -65,6 +67,10 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
         $restrictedCarrierIds = $command->getRestrictedCarrierIds();
         if (null !== $restrictedCarrierIds) {
             $this->setCarrierRestrictions($cartRule, $restrictedCarrierIds);
+        }
+        $restrictedCountryIds = $command->getRestrictedCountryIds();
+        if (null !== $restrictedCountryIds) {
+            $this->setCountryRestrictions($cartRule, $restrictedCountryIds);
         }
         // it would be more performant updating all restriction props at the end with one update call,
         // but that way we might introduce cart rule state failure in case one of steps fails somewhere in the middle
@@ -108,5 +114,19 @@ class SetCartRuleRestrictionsHandler implements SetCartRuleRestrictionsHandlerIn
 
         $cartRule->carrier_restriction = !empty($restrictedCarrierIds);
         $this->cartRuleRepository->partialUpdate($cartRule, ['carrier_restriction']);
+    }
+
+    /**
+     * @param CartRule $cartRule
+     * @param CountryId[] $restrictedCountryIds
+     *
+     * @return void
+     */
+    private function setCountryRestrictions(CartRule $cartRule, array $restrictedCountryIds): void
+    {
+        $this->cartRuleRepository->setCountryRestrictions(new CartRuleId((int) $cartRule->id), $restrictedCountryIds);
+
+        $cartRule->country_restriction = !empty($restrictedCountryIds);
+        $this->cartRuleRepository->partialUpdate($cartRule, ['country_restriction']);
     }
 }

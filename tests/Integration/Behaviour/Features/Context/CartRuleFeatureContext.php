@@ -161,27 +161,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule "(.+)" is restricted to country "(.+)"$/
-     */
-    public function cartRuleNamedIsRestrictedToCountryNamed(string $cartRuleName, string $country)
-    {
-        $this->countryFeatureContext->checkCountryWithIsoCodeExists($country);
-        $cartRuleId = $this->getCartRuleId($cartRuleName);
-
-        $cartRule = new CartRule($cartRuleId);
-        $cartRule->country_restriction = true;
-        $cartRule->save();
-        $this->cartRules[$cartRuleName] = $cartRule;
-
-        $idCountry = (int) $this->countryFeatureContext->getCountryWithIsoCode($country);
-        Db::getInstance()->execute(
-            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_country(`id_cart_rule`, `id_country`) ' .
-            'VALUES(' . $cartRuleId . ', ' . $idCountry . ')'
-        );
-        Cache::clear();
-    }
-
-    /**
      * @When /^I enable cart rule "(.+)"$/
      */
     public function enableCartRule($cartRuleName)
