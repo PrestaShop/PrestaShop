@@ -81,7 +81,7 @@ class EmailTheme extends BOBasePage {
         /* eslint-disable no-loop-func */
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, (el: HTMLElement) => el.click()),
-          page.waitForURL(''),
+          page.waitForURL('**/mail_theme/preview/**'),
         ]);
         /* eslint-enable no-loop-func */
         found = true;
