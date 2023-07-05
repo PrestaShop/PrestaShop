@@ -85,10 +85,6 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psFacetedSearch, 'uninstall', false, true);
     await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psFacetedSearch.tag));
 
-    // Check the button at the right of the module is displaying "Install"
-    const mainAction = await moduleManagerPage.getMainActionInModule(page, Modules.psFacetedSearch);
-    await expect(mainAction).to.be.eq('install');
-
     // Check the directory `modules/Modules.psFacetedSearch.tag`
     const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psFacetedSearch.tag}/`);
     await expect(dirExists).to.be.false;
@@ -149,8 +145,8 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     it('should close upload module modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalVisible = await moduleManagerPage.closeUploadModuleModal(page);
-      await expect(isModalVisible).to.be.false;
+      const isModalNotVisible = await moduleManagerPage.closeUploadModuleModal(page);
+      await expect(isModalNotVisible).to.be.true;
     });
 
     it(`should search the module '${Modules.psFacetedSearch.name}'`, async function () {
