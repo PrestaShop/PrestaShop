@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
@@ -91,6 +93,7 @@ smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
+smartyRegisterFunction($smarty, 'function', 'render_template', 'renderTemplate');
 
 // Native PHP Functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
@@ -228,4 +231,26 @@ function smartyClassnames(array $classnames)
 function smarty_endWithoutReference($arrayValue)
 {
     return end($arrayValue);
+}
+
+function renderTemplate(array $params) {
+    $twigTemplate = $params['twig_template'];
+    unset($params['twig_template']);
+    $smartyTemplate = $params['smarty_template'];
+    unset($params['smarty_template']);
+
+    if (
+        SymfonyContainer::getInstance()
+            ->get('request_stack')
+            ->getCurrentRequest()
+            ->query->has('symfony_layout')
+    ) {
+        /** @var Twig\Environment $twig */
+        $twig = SymfonyContainer::getInstance()->get('twig');
+        return $twig->render($twigTemplate, $params);
+    } else {
+        global $smarty;
+        $smarty->display($smartyTemplate);
+    }
+
 }

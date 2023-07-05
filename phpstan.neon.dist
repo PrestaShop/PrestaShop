@@ -1,6 +1,7 @@
 includes:
 	- phpstan-baseline.neon
 	- phpstan-disallowed-calls.neon
+	- phpstan-tmp-legacy-layout-baseline.neon
 parameters:
   phpVersion: 80100
   level: 5

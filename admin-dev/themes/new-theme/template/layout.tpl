@@ -22,7 +22,14 @@
       <span id="shop_version">{$ps_version}</span>
 
       <div class="component" id="quick-access-container">
-        {include file="components/layout/quick_access.tpl"}
+        {render_template
+          smarty_template="components/layout/quick_access.tpl"
+          twig_template="@PrestaShop/Admin/Layout/quick_access.html.twig"
+          quick_access=$quick_access
+          link=$link
+          quick_access_current_link_icon=$quick_access_current_link_icon
+          quick_access_current_link_name=$quick_access_current_link_name
+        }
       </div>
       <div class="component component-search" id="header-search-container">
         <div class="component-search-body">
