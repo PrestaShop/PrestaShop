@@ -180,6 +180,8 @@
         "symfony/yaml": "5.4.*",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
+        "twig/extra-bundle": "^3.6",
+        "twig/string-extra": "^3.6",
         "twig/twig": "^3.0"
     },
     "require-dev": {
