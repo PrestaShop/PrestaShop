@@ -104,12 +104,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.request_sql');
@@ -131,7 +131,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Process Request SQL settings save.
      *
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *      redirectRoute="admin_sql_requests_index"
@@ -141,6 +140,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function processFormAction(Request $request)
     {
         $handler = $this->getSettingsFormHandler();
@@ -207,7 +207,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show Request SQL edit page.
      *
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
@@ -219,6 +218,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function editAction(int $sqlRequestId, Request $request)
     {
         $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
@@ -260,12 +260,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param int $sqlRequestId ID of selected Request SQL
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function deleteAction(int $sqlRequestId)
     {
         try {
@@ -291,12 +291,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function deleteBulkAction(Request $request)
     {
         try {
@@ -358,12 +358,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param int $sqlRequestId Request SQL id
      *
      * @return RedirectResponse|BinaryFileResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function exportAction(int $sqlRequestId)
     {
         $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request_exporter');

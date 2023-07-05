@@ -224,8 +224,8 @@ class AttachmentController extends FrameworkBundleAdminController
      * Deletes attachment
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
-     * @DemoRestricted(redirectRoute="admin_attachments_index")
      */
+    #[DemoRestricted(redirectRoute: 'admin_attachments_index')]
     public function deleteAction(int $attachmentId): RedirectResponse
     {
         try {

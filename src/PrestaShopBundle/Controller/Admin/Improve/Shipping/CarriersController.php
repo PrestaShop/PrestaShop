@@ -134,12 +134,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param int $carrierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function deleteAction(int $carrierId): RedirectResponse
     {
         try {
@@ -161,12 +161,11 @@ class CarriersController extends FrameworkBundleAdminController
      *     message="You need permission to edit this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
      * @param int $carrierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function toggleStatusAction(int $carrierId): RedirectResponse
     {
         try {
@@ -192,12 +191,11 @@ class CarriersController extends FrameworkBundleAdminController
      *     message="You need permission to edit this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
      * @param int $carrierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function toggleIsFreeAction(int $carrierId): RedirectResponse
     {
         try {
@@ -223,12 +221,11 @@ class CarriersController extends FrameworkBundleAdminController
      *     message="You need permission to edit this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function updatePositionAction(Request $request): RedirectResponse
     {
         $positionsData = [
@@ -258,12 +255,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
@@ -288,12 +285,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function bulkEnableStatusAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
@@ -318,12 +315,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function bulkDisableStatusAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);

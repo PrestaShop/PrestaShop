@@ -727,15 +727,12 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"id_category"},
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_products_index",
-     *     redirectQueryParamsToKeep={"id_category"}
-     * )
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_products_index', redirectQueryParamsToKeep: ['id_category'])]
     public function updatePositionAction(Request $request): RedirectResponse
     {
         try {

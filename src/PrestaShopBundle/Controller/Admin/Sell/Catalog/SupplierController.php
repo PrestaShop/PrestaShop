@@ -143,14 +143,12 @@ class SupplierController extends FrameworkBundleAdminController
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_suppliers_index"
-     * )
      *
      * @param int $supplierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function deleteAction($supplierId)
     {
         try {
@@ -175,14 +173,12 @@ class SupplierController extends FrameworkBundleAdminController
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_suppliers_index"
-     * )
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function bulkDeleteAction(Request $request)
     {
         $suppliersToDelete = $request->request->all('supplier_bulk');
@@ -215,14 +211,12 @@ class SupplierController extends FrameworkBundleAdminController
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_suppliers_index"
-     * )
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function bulkDisableAction(Request $request)
     {
         $suppliersToDisable = $request->request->all('supplier_bulk');
@@ -254,14 +248,12 @@ class SupplierController extends FrameworkBundleAdminController
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_suppliers_index"
-     * )
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function bulkEnableAction(Request $request)
     {
         $suppliersToEnable = $request->request->all('supplier_bulk');
@@ -353,14 +345,12 @@ class SupplierController extends FrameworkBundleAdminController
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_suppliers_index"
-     * )
      *
      * @param int $supplierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function toggleStatusAction($supplierId)
     {
         try {

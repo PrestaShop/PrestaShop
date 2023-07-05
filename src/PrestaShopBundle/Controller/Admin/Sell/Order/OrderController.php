@@ -1272,16 +1272,13 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"}
-     * )
      *
      * @param Request $request
      * @param int $orderId
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'])]
     public function sendMessageAction(Request $request, int $orderId): Response
     {
         $orderMessageForm = $this->createForm(OrderMessageType::class);

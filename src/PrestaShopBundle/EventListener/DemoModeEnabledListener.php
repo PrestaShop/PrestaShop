@@ -26,11 +26,9 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Util\ClassUtils;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use ReflectionClass;
-use ReflectionObject;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -38,67 +36,23 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * Allow a redirection to the right url when using BetterSecurity annotation.
- */
+#[AsEventListener(
+    event: ControllerEvent::class,
+    method: 'onKernelController',
+)]
 class DemoModeEnabledListener
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var Reader
-     */
-    private $annotationReader;
-
-    /**
-     * @var bool
-     */
-    private $isDemoModeEnabled;
-
-    /**
-     * DemoModeEnabledListener constructor.
-     *
-     * @param RouterInterface $router
-     * @param TranslatorInterface $translator
-     * @param Session $session
-     * @param Reader $annotationReader
-     * @param bool $isDemoModeEnabled
-     */
     public function __construct(
-        RouterInterface $router,
-        TranslatorInterface $translator,
-        Session $session,
-        Reader $annotationReader,
-        $isDemoModeEnabled
+        private readonly ShopConfigurationInterface $shopConfiguration,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly Session $session,
     ) {
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->annotationReader = $annotationReader;
-        $this->isDemoModeEnabled = $isDemoModeEnabled;
     }
 
-    /**
-     * @param ControllerEvent $event
-     */
-    public function onKernelController(ControllerEvent $event)
+    public function onKernelController(ControllerEvent $event): void
     {
-        if (!$this->isDemoModeEnabled
-            || !$event->isMainRequest()
-        ) {
+        if (!$this->shopConfiguration->getBoolean('_PS_MODE_DEMO_') || !$event->isMainRequest()) {
             return;
         }
 
@@ -109,11 +63,18 @@ class DemoModeEnabledListener
         }
 
         [$controllerObject, $methodName] = $controller;
-        $demoRestricted = $this->getAnnotation($controllerObject, $methodName);
 
-        if (!$demoRestricted instanceof DemoRestricted) {
+        $method = new \ReflectionMethod($controllerObject, $methodName);
+        $attributes = $method->getAttributes(DemoRestricted::class);
+
+        if ([] === $attributes) {
             return;
         }
+
+        $attribute = $attributes[0];
+
+        /** @var DemoRestricted $demoRestricted */
+        $demoRestricted = $attribute->newInstance();
 
         $this->showNotificationMessage($demoRestricted);
 
@@ -144,33 +105,6 @@ class DemoModeEnabledListener
                 $demoRestricted->getDomain()
             )
         );
-    }
-
-    /**
-     * Retrieve DemoRestricted Annotation.
-     *
-     * @param object $controllerObject
-     * @param string $methodName
-     *
-     * @return DemoRestricted|null
-     */
-    private function getAnnotation($controllerObject, $methodName)
-    {
-        $tokenAnnotation = DemoRestricted::class;
-
-        $classAnnotation = $this->annotationReader->getClassAnnotation(
-            new ReflectionClass(ClassUtils::getClass($controllerObject)),
-            $tokenAnnotation
-        );
-
-        if ($classAnnotation) {
-            return null;
-        }
-
-        $controllerReflectionObject = new ReflectionObject($controllerObject);
-        $reflectionMethod = $controllerReflectionObject->getMethod($methodName);
-
-        return $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
     }
 
     /**

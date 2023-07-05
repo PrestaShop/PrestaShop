@@ -137,12 +137,12 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      * Deletes catalog price rule
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
-     * @DemoRestricted(redirectRoute="admin_catalog_price_rules_index")
      *
      * @param int|string $catalogPriceRuleId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_catalog_price_rules_index')]
     public function deleteAction($catalogPriceRuleId)
     {
         try {
@@ -162,12 +162,12 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      * Deletes catalogPriceRules on bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
-     * @DemoRestricted(redirectRoute="admin_catalog_price_rules_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_catalog_price_rules_index')]
     public function bulkDeleteAction(Request $request)
     {
         $catalogPriceRuleIds = $this->getBulkCatalogPriceRulesFromRequest($request);

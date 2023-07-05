@@ -66,12 +66,11 @@ class PreferencesController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_preferences")
      *
-     * @DemoRestricted(redirectRoute="admin_preferences")
-     *
      * @return Response
      *
      * @throws \LogicException
      */
+    #[DemoRestricted(redirectRoute: 'admin_preferences')]
     public function processFormAction(Request $request)
     {
         $this->dispatchHook('actionAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);

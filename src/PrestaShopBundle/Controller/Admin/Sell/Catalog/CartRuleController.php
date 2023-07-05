@@ -126,12 +126,12 @@ class CartRuleController extends FrameworkBundleAdminController
      * Deletes cart rule
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
-     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param int $cartRuleId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_cart_rules_index')]
     public function deleteAction(int $cartRuleId): RedirectResponse
     {
         try {
@@ -151,12 +151,12 @@ class CartRuleController extends FrameworkBundleAdminController
      * Deletes cartRules on bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
-     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_cart_rules_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
@@ -178,12 +178,12 @@ class CartRuleController extends FrameworkBundleAdminController
      * Toggles cart rule status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
-     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param int $cartRuleId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_cart_rules_index')]
     public function toggleStatusAction(int $cartRuleId): RedirectResponse
     {
         try {
@@ -205,10 +205,10 @@ class CartRuleController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
-     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_cart_rules_index')]
     public function createAction(Request $request): Response
     {
         $form = $this->getFormBuilder()->getForm($this->prefillFormDataForCreation($request));
@@ -237,12 +237,12 @@ class CartRuleController extends FrameworkBundleAdminController
      * Enables cart rules on bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
-     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_cart_rules_index')]
     public function bulkEnableAction(Request $request): RedirectResponse
     {
         $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
@@ -265,12 +265,12 @@ class CartRuleController extends FrameworkBundleAdminController
      * Disables cart rules on bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
-     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_cart_rules_index')]
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');

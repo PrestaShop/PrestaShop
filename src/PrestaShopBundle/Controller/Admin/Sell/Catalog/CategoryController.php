@@ -572,12 +572,12 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function bulkEnableStatusAction(Request $request)
     {
         try {
@@ -606,12 +606,12 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function bulkDisableStatusAction(Request $request)
     {
         try {
@@ -640,12 +640,12 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function bulkDeleteAction(Request $request)
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
@@ -687,12 +687,12 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function deleteAction(Request $request)
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
@@ -728,12 +728,12 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to view this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param CategoryFilters $filters
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function exportAction(CategoryFilters $filters)
     {
         $filters = new CategoryFilters(['limit' => null] + $filters->all());

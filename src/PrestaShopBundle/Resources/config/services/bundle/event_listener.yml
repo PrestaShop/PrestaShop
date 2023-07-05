@@ -56,16 +56,11 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
-  prestashop.demo_mode_enabled.listener:
-    class: PrestaShopBundle\EventListener\DemoModeEnabledListener
+  PrestaShopBundle\EventListener\DemoModeEnabledListener:
+    autowire: true
+    autoconfigure: true
     arguments:
-      - "@router"
-      - "@translator"
-      - "@session"
-      - "@annotation_reader"
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+      $session: "@session"
 
   prestashop.module_activated.listener:
     class: PrestaShopBundle\EventListener\ModuleActivatedListener
