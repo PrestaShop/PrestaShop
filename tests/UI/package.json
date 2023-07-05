@@ -30,7 +30,7 @@
     "// Functional": "Scripts to run functional tests",
     "test:functional": "TEST_PATH='functional/**/*' npm run test:specific",
     "// Functional API": "Scripts to run functional API tests",
-    "test:functional:API": "TEST_PATH='functional/API/**/*' npm run test:specific",
+    "test:functional:API": "TEST_PATH='functional/API/*' npm run test:specific",
     "// Functional BO": "Scripts to run functional BO tests",
     "test:functional:BO": "TEST_PATH='functional/BO/**/*' npm run test:specific",
     "test:functional:BO:login": "TEST_PATH='functional/BO/00_login/**/*' npm run test:specific",

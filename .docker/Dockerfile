@@ -34,5 +34,12 @@ ENV PATH          $PATH:$NODE_PATH
 # Install mailutils to make sendmail work
 RUN apt update && apt install -y mailutils
 
+# Configure OpenSSL
+## Enable legacy providers in OpenSSL
+RUN sed -i "s/\# \[provider_sect\]/\[provider_sect\]/g" /etc/ssl/openssl.cnf \
+    && sed -i "s/\# default = default_sect/default = default_sect\nlegacy = legacy_sect/g" /etc/ssl/openssl.cnf \
+    && sed -i "s/\# \[default_sect\]/\[legacy_sect\]\nactivate = 1\n\[default_sect\]\nactivate = 1/g" /etc/ssl/openssl.cnf \
+	  && cat /etc/ssl/openssl.cnf
+
 RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
 CMD ["/tmp/docker_run_git.sh"]

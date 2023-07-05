@@ -49,13 +49,14 @@ export default {
   /**
    * Create a API context
    * @param url {string}
+   * @param ignoreHTTPSErrors {boolean}
    * @return {Promise<APIRequestContext>}
    */
-  async createAPIContext(url: string): Promise<APIRequestContext> {
+  async createAPIContext(url: string, ignoreHTTPSErrors: boolean = true): Promise<APIRequestContext> {
     return request.newContext({
       baseURL: url,
       // @todo : Remove it when Puppeteer will accept self signed certificates
-      ignoreHTTPSErrors: true,
+      ignoreHTTPSErrors,
     });
   },
 
