@@ -3,7 +3,7 @@
 @set-mixed-cart-rule-restrictions
 Feature: Set cart rule restrictions in BO
   PrestaShop allows BO users to add and remove various restriction rules which defines
-  how other cart rules, countries, products, carriers or customer groups affects validity of cart rule in cart.
+  how other cart rules, countries, products, groups or customer groups affects validity of cart rule in cart.
 
   Background:
     Given shop "shop1" with name "test_shop" exists
@@ -42,6 +42,18 @@ Feature: Set cart rule restrictions in BO
       | need_identification_number | false           |
       | display_tax_label          | true            |
       | shop_association           | 1               |
+    And I create a Customer Group "group1" with the following details:
+      | name[en-US]             | Name EN |
+      | reduction               | 1.23    |
+      | displayPriceTaxExcluded | true    |
+      | showPrice               | true    |
+      | shopIds                 | shop1   |
+    And I create a Customer Group "group2" with the following details:
+      | name[en-US]             | Name EN |
+      | reduction               | 1.25    |
+      | displayPriceTaxExcluded | true    |
+      | showPrice               | true    |
+      | shopIds                 | shop1   |
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
@@ -93,21 +105,27 @@ Feature: Set cart rule restrictions in BO
     And I clear cart rule combination restrictions for cart rule rule_free_shipping_1
     And I clear all product restrictions for cart rule rule_free_shipping_1
     And I clear all carrier restrictions for cart rule rule_free_shipping_1
+    And I clear all group restrictions for cart rule rule_free_shipping_1
     And I clear cart rule combination restrictions for cart rule rule_50_percent
     And I clear all product restrictions for cart rule rule_50_percent
+    And I clear all group restrictions for cart rule rule_50_percent
     And I clear all carrier restrictions for cart rule rule_50_percent
     And I clear cart rule combination restrictions for cart rule rule_70_percent
     And I clear all product restrictions for cart rule rule_70_percent
     And I clear all carrier restrictions for cart rule rule_70_percent
+    And I clear all group restrictions for cart rule rule_70_percent
     And cart rule "rule_free_shipping_1" should have the following properties:
       | restricted cart rules |  |
       | restricted carriers   |  |
+      | restricted groups     |  |
     And cart rule "rule_50_percent" should have the following properties:
       | restricted cart rules |  |
       | restricted carriers   |  |
+      | restricted groups     |  |
     And cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules |  |
       | restricted carriers   |  |
+      | restricted groups     |  |
     And cart rule rule_free_shipping_1 should have no product restriction rules
     And cart rule rule_50_percent should have no product restriction rules
     And cart rule rule_70_percent should have no product restriction rules
@@ -119,6 +137,8 @@ Feature: Set cart rule restrictions in BO
       | restricted carriers | carrier1,carrier2 |
     And I restrict following countries for cart rule rule_free_shipping_1:
       | restricted countries | France |
+    And I restrict following groups for cart rule rule_free_shipping_1:
+      | restricted groups | group1,group2 |
     And I add a restriction for cart rule rule_free_shipping_1, which requires at least 1 product in cart matching one of these rules:
       | type          | references                 |
       | products      | product1                   |
@@ -138,6 +158,7 @@ Feature: Set cart rule restrictions in BO
       | restricted cart rules | rule_50_percent,rule_70_percent |
       | restricted carriers   | carrier1,carrier2               |
       | restricted countries  | France                          |
+      | restricted groups     | group1,group2                   |
     And cart rule "rule_free_shipping_1" should have the following product restriction rule groups:
       | groupReference | quantity | rules count |
       | group_nr_1     | 1        | 5           |

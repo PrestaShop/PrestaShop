@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class CartRuleRepository extends AbstractObjectModelRepository
@@ -338,31 +340,17 @@ class CartRuleRepository extends AbstractObjectModelRepository
      */
     public function setCarrierRestrictions(CartRuleId $cartRuleId, array $restrictedCarrierIds): void
     {
-        $this->removeCarrierRestrictions($cartRuleId);
+        $this->setRestrictionsByName($cartRuleId, $restrictedCarrierIds, 'carrier');
+    }
 
-        if (empty($restrictedCarrierIds)) {
-            return;
-        }
-
-        $checkedIds = [];
-        $insertValues = [];
-        foreach ($restrictedCarrierIds as $restrictedCarrierId) {
-            $restrictedCarrierIdValue = $restrictedCarrierId->getValue();
-            // skip duplicate ids if for some reason they exist
-            if (in_array($restrictedCarrierIdValue, $checkedIds, true)) {
-                continue;
-            }
-            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCarrierIdValue);
-            $checkedIds[] = $restrictedCarrierIdValue;
-        }
-
-        $this->connection->executeStatement(
-            sprintf(
-                'INSERT INTO %s (`id_cart_rule`, `id_carrier`) VALUES %s',
-                $this->dbPrefix . 'cart_rule_carrier',
-                implode(',', $insertValues)
-            )
-        );
+    /**
+     * @param GroupId[] $restrictedGroupIds
+     *
+     * @return void
+     */
+    public function setGroupRestrictions(CartRuleId $cartRuleId, array $restrictedGroupIds): void
+    {
+        $this->setRestrictionsByName($cartRuleId, $restrictedGroupIds, 'group');
     }
 
     /**
@@ -373,31 +361,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
      */
     public function setCountryRestrictions(CartRuleId $cartRuleId, array $restrictedCountryIds): void
     {
-        $this->removeCountryRestrictions($cartRuleId);
-
-        if (empty($restrictedCountryIds)) {
-            return;
-        }
-
-        $checkedIds = [];
-        $insertValues = [];
-        foreach ($restrictedCountryIds as $restrictedCountryId) {
-            $restrictedCountryIdValue = $restrictedCountryId->getValue();
-            // skip duplicate ids if for some reason they exist
-            if (in_array($restrictedCountryIdValue, $checkedIds, true)) {
-                continue;
-            }
-            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCountryIdValue);
-            $checkedIds[] = $restrictedCountryIdValue;
-        }
-
-        $this->connection->executeStatement(
-            sprintf(
-                'INSERT INTO %s (`id_cart_rule`, `id_country`) VALUES %s',
-                $this->dbPrefix . 'cart_rule_country',
-                implode(',', $insertValues)
-            )
-        );
+        $this->setRestrictionsByName($cartRuleId, $restrictedCountryIds, 'country');
     }
 
     /**
@@ -414,6 +378,24 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
             ->execute()
+            ->fetchAllAssociative();
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(static fn (array $result): int => (int) $result['id_carrier'], $results);
+    }
+
+    public function getRestrictedGroupIds(CartRuleId $cartRuleId): array
+    {
+        $cartRuleIdValue = $cartRuleId->getValue();
+        $results = $this->connection->createQueryBuilder()
+            ->select('crc.id_group')
+            ->from($this->dbPrefix . 'cart_rule_group', 'crc')
+            ->where('crc.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleIdValue)
+            ->execute()
             ->fetchAllAssociative()
         ;
 
@@ -421,9 +403,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             return [];
         }
 
-        return array_map(static function (array $result): int {
-            return (int) $result['id_carrier'];
-        }, $results);
+        return array_map(static fn (array $result): int => (int) $result['id_group'], $results);
     }
 
     /**
@@ -447,29 +427,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             return [];
         }
 
-        return array_map(static function (array $result): int {
-            return (int) $result['id_country'];
-        }, $results);
-    }
-
-    private function removeCarrierRestrictions(CartRuleId $cartRuleId): void
-    {
-        $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_carrier', 'crc')
-            ->where('crc.id_cart_rule = :cartRuleId')
-            ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
-        ;
-    }
-
-    private function removeCountryRestrictions(CartRuleId $cartRuleId): void
-    {
-        $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_country', 'crc')
-            ->where('crc.id_cart_rule = :cartRuleId')
-            ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
-        ;
+        return array_map(static fn (array $result): int => (int) $result['id_country'], $results);
     }
 
     private function removeRestrictedCartRules(CartRuleId $cartRuleId): void
@@ -509,6 +467,57 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->connection->createQueryBuilder()
             ->delete($this->dbPrefix . 'cart_rule_product_rule_group')
             ->where('id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     * @param CarrierId[]|CountryId[]|GroupId[] $entityIds
+     * @param string $entityName
+     *
+     * @return void
+     */
+    private function setRestrictionsByName(CartRuleId $cartRuleId, array $entityIds, string $entityName): void
+    {
+        $availableEntityNames = ['carrier', 'country', 'group'];
+        if (!in_array($entityName, $availableEntityNames, true)) {
+            throw new InvalidArgumentException('Invalid $entityName provided');
+        }
+
+        $this->removeRestrictionsByName($cartRuleId, $entityName);
+
+        if (empty($entityIds)) {
+            return;
+        }
+
+        $checkedIds = [];
+        $insertValues = [];
+        foreach ($entityIds as $entityId) {
+            $entityIdValue = $entityId->getValue();
+            // skip duplicate ids if for some reason they exist
+            if (in_array($entityIdValue, $checkedIds, true)) {
+                continue;
+            }
+            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $entityIdValue);
+            $checkedIds[] = $entityIdValue;
+        }
+
+        $this->connection->executeStatement(
+            sprintf(
+                'INSERT INTO %s (`id_cart_rule`, `id_' . $entityName . '`) VALUES %s',
+                $this->dbPrefix . 'cart_rule_' . $entityName,
+                implode(',', $insertValues)
+            )
+        );
+    }
+
+    private function removeRestrictionsByName(CartRuleId $cartRuleId, string $entityName)
+    {
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_' . $entityName, 'crc')
+            ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()
         ;

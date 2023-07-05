@@ -94,6 +94,26 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+     * @When I restrict following groups for cart rule :cartRuleReference:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $tableNode
+     *
+     * @return void
+     */
+    public function setRestrictedGroups(string $cartRuleReference, TableNode $tableNode): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+
+        try {
+            $command->setRestrictedGroupIds($this->referencesToIds($tableNode->getRowsHash()['restricted groups']));
+            $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @When I restrict following countries for cart rule :cartRuleReference:
      *
      * @param string $cartRuleReference
@@ -230,6 +250,21 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
     }
 
     /**
+     * @When I clear all group restrictions for cart rule :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     *
+     * @return void
+     */
+    public function clearCartRuleGroupRestrictions(string $cartRuleReference): void
+    {
+        $command = $this->getRestrictionsCommand($cartRuleReference);
+        $command->setRestrictedGroupIds([]);
+
+        $this->restrictionCommandsByReference[$cartRuleReference] = $command;
+    }
+
+    /**
      * @When I save all the restrictions for cart rule :cartRuleReference
      *
      * @param string $cartRuleReference
@@ -250,6 +285,7 @@ class SetCartRuleRestrictionsFeatureContext extends AbstractCartRuleFeatureConte
             && null === $command->getProductRestrictionRuleGroups()
             && null === $command->getRestrictedCarrierIds()
             && null === $command->getRestrictedCountryIds()
+            && null === $command->getRestrictedGroupIds()
         ) {
             throw new RuntimeException(
                 sprintf(
