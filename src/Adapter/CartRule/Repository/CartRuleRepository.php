@@ -358,6 +358,10 @@ class CartRuleRepository extends AbstractObjectModelRepository
             $checkedIds[] = $restrictedCarrierIdValue;
         }
 
+        if (empty($insertValues)) {
+            return;
+        }
+
         $this->connection->executeStatement(
             sprintf(
                 'INSERT INTO %s (`id_cart_rule`, `id_carrier`) VALUES %s',
@@ -392,10 +396,14 @@ class CartRuleRepository extends AbstractObjectModelRepository
             $checkedIds[] = $restrictedGroupIdValue;
         }
 
+        if (empty($insertValues)) {
+            return;
+        }
+
         $this->connection->executeStatement(
             sprintf(
-                'INSERT INTO %s (`id_cart_rule`, `id_carrier`) VALUES %s',
-                $this->dbPrefix . 'cart_rule_carrier',
+                'INSERT INTO %s (`id_cart_rule`, `id_group`) VALUES %s',
+                $this->dbPrefix . 'cart_rule_group',
                 implode(',', $insertValues)
             )
         );
@@ -427,10 +435,14 @@ class CartRuleRepository extends AbstractObjectModelRepository
             $checkedIds[] = $restrictedCountryIdValue;
         }
 
+        if (empty($insertValues)) {
+            return;
+        }
+
         $this->connection->executeStatement(
             sprintf(
-                'INSERT INTO %s (`id_cart_rule`, `id_group`) VALUES %s',
-                $this->dbPrefix . 'cart_rule_group',
+                'INSERT INTO %s (`id_cart_rule`, `id_country`) VALUES %s',
+                $this->dbPrefix . 'cart_rule_country',
                 implode(',', $insertValues)
             )
         );
@@ -457,7 +469,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
         }
 
         return array_map(static function (array $result): int {
-            return (int)$result['id_carrier'];
+            return (int) $result['id_carrier'];
         }, $results);
     }
 
