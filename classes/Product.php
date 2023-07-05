@@ -5617,7 +5617,12 @@ class ProductCore extends ObjectModel
         $row['category'] = Category::getLinkRewrite((int) $row['id_category_default'], (int) $id_lang);
         $row['category_name'] = Db::getInstance()->getValue('SELECT name FROM ' . _DB_PREFIX_ . 'category_lang WHERE id_shop = ' . (int) $context->shop->id . ' AND id_lang = ' . (int) $id_lang . ' AND id_category = ' . (int) $row['id_category_default']);
         $row['link'] = $context->link->getProductLink((int) $row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
-        $row['manufacturer_name'] = !empty((int) $row['id_manufacturer']) ? Manufacturer::getNameById((int) $row['id_manufacturer']) : null;
+
+        if (empty($row['manufacturer_name']) && (isset($row['id_manufacturer']) && !empty((int) $row['id_manufacturer']))) {
+            $row['manufacturer_name'] = Manufacturer::getNameById((int) $row['id_manufacturer']);
+        } else {
+            $row['manufacturer_name'] = null;
+        }
 
         $row['attribute_price'] = 0;
         if ($id_product_attribute) {
