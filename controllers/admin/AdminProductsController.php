@@ -1904,7 +1904,9 @@ class AdminProductsControllerCore extends AdminController
                 $this->copyFromPost($object, $this->table);
                 $object->indexed = 0;
 
-                if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
+                // disable to fix https://github.com/PrestaShop/PrestaShop/issues/31287
+                // probably all multishop_check related things can be removed?
+                if (false && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
                     $values = (array) Tools::getValue('multishop_check', []);
                     $values['state'] = Product::STATE_SAVED;
 
