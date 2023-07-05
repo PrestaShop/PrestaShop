@@ -239,7 +239,6 @@ function renderTemplate(array $params) {
     $smartyTemplate = $params['smarty_template'];
     unset($params['smarty_template']);
 
-    //dd(isset($params["quick_access_current_link_icon"]));
     if (
         SymfonyContainer::getInstance()
             ->get('request_stack')

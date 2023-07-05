@@ -30,16 +30,16 @@
     {% for quick in quickAccess %}
       <a class="
         dropdown-item quick-row-link
-        {% if quick.class is defined %}{{ quick.class}}{% endif %}
+        {% if quick.class is defined %}{{ quick.class|escape('html_attr') }}{% endif %}
         {% if link.matchQuickLink(quick.link) %}
           {% set matchQuickLink = quick.id_quick_access %}
           active
         {% endif %}
       "
-      href="{{ quick.link|escape('html') }}"
+      href="{{ quick.link|escape('html_attr') }}"
       {% if quick.new_window %} target="_blank"{% endif %}
       data-item="{{ quick.name }}"
-      >{{ quick.name }}</a>
+      >{{ quick.name|escape('html_attr') }}</a>
     {% endfor %}
     <div class="dropdown-divider"></div>
     {% if matchQuickLink is defined %}
@@ -50,9 +50,9 @@
          data-quicklink-id="{{ matchQuickLink }}"
          data-rand="{{ random(1, 200) }}"
          data-icon="{{ quickAccessCurrentLinkIcon }}"
-         data-url="{{ link.getQuickLink(app.request.uri|escape('js')) }}"
+         data-url="{{ link.getQuickLink(app.request.uri|escape('html_attr')) }}"
          data-post-link="{{ link.getAdminLink('AdminQuickAccesses') }}"
-         data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('js') }}"
+         data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr') }}"
          data-link="{{ quickAccessCurrentLinkName|truncate(32) }}"
       >
         <i class="material-icons">remove_circle_outline</i>
@@ -65,16 +65,16 @@
        data-rand="{{ random(1, 200) }}"
        data-icon="{{ quickAccessCurrentLinkIcon }}"
        data-method="add"
-       data-url="{{ link.getQuickLink(app.request.uri|escape('js')) }}"
+       data-url="{{ link.getQuickLink(app.request.uri|escape('html_attr')) }}"
        data-post-link="{{ link.getAdminLink('AdminQuickAccesses') }}"
-       data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('js')}}"
+       data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr')}}"
        data-link="{{ quickAccessCurrentLinkName|truncate(32) }}"
     >
       <i class="material-icons">add_circle</i>
       {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
     </a>
     {% endif %}
-    <a id="quick-manage-link" class="dropdown-item" href="{{ link.getAdminLink("AdminQuickAccesses")|addslashes }}">
+    <a id="quick-manage-link" class="dropdown-item" href="{{ link.getAdminLink('AdminQuickAccesses') }}">
     <i class="material-icons">settings</i>
     {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
     </a>

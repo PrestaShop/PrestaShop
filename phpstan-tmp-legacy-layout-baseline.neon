@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Namespace Link is forbidden, No legacy calls inside the prestashop bundle. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/QuickAccess.php
+
+		-
+			message: "#^Class Link is forbidden, No legacy calls inside the prestashop bundle. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/QuickAccess.php
