@@ -116,7 +116,15 @@
 {/if}
 
 {if $display_header}
-  {include file='components/layout/nav_bar.tpl'}
+    {render_template
+      smarty_template="components/layout/nav_bar.tpl"
+      twig_template="@PrestaShop/Admin/Layout/nav_bar.html.twig"
+      toggle_navigation_url=$toggle_navigation_url
+      default_tab_link=$default_tab_link
+      ps_version=$ps_version
+      collapse_menu=$collapse_menu
+      tabs=$tabs
+    }
 {/if}
 
 {if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
