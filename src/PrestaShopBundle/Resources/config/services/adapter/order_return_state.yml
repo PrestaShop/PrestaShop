@@ -20,8 +20,11 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\EditOrderReturnStateCommand'
 
+  PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository:
+
   prestashop.adapter.order_return_state.repository.order_return_state_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository'
+    alias: PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository
+    deprecated: ~
 
   prestashop.adapter.order_return_state.command_handler.delete_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\DeleteOrderReturnStateHandler'

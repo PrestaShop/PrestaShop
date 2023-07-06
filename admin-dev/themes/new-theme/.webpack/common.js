@@ -95,6 +95,7 @@ module.exports = {
     manufacturer_address_form:
       './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
+    merchandise_return_form: './js/pages/merchandise-return/form.js',
     meta: './js/pages/meta',
     module: './js/pages/module',
     module_card: './js/app/pages/module-card',

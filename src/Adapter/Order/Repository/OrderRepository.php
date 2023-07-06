@@ -29,12 +29,18 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\Repository;
 
 use Order;
+use OrderDetail;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomizations;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
+use Product;
 
 class OrderRepository extends AbstractObjectModelRepository
 {
@@ -70,5 +76,49 @@ class OrderRepository extends AbstractObjectModelRepository
         }
 
         return $order;
+    }
+
+    /**
+     * @param OrderDetailId $detailId
+     * @param LanguageId $languageId
+     *
+     * @return OrderDetailCustomizations|null
+     *
+     * @throws CoreException
+     */
+    public function getOrderDetailCustomizations(OrderDetailId $detailId, LanguageId $languageId): ?OrderDetailCustomizations
+    {
+        try {
+            $orderDetail = new OrderDetail($detailId->getValue());
+            $order = new Order($orderDetail->id_order);
+            $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $languageId->getValue(), true, $order->id_shop, $orderDetail->id_customization);
+            $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id] ?? null;
+            if (!is_array($customizedDatas)) {
+                return null;
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get order customization for %s #%d [%s]',
+                    OrderDetail::class,
+                    $detailId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
+        $customizations = [];
+        foreach ($customizedDatas as $customizationPerAddress) {
+            foreach ($customizationPerAddress as $customization) {
+                foreach ($customization['datas'] as $datas) {
+                    foreach ($datas as $data) {
+                        $customizations[] = new OrderProductCustomizationForViewing((int) $data['type'], $data['name'], $data['value']);
+                    }
+                }
+            }
+        }
+
+        return new OrderDetailCustomizations($customizations);
     }
 }

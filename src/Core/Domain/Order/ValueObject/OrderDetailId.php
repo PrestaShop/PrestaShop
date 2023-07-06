@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,19 +22,49 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/OrderReturn/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\Order\ValueObject;
 
-{% block javascripts %}
-  {{ parent() }}
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+/**
+ * Order identity
+ */
+class OrderDetailId
+{
+    /**
+     * @var int
+     */
+    private $orderDetailId;
+
+    /**
+     * @param int $orderDetailId
+     *
+     * @throws OrderException
+     */
+    public function __construct(int $orderDetailId)
+    {
+        $this->assertIntegerIsGreaterThanZero($orderDetailId);
+
+        $this->orderDetailId = $orderDetailId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->orderDetailId;
+    }
+
+    /**
+     * @param int $orderId
+     */
+    private function assertIntegerIsGreaterThanZero(int $orderId): void
+    {
+        if (0 > $orderId) {
+            throw new OrderException(sprintf('Order detail id %d is invalid. Order detail id must be number that is greater than zero.', $orderId));
+        }
+    }
+}

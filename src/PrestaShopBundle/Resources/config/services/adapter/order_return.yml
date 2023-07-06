@@ -1,30 +1,56 @@
 services:
   _defaults:
-    public: true
+    public: false
+    autowire: true
 
-  prestashop.adapter.order_return.query_handler.get_order_return_for_editing_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnForEditingHandler'
+  PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnForEditingHandler:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing'
-    arguments:
-      - '@prestashop.adapter.order_return.repository.order_return_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
-      - '@prestashop.adapter.order.repository.order_repository'
 
-  prestashop.adapter.order_return.command_handler.update_order_return_state_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler'
+  PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator:
+
+  PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler:
+    arguments:
+      - '@prestashop.adapter.order.repository.order_repository'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations'
+
+  PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandlerInterface: '@PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler'
+
+  PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
-    arguments:
-      - '@prestashop.adapter.order_return.repository.order_return_repository'
-      - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'
+
+  PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand'
+
+  PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand'
+
+  prestashop.adapter.order_return.query_handler.get_order_return_for_editing_handler:
+    alias: PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnForEditingHandler
+    deprecated: ~
+
+  prestashop.adapter.order_return.command_handler.update_order_return_state_handler:
+    alias: PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler
+    deprecated: ~
 
   prestashop.adapter.order_return.repository.order_return_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository'
-    arguments:
-      [ '@prestashop.adapter.order_return.validator.order_return_validator' ]
+    alias: PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository
+    deprecated: ~
 
   prestashop.adapter.order_return.validator.order_return_validator:
-    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'
+    alias: PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator
+    deprecated: ~
