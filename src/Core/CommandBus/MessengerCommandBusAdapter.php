@@ -41,6 +41,7 @@ final class MessengerCommandBusAdapter implements CommandBusInterface
 
     public function __construct(MessageBusInterface $messageBus)
     {
+        // used in HandleTrait
         $this->messageBus = $messageBus;
     }
 

@@ -32,6 +32,4 @@ services:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\SearchForSearchTermHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm
+    autoconfigure: true

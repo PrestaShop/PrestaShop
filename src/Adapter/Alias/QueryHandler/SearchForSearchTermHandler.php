@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\SearchForSearchTermHandlerInterface;
 
+#[AsQueryHandler]
 class SearchForSearchTermHandler implements SearchForSearchTermHandlerInterface
 {
     public function __construct(protected readonly AliasRepository $aliasRepository)
