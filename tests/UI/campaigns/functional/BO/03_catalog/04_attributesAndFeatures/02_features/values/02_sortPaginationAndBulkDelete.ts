@@ -14,6 +14,7 @@ import viewFeaturePage from '@pages/BO/catalog/features/view';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
+import Features from '@data/demo/features';
 import FeatureValueData from '@data/faker/featureValue';
 
 import {expect} from 'chai';
@@ -76,9 +77,9 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
   it('should filter list of features by name \'Composition\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
-    await featuresPage.filterTable(page, 'name', 'Composition');
+    await featuresPage.filterTable(page, 'name', Features.composition.name);
 
-    const textColumn = await featuresPage.getTextColumn(page, 1, 'name');
+    const textColumn = await featuresPage.getTextColumn(page, 1, 'name', 'id_feature');
     await expect(textColumn).to.contains('Composition');
   });
 
@@ -88,7 +89,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     await featuresPage.viewFeature(page, 1);
 
     const pageTitle = await viewFeaturePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} • ${global.INSTALL.SHOP_NAME}`);
+    await expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
 
     numberOfValues = await viewFeaturePage.resetAndGetNumberOfLines(page);
     await expect(numberOfValues).to.be.above(0);
@@ -127,7 +128,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeatureComposition2', baseContext);
 
       const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} • ${global.INSTALL.SHOP_NAME}`);
+      await expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
 
       const numberOfValuesAfterCreation = await viewFeaturePage.resetAndGetNumberOfLines(page);
       await expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 15);

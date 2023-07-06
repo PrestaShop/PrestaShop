@@ -131,7 +131,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await featuresPage.viewFeature(page, 1);
 
       const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} • ${global.INSTALL.SHOP_NAME}`);
+      await expect(pageTitle).to.contains(`${createFeatureData.name} • ${global.INSTALL.SHOP_NAME}`);
     });
   });
 
@@ -165,7 +165,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeature1', baseContext);
 
       const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} • ${global.INSTALL.SHOP_NAME}`);
+      await expect(pageTitle).to.contains(`${createFeatureData.name} • ${global.INSTALL.SHOP_NAME}`);
 
       const numberOfValuesAfterCreation = await viewFeaturePage.resetAndGetNumberOfLines(page);
       await expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 2);
@@ -226,7 +226,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await featuresPage.viewFeature(page, 1);
 
       const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${createFeatureData.name}`);
+      await expect(pageTitle).to.contains(`${editFeatureData.name} • ${global.INSTALL.SHOP_NAME}`);
     });
 
     it('should delete the second value', async function () {

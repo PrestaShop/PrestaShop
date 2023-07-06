@@ -99,7 +99,7 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     await testContext.addContextItem(this, 'testIdentifier', 'resetFeaturePosition', baseContext);
 
     // Close alert
-    await featuresPage.closeAlertParagraph(page);
+    await featuresPage.closeAlertBlock(page);
 
     // Get third row feature name
     const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name', 'position');
@@ -111,5 +111,22 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     // Get first row feature name and check if is equal the first row feature name before changing position
     const firstRowFeatureName = await featuresPage.getTextColumn(page, 1, 'name', 'position');
     await expect(firstRowFeatureName, 'Changing position was done wrongly').to.equal(secondRowFeatureName);
+  });
+
+  it('should reset the sort to \'id_feature\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'sortByIdFeature', baseContext);
+
+    const nonSortedTable = await featuresPage.getAllRowsColumnContent(page, 'position', 'position');
+
+    await featuresPage.sortTable(page, 'id_feature', 'asc');
+
+    const sortedTable = await featuresPage.getAllRowsColumnContent(page, 'position', 'id_feature');
+
+    const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+    const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
+
+    const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+
+    await expect(sortedTableFloat).to.deep.equal(expectedResult);
   });
 });

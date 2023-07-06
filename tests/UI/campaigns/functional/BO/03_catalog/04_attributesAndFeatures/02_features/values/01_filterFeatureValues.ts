@@ -68,7 +68,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await featuresPage.resetFilter(page);
     await featuresPage.filterTable(page, 'name', Features.composition.name);
 
-    const textColumn = await featuresPage.getTextColumn(page, 1, 'name');
+    const textColumn = await featuresPage.getTextColumn(page, 1, 'name', 'id_feature');
     await expect(textColumn).to.contains(Features.composition.name);
   });
 
@@ -78,7 +78,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await featuresPage.viewFeature(page, 1);
 
     const pageTitle = await viewFeaturePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} • ${global.INSTALL.SHOP_NAME}`);
+    await expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
   });
 
   it('should reset all filters and get number of features in BO', async function () {
