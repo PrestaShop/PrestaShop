@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\Category\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\MessengerCommandBusAdapter;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -38,7 +38,7 @@ use Tests\Resources\DatabaseDump;
 class GetCategoryForEditingHandlerTest extends KernelTestCase
 {
     /**
-     * @var object|MessengerCommandBusAdapter|null
+     * @var object|CommandBusInterface|null
      */
     private $commandBus;
     /**
