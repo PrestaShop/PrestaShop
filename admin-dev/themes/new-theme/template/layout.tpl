@@ -102,7 +102,16 @@
         {/if}
         {if $show_new_orders || $show_new_customers || $show_new_messages}
           <div class="component header-right-component" id="header-notifications-container">
-            {include file="components/layout/notifications_center.tpl"}
+              {render_template
+                smarty_template="components/layout/notifications_center.tpl"
+                twig_template="@PrestaShop/Admin/Layout/notifications_center.html.twig"
+                show_new_orders=$show_new_orders
+                show_new_customers=$show_new_customers
+                show_new_messages=$show_new_messages
+                no_order_tip=$no_order_tip
+                no_customer_tip=$no_customer_tip
+                no_customer_message_tip=$no_customer_message_tip
+              }
           </div>
         {/if}
 
