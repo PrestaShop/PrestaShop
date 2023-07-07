@@ -111,7 +111,15 @@
       <div class="header-right">
         {if !isset($hideLegacyStoreContextSelector) || !$hideLegacyStoreContextSelector}
           <div class="component" id="header-shop-list-container">
-            {include file="components/layout/shop_list.tpl"}
+            {render_template
+              smarty_template="components/layout/shop_list.tpl"
+              twig_template="@PrestaShop/Admin/Layout/shop_list.html.twig"
+              base_url=$base_url
+              is_multishop= $is_multishop|default:null
+              shop_list= $shop_list|default:null
+              multishop_context= $multishop_context|default:null
+              current_shop_name= $current_shop_name|default:null
+            }
           </div>
         {/if}
         {if $show_new_orders || $show_new_customers || $show_new_messages}
