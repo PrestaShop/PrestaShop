@@ -6,7 +6,7 @@ services:
     alias: PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
 
   PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface:
-    class: PrestaShop\PrestaShop\Core\CommandBus\MessengerCommandBusAdapter
+    class: PrestaShopBundle\CommandBus\MessengerCommandBusAdapter
     autowire: true
     public: false
 
@@ -17,7 +17,7 @@ services:
   prestashop.core.provider.command_definition_provider:
     class: 'PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser'
 
-  PrestaShop\PrestaShop\Core\CommandBus\Middleware\CommandRegisterMiddleware:
+  PrestaShopBundle\CommandBus\Middleware\CommandRegisterMiddleware:
     autowire: true
     public: false
     arguments:

@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\CommandBus;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\CommandBus\MessengerCommandBusAdapter;
+use PrestaShopBundle\CommandBus\MessengerCommandBusAdapter;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class MessengerCommandBusAdapterTest extends TestCase

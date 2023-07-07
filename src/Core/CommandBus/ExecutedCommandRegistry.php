@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandTypeParser;
+use PrestaShopBundle\CommandBus\MessengerCommandBusAdapter;
 
 /**
  * Stores information about executed commands/queries

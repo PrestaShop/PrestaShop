@@ -3,4 +3,4 @@ framework:
     buses:
       messenger.bus.default:
         middleware:
-          - 'PrestaShop\PrestaShop\Core\CommandBus\Middleware\CommandRegisterMiddleware'
+          - 'PrestaShopBundle\CommandBus\Middleware\CommandRegisterMiddleware'

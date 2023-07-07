@@ -24,8 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\CommandBus;
+namespace PrestaShopBundle\CommandBus;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
