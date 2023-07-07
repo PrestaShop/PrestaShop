@@ -29,14 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandTypeParser;
-use PrestaShopBundle\CommandBus\MessengerCommandBusAdapter;
+use PrestaShopBundle\CommandBus\MessengerCommandBus;
 
 /**
  * Stores information about executed commands/queries
  */
 final class ExecutedCommandRegistry
 {
-    private const BACKTRACE_LIMIT = 10;
+    private const BACKTRACE_LIMIT = 15;
 
     /**
      * @var array
@@ -115,8 +115,8 @@ final class ExecutedCommandRegistry
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::BACKTRACE_LIMIT);
 
-        foreach ($trace as $step) {
-            if ($step['class'] === MessengerCommandBusAdapter::class
+        foreach ($trace as $key => $step) {
+            if (is_a($step['class'], MessengerCommandBus::class, true)
                 && $step['function'] === 'handle'
             ) {
                 return [

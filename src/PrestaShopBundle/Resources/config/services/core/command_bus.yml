@@ -6,7 +6,7 @@ services:
     alias: PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
 
   PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface:
-    class: PrestaShopBundle\CommandBus\MessengerCommandBusAdapter
+    class: PrestaShopBundle\CommandBus\MessengerCommandBus
     autowire: true
     public: false
 

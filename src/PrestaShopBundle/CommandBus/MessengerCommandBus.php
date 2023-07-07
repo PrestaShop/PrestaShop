@@ -24,19 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\Core\CommandBus;
+namespace PrestaShopBundle\CommandBus;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShopBundle\CommandBus\MessengerCommandBusAdapter;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class MessengerCommandBusAdapterTest extends TestCase
+/**
+ * Class MessengerCommandBus is the Symfony Messenger CommandsBus implementation for PrestaShop's contract.
+ */
+final class MessengerCommandBus implements CommandBusInterface
 {
-    public function testIsValidImplementation()
-    {
-        $commandBudAdapter = new MessengerCommandBusAdapter($this->createMock(MessageBusInterface::class));
+    use HandleTrait {
+        HandleTrait::handle as process;
+    }
 
-        $this->assertInstanceOf(CommandBusInterface::class, $commandBudAdapter);
+    public function __construct(MessageBusInterface $messageBus)
+    {
+        // used in HandleTrait
+        $this->messageBus = $messageBus;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle($command)
+    {
+        try {
+            return $this->process($command);
+        } catch (HandlerFailedException $exception) {
+            throw $exception->getPrevious();
+        }
     }
 }
