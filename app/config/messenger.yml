@@ -1,0 +1,6 @@
+framework:
+  messenger:
+    buses:
+      messenger.bus.default:
+        middleware:
+          - 'PrestaShop\PrestaShop\Core\CommandBus\Middleware\CommandRegisterMiddleware'

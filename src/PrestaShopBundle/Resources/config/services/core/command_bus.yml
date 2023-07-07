@@ -21,10 +21,9 @@ services:
     autowire: true
     public: false
     arguments:
-      - $executedCommandRegistry: '@prestashop.core.command_bus.executed_command_registry'
+      - '@messenger.bus.default.messenger.handlers_locator'
 
-  prestashop.core.command_bus.executed_command_registry:
-    class: PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry
+  PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry:
     arguments:
       - '@prestashop.core.command_bus.parser.command_type_parser'
 
