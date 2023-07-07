@@ -95,7 +95,7 @@ class CommandAndQueryRegisterPass implements CompilerPassInterface
         });
     }
 
-    private static function guessHandledClasses(ReflectionClass $class, string $method): ?string
+    private static function guessHandledClasses(ReflectionClass $class, string $method): string
     {
         $reflectionMethod = $class->getMethod($method);
         $parameters = $reflectionMethod->getParameters();

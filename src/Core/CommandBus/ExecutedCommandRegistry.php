@@ -115,7 +115,7 @@ final class ExecutedCommandRegistry
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::BACKTRACE_LIMIT);
 
         foreach ($trace as $step) {
-            if ($step['class'] instanceof MessengerCommandBusAdapter
+            if ($step['class'] === MessengerCommandBusAdapter::class
                 && $step['function'] === 'handle'
             ) {
                 return [
