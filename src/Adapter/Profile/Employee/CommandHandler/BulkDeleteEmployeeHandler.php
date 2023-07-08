@@ -49,7 +49,6 @@ final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements
             $this->assertEmployeeWasFoundById($employeeId, $employee);
             $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
             $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
-            $this->assertEmployeeDoesNotManageWarehouse($employee);
 
             if (!$employee->delete()) {
                 throw new CannotDeleteEmployeeException($employeeId, sprintf('Cannot delete employee with id "%s".', $employeeId->getValue()));

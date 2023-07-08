@@ -30,11 +30,9 @@ use Context;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteWarehouseManagerException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use Warehouse;
 
 /**
  * Class AbstractEmployeeStatusHandler.
@@ -75,24 +73,6 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
     {
         if (Context::getContext()->employee->id === $employee->id) {
             throw new EmployeeCannotChangeItselfException('Employee cannot change status of itself.', EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS);
-        }
-    }
-
-    /**
-     * Make sure that given employee does not manage any warehouse.
-     *
-     * Even though Warehouse feature was removed in 1.7
-     * but the code related to it still exists
-     * thus assertion is kept for BC i guess.
-     *
-     * @param Employee $employee
-     */
-    protected function assertEmployeeDoesNotManageWarehouse(Employee $employee)
-    {
-        $warehouses = Warehouse::getWarehousesByEmployee($employee->id);
-
-        if (count($warehouses) > 0) {
-            throw new CannotDeleteWarehouseManagerException(sprintf('Employee with id %s is warehouse manager and cannot be deleted.', $employee->id));
         }
     }
 }

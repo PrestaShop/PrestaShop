@@ -283,7 +283,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || !$tab['enabled']
-                || ($tab['class_name'] == 'AdminStock' && $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminStock'
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
 

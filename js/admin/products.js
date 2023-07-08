@@ -1451,16 +1451,8 @@ product_tabs['Quantities'] = new function(){
 
 	this.refreshQtyAvailabilityForm = function()
 	{
-		if ($('#depends_on_stock_0').prop('checked'))
-		{
-			$('.available_quantity').find('input').show();
-			$('.available_quantity').find('span').hide();
-		}
-		else
-		{
-			$('.available_quantity').find('input').hide();
-			$('.available_quantity').find('span').show();
-		}
+		$('.available_quantity').find('input').show();
+		$('.available_quantity').find('span').hide();
 	};
 
 	this.onReady = function(){
@@ -1468,37 +1460,6 @@ product_tabs['Quantities'] = new function(){
 			prevText: '',
 			nextText: '',
 			dateFormat: 'yy-mm-dd'
-		});
-
-		$('.depends_on_stock').on('click', function(e)
-		{
-			self.refreshQtyAvailabilityForm();
-			self.ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
-			if($(this).val() == 0)
-				$('.available_quantity input').trigger('change');
-		});
-
-		$('.advanced_stock_management').on('click', function(e)
-		{
-			var val = 0;
-			if ($(this).prop('checked'))
-				val = 1;
-
-			self.ajaxCall({actionQty: 'advanced_stock_management', value: val});
-			if (val == 1)
-			{
-				$(this).val(1);
-				$('#depends_on_stock_1').attr('disabled', false);
-			}
-			else
-			{
-				$(this).val(0);
-				$('#depends_on_stock_1').attr('disabled', true);
-				$('#depends_on_stock_0').attr('checked', true);
-				self.ajaxCall({actionQty: 'depends_on_stock', value: 0});
-				self.refreshQtyAvailabilityForm();
-			}
-			self.refreshQtyAvailabilityForm();
 		});
 
 		$('.available_quantity').find('input').on('change', function(e, init_val)
@@ -1639,36 +1600,6 @@ product_tabs['VirtualProduct'] = new function(){
 			}
 		});
 	}
-}
-
-product_tabs['Warehouses'] = new function(){
-	this.onReady = function(){
-		$('.check_all_warehouse').on('click', function() {
-			//get all checkboxes of current warehouse
-			var checkboxes = $('input[name*="'+$(this).val()+'"]');
-			var checked = false;
-
-			for (var i=0; i<checkboxes.length; i++)
-			{
-				var item = $(checkboxes[i]);
-
-				if (item.is(':checked'))
-				{
-					item.removeAttr("checked");
-				}
-				else
-				{
-					item.attr("checked", true);
-					checked = true;
-				}
-			}
-
-			if (checked)
-				$(this).find('i').removeClass('icon-check-sign').addClass('icon-check-empty');
-			else
-				$(this).find('i').removeClass('icon-check-empty').addClass('icon-check-sign');
-		});
-	};
 }
 
 /**

@@ -339,17 +339,12 @@ class ToolsTest extends TestCase
             ['stock_mvt_reason_lang', 'stockMvtReasonLang', false],
             ['store_lang', 'storeLang', false],
             ['supplier_lang', 'supplierLang', false],
-            ['supply_order_state', 'supplyOrderState', false],
-            ['supply_order_state_lang', 'supplyOrderStateLang', false],
             ['tab', 'tab', false],
             ['tax_lang', 'taxLang', false],
-            ['warehouse', 'warehouse', false],
             ['web_browser', 'webBrowser', false],
             ['zone', 'zone', false],
             // True
             ['supplier_lang', 'SupplierLang', true],
-            ['supply_order_state', 'SupplyOrderState', true],
-            ['supply_order_state_lang', 'SupplyOrderStateLang', true],
             ['tab', 'Tab', true],
         ];
     }

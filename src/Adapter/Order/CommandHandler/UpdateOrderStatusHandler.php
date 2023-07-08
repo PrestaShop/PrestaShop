@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use StockAvailable;
 
 /**
  * @internal
@@ -81,18 +80,7 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
         }
 
         // Save all changes
-        $historyAdded = $history->addWithemail(true, $templateVars);
-
-        if ($historyAdded) {
-            // synchronizes quantities if needed..
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                foreach ($order->getProducts() as $product) {
-                    if (StockAvailable::dependsOnStock($product['product_id'])) {
-                        StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
-                    }
-                }
-            }
-
+        if ($history->addWithemail(true, $templateVars)) {
             return;
         }
 

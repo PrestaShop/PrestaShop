@@ -448,14 +448,6 @@ class AdminProductsController extends AdminProductsControllerCore
             if (isset($object->noZeroObject) && count($taxes = call_user_func([$this->className, $object->noZeroObject])) <= 1) {
                 $this->errors[] = Tools::displayError('You need at least one object.') . ' <b>' . $this->table . '</b><br />' . Tools::displayError('You cannot delete all of the items.');
             } else {
-                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $object->advanced_stock_management) {
-                    $stock_manager = StockManagerFactory::getManager();
-                    $physical_quantity = $stock_manager->getProductPhysicalQuantities($object->id, 0);
-                    $real_quantity = $stock_manager->getProductRealQuantities($object->id, 0);
-                    if ($physical_quantity > 0 || $real_quantity > $physical_quantity) {
-                        $this->errors[] = Tools::displayError('You cannot delete this product because there is physical stock left.');
-                    }
-                }
                 if (!count($this->errors)) {
                     if ($object->delete()) {
                         $id_category = (int) Tools::getValue('id_category');
@@ -527,19 +519,8 @@ class AdminProductsController extends AdminProductsControllerCore
                         if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                             ini_set('max_execution_time', round($count * 1.5));
                         }
-                        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                            $stock_manager = StockManagerFactory::getManager();
-                        }
                         foreach ($products as $id_product) {
                             $product = new Product((int) $id_product);
-
-                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management) {
-                                $physical_quantity = $stock_manager->getProductPhysicalQuantities($product->id, 0);
-                                $real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
-                                if ($physical_quantity > 0 || $real_quantity > $physical_quantity) {
-                                    $this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left.'), $product->id);
-                                }
-                            }
                             if (!count($this->errors)) {
                                 if ($product->delete()) {
                                     PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int) $product->id, true, (int) $this->context->employee->id);
@@ -643,7 +624,6 @@ class AdminProductsController extends AdminProductsControllerCore
                                 $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
                                 false
                             );
-                            StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, (int) $id_product_attribute);
                             StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, (int) $id_product_attribute);
                         }
                     } else {
@@ -673,7 +653,6 @@ class AdminProductsController extends AdminProductsControllerCore
                                 Tools::getValue('available_date_attribute'),
                                 Tools::getValue('attribute_isbn')
                             );
-                            StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, (int) $id_product_attribute);
                             StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, (int) $id_product_attribute);
                         }
                     } else {
@@ -1168,33 +1147,19 @@ class AdminProductsController extends AdminProductsControllerCore
             $id_product = (int) Tools::getValue('id_product');
             $id_product_attribute = (int) Tools::getValue('id_product_attribute');
             if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product))) {
-                if (($depends_on_stock = StockAvailable::dependsOnStock($id_product)) && StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute)) {
-                    $json = [
-                        'status' => 'error',
-                        'message' => $this->l('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.'),
-                    ];
+                $product->deleteAttributeCombination((int) $id_product_attribute);
+                $product->checkDefaultAttributes();
+                if (!$product->hasAttributes()) {
+                    $product->cache_default_attribute = 0;
+                    $product->update();
                 } else {
-                    $product->deleteAttributeCombination((int) $id_product_attribute);
-                    $product->checkDefaultAttributes();
-                    if (!$product->hasAttributes()) {
-                        $product->cache_default_attribute = 0;
-                        $product->update();
-                    } else {
-                        Product::updateDefaultAttribute($id_product);
-                    }
-                    if ($depends_on_stock && !Stock::deleteStockByIds($id_product, $id_product_attribute)) {
-                        $json = [
-                            'status' => 'error',
-                            'message' => $this->l('Error while deleting the stock'),
-                        ];
-                    } else {
-                        $json = [
-                            'status' => 'ok',
-                            'message' => $this->_conf[1],
-                            'id_product_attribute' => (int) $id_product_attribute,
-                        ];
-                    }
+                    Product::updateDefaultAttribute($id_product);
                 }
+                $json = [
+                    'status' => 'ok',
+                    'message' => $this->_conf[1],
+                    'id_product_attribute' => (int) $id_product_attribute,
+                ];
             } else {
                 $json = [
                     'status' => 'error',
@@ -1568,11 +1533,6 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->updateAccessories($this->object);
             $this->updatePackItems($this->object);
             $this->updateDownloadProduct($this->object);
-            if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                $this->object->advanced_stock_management = 1;
-                StockAvailable::setProductDependsOnStock($this->object->id, true, (int) $this->context->shop->id, 0);
-                $this->object->save();
-            }
             if (empty($this->errors)) {
                 $languages = Language::getLanguages(false);
                 if ($this->isProductFieldUpdated('category_box') && !$this->object->updateCategories(Tools::getValue('categoryBox'))) {
@@ -1584,14 +1544,6 @@ class AdminProductsController extends AdminProductsControllerCore
                     if (in_array($this->object->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $this->object->id);
                     }
-                }
-                if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    $warehouse_location_entity = new WarehouseProductLocation();
-                    $warehouse_location_entity->id_product = $this->object->id;
-                    $warehouse_location_entity->id_product_attribute = 0;
-                    $warehouse_location_entity->id_warehouse = Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
-                    $warehouse_location_entity->location = pSQL('');
-                    $warehouse_location_entity->save();
                 }
                 $this->object->setGroupReduction();
                 if (Tools::isSubmit('submitAddProductAndPreview')) {
@@ -1706,9 +1658,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if ($object->update()) {
                     if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($this->context->shop->id)) {
                         $out_of_stock = StockAvailable::outOfStock($existing_product->id, $existing_product->id_shop_default);
-                        $depends_on_stock = StockAvailable::dependsOnStock($existing_product->id, $existing_product->id_shop_default);
                         StockAvailable::setProductOutOfStock((int) $this->object->id, $out_of_stock, $this->context->shop->id);
-                        StockAvailable::setProductDependsOnStock((int) $this->object->id, $depends_on_stock, $this->context->shop->id);
                     }
                     PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int) $this->object->id, true, (int) $this->context->employee->id);
                     if (in_array($this->context->shop->getContext(), [Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL])) {
@@ -1741,18 +1691,13 @@ class AdminProductsController extends AdminProductsControllerCore
                             $this->processImageLegends();
                         }
                         $this->updatePackItems($object);
-                        if ($product_type_before == Product::PTYPE_SIMPLE && $object->getType() == Product::PTYPE_PACK) {
-                            StockAvailable::setProductDependsOnStock((int) $object->id, false);
-                        }
                         $this->updateDownloadProduct($object, 1);
                         $this->updateTags(Language::getLanguages(false), $object);
                         if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox'))) {
                             $this->errors[] = Tools::displayError('An error occurred while linking the object.') . ' <b>' . $this->table . '</b> ' . Tools::displayError('To categories');
                         }
                     }
-                    if ($this->isTabSubmitted('Warehouses')) {
-                        $this->processWarehouses();
-                    }
+
                     if (empty($this->errors)) {
                         if (in_array($object->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                             Search::indexation(false, $object->id);
@@ -2099,11 +2044,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (!method_exists($this, 'initForm' . $this->tab_display)) {
                     $this->tab_display = $this->default_tab;
                 }
-                $advanced_stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
                 foreach ($this->available_tabs as $product_tab => $value) {
-                    if ($advanced_stock_management_active == 0 && $product_tab == 'Warehouses') {
-                        continue;
-                    }
                     $product_tabs[$product_tab] = [
                         'id' => $product_tab,
                         'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (isset($this->tab_display_module) && 'module' . $this->tab_display_module == Tools::strtolower($product_tab))),
@@ -2662,61 +2603,6 @@ class AdminProductsController extends AdminProductsControllerCore
                 $this->object->id_supplier = $new_default_supplier;
                 $this->object->update();
             }
-        }
-    }
-
-    /*
-    * module: pscsx32412
-    * date: 2018-12-26 14:14:05
-    * version: 1
-    */
-    public function processWarehouses()
-    {
-        if ((int) Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int) $id_product = Tools::getValue('id_product')))) {
-            $attributes = $product->getAttributesResume($this->context->language->id);
-            if (empty($attributes)) {
-                $attributes[] = [
-                    'id_product_attribute' => 0,
-                    'attribute_designation' => '',
-                ];
-            }
-            $warehouses = Warehouse::getWarehouses(true);
-            $associated_warehouses_collection = WarehouseProductLocation::getCollection($product->id);
-            $elements_to_manage = [];
-            foreach ($attributes as $attribute) {
-                foreach ($warehouses as $warehouse) {
-                    $key = $warehouse['id_warehouse'] . '_' . $product->id . '_' . $attribute['id_product_attribute'];
-                    if (Tools::isSubmit('check_warehouse_' . $key)) {
-                        $location = Tools::getValue('location_warehouse_' . $key, '');
-                        $elements_to_manage[$key] = $location;
-                    }
-                }
-            }
-            foreach ($associated_warehouses_collection as $awc) {
-                if (!array_key_exists($awc->id_warehouse . '_' . $awc->id_product . '_' . $awc->id_product_attribute, $elements_to_manage)) {
-                    $awc->delete();
-                }
-            }
-            foreach ($elements_to_manage as $key => $location) {
-                $params = explode('_', $key);
-                $wpl_id = (int) WarehouseProductLocation::getIdByProductAndWarehouse((int) $params[1], (int) $params[2], (int) $params[0]);
-                if (empty($wpl_id)) {
-                    $warehouse_location_entity = new WarehouseProductLocation();
-                    $warehouse_location_entity->id_product = (int) $params[1];
-                    $warehouse_location_entity->id_product_attribute = (int) $params[2];
-                    $warehouse_location_entity->id_warehouse = (int) $params[0];
-                    $warehouse_location_entity->location = pSQL($location);
-                    $warehouse_location_entity->save();
-                } else {
-                    $warehouse_location_entity = new WarehouseProductLocation((int) $wpl_id);
-                    $location = pSQL($location);
-                    if ($location != $warehouse_location_entity->location) {
-                        $warehouse_location_entity->location = pSQL($location);
-                        $warehouse_location_entity->update();
-                    }
-                }
-            }
-            StockAvailable::synchronize((int) $id_product);
         }
     }
 
@@ -3828,7 +3714,6 @@ class AdminProductsController extends AdminProductsControllerCore
                     $data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
                     $data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
                     $data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
-                    $data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
                     $data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
                     $data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
                     $data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities($this->getFieldValue($product, 'available_date'), $this->context->language->id)) : '0000-00-00');
@@ -3955,130 +3840,6 @@ class AdminProductsController extends AdminProductsControllerCore
     * date: 2018-12-26 14:14:05
     * version: 1
     */
-    public function initFormQuantities($obj)
-    {
-        if (!$this->default_form_language) {
-            $this->getLanguages();
-        }
-        $data = $this->createTemplate($this->tpl_form);
-        $data->assign('default_form_language', $this->default_form_language);
-        if ($obj->id) {
-            if ($this->product_exists_in_shop) {
-                $attributes = $obj->getAttributesResume($this->context->language->id);
-                if (empty($attributes)) {
-                    $attributes[] = [
-                        'id_product_attribute' => 0,
-                        'attribute_designation' => '',
-                    ];
-                }
-                $available_quantity = [];
-                $product_designation = [];
-                foreach ($attributes as $attribute) {
-                    $available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct(
-                        (int) $obj->id,
-                                                                                                                            $attribute['id_product_attribute']
-                    );
-                    $product_designation[$attribute['id_product_attribute']] = rtrim(
-                        $obj->name[$this->context->language->id] . ' - ' . $attribute['attribute_designation'],
-                        ' - '
-                    );
-                }
-                $show_quantities = true;
-                $shop_context = Shop::getContext();
-                $shop_group = new ShopGroup((int) Shop::getContextShopGroupID());
-                if (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_ALL) {
-                    $show_quantities = false;
-                } elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP) {
-                    if (!$shop_group->share_stock) {
-                        $show_quantities = false;
-                    }
-                } else {
-                    if ($shop_group->share_stock) {
-                        $show_quantities = false;
-                    }
-                }
-                $data->assign('ps_stock_management', Configuration::get('PS_STOCK_MANAGEMENT'));
-                $data->assign('has_attribute', $obj->hasAttributes());
-                if (Combination::isFeatureActive()) {
-                    $data->assign('countAttributes', (int) Db::getInstance()->getValue('SELECT COUNT(id_product) FROM ' . _DB_PREFIX_ . 'product_attribute WHERE id_product = ' . (int) $obj->id));
-                } else {
-                    $data->assign('countAttributes', false);
-                }
-                $advanced_stock_management_warning = false;
-                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management) {
-                    $p_attributes = Product::getProductAttributesIds($obj->id);
-                    $warehouses = [];
-                    if (!$p_attributes) {
-                        $warehouses[] = Warehouse::getProductWarehouseList($obj->id, 0);
-                    }
-                    foreach ($p_attributes as $p_attribute) {
-                        $ws = Warehouse::getProductWarehouseList($obj->id, $p_attribute['id_product_attribute']);
-                        if ($ws) {
-                            $warehouses[] = $ws;
-                        }
-                    }
-                    $warehouses = Tools::arrayUnique($warehouses);
-                    if (empty($warehouses)) {
-                        $advanced_stock_management_warning = true;
-                    }
-                }
-                if ($advanced_stock_management_warning) {
-                    $this->displayWarning($this->l('If you wish to use the advanced stock management, you must:'));
-                    $this->displayWarning('- ' . $this->l('associate your products with warehouses.'));
-                    $this->displayWarning('- ' . $this->l('associate your warehouses with carriers.'));
-                    $this->displayWarning('- ' . $this->l('associate your warehouses with the appropriate shops.'));
-                }
-                $pack_quantity = null;
-                if (Pack::isPack($obj->id)) {
-                    $items = Pack::getItems((int) $obj->id, Configuration::get('PS_LANG_DEFAULT'));
-                    $pack_quantities = [];
-                    foreach ($items as $item) {
-                        if (!$item->isAvailableWhenOutOfStock((int) $item->out_of_stock)) {
-                            $pack_id_product_attribute = Product::getDefaultAttribute($item->id, 1);
-                            $pack_quantities[] = Product::getQuantity($item->id, $pack_id_product_attribute) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
-                        }
-                    }
-                    if (count($pack_quantities)) {
-                        $pack_quantity = $pack_quantities[0];
-                        foreach ($pack_quantities as $value) {
-                            if ($pack_quantity > $value) {
-                                $pack_quantity = $value;
-                            }
-                        }
-                    }
-                    if (!Warehouse::getPackWarehouses((int) $obj->id)) {
-                        $this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
-                    }
-                }
-                $data->assign([
-                    'attributes' => $attributes,
-                    'available_quantity' => $available_quantity,
-                    'pack_quantity' => $pack_quantity,
-                    'stock_management_active' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
-                    'product_designation' => $product_designation,
-                    'product' => $obj,
-                    'show_quantities' => $show_quantities,
-                    'order_out_of_stock' => Configuration::get('PS_ORDER_OUT_OF_STOCK'),
-                    'pack_stock_type' => Configuration::get('PS_PACK_STOCK_TYPE'),
-                    'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
-                    'token' => $this->token,
-                    'languages' => $this->_languages,
-                    'id_lang' => $this->context->language->id,
-                ]);
-            } else {
-                $this->displayWarning($this->l('You must save the product in this shop before managing quantities.'));
-            }
-        } else {
-            $this->displayWarning($this->l('You must save this product before managing quantities.'));
-        }
-        $this->tpl_form_vars['custom_form'] = $data->fetch();
-    }
-
-    /*
-    * module: pscsx32412
-    * date: 2018-12-26 14:14:05
-    * version: 1
-    */
     public function initFormSuppliers($obj)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -4135,51 +3896,6 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         } else {
             $this->displayWarning($this->l('You must save this product before managing suppliers.'));
-        }
-        $this->tpl_form_vars['custom_form'] = $data->fetch();
-    }
-
-    /*
-    * module: pscsx32412
-    * date: 2018-12-26 14:14:05
-    * version: 1
-    */
-    public function initFormWarehouses($obj)
-    {
-        $data = $this->createTemplate($this->tpl_form);
-        if ($obj->id) {
-            if ($this->product_exists_in_shop) {
-                $attributes = $obj->getAttributesResume($this->context->language->id);
-                if (empty($attributes)) {
-                    $attributes[] = [
-                        'id_product' => $obj->id,
-                        'id_product_attribute' => 0,
-                        'attribute_designation' => '',
-                    ];
-                }
-                $product_designation = [];
-                foreach ($attributes as $attribute) {
-                    $product_designation[$attribute['id_product_attribute']] = rtrim(
-                        $obj->name[$this->context->language->id] . ' - ' . $attribute['attribute_designation'],
-                        ' - '
-                    );
-                }
-                $warehouses = Warehouse::getWarehouses(true);
-                $associated_warehouses_collection = WarehouseProductLocation::getCollection($obj->id);
-                $data->assign([
-                    'attributes' => $attributes,
-                    'warehouses' => $warehouses,
-                    'associated_warehouses' => $associated_warehouses_collection,
-                    'product_designation' => $product_designation,
-                    'product' => $obj,
-                    'link' => $this->context->link,
-                    'token' => $this->token,
-                ]);
-            } else {
-                $this->displayWarning($this->l('You must save the product in this shop before managing warehouses.'));
-            }
-        } else {
-            $this->displayWarning($this->l('You must save this product before managing warehouses.'));
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
@@ -4250,38 +3966,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $product = new Product((int) Tools::getValue('id_product'), true);
         switch (Tools::getValue('actionQty')) {
-            case 'depends_on_stock':
-                if (Tools::getValue('value') === false) {
-                    die(json_encode(['error' => $this->l('Undefined value')]));
-                }
-                if ((int) Tools::getValue('value') != 0 && (int) Tools::getValue('value') != 1) {
-                    die(json_encode(['error' => $this->l('Incorrect value')]));
-                }
-                if (!$product->advanced_stock_management && (int) Tools::getValue('value') == 1) {
-                    die(json_encode(['error' => $this->l('Not possible if advanced stock management is disabled. ')]));
-                }
-                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-                    && (int) Tools::getValue('value') == 1
-                    && (
-                        Pack::isPack($product->id)
-                        && !Pack::allUsesAdvancedStockManagement($product->id)
-                        && (
-                            $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                            || $product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                            || (
-                                $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                                && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                                    || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
-                            )
-                        )
-                    )
-                ) {
-                    die(json_encode(['error' => $this->l('You cannot use advanced stock management for this pack because') . '</br>' .
-                        $this->l('- advanced stock management is not enabled for these products') . '</br>' .
-                        $this->l('- you have chosen to decrement products quantities.'), ]));
-                }
-                StockAvailable::setProductDependsOnStock($product->id, (int) Tools::getValue('value'));
-                break;
             case 'pack_stock_type':
                 $value = Tools::getValue('value');
                 if ($value === false) {
@@ -4290,22 +3974,6 @@ class AdminProductsController extends AdminProductsControllerCore
                 if ((int) $value != 0 && (int) $value != 1
                     && (int) $value != 2 && (int) $value != 3) {
                     die(json_encode(['error' => $this->l('Incorrect value')]));
-                }
-                if ($product->depends_on_stock
-                    && !Pack::allUsesAdvancedStockManagement($product->id)
-                    && (
-                        (int) $value == 1
-                        || (int) $value == 2
-                        || (
-                            (int) $value == 3
-                            && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                                || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
-                        )
-                    )
-                ) {
-                    die(json_encode(['error' => $this->l('You cannot use this stock management option because:') . '</br>' .
-                        $this->l('- advanced stock management is not enabled for these products') . '</br>' .
-                        $this->l('- advanced stock management is enabled for the pack'), ]));
                 }
                 Product::setPackStockType($product->id, $value);
                 break;
@@ -4331,21 +3999,6 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (!empty($error)) {
                     ob_end_clean();
                     die(json_encode(['error' => $error]));
-                }
-                break;
-            case 'advanced_stock_management':
-                if (Tools::getValue('value') === false) {
-                    die(json_encode(['error' => $this->l('Undefined value')]));
-                }
-                if ((int) Tools::getValue('value') != 1 && (int) Tools::getValue('value') != 0) {
-                    die(json_encode(['error' => $this->l('Incorrect value')]));
-                }
-                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int) Tools::getValue('value') == 1) {
-                    die(json_encode(['error' => $this->l('Not possible if advanced stock management is disabled. ')]));
-                }
-                $product->setAdvancedStockManagement((int) Tools::getValue('value'));
-                if (StockAvailable::dependsOnStock($product->id) == 1 && (int) Tools::getValue('value') == 0) {
-                    StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
                 break;
         }
@@ -4721,9 +4374,8 @@ class AdminProductsController extends AdminProductsControllerCore
             'Attachments' => $this->l('Attachments'),
             'Quantities' => $this->l('Quantities'),
             'Suppliers' => $this->l('Suppliers'),
-            'Warehouses' => $this->l('Warehouses'),
         ];
-        $this->available_tabs = ['Quantities' => 6, 'Warehouses' => 14];
+        $this->available_tabs = ['Quantities' => 6];
         if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
             $this->available_tabs = array_merge($this->available_tabs, [
                 'Informations' => 0,

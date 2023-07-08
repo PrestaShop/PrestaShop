@@ -141,12 +141,4 @@
   </div>
 </div>
 
-<div class="col-md-12">
-  <div id="warehouse_combination_collection" class="col-md-12 form-group" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
-    {% if asm_globally_activated and isNotVirtual and isChecked %}
-      {{ include('@PrestaShop/Admin/Product/ProductPage/Forms/form_warehouse_combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
-    {% endif %}
-  </div>
-</div>
-
 {{ renderhook('displayAdminProductsShippingStepBottom', { 'id_product': id_product }) }}

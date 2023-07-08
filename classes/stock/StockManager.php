@@ -28,6 +28,7 @@
  * StockManager : implementation of StockManagerInterface.
  *
  * @since 1.5.0
+ * @deprecated since 9.0 and will be removed in 10.0, stock is now managed by new logic
  */
 class StockManagerCore implements StockManagerInterface
 {
@@ -241,33 +242,6 @@ class StockManagerCore implements StockManagerInterface
         // Special case of a pack
         if (Pack::isPack((int) $id_product) && !$ignore_pack) {
             if (Validate::isLoadedObject($product = new Product((int) $id_product))) {
-                // Gets items
-                if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                    || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                    || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                        && Configuration::get('PS_PACK_STOCK_TYPE') > 0)
-                ) {
-                    $products_pack = Pack::getItems((int) $id_product, (int) Configuration::get('PS_LANG_DEFAULT'));
-                    // Foreach item
-                    foreach ($products_pack as $product_pack) {
-                        if ($product_pack->advanced_stock_management == 1) {
-                            $product_warehouses = Warehouse::getProductWarehouseList($product_pack->id, $product_pack->id_pack_product_attribute);
-                            $warehouse_stock_found = false;
-                            foreach ($product_warehouses as $product_warehouse) {
-                                if (!$warehouse_stock_found) {
-                                    if (Warehouse::exists($product_warehouse['id_warehouse'])) {
-                                        $current_warehouse = new Warehouse($product_warehouse['id_warehouse']);
-                                        $return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $current_warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order, $ignore_pack, $employee);
-
-                                        // The product was found on this warehouse. Stop the stock searching.
-                                        $warehouse_stock_found = !empty($return[count($return) - 1]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
                 if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
                     || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
                     || (
@@ -488,21 +462,6 @@ class StockManagerCore implements StockManagerInterface
                     $stock_available_quantity = $quantity_in_stock - $quantity;
                     $max_pack_quantity = max([0, floor($stock_available_quantity / $quantity_by_pack)]);
                     $quantity_delta = Pack::getQuantity($pack->id) - $max_pack_quantity;
-
-                    if ($pack->advanced_stock_management == 1 && $quantity_delta > 0) {
-                        $product_warehouses = Warehouse::getPackWarehouses($pack->id);
-                        $warehouse_stock_found = false;
-                        foreach ($product_warehouses as $product_warehouse) {
-                            if (!$warehouse_stock_found) {
-                                if (Warehouse::exists($product_warehouse)) {
-                                    $current_warehouse = new Warehouse($product_warehouse);
-                                    $return[] = $this->removeProduct($pack->id, null, $current_warehouse, $quantity_delta, $id_stock_mvt_reason, $is_usable, $id_order, 1);
-                                    // The product was found on this warehouse. Stop the stock searching.
-                                    $warehouse_stock_found = !empty($return[count($return) - 1]);
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }

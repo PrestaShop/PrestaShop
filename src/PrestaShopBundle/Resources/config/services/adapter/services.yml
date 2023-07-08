@@ -100,7 +100,6 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - "@prestashop.adapter.data_provider.product"
       - "@prestashop.adapter.data_provider.supplier"
-      - "@prestashop.adapter.data_provider.warehouse"
       - "@prestashop.adapter.data_provider.feature"
       - "@prestashop.adapter.data_provider.pack"
       - "@prestashop.adapter.shop.context"

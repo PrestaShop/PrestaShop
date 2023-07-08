@@ -669,7 +669,7 @@ class CartCore extends ObjectModel
                         stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
                         p.`available_date`, p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
                         CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0), IFNULL(cp.`id_customization`, 0)) AS unique_id, cp.id_address_delivery,
-                        product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
+                        ps.product_supplier_reference supplier_reference');
 
         // Build FROM
         $sql->from('cart_product', 'cp');
@@ -2448,7 +2448,6 @@ class CartCore extends ObjectModel
      *               0 => array(  // First package
      *               'product_list' => array(...),
      *               'carrier_list' => array(...),
-     *               'id_warehouse' => array(...),
      *               ),
      *               ),
      *               );
@@ -2457,120 +2456,52 @@ class CartCore extends ObjectModel
      */
     public function getPackageList($flush = false)
     {
+        // Resolve cache key, we will get the info from cache if present and we are not forcing a refresh
         $cache_key = (int) $this->id . '_' . (int) $this->id_address_delivery;
         if (isset(static::$cachePackageList[$cache_key]) && static::$cachePackageList[$cache_key] !== false && !$flush) {
             return static::$cachePackageList[$cache_key];
         }
 
+        // Load products, hard refresh if needed
         $product_list = $this->getProducts($flush);
-        // Step 1 : Get product informations (warehouse_list and carrier_list), count warehouse
-        // Determine the best warehouse to determine the packages
-        // For that we count the number of time we can use a warehouse for a specific delivery address
-        $warehouse_count_by_address = [];
 
-        $stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+        // Step 1 - We assign some basic information (load their carriers) to products and separate them by their stock quantities.
+        $grouped_by_stock = [];
 
         foreach ($product_list as &$product) {
+            // Add cart's delivery address to products that don't have it for some reason
             if ((int) $product['id_address_delivery'] == 0) {
                 $product['id_address_delivery'] = (int) $this->id_address_delivery;
             }
 
-            if (!isset($warehouse_count_by_address[$product['id_address_delivery']])) {
-                $warehouse_count_by_address[$product['id_address_delivery']] = [];
-            }
-
-            $product['warehouse_list'] = [];
-
-            if ($stock_management_active &&
-                (int) $product['advanced_stock_management'] == 1) {
-                $warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute'], $this->id_shop);
-                if (count($warehouse_list) == 0) {
-                    $warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
-                }
-                // Does the product is in stock ?
-                // If yes, get only warehouse where the product is in stock
-
-                $warehouse_in_stock = [];
-                $manager = StockManagerFactory::getManager();
-
-                foreach ($warehouse_list as $key => $warehouse) {
-                    $product_real_quantities = $manager->getProductRealQuantities(
-                        $product['id_product'],
-                        $product['id_product_attribute'],
-                        [$warehouse['id_warehouse']],
-                        true
-                    );
-
-                    if ($product_real_quantities > 0 || Pack::isPack((int) $product['id_product'])) {
-                        $warehouse_in_stock[] = $warehouse;
-                    }
-                }
-
-                if (!empty($warehouse_in_stock)) {
-                    $warehouse_list = $warehouse_in_stock;
-                    $product['in_stock'] = true;
-                } else {
-                    $product['in_stock'] = false;
-                }
-            } else {
-                //simulate default warehouse
-                $warehouse_list = [0 => ['id_warehouse' => 0]];
-                $product['in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']) > 0;
-            }
-
-            foreach ($warehouse_list as $warehouse) {
-                $product['warehouse_list'][$warehouse['id_warehouse']] = $warehouse['id_warehouse'];
-                if (!isset($warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']])) {
-                    $warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']] = 0;
-                }
-
-                ++$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']];
-            }
-        }
-        unset($product);
-
-        arsort($warehouse_count_by_address);
-
-        // Step 2 : Group product by warehouse
-        $grouped_by_warehouse = [];
-
-        foreach ($product_list as &$product) {
-            if (!isset($grouped_by_warehouse[$product['id_address_delivery']])) {
-                $grouped_by_warehouse[$product['id_address_delivery']] = [
+            // Initialize our array if it's the first product going to that address
+            if (!isset($grouped_by_stock[$product['id_address_delivery']])) {
+                $grouped_by_stock[$product['id_address_delivery']] = [
                     'in_stock' => [],
                     'out_of_stock' => [],
                 ];
             }
 
-            $product['carrier_list'] = [];
-            $id_warehouse = 0;
-            foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val) {
-                if (array_key_exists((int) $id_war, $product['warehouse_list'])) {
-                    $product['carrier_list'] = array_replace(
-                        $product['carrier_list'],
-                        Carrier::getAvailableCarrierList(
-                            new Product($product['id_product']),
-                            $id_war,
-                            $product['id_address_delivery'],
-                            null,
-                            $this
-                        )
-                    );
-                    if (!$id_warehouse) {
-                        $id_warehouse = (int) $id_war;
-                    }
-                }
+            // Get product's carriers - the product can have some specific limitations
+            $product['carrier_list'] = Carrier::getAvailableCarrierList(
+                new Product($product['id_product']),
+                0,
+                $product['id_address_delivery'],
+                null,
+                $this
+            );
+
+            // Apply fallback if no carrier is found
+            if (empty($product['carrier_list'])) {
+                $product['carrier_list'] = [0 => 0];
             }
 
-            if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse])) {
-                $grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse] = [];
-                $grouped_by_warehouse[$product['id_address_delivery']]['out_of_stock'][$id_warehouse] = [];
-            }
-
+            // If "send in-stock items first" is enabled and properly implemented sometime in the future, we separate products by stock
             if (!$this->allow_seperated_package) {
-                $key = 'in_stock';
+                $stockGroupKey = 'in_stock';
             } else {
-                $key = $product['in_stock'] ? 'in_stock' : 'out_of_stock';
+                $product['in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']) > 0;
+                $stockGroupKey = $product['in_stock'] ? 'in_stock' : 'out_of_stock';
                 $product_quantity_in_stock = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']);
                 if ($product['in_stock'] && $product['cart_quantity'] > $product_quantity_in_stock) {
                     $out_stock_part = $product['cart_quantity'] - $product_quantity_in_stock;
@@ -2578,55 +2509,56 @@ class CartCore extends ObjectModel
                     $product_bis['cart_quantity'] = $out_stock_part;
                     $product_bis['in_stock'] = 0;
                     $product['cart_quantity'] -= $out_stock_part;
-                    $grouped_by_warehouse[$product['id_address_delivery']]['out_of_stock'][$id_warehouse][] = $product_bis;
+                    $grouped_by_stock[$product['id_address_delivery']]['out_of_stock'][] = $product_bis;
                 }
             }
 
-            if (empty($product['carrier_list'])) {
-                $product['carrier_list'] = [0 => 0];
-            }
-
-            $grouped_by_warehouse[$product['id_address_delivery']][$key][$id_warehouse][] = $product;
+            $grouped_by_stock[$product['id_address_delivery']][$stockGroupKey][] = $product;
         }
         unset($product);
+        // Now we have them in two groups, those in stock and those not in stock.
 
-        // Step 3 : grouped product from grouped_by_warehouse by available carriers
+        // Step 2 - We divide those two groups once more into groups by their carriers.
         $grouped_by_carriers = [];
-        foreach ($grouped_by_warehouse as $id_address_delivery => $products_in_stock_list) {
+        foreach ($grouped_by_stock as $id_address_delivery => $products_in_stock_list) {
+            // Initialize our array if it's the first product going to that address
             if (!isset($grouped_by_carriers[$id_address_delivery])) {
                 $grouped_by_carriers[$id_address_delivery] = [
                     'in_stock' => [],
                     'out_of_stock' => [],
                 ];
             }
-            foreach ($products_in_stock_list as $key => $warehouse_list) {
-                if (!isset($grouped_by_carriers[$id_address_delivery][$key])) {
-                    $grouped_by_carriers[$id_address_delivery][$key] = [];
-                }
-                foreach ($warehouse_list as $id_warehouse => $product_list) {
-                    if (!isset($grouped_by_carriers[$id_address_delivery][$key][$id_warehouse])) {
-                        $grouped_by_carriers[$id_address_delivery][$key][$id_warehouse] = [];
-                    }
-                    foreach ($product_list as $product) {
-                        $package_carriers_key = implode(',', $product['carrier_list']);
 
-                        if (!isset($grouped_by_carriers[$id_address_delivery][$key][$id_warehouse][$package_carriers_key])) {
-                            $grouped_by_carriers[$id_address_delivery][$key][$id_warehouse][$package_carriers_key] = [
-                                'product_list' => [],
-                                'carrier_list' => $product['carrier_list'],
-                                'warehouse_list' => $product['warehouse_list'],
-                            ];
-                        }
+            foreach ($products_in_stock_list as $key => $product_list) {
+                foreach ($product_list as $product) {
+                    // We construct unique key by combining IDs of their carriers
+                    $package_carriers_key = implode(',', $product['carrier_list']);
 
-                        $grouped_by_carriers[$id_address_delivery][$key][$id_warehouse][$package_carriers_key]['product_list'][] = $product;
+                    // Initialize our array if it's the first product with this combination of these carriers
+                    if (!isset($grouped_by_carriers[$id_address_delivery][$key][$package_carriers_key])) {
+                        $grouped_by_carriers[$id_address_delivery][$key][$package_carriers_key] = [
+                            'product_list' => [],
+                            'carrier_list' => $product['carrier_list'],
+                        ];
                     }
+
+                    // Add this product to this carrier combination group
+                    $grouped_by_carriers[$id_address_delivery][$key][$package_carriers_key]['product_list'][] = $product;
                 }
             }
         }
+        // Now we have them in two groups, those in stock and those not in stock, then grouped by their common carriers.
 
+        /*
+         * Step 3 - merge product from grouped_by_carriers into $package to minimize the number of package.
+         * Example:
+         * Product A can be sent with carriers A and B
+         * Product B can be sent with carriers A and C
+         * Resulting package will be 1 with carrier A
+         */
         $package_list = [];
-        // Step 4 : merge product from grouped_by_carriers into $package to minimize the number of package
         foreach ($grouped_by_carriers as $id_address_delivery => $products_in_stock_list) {
+            // Initialize our array if it's the first product going to that address
             if (!isset($package_list[$id_address_delivery])) {
                 $package_list[$id_address_delivery] = [
                     'in_stock' => [],
@@ -2634,67 +2566,57 @@ class CartCore extends ObjectModel
                 ];
             }
 
-            foreach ($products_in_stock_list as $key => $warehouse_list) {
-                if (!isset($package_list[$id_address_delivery][$key])) {
-                    $package_list[$id_address_delivery][$key] = [];
-                }
-                // Count occurance of each carriers to minimize the number of packages
-                $carrier_count = [];
-                foreach ($warehouse_list as $id_warehouse => $products_grouped_by_carriers) {
-                    foreach ($products_grouped_by_carriers as $data) {
-                        foreach ($data['carrier_list'] as $id_carrier) {
-                            if (!isset($carrier_count[$id_carrier])) {
-                                $carrier_count[$id_carrier] = 0;
-                            }
-                            ++$carrier_count[$id_carrier];
+            // Count occurance of each carriers to minimize the number of packages
+            $carrier_count = [];
+            foreach ($products_in_stock_list as $key => $products_grouped_by_carriers) {
+                foreach ($products_grouped_by_carriers as $data) {
+                    foreach ($data['carrier_list'] as $id_carrier) {
+                        if (!isset($carrier_count[$id_carrier])) {
+                            $carrier_count[$id_carrier] = 0;
                         }
+                        ++$carrier_count[$id_carrier];
                     }
                 }
-                arsort($carrier_count);
-                foreach ($warehouse_list as $id_warehouse => $products_grouped_by_carriers) {
-                    if (!isset($package_list[$id_address_delivery][$key][$id_warehouse])) {
-                        $package_list[$id_address_delivery][$key][$id_warehouse] = [];
-                    }
-                    foreach ($products_grouped_by_carriers as $data) {
-                        foreach ($carrier_count as $id_carrier => $rate) {
-                            if (array_key_exists($id_carrier, $data['carrier_list'])) {
-                                if (!isset($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier])) {
-                                    $package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier] = [
-                                        'carrier_list' => $data['carrier_list'],
-                                        'warehouse_list' => $data['warehouse_list'],
-                                        'product_list' => [],
-                                    ];
-                                }
-                                $package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'] =
-                                    array_intersect($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'], $data['carrier_list']);
-                                $package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'] =
-                                    array_merge($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'], $data['product_list']);
-
-                                break;
+            }
+            arsort($carrier_count);
+            foreach ($products_in_stock_list as $key => $products_grouped_by_carriers) {
+                foreach ($products_grouped_by_carriers as $data) {
+                    foreach ($carrier_count as $id_carrier => $rate) {
+                        if (array_key_exists($id_carrier, $data['carrier_list'])) {
+                            if (!isset($package_list[$id_address_delivery][$key][$id_carrier])) {
+                                $package_list[$id_address_delivery][$key][$id_carrier] = [
+                                    'carrier_list' => $data['carrier_list'],
+                                    'product_list' => [],
+                                ];
                             }
+                            $package_list[$id_address_delivery][$key][$id_carrier]['carrier_list'] =
+                                array_intersect($package_list[$id_address_delivery][$key][$id_carrier]['carrier_list'], $data['carrier_list']);
+                            $package_list[$id_address_delivery][$key][$id_carrier]['product_list'] =
+                                array_merge($package_list[$id_address_delivery][$key][$id_carrier]['product_list'], $data['product_list']);
+
+                            break;
                         }
                     }
                 }
             }
         }
 
-        // Step 5 : Reduce depth of $package_list
+        // Step 4 - Reduce depth of $package_list
         $final_package_list = [];
         foreach ($package_list as $id_address_delivery => $products_in_stock_list) {
+            // Initialize our array if it's the first product going to that address
             if (!isset($final_package_list[$id_address_delivery])) {
                 $final_package_list[$id_address_delivery] = [];
             }
 
-            foreach ($products_in_stock_list as $key => $warehouse_list) {
-                foreach ($warehouse_list as $id_warehouse => $products_grouped_by_carriers) {
-                    foreach ($products_grouped_by_carriers as $data) {
-                        $final_package_list[$id_address_delivery][] = [
-                            'product_list' => $data['product_list'],
-                            'carrier_list' => $data['carrier_list'],
-                            'warehouse_list' => $data['warehouse_list'],
-                            'id_warehouse' => $id_warehouse,
-                        ];
-                    }
+            foreach ($products_in_stock_list as $products_grouped_by_carriers) {
+                foreach ($products_grouped_by_carriers as $data) {
+                    $final_package_list[$id_address_delivery][] = [
+                        'product_list' => $data['product_list'],
+                        'carrier_list' => $data['carrier_list'],
+                        'warehouse_list' => [0 => 0], // For backward compatibility - not used
+                        'id_warehouse' => 0, // For backward compatibility - not used
+                    ];
                 }
             }
         }
@@ -2704,25 +2626,15 @@ class CartCore extends ObjectModel
         return $final_package_list;
     }
 
+    /**
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     public function getPackageIdWarehouse($package, $id_carrier = null)
     {
-        if ($id_carrier === null) {
-            if (isset($package['id_carrier'])) {
-                $id_carrier = (int) $package['id_carrier'];
-            }
-        }
-
-        if ($id_carrier == null) {
-            return $package['id_warehouse'];
-        }
-
-        foreach ($package['warehouse_list'] as $id_warehouse) {
-            $warehouse = new Warehouse((int) $id_warehouse);
-            $available_warehouse_carriers = $warehouse->getCarriers();
-            if (in_array($id_carrier, $available_warehouse_carriers)) {
-                return (int) $id_warehouse;
-            }
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
         return 0;
     }
@@ -4040,23 +3952,6 @@ class CartCore extends ObjectModel
         }
 
         foreach ($this->getProducts() as $product) {
-            if (
-                !$this->allow_seperated_package
-                && !$product['allow_oosp']
-                && StockAvailable::dependsOnStock($product['id_product'])
-                && $product['advanced_stock_management']
-                && (bool) Context::getContext()->customer->isLogged()
-            ) {
-                $delivery = $this->getDeliveryOption();
-                if (!empty($delivery)) {
-                    $product['stock_quantity'] = StockManager::getStockByCarrier(
-                        (int) $product['id_product'],
-                        (int) $product['id_product_attribute'],
-                        $delivery
-                    );
-                }
-            }
-
             if (
                 !$product['active'] ||
                 !$product['available_for_order'] ||

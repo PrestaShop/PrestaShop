@@ -2135,7 +2135,7 @@ class AdminControllerCore extends Controller
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || !$tab['enabled']
-                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminStock'
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
 

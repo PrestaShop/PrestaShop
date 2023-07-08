@@ -49,7 +49,6 @@ final class DeleteEmployeeHandler extends AbstractEmployeeHandler implements Del
         $this->assertEmployeeWasFoundById($employeeId, $employee);
         $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
         $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
-        $this->assertEmployeeDoesNotManageWarehouse($employee);
 
         if (!$employee->delete()) {
             throw new CannotDeleteEmployeeException($employeeId, sprintf('Cannot delete employee with id "%s".', $employeeId->getValue()));

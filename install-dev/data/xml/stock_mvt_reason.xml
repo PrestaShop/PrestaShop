@@ -9,9 +9,14 @@
     <stock_mvt_reason id="Customer_Order" sign="-1"/>
     <stock_mvt_reason id="Regulation_following_an_inventory_of_stock" sign="-1"/>
     <stock_mvt_reason id="Regulation_following_an_inventory_of_stock_1" sign="1"/>
+
+    <!-- 3 reasons below are unused, but kept only to keep proper IDs. They are tied to IDs in configuration table. -->
+    <!-- If you delete them, make sure to change PS_STOCK_MVT_INC_EMPLOYEE_EDITION from 11 to 8 for example. -->
     <stock_mvt_reason id="Transfer_to_another_warehouse" sign="-1"/>
     <stock_mvt_reason id="Transfer_from_another_warehouse" sign="1"/>
     <stock_mvt_reason id="Supply_Order" sign="1"/>
+    <!-- / -->
+
     <stock_mvt_reason id="Customer_Order_1" sign="1"/>
     <stock_mvt_reason id="Product_Return" sign="1"/>
     <stock_mvt_reason id="Employee_Edition" sign="1"/>

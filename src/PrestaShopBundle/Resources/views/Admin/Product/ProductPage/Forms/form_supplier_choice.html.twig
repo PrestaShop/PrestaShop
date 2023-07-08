@@ -26,19 +26,11 @@
   <div id="form_step6_suppliers_custom_fields">
     <h2>{{ form.suppliers.vars.label }}</h2>
     <div class="mb-1">
-      <div class="alert expandable-alert alert-info" role="alert">
-        <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#suppliersInfo" aria-expanded="false" aria-controls="collapseDanger">
-          {{ 'Read more'|trans({}, 'Admin.Actions')|raw }}
-        </button>
+      <div class="alert alert-info" role="alert">
         <p class="alert-text">
           {{ 'This interface allows you to specify the suppliers of the current product and its combinations, if any.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
           {{ 'You can specify supplier references according to previously associated suppliers.'|trans({}, 'Admin.Catalog.Help')|raw }}
         </p>
-        <div class="alert-more collapse" id="suppliersInfo">
-          <p>
-            {{ 'When using the advanced stock management tool (see Shop Parameters > Products settings), the values you define (price, references) will be used in supply orders.'|trans({}, 'Admin.Catalog.Help')|raw }}
-          </p>
-        </div>
       </div>
     </div>
 

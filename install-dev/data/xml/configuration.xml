@@ -455,9 +455,6 @@
   <configuration id="PS_STOCK_MVT_DEC_REASON_DEFAULT" name="PS_STOCK_MVT_DEC_REASON_DEFAULT">
     <value>2</value>
   </configuration>
-  <configuration id="PS_ADVANCED_STOCK_MANAGEMENT" name="PS_ADVANCED_STOCK_MANAGEMENT">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_STOCK_MVT_TRANSFER_TO" name="PS_STOCK_MVT_TRANSFER_TO">
     <value>7</value>
   </configuration>
