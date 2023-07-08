@@ -4994,7 +4994,7 @@ class CartCore extends ObjectModel
      * Checks if all products of the cart are still available in the current state. They might have been converted to another
      * type of product since then, ordering disabled or deactivated.
      *
-     * @return bool False if one of the product not publicly orderable anymore.
+     * @return bool false if one of the product not publicly orderable anymore
      */
     public function checkAllProductsAreStillAvailableInThisState()
     {
