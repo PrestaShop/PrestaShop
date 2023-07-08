@@ -4991,10 +4991,10 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Are all products of the Cart still available in the current state ? They might have been converted to another
-     * type of product since then
+     * Checks if all products of the cart are still available in the current state. They might have been converted to another
+     * type of product since then, ordering disabled or deactivated.
      *
-     * @return bool False if one of the products from the cart has been changed into a new type of product
+     * @return bool False if one of the product not publicly orderable anymore.
      */
     public function checkAllProductsAreStillAvailableInThisState()
     {
@@ -5002,7 +5002,13 @@ class CartCore extends ObjectModel
             $currentProduct = new Product();
             $currentProduct->hydrate($product);
 
+            // Check if the product combinations state is still valid
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return false;
+            }
+
+            // Check if product is still active and possible to order
+            if (!$product['active'] || !$product['available_for_order']) {
                 return false;
             }
         }
