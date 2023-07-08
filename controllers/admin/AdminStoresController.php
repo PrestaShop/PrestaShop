@@ -24,6 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
+
 /**
  * @property Store $object
  */
@@ -415,23 +419,45 @@ class AdminStoresControllerCore extends AdminController
         // Should we generate high DPI images?
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
+        /*
+        * Let's resolve which formats we will use for image generation.
+        * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+        *
+        * In case of .jpg images, the actual format inside is decided by ImageManager.
+        */
+        $sfContainer = SymfonyContainer::getInstance();
+        if ($sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+            $configuredImageFormats = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
+        } else {
+            $configuredImageFormats = ['jpg'];
+        }
+
         if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
-                ImageManager::resize(
-                    _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
-                    _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.jpg',
-                    (int) $image_type['width'],
-                    (int) $image_type['height']
-                );
-
-                if ($generate_hight_dpi_images) {
+                foreach ($configuredImageFormats as $imageFormat) {
+                    // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                    // For webp and avif extensions, we want it to follow our command and ignore the original format.
+                    $forceFormat = ($imageFormat !== 'jpg');
                     ImageManager::resize(
                         _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
-                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.jpg',
-                        (int) $image_type['width'] * 2,
-                        (int) $image_type['height'] * 2
+                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.' . $imageFormat,
+                        (int) $image_type['width'],
+                        (int) $image_type['height'],
+                        $imageFormat,
+                        $forceFormat
                     );
+
+                    if ($generate_hight_dpi_images) {
+                        ImageManager::resize(
+                            _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
+                            _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.' . $imageFormat,
+                            (int) $image_type['width'] * 2,
+                            (int) $image_type['height'] * 2,
+                            $imageFormat,
+                            $forceFormat
+                        );
+                    }
                 }
             }
         }
