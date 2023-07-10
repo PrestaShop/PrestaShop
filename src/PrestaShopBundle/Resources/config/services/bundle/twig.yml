@@ -64,6 +64,9 @@ services:
     arguments:
       - '@prestashop.core.admin.multistore'
 
+  PrestaShopBundle\Twig\Layout\LayoutBuilder:
+    autowire: true
+
   # Deprecated since 9.0
   prestashop.twig.modules.loader:
     alias: PrestaShopBundle\Twig\Locator\ModuleTemplateLoader
