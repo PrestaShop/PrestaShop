@@ -200,7 +200,7 @@ class Taxes extends BOBasePage {
         await this.setValue(page, this.taxesFilterColumnInput(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.taxesFilterColumnInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.taxesFilterColumnInput(filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
