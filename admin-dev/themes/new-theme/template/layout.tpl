@@ -152,7 +152,10 @@
   <div class="mobile-layer"></div>
 
   {if $display_footer}
-    {include file='footer.tpl'}
+      {render_template
+        smarty_template="footer.tpl"
+        twig_template="@PrestaShop/Admin/Layout/footer.html.twig"
+      }
   {/if}
 {/if}
 
