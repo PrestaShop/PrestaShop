@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Twig\Layout\LayoutBuilder;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -42,21 +43,12 @@ use Twig\TwigFunction;
  */
 class LayoutExtension extends AbstractExtension implements GlobalsInterface
 {
-    /**
-     * Constructor.
-     *
-     * Keeps the Context to look inside language settings.
-     *
-     * @param LegacyContext $context
-     * @param string $environment
-     * @param ShopConfigurationInterface $configuration
-     * @param CurrencyDataProvider $currencyDataProvider
-     */
     public function __construct(
         private readonly LegacyContext $context,
         private readonly string $environment,
         private readonly ShopConfigurationInterface $configuration,
-        private readonly CurrencyDataProvider $currencyDataProvider
+        private readonly CurrencyDataProvider $currencyDataProvider,
+        private readonly LayoutBuilder $layoutBuilder
     ) {
     }
 
@@ -189,6 +181,8 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
 EOF;
         }
 
+        $builderMetaTitle = $this->layoutBuilder->getMetaTitle();
+
         $layout = $this->context->getLegacyLayout(
             $controllerName,
             $title,
@@ -199,7 +193,7 @@ EOF;
             $enableSidebar,
             $helpLink,
             $jsRouterMetadata,
-            $metaTitle,
+            $metaTitle ?: $builderMetaTitle,
             $useRegularH1Structure,
             $baseLayout
         );

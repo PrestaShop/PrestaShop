@@ -106,6 +106,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use PrestaShopBundle\Twig\Layout\LayoutBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
@@ -128,6 +129,11 @@ class OrderController extends FrameworkBundleAdminController
      * Options used for the number of products per page
      */
     public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+
+    public function __construct(
+        private LayoutBuilder $layoutBuilder
+    ) {
+    }
 
     /**
      * Shows list of orders
@@ -545,6 +551,10 @@ class OrderController extends FrameworkBundleAdminController
                 ]
             )
         );
+
+        $this->layoutBuilder
+            ->setMetaTitle($metatitle)
+        ;
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
