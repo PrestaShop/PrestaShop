@@ -43,7 +43,7 @@ const editProductData = new ProductFaker({
   minimumQuantity: 1,
   status: true,
   attributes: {
-    color: ['Grey', 'Taupe', 'Red'],
+    color: ['Gray', 'Taupe', 'Red'],
     size: ['L', 'XL'],
   },
 });
