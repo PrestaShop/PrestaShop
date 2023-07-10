@@ -157,7 +157,11 @@
 {/if}
 
 {if isset($php_errors)}
-  {include file="error.tpl"}
+    {render_template
+      smarty_template="error.tpl"
+      twig_template="@PrestaShop/Admin/Layout/php_errors.html.twig"
+      php_errors=$php_errors
+    }
 {/if}
 
 {if (!isset($lite_display) || (isset($lite_display) && !$lite_display))}
