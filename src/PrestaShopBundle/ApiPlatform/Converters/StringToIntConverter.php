@@ -30,12 +30,12 @@ namespace PrestaShopBundle\ApiPlatform\Converters;
 
 class StringToIntConverter implements ConverterInterface
 {
-    public function convert($value): int
+    public function convert(mixed $value): int
     {
         return (int) $value;
     }
 
-    public function supports($type): bool
+    public function supports(string $type): bool
     {
         return 'int' === $type;
     }

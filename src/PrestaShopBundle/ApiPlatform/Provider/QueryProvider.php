@@ -32,6 +32,9 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
@@ -41,7 +44,7 @@ class QueryProvider implements ProviderInterface
 {
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly Serializer $apiPlatformSerializer,
+        private readonly SerializerInterface $apiPlatformSerializer,
         private readonly iterable $converters,
     ) {
     }
@@ -49,6 +52,7 @@ class QueryProvider implements ProviderInterface
     /**
      * @throws \ReflectionException
      * @throws \Exception
+     * @throws ExceptionInterface
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
@@ -60,29 +64,7 @@ class QueryProvider implements ProviderInterface
             throw new NoExtraPropertiesFoundException();
         }
 
-        $reflectionMethod = new \ReflectionMethod($queryClass, '__construct');
-        $constructParameters = $reflectionMethod->getParameters();
-
-        $params = [];
-
-        foreach ($constructParameters as $parameter) {
-            if (!isset($uriVariables[$parameter->name]) && !$parameter->isDefaultValueAvailable()) {
-                throw new \Exception(sprintf('Required parameter %s is not present', $parameter->name));
-            }
-
-            if (isset($uriVariables[$parameter->name])) {
-                $uriValue = $uriVariables[$parameter->name];
-                //Transform parameter type if needed
-                if ($parameter->getType() instanceof \ReflectionNamedType && $parameter->getType()->getName() !== gettype($uriValue)) {
-                    $uriValue = $this->findConverter($parameter->getType()->getName())->convert($uriValue);
-                }
-                $params[$parameter->getPosition()] = $uriValue;
-
-                unset($uriVariables[$parameter->name]);
-            }
-        }
-
-        $query = new $queryClass(...$params);
+        $query = $this->apiPlatformSerializer->denormalize($uriVariables, $queryClass, null, [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true]);
 
         //Try to call setter on additional query params
         if (count($uriVariables)) {

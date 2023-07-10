@@ -101,7 +101,7 @@ class QueryProviderTest extends TestCase
     /**
      * @return FoundProduct[]
      */
-    public function createsSearchProductResultBasedOnQuery(SearchProducts $query): array
+    private function createsSearchProductResultBasedOnQuery(SearchProducts $query): array
     {
         if ($query->getPhrase() === 'mug') {
             return [
@@ -132,10 +132,6 @@ class QueryProviderTest extends TestCase
         $get = new Get();
         $get = $get->withExtraProperties([
             'query' => SearchProducts::class,
-            'paramConverters' => [
-                'resultsLimit' => StringToIntConverter::class,
-                'orderId' => StringToIntConverter::class,
-            ],
         ]);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'mug', 'resultsLimit' => 10, 'isoCode' => 'EUR']);
         self::assertCount(1, $searchProducts);
