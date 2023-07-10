@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use Address;
 use PrestaShop\PrestaShop\Adapter\Supplier\AbstractSupplierHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\EditSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -38,6 +39,7 @@ use Supplier;
 /**
  * Handles command which edits supplier using legacy object model
  */
+#[AsCommandHandler]
 final class EditSupplierHandler extends AbstractSupplierHandler implements EditSupplierHandlerInterface
 {
     /**

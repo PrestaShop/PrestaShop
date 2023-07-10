@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForEditingHandlerInterface;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandlerInterface
 {
     /**

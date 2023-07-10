@@ -4,13 +4,11 @@ services:
 
   prestashop.adapter.module.command_handler.bulk_toggle_module_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Module\CommandHandler\BulkToggleModuleStatusHandler
+    autoconfigure: true
     arguments:
       - '@prestashop.module.manager'
       - '@prestashop.adapter.legacy.logger'
       - '@prestashop.core.cache.clearer.cache_clearer_chain'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand'
 
   prestashop.adapter.module.self_configurator:
     class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator

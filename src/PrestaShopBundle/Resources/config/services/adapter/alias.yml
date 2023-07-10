@@ -11,41 +11,25 @@ services:
       $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAliasHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\GetAliasForEditingHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\DeleteAliasHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkDeleteAliasHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasStatusHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkUpdateAliasStatusHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\SearchForSearchTermHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm
+    autoconfigure: true

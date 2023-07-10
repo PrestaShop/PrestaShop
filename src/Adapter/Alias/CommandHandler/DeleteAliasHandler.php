@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\DeleteAliasHandlerInterface;
 
+#[AsCommandHandler]
 class DeleteAliasHandler implements DeleteAliasHandlerInterface
 {
     public function __construct(private readonly AliasRepository $aliasRepository)

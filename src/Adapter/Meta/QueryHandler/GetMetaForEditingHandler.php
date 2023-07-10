@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\QueryHandler;
 
 use Meta;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetMetaForEditingHandlerInterface;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\EditableMeta;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterface
 {
     /**

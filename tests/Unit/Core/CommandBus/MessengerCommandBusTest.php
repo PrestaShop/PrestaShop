@@ -24,17 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler;
+namespace Tests\Unit\Core\CommandBus;
 
-use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\CommandBus\MessengerCommandBus;
+use Symfony\Component\Messenger\MessageBusInterface;
 
-/**
- * Interface GenerateThemeMailsHandlerInterface
- */
-interface GenerateThemeMailTemplatesCommandHandlerInterface
+class MessengerCommandBusTest extends TestCase
 {
-    /**
-     * @param GenerateThemeMailTemplatesCommand $command
-     */
-    public function handle(GenerateThemeMailTemplatesCommand $command);
+    public function testIsValidImplementation()
+    {
+        $commandBudAdapter = new MessengerCommandBus($this->createMock(MessageBusInterface::class));
+
+        $this->assertInstanceOf(CommandBusInterface::class, $commandBudAdapter);
+    }
 }

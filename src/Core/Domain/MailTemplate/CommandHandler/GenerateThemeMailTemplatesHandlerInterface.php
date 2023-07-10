@@ -24,19 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\Core\CommandBus;
+namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler;
 
-use League\Tactician\CommandBus;
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 
-class TacticianCommandBusAdapterTest extends TestCase
+/**
+ * Interface GenerateThemeMailTemplatesHandlerInterface
+ */
+interface GenerateThemeMailTemplatesHandlerInterface
 {
-    public function testIsValidImplementation()
-    {
-        $commandBudAdapter = new TacticianCommandBusAdapter($this->createMock(CommandBus::class));
-
-        $this->assertInstanceOf(CommandBusInterface::class, $commandBudAdapter);
-    }
+    /**
+     * @param GenerateThemeMailTemplatesCommand $command
+     */
+    public function handle(GenerateThemeMailTemplatesCommand $command);
 }

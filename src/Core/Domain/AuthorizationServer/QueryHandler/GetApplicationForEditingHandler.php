@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableAp
  *
  * @experimental
  */
+#[AsQueryHandler]
 class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
 {
     /**

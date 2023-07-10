@@ -3,19 +3,15 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\AddVirtualProductFileHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\UpdateVirtualProductFileHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater:
     autowire: true
@@ -37,8 +33,6 @@ services:
       - !php/const _PS_DOWNLOAD_DIR_
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\DeleteVirtualProductFileHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand

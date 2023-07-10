@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
 {
     /**

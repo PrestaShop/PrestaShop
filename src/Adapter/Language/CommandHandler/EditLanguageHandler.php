@@ -30,6 +30,7 @@ use Configuration;
 use Db;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\EditLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditLanguageHandler extends AbstractLanguageHandler implements EditLanguageHandlerInterface
 {
     /**

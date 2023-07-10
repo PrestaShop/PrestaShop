@@ -5,54 +5,40 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\AddProductImageHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\UpdateProductImageHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
       - '@PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\DeleteProductImageHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\SetProductImagesForAllShopHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImagesHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetShopProductImagesHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImageHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator: ~
 

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ConfigurationMap;
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ConfigurationMap;
 /**
  * Saves the showcase card status to keep it closed
  */
+#[AsCommandHandler]
 final class CloseShowcaseCardHandler implements CloseShowcaseCardHandlerInterface
 {
     /**

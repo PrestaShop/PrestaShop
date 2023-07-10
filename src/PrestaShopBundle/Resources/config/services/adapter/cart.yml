@@ -4,127 +4,93 @@ services:
 
   prestashop.adapter.cart.command_handler.create_empty_customer_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\CreateEmptyCustomerCartHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand'
+    autoconfigure: true
 
   prestashop.adapter.cart.command_handler.update_cart_currency_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartCurrencyHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand'
+    autoconfigure: true
 
   prestashop.adapter.cart.command_handler.update_cart_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartLanguageHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand'
+    autoconfigure: true
 
   prestashop.adapter.cart.command_handler.update_cart_addresses_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartAddressesHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.command_handler.update_cart_carrier_handler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand'
 
   prestashop.adapter.cart.command_handler.update_delivery_options_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartDeliverySettingsHandler'
+    autoconfigure: true
     arguments:
       - '@translator'
       - '@prestashop.adapter.legacy.configuration'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand'
 
   prestashop.adapter.command_handler.update_product_quantity_in_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateProductQuantityInCartHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.context_state_manager'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand'
 
   prestashop.adapter.command_handler.update_cart_carrier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartCarrierHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.context_state_manager'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand'
 
   prestashop.adapter.command_handler.add_cart_rule_to_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCartRuleToCartHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.context_state_manager'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand'
 
   prestashop.adapter.command_handler.remove_cart_rule_from_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\RemoveCartRuleFromCartHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand'
+    autoconfigure: true
 
   prestashop.adapter.command_handler.remove_product_from_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\RemoveProductFromCartHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.context_state_manager'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand'
 
   prestashop.adapter.command_handler.update_product_price_in_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateProductPriceInCartHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand'
+    autoconfigure: true
 
   prestashop.adapter.command_handler.send_cart_to_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\SendCartToCustomerHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\SendCartToCustomerCommand'
+    autoconfigure: true
 
   prestashop.adapter.query_handler.get_cart_for_viewing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartForViewingHandler'
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\ImageManager'
       - "@prestashop.core.localization.locale.context_locale"
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing'
 
   prestashop.adapter.cart.query_handler.get_last_empty_customer_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetLastEmptyCustomerCartHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart'
+    autoconfigure: true
 
   prestashop.adapter.query_handler.get_cart_information_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartForOrderCreationHandler'
+    autoconfigure: true
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@=service("prestashop.adapter.legacy.context").getContext().link'
       - '@prestashop.adapter.context_state_manager'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_CARRIER_DEFAULT")'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation'
 
   prestashop.adapter.command_handler.add_customization_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCustomizationHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand'
+    autoconfigure: true
 
   prestashop.adapter.command_handler.add_product_to_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddProductToCartHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.command_handler.add_customization_handler'
       - '@prestashop.adapter.command_handler.update_product_quantity_in_cart_handler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand'

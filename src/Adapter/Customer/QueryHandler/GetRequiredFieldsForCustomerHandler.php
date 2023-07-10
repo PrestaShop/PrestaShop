@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetRequiredFieldsForCustomerHandlerInterface;
 
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetRequiredFieldsFor
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetRequiredFieldsForCustomerHandler implements GetRequiredFieldsForCustomerHandlerInterface
 {
     /**

@@ -30,10 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler;
 use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\CommandHandler\AddCustomerGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 
+#[AsCommandHandler]
 class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
 {
     /**

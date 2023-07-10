@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler;
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField as CustomizationFieldDTO;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 /**
  * Handles @see SetProductCustomizationFieldsCommand using legacy object model
  */
+#[AsCommandHandler]
 class SetProductCustomizationFieldsHandler implements SetProductCustomizationFieldsHandlerInterface
 {
     /**

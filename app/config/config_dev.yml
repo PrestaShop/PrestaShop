@@ -48,10 +48,3 @@ prestashop:
   addons:
     api_client:
       ttl: 300  # 5min
-
-tactician:
-  commandbus:
-    default:
-      middleware:
-        - prestashop.core.command_bus.middleware.command_register_middleware
-        - tactician.middleware.command_handler

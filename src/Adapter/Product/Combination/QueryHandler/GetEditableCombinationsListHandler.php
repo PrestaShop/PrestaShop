@@ -33,6 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 /**
  * Handles @see GetEditableCombinationsList using legacy object model
  */
+#[AsQueryHandler]
 final class GetEditableCombinationsListHandler implements GetEditableCombinationsListHandlerInterface
 {
     /**

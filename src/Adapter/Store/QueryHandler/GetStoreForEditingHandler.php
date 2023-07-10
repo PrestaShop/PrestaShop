@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShopException;
 
+#[AsQueryHandler]
 class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
 {
     /**

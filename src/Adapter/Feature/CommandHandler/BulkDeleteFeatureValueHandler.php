@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureValueExceptio
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 
+#[AsCommandHandler]
 class BulkDeleteFeatureValueHandler extends AbstractBulkCommandHandler implements BulkDeleteFeatureValueHandlerInterface
 {
     public function __construct(

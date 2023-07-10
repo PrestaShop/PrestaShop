@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Country\CountryRequiredFieldsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryRequiredFieldsHandlerInterface;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryRequiredFields;
 /**
  * Handles and provides country state requirements
  */
+#[AsQueryHandler]
 final class GetCountryRequiredFieldsHandler implements GetCountryRequiredFieldsHandlerInterface
 {
     /** @var CountryRequiredFieldsProviderInterface */

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
@@ -34,11 +35,12 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 
 /**
- * Class GenerateThemeMailTemplatesCommandHandler generates email templates with parameters provided
+ * Class GenerateThemeMailTemplatesHandler generates email templates with parameters provided
  * by GenerateThemeMailTemplatesCommand. If no output folders are defined by the command its output
  * folders are the default ones.
  */
-class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTemplatesCommandHandlerInterface
+#[AsCommandHandler]
+class GenerateThemeMailTemplatesHandler implements GenerateThemeMailTemplatesHandlerInterface
 {
     /** @var LanguageRepositoryInterface */
     private $languageRepository;

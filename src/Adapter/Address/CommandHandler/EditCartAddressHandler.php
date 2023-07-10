@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCartAddressHandlerInterface;
@@ -46,6 +47,7 @@ use PrestaShopException;
  * EditCartAddressHandler manages an address update, it then updates cart
  * relation to the newly created address.
  */
+#[AsCommandHandler]
 class EditCartAddressHandler implements EditCartAddressHandlerInterface
 {
     /**

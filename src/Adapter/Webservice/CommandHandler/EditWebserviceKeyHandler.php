@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Webservice\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\EditWebserviceKeyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\CommandHandler\EditWebserviceKeyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
@@ -39,6 +40,7 @@ use WebserviceKey;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditWebserviceKeyHandler extends AbstractWebserviceKeyHandler implements EditWebserviceKeyHandlerInterface
 {
     /**

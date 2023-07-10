@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Configuration\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\CommandHandler\SwitchDebugModeHandlerInterface;
 
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\CommandHandler\SwitchDebugMo
  *
  * @internal
  */
+#[AsCommandHandler]
 final class SwitchDebugModeHandler implements SwitchDebugModeHandlerInterface
 {
     /**

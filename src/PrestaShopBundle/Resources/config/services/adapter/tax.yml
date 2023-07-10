@@ -16,38 +16,28 @@ services:
   # Command handlers
   prestashop.adapter.tax.command_handler.delete_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\DeleteTaxHandler'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand' }
+    autoconfigure: true
 
   prestashop.adapter.tax.command_handler.toggle_tax_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\ToggleTaxStatusHandler'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand' }
+    autoconfigure: true
 
   prestashop.adapter.tax.command_handler.bulk_toggle_tax_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkToggleTaxStatusHandler'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand' }
+    autoconfigure: true
 
   prestashop.adapter.tax.command_handler.bulk_delete_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkDeleteTaxHandler'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand' }
+    autoconfigure: true
 
   prestashop.adapter.tax.query_handler.get_tax_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\QueryHandler\GetTaxForEditingHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing'
+    autoconfigure: true
 
   prestashop.adapter.tax.command_handler.edit_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\EditTaxHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand'
+    autoconfigure: true
 
   prestashop.adapter.tax.command_handler.add_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\AddTaxHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand'
+    autoconfigure: true

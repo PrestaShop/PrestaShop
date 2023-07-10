@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\BulkDeleteCategoriesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\FailedToDeleteCategoryE
 /**
  * Class BulkDeleteCategoriesHandler.
  */
+#[AsCommandHandler]
 final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler implements BulkDeleteCategoriesHandlerInterface
 {
     /**

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Zone\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Zone\QueryHandler\GetZoneForEditingHandlerInterface;
@@ -39,6 +40,7 @@ use Zone;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetZoneForEditingHandler implements GetZoneForEditingHandlerInterface
 {
     /**

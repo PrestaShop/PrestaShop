@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
 
 use Gender;
 use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\AddTitleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleException;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 /**
  * Handles creation of title
  */
+#[AsCommandHandler]
 class AddTitleHandler extends AbstractTitleHandler implements AddTitleHandlerInterface
 {
     /**

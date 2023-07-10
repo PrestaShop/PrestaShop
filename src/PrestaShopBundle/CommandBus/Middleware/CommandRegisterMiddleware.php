@@ -24,33 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\CommandBus;
+namespace PrestaShopBundle\CommandBus\Middleware;
 
-use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Handler\HandlersLocatorInterface;
+use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
+use Symfony\Component\Messenger\Middleware\StackInterface;
 
 /**
- * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract.
+ * Registers every command that was executed in system
  */
-final class TacticianCommandBusAdapter implements CommandBusInterface
+final class CommandRegisterMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var CommandBus
-     */
-    private $bus;
-
-    /**
-     * @param CommandBus $bus
-     */
-    public function __construct(CommandBus $bus)
-    {
-        $this->bus = $bus;
+    public function __construct(
+        private readonly HandlersLocatorInterface $handlersLocator,
+        private readonly ExecutedCommandRegistry $executedCommandRegistry
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handle($command)
+    public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
-        return $this->bus->handle($command);
+        $command = $envelope->getMessage();
+        $handlers = $this->handlersLocator->getHandlers($envelope);
+
+        foreach ($handlers as $handler) {
+            $this->executedCommandRegistry->register($command, $handler);
+        }
+
+        return $stack->next()->handle($envelope, $stack);
     }
 }

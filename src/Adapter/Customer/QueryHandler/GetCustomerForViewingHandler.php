@@ -34,6 +34,7 @@ use Gender;
 use Group;
 use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
@@ -58,6 +59,7 @@ use Tools;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetCustomerForViewingHandler implements GetCustomerForViewingHandlerInterface
 {
     /**

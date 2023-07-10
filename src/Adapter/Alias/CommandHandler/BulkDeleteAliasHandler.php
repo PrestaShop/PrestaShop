@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\BulkDeleteAliasHandlerInterface;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 /**
  * Handles command which deletes aliases in bulk action
  */
+#[AsCommandHandler]
 class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkDeleteAliasHandlerInterface
 {
     public function __construct(protected AliasRepository $aliasRepository)

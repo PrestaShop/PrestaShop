@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasHandlerInterface;
 
+#[AsCommandHandler]
 class UpdateAliasHandler implements UpdateAliasHandlerInterface
 {
     public function __construct(
