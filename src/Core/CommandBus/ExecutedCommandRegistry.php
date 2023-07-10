@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandTypeParser;
-use PrestaShopBundle\CommandBus\MessengerCommandBus;
 
 /**
  * Stores information about executed commands/queries
@@ -115,9 +114,9 @@ final class ExecutedCommandRegistry
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::BACKTRACE_LIMIT);
 
-        foreach ($trace as $key => $step) {
-            if (is_a($step['class'], MessengerCommandBus::class, true)
-                && $step['function'] === 'handle'
+        foreach ($trace as $step) {
+            if ($step['function'] === 'handle'
+                && is_a($step['class'], CommandBusInterface::class, true)
             ) {
                 return [
                     'file' => $step['file'],
