@@ -152,6 +152,9 @@ class CartPresenter implements PresenterInterface
             }
         }
 
+        $rawProduct['price'] = Tools::ps_round($rawProduct['price'], Context::getContext()->getComputingPrecision());
+        $rawProduct['price_wt'] = Tools::ps_round($rawProduct['price_wt'], Context::getContext()->getComputingPrecision());
+
         if ($this->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price'] = $rawProduct['price_wt'];
             $rawProduct['unit_price'] = $rawProduct['unit_price_tax_included'];

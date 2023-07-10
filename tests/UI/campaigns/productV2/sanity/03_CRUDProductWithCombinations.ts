@@ -49,7 +49,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     attributes: [
       {
         name: 'color',
-        values: ['Grey', 'Taupe', 'Red'],
+        values: ['Gray', 'Taupe', 'Red'],
       },
       {
         name: 'size',
@@ -149,7 +149,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal('Successfully generated 4 combinations.');
     });
 
-    it('combinations generation modal should be closed', async function () {
+    it('should check that combinations generation modal is closed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
       const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
@@ -231,7 +231,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal('Successfully generated 6 combinations.');
     });
 
-    it('combinations generation modal should be closed', async function () {
+    it('should check that combinations generation modal is closed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
       const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);

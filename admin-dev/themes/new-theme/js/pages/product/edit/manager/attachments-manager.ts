@@ -68,7 +68,7 @@ export default class AttachmentsManager {
         id: 'modal-create-product-attachment',
         modalTitle: this.$addAttachmentBtn.data('modalTitle'),
         formSelector: 'form[name="attachment"]',
-        formUrl: $(event.target).prop('href'),
+        formUrl: $(event.currentTarget).prop('href'),
         closable: true,
         onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
           if (dataAttributes && dataAttributes.attachmentId) {

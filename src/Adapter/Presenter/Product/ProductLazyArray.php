@@ -769,16 +769,14 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['discount_percentage_absolute'] = Context::getContext()->getCurrentLocale()->formatNumber($presAbsoluteReduction) . '%';
             if ($settings->include_taxes) {
                 $regular_price = $product['price_without_reduction'];
-                $this->product['discount_amount'] = $this->priceFormatter->format(
-                    $product['reduction']
-                );
             } else {
                 $regular_price = $product['price_without_reduction_without_tax'];
-                $this->product['discount_amount'] = $this->priceFormatter->format(
-                    $product['reduction_without_tax']
-                );
             }
-            $this->product['discount_amount_to_display'] = '-' . $this->product['discount_amount'];
+            // We must calculate the real amount of discount.
+            // see @https://github.com/PrestaShop/PrestaShop/issues/32924
+            $product['reduction'] = $regular_price - $price;
+            $this->product['discount_amount'] = $this->priceFormatter->format($product['reduction']);
+            $this->product['discount_amount_to_display'] = '-' . $this->priceFormatter->format($product['reduction']);
         }
 
         $this->product['price_amount'] = $price;
