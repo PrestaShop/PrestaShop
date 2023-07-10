@@ -2,9 +2,9 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.admin.tab.repository:
-    class: PrestaShopBundle\Entity\Repository\TabRepository
+  PrestaShopBundle\Entity\Repository\TabRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    public: false
     arguments:
       - PrestaShopBundle\Entity\Tab
 
@@ -143,3 +143,7 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\ApiAccess
+
+  prestashop.core.admin.tab.repository:
+    alias: PrestaShopBundle\Entity\Repository\TabRepository
+    deprecated: 'The "%alias_id%" service alias is deprecated since v9.0.'

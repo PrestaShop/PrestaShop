@@ -27,10 +27,14 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use PrestaShopBundle\Entity\Tab;
 
 class TabRepository extends EntityRepository
 {
+    /** @var array<string, int> */
+    private $cachedTabIds = [];
+
     /**
      * @param string $moduleName
      *
@@ -112,5 +116,66 @@ class TabRepository extends EntityRepository
             $tab->setEnabled($enabled);
         }
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param string $className
+     *
+     * @return int
+     *
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getIdByClassName(string $className): int
+    {
+        if (!isset($this->cachedTabIds[$className])) {
+            $result = $this->createQueryBuilder('t')
+                ->select('t.id, t.className')
+                ->where('t.className = :className')
+                ->andWhere('t.id != 0')
+                ->setParameter('className', $className)
+                ->getQuery()
+                ->getSingleResult(Query::HYDRATE_ARRAY)
+            ;
+
+            $this->cachedTabIds[$result['className']] = (int) $result['id'];
+        }
+
+        return $this->cachedTabIds[$className];
+    }
+
+    /**
+     * @param int $tabId
+     *
+     * @return Tab[] breadcrumb to access the Tab, the request tab is the last its higher root the first one
+     *
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getAncestors(int $tabId): array
+    {
+        return $this->getTabWithParents($tabId);
+    }
+
+    /**
+     * Recursive method is kept as private.
+     *
+     * @param int $tabId
+     *
+     * @return Tab[]
+     *
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function getTabWithParents(int $tabId): array
+    {
+        /** @var Tab $tab */
+        $tab = $this->findOneBy(['id' => $tabId]);
+
+        if (empty($tab->getIdParent())) {
+            return [$tab];
+        }
+
+        return $this->getTabWithParents($tab->getIdParent()) + [$tab];
     }
 }
