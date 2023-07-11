@@ -40,7 +40,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /** @var ManufacturerPresenter */
     protected $manufacturerPresenter;
 
-    public function canonicalRedirection($canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = '')
     {
         if (Validate::isLoadedObject($this->manufacturer)) {
             parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));

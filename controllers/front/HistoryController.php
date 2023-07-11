@@ -85,7 +85,7 @@ class HistoryControllerCore extends FrontController
      *
      * @return string
      */
-    public static function getUrlToInvoice($order, $context)
+    public static function getUrlToInvoice(Order $order, Context $context)
     {
         $url_to_invoice = '';
 
@@ -109,7 +109,7 @@ class HistoryControllerCore extends FrontController
      *
      * @return string
      */
-    public static function getUrlToReorder($id_order, $context)
+    public static function getUrlToReorder(int $id_order, Context $context)
     {
         $url_to_reorder = '';
         if (!(bool) Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {

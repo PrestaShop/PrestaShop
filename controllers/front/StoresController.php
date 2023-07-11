@@ -40,7 +40,7 @@ class StoresControllerCore extends FrontController
      *
      * @return string
      */
-    protected function processStoreAddress($store)
+    protected function processStoreAddress(array $store)
     {
         $ignore_field = [
             'firstname',

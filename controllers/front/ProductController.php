@@ -74,7 +74,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected $isPreview = false;
 
-    public function canonicalRedirection($canonical_url = '')
+    public function canonicalRedirection(string $canonical_url = '')
     {
         // This is there to prevent error, because this function is also called
         // in parent front controller before we have even loaded our data.
@@ -601,7 +601,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Assign template vars related to attribute groups and colors.
      */
-    protected function assignAttributesGroups($product_for_template = null)
+    protected function assignAttributesGroups(ProductLazyArray|null $product_for_template = null)
     {
         $colors = [];
         $groups = [];
@@ -876,7 +876,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
-    protected function transformDescriptionWithImg($desc)
+    protected function transformDescriptionWithImg(string $desc)
     {
         $reg = '/\[img\-([0-9]+)\-(left|right)\-([a-zA-Z0-9-_]+)\]/';
         while (preg_match($reg, $desc, $matches)) {
@@ -966,7 +966,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return array
      */
-    protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
+    protected function formatQuantityDiscounts(array $specific_prices, float $price, float $tax_rate, float $ecotax_amount)
     {
         $priceCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
         $isTaxIncluded = false;
@@ -1058,7 +1058,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int
      */
-    protected function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
+    protected function tryToGetAvailableIdProductAttribute(int $checkedIdProductAttribute)
     {
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
             $productCombinations = $this->product->getAttributeCombinations();
@@ -1220,7 +1220,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int
      */
-    protected function getProductMinimalQuantity($product)
+    protected function getProductMinimalQuantity(ProductLazyArray|array $product)
     {
         $minimal_quantity = 1;
 
@@ -1272,7 +1272,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return ProductController|null
      */
-    public function findProductCombinationById($combinationId)
+    public function findProductCombinationById(int $combinationId)
     {
         $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
 
@@ -1288,7 +1288,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int
      */
-    protected function getRequiredQuantity($product)
+    protected function getRequiredQuantity(array $product)
     {
         $requiredQuantity = (int) Tools::getValue('quantity_wanted', $this->getProductMinimalQuantity($product));
         if ($requiredQuantity < $product['minimal_quantity']) {
@@ -1499,7 +1499,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return bool
      */
-    protected function isValidCombination($productAttributeId, $productId)
+    protected function isValidCombination(int $productAttributeId, int $productId)
     {
         if ($productAttributeId > 0 && $productId > 0) {
             $combination = new Combination($productAttributeId);

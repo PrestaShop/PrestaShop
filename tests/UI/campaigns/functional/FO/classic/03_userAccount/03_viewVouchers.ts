@@ -118,7 +118,7 @@ describe('FO - Account : View vouchers', async () => {
       {args: {column: 'code', row: 1, value: firstCartRule.code}},
       {args: {column: 'description', row: 1, value: firstCartRule.name}},
       {args: {column: 'quantity', row: 1, value: '1'}},
-      {args: {column: 'value', row: 1, value: '20.00%'}},
+      {args: {column: 'value', row: 1, value: '20%'}},
       {args: {column: 'minimum', row: 1, value: 'None'}},
       {args: {column: 'cumulative', row: 1, value: 'Yes'}},
       {args: {column: 'expiration_date', row: 1, value: expirationDate}},
