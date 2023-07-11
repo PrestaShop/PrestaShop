@@ -49,7 +49,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     attributes: [
       {
         name: 'color',
-        values: ['Gray', 'Taupe', 'Red'],
+        values: ['Grey', 'Taupe', 'Red'],
       },
       {
         name: 'size',
