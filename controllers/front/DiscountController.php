@@ -147,7 +147,7 @@ class DiscountControllerCore extends FrontController
      */
     protected function formatReductionInPercentage(float $percentage)
     {
-        return sprintf('%s%%', $percentage);
+        return sprintf('%s%%', $this->context->getCurrentLocale()->formatNumber($percentage));
     }
 
     /**
