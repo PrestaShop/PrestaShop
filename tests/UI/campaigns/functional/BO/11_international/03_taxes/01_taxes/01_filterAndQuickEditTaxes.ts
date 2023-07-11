@@ -129,13 +129,13 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
     it('should filter by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
 
-      await taxesPage.filterTaxes(page, 'input', 'name', tax.VatUkTax.name);
+      await taxesPage.filterTaxes(page, 'input', 'name', tax.DefaultFrTax.name);
 
       const numberOfTaxesAfterFilter = await taxesPage.getNumberOfElementInGrid(page);
       await expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
 
       const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
-      await expect(textColumn).to.contains(tax.VatUkTax.name);
+      await expect(textColumn).to.contains(tax.DefaultFrTax.name);
     });
 
     [
