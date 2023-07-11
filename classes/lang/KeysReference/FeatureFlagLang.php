@@ -97,3 +97,6 @@ trans('Enable or disable the migrated features page.', 'Admin.Advparameters.Help
 
 trans('Symfony layout', 'Admin.Advparameters.Feature');
 trans('Enable / Disable symfony layout (in opposition to legacy layout).', 'Admin.Advparameters.Help');
+
+trans('New front container', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new front container.', 'Admin.Advparameters.Help');

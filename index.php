@@ -43,9 +43,7 @@ require_once _PS_FRONT_DIR_ . '/vendor/autoload.php';
 (new Dotenv(false))->loadEnv(_PS_FRONT_DIR_ . '/.env');
 
 // If we want to use new container access in front (Warning: Experimental feature from now!)
-if (isset($_ENV['PS_CONTAINER_V2_FRONT']) && filter_var($_ENV['PS_CONTAINER_V2_FRONT'], \FILTER_VALIDATE_BOOL)) {
-    define('_PS_CONTAINER_V2_FRONT_', true);
-
+if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
     // Activate Symfony's debug if we need it
     if (_PS_MODE_DEV_) {
         Debug::enable();
