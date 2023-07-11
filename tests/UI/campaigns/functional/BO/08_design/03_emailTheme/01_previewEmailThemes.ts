@@ -41,7 +41,6 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
       dashboardPage.designParentLink,
       dashboardPage.emailThemeLink,
     );
-    await emailThemesPage.closeSfToolBar(page);
 
     const pageTitle = await emailThemesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
