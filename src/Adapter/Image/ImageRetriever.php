@@ -54,6 +54,8 @@ class ImageRetriever
 
     private $isMultipleImageFormatFeatureActive;
 
+    private static $image_cache = ['products' => [], 'stores' => [], 'categories' => []];
+
     public function __construct(Link $link)
     {
         $this->link = $link;
@@ -177,6 +179,11 @@ class ImageRetriever
             $imageFolderPath = rtrim(_PS_CAT_IMG_DIR_, DIRECTORY_SEPARATOR);
         }
 
+        $imageCacheKey = $object->id . '_' . $id_image;
+        if (isset(self::$image_cache[$type][$imageCacheKey])) {
+            return self::$image_cache[$type][$imageCacheKey];
+        }
+
         $urls = [];
 
         // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
@@ -254,7 +261,7 @@ class ImageRetriever
         $large = end($urls);
         $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
 
-        return [
+        return self::$image_cache[$type][$imageCacheKey] = [
             'bySize' => $urls,
             'small' => $small,
             'medium' => $medium,
