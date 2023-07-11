@@ -645,14 +645,8 @@ class CartCore extends ObjectModel
         // Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
         if ($this->_products !== null && !$refresh) {
             // Return product row with specified ID if it exists
-            if (is_int($id_product)) {
-                foreach ($this->_products as $product) {
-                    if ($product['id_product'] == $id_product) {
-                        return [$product];
-                    }
-                }
-
-                return [];
+            if (isset($this->_products[$id_product])) {
+                return [$this->_products[$id_product]];
             }
 
             return $this->_products;
@@ -846,7 +840,7 @@ class CartCore extends ObjectModel
                     );
                 }
 
-                $this->_products[] = $product;
+                $this->_products[$product['id_product']] = $product;
             }
         } else {
             $this->_products = $products;
