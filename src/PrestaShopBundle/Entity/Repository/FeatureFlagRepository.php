@@ -68,7 +68,7 @@ class FeatureFlagRepository extends EntityRepository
     }
 
     /**
-     * Check if a feature flag is enabled based on its name (if it doesn't exist false is returned).
+     * Check if a feature flag is disabled based on its name (if it doesn't exist true is returned).
      *
      * @param string $featureFlagName
      *

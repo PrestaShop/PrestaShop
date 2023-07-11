@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,44 +21,33 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-declare(strict_types=1);
+{% block feature_flag_row %}
+  <div class="form-group row feature_flag-widget">
+    <div class="form-control-label">
+      {{ form_label(form) }}
+    </div>
+    <div class="col-sm input-container">
+      {{ form_widget(form) }}
+    </div>
+  </div>
+{% endblock %}
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
+{% block feature_flag_label %}
+  <label for="{{ id }}">{{ label }}</label>
+  <div>
+    <ul class="list-inline small form-text">
+      {% for type in types %}
+        <li class="list-inline-item {% if type == used_type %}font-weight-bold{% endif %}">{{ type }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
 
-class FeatureFlagSettings
-{
-    /**
-     * Stability consts
-     */
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
-
-    /**
-     * Type consts
-     */
-    public const TYPE_DEFAULT = 'env,dotenv,db';
-    public const TYPE_ENV = 'env';
-    public const TYPE_QUERY = 'query';
-    public const TYPE_DOTENV = 'dotenv';
-    public const TYPE_DB = 'db';
-
-    /**
-     * Prefix for DotEnv & Env Layers
-     */
-    public const PREFIX = 'PS_FF_';
-
-    /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
-     */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
-
-    /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
-     */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
-
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
-}
+{% block feature_flag_widget %}
+  {{ block('switch_widget') }}
+  {% if forced_by_env %}
+    <div class="small form-text font-weight-bold">{{ "This FeatureFlag is forced by Env."|trans({}, 'Admin.Advparameters.Help') }}</div>
+  {% endif %}
+{% endblock feature_flag_widget %}

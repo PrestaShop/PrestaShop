@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Component\Console\Command\Command;
@@ -55,16 +56,11 @@ class FeatureFlagCommand extends Command
         'list',
     ];
 
-    /**
-     * @var FeatureFlagRepository
-     */
-    private $featureFlagRepository;
-
     public function __construct(
-        FeatureFlagRepository $featureFlagRepository
+        private readonly FeatureFlagRepository $featureFlagRepository,
+        private readonly FeatureFlagManager $featureFlagManager
     ) {
         parent::__construct();
-        $this->featureFlagRepository = $featureFlagRepository;
     }
 
     protected function configure()
@@ -99,14 +95,33 @@ class FeatureFlagCommand extends Command
     {
         $featureFlags = $this->featureFlagRepository->findAll();
         $table = new Table($output);
-        $table->setHeaders(['Feature flag', 'State']);
+        $table->setHeaders(['Feature flag', 'Type', 'State']);
         /** @var FeatureFlag $featureFlag */
         foreach ($featureFlags as $featureFlag) {
-            $table->addRow([$featureFlag->getName(), $featureFlag->isEnabled() ? 'Enabled' : 'Disabled']);
+            $table->addRow([
+                $featureFlag->getName(),
+                $this->getTypeRow($featureFlag),
+                $this->featureFlagManager->isEnabled($featureFlag->getName()) ? 'Enabled' : 'Disabled',
+            ]);
         }
         $table->render();
 
         return self::SUCCESS_RETURN_CODE;
+    }
+
+    private function getTypeRow(FeatureFlag $featureFlag): string
+    {
+        $out = [];
+
+        foreach ($featureFlag->getOrderedTypes() as $type) {
+            if ($this->featureFlagManager->getUsedType($featureFlag->getName()) === $type) {
+                $out[] = "[$type]";
+            } else {
+                $out[] = $type;
+            }
+        }
+
+        return implode(',', $out);
     }
 
     private function toggleFeatureFlag(bool $expectedState, InputInterface $input, OutputInterface $output): int
@@ -129,13 +144,13 @@ class FeatureFlagCommand extends Command
         }
 
         if ($expectedState) {
-            $this->featureFlagRepository->enable($featureFlagArgument);
+            $this->featureFlagManager->enable($featureFlagArgument);
             $output->writeln(sprintf(
                 '<info>Feature flag %s was enabled</info>',
                 $featureFlagArgument
             ));
         } else {
-            $this->featureFlagRepository->disable($featureFlagArgument);
+            $this->featureFlagManager->disable($featureFlagArgument);
             $output->writeln(sprintf(
                 '<info>Feature flag %s was disabled</info>',
                 $featureFlagArgument

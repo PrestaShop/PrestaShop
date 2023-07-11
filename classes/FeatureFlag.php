@@ -42,6 +42,11 @@ class FeatureFlagCore extends ObjectModel
     /**
      * @var string
      */
+    public $type;
+
+    /**
+     * @var string
+     */
     public $label_wording;
 
     /**
@@ -77,6 +82,12 @@ class FeatureFlagCore extends ObjectModel
         'primary' => 'id_feature_flag',
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 191],
+            'type' => [
+                'type' => self::TYPE_STRING,
+                'required' => true,
+                'size' => 64,
+                'default' => FeatureFlagSettings::TYPE_DEFAULT,
+            ],
             'label_wording' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 191],
             'label_domain' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 255],
             'description_wording' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 191],

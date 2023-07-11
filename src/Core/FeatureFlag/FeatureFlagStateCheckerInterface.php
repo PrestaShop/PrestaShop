@@ -28,38 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
-class FeatureFlagSettings
+interface FeatureFlagStateCheckerInterface
 {
     /**
-     * Stability consts
+     * Retrieve if the feature flag is enabled.
      */
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
+    public function isEnabled(string $featureFlagName): bool;
 
     /**
-     * Type consts
+     * Retrieve if the feature flag is enabled.
      */
-    public const TYPE_DEFAULT = 'env,dotenv,db';
-    public const TYPE_ENV = 'env';
-    public const TYPE_QUERY = 'query';
-    public const TYPE_DOTENV = 'dotenv';
-    public const TYPE_DB = 'db';
-
-    /**
-     * Prefix for DotEnv & Env Layers
-     */
-    public const PREFIX = 'PS_FF_';
-
-    /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
-     */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
-
-    /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
-     */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
-
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
+    public function isDisabled(string $featureFlagName): bool;
 }

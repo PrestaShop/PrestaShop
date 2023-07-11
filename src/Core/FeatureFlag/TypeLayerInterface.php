@@ -28,38 +28,35 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
-class FeatureFlagSettings
+interface TypeLayerInterface
 {
     /**
-     * Stability consts
+     * Get type name of this handler.
      */
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
+    public function getTypeName(): string;
 
     /**
-     * Type consts
+     * Define is this handler can change feature flag status.
      */
-    public const TYPE_DEFAULT = 'env,dotenv,db';
-    public const TYPE_ENV = 'env';
-    public const TYPE_QUERY = 'query';
-    public const TYPE_DOTENV = 'dotenv';
-    public const TYPE_DB = 'db';
+    public function isReadonly(): bool;
 
     /**
-     * Prefix for DotEnv & Env Layers
+     * Define is this handler can be used.
      */
-    public const PREFIX = 'PS_FF_';
+    public function canBeUsed(string $featureFlagName): bool;
 
     /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
+     * Retrieve if the feature flag is enabled.
      */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
+    public function isEnabled(string $featureFlagName): bool;
 
     /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
+     * Enable the feature flag with this handler method.
      */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
+    public function enable(string $featureFlagName): void;
 
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
+    /**
+     * Disable the feature flag with this handler method.
+     */
+    public function disable(string $featureFlagName): void;
 }

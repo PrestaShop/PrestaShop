@@ -217,3 +217,8 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
+
+# DotEnv files
+/.env.local
+/.env.local.php
+/.env.*.local

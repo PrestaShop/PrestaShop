@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePrio
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
@@ -2891,7 +2892,7 @@ class AdminProductsControllerCore extends AdminController
                     *
                     * In case of .jpg images, the actual format inside is decided by ImageManager.
                     */
-                    if ($sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+                    if ($sfContainer->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
                         $configuredImageFormats = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
                     } else {
                         $configuredImageFormats = ['jpg'];
