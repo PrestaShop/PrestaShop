@@ -98,7 +98,18 @@ services:
   prestashop.adapter.cart.command_handler.delete_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\DeleteCartHandler'
     autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository'
 
   prestashop.adapter.cart.command_handler.bulk_delete_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\BulkDeleteCartHandler'
     autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository'
+
+  PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

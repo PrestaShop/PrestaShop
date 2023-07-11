@@ -13,6 +13,7 @@ Feature: Cart deleting in BO
     And there is customer "testCustomer1" with email "pub@prestashop.com"
     And there is a customer named "testCustomer2" whose email is "pub2@prestashop.com"
     And there is a customer named "testCustomer3" whose email is "pub3@prestashop.com"
+    And the module "dummy_payment" is installed
 
   Scenario: Delete cart not already ordered
     Given I create an empty cart "dummy_cart" for customer "testCustomer1"

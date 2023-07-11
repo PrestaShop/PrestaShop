@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\DeleteCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 /**
  * Handles deletion of cart using legacy object model
  */
+#[AsCommandHandler]
 final class DeleteCartHandler extends AbstractCartHandler implements DeleteCartHandlerInterface
 {
     /**
