@@ -31,6 +31,12 @@ class ImportTheme extends themeAndLogoBasePage {
     this.importWebSubmit = `${this.importForm} > div.row > div:nth-child(2) div.card-footer button`;
   }
 
+  /**
+   * Import theme from web
+   * @param page  {Page} Browser tab
+   * @param themeUrl {string} Theme URL link to import
+   * @returns {Promise<void>}
+   */
   async importTheme(page: Page, themeUrl: string): Promise<void> {
     await this.setValue(page, this.inputArchiveURL, themeUrl);
     await page.click(this.importWebSubmit);
