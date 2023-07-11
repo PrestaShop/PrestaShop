@@ -3671,7 +3671,7 @@ class ProductCore extends ObjectModel
 
         $cart_quantity = 0;
         if ((int) $id_cart) {
-            $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_cart;
+            $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_cart . '-' . (int) $id_product_attribute;
             if (!Cache::isStored($cache_id) || ($cart_quantity = Cache::retrieve($cache_id) != (int) $quantity)) {
                 $sql = 'SELECT SUM(`quantity`)
                 FROM `' . _DB_PREFIX_ . 'cart_product`
