@@ -1,9 +1,10 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import countryXml from '@webservices/country/countryXml';
+import xml from '@utils/xml';
 
 // Import webservices
+import countryXml from '@webservices/country/countryXml';
 import CountryWS from '@webservices/country/countryWs';
 
 // Import commonTests
@@ -104,6 +105,123 @@ describe('WS - Countries : CRUD', async () => {
       });
     });
 
+    describe(`Endpoint : ${CountryWS.endpoint} - Schema : Blank `, () => {
+      let apiResponse: APIResponse;
+      let xmlResponse : string;
+
+      it('should check response status', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankStatus', baseContext);
+
+        apiResponse = await CountryWS.getBlank(
+          apiContext,
+          authorization,
+        );
+        await expect(apiResponse.status()).to.eq(200);
+      });
+
+      it('should check that the blank XML can be parsed', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankValid', baseContext);
+
+        xmlResponse = await apiResponse.text();
+
+        const isValidXML = xml.isValid(xmlResponse);
+        await expect(isValidXML).to.be.true;
+      });
+
+      it('should check response root node', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankRootNode', baseContext);
+
+        expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+      });
+
+      it('should check number of node under prestashop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankChildNode', baseContext);
+
+        const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
+        expect(rootNodes.length).to.be.eq(1);
+        expect(rootNodes[0].nodeName).to.be.eq('country');
+      });
+
+      it('should check each node name, attributes and has empty values', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankChildNodes', baseContext);
+
+        const nodes = countryXml.getCountryNodes(xmlResponse);
+        expect(nodes.length).to.be.gt(0);
+
+        for (let c: number = 0; c < nodes.length; c++) {
+          const countryNode: Element = nodes[c];
+
+          // Attributes
+          const countryNodeAttributes: NamedNodeMap = countryNode.attributes;
+          expect(countryNodeAttributes.length).to.be.eq(0);
+
+          // Empty value
+          const isEmpty = xml.isEmpty(countryNode);
+          expect(isEmpty, `The node ${countryNode.nodeName} is not empty`).to.be.true;
+        }
+      });
+    });
+
+    describe(`Endpoint : ${CountryWS.endpoint} - Schema : Synopsis `, () => {
+      let apiResponse: APIResponse;
+      let xmlResponse : string;
+
+      it('should check response status', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestSynopsisStatus', baseContext);
+
+        apiResponse = await CountryWS.getSynopsis(
+          apiContext,
+          authorization,
+        );
+        await expect(apiResponse.status()).to.eq(200);
+      });
+
+      it('should check that the synopsis XML can be parsed', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestSynopsisValid', baseContext);
+
+        xmlResponse = await apiResponse.text();
+
+        const isValidXML = xml.isValid(xmlResponse);
+        await expect(isValidXML).to.be.true;
+      });
+
+      it('should check response root node', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankRootNode', baseContext);
+
+        expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+      });
+
+      it('should check number of node under prestashop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankChildNode', baseContext);
+
+        const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
+        expect(rootNodes.length).to.be.eq(1);
+        expect(rootNodes[0].nodeName).to.be.eq('country');
+      });
+
+      it('should check each node name, attributes and has empty values', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestGetCheckAll1', baseContext);
+
+        const nodes = countryXml.getCountryNodes(xmlResponse);
+        expect(nodes.length).to.be.gt(0);
+
+        for (let c: number = 0; c < nodes.length; c++) {
+          const node: Element = nodes[c];
+
+          // Attributes
+          const nodeAttributes: NamedNodeMap = node.attributes;
+          expect(nodeAttributes.length).to.be.gte(1);
+
+          // Attribute : format
+          expect(nodeAttributes[nodeAttributes.length - 1].nodeName).to.be.eq('format');
+
+          // Empty value
+          const isEmpty = xml.isEmpty(node);
+          expect(isEmpty, `The node ${node.nodeName} is not empty`).to.be.true;
+        }
+      });
+    });
+
     describe(`Endpoint : ${CountryWS.endpoint} - Method : GET `, () => {
       let apiResponse : APIResponse;
       let xmlResponse : string;
@@ -178,7 +296,6 @@ describe('WS - Countries : CRUD', async () => {
             authorization,
             xmlCreate,
           );
-
           await expect(apiResponse.status()).to.eq(201);
         });
 
