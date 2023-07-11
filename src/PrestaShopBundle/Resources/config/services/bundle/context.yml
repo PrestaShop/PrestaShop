@@ -1,0 +1,18 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  # Many other contexts depend on the cookie, so it should be initialized first
+  PrestaShopBundle\EventListener\Context\Admin\CookieContextListener:
+    tags:
+      - { name: kernel.event_listener, method: onKernelRequest, priority: 1000 }
+
+  PrestaShopBundle\EventListener\Context\Admin\EmployeeContextListener:
+    tags:
+      - { name: kernel.event_listener, method: onKernelRequest, priority: 900 }
+
+  PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
+    tags:
+      - { name: kernel.event_listener, method: onKernelRequest, priority: 800 }
