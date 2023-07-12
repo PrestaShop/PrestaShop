@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,29 +27,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Provider;
+namespace PrestaShopBundle\ApiPlatform\Resources;
 
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 
-class QueryProvider implements ProviderInterface
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/customers',
+            provider: CommandProcessor::class,
+            extraProperties: [
+                'command' => AddCustomerGroupCommand::class,
+            ],
+        ),
+    ]
+)]
+class Customer
 {
-    public function __construct(private CommandBusInterface $queryBus)
-    {
-    }
-
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
-    {
-        $extraProperties = $operation->getExtraProperties();
-
-        $query = $extraProperties['query'] ?? null;
-
-        if (null === $query) {
-            throw new NoExtraPropertiesFoundException();
-        }
-
-        return $this->queryBus->handle(new $query(...$uriVariables));
+    /**
+     * @param string[] $localizedNames
+     * @param int[] $shopIds
+     */
+    public function __construct(
+        #[ApiProperty(
+            example: 'array<string>',
+        )]
+        public array $localizedNames,
+        public DecimalNumber $reductionPercent,
+        public bool $displayPriceTaxExcluded,
+        public bool $showPrice,
+        #[ApiProperty(
+            example: 'array<int>',
+        )]
+        public array $shopIds
+    ) {
     }
 }

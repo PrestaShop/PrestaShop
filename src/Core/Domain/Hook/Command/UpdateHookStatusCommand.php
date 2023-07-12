@@ -39,10 +39,8 @@ class UpdateHookStatusCommand
 
     /**
      * New hook status
-     *
-     * @var bool
      */
-    private $active;
+    private bool $active;
 
     /**
      * UpdateHookStatusCommand constructor.

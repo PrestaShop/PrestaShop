@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
@@ -78,26 +77,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
           uriTemplate: '/hooks/{id}',
             requirements: ['id' => '\d+'],
             exceptionToStatus: [HookNotFoundException::class => 404],
-            normalizationContext: [
-                'groups' => [
-                    'hook-status:read',
-                ],
-            ],
             provider: QueryProvider::class,
-            extraProperties: [
-                'dto' => GetHook::class,
-                'denormalizer' => Hook::class,
-            ]
+            extraProperties: ['query' => GetHook::class]
         ),
     ],
 )]
 class Hook
 {
     #[ApiProperty(identifier: true)]
-    #[Groups(['hook-status:read'])]
     public int $id;
 
-    #[Groups(['hook-status:read'])]
     public bool $active;
 
     public string $name;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,29 +27,41 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Provider;
+namespace PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult;
 
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
-
-class QueryProvider implements ProviderInterface
+class Hook
 {
-    public function __construct(private CommandBusInterface $queryBus)
-    {
+    public function __construct(
+        public readonly int $id,
+        public readonly bool $active,
+        public readonly string $name,
+        public readonly string $title,
+        public readonly string $description
+    ) {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function getId(): int
     {
-        $extraProperties = $operation->getExtraProperties();
+        return $this->id;
+    }
 
-        $query = $extraProperties['query'] ?? null;
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
 
-        if (null === $query) {
-            throw new NoExtraPropertiesFoundException();
-        }
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-        return $this->queryBus->handle(new $query(...$uriVariables));
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 }

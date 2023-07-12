@@ -33,13 +33,11 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
+use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\Hook as HookQuery;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
-use PrestaShopBundle\ApiPlatform\Resources\Hook;
 use RuntimeException;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class QueryProviderTest extends TestCase
 {
@@ -48,7 +46,7 @@ class QueryProviderTest extends TestCase
      */
     private $queryBus;
 
-    private function createResultBasedOnQuery(GetHookStatus $query): HookStatus
+    private function createResultBasedOnHookStatusQuery(GetHookStatus $query): HookStatus
     {
         if ($query->getId()->getValue() === 1) {
             return new HookStatus($query->getId()->getValue(), false);
@@ -61,20 +59,26 @@ class QueryProviderTest extends TestCase
         throw new RuntimeException(sprintf('Hook "%s" was not expected in query bus mock', $query->getId()->getValue()));
     }
 
-    private function createResultBasedOnObjectModel(GetHook $query): \stdClass
+    private function createResultBasedOnHookQuery(GetHook $query): HookQuery
     {
         if ($query->getId()->getValue() === 1) {
-            $objectModelHook = new \stdClass();
-            $objectModelHook->active = false;
-
-            return $objectModelHook;
+            return new HookQuery(
+                $query->getId()->getValue(),
+                false,
+                'testName1',
+                'testTitle1',
+                'testDescription1'
+            );
         }
 
         if ($query->getId()->getValue() === 2) {
-            $objectModelHook = new \stdClass();
-            $objectModelHook->active = true;
-
-            return $objectModelHook;
+            return new HookQuery(
+                $query->getId()->getValue(),
+                true,
+                'testName1',
+                'testTitle1',
+                'testDescription1'
+            );
         }
 
         throw new RuntimeException(sprintf('Hook "%s" was not expected in query bus mock', $query->getId()->getValue()));
@@ -87,12 +91,11 @@ class QueryProviderTest extends TestCase
             ->method('handle')
             ->with($this->isInstanceOf(GetHookStatus::class))
             ->willReturnCallback(function ($query) {
-                return $this->createResultBasedOnQuery($query);
+                return $this->createResultBasedOnHookStatusQuery($query);
             })
         ;
         $hookStatusProvider = new QueryProvider(
             $this->queryBus,
-            $this->createMock(DenormalizerInterface::class)
         );
         $get = new Get();
         $get = $get->withExtraProperties(['query' => "PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus"]);
@@ -111,56 +114,31 @@ class QueryProviderTest extends TestCase
             ->method('handle')
             ->with($this->isInstanceOf(GetHook::class))
             ->willReturnCallback(function ($query) {
-                return $this->createResultBasedOnObjectModel($query);
+                return $this->createResultBasedOnHookQuery($query);
             })
         ;
 
         $hookStatusProvider = new QueryProvider(
             $this->queryBus,
-            $this->setUpSerializerMock()
         );
         $get = new Get();
-        $get = $get->withExtraProperties([
-            'dto' => "PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook",
-            'denormalizer' => "src\PrestaShopBundle\ApiPlatform\Resources\Hook.php",
-        ]);
-        /** @var Hook $hookDto */
+        $get = $get->withExtraProperties(['query' => 'PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook']);
+        /** @var HookQuery $hookDto */
         $hookDto = $hookStatusProvider->provide($get, ['id' => 1]);
-        self::assertEquals(false, $hookDto->active);
-        /** @var Hook $hookDto */
+        self::assertEquals(false, $hookDto->isActive());
+        /** @var HookQuery $hookDto */
         $hookDto = $hookStatusProvider->provide($get, ['id' => 2]);
-        self::assertTrue($hookDto->active);
+        self::assertTrue($hookDto->isActive());
     }
 
     public function testProvideNoQueryThrowsException(): void
     {
         $hookStatusProvider = new QueryProvider(
             $this->createMock(CommandBusInterface::class),
-            $this->createMock(DenormalizerInterface::class)
         );
         $get = new Get();
 
         $this->expectException(NoExtraPropertiesFoundException::class);
         $hookStatusProvider->provide($get, ['id' => 1]);
-    }
-
-    private function setUpSerializerMock(): Serializer
-    {
-        $firstHookDto = new Hook();
-        $firstHookDto->active = false;
-
-        $secondHookDto = new Hook();
-        $secondHookDto->active = true;
-
-        $serializerMock = $this->createMock(Serializer::class);
-        $serializerMock
-            ->expects(static::exactly(2))
-            ->method('denormalize')
-            ->willReturnOnConsecutiveCalls(
-                $firstHookDto, $secondHookDto
-            )
-        ;
-
-        return $serializerMock;
     }
 }
