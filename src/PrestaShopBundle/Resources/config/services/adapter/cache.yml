@@ -16,3 +16,7 @@ services:
 
   prestashop.adapter.cache.clearer.xml_cache_clearer:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\XmlCacheClearer'
+
+  PrestaShop\PrestaShop\Adapter\Cache\Clearer\DoctrineCacheClearer:
+    arguments:
+      - '@doctrine.cache.provider'
