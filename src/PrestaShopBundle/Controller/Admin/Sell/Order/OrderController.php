@@ -130,11 +130,6 @@ class OrderController extends FrameworkBundleAdminController
      */
     public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
-    public function __construct(
-        private LayoutBuilder $layoutBuilder
-    ) {
-    }
-
     /**
      * Shows list of orders
      *
@@ -551,10 +546,6 @@ class OrderController extends FrameworkBundleAdminController
                 ]
             )
         );
-
-        $this->layoutBuilder
-            ->setMetaTitle($metatitle)
-        ;
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,

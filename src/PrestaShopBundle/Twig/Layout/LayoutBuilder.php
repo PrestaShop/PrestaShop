@@ -39,8 +39,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class LayoutBuilder
 {
-    private ?string $metaTitle = null;
-
     public function __construct(
         private LegacyContext $legacyContext,
         private TabRepository $tabRepository,
@@ -58,10 +56,6 @@ class LayoutBuilder
 
     public function getMetaTitle(): string
     {
-        if ($this->metaTitle) {
-            return $this->metaTitle;
-        }
-
         $ancestors = $this->tabRepository->getAncestors($this->getCurrentTabId());
 
         /** @var Tab $current */
@@ -81,13 +75,6 @@ class LayoutBuilder
         }
 
         return $currentTabLang->getName();
-    }
-
-    public function setMetaTitle(string $metaTitle): self
-    {
-        $this->metaTitle = $metaTitle;
-
-        return $this;
     }
 
     public function getSmartyTemplateVariables(): array
