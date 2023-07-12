@@ -12,12 +12,14 @@ services:
 
   PrestaShop\PrestaShop\Core\Module\ModuleRepository:
     public: false
+    lazy: true
     arguments:
       - '@prestashop.adapter.data_provider.module'
       - '@prestashop.adapter.admin.data_provider.module'
       - '@doctrine.cache.provider'
       - '@prestashop.adapter.hook.manager'
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
   prestashop.core.admin.module.repository.eventsubscriber:
     class: PrestaShop\PrestaShop\Core\Module\EventSubscriber

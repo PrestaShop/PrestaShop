@@ -74,18 +74,25 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var Module[] */
     private $modulesFromHook;
 
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
         CacheProvider $cacheProvider,
         HookManager $hookManager,
-        string $modulePath
+        string $modulePath,
+        int $contextLangId
     ) {
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
         $this->cacheProvider = $cacheProvider;
         $this->hookManager = $hookManager;
         $this->modulePath = $modulePath;
+        $this->contextLangId = $contextLangId;
     }
 
     public function getList(): ModuleCollection
@@ -227,7 +234,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $shop = $shopId ? [$shopId] : Shop::getContextListShopID();
 
-        return $moduleName . implode('-', $shop);
+        return $moduleName . implode('-', $shop) . $this->contextLangId;
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
