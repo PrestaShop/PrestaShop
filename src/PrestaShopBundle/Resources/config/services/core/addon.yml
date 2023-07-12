@@ -34,10 +34,12 @@ services:
 
   prestashop.core.addon.theme.theme_manager:
     class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
+    lazy: true
     factory: [ '@prestashop.core.addon.theme.theme_manager_builder', 'build' ]
 
   prestashop.core.addon.theme.theme.page_layouts_customizer:
     class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemePageLayoutsCustomizer
+    lazy: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
       - '@prestashop.core.addon.theme.theme_manager'
