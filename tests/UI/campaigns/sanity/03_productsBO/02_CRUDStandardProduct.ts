@@ -5,13 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
-// Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import foProductPage from '@pages/FO/product';
 import dashboardPage from '@pages/BO/dashboard';
@@ -45,9 +39,6 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     minimumQuantity: 1,
     status: true,
   });
-
-  // Pre-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -207,7 +198,4 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

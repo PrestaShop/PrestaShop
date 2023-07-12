@@ -4,14 +4,9 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
@@ -57,9 +52,6 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       },
     ],
   });
-
-  // Pre-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -150,7 +142,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     });
 
     it('should check that combinations generation modal is closed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed', baseContext);
 
       const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
       await expect(isModalClosed).to.be.true;
@@ -294,7 +286,4 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
