@@ -64,7 +64,7 @@ class ImportTheme extends themeAndLogoBasePage {
    * @param themeUrl {string} Theme URL link to import
    * @returns {Promise<void>}
    */
-  async importTheme(page: Page, themeUrl: string): Promise<void> {
+  async importFromWeb(page: Page, themeUrl: string): Promise<void> {
     await this.setValue(page, this.inputArchiveURL, themeUrl);
     await page.click(this.importWebSubmit);
   }

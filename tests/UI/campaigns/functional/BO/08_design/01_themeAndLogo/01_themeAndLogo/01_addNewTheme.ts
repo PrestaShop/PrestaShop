@@ -111,7 +111,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     it('should import from the web the Hummingbird theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importThemeFromWeb', baseContext);
 
-      await themeImportPage.importTheme(page, urlTheme);
+      await themeImportPage.importFromWeb(page, urlTheme);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
       await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
