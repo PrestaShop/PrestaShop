@@ -174,7 +174,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page: Page): Promise<string> {
-    await this.clickAndWaitForLoadState(page, this.saveProductButton);
+    await this.clickAndWaitForURL(page, this.saveProductButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
