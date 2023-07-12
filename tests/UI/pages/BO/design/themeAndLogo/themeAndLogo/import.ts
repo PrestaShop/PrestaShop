@@ -73,6 +73,7 @@ class ImportTheme extends themeAndLogoBasePage {
    * Import theme from ftp
    * @param page {Page} Browser tab
    * @param zipName {string} Zip name to select
+   * @returns {Promise<void>}
    */
   async importFromFTP(page: Page, zipName: string): Promise<void> {
     await this.selectByVisibleText(page, this.selectArchive, zipName);
