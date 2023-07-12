@@ -238,7 +238,7 @@
 
       {if isset($maintenance_mode) && $maintenance_mode == true}
         {capture name="title"}
-          <p class="text-left text-nowrap">
+          <p class="text-left">
             <strong>{l s='Your store is in maintenance mode.' d='Admin.Navigation.Notification'}</strong>
           </p>
           <p class="text-left">
