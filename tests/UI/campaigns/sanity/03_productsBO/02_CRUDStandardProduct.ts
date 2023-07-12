@@ -18,7 +18,7 @@ import ProductData from '@data/faker/product';
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
-const baseContext: string = 'productV2_sanity_CRUDStandardProduct';
+const baseContext: string = 'sanity_productsBO_CRUDStandardProduct';
 
 describe('BO - Catalog - Products : CRUD standard product', async () => {
   let browserContext: BrowserContext;

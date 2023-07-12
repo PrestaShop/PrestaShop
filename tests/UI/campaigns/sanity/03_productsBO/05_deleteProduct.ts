@@ -16,7 +16,7 @@ import ProductData from '@data/faker/product';
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
-const baseContext: string = 'productV2_sanity_deleteProduct';
+const baseContext: string = 'sanity_productsBO_deleteProduct';
 
 describe('BO - Catalog - Products : Delete product', async () => {
   let browserContext: BrowserContext;

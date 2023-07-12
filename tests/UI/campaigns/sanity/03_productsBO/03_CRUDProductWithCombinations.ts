@@ -20,7 +20,7 @@ import ProductData from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'productV2_sanity_CRUDProductWithCombinations';
+const baseContext: string = 'sanity_productsBO_CRUDProductWithCombinations';
 
 describe('BO - Catalog - Products : CRUD product with combinations', async () => {
   let browserContext: BrowserContext;

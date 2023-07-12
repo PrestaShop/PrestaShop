@@ -18,7 +18,7 @@ import foProductPage from '@pages/FO/product';
 // Import data
 import ProductData from '@data/faker/product';
 
-const baseContext: string = 'productV2_sanity_CRUDVirtualProduct';
+const baseContext: string = 'sanity_productsBO_CRUDVirtualProduct';
 
 describe('BO - Catalog - Products : CRUD virtual product', async () => {
   let browserContext: BrowserContext;

@@ -16,7 +16,7 @@ import Categories from '@data/demo/categories';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'productV2_sanity_filterProducts';
+const baseContext: string = 'sanity_productsBO_filterProducts';
 
 describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let browserContext: BrowserContext;

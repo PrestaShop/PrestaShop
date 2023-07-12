@@ -16,7 +16,7 @@ import createProductsPage from '@pages/BO/catalog/productsV2/add';
 // Import data
 import ProductData from '@data/faker/product';
 
-const baseContext: string = 'productV2_sanity_deleteProductsWithBulkActions';
+const baseContext: string = 'sanity_productsBO_deleteProductsWithBulkActions';
 
 describe('BO - Catalog - Products : Delete products with bulk actions', async () => {
   let browserContext: BrowserContext;
