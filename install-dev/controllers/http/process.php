@@ -212,7 +212,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         $success = $this->model_install->configureShop([
             'shop_name' => $this->session->shop_name,
-            'shop_activity' => $this->session->shop_activity,
             'shop_country' => $this->session->shop_country,
             'shop_timezone' => $this->session->shop_timezone,
             'admin_firstname' => $this->session->admin_firstname,
@@ -274,7 +273,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->initializeContext();
 
         $this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
-        if (!$this->model_install->installFixtures(Tools::getValue('entity', null), ['shop_activity' => $this->session->shop_activity, 'shop_country' => $this->session->shop_country]) || $this->model_install->getErrors()) {
+        if (!$this->model_install->installFixtures(Tools::getValue('entity', null), ['shop_country' => $this->session->shop_country]) || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
