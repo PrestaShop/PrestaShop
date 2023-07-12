@@ -1908,6 +1908,16 @@ class AdminProductsControllerCore extends AdminController
                 if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
                     $values = (array) Tools::getValue('multishop_check', []);
                     $values['state'] = Product::STATE_SAVED;
+                    $values['id_manufacturer'] = true;
+                    $values['ean13'] = true;
+                    $values['mpn'] = true;
+                    $values['isbn'] = true;
+                    $values['upc'] = true;
+                    $values['reference'] = true;
+                    $values['weight'] = true;
+                    $values['depth'] = true;
+                    $values['width'] = true;
+                    $values['height'] = true;
 
                     $object->setFieldsToUpdate($values);
                 }

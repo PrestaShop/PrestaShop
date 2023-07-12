@@ -1747,7 +1747,7 @@ parameters:
 
 		-
 			message: "#^Using _DB_PREFIX_ is forbidden, Use dependency injection instead$#"
-			count: 2
+			count: 3
 			path: src/PrestaShopBundle/Translation/Loader/SqlTranslationLoader.php
 
 		-

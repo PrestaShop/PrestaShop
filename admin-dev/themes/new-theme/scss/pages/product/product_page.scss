@@ -1961,6 +1961,7 @@ $product-page-padding-bottom: 80px !default;
 
 .combination-page {
   #combination_form {
+    position: relative;
     padding-top: 1rem;
   }
 
@@ -2747,7 +2748,7 @@ $mobile-menu-height: 2.6rem !default;
     .combination-cover-row {
       position: absolute;
       top: 1rem;
-      left: 1rem;
+      left: 0;
       max-width: $product-cover-mobile-size;
       max-height: $product-cover-mobile-size;
     }
