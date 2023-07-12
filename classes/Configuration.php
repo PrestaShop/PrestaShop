@@ -171,7 +171,7 @@ class ConfigurationCore extends ObjectModel
      * @param bool $force force if configuration already loaded
      *
      */
-    public static function loadConfiguration(bool $force = false)
+    public static function loadConfiguration(bool $force = true)
     {
         if (static::configurationIsLoaded() && !$force) {
             return ;
