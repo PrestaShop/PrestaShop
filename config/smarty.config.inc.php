@@ -25,6 +25,8 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
@@ -241,9 +243,8 @@ function renderTemplate(array $params) {
 
     if (
         SymfonyContainer::getInstance()
-            ->get('request_stack')
-            ->getCurrentRequest()
-            ->query->has('symfony_layout')
+            ->get(FeatureFlagStateCheckerInterface::class)
+            ->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)
     ) {
         /** @var Twig\Environment $twig */
         $twig = SymfonyContainer::getInstance()->get('twig');

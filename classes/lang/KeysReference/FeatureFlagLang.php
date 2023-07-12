@@ -94,3 +94,6 @@ trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.
 
 trans('Features', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated features page.', 'Admin.Advparameters.Help');
+
+trans('Symfony layout', 'Admin.Advparameters.Feature');
+trans('Enable / Disable symfony layout (in opposition to legacy layout).', 'Admin.Advparameters.Help');
