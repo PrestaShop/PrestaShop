@@ -467,7 +467,7 @@ class HomePage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isQuickViewProductModalVisible(page: Page): Promise<boolean> {
+  async isQuickViewProductModalVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.quickViewModalDiv, 2000);
   }
 
