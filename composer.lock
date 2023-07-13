@@ -5145,16 +5145,16 @@
         },
         {
             "name": "prestashop/autoload",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/autoload.git",
-                "reference": "9b057242f67076a50e55e7cb77a65d595bfb15b4"
+                "reference": "b84a116564d624e3db04fce648dbfee135df87c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/autoload/zipball/9b057242f67076a50e55e7cb77a65d595bfb15b4",
-                "reference": "9b057242f67076a50e55e7cb77a65d595bfb15b4",
+                "url": "https://api.github.com/repos/PrestaShop/autoload/zipball/b84a116564d624e3db04fce648dbfee135df87c0",
+                "reference": "b84a116564d624e3db04fce648dbfee135df87c0",
                 "shasum": ""
             },
             "require": {
@@ -5190,9 +5190,9 @@
             ],
             "description": "PrestaShop legacy autoloading",
             "support": {
-                "source": "https://github.com/PrestaShop/autoload/tree/v1.0.0"
+                "source": "https://github.com/PrestaShop/autoload/tree/v1.0.1"
             },
-            "time": "2022-11-29T16:54:18+00:00"
+            "time": "2023-07-07T13:49:33+00:00"
         },
         {
             "name": "prestashop/blockreassurance",
