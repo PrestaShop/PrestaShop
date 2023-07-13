@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-define('_PS_INSTALL_VERSION_', '8.0.4');
+define('_PS_INSTALL_VERSION_', '8.0.5');
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70205);
 define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 81099);
 
