@@ -28,13 +28,14 @@ namespace PrestaShopBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Adds main PrestaShop core services to the Symfony container.
  */
-class PrestaShopExtension extends Extension
+class PrestaShopExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -60,5 +61,45 @@ class PrestaShopExtension extends Extension
     public function getAlias()
     {
         return 'prestashop';
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        $this->preprendApiConfig($container);
+    }
+
+    public function preprendApiConfig(ContainerBuilder $container)
+    {
+        $paths = [];
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        $moduleDir = $container->getParameter('prestashop.module_dir');
+
+        foreach ($installedModules as $moduleName) {
+            $modulePath = $moduleDir . $moduleName;
+            // Load YAML definition from the config/api_platform folder in the module
+            $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
+            if (file_exists($moduleConfigPath)) {
+                $paths[] = $moduleConfigPath;
+            }
+
+            /**
+             * TODO: Understand why this crashes PrestaShop and redirects to Front Office - no support of entities until then
+             * // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
+             * $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
+             * if (file_exists($entitiesRessourcesPath)) {
+             *   $paths[] = $entitiesRessourcesPath;
+             * }
+             */
+
+            // Load ApiPLatform DTOs from the src/ApiPlatform/Resources folder
+            $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resource', $modulePath);
+            if (file_exists($moduleRessourcesPath)) {
+                $paths[] = $moduleRessourcesPath;
+            }
+        }
+
+        if (!empty($paths)) {
+            $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => $paths]]);
+        }
     }
 }
