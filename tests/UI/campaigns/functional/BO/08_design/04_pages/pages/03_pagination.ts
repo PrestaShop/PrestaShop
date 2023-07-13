@@ -1,5 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -17,7 +16,7 @@ import CMSPageData from '@data/faker/CMSpage';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_design_pages_pages_paginationOfPages';
+const baseContext: string = 'functional_BO_design_pages_pages_pagination';
 
 /*
 Create 11 pages
