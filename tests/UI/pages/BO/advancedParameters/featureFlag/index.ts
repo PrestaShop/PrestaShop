@@ -13,6 +13,8 @@ class FeatureFlag extends BOBasePage {
 
   public readonly featureFlagMultipleImageFormats: string;
 
+  public readonly featureFlagAuthorizationServer: string;
+
   private readonly featureFlagSwitchButton: (status: string, feature: string, toggle: number) => string;
 
   private readonly submitButton: (status: string) => string;
@@ -36,7 +38,7 @@ class FeatureFlag extends BOBasePage {
     // Feature Flag
     this.featureFlagProductPageV2 = 'product_page_v2';
     this.featureFlagMultipleImageFormats = 'multiple_image_format';
-
+    this.featureFlagAuthorizationServer = 'authorization_server';
     // Selectors
     this.featureFlagSwitchButton = (status: string, feature: string, toggle: number) => `#feature_flag_${
       status}_feature_flags_${feature}_enabled_${toggle}`;
@@ -62,6 +64,9 @@ class FeatureFlag extends BOBasePage {
         break;
       case this.featureFlagProductPageV2:
         isStable = true;
+        break;
+      case this.featureFlagAuthorizationServer:
+        isStable = false;
         break;
       default:
         throw new Error(`The feature flag ${featureFlag} is not defined`);
