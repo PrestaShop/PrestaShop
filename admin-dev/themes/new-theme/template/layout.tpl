@@ -37,8 +37,14 @@
             {include file="components/layout/search_form.tpl"}
             <button class="component-search-cancel d-none">{l|escape s='Cancel' d='Admin.Actions'}</button>
           </div>
-
-          {include file="components/layout/mobile_quickaccess.tpl"}
+            {render_template
+              smarty_template="components/layout/mobile_quickaccess.tpl"
+              twig_template="@PrestaShop/Admin/Layout/mobile_quick_access.html.twig"
+              quick_access=$quick_access
+              link=$link
+              quick_access_current_link_icon=$quick_access_current_link_icon
+              quick_access_current_link_name=$quick_access_current_link_name
+            }
         </div>
 
         <div class="component-search-background d-none"></div>
