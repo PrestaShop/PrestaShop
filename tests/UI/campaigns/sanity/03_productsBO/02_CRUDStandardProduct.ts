@@ -1,6 +1,3 @@
-import type {BrowserContext, Page} from 'playwright';
-import {expect} from 'chai';
-
 // Import utils
 import helper from '@utils/helpers';
 import basicHelper from '@utils/basicHelper';
@@ -8,45 +5,40 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
-// Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
-import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductData from '@data/faker/product';
 
-const baseContext: string = 'productV2_sanity_CRUDVirtualProduct';
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
 
-describe('BO - Catalog - Products : CRUD virtual product', async () => {
+const baseContext: string = 'sanity_productsBO_CRUDStandardProduct';
+
+describe('BO - Catalog - Products : CRUD standard product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Data to create virtual product
+  // Data to create standard product
   const newProductData: ProductData = new ProductData({
-    type: 'virtual',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 50,
     minimumQuantity: 1,
     status: true,
   });
   const editProductData: ProductData = new ProductData({
-    type: 'virtual',
+    type: 'standard',
     taxRule: 'FR Taux réduit (10%)',
     quantity: 100,
     minimumQuantity: 1,
     status: true,
   });
-
-  // Pre-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -85,8 +77,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await expect(isModalVisible).to.be.true;
     });
 
-    it('should choose \'Virtual product\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'chooseVirtualProduct', baseContext);
+    it('should choose \'Standard product\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
       await productsPage.selectProductType(page, newProductData.type);
 
@@ -103,8 +95,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
-    it('should create virtual product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createVirtualProduct', baseContext);
+    it('should create standard product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
       await createProductsPage.closeSfToolBar(page);
 
@@ -206,7 +198,4 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

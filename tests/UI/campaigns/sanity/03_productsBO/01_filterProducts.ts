@@ -1,38 +1,27 @@
 // Import utils
-import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
 
-// Import commonTests
+// Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  setFeatureFlag,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/products';
+import productsPage from '@pages/BO/catalog/productsV2';
 
 // Import data
-import Categories from '@data/demo/categories';
 import Products from '@data/demo/products';
-import tax from '@data/demo/tax';
+import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'sanity_productsBO_filterProducts';
 
-// Test of filters in products page
 describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfProducts: number = 0;
-  let numberOfProductsOnPage: number = 0;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -44,8 +33,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Product page V1: Filter products table by : Name, Reference, Category', async () => {
-    // Steps
+  describe('Filter products table by : ID, Name, Reference, Category, Price, Quantity and Status', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -59,70 +47,114 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         dashboardPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
+      const pageTitle: string = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should reset all filters and get number of products in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+    it('should check that no filter is applied by default', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNoFilter', baseContext);
 
-      await productsPage.resetFilterCategory(page);
+      const isVisible: boolean = await productsPage.isResetButtonVisible(page);
+      await expect(isVisible, 'Reset button is visible!').to.be.false;
+    });
 
-      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+    it('should get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
+
+      numberOfProducts = await productsPage.getNumberOfProductsFromHeader(page);
       await expect(numberOfProducts).to.be.above(0);
-
-      // Do not loop more than the products displayed via the pagination
-      numberOfProductsOnPage = await productsPage.getNumberOfProductsOnPage(page);
     });
 
-    it('should check that prices have correct tax values', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkTaxRules', baseContext);
+    [
+      {
+        args: {
+          identifier: 'filterIDMinMax',
+          filterBy: 'id_product',
+          filterValue: {min: 5, max: 10},
+          filterType: 'input',
+        },
+      },
+      {
+        args: {
+          identifier: 'filterName',
+          filterBy: 'product_name',
+          filterValue: Products.demo_14.name,
+          filterType: 'input',
+        },
+      },
+      {
+        args: {
+          identifier: 'filterReference',
+          filterBy: 'reference',
+          filterValue: Products.demo_1.reference,
+          filterType: 'input',
+        },
+      },
+      {
+        args: {
+          identifier: 'filterCategory',
+          filterBy: 'category',
+          filterValue: Categories.women.name,
+          filterType: 'input',
+        },
+      },
+      {
+        args: {
+          identifier: 'filterPriceMinMax',
+          filterBy: 'price',
+          filterValue: {min: 5, max: 10},
+          filterType: 'input',
+        },
+      },
+      {
+        args: {
+          identifier: 'filterQuantityMinMax',
+          filterBy: 'quantity',
+          filterValue: {min: 100, max: 1000},
+          filterType: 'input',
+        },
+      },
+      {
+        args: {
+          identifier: 'filterStatus',
+          filterBy: 'active',
+          filterValue: 'Yes',
+          filterType: 'select',
+        },
+      },
+    ].forEach((test) => {
+      it(`should filter list by '${test.args.filterBy}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}`, baseContext);
 
-      // Check that prices have correct tax values
-      for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
-        const productPrice = await productsPage.getProductPriceFromList(page, i, false);
-        const productPriceATI = await productsPage.getProductPriceFromList(page, i, true);
-        const conversionRate = (100 + parseInt(tax.DefaultFrTax.rate, 10)) / 100;
-        await expect(productPrice).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
-      }
-    });
+        await productsPage.filterProducts(page, test.args.filterBy, test.args.filterValue, test.args.filterType);
 
-    const tests = [
-      {args: {identifier: 'filterName', filterBy: 'name', filterValue: Products.demo_14.name}},
-      {args: {identifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
-      {args: {identifier: 'filterCategory', filterBy: 'category', filterValue: Categories.men.name}},
-    ];
-    tests.forEach((test) => {
-      it(`should filter list by ${test.args.filterBy} and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.identifier}`, baseContext);
+        const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
 
-        if (test.args.filterBy === 'category') {
-          await productsPage.filterProductsByCategory(page, test.args.filterValue);
+        if (test.args.filterBy === 'active') {
+          await expect(numberOfProductsAfterFilter).to.be.above(0);
         } else {
-          await productsPage.filterProducts(page, test.args.filterBy, test.args.filterValue);
+          await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
         }
 
-        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
-        await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
+        for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
+          const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
+
+          if (typeof test.args.filterValue !== 'string') {
+            await expect(textColumn).to.within(test.args.filterValue.min, test.args.filterValue.max);
+          } else if (test.args.filterBy === 'active') {
+            await expect(textColumn).to.be.true;
+          } else {
+            await expect(textColumn).to.be.contain(test.args.filterValue);
+          }
+        }
       });
 
-      it('should reset filter and check result', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
+      it('should reset filter', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetAfter${test.args.identifier}`, baseContext);
 
-        let numberOfProductsAfterReset;
-
-        if (test.args.filterBy === 'category') {
-          await productsPage.resetFilterCategory(page);
-          numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList(page);
-        } else {
-          numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-        }
-
+        const numberOfProductsAfterReset: number = await productsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
