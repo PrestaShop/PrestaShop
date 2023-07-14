@@ -196,6 +196,7 @@ class OrderInvoiceCore extends ObjectModel
             }
 
             $this->setProductImageInformations($row);
+            $this->setProductCurrentStock($row);
 
             $customized_datas = Product::getAllCustomizedDatas($order->id_cart, null, true, null, (int) $row['id_customization']);
             $this->setProductCustomizedDatas($row, $customized_datas);
@@ -260,6 +261,17 @@ class OrderInvoiceCore extends ObjectModel
         if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']])) {
             $product['customizedDatas'] = $customized_datas[$product['product_id']][$product['product_attribute_id']];
         }
+    }
+
+    /**
+     * This method allow to add stock information on a product detail.
+     *
+     * @param array $product
+     */
+    protected function setProductCurrentStock(&$product)
+    {
+        $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct((int) $product['product_id'], (int) $product['product_attribute_id'], (int) $product['id_shop']);
+        $product['location'] = StockAvailable::getLocation((int) $product['product_id'], (int) $product['product_attribute_id'], (int) $product['id_shop']);
     }
 
     /**
