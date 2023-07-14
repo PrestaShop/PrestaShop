@@ -50,8 +50,8 @@ class StockAvailableCore extends ObjectModel
     public $quantity = 0;
 
     /**
-     * @deprecated since 1.7.8
-     * This property was only relevant to advanced stock management and that feature is not maintained anymore
+     * @deprecated since 1.7.8 and will be removed in future version.
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
      *
      * @var bool determine if the available stock value depends on physical stock
      */
