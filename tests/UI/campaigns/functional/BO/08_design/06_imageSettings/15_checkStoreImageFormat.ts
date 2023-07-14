@@ -218,8 +218,6 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await expect(imageTypeJPG).to.be.eq(arg.extOriginal);
 
         // Check the WebP file
-        /*
-         * @todo : https://github.com/PrestaShop/PrestaShop/issues/32528
         const pathImageWEBP: string = `${files.getRootPath()}/img/st/${idStore}-stores_default.webp`;
 
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
@@ -227,7 +225,6 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
         const imageTypeWEBP = await files.getImageType(pathImageWEBP);
         await expect(imageTypeWEBP).to.be.eq('webp');
-         */
       });
 
       it('should go to FO page', async function () {
