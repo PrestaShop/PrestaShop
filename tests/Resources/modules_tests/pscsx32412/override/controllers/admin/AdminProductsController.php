@@ -3849,7 +3849,6 @@ class AdminProductsController extends AdminProductsControllerCore
                     $data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
                     $data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
 
-                    $data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
                     $data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
                     $data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities($this->getFieldValue($product, 'available_date'), $this->context->language->id)) : '0000-00-00');
 
