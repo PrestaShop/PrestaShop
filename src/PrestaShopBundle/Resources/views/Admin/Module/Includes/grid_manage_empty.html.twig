@@ -29,7 +29,7 @@
     <div class="module-short-list">
       <span id="{{ category.refMenu }}_modules" class="module-search-result-title">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
       <div class="modules-list module-list-empty" data-name="{{ category.refMenu }}">
-        {{ hookData }}
+        {{ hookData|raw }}
       </div>
     </div>
   {% endif %}
