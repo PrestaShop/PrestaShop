@@ -7568,9 +7568,16 @@ class ProductCore extends ObjectModel
      * @param int|null $id_shop Shop identifier
      *
      * @return int real_quantity
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0 - use StockAvailable::getQuantityAvailableByProduct directly
      */
     public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = 0, $id_shop = null)
     {
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
         return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
     }
 
