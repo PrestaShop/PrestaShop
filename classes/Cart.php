@@ -1422,36 +1422,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Check if the Cart contains the given Product (Attribute).
-     *
-     * @deprecated 1.7.3.1
-     * @see Cart::getProductQuantity()
-     *
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute ProductAttribute ID
-     * @param int $id_customization Customization ID
-     * @param int $id_address_delivery Delivery Address ID
-     *
-     * @return array|bool Whether the Cart contains the Product
-     *                    Result comes directly from the database
-     */
-    public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
-    {
-        $result = $this->getProductQuantity(
-            $id_product,
-            $id_product_attribute,
-            $id_customization,
-            $id_address_delivery
-        );
-
-        if (empty($result['quantity'])) {
-            return false;
-        }
-
-        return ['quantity' => $result['quantity']];
-    }
-
-    /**
      * Update Product quantity.
      *
      * @param int $quantity Quantity to add (or substract)
@@ -3100,73 +3070,13 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Get all deliveries options available for the current cart formatted like Carriers::getCarriersForOrder
-     * This method was wrote for retrocompatibility with 1.4 theme
-     * New theme need to use Cart::getDeliveryOptionList() to generate carriers option in the checkout process.
-     *
-     * @since 1.5.0
-     * @deprecated 1.7.0
-     *
-     * @param Country $default_country Default Country
-     * @param bool $flush Force flushing cache
-     *
-     * @return array
-     */
-    public function simulateCarriersOutput(Country $default_country = null, $flush = false)
-    {
-        $delivery_option_list = $this->getDeliveryOptionList($default_country, $flush);
-
-        // This method cannot work if there is multiple address delivery
-        if (count($delivery_option_list) > 1 || empty($delivery_option_list)) {
-            return [];
-        }
-
-        $carriers = [];
-        foreach (reset($delivery_option_list) as $key => $option) {
-            $price = $option['total_price_with_tax'];
-            $price_tax_exc = $option['total_price_without_tax'];
-            $name = $img = $delay = '';
-
-            if ($option['unique_carrier']) {
-                $carrier = reset($option['carrier_list']);
-                if (isset($carrier['instance'])) {
-                    $name = $carrier['instance']->name;
-                    $delay = $carrier['instance']->delay;
-                    $delay = isset($delay[Context::getContext()->language->id]) ?
-                        $delay[Context::getContext()->language->id] : $delay[(int) Configuration::get('PS_LANG_DEFAULT')];
-                }
-                if (isset($carrier['logo'])) {
-                    $img = $carrier['logo'];
-                }
-            } else {
-                $nameList = [];
-                foreach ($option['carrier_list'] as $carrier) {
-                    $nameList[] = $carrier['instance']->name;
-                }
-                $name = implode(' -', $nameList);
-                $img = ''; // No images if multiple carriers
-                $delay = '';
-            }
-            $carriers[] = [
-                'name' => $name,
-                'img' => $img,
-                'delay' => $delay,
-                'price' => $price,
-                'price_tax_exc' => $price_tax_exc,
-                'id_carrier' => Cart::intifier($key), // Need to translate to an integer for retrocompatibility reason, in 1.4 template we used intval
-                'is_module' => false,
-            ];
-        }
-
-        return $carriers;
-    }
-
-    /**
      * Simulate output of selected Carrier.
      *
      * @param bool $use_cache Use cache
      *
      * @return int Intified Cart output
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public function simulateCarrierSelectedOutput($use_cache = true)
     {
@@ -3187,6 +3097,8 @@ class CartCore extends ObjectModel
      * The size of this sequence is fixed by the first digit of the return
      *
      * @return string Intified value
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public static function intifier($string, $delimiter = ',')
     {
@@ -3198,6 +3110,8 @@ class CartCore extends ObjectModel
 
     /**
      * Translate an int option_delivery identifier (3240002000) in a string ('24,3,').
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public static function desintifier($int, $delimiter = ',')
     {
