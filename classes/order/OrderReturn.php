@@ -207,7 +207,7 @@ class OrderReturnCore extends ObjectModel
             $return['product_attribute_id'] = (int) $products[(int) $return['id_order_detail']]['product_attribute_id'];
             $return['name'] = $products[(int) $return['id_order_detail']]['product_name'];
             $return['reference'] = $products[(int) $return['id_order_detail']]['product_reference'];
-            $return['id_address_delivery'] = $products[(int) $return['id_order_detail']]['id_address_delivery'];
+            $return['id_address_delivery'] = (int) $order->id_address_delivery;
         }
 
         return $returns;

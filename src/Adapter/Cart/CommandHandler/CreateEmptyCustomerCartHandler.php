@@ -85,7 +85,6 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
         $cart->id_address_delivery = $addressId;
         $cart->id_address_invoice = $addressId;
 
-        $cart->setNoMultishipping();
         $cart->save();
 
         return $cart;
