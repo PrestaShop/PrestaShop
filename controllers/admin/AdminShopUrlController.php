@@ -106,7 +106,8 @@ class AdminShopUrlControllerCore extends AdminController
 
     public function renderList()
     {
-        $this->addRowActionSkipList('delete', [1]);
+        // We will hide "delete" action for all URLs that are set as main ones for the store
+        $this->addRowActionSkipList('delete', $this->getUnremovableUrls());
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -120,6 +121,19 @@ class AdminShopUrlControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         return parent::renderList();
+    }
+
+    /**
+     * Returns a list of URLs that are selected as main ones for some store.
+     *
+     * @return array of URLs that are selected as main
+     */
+    protected function getUnremovableUrls()
+    {
+        return array_column(
+            Db::getInstance()->executeS('SELECT id_shop_url FROM ' . _DB_PREFIX_ . 'shop_url WHERE main = 1'),
+            'id_shop_url'
+        );
     }
 
     /**
