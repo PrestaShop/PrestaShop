@@ -37,6 +37,9 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
   let title: string;
 
   switch (featureFlag) {
+    case featureFlagPage.featureFlagAuthorizationServer:
+      title = 'Authorization server';
+      break;
     case featureFlagPage.featureFlagMultipleImageFormats:
       title = 'Multiple image formats';
       break;

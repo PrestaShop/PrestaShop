@@ -78,6 +78,7 @@ jobs:
           - 'functional:BO:shop-parameters:05-07'
           - 'functional:BO:advanced-parameters:01-06'
           - 'functional:BO:advanced-parameters:07-10'
+          - 'functional:BO:advanced-parameters:11-12'
           - 'functional:BO:header'
           - 'functional:FO:01-03'
           - 'functional:FO:04-07'
@@ -95,6 +96,8 @@ jobs:
           ## 1.7.8.x
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'cldr'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'functional:BO:dashboard'
           - BRANCH: 1.7.8.x
@@ -119,6 +122,8 @@ jobs:
           - BRANCH: 8.0.x
             CAMPAIGN: 'cldr'
           - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 8.0.x
             CAMPAIGN: 'functional:BO:dashboard'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:productV2'
@@ -137,6 +142,8 @@ jobs:
           - BRANCH: 8.0.x
             CAMPAIGN: 'modules'
           ## 8.1.x
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
           - BRANCH: 8.1.x
             CAMPAIGN: 'functional:FO:01-03'
           - BRANCH: 8.1.x
