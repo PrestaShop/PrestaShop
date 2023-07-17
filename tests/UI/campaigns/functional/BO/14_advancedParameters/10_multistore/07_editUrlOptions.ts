@@ -121,7 +121,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
     });
 
     it('should disable the shop URL for the created url', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableSHopURL', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'disableShopURL', baseContext);
 
       await shopUrlPage.setStatus(page, 2, '6', false);
 
@@ -130,7 +130,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
     });
 
     it('should enable the main URL for the created url', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableSHopURL', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'enableMainURL', baseContext);
 
       const isActionPerformed = await shopUrlPage.setStatus(page, 2, '5', true);
 
