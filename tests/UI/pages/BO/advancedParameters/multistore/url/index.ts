@@ -173,7 +173,7 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditShopURLPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditButton(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditButton(row));
   }
 
   /* Filter methods */
