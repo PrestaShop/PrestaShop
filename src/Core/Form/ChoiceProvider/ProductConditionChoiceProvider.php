@@ -54,9 +54,9 @@ final class ProductConditionChoiceProvider implements FormChoiceProviderInterfac
     public function getChoices()
     {
         return [
-            $this->translator->trans('New', [], 'Shop.Theme.Catalog') => ProductCondition::NEW,
-            $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => ProductCondition::USED,
-            $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => ProductCondition::REFURBISHED,
+            $this->translator->trans('New', [], 'Admin.Catalog.Feature') => ProductCondition::NEW,
+            $this->translator->trans('Used', [], 'Admin.Catalog.Feature') => ProductCondition::USED,
+            $this->translator->trans('Refurbished', [], 'Admin.Catalog.Feature') => ProductCondition::REFURBISHED,
         ];
     }
 }
