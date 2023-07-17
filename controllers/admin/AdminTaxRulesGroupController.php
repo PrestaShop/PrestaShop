@@ -153,7 +153,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			LEFT JOIN `' . _DB_PREFIX_ . 'state` s
 				ON (a.`id_state` = s.`id_state`)
 			LEFT JOIN `' . _DB_PREFIX_ . 'tax` t
-				ON (a.`id_tax` = t.`id_tax`)';
+				ON (a.`id_tax` = t.`id_tax` AND t.active = 1)';
         $this->_where = 'AND `id_tax_rules_group` = ' . (int) $id_group;
         $this->_use_found_rows = false;
 
