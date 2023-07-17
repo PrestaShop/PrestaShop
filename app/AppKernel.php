@@ -32,11 +32,11 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '8.0.4';
+    const VERSION = '8.0.5';
     const MAJOR_VERSION_STRING = '8';
     const MAJOR_VERSION = 8;
     const MINOR_VERSION = 0;
-    const RELEASE_VERSION = 4;
+    const RELEASE_VERSION = 5;
 
     /**
      * Lock stream is saved as static field, this way if multiple AppKernel are instanciated (this can happen in
