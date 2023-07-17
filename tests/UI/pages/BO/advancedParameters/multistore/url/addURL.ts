@@ -74,7 +74,7 @@ class AddUrl extends BOBasePage {
    */
   async setMainURL(page: Page, status: string): Promise<string> {
     await this.setChecked(page, this.mainURLButton(status));
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getTextContent(page, this.alertBlock);
   }
@@ -87,7 +87,7 @@ class AddUrl extends BOBasePage {
    */
   async setShopStatus(page: Page, status: string): Promise<string> {
     await this.setChecked(page, this.enabledButton(status));
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getTextContent(page, this.alertBlock);
   }
