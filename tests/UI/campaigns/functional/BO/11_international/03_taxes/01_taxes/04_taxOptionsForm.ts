@@ -62,12 +62,6 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
       \tEcotax: '${taxOption.ecoTax}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateForm${index + 1}`, baseContext);
 
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/32914
-        if (taxOption.ecoTax === 'FR Taux standard (20%)') {
-          this.skip();
-          return;
-        }
-
         const textResult = await taxesPage.updateTaxOption(page, taxOption);
         await expect(textResult).to.be.equal('Update successful');
       });
