@@ -5769,12 +5769,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/laminas-code-lts.git",
-                "reference": "3dbe7f7f48a5d877e02cc70e4f58cb0e1e5cca82"
+                "reference": "c22c7aee2092bcec532b910a1f4dbac0ce6a3bbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/laminas-code-lts/zipball/3dbe7f7f48a5d877e02cc70e4f58cb0e1e5cca82",
-                "reference": "3dbe7f7f48a5d877e02cc70e4f58cb0e1e5cca82",
+                "url": "https://api.github.com/repos/PrestaShop/laminas-code-lts/zipball/c22c7aee2092bcec532b910a1f4dbac0ce6a3bbf",
+                "reference": "c22c7aee2092bcec532b910a1f4dbac0ce6a3bbf",
                 "shasum": ""
             },
             "require": {
@@ -5831,7 +5831,7 @@
                 "rss": "https://github.com/laminas/laminas-code/releases.atom",
                 "source": "https://github.com/laminas/laminas-code"
             },
-            "time": "2022-05-03T11:51:53+00:00"
+            "time": "2023-06-13T07:18:53+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
