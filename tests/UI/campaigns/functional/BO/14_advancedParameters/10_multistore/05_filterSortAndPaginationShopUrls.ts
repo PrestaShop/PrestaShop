@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -17,7 +18,6 @@ import ShopData from '@data/faker/shop';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {disableMultiStoreTest, enableMultiStoreTest} from '@commonTests/BO/advancedParameters/multistore';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopUrls';
 
@@ -34,8 +34,8 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   let browserContext: BrowserContext;
   let page: Page;
 
-  //Pre-condition: Enable multistore
-  enableMultiStoreTest(baseContext);
+  // Pre-condition: Enable multistore
+  setMultiStoreStatus(true, `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -259,5 +259,5 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   });
 
   // Post-condition : Disable multi store
-  disableMultiStoreTest(baseContext);
+  setMultiStoreStatus(false, `${baseContext}_postTest`);
 });

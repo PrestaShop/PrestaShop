@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {disableMultiStoreTest, enableMultiStoreTest} from '@commonTests/BO/advancedParameters/multistore';
+import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -32,7 +32,7 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
   const updateShopData: ShopData = new ShopData({shopGroup: 'Default', categoryRoot: 'Home'});
 
   //Pre-condition: Enable multistore
-  enableMultiStoreTest(baseContext);
+  setMultiStoreStatus(true, `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -159,5 +159,5 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
   });
 
   // Post-condition : Disable multi store
-  disableMultiStoreTest(baseContext);
+  setMultiStoreStatus(false, `${baseContext}_postTest`);
 });

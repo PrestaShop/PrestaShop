@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {disableMultiStoreTest, enableMultiStoreTest} from '@commonTests/BO/advancedParameters/multistore';
+import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -37,7 +37,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
   const ShopUrlData: ShopData = new ShopData({name: 'polpol', shopGroup: '', categoryRoot: ''});
 
   //Pre-condition: Enable multistore
-  enableMultiStoreTest(baseContext);
+  setMultiStoreStatus(true, `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -167,5 +167,5 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
   });
 
   // Post-condition : Disable multi store
-  disableMultiStoreTest(baseContext);
+  setMultiStoreStatus(false, `${baseContext}_postTest`);
 });

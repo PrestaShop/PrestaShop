@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {disableMultiStoreTest, enableMultiStoreTest} from '@commonTests/BO/advancedParameters/multistore';
+import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -34,8 +34,8 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
   let numberOfShopUrls: number = 0;
   const ShopUrlData: ShopData = new ShopData({name: 'ToDelete', shopGroup: '', categoryRoot: ''});
 
-  //Pre-condition: Enable multistore
-  enableMultiStoreTest(baseContext);
+  // Pre-condition: Enable multistore
+  setMultiStoreStatus(true, `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -226,5 +226,5 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
   });
 
   // Post-condition : Disable multi store
-  disableMultiStoreTest(baseContext);
+  setMultiStoreStatus(false, `${baseContext}_postTest`);
 });

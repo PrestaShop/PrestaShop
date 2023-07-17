@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {disableMultiStoreTest, enableMultiStoreTest} from '@commonTests/BO/advancedParameters/multistore';
+import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -36,7 +36,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   const shopCreate: ShopData = new ShopData({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
 
   //Pre-condition: Enable multistore
-  enableMultiStoreTest(baseContext);
+  setMultiStoreStatus(true, `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -284,5 +284,5 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   });
 
   // Post-condition : Disable multi store
-  disableMultiStoreTest(baseContext);
+  setMultiStoreStatus(false, `${baseContext}_postTest`);
 });
