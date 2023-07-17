@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 
 use ApiPlatform\Metadata\Get;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
@@ -38,9 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShopBundle\ApiPlatform\Converters\StringToIntConverter;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\InputBag;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Serializer\Serializer;
 
 class QueryProviderTest extends TestCase
 {
@@ -49,11 +48,14 @@ class QueryProviderTest extends TestCase
      */
     private $queryBus;
 
+    private Serializer|MockObject $serializer;
+
     /**
      * Set up dependencies for HookStatusProvider
      */
     public function setUp(): void
     {
+        $this->serializer = $this->createMock(Serializer::class);
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus
             ->method('handle')
@@ -87,7 +89,15 @@ class QueryProviderTest extends TestCase
 
     public function testProvideHookStatus(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()]);
+        $hookStatusQuery1 = new GetHookStatus(1);
+        $hookStatusQuery2 = new GetHookStatus(2);
+
+        $this->serializer
+            ->expects(static::exactly(2))
+            ->method('denormalize')
+            ->willReturnOnConsecutiveCalls($hookStatusQuery1, $hookStatusQuery2)
+        ;
+        $hookStatusProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
         $get = new Get();
         $get = $get->withExtraProperties(['query' => GetHookStatus::class]);
         /** @var HookStatus $hookStatus */
@@ -128,7 +138,14 @@ class QueryProviderTest extends TestCase
 
     public function testSearchProduct(): void
     {
-        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()]);
+        $searchProductsQuery1 = new SearchProducts('mug', 10, 'EUR');
+        $searchProductsQuery2 = new SearchProducts('search with order id', 10, 'EUR', 1);
+        $this->serializer
+            ->expects(static::exactly(2))
+            ->method('denormalize')
+            ->willReturnOnConsecutiveCalls($searchProductsQuery1, $searchProductsQuery2)
+        ;
+        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
         $get = new Get();
         $get = $get->withExtraProperties([
             'query' => SearchProducts::class,
@@ -136,7 +153,7 @@ class QueryProviderTest extends TestCase
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'mug', 'resultsLimit' => 10, 'isoCode' => 'EUR']);
         self::assertCount(1, $searchProducts);
 
-        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()]);
+        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'search with order id', 'resultsLimit' => 10, 'isoCode' => 'EUR'], ['filters' => ['orderId' => 1]]);
         self::assertCount(0, $searchProducts);
     }

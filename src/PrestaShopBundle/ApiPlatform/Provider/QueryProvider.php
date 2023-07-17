@@ -45,7 +45,7 @@ class QueryProvider implements ProviderInterface
     public function __construct(
         private readonly CommandBusInterface $queryBus,
         private readonly SerializerInterface $apiPlatformSerializer,
-        private readonly iterable $converters,
+        private readonly iterable $converters
     ) {
     }
 
@@ -64,7 +64,7 @@ class QueryProvider implements ProviderInterface
             throw new NoExtraPropertiesFoundException();
         }
 
-        $query = $this->apiPlatformSerializer->denormalize($uriVariables, $queryClass, null, [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true]);
+        $query = $this->apiPlatformSerializer->denormalize($uriVariables, $queryClass);
 
         //Try to call setter on additional query params
         if (count($uriVariables)) {

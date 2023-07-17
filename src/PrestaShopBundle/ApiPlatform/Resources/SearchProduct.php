@@ -82,4 +82,8 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 )]
 class SearchProduct
 {
+    public string $phrase;
+    public int $resultsLimit;
+    public string $isoCode;
+    public int $orderId;
 }
