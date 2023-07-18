@@ -46,6 +46,8 @@ describe('Filter in Products Page', async () => {
       dashboardPage.productsLink,
     );
 
+    await productsPage.closeSfToolBar(page);
+
     const pageTitle = await productsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
