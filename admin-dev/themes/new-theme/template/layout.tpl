@@ -153,7 +153,20 @@
     }
 {/if}
 
-{if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
+{if isset($page_header_toolbar_template)}
+    {render_template
+      smarty_template=$page_header_toolbar_template
+      twig_template="@PrestaShop/Admin/Layout/tool_bar.html.twig"
+      multistore_header=$multistore_header
+      breadcrumbs2=$breadcrumbs2
+      title=$title
+      toolbar_btn=$toolbar_btn
+      table=$table
+      help_link=$help_link
+      enableSidebar=$enableSidebar
+      current_tab_level=$current_tab_level
+    }
+{/if}
 
 <div id="main-div">
     {if $install_dir_exists}
