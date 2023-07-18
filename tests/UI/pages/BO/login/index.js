@@ -48,7 +48,7 @@ class Login extends BOBasePage {
 
     // Wait for navigation if the login is successful
     if (waitForNavigation) {
-      await this.clickAndWaitForNavigation(page, this.submitLoginButton);
+      await this.clickAndWaitForNavigation(page, this.submitLoginButton, 'load');
     } else {
       await page.click(this.submitLoginButton);
     }
