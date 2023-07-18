@@ -34,11 +34,14 @@
       <div class="component component-search" id="header-search-container">
         <div class="component-search-body">
           <div class="component-search-top">
+
               {render_template
                 smarty_template="components/layout/search_form.tpl"
                 twig_template="@PrestaShop/Admin/Layout/search_form.html.twig"
                 bo_query=$bo_query
                 link=$link
+                show_clear_btn= $show_clear_btn|default:null
+                search_type= $search_type|default:null
               }
             <button class="component-search-cancel d-none">{l|escape s='Cancel' d='Admin.Actions'}</button>
           </div>

@@ -28,7 +28,7 @@
       action="{{ link.getAdminLink('AdminSearch') }}"
       role="search">
   <input type="hidden" name="bo_search_type" id="bo_search_type" class="js-search-type" />
-  {% if show_clear_btn is defined and show_clear_btn %}
+  {% if showClearBtn is defined and showClearBtn %}
     <a href="#" class="clear_search hide"><i class="icon-remove"></i></a>
   {% endif %}
   <div class="input-group">
@@ -55,8 +55,8 @@
 
 <script type="text/javascript">
   $(function(){
-    {% if search_type is defined and search_type %}
-      $('.search-option a[data-value=' + {{ search_type ? 1 : 0 }} + ']').click();
+    {% if searchType is defined and searchType %}
+      $('.search-option a[data-value=' + {{ searchType ? 1 : 0 }} + ']').click();
     {% endif %}
       $('#bo_query').one('click', function() {
         $(this).closest('form').removeClass('collapsed');

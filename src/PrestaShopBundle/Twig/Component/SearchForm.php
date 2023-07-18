@@ -36,4 +36,12 @@ class SearchForm
 {
     public string $boQuery;
     public Link $link;
+    public bool $showClearBtn;
+    public bool $searchType;
+
+    public function mount(bool $showClearBtn = null, bool $searchType = null): void
+    {
+        $this->showClearBtn = $showClearBtn ?? false;
+        $this->searchType = $searchType ?? false;
+    }
 }
