@@ -75,6 +75,7 @@ class ModuleRepositoryTest extends TestCase
                 $this->createMock(CacheProvider::class),
                 $this->createMock(HookManager::class),
                 dirname(__DIR__, 3) . '/Resources/modules',
+                1,
             ])
             ->onlyMethods(['getModule'])
             ->getMock()
