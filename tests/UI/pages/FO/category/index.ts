@@ -65,6 +65,12 @@ class Category extends FOBasePage {
 
   private readonly searchFilters: string;
 
+  private readonly searchFiltersCheckbox: string;
+
+  private readonly searchFiltersRadio: string;
+
+  private readonly searchFiltersDropdown: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on category page
@@ -111,7 +117,10 @@ class Category extends FOBasePage {
     this.categoryDescription = '#category-description';
 
     // Filter
-    this.searchFilters = '#search_filters_wrapper';
+    this.searchFilters = '#search_filters';
+    this.searchFiltersCheckbox = `${this.searchFilters} ul[id^="facet"] label.facet-label input[type="checkbox"]`;
+    this.searchFiltersRadio = `${this.searchFilters} ul[id^="facet"] label.facet-label input[type="radio"]`;
+    this.searchFiltersDropdown = `${this.searchFilters} ul[id^="facet"] .facet-dropdown`;
   }
 
   /* Methods */
@@ -352,7 +361,34 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async hasSearchFilters(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.searchFilters);
+    return page.$$eval(this.searchFilters, (all) => all.length !== 0);
+  }
+
+  /**
+   * Return if search filters use checkbox button
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isSearchFiltersCheckbox(page: Page): Promise<boolean> {
+    return page.$$eval(this.searchFiltersCheckbox, (all) => all.length !== 0);
+  }
+
+  /**
+   * Return if search filters use radio button
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isSearchFilterRadio(page: Page): Promise<boolean> {
+    return page.$$eval(this.searchFiltersRadio, (all) => all.length !== 0);
+  }
+
+  /**
+   * Return if search filters use radio button
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isSearchFilterDropdown(page: Page): Promise<boolean> {
+    return page.$$eval(this.searchFiltersDropdown, (all) => all.length !== 0);
   }
 }
 
