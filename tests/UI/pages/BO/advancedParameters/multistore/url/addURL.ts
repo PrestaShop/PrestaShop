@@ -87,7 +87,7 @@ class AddUrl extends BOBasePage {
    */
   async setShopStatus(page: Page, status: string): Promise<string> {
     await this.setChecked(page, this.enabledButton(status));
-    await this.clickAndWaitForURL(page, this.saveButton);
+    await this.waitForSelectorAndClick(page, this.saveButton);
 
     return this.getTextContent(page, this.alertBlock);
   }
