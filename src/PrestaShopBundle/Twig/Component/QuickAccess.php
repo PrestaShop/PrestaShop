@@ -28,14 +28,198 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
-use Link;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
+use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/quick_access.html.twig')]
 class QuickAccess
 {
-    public array $quickAccess;
-    public Link $link;
-    public string $quickAccessCurrentLinkIcon;
-    public string $quickAccessCurrentLinkName;
+    /**
+     * link to new product creation form
+     */
+    private const NEW_PRODUCT_LINK = 'index.php/sell/catalog/products/new';
+
+    /**
+     * link to new product creation form for product v2
+     */
+    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products-v2/create';
+
+    /**
+     * List of Quick Accesses to display
+     */
+    private array $quickAccesses = [];
+
+    /**
+     * Current Quick access by current request uri
+     */
+    private array|false|null $currentQuickAccess = null;
+
+    /**
+     * Clean current Url
+     */
+    private ?string $currentUrl = null;
+
+    /**
+     * Current url title
+     */
+    private ?string $currentUrlTitle = null;
+
+    /**
+     * Tokenized Urls cache
+     */
+    private array $tokenizedUrls = [];
+
+    public function __construct(
+        private readonly LegacyContext $context,
+        private readonly QuickAccessRepositoryInterface $quickAccessRepository,
+        private readonly TabRepository $tabRepository,
+        private readonly CsrfTokenManagerInterface $tokenManager,
+        private readonly UserProvider $userProvider,
+        private readonly RequestStack $requestStack,
+        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        private readonly TranslatorInterface $translator,
+    ) {
+    }
+
+    /**
+     * Get quick accesses to display
+     */
+    public function getQuickAccesses(): array
+    {
+        if (empty($this->quickAccesses)) {
+            // Get context
+            $context = $this->context->getContext();
+
+            // Get language and employee ids
+            $languageId = new LanguageId($this->context->getContext()->employee->id_lang);
+
+            // Retrieve all quick accesses
+            $quickAccesses = $this->quickAccessRepository->fetchAll($languageId);
+
+            // Prepare quick accesses to render the component view properly.
+            foreach ($quickAccesses as $index => &$quick) {
+                // Initialise our Quick Access
+                $quick['class'] = '';
+                $quick['link'] = $context->link->getQuickLink($quick['link']);
+
+                // If this quick access is legacy
+                preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
+                if (isset($admin_tab[1])) {
+                    if (strpos($admin_tab[1], '&')) {
+                        $admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
+                    }
+                }
+                // Let's build our url
+                if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
+                    if (!in_array('ROLE_MOD_TAB_ADMINPRODUCTS_CREATE', $this->userProvider->getUser()->getRoles())) {
+                        // if employee has no access, we don't show product creation link,
+                        // because it causes modal-related issues in product v2
+                        unset($quickAccesses[$index]);
+                        continue;
+                    }
+                    // if new product page feature is enabled we create new product v2 modal popup
+                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
+                        $quick['link'] = self::NEW_PRODUCT_V2_LINK;
+                        $quick['class'] = 'new-product-button';
+                    }
+                }
+
+                // Preparation of the link to display in component view.
+                $quick['link'] = '/' . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
+
+                // Verify if we are currently on this page.
+                $quick['active'] = $this->isCurrentPage($quick['link']);
+
+                // Add token if needed
+                $quick['link'] = $this->getTokenizedUrl($quick['link']);
+            }
+            $this->quickAccesses = $quickAccesses;
+        }
+
+        return $this->quickAccesses;
+    }
+
+    /**
+     * Retrieve and prepare quick accesses data for twig view
+     */
+    public function getCurrentQuickAccess(): array|false
+    {
+        if (null === $this->currentQuickAccess) {
+            $this->currentQuickAccess = current(array_filter($this->getQuickAccesses(), fn ($data) => $data['active']));
+        }
+
+        return $this->currentQuickAccess;
+    }
+
+    /**
+     * Get current clean url.
+     */
+    public function getCleanCurrentUrl(): string
+    {
+        if (null === $this->currentUrl) {
+            $this->currentUrl = rtrim(UrlCleaner::cleanUrl($this->requestStack->getMainRequest()->getRequestUri(), ['_token', 'token']), '/');
+        }
+
+        return $this->currentUrl;
+    }
+
+    /**
+     * Get current title
+     */
+    public function getCurrentUrlTitle(): string
+    {
+        if (null === $this->currentUrlTitle) {
+            $class_name = $this->requestStack->getMainRequest()->attributes->get('_legacy_controller');
+            $tab = $this->tabRepository->findOneByClassName($class_name);
+            $this->currentUrlTitle = $tab ? $this->translator->trans($tab->getWording(), [], $tab->getWordingDomain()) : '';
+        }
+
+        return $this->currentUrlTitle;
+    }
+
+    /**
+     * Get url tokenized
+     */
+    private function getTokenizedUrl(string $baseUrl): string
+    {
+        if (!in_array($baseUrl, $this->tokenizedUrls)) {
+            $url = $baseUrl;
+
+            // Define separator and if the url is legacy or symfony.
+            $separator = strpos($url, '?') ? '&' : '?';
+            preg_match('/controller=(\w*)/', $url, $admin_tab);
+
+            // If legacy link
+            if (isset($admin_tab[1]) && !str_contains('token', $url)) {
+                $token = $admin_tab[1] . $this->tabRepository->findOneIdByClassName($admin_tab[1]) . $this->context->getContext()->employee->id;
+                $url .= $separator . 'token=' . \Tools::getAdminToken($token);
+            }
+
+            // If symfony link
+            if (!isset($admin_tab[1]) && !str_contains('_token', $url)) {
+                $url .= $separator . '_token=' . $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
+            }
+            $this->tokenizedUrls[$baseUrl] = $url;
+        }
+
+        return $this->tokenizedUrls[$baseUrl];
+    }
+
+    /**
+     * Return true if the current page is the quick access url
+     */
+    private function isCurrentPage(string $url): bool
+    {
+        return 0 === strcasecmp($this->getCleanCurrentUrl(), rtrim($url, '/'));
+    }
 }

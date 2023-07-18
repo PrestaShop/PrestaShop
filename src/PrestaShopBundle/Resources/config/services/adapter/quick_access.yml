@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: false
+    bind:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessRepositoryInterface:
+    alias: PrestaShop\PrestaShop\Adapter\QuickAccess\Repository\QuickAccessRepository
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\Repository\QuickAccessRepository:
+    autowire: true

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,5 +22,23 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{{ component('QuickAccess') }}
+ */
+
+namespace PrestaShop\PrestaShop\Core\QuickAccess;
+
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+
+/**
+ * Define the contract to access Quick Accesses.
+ */
+interface QuickAccessRepositoryInterface
+{
+    /**
+     * Returns the complete list of quick accesses.
+     *
+     * @param LanguageId $languageId
+     *
+     * @return array
+     */
+    public function fetchAll(LanguageId $languageId): array;
+}
