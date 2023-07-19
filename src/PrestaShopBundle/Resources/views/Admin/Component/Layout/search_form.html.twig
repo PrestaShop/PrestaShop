@@ -1,0 +1,66 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<form id="header_search"
+      class="bo_search_form dropdown-form js-dropdown-form collapsed"
+      method="post"
+      action="{{ link.getAdminLink('AdminSearch') }}"
+      role="search">
+  <input type="hidden" name="bo_search_type" id="bo_search_type" class="js-search-type" />
+  {% if showClearBtn is defined and showClearBtn %}
+    <a href="#" class="clear_search hide"><i class="icon-remove"></i></a>
+  {% endif %}
+  <div class="input-group">
+    <input type="text" class="form-control js-form-search" id="bo_query" name="bo_query" value="{{ boQuery }}" placeholder="{{ 'Search (e.g.: product reference, customer name…)'|trans({}, 'Admin.Navigation.Header') }}" aria-label="{{ 'Searchbar'|trans({}, 'Admin.Navigation.Header') }}">
+    <div class="input-group-append">
+      <button type="button" class="btn btn-outline-secondary dropdown-toggle js-dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ 'Everywhere'|trans({}, 'Admin.Navigation.Header') }}
+      </button>
+      <div class="dropdown-menu js-items-list">
+        <a class="dropdown-item" data-item="{{ 'Everywhere'|trans({}, 'Admin.Navigation.Header') }}" href="#" data-value="0" data-placeholder="{{ 'What are you looking for?'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-search"><i class="material-icons">search</i> {{ 'Everywhere'|trans({}, 'Admin.Navigation.Header') }}</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" data-item="{{ 'Catalog'|trans({}, 'Admin.Global') }}" href="#" data-value="1" data-placeholder="{{ 'Product name, reference, etc.'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-book"><i class="material-icons">store_mall_directory</i> {{ 'Catalog'|trans({}, 'Admin.Global') }}</a>
+        <a class="dropdown-item" data-item="{{ 'Customers'|trans({}, 'Admin.Navigation.Header') }} {{ 'by name'|trans }}" href="#" data-value="2" data-placeholder="{{ 'Name'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-group"><i class="material-icons">group</i> {{ 'Customers'|trans({}, 'Admin.Navigation.Header') }} {{ 'by name'|trans({}, 'Admin.Navigation.Header') }} </a>
+        <a class="dropdown-item" data-item="{{ 'Customers'|trans({}, 'Admin.Navigation.Header') }} {{ 'by ip address'|trans }}" href="#" data-value="6" data-placeholder="{{ '123.45.67.89'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-desktop"><i class="material-icons">desktop_mac</i>{{ 'Customers'|trans({}, 'Admin.Navigation.Header') }} {{ 'by IP address'|trans({}, 'Admin.Navigation.Header') }}</a>
+        <a class="dropdown-item" data-item="{{ 'Orders'|trans({}, 'Admin.Global') }}" href="#" data-value="3" data-placeholder="{{ 'Order ID'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-credit-card"><i class="material-icons">shopping_basket</i> {{ 'Orders'|trans({}, 'Admin.Global') }}</a>
+        <a class="dropdown-item" data-item="{{ 'Invoices'|trans({}, 'Admin.Global') }}" href="#" data-value="4" data-placeholder="{{ 'Invoice number'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-book"><i class="material-icons">book</i> {{ 'Invoices'|trans({}, 'Admin.Global') }}</a>
+        <a class="dropdown-item" data-item="{{ 'Carts'|trans({}, 'Admin.Global') }}" href="#" data-value="5" data-placeholder="{{ 'Cart ID'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-shopping-cart"><i class="material-icons">shopping_cart</i> {{ 'Carts'|trans({}, 'Admin.Global') }}</a>
+        <a class="dropdown-item" data-item="{{ 'Modules'|trans({}, 'Admin.Global') }}" href="#" data-value="7" data-placeholder="{{ 'Module name'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-puzzle-piece"><i class="material-icons">extension</i> {{ 'Modules'|trans({}, 'Admin.Global') }}</a>
+      </div>
+      <button class="btn btn-primary" type="submit"><span class="d-none">{{ 'SEARCH'|trans({}, 'Admin.Navigation.Header') }}</span><i class="material-icons">search</i></button>
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  $(function(){
+    {% if searchType is defined and searchType %}
+      $('.search-option a[data-value=' + {{ searchType ? 1 : 0 }} + ']').click();
+    {% endif %}
+      $('#bo_query').one('click', function() {
+        $(this).closest('form').removeClass('collapsed');
+      });
+    });
+</script>
+
