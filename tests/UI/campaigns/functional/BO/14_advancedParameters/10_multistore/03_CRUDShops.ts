@@ -12,7 +12,6 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
-import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
 // Import data
 import ShopData from '@data/faker/shop';
