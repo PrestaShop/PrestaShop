@@ -28,10 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
+use Context;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Tab;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/non_responsive.html.twig')]
 class NonResponsive
 {
-    public string $defaultTabLink;
+    private ?string $defaultTabLink = null;
+
+    public function getDefaultTabLink(): string
+    {
+        if ($this->defaultTabLink === null) {
+            $this->defaultTabLink = Context::getContext()->link->getAdminLink(Tab::getClassNameById((int) Context::getContext()->employee->default_tab));
+        }
+
+        return $this->defaultTabLink;
+    }
 }

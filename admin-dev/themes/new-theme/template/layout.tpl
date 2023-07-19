@@ -189,7 +189,6 @@
     {render_template
       smarty_template="components/layout/non-responsive.tpl"
       twig_template="@PrestaShop/Admin/Layout/non_responsive.html.twig"
-      default_tab_link=$default_tab_link
     }
   <div class="mobile-layer"></div>
 
