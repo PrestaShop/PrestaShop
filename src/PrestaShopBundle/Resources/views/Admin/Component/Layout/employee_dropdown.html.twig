@@ -31,14 +31,14 @@
       <div class="employee-wrapper-avatar">
         <div class="employee-top">
           <span class="employee-avatar">
-            <img class="avatar rounded-circle" src="{{ employee.getImage }}" alt="{{ employee.firstname }}" />
+            <img class="avatar rounded-circle" src="{{ this.employee.getImage }}" alt="{{ this.employee.firstname }}" />
           </span>
           <span class="employee_profile">
-            {{ 'Welcome back %name%'|trans({'%name%': employee.firstname}, 'Admin.Navigation.Header') }}
+            {{ 'Welcome back %name%'|trans({'%name%': this.employee.firstname}, 'Admin.Navigation.Header') }}
           </span>
         </div>
 
-        <a class="dropdown-item employee-link profile-link" href="{{ path('admin_employees_edit', {employeeId: employee.id}) }}">
+        <a class="dropdown-item employee-link profile-link" href="{{ path('admin_employees_edit', {employeeId: this.employee.id}) }}">
           <i class="material-icons">edit</i>
           <span>
             {{ 'Your profile'|trans({}, 'Admin.Navigation.Header') }}
@@ -61,7 +61,7 @@
         {% endif %}
       {% endfor %}
 
-      <a class="dropdown-item employee-link text-center" id="header_logout" href="{{ logout_link|escape('html_attr') }}">
+      <a class="dropdown-item employee-link text-center" id="header_logout" href="{{ path('AdminLogin', {'logout' : 1})|escape('html_attr') }}">
         <i class="material-icons d-lg-none">power_settings_new</i>
         <span>
           {{ 'Sign out'|trans({}, 'Admin.Navigation.Header') }}
