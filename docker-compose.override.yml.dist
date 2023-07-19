@@ -21,6 +21,13 @@ services:
       MYSQL_ROOT_PASSWORD: prestashop
       MYSQL_DATABASE: prestashop
 
+  keycloak:
+    ports:
+      - "8003:8080"
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+
   prestashop-git:
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}

@@ -17,13 +17,8 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.3
-    environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     command:
       - start-dev
-    ports:
-      - "8003:8080"
 
   prestashop-git:
     hostname: ${PS_HOSTNAME:-localhost}
