@@ -148,18 +148,8 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
     });
   });
 
-  // 4 : Delete shop URL
-  describe('delete shop URL', async () => {
-    it('should delete the shop URL', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteShopURL', baseContext);
-
-      const textResult = await shopUrlPage.deleteShopURL(page, 1);
-      await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
-    });
-  });
-
   // 4 : Delete the shop
-  describe('delete shop', async () => {
+  describe('Delete shop', async () => {
     it('should go to the created shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedShopPage', baseContext);
 
