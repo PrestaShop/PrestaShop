@@ -6,13 +6,14 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import createAccountTest from '@commonTests/FO/hummingbird/account';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {passwordReminderPage} from '@pages/FO/passwordReminder';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
+import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
 
 // Import data
 import CustomerData from '@data/faker/customer';
@@ -22,7 +23,7 @@ import {expect} from 'chai';
 import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_login_passwordReminder';
+const baseContext: string = 'functional_FO_hummingbird_login_passwordReminder';
 
 /*
 Pre-condition:
@@ -50,11 +51,14 @@ describe('FO - Login : Password reminder', async () => {
   customerNewPassword.email = customerData.email;
   customerNewPassword.password = newPassword;
 
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_1`);
+
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest_1`);
+  setupSmtpConfigTest(`${baseContext}_preTest_2`);
 
   // Pre-condition : Create new customer on FO
-  createAccountTest(customerData, `${baseContext}_preTest_2`);
+  createAccountTest(customerData, `${baseContext}_preTest_3`);
 
   // before and after functions
   before(async function () {
@@ -201,4 +205,7 @@ describe('FO - Login : Password reminder', async () => {
 
   // Post-condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_3`);
 });

@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class PasswordReminder extends FOBasePage {
+class PasswordReminderPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly errorMessage: string;
@@ -18,7 +18,7 @@ class PasswordReminder extends FOBasePage {
 
   private readonly sendResetLinkButton: string;
 
-  private readonly emailAddressText: string;
+  protected emailAddressText: string;
 
   private readonly newPasswordInput: string;
 
@@ -26,9 +26,9 @@ class PasswordReminder extends FOBasePage {
 
   private readonly submitButton: string;
 
-  private readonly sendResetLinkSuccessAlert: string;
+  protected sendResetLinkSuccessAlert: string;
 
-  private readonly errorMessageAlert: string;
+  protected errorMessageAlert: string;
 
   /**
    * @constructs
@@ -123,4 +123,5 @@ class PasswordReminder extends FOBasePage {
   }
 }
 
-export default new PasswordReminder();
+const passwordReminderPage = new PasswordReminderPage();
+export {passwordReminderPage, PasswordReminderPage};
