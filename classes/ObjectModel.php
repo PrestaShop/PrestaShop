@@ -1965,11 +1965,27 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return false;
             }
 
+            /** @var PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
+            $imageFormatConfiguration = ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
+            $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
+
             $types = ImageType::getImagesTypes();
             foreach ($types as $image_type) {
                 if (file_exists($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)
                 && !unlink($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)) {
                     return false;
+                }
+
+                foreach ($configuredImageFormats as $imageFormat) {
+                    $file = $this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $imageFormat;
+                    if (file_exists($file)) {
+                        unlink($file);
+                    }
+
+                    $file = $this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '2x.' . $imageFormat;
+                    if (file_exists($file)) {
+                        unlink($file);
+                    }
                 }
             }
         }

@@ -63,15 +63,31 @@ class DeleteManufacturerLogoImageHandler extends AbstractManufacturerCommandHand
 
         $imageTypes = ImageType::getImagesTypes('manufacturers');
 
+        /** @var \PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
+        $imageFormatConfiguration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
+        $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
+
         foreach ($imageTypes as $imageType) {
-            $path = sprintf(
-                '%s%s-%s.jpg',
-                $this->imageDir,
-                $command->getManufacturerId()->getValue(),
-                stripslashes($imageType['name'])
-            );
-            if ($fs->exists($path)) {
-                $fs->remove($path);
+            foreach ($configuredImageFormats as $imageFormat) {
+                $path = sprintf(
+                    '%s%s-%s.' . $imageFormat,
+                    $this->imageDir,
+                    $command->getManufacturerId()->getValue(),
+                    stripslashes($imageType['name'])
+                );
+                if ($fs->exists($path)) {
+                    $fs->remove($path);
+                }
+
+                $path = sprintf(
+                    '%s%s-%s2x.' . $imageFormat,
+                    $this->imageDir,
+                    $command->getManufacturerId()->getValue(),
+                    stripslashes($imageType['name'])
+                );
+                if ($fs->exists($path)) {
+                    $fs->remove($path);
+                }
             }
         }
 
