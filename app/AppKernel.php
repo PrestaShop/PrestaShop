@@ -32,11 +32,11 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.8.9';
+    const VERSION = '1.7.8.10';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
     const MINOR_VERSION = 8;
-    const RELEASE_VERSION = 9;
+    const RELEASE_VERSION = 10;
 
     /**
      * {@inheritdoc}
