@@ -125,6 +125,10 @@ export default class FOBasePage extends CommonPage {
 
   protected readonly userMenuDropdown: string;
 
+  protected readonly languageSelector: string;
+
+  protected readonly navbarLink: string;
+
   protected theme: string;
 
   /**
@@ -210,6 +214,8 @@ export default class FOBasePage extends CommonPage {
 
     // Hummingbird
     this.userMenuDropdown = '#userMenuButton';
+    this.languageSelector = '#language-selector';
+    this.navbarLink = '.navbar-brand';
 
     this.theme = 'classic';
   }
@@ -267,6 +273,12 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToHomePage(page: Page): Promise<void> {
+    if (this.theme === 'hummingbird') {
+      await this.waitForVisibleSelector(page, this.navbarLink);
+      await this.clickAndWaitForLoadState(page, this.navbarLink);
+      return;
+    }
+
     await this.waitForVisibleSelector(page, this.desktopLogo);
     await this.clickAndWaitForLoadState(page, this.desktopLogoLink);
   }
@@ -345,6 +357,19 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async changeLanguage(page: Page, lang: string = 'en'): Promise<void> {
+    if (this.theme === 'hummingbird') {
+      const langOptions = await page.$$(`${this.languageSelector} option`);
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [keyOption, langOption] of Object.entries(langOptions)) {
+        if ((await langOption.getAttribute('data-iso-code')) === lang) {
+          await page.selectOption(this.languageSelector, {index: parseInt(keyOption, 10)});
+          return;
+        }
+      }
+
+      return;
+    }
     await Promise.all([
       page.click(this.languageSelectorExpandIcon),
       this.waitForVisibleSelector(page, this.languageSelectorList),

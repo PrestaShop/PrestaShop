@@ -28,7 +28,7 @@ class LoginPage extends FOBasePage {
 
   protected displayRegisterFormLink: string;
 
-  private readonly passwordReminderLink: string;
+  protected passwordReminderLink: string;
 
   private readonly showPasswordButton: string;
 
