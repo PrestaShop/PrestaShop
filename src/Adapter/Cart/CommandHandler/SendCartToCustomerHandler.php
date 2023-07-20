@@ -40,6 +40,8 @@ use Validate;
 
 /**
  * @internal
+ *
+ * @deprecated Since 9.0 and will be removed in the next major.
  */
 #[AsCommandHandler]
 final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterface
