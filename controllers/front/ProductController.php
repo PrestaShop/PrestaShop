@@ -437,11 +437,22 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product_for_template = $filteredProduct['object'];
             }
 
-            $manufacturerPresenter = new ManufacturerPresenter($this->context->link);
-            $productManufacturer = $manufacturerPresenter->present(
-                new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
-                $this->context->language
-            );
+            // Prepare information about product manufacturer
+            $productManufacturer = null;
+            $manufacturerImageUrl = null;
+            $productBrandUrl = null;
+
+            if (!empty($this->product->id_manufacturer)) {
+                $manufacturerPresenter = new ManufacturerPresenter($this->context->link);
+                $productManufacturer = $manufacturerPresenter->present(
+                    new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
+                    $this->context->language
+                );
+
+                // These two variables are deprecated are kept just for backward compatibility and will be removed in v10
+                $manufacturerImageUrl = $productManufacturer['image']['small']['url'];
+                $productBrandUrl = $productManufacturer['url'];
+            }
 
             $this->context->smarty->assign([
                 'priceDisplay' => $priceDisplay,
@@ -452,8 +463,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product' => $product_for_template,
                 'displayUnitPrice' => !empty($this->product->unity) && $this->product->unit_price > 0.000000,
                 'product_manufacturer' => $productManufacturer,
-                'manufacturer_image_url' => $productManufacturer['image']['small']['url'],
-                'product_brand_url' => $productManufacturer['url'],
+                'manufacturer_image_url' => $manufacturerImageUrl,
+                'product_brand_url' => $productBrandUrl,
             ]);
 
             // Assign attribute groups to the template
