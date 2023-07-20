@@ -21,6 +21,7 @@ admin_features_search:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminTracking:submitFilterfeature
     gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory
     redirectRoute: admin_features_index
 
@@ -52,6 +53,7 @@ admin_features_export:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::exportAction'
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminThemes:exportfeature
 
 admin_features_update_position:
   path: /update-position
@@ -59,6 +61,7 @@ admin_features_update_position:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::updatePositionAction
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:updateFeaturesPositions
     position_definition: prestashop.core.grid.feature.position_definition
     redirect_route: admin_features_index
 
