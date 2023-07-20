@@ -270,8 +270,10 @@ GitHub contributors:
 - Fabio Chelly
 - Fabio Vannini
 - Fabrice Pantanella
+- fatm
 - Fatma BOUCHEKOI
 - Fatma Bouchekoua
+- Fatima Mazhit
 - fchellypresta
 - Felipe Uribe
 - fetis
@@ -677,6 +679,7 @@ GitHub contributors:
 - Petyuska
 - Philip Iezzi
 - PhpMadman
+- PICHAT Morgan
 - Pierre
 - Pierre Avizou
 - Pierre Joube
@@ -885,6 +888,7 @@ GitHub contributors:
 - tiledcode
 - timactive
 - timsit
+- tleon
 - tmackay
 - TMMeilleur
 - tolispy
