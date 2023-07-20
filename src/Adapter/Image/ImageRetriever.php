@@ -179,11 +179,9 @@ class ImageRetriever
 
         $urls = [];
 
-        // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
-        $originalImagePath = implode(DIRECTORY_SEPARATOR, [
-            $imageFolderPath,
-            $id_image . '.jpg',
-        ]);
+        // Should we generate all sizes also in double the resolution?
+        // Obsolete solution, will be removed
+        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         /*
          * Let's resolve which formats we will use for image generation.
@@ -210,6 +208,19 @@ class ImageRetriever
         $image_types = ImageType::getImagesTypes($type, true);
         foreach ($image_types as $image_type) {
             $sources = [];
+            $formattedName = ImageType::getFormattedName('small');
+
+            if ($type === 'categories' && $formattedName === $image_type['name']) {
+                $originalFileName = $id_image . '_thumb.jpg';
+            } else {
+                $originalFileName = $id_image . '.jpg';
+            }
+
+            // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
+            $originalImagePath = implode(DIRECTORY_SEPARATOR, [
+                $imageFolderPath,
+                $originalFileName,
+            ]);
 
             foreach ($configuredImageFormats as $imageFormat) {
                 // Generate the thumbnail

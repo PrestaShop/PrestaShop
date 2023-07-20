@@ -491,7 +491,7 @@ class ProductLazyArray extends AbstractLazyArray
         if ($this->product['new']) {
             $flags['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
+                'label' => $this->translator->trans('New', [], 'Shop.Theme.Global'),
             ];
         }
 

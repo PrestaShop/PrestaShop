@@ -24,11 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Note this value must be hard-coded and can't import PrestaShop\PrestaShop\Core\Version::VERSION because it's loaded/used
-// in very basic scripts that don't use autoload and can't recognize the class
-define('_PS_INSTALL_VERSION_', '9.0.0');
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 80100);
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 80299);
+
+define('_PS_INSTALL_VERSION_', '8.1.1');
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70205);
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 81099);
 
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '8.1');
 define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.2');
