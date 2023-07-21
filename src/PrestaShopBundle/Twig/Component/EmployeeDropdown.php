@@ -28,16 +28,46 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
+use Context;
 use Employee;
-use Link;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/employee_dropdown.html.twig')]
 class EmployeeDropdown
 {
-    public Employee $employee;
-    public Link $link;
-    public ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu;
-    public string $logout_link;
+    private ?Employee $employee = null;
+    public ?ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu = null;
+
+    public function __construct(private HookDispatcherInterface $hookDispatcher)
+    {
+    }
+
+    public function getEmployee()
+    {
+        if ($this->employee === null) {
+            $this->employee = Context::getContext()->employee;
+        }
+
+        return $this->employee;
+    }
+
+    public function getDisplayBackOfficeEmployeeMenu()
+    {
+        if ($this->displayBackOfficeEmployeeMenu === null) {
+            $menuLinksCollections = new ActionsBarButtonsCollection();
+
+            $this->hookDispatcher->dispatchWithParameters(
+                'displayBackOfficeEmployeeMenu',
+                [
+                    'links' => $menuLinksCollections,
+                ]
+            );
+
+            $this->displayBackOfficeEmployeeMenu = $menuLinksCollections;
+        }
+
+        return $this->displayBackOfficeEmployeeMenu;
+    }
 }

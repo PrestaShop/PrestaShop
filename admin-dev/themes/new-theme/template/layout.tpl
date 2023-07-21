@@ -133,10 +133,6 @@
             {render_template
               smarty_template="components/layout/employee_dropdown.tpl"
               twig_template="@PrestaShop/Admin/Layout/employee_dropdown.html.twig"
-              employee=$employee
-              link=$link
-              displayBackOfficeEmployeeMenu=$displayBackOfficeEmployeeMenu
-              logout_link=$logout_link
             }
         </div>
         {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
