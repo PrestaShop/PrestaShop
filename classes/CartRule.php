@@ -611,6 +611,12 @@ class CartRuleCore extends ObjectModel
      */
     public static function deleteByIdCustomer($id_customer)
     {
+        // Remove cart rules only if we got some sensible ID of a customer.
+        // If we would pass zero further below, it would delete all non-customer-restricted cart rules.
+        if (empty($id_customer)) {
+            return false;
+        }
+
         $return = true;
         $cart_rules = new PrestaShopCollection('CartRule');
         $cart_rules->where('id_customer', '=', $id_customer);
