@@ -4791,16 +4791,16 @@
         },
         {
             "name": "prestashop/autoload",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/autoload.git",
-                "reference": "9b057242f67076a50e55e7cb77a65d595bfb15b4"
+                "reference": "b84a116564d624e3db04fce648dbfee135df87c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/autoload/zipball/9b057242f67076a50e55e7cb77a65d595bfb15b4",
-                "reference": "9b057242f67076a50e55e7cb77a65d595bfb15b4",
+                "url": "https://api.github.com/repos/PrestaShop/autoload/zipball/b84a116564d624e3db04fce648dbfee135df87c0",
+                "reference": "b84a116564d624e3db04fce648dbfee135df87c0",
                 "shasum": ""
             },
             "require": {
@@ -4836,9 +4836,9 @@
             ],
             "description": "PrestaShop legacy autoloading",
             "support": {
-                "source": "https://github.com/PrestaShop/autoload/tree/v1.0.0"
+                "source": "https://github.com/PrestaShop/autoload/tree/v1.0.1"
             },
-            "time": "2022-11-29T16:54:18+00:00"
+            "time": "2023-07-07T13:49:33+00:00"
         },
         {
             "name": "prestashop/blockreassurance",
@@ -5399,6 +5399,76 @@
                 "source": "https://github.com/PrestaShop/gsitemap/tree/v4.3.0"
             },
             "time": "2023-04-05T13:04:34+00:00"
+        },
+        {
+            "name": "prestashop/laminas-code-lts",
+            "version": "dev-4.5-lts",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/laminas-code-lts.git",
+                "reference": "c22c7aee2092bcec532b910a1f4dbac0ce6a3bbf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/laminas-code-lts/zipball/c22c7aee2092bcec532b910a1f4dbac0ce6a3bbf",
+                "reference": "c22c7aee2092bcec532b910a1f4dbac0ce6a3bbf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2, <8.2"
+            },
+            "replace": {
+                "laminas/laminas-code": "^4.5"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^1.13.2",
+                "ext-phar": "*",
+                "laminas/laminas-coding-standard": "^2.1.0",
+                "laminas/laminas-stdlib": "^3.2.1",
+                "phpunit/phpunit": "^8.5.26",
+                "psalm/plugin-phpunit": "^0.16.1",
+                "vimeo/psalm": "^4.13.1"
+            },
+            "suggest": {
+                "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
+                "laminas/laminas-stdlib": "Laminas\\Stdlib component"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "name": "laminas/laminas-code",
+                    "url": "https://github.com/laminas/laminas-code"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "polyfill/ReflectionEnumPolyfill.php"
+                ],
+                "psr-4": {
+                    "Laminas\\Code\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Adding support for a wider range of PHP versions to laminas/laminas-code",
+            "homepage": "https://github.com/prestashop/laminas-code-lts",
+            "keywords": [
+                "code",
+                "laminas",
+                "laminasframework"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-code/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-code/issues",
+                "rss": "https://github.com/laminas/laminas-code/releases.atom",
+                "source": "https://github.com/laminas/laminas-code"
+            },
+            "time": "2023-06-13T07:18:53+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",

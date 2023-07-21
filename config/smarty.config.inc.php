@@ -122,6 +122,18 @@ smartyRegisterFunction($smarty, 'modifier', 'print_r', 'print_r');
 smartyRegisterFunction($smarty, 'modifier', 'var_dump', 'var_dump');
 smartyRegisterFunction($smarty, 'modifier', 'lcfirst', 'lcfirst');
 smartyRegisterFunction($smarty, 'modifier', 'nl2br', 'nl2br');
+smartyRegisterFunction($smarty, 'modifier', 'sizeof', 'sizeof');
+smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
+smartyRegisterFunction($smarty, 'modifier', 'substr', 'substr');
+smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
+smartyRegisterFunction($smarty, 'modifier', 'date', 'date');
+smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
+smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
+smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
+smartyRegisterFunction($smarty, 'modifier', 'stripslashes', 'stripslashes');
+smartyRegisterFunction($smarty, 'modifier', 'mt_rand', 'mt_rand');
+smartyRegisterFunction($smarty, 'modifier', 'md5', 'md5');
+smartyRegisterFunction($smarty, 'modifier', 'floatval', 'floatval');
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
