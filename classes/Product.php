@@ -5771,7 +5771,6 @@ class ProductCore extends ObjectModel
         }
 
         $row['id_image'] = Product::defineProductImage($row, $id_lang);
-        $row['features'] = Product::getFrontFeaturesStatic((int) $id_lang, $row['id_product']);
 
         $row['attachments'] = [];
         if (!isset($row['cache_has_attachments']) || $row['cache_has_attachments']) {
