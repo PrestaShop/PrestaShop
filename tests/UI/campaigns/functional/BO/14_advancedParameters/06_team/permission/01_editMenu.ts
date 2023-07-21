@@ -67,7 +67,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
     it('should check the checkbox \'ALL\' from the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllCheckbox', baseContext);
 
-      const isPermissionDefined = await permissionsPage.bulkSetPermission(page, 'all');
+      const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, 'all');
       await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
     });
 
@@ -77,7 +77,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       {args: {action: 'edit'}},
       {args: {action: 'delete'}},
     ].forEach((test) => {
-      it(`should check that everything in '${test.args.action}' block is checked`, async function () {
+      it(`should check that everything in '${test.args.action}' permission is checked`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check_${test.args.action}1`, baseContext);
 
         const isBulkPermissionPerformed = await permissionsPage.isBulkPermissionPerformed(page, test.args.action);
@@ -90,7 +90,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
     it('should uncheck the checkbox \'ALL\' from the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uncheckAllCheckbox', baseContext);
 
-      const isPermissionDefined = await permissionsPage.bulkSetPermission(page, 'all', false);
+      const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, 'all', false);
       await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
     });
 
@@ -100,7 +100,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       {args: {action: 'edit'}},
       {args: {action: 'delete'}},
     ].forEach((test) => {
-      it(`should check that everything in '${test.args.action}' block is unchecked`, async function () {
+      it(`should check that everything in '${test.args.action}' permission is unchecked`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `unchecked_${test.args.action}1`, baseContext);
 
         const isBulkPermissionPerformed = await permissionsPage.isBulkPermissionPerformed(page, test.args.action, false);
@@ -119,12 +119,12 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       it(`should check '${test.args.action}' checkbox from the header`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckbox_${index}`, baseContext);
 
-        const isPermissionDefined = await permissionsPage.bulkSetPermission(page, test.args.action);
+        const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, test.args.action);
         await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
       });
 
-      it(`should check that everything in '${test.args.action}' block is checked`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckboxForBlock${index}`, baseContext);
+      it(`should check that everything in '${test.args.action}' permission is checked`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckboxForpermission${index}`, baseContext);
 
         const isBulkPermissionPerformed = await permissionsPage.isBulkPermissionPerformed(page, test.args.action);
         await expect(isBulkPermissionPerformed).to.be.true;
@@ -149,7 +149,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       {args: {action: 'delete'}},
       {args: {action: 'all'}},
     ].forEach((test, index: number) => {
-      it(`should check that '${test.args.action}' block is checked for all menu`, async function () {
+      it(`should check that '${test.args.action}' permission is checked for all menu`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAfterRefreshPage${index}`, baseContext);
 
         const number = await permissionsPage.getNumberOfCheckBoxUnChecked(page, test.args.action);
@@ -162,9 +162,9 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
     it('should uncheck the checkbox \'ALL\' from the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uncheckAll', baseContext);
 
-      await permissionsPage.bulkSetPermission(page, 'all', false);
+      await permissionsPage.setPermissionOnAllPages(page, 'all', false);
 
-      const isPermissionDefined = await permissionsPage.bulkSetPermission(page, 'all', false);
+      const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, 'all', false);
       await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
     });
 

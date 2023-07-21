@@ -12,17 +12,25 @@ class Permissions extends BOBasePage {
 
   private readonly profileSubTab: (profileName: string) => string;
 
-  private readonly profileAccess: (className: string, access: string) => string;
+  private readonly menuTableProfileAccess: (className: string, access: string) => string;
 
   private readonly menuTable: string;
 
-  private readonly permissionCheckbox: string;
+  private readonly modulesTable: string;
+
+  private readonly menuTablePermissionCheckboxAll: string;
 
   private readonly menuTableHeaderCheckbox: (permission: string) => string;
 
+  private readonly modulesTableHeaderCheckbox: (permission: string) => string;
+
   private readonly menuTableRow: (row: number) => string;
 
-  private readonly permissionCheckboxRow: (row: number, access: string) => string;
+  private readonly modulesTableRow: (row: number) => string;
+
+  private readonly menuTablePermissionCheckboxRow: (row: number, access: string) => string;
+
+  private readonly modulesTablePermissionCheckboxRow: (row: number, permission: string) => string;
 
   /**
    * @constructs
@@ -38,14 +46,21 @@ class Permissions extends BOBasePage {
     this.growlCloseButton = `${this.growlDiv} .growl-close`;
     this.successfulUpdateMessage = 'Update successful';
     this.profileSubTab = (profileName: string) => `a[id^="profile-"]:text("${profileName}")`;
-    this.profileAccess = (className: string, access: string) => `input[data-type="${access}"][data-classname="${
-      className}"]:visible`;
+    // Selectors for menu table
     this.menuTable = '#table_2';
-    this.menuTableHeaderCheckbox = (permission: string) => `#table_2 thead tr th input.${permission}all`;
+    this.menuTableHeaderCheckbox = (permission: string) => `${this.menuTable} thead tr th input.${permission}all`;
+    this.menuTableProfileAccess = (className: string, access: string) => `${this.menuTable} input[data-type="${access}"]
+      [data-classname="${className}"]:visible`;
+    this.menuTablePermissionCheckboxAll = `${this.menuTable} tr td input[data-type='all']`;
     this.menuTableRow = (row: number) => `${this.menuTable} tr:nth-child(${row})`;
-    this.permissionCheckbox = `${this.menuTable} tr td input[data-type='all']`;
-    this.permissionCheckboxRow = (row: number, permission: string) => `${this.menuTable} tr:nth-child(${row})`
+    this.menuTablePermissionCheckboxRow = (row: number, permission: string) => `${this.menuTable} tr:nth-child(${row})`
       + ` td input[data-type='${permission}']`;
+    // Selectors for modules table
+    this.modulesTable = '#table_module_2';
+    this.modulesTableHeaderCheckbox = (permission: string) => `${this.modulesTable} thead tr th input[data-rel*='${permission}']`;
+    this.modulesTableRow = (row: number) => `${this.modulesTable} tr:nth-child(${row})`;
+    this.modulesTablePermissionCheckboxRow = (row: number, permission: string) => `${this.modulesTable} tr:nth-child(${row})`
+      + ` td input[data-rel*='${permission}']`;
   }
 
   /*
@@ -62,6 +77,7 @@ class Permissions extends BOBasePage {
     return this.elementVisible(page, `${this.profileSubTab(profileName)}.selected.active`, 1000);
   }
 
+  // Methods for menu table
   /**
    * Set a specific permission on a specific page
    * @param page {Page} Browser tab
@@ -71,10 +87,10 @@ class Permissions extends BOBasePage {
    */
   async setPermission(page: Page, className: string, access: string): Promise<boolean> {
     await this.closeGrowlMessage(page);
-    if (await this.isChecked(page, this.profileAccess(className, access))) {
+    if (await this.isChecked(page, this.menuTableProfileAccess(className, access))) {
       return true;
     }
-    await page.click(this.profileAccess(className, access));
+    await page.click(this.menuTableProfileAccess(className, access));
     const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
     await this.closeGrowlMessage(page);
 
@@ -82,13 +98,13 @@ class Permissions extends BOBasePage {
   }
 
   /**
-   * Bulk set a specific permission on a specific page
+   * Bulk set a specific permission on all pages
    * @param page {Page} Browser tab
    * @param permission {string} Name of permission
    * @param toCheck {boolean} True if we need to click on checkbox, false if not
    * @returns {Promise<boolean>}
    */
-  async bulkSetPermission(page: Page, permission: string, toCheck: boolean = true): Promise<boolean> {
+  async setPermissionOnAllPages(page: Page, permission: string, toCheck: boolean = true): Promise<boolean> {
     await this.closeGrowlMessage(page);
     if (toCheck && await this.isChecked(page, this.menuTableHeaderCheckbox(permission))) {
       return true;
@@ -105,7 +121,7 @@ class Permissions extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfElementInMenu(page: Page): Promise<number> {
-    return (await page.$$(this.permissionCheckbox)).length;
+    return (await page.$$(this.menuTablePermissionCheckboxAll)).length;
   }
 
   /**
@@ -121,7 +137,7 @@ class Permissions extends BOBasePage {
     let i: number = 1;
     let isVisible = isChecked;
     while (isVisible === isChecked && i < menuNumber) {
-      isVisible = await this.isChecked(page, this.permissionCheckboxRow(i, permission));
+      isVisible = await this.isChecked(page, this.menuTablePermissionCheckboxRow(i, permission));
       i += 1;
     }
 
@@ -140,7 +156,7 @@ class Permissions extends BOBasePage {
     let checked = 0;
 
     for (let i = 1; i <= menuNumber; i++) {
-      if (await this.isChecked(page, this.permissionCheckboxRow(i, permission))) {
+      if (await this.isChecked(page, this.menuTablePermissionCheckboxRow(i, permission))) {
         checked += 1;
       }
     }
@@ -156,7 +172,75 @@ class Permissions extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isMenuChecked(page: Page, className: string, access: string): Promise<boolean> {
-    return this.isChecked(page, this.profileAccess(className, access));
+    return this.isChecked(page, this.menuTableProfileAccess(className, access));
+  }
+
+  // Methods for modules table
+  /**
+   * Bulk set a specific permission on all modules
+   * @param page {Page} Browser tab
+   * @param permission {string} Name of permission
+   * @param toCheck {boolean} True if we need to click on checkbox, false if not
+   * @returns {Promise<boolean>}
+   */
+  async setPermissionOnAllModules(page: Page, permission: string, toCheck: boolean = true): Promise<boolean> {
+    await this.closeGrowlMessage(page);
+    if (toCheck && await this.isChecked(page, this.modulesTableHeaderCheckbox(permission))) {
+      return true;
+    }
+    await page.click(this.modulesTableHeaderCheckbox(permission));
+    const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
+
+    return growlTextMessage === this.successfulUpdateMessage;
+  }
+
+  /**
+   * Is bulk permission performed
+   * @param page {Page} Browser tab
+   * @param permission {string} Name of permission
+   * @param isChecked {boolean} True if we need to click on checkbox, false if not
+   * @returns {Promise<boolean>}
+   */
+  async isAllPermissionPerformed(page: Page, permission: string, isChecked: boolean = true): Promise<boolean> {
+    const menuNumber = await this.getNumberOfModules(page);
+
+    let i: number = 1;
+    let isVisible = isChecked;
+    while (isVisible === isChecked && i < menuNumber) {
+      isVisible = await this.isChecked(page, this.modulesTablePermissionCheckboxRow(i, permission));
+      i += 1;
+    }
+
+    return isVisible;
+  }
+
+  /**
+   * Get number of menu
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfModules(page: Page): Promise<number> {
+    return (await page.$$(`${this.modulesTable} body tr`)).length;
+  }
+
+  /**
+   * Get number of checkbox unchecked
+   * @param page {Page} Browser tab
+   * @param permission {string} Name of permission
+   * @returns {Promise<number>}
+   */
+  async getNumberOfModulesUnChecked(page: Page, permission: string): Promise<number> {
+    const modulesNumber = await this.getNumberOfModules(page);
+
+    let checked = 0;
+
+    for (let i = 1; i <= modulesNumber; i++) {
+      if (await this.isChecked(page, this.modulesTablePermissionCheckboxRow(i, permission))) {
+        checked += 1;
+      }
+    }
+
+    return modulesNumber - checked;
   }
 }
 
