@@ -152,7 +152,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       it(`should check that '${test.args.action}' permission is checked for all menu`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAfterRefreshPage${index}`, baseContext);
 
-        const number = await permissionsPage.getNumberOfCheckBoxUnChecked(page, test.args.action);
+        const number = await permissionsPage.getNumberOfPagesUnChecked(page, test.args.action);
         expect(number).to.eq(1);
       });
     });
@@ -180,7 +180,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
 
       const numberOfCheckBoxes = await permissionsPage.getNumberOfElementInMenu(page);
 
-      const number = await permissionsPage.getNumberOfCheckBoxUnChecked(page, 'all');
+      const number = await permissionsPage.getNumberOfPagesUnChecked(page, 'all');
       await expect(numberOfCheckBoxes - number).to.eq(6);
     });
 
