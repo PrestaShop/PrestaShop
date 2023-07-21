@@ -165,13 +165,13 @@ class Permissions extends BOBasePage {
   }
 
   /**
-   * Is menu checked
+   * Is page checked
    * @param page {Page} Browser tab
    * @param className {string} Name of the className
    * @param access {string} Access name
    * @returns {Promise<boolean>}
    */
-  async isMenuChecked(page: Page, className: string, access: string): Promise<boolean> {
+  async isPageChecked(page: Page, className: string, access: string): Promise<boolean> {
     return this.isChecked(page, this.menuTableProfileAccess(className, access));
   }
 

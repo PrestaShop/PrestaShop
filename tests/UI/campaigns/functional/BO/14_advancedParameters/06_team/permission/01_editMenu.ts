@@ -195,7 +195,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       it(`should check that the menu '${test.args.className}' is checked`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkMenu${index}`, baseContext);
 
-        const isChecked = await permissionsPage.isMenuChecked(page, test.args.className, 'all');
+        const isChecked = await permissionsPage.isPageChecked(page, test.args.className, 'all');
         await expect(isChecked).to.be.true;
       });
     });
