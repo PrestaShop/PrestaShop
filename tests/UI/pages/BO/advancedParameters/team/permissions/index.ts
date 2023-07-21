@@ -49,8 +49,8 @@ class Permissions extends BOBasePage {
     // Selectors for menu table
     this.menuTable = '#table_2';
     this.menuTableHeaderCheckbox = (permission: string) => `${this.menuTable} thead tr th input.${permission}all`;
-    this.menuTableProfileAccess = (className: string, access: string) => `${this.menuTable} input[data-type="${access}"]
-      [data-classname="${className}"]:visible`;
+    this.menuTableProfileAccess = (className: string, access: string) => `${this.menuTable} input[data-type="${access}"]`
+      + `[data-classname="${className}"]:visible`;
     this.menuTablePermissionCheckboxAll = `${this.menuTable} tr td input[data-type='all']`;
     this.menuTableRow = (row: number) => `${this.menuTable} tr:nth-child(${row})`;
     this.menuTablePermissionCheckboxRow = (row: number, permission: string) => `${this.menuTable} tr:nth-child(${row})`
