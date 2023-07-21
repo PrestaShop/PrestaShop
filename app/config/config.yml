@@ -86,6 +86,7 @@ twig:
     '%kernel.project_dir%/modules': Modules
     '%mail_themes_dir%': MailThemes
     '%prestashop_views%': PrestaShopCore
+    '%kernel.project_dir%/admin-dev/themes/new-theme': AdminNewTheme
   globals:
     webpack_server: false
     multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
