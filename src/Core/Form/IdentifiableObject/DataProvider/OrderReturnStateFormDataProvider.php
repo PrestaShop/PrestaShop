@@ -66,10 +66,8 @@ final class OrderReturnStateFormDataProvider implements FormDataProviderInterfac
      */
     public function getDefaultData()
     {
-        $data = [
-            'is_enabled' => true,
+        return [
+            'color' => '#ffffff',
         ];
-
-        return $data;
     }
 }

@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShopBundle\Form\Admin\Type\ColorPickerType;
@@ -37,6 +38,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,6 +50,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class OrderStateType extends TranslatorAwareType
 {
+    protected const NAME_CHARS = '!<>,;?=+()@#"{}_$%:';
+
     /**
      * @var array
      */
@@ -65,7 +69,7 @@ class OrderStateType extends TranslatorAwareType
      * @param UrlGeneratorInterface $routing
      * @param ShopConfigurationInterface $configuration
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -111,6 +115,13 @@ class OrderStateType extends TranslatorAwareType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->trans('Status name', 'Admin.Shopparameters.Feature'),
+                'help' => sprintf(
+                    '%s %s %s',
+                    $this->trans('Order status (e.g. \'Pending\').', 'Admin.Shopparameters.Help'),
+                    $this->trans('Invalid characters: numbers and', 'Admin.Shopparameters.Help'),
+                    static::NAME_CHARS
+                ),
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
@@ -123,8 +134,15 @@ class OrderStateType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('icon', FileType::class, [
+                'required' => false,
+                'label' => $this->trans('Icon', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Upload an icon from your computer (File type: .gif, suggested size: 16x16).', 'Admin.Shopparameters.Help'),
+            ])
             ->add('color', ColorPickerType::class, [
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Color', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Status will be highlighted in this color. HTML colors only.', 'Admin.Shopparameters.Help'),
             ])
             ->add('loggable', CheckboxType::class, [
                 'required' => false,
@@ -190,6 +208,7 @@ class OrderStateType extends TranslatorAwareType
                 ],
             ])
             ->add('template', TranslatableChoiceType::class, [
+                'label' => $this->trans('Template', 'Admin.Shopparameters.Feature'),
                 'hint' => sprintf(
                     '%s<br>%s',
                     $this->trans('Only letters, numbers and underscores ("_") are allowed.', 'Admin.Shopparameters.Help'),
@@ -197,7 +216,15 @@ class OrderStateType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'choices' => $this->templates,
-                'row_attr' => $this->templateAttributes,
+                'row_attr' => $this->templateAttributes + [
+                    'class' => 'order_state_template_select',
+                ],
+                'button' => [
+                    'label' => $this->trans('Preview', 'Admin.Actions'),
+                    'icon' => 'visibility',
+                    'class' => 'btn btn-primary',
+                    'id' => 'order_state_template_preview',
+                ],
             ])
         ;
     }

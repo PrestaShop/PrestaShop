@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\OrderState\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
+use SplFileInfo;
 
 /**
  * Stores editable data for order state
@@ -42,6 +43,10 @@ class EditableOrderState
      * @var array
      */
     private $localizedNames;
+    /**
+     * @var SplFileInfo|null
+     */
+    protected $icon;
     /**
      * @var string
      */
@@ -94,6 +99,7 @@ class EditableOrderState
     public function __construct(
         OrderStateId $orderStateId,
         array $name,
+        ?SplFileInfo $icon,
         string $color,
         bool $loggable,
         bool $invoice,
@@ -109,6 +115,7 @@ class EditableOrderState
     ) {
         $this->orderStateId = $orderStateId;
         $this->localizedNames = $name;
+        $this->icon = $icon;
         $this->color = $color;
         $this->loggable = $loggable;
         $this->invoice = $invoice;
@@ -233,5 +240,13 @@ class EditableOrderState
     public function getLocalizedTemplates()
     {
         return $this->localizedTemplates;
+    }
+
+    /**
+     * @return SplFileInfo|null
+     */
+    public function getIcon(): ?SplFileInfo
+    {
+        return $this->icon;
     }
 }

@@ -41,6 +41,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OrderReturnStateType extends TranslatorAwareType
 {
+    protected const NAME_CHARS = '!<>,;?=+()@#"{}_$%:';
+
     /**
      * {@inheritdoc}
      */
@@ -48,6 +50,13 @@ class OrderReturnStateType extends TranslatorAwareType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->trans('Status name', 'Admin.Shopparameters.Feature'),
+                'help' => sprintf(
+                    '%s %s %s',
+                    $this->trans('Status name', 'Admin.Shopparameters.Feature'),
+                    $this->trans('Invalid characters: numbers and', 'Admin.Shopparameters.Feature'),
+                    static::NAME_CHARS
+                ),
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
@@ -61,7 +70,9 @@ class OrderReturnStateType extends TranslatorAwareType
                 ],
             ])
             ->add('color', ColorPickerType::class, [
-                'required' => true,
+                'label' => $this->trans('Color', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Status will be highlighted in this color. HTML colors only.', 'Admin.Shopparameters.Help'),
+                'required' => false,
             ])
         ;
     }
