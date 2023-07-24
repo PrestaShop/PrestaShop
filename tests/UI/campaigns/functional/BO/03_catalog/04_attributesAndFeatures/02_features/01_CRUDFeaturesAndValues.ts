@@ -192,9 +192,8 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     });
   });
 
-  // @todo https://github.com/PrestaShop/PrestaShop/issues/31572
   describe('Update feature', async () => {
-    it.skip('should click on \'Back to the list\' button', async function () {
+    it('should click on \'Back to the list\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToTheList', baseContext);
 
       await viewFeaturePage.clickOnBackToTheListButton(page);
@@ -203,7 +202,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await expect(pageTitle).to.contains(featuresPage.pageTitle);
     });
 
-    it.skip('should filter list of features by the created feature', async function () {
+    it('should filter list of features by the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterFeature2', baseContext);
 
       await featuresPage.filterTable(page, 'b!name', createFeatureData.name);
@@ -212,18 +211,18 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await expect(textColumn).to.contains(createFeatureData.name);
     });
 
-    it.skip('should edit the created feature', async function () {
+    it('should edit the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editFeature', baseContext);
 
       await featuresPage.clickOnEditFeature(page, 1);
 
       const textResult = await editFeaturePage.editFeature(page, editFeatureData);
-      await expect(textResult).to.contains(editFeaturePage.successfulCreationMessage);
+      await expect(textResult).to.contains(editFeaturePage.successfulUpdateMessage);
     });
   });
 
   describe('Delete value', async () => {
-    it.skip('should view feature', async function () {
+    it('should view feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeature2', baseContext);
 
       await featuresPage.viewFeature(page, 1);
