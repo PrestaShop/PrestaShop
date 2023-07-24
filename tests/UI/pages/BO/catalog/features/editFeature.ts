@@ -34,11 +34,11 @@ class EditFeature extends BOBasePage {
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Form selectors
-    this.nameInput = '#feature_name_1';
-    this.urlInput = '#feature_url_name_1';
-    this.metaTitleInput = '#feature_meta_title_1';
-    this.indexableToggle = (toggle: string) => `#feature_layered_indexable_${toggle}`;
-    this.saveButton = '#main-div div.card-footer button.float-right';
+    this.nameInput = '#name_1';
+    this.urlInput = 'input[name=\'url_name_1\']';
+    this.metaTitleInput = 'input[name=\'meta_title_1\']';
+    this.indexableToggle = (toggle: string) => `#indexable_${toggle}`;
+    this.saveButton = '#feature_form_submit_btn';
   }
 
   /**
@@ -56,7 +56,7 @@ class EditFeature extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, featureData.metaTitle);
 
     // Set indexable toggle
-    await this.setChecked(page, this.indexableToggle(featureData.indexable ? '1' : '0'));
+    await this.setChecked(page, this.indexableToggle(featureData.indexable ? 'on' : 'off'));
 
     // Save feature
     await this.clickAndWaitForURL(page, this.saveButton);
