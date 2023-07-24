@@ -5549,17 +5549,6 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack' . $row['id_product_pack'];
         }
 
-        if (!isset($row['cover_image_id'])) {
-            $cover = static::getCover($row['id_product']);
-            if (isset($cover['id_image'])) {
-                $row['cover_image_id'] = $cover['id_image'];
-            }
-        }
-
-        if (isset($row['cover_image_id'])) {
-            $cache_key .= '-cover' . (int) $row['cover_image_id'];
-        }
-
         if (isset(self::$productPropertiesCache[$cache_key])) {
             return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
@@ -5716,8 +5705,6 @@ class ProductCore extends ObjectModel
                 $id_product_attribute
             );
         }
-
-        $row['id_image'] = Product::defineProductImage($row, $id_lang);
 
         /*
          * Loading of files attached to product. This is using cache_has_attachments property which needs to be managed

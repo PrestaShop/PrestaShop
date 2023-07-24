@@ -53,6 +53,7 @@ class PageConfiguration implements DataConfigurationInterface
         return [
             'display_quantities' => $this->configuration->getBoolean('PS_DISPLAY_QTIES'),
             'allow_add_variant_to_cart_from_listing' => $this->configuration->getBoolean('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
+            'use_combination_image_in_listing' => $this->configuration->getBoolean('PS_USE_COMBINATION_IMAGE_IN_LISTING'),
             'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'),
             'display_discount_price' => $this->configuration->getBoolean('PS_DISPLAY_DISCOUNT_PRICE'),
         ];
@@ -68,6 +69,7 @@ class PageConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_DISPLAY_QTIES', (int) $config['display_quantities']);
             $this->configuration->set('PS_ATTRIBUTE_CATEGORY_DISPLAY', (int) $config['allow_add_variant_to_cart_from_listing']);
+            $this->configuration->set('PS_USE_COMBINATION_IMAGE_IN_LISTING', (int) $config['use_combination_image_in_listing']);
             $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $config['attribute_anchor_separator']);
             $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (int) $config['display_discount_price']);
         }
@@ -84,6 +86,7 @@ class PageConfiguration implements DataConfigurationInterface
         $resolver->setRequired([
             'display_quantities',
             'allow_add_variant_to_cart_from_listing',
+            'use_combination_image_in_listing',
             'attribute_anchor_separator',
             'display_discount_price',
         ]);

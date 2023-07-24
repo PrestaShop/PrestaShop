@@ -74,6 +74,17 @@ class PageType extends TranslatorAwareType
                 ),
                 'required' => false,
             ])
+            ->add('use_combination_image_in_listing', SwitchType::class, [
+                'label' => $this->trans(
+                    'Use combination image in listings',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'This option allows you to choose which image you want to use in listings for products with combinations. By default, it always uses the cover image of the product. If you enable this option and your filtering module is properly passing required information, you can show directly show the image of this combination.',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'required' => false,
+            ])
             ->add('attribute_anchor_separator', ChoiceType::class, [
                 'label' => $this->trans(
                     'Separator of attribute anchor on the product links',
