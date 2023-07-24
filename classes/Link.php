@@ -1208,17 +1208,17 @@ class LinkCore
             $controller = $context->controller->php_self;
         }
 
-        if ($controller == 'product' && isset($params['id_product']) && $params['id_product'] !== false) {
+        if ($controller == 'product' && isset($params['id_product'])) {
             return $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLang);
-        } elseif ($controller == 'category' && isset($params['id_category']) && $params['id_category'] !== false) {
+        } elseif ($controller == 'category' && isset($params['id_category'])) {
             return $this->getCategoryLink((int) $params['id_category'], null, (int) $idLang);
-        } elseif ($controller == 'supplier' && isset($params['id_supplier']) && $params['id_supplier'] !== false) {
+        } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
             return $this->getSupplierLink((int) $params['id_supplier'], null, (int) $idLang);
-        } elseif ($controller == 'manufacturer' && isset($params['id_manufacturer']) && $params['id_manufacturer'] !== false) {
+        } elseif ($controller == 'manufacturer' && isset($params['id_manufacturer'])) {
             return $this->getManufacturerLink((int) $params['id_manufacturer'], null, (int) $idLang);
-        } elseif ($controller == 'cms' && isset($params['id_cms']) && $params['id_cms'] !== false) {
+        } elseif ($controller == 'cms' && isset($params['id_cms'])) {
             return $this->getCMSLink(new CMS((int) $params['id_cms']), null, null, (int) $idLang);
-        } elseif ($controller == 'cms' && isset($params['id_cms_category']) && $params['id_cms_category'] !== false) {
+        } elseif ($controller == 'cms' && isset($params['id_cms_category'])) {
             return $this->getCMSCategoryLink(new CMSCategory((int) $params['id_cms_category']), null, (int) $idLang);
         } elseif (isset($params['fc']) && $params['fc'] == 'module') {
             $module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
