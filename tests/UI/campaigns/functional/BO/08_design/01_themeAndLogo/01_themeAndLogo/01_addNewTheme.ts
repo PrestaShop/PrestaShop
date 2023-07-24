@@ -115,6 +115,9 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
       await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+
+      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      await expect(numThemes).to.eq(2);
     });
 
     it('should remove the theme Hummingbird', async function () {
