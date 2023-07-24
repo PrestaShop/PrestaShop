@@ -15,7 +15,7 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
     let browserContext: BrowserContext;
     let page: Page;
 
-    const urlTheme: string = 'https://github.com/PrestaShop/hummingbird/releases/download/v0.1.5/hummingbird.zip';
+    const urlTheme: string = 'https://github.com/PrestaShop/hummingbird/releases/download/v0.1.6/hummingbird.zip';
 
     // before and after functions
     before(async function () {
