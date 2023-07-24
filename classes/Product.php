@@ -1346,6 +1346,7 @@ class ProductCore extends ObjectModel
             !$this->deleteProductSale() ||
             !$this->deleteSearchIndexes() ||
             !$this->deleteAccessories() ||
+            !$this->deleteCarrierRestrictions() ||
             !$this->deleteFromAccessories() ||
             !$this->deleteFromSupplier() ||
             !$this->deleteDownload() ||
@@ -4580,6 +4581,20 @@ class ProductCore extends ObjectModel
     public function deleteAccessories()
     {
         return Db::getInstance()->delete('accessory', 'id_product_1 = ' . (int) $this->id);
+    }
+
+    /**
+     * Delete product carrier restriction.
+     *
+     * @return bool Deletion result
+     */
+    public function deleteCarrierRestrictions()
+    {
+        $all_shops = Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL ? true : false;
+
+        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_carrier`
+            WHERE `id_product` = ' . (int) $this->id . (!$all_shops ? ' AND `id_shop` = ' . (int) Context::getContext()->shop->id : '')
+        );
     }
 
     /**
