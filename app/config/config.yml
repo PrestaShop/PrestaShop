@@ -101,5 +101,3 @@ api_platform:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
 
   metadata_backward_compatibility_layer: false
-  exception_to_status:
-    Lcobucci\JWT\Token\InvalidTokenStructure: 401
