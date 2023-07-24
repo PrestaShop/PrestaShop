@@ -28,6 +28,31 @@ parameters:
 		-
 			message: "#^Class Link is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
+			path: src/PrestaShopBundle/Twig/Component/NotificationsCenter.php
+
+		-
+			message: "#^Namespace Configuration is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/PrestaShopBundle/Twig/Component/NotificationsCenter.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Twig/Component/NotificationsCenter.php
+
+		-
+			message: "#^Namespace Link is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/NotificationsCenter.php
+
+		-
+			message: "#^Namespace Profile is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Twig/Component/NotificationsCenter.php
+
+		-
+			message: "#^Class Link is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
 			path: src/PrestaShopBundle/Twig/Component/QuickAccess.php
 
 		-
