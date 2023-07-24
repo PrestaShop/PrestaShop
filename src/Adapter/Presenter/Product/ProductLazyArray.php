@@ -366,17 +366,36 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns all product features, not grouped yet for performance reasons.
+     *
      * @arrayAccess
      *
-     * @return array|null
+     * @return array
+     */
+    public function getFeatures()
+    {
+        /*
+         * If features were not loaded yet, we will ask for them if needed - usually on product page.
+         * However, if really hunting performance and you know you will need features in listing for bunch of products,
+         * fetch them with one query (in more performant way) and pass them here when constructing this object.
+         */
+        if (!isset($this->product['features'])) {
+            $this->product['features'] = Product::getFrontFeaturesStatic((int) $this->language->id, $this->product['id_product']);
+        }
+
+        return $this->product['features'];
+    }
+
+    /**
+     * Returns all product feature values nicely grouped by feature name.
+     *
+     * @arrayAccess
+     *
+     * @return array
      */
     public function getGroupedFeatures()
     {
-        if ($this->product['features']) {
-            return $this->buildGroupedFeatures($this->product['features']);
-        }
-
-        return null;
+        return $this->buildGroupedFeatures($this->getFeatures());
     }
 
     /**
