@@ -22,3 +22,6 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.core.localization.locale.repository'
+
+  PrestaShopBundle\Bridge\Helper\AddFlashMessage:
+    autowire: true
