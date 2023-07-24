@@ -194,7 +194,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
 
   describe('Update feature', async () => {
     it('should click on \'Back to the list\' button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'backToTheList', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'backToTheListForUpdate', baseContext);
 
       await viewFeaturePage.clickOnBackToTheListButton(page);
 
@@ -203,7 +203,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     });
 
     it('should filter list of features by the created feature', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterFeature2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterFeatureForUpdate', baseContext);
 
       await featuresPage.filterTable(page, 'b!name', createFeatureData.name);
 
@@ -241,7 +241,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
 
   describe('Delete feature', async () => {
     it('should click on \'Back to the list\' button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'backToTheList', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'backToTheListForDelete', baseContext);
 
       await viewFeaturePage.clickOnBackToTheListButton(page);
 
@@ -250,7 +250,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     });
 
     it('should filter list of features by the created feature', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterFeature2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterFeatureForDelete', baseContext);
 
       await featuresPage.filterTable(page, 'b!name', createFeatureData.name);
 
