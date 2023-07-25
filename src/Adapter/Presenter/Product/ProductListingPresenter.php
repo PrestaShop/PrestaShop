@@ -36,6 +36,7 @@ class ProductListingPresenter extends ProductPresenter
      * @param ProductPresentationSettings $settings
      * @param array $product
      * @param Language $language
+     * @param array $productList optional product list to fetch information more efficiently
      *
      * @return ProductLazyArray|ProductListingLazyArray
      *
@@ -44,7 +45,8 @@ class ProductListingPresenter extends ProductPresenter
     public function present(
         ProductPresentationSettings $settings,
         array $product,
-        Language $language
+        Language $language,
+        array $productList = []
     ) {
         $productListingLazyArray = new ProductListingLazyArray(
             $settings,
@@ -54,7 +56,10 @@ class ProductListingPresenter extends ProductPresenter
             $this->link,
             $this->priceFormatter,
             $this->productColorsRetriever,
-            $this->translator
+            $this->translator,
+            null,
+            null,
+            $productList
         );
 
         Hook::exec('actionPresentProductListing',
@@ -62,5 +67,33 @@ class ProductListingPresenter extends ProductPresenter
         );
 
         return $productListingLazyArray;
+    }
+
+    /**
+     * @param ProductPresentationSettings $settings
+     * @param array $product
+     * @param Language $language
+     *
+     * @return ProductLazyArray|ProductListingLazyArray
+     *
+     * @throws \ReflectionException
+     */
+    public function presentList(
+        ProductPresentationSettings $settings,
+        array $productList,
+        Language $language
+    ) {
+        $presentedProducts = [];
+
+        foreach ($productList as $product) {
+            $presentedProducts[] = $this->present(
+                $settings,
+                $product,
+                $language,
+                $productList
+            );
+        }
+
+        return $presentedProducts;
     }
 }

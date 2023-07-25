@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use Context;
 use DateTime;
+use Db;
 use Language;
 use Link;
 use PrestaShop\Decimal\DecimalNumber;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use Shop;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -100,6 +102,16 @@ class ProductLazyArray extends AbstractLazyArray
      */
     private $configuration;
 
+    /**
+     * @var array
+     */
+    protected $productList;
+
+    /**
+     * @var array
+     */
+    public static $featuresCache = [];
+
     public function __construct(
         ProductPresentationSettings $settings,
         array $product,
@@ -110,7 +122,8 @@ class ProductLazyArray extends AbstractLazyArray
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator,
         HookManager $hookManager = null,
-        Configuration $configuration = null
+        Configuration $configuration = null,
+        array $productList = []
     ) {
         $this->settings = $settings;
         $this->product = $product;
@@ -122,6 +135,10 @@ class ProductLazyArray extends AbstractLazyArray
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
+        $this->productList = $productList;
+        if (empty($productList)) {
+            $this->productList = [$product['id_product']] ;
+        }
 
         $this->fillImages(
             $product,
@@ -374,16 +391,45 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getFeatures()
     {
-        /*
-         * If features were not loaded yet, we will ask for them if needed - usually on product page.
-         * However, if really hunting performance and you know you will need features in listing for bunch of products,
-         * fetch them with one query (in more performant way) and pass them here when constructing this object.
-         */
+        // If features are not loaded yet
         if (!isset($this->product['features'])) {
-            $this->product['features'] = Product::getFrontFeaturesStatic((int) $this->language->id, $this->product['id_product']);
+            // Check if some other product has loaded them yet and load them if needed
+            if (!isset(static::$featuresCache[$this->product['id_product']])) {
+                $this->loadFeatures();
+            }
+
+            // And assign it to this product
+            $this->product['features'] = static::$featuresCache[$this->product['id_product']];
+            // $this->product['features'] = Product::getFrontFeaturesStatic((int) $this->language->id, $this->product['id_product']);
         }
 
         return $this->product['features'];
+    }
+
+    private function loadFeatures() {
+        // Get product IDs to load, we will use our "situational awareness" product list we optionally got
+        $productIds = array_column($this->productList, 'id_product');
+
+        // Initialize empty feature list
+        foreach ($productIds as $Id) {
+            static::$featuresCache[$Id] = [];
+        }
+
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
+            SELECT pf.id_product, name, value, pf.id_feature, f.position, fvl.id_feature_value
+            FROM ' . _DB_PREFIX_ . 'feature_product pf
+            LEFT JOIN ' . _DB_PREFIX_ . 'feature_lang fl ON (fl.id_feature = pf.id_feature AND fl.id_lang = ' . (int) $this->language->id . ')
+            LEFT JOIN ' . _DB_PREFIX_ . 'feature_value_lang fvl ON (fvl.id_feature_value = pf.id_feature_value AND fvl.id_lang = ' . (int) $this->language->id . ')
+            LEFT JOIN ' . _DB_PREFIX_ . 'feature f ON (f.id_feature = pf.id_feature AND fl.id_lang = ' . (int) $this->language->id . ')
+            ' . Shop::addSqlAssociation('feature', 'f') . '
+            WHERE pf.id_product IN (' . implode(',', $productIds) . ')
+            ORDER BY f.position ASC'
+        );
+
+        foreach ($result as $row) {
+            static::$featuresCache[$row['id_product']][] = $row;
+        }
     }
 
     /**
