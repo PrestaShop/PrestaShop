@@ -9,6 +9,8 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Category extends FOBasePage {
+  public readonly messageAddedToWishlist: string;
+
   private readonly bodySelector: string;
 
   private readonly mainSection: string;
@@ -57,6 +59,8 @@ class Category extends FOBasePage {
 
   private readonly productQuickViewLink: (number: number) => string;
 
+  private readonly productAddToWishlist: (number: number) => string;
+
   private readonly quickViewModalDiv: string;
 
   private readonly quickViewModalProductImageCover: string;
@@ -71,12 +75,21 @@ class Category extends FOBasePage {
 
   private readonly searchFiltersDropdown: string;
 
+  private readonly wishlistModal: string;
+
+  private readonly wishlistModalListItem: string;
+
+  private readonly wishlistToast: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on category page
    */
   constructor() {
     super();
+
+    // Message
+    this.messageAddedToWishlist = 'Product added';
 
     // Selectors
     this.bodySelector = '#category';
@@ -104,6 +117,7 @@ class Category extends FOBasePage {
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
+    this.productAddToWishlist = (number: number) => `${this.productArticle(number)} button.wishlist-button-add`;
 
     // Pagination selectors
     this.pagesList = '.page-list';
@@ -121,6 +135,11 @@ class Category extends FOBasePage {
     this.searchFiltersCheckbox = `${this.searchFilters} ul[id^="facet"] label.facet-label input[type="checkbox"]`;
     this.searchFiltersRadio = `${this.searchFilters} ul[id^="facet"] label.facet-label input[type="radio"]`;
     this.searchFiltersDropdown = `${this.searchFilters} ul[id^="facet"] .facet-dropdown`;
+
+    // Wishlist
+    this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
+    this.wishlistModalListItem = `${this.wishlistModal} ul.wishlist-list li.wishlist-list-item:nth-child(1)`;
+    this.wishlistToast = '.wishlist-toast .wishlist-toast-text';
   }
 
   /* Methods */
@@ -389,6 +408,35 @@ class Category extends FOBasePage {
    */
   async isSearchFilterDropdown(page: Page): Promise<boolean> {
     return page.$$eval(this.searchFiltersDropdown, (all) => all.length !== 0);
+  }
+
+  /**
+   * Add a product (based on its index) to the first wishlist
+   * @param page {Page}
+   * @param idxProduct {number}
+   * @returns Promise<string>
+   */
+  async addToWishList(page: Page, idxProduct: number): Promise<string> {
+    // Click on the heart
+    await page.click(this.productAddToWishlist(idxProduct));
+    // Wait for the modal
+    await this.elementVisible(page, this.wishlistModal, 2000);
+    // Click on the first wishlist
+    await page.click(this.wishlistModalListItem);
+    // Wait for the toast
+    await this.elementVisible(page, this.wishlistToast, 2000);
+
+    return this.getTextContent(page, this.wishlistToast);
+  }
+
+  /**
+   * Check if a product (based on its index) is added to a wishlist
+   * @param page {Page}
+   * @param idxProduct {number}
+   * @returns Promise<boolean>
+   */
+  async isAddedToWishlist(page: Page, idxProduct: number): Promise<boolean> {
+    return ((await this.getTextContent(page, this.productAddToWishlist(idxProduct))) === 'favorite');
   }
 }
 

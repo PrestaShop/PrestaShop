@@ -1,6 +1,10 @@
 import ModuleData from '@data/faker/module';
 
 export default {
+  blockwishlist: new ModuleData({
+    tag: 'blockwishlist',
+    name: 'Wishlist',
+  }),
   psCashOnDelivery: new ModuleData({
     tag: 'ps_cashondelivery',
     name: 'Cash on delivery (COD)',
