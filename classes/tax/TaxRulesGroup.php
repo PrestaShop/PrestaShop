@@ -195,11 +195,12 @@ class TaxRulesGroupCore extends ObjectModel
                 INNER JOIN ' . _DB_PREFIX_ . 'tax_rule tr
                 ON g.id_tax_rules_group = tr.id_tax_rules_group
                 INNER JOIN ' . _DB_PREFIX_ . 'tax t
-                ON tr.id_tax = t.id_tax
+                ON (tr.id_tax = t.id_tax AND t.active = 1)
             ';
         }
 
         $sql .= Shop::addSqlAssociation('tax_rules_group', 'g') . ' WHERE g.deleted = 0'
+            . ($onlyActive ? ' AND g.`active` = 1' : '')
             . ($onlyActive ? ' AND g.`active` = 1' : '')
             . ' ORDER BY name ASC';
 

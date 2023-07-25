@@ -84,13 +84,25 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
             ) {
                 $imageTypes = ImageType::getImagesTypes('manufacturers');
 
+                /** @var \PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
+                $imageFormatConfiguration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
+                $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
+
                 foreach ($imageTypes as $imageType) {
-                    $resized &= ImageManager::resize(
-                        _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
-                        _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.jpg',
-                        (int) $imageType['width'],
-                        (int) $imageType['height']
-                    );
+                    foreach ($configuredImageFormats as $imageFormat) {
+                        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                        // For webp and avif extensions, we want it to follow our command and ignore the original format.
+                        $forceFormat = ($imageFormat !== 'jpg');
+
+                        $resized &= ImageManager::resize(
+                            _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
+                            _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
+                            (int) $imageType['width'],
+                            (int) $imageType['height'],
+                            $imageFormat,
+                            $forceFormat
+                        );
+                    }
                 }
 
                 $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';

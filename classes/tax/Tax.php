@@ -86,15 +86,6 @@ class TaxCore extends ObjectModel
         return parent::update();
     }
 
-    public function toggleStatus()
-    {
-        if (parent::toggleStatus()) {
-            return $this->_onStatusChange();
-        }
-
-        return false;
-    }
-
     public function update($null_values = false)
     {
         if (!$this->deleted && $this->isUsed()) {
@@ -110,19 +101,10 @@ class TaxCore extends ObjectModel
 
             return $res;
         } elseif (parent::update($null_values)) {
-            return $this->_onStatusChange();
+            return true;
         }
 
         return false;
-    }
-
-    protected function _onStatusChange()
-    {
-        if (!$this->active) {
-            return TaxRule::deleteTaxRuleByIdTax($this->id);
-        }
-
-        return true;
     }
 
     /**
