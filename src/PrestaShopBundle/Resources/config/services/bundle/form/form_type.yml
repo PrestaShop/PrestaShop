@@ -2212,3 +2212,10 @@ services:
     autowire: true
     autoconfigure: true
     public: false
+
+  PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType:
+    autowire: true
+    autoconfigure: true
+    public: false
+    arguments:
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
