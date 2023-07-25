@@ -541,7 +541,7 @@ describe('WS - Stores : CRUD', async () => {
         it('should check store\'s state', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState', baseContext);
 
-          const xmlValueIDState = '';
+          const xmlValueIDState  = storeXml.getEltTextContent(xmlCreate, 'id_state');
           const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
@@ -877,7 +877,7 @@ describe('WS - Stores : CRUD', async () => {
         it('should check store\'s state', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState2', baseContext);
 
-          const xmlValueIDState = '';
+          const xmlValueIDState = storeXml.getEltTextContent(xmlUpdate, 'id_state');
           const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
