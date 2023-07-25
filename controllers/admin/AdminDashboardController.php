@@ -25,6 +25,7 @@
  */
 class AdminDashboardControllerCore extends AdminController
 {
+    private const DASHBOARD_ALLOWED_HOOKS = ['dashboardData', 'dashboardZoneOne', 'dashboardZoneTwo', 'displayDashboardToolbarIcons', 'displayDashboardToolbarTopMenu', 'displayDashboardTop'];
     public function __construct()
     {
         $this->bootstrap = true;
@@ -436,7 +437,7 @@ class AdminDashboardControllerCore extends AdminController
             }
         }
 
-        if (Validate::isHookName($hook) && method_exists($module_obj, $hook)) {
+        if (in_array($hook, self::DASHBOARD_ALLOWED_HOOKS) && method_exists($module_obj, $hook)) {
             $return['widget_html'] = $module_obj->$hook($params);
         }
 
