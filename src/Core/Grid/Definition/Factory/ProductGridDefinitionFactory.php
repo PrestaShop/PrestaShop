@@ -57,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -576,14 +577,9 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('active', YesAndNoChoiceType::class))
                     ->setAssociatedColumn('active')
             )
-            ->add((new Filter('position', TextType::class))
-            ->setAssociatedColumn('position')
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                ],
-            ])
+            ->add(
+                (new Filter('position', ReorderPositionsButtonType::class))
+                    ->setAssociatedColumn('position')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
