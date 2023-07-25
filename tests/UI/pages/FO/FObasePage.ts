@@ -337,7 +337,7 @@ export default class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isLanguageListVisible(page: Page): Promise<boolean> {
+  async isLanguageListVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.languageSelectorExpandIcon, 1000);
   }
 
@@ -346,7 +346,7 @@ export default class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getShopLanguage(page: Page): Promise<string> {
+  async getShopLanguage(page: Page): Promise<string> {
     return this.getAttributeContent(page, 'html[lang]', 'lang');
   }
 
@@ -382,7 +382,7 @@ export default class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDefaultShopLanguage(page: Page): Promise<string> {
+  async getDefaultShopLanguage(page: Page): Promise<string> {
     return this.getTextContent(page, this.defaultLanguageSpan);
   }
 
@@ -420,7 +420,7 @@ export default class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isCurrencyDropdownExist(page: Page): Promise<boolean> {
+  async isCurrencyDropdownExist(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.currencySelectorExpandIcon, 1000);
   }
 
@@ -440,7 +440,7 @@ export default class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDefaultCurrency(page: Page): Promise<string> {
+  async getDefaultCurrency(page: Page): Promise<string> {
     return this.getTextContent(page, this.defaultCurrencySpan);
   }
 
