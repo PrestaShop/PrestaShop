@@ -41,6 +41,7 @@ class ReorderPositionsButtonType extends TranslatorAwareType
     {
         $builder->add('position', ButtonType::class, [
             'label' => $this->trans('Rearrange', 'Admin.Actions'),
+            'row_attr' => ['class' => 'mb-0'],
             'attr' => [
                 'class' => 'btn-default js-btn-reorder-positions',
                 'data-label-reorder' => $this->trans('Rearrange', 'Admin.Actions'),
