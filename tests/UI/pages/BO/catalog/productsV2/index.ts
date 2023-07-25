@@ -304,7 +304,7 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
     await expect(createProductFrame).to.be.not.null;
 
     return this.getTextContent(createProductFrame!, this.productTypeDescription);
@@ -329,7 +329,7 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
     await expect(createProductFrame).to.be.not.null;
 
     await this.waitForSelectorAndClick(createProductFrame!, this.productType(productType));
@@ -341,7 +341,7 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnAddNewProduct(page: Page): Promise<void> {
-    const createProductFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
     await expect(createProductFrame).to.be.not.null;
 
     await this.waitForSelectorAndClick(createProductFrame!, this.addNewProductButton);
@@ -447,7 +447,8 @@ class Products extends BOBasePage {
     const modalBulkActionsProductsProgress = this.modalBulkActionsProductsProgress(
       (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
     );
-    await this.clickAndWaitForLoadState(page, modalBulkActionsProductsCloseButton);
+    await this.waitForSelectorAndClick(page, modalBulkActionsProductsCloseButton);
+    await page.waitForURL('**/sell/catalog/products-v2/**');
 
     return this.elementNotVisible(page, modalBulkActionsProductsProgress, 1000);
   }
@@ -663,16 +664,16 @@ class Products extends BOBasePage {
 
     // In case we filter products and there is only one page, link next from pagination does not appear
     if (!found) {
-      return (await page.$$(this.productRow)).length;
+      return this.getNumberOfProductsFromHeader(page);
     }
 
     const footerText = await this.getTextContent(page, this.productsNumberLabel);
-    const resultFooterMatch: RegExpMatchArray|null = footerText.match(/out of ([0-9]+)/);
+    const resultFooterMatch: RegExpMatchArray | null = footerText.match(/out of ([0-9]+)/);
 
     if (resultFooterMatch === null) {
       return 0;
     }
-    const resultExecArray: RegExpExecArray|null = /\d+/g.exec(resultFooterMatch.toString());
+    const resultExecArray: RegExpExecArray | null = /\d+/g.exec(resultFooterMatch.toString());
 
     if (resultExecArray === null) {
       return 0;
@@ -691,7 +692,7 @@ class Products extends BOBasePage {
   async getProductPriceFromList(page: Page, row: number, withTaxes: boolean): Promise<number> {
     const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPriceTExc;
     const text = await this.getTextContent(page, selector(row));
-    const resultExecArray: RegExpExecArray|null = /\d+/g.exec(text);
+    const resultExecArray: RegExpExecArray | null = /\d+/g.exec(text);
 
     if (resultExecArray === null) {
       return 0;
