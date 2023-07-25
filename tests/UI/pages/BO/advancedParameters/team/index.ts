@@ -138,16 +138,6 @@ class Employees extends BOBasePage {
   /*
   Methods
    */
-  /**
-   * Go to Permissions tab
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async goToPermissionsTab(page: Page): Promise<boolean> {
-    await this.clickAndWaitForURL(page, this.permissionsTab);
-    return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
-  }
-
   // Header methods
   /**
    * Go to new Employee page
@@ -166,6 +156,16 @@ class Employees extends BOBasePage {
    */
   async goToRolesPage(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.rolesTab);
+  }
+
+  /**
+   * Go to Permissions tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToPermissionsTab(page: Page): Promise<boolean> {
+    await this.clickAndWaitForURL(page, this.permissionsTab);
+    return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
   }
 
   // Columns methods
