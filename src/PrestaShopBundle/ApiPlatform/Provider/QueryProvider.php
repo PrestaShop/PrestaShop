@@ -40,7 +40,6 @@ class QueryProvider implements ProviderInterface
         private readonly CommandBusInterface $queryBus,
         private readonly Serializer $apiPlatformSerializer
     ) {
-
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
@@ -56,6 +55,6 @@ class QueryProvider implements ProviderInterface
         $queryResult = $this->queryBus->handle(new $query(...$uriVariables));
         $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
 
-        return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $context['operation']->getClass());
+        return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
     }
 }
