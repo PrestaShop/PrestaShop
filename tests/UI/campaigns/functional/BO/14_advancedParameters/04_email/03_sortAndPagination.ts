@@ -34,7 +34,7 @@ Pagination
 Sort by Id, Recipient, Template, Language, Subject, Send
 Delete by bulk actions
  */
-describe('BO - Advanced Parameters - E-mail : Test Sort and pagination emails', async () => {
+describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
