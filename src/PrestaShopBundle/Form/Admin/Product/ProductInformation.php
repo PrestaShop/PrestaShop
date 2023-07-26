@@ -44,7 +44,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\FormHelper;
-use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
