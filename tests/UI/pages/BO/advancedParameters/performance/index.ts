@@ -60,7 +60,7 @@ class Performance extends BOBasePage {
    */
   async setDebugMode(page: Page, toEnable: boolean): Promise<string> {
     await this.setChecked(page, this.debugModeButton(toEnable ? 1 : 0));
-    await this.waitForSelectorAndClick(page, this.saveDebugModeForm);
+    await this.clickAndWaitForURL(page, this.saveDebugModeForm);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
