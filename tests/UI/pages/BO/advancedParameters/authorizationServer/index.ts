@@ -32,6 +32,8 @@ class AuthorizationServer extends BOBasePage {
 
   private readonly gridTableToggleDropDown: (row: number) => string;
 
+  private readonly gridTableViewLink: (row: number) => string;
+
   private readonly gridTableDeleteLink: (row: number) => string;
 
   private readonly gridTableEditLink: (row: number) => string;
@@ -68,6 +70,7 @@ class AuthorizationServer extends BOBasePage {
     this.gridTableColumnAction = (row: number) => this.gridTableColumn(row, 'actions');
     this.gridTableToggleDropDown = (row: number) => `${this.gridTableColumnAction(row)
     } a[data-toggle='dropdown']`;
+    this.gridTableViewLink = (row: number) => `${this.gridTableColumnAction(row)} a.grid-view-row-link`;
     this.gridTableDeleteLink = (row: number) => `${this.gridTableColumnAction(row)} a.grid-delete-row-link`;
     this.gridTableEditLink = (row: number) => `${this.gridTableColumnAction(row)} a.grid-edit-row-link`;
 
@@ -97,6 +100,22 @@ class AuthorizationServer extends BOBasePage {
    */
   async goToEditAuthorizedAppPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForURL(page, this.gridTableEditLink(row));
+  }
+
+  /**
+   * Go to view Authorized App page
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<void>}
+   */
+  async goToViewAuthorizedAppPage(page: Page, row: number): Promise<void> {
+    // Click on dropDown
+    await Promise.all([
+      page.click(this.gridTableToggleDropDown(row)),
+      this.waitForVisibleSelector(page, `${this.gridTableToggleDropDown(row)}[aria-expanded='true']`),
+    ]);
+    // Click on delete
+    return this.clickAndWaitForURL(page, this.gridTableViewLink(row));
   }
 
   /* Grid methods */
