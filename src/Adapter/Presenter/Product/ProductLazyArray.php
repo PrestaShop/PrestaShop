@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Combination;
 use Context;
 use DateTime;
 use Language;
@@ -1044,6 +1045,26 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['availability_message'] = $config[$language->id] ?? null;
             }
         }
+    }
+
+    /**
+     * Returns extra price associated with current combination, if provided
+     *
+     * @arrayAccess
+     *
+     * @return float
+     */
+    public function getAttributePrice()
+    {
+        if (!isset($this->product['attribute_price'])) {
+            if (!empty($this->product['id_product_attribute'])) {
+                $this->product['attribute_price'] = (float) Combination::getPrice($this->product['id_product_attribute']);
+            } else {
+                $this->product['attribute_price'] = 0;
+            }
+        }
+
+        return (float) $this->product['attribute_price'];
     }
 
     /**

@@ -5629,11 +5629,6 @@ class ProductCore extends ObjectModel
         $row['link'] = $context->link->getProductLink((int) $row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
         $row['manufacturer_name'] = !empty((int) $row['id_manufacturer']) ? Manufacturer::getNameById((int) $row['id_manufacturer']) : null;
 
-        $row['attribute_price'] = 0;
-        if ($id_product_attribute) {
-            $row['attribute_price'] = (float) Combination::getPrice($id_product_attribute);
-        }
-
         if (isset($row['quantity_wanted'])) {
             // 'quantity_wanted' may very well be zero even if set
             $quantity = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
