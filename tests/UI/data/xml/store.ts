@@ -60,8 +60,8 @@ export function getUpdateStoreXml(idStore: string | null = null): string {
     + '</hours>'
     + `<postcode><![CDATA[${faker.number.int({min: 10000, max: 99999})}]]></postcode>`
     + `<city><![CDATA[${faker.location.city()}]]></city>`
-    + `<latitude><![CDATA[${faker.location.latitude(90, -90, 8)}]]></latitude>`
-    + `<longitude><![CDATA[${faker.location.longitude(180, -180, 8)}]]></longitude>`
+    + '<latitude><![CDATA[35.01159999]]></latitude>'
+    + '<longitude><![CDATA[135.76810001]]></longitude>'
     + '<phone><![CDATA[+81 75-525-1234]]></phone>'
     + '<fax><![CDATA[+81 75-525-5678]]></fax>'
     + `<email><![CDATA[${faker.internet.email()}]]></email>`
