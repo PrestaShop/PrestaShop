@@ -48,9 +48,9 @@ class NavBar
         private readonly LegacyContext $context,
         private readonly LoggerInterface $logger,
     ) {
-        $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-        $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-        $this->link = new Link($protocol_link, $protocol_content);
+        $isSecureMode = Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED');
+        $protocol = $isSecureMode ? 'https://' : 'http://';
+        $this->link = new Link($protocol, $protocol);
     }
 
     public function getToggleNavigationUrl(): string
@@ -72,7 +72,13 @@ class NavBar
 
     public function isCollapseMenu(): bool
     {
-        return $this->context->cookie->collapse_menu ?? false;
+        $cookie = $this->context->getContext()->cookie;
+
+        if (isset($cookie->collapse_menu)) {
+            return boolval($cookie->collapse_menu);
+        }
+
+        return false;
     }
 
     public function getTabs(): array
