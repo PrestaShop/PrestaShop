@@ -94,7 +94,8 @@ class ModuleRepositoryTest extends TestCase
             $this->createMock(AdminModuleDataProvider::class),
             new DoctrineProvider(new ArrayAdapter()),
             $hookManager,
-            dirname(__DIR__, 3) . '/Resources/modules/'
+            dirname(__DIR__, 3) . '/Resources/modules/',
+            1
         );
     }
 

@@ -17,7 +17,7 @@ parameters:
 
 		-
 			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 6
+			count: 7
 			path: src/Core/Addon/Module/ModuleManagerBuilder.php
 
 		-
