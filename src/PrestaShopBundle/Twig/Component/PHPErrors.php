@@ -33,5 +33,59 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/php_errors.html.twig')]
 class PHPErrors
 {
-    public array $phpErrors;
+    private ?array $phpErrors = null;
+
+    public function getPhpErrors(): array
+    {
+
+        if ($this->phpErrors === null) {
+            $this->phpErrors = [];
+            if (_PS_MODE_DEV_) {
+                set_error_handler(function ($errno, $errstr, $errfile, $errline): bool
+                {
+                    /**
+                     * Prior to PHP 8.0.0, the $errno value was always 0 if the expression which caused the diagnostic was prepended by the @ error-control operator.
+                     *
+                     * @see https://www.php.net/manual/fr/function.set-error-handler.php
+                     * @see https://www.php.net/manual/en/language.operators.errorcontrol.php
+                     */
+                    if (!(error_reporting() & $errno)) {
+                        return false;
+                    }
+
+                    switch ($errno) {
+                        case E_USER_ERROR:
+                        case E_ERROR:
+                            die('Fatal error: ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+                        case E_USER_WARNING:
+                        case E_WARNING:
+                            $type = 'Warning';
+
+                            break;
+                        case E_USER_NOTICE:
+                        case E_NOTICE:
+                            $type = 'Notice';
+
+                            break;
+                        default:
+                            $type = 'Unknown error';
+
+                            break;
+                    }
+
+                    $this->phpErrors = [
+                        'type' => $type,
+                        'errline' => (int) $errline,
+                        'errfile' => str_replace('\\', '\\\\', $errfile), // Hack for Windows paths
+                        'errno' => (int) $errno,
+                        'errstr' => $errstr,
+                    ];
+
+                    return true;
+                });
+            }
+        }
+
+        return $this->phpErrors;
+    }
 }

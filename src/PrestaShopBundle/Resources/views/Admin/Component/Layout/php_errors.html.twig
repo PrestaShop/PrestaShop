@@ -22,12 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% if phpErrors|length > 0 %}
+{% if this.phpErrors|length > 0 %}
 <div class="bootstrap">
   <div id="error-modal" class="modal fade">
     <div class="modal-dialog">
       <div class="alert alert-danger clearfix">
-        {% for phpError in phpErrors %}
+        {% for phpError in this.phpErrors %}
           {{ '%1$s on line %2$s in file %3$s'|trans({
             '%1$s': phpError.type,
             '%2$s': phpError.errline,

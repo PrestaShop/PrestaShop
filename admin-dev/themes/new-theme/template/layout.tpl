@@ -201,7 +201,6 @@
     {render_template
       smarty_template="error.tpl"
       twig_template="@PrestaShop/Admin/Layout/php_errors.html.twig"
-      php_errors=$php_errors
     }
 {/if}
 
