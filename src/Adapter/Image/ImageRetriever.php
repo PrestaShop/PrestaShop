@@ -101,7 +101,7 @@ class ImageRetriever
         ) {
             // Now let's fetch extra information about thumbnail sizes etc. and add this information.
             // getImage also resolves a proper image legend, if it was missing in $image originally.
-            $image = array_merge( 
+            $image = array_merge(
                 $image,
                 $this->getImage($productInstance, $image['id_image'])
             );
