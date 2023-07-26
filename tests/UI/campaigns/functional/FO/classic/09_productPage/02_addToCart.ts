@@ -20,7 +20,7 @@ import boAddProductPage from '@pages/BO/catalog/products/add';
 import {homePage} from '@pages/FO/home';
 import searchResultsPage from '@pages/FO/searchResults';
 import productPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 
 // Import data
 import Products from '@data/demo/products';

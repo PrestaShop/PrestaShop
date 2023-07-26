@@ -15,7 +15,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';

@@ -12,7 +12,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
