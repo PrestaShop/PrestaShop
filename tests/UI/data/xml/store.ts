@@ -9,7 +9,7 @@ export function getStoreXml(idStore: string | null = null): string {
     + '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">'
     + `<store>${idStore !== null ? (`<id><![CDATA[${idStore}]]></id>`) : ''}`
     + '<id_country><![CDATA[11]]></id_country>'
-    + '<id_state><![CDATA[]]></id_state>'
+    + '<id_state><![CDATA[0]]></id_state>'
     + '<hours>'
     + '<language id="1"><![CDATA[[["4h30AM - 5h30PM"],["5h30AM - 5h30PM"],["6h30AM - 5h30PM"],["7h30AM - 5h30PM"],'
     + '["8h30AM - 5h30PM"],["9h30AM - 5h30PM"],["10h30AM - 5h30PM"]]]]></language>'
@@ -51,7 +51,7 @@ export function getUpdateStoreXml(idStore: string | null = null): string {
     + '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">'
     + `<store>${idStore !== null ? (`<id><![CDATA[${idStore}]]></id>`) : ''}`
     + `<id_country><![CDATA[${faker.number.int({min: 1, max: 5})}]]></id_country>`
-    + '<id_state><![CDATA[]]></id_state>'
+    + '<id_state><![CDATA[0]]></id_state>'
     + '<hours>'
     + '<language id="1"><![CDATA[[["8h30AM - 5h30PM"],["8h30AM - 6h30PM"],["8h30AM - 7h30PM"],["8h30AM - 8h30PM"],'
     + '["8h30AM - 9h30PM"],["8h30AM - 10h30PM"],["8h30AM - 11h30PM"]]]]></language>'

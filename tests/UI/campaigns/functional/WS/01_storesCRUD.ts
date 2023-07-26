@@ -377,7 +377,7 @@ describe('WS - Stores : CRUD', async () => {
             const oNode: Element = storesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent).to.be.eq(storeNodeID);
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(storeNodeID);
             } else if (oNode.nodeName === 'name' || oNode.nodeName === 'hours' || oNode.nodeName === 'address1'
               || oNode.nodeName === 'address2' || oNode.nodeName === 'note') {
               const objectNodeValueEN = storeXml.getLangEltTextContent(
@@ -392,7 +392,7 @@ describe('WS - Stores : CRUD', async () => {
                 '1',
               );
 
-              expect(objectNodeValueEN).to.be.eq(createNodeValueEN);
+              expect(objectNodeValueEN, `node name: ${oNode.nodeName}`).to.be.eq(createNodeValueEN);
 
               const objectNodeValueFR = storeXml.getLangEltTextContent(
                 xmlResponse,
@@ -404,13 +404,13 @@ describe('WS - Stores : CRUD', async () => {
                 oNode.nodeName,
                 '2',
               );
-              expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
+              expect(objectNodeValueFR, `node name: ${oNode.nodeName}`).to.be.eq(createNodeValueFR);
             } else if (oNode.nodeName !== 'date_add' && oNode.nodeName !== 'date_upd') {
               const objectNodeValue: string = storeXml.getEltTextContent(
                 xmlCreate,
                 oNode.nodeName,
               );
-              expect(oNode.textContent).to.be.eq(objectNodeValue);
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(objectNodeValue);
             }
           }
         });
@@ -541,7 +541,7 @@ describe('WS - Stores : CRUD', async () => {
         it('should check store\'s state', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState', baseContext);
 
-          const xmlValueIDState  = storeXml.getEltTextContent(xmlCreate, 'id_state');
+          const xmlValueIDState = '';
           const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
@@ -738,7 +738,7 @@ describe('WS - Stores : CRUD', async () => {
             const oNode: Element = storesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent).to.be.eq(storeNodeID);
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(storeNodeID);
             } else if (oNode.nodeName === 'name' || oNode.nodeName === 'hours' || oNode.nodeName === 'address1'
               || oNode.nodeName === 'address2' || oNode.nodeName === 'note') {
               const objectNodeValueEN = storeXml.getLangEltTextContent(
@@ -753,7 +753,7 @@ describe('WS - Stores : CRUD', async () => {
                 '1',
               );
 
-              expect(objectNodeValueEN).to.be.eq(createNodeValueEN);
+              expect(objectNodeValueEN, `node name: ${oNode.nodeName}`).to.be.eq(createNodeValueEN);
 
               const objectNodeValueFR = storeXml.getLangEltTextContent(
                 xmlResponse,
@@ -765,13 +765,13 @@ describe('WS - Stores : CRUD', async () => {
                 oNode.nodeName,
                 '2',
               );
-              expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
+              expect(objectNodeValueFR, `node name: ${oNode.nodeName}`).to.be.eq(createNodeValueFR);
             } else if (oNode.nodeName !== 'date_add' && oNode.nodeName !== 'date_upd') {
               const objectNodeValue: string = storeXml.getEltTextContent(
                 xmlUpdate,
                 oNode.nodeName,
               );
-              expect(oNode.textContent).to.be.eq(objectNodeValue);
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(objectNodeValue);
             }
           }
         });
@@ -877,7 +877,7 @@ describe('WS - Stores : CRUD', async () => {
         it('should check store\'s state', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState2', baseContext);
 
-          const xmlValueIDState = storeXml.getEltTextContent(xmlUpdate, 'id_state');
+          const xmlValueIDState = '';
           const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
