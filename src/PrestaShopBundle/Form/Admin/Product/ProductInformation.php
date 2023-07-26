@@ -251,11 +251,6 @@ class ProductInformation extends CommonAbstractType
                     'attr' => [
                         'class' => 'serp-default-description',
                     ],
-                    'constraints' => [
-                        new TinyMceMaxLength([
-                            'max' => FormattedTextareaType::LIMIT_TEXT_UTF8,
-                        ]),
-                    ],
                 ],
                 'locales' => $this->locales,
                 'hideTabs' => true,
@@ -269,11 +264,6 @@ class ProductInformation extends CommonAbstractType
                         'class' => 'autoload_rte',
                         'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help'),
                         'counter' => $shortDescriptionLimit,
-                    ],
-                    'constraints' => [
-                        new TinyMceMaxLength([
-                            'max' => $shortDescriptionLimit,
-                        ]),
                     ],
                     'required' => false,
                 ],
