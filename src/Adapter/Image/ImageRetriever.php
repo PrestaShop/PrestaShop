@@ -74,18 +74,21 @@ class ImageRetriever
             $language->id
         );
 
+        // Get all product images that are related to this object
         $images = $productInstance->getImages($language->id);
-
         if (empty($images)) {
             return [];
         }
 
+        // Load all pairs of images assigned to combinations
         $combinationImages = $productInstance->getCombinationImages($language->id);
         if (!$combinationImages) {
             $combinationImages = [];
         }
-        $imageToCombinations = [];
 
+        // And resolve them by id_image
+        // We can't assign them directly because the $images array keys are not id_image
+        $imageToCombinations = [];
         foreach ($combinationImages as $imgs) {
             foreach ($imgs as $img) {
                 $imageToCombinations[$img['id_image']][] = $img['id_product_attribute'];
@@ -96,11 +99,14 @@ class ImageRetriever
             $productInstance,
             $imageToCombinations
         ) {
-            $image = array_merge($this->getImage(
-                $productInstance,
-                $image['id_image']
-            ), $image);
+            // Now let's fetch extra information about thumbnail sizes etc. and add this information.
+            // getImage also resolves a proper image legend, if it was missing in $image originally.
+            $image = array_merge( 
+                $image,
+                $this->getImage($productInstance, $image['id_image'])
+            );
 
+            // Assign a list of variants related to the given image
             if (isset($imageToCombinations[$image['id_image']])) {
                 $image['associatedVariants'] = $imageToCombinations[$image['id_image']];
             } else {
