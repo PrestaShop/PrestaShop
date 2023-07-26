@@ -541,7 +541,7 @@ describe('WS - Stores : CRUD', async () => {
         it('should check store\'s state', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState', baseContext);
 
-          const xmlValueIDState = '';
+          const xmlValueIDState = storeXml.getEltTextContent(xmlCreate, 'id_state');
           const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
@@ -599,7 +599,7 @@ describe('WS - Stores : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', `checkStoreHours${day}Lang1`, baseContext);
 
             const dayHours = hoursArrLang1[index];
-            let expectedDayHours = '';
+            let expectedDayHours: string;
 
             if (index === 0) {
               expectedDayHours = dayHours.substring(3, dayHours.length - 2);
@@ -617,7 +617,7 @@ describe('WS - Stores : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', `checkStoreHours${day}Lang2`, baseContext);
 
             const dayHours = hoursArrLang2[index];
-            let expectedDayHours = '';
+            let expectedDayHours: string;
 
             if (index === 0) {
               expectedDayHours = dayHours.substring(3, dayHours.length - 2);
@@ -877,7 +877,7 @@ describe('WS - Stores : CRUD', async () => {
         it('should check store\'s state', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState2', baseContext);
 
-          const xmlValueIDState = '';
+          const xmlValueIDState = storeXml.getEltTextContent(xmlUpdate, 'id_state');
           const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
@@ -938,7 +938,7 @@ describe('WS - Stores : CRUD', async () => {
             const hoursArrUpdatedLang1: string[] = xmlValueUpdatedHoursLang1.split(',');
             const dayHours = hoursArrUpdatedLang1[index];
 
-            let expectedDayHours = '';
+            let expectedDayHours: string;
 
             if (index === 0) {
               expectedDayHours = dayHours.substring(3, dayHours.length - 2);
@@ -959,7 +959,7 @@ describe('WS - Stores : CRUD', async () => {
             const hoursArrUpdatedLang2: string[] = xmlValueUpdatedHoursLang2.split(',');
             const dayHours = hoursArrUpdatedLang2[index];
 
-            let expectedDayHours = '';
+            let expectedDayHours : string;
 
             if (index === 0) {
               expectedDayHours = dayHours.substring(3, dayHours.length - 2);
