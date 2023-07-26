@@ -98,6 +98,7 @@ describe('BO - Advanced Parameter - Authorization Server : View detail', async (
         const pageTitle = await viewAuthorizedAppPage.getPageTitle(page);
         await expect(pageTitle).to.eq(viewAuthorizedAppPage.pageTitle(application.appName));
       });
+
       it('should check details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkDetailsInformations', baseContext);
 
@@ -120,6 +121,7 @@ describe('BO - Advanced Parameter - Authorization Server : View detail', async (
         const pageTitle = await authorizationServerPage.getPageTitle(page);
         await expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
       });
+
       it('should delete authorized app', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteAuthorizedApp', baseContext);
 
