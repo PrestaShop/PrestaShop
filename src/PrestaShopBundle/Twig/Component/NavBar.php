@@ -29,40 +29,32 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component;
 
 use Configuration;
-use Context;
 use Dispatcher;
-use Link;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tab;
-use Tools;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/nav_bar.html.twig')]
 class NavBar
 {
-    private Link $link;
-
     public function __construct(
         private readonly LegacyContext $context,
         private readonly LoggerInterface $logger,
     ) {
-        $isSecureMode = Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED');
-        $protocol = $isSecureMode ? 'https://' : 'http://';
-        $this->link = new Link($protocol, $protocol);
     }
 
     public function getToggleNavigationUrl(): string
     {
-        return $this->link->getAdminLink('AdminEmployees', true, [], [
+        return $this->context->getAdminLink('AdminEmployees', true, [
             'action' => 'toggleMenu',
         ]);
     }
 
     public function getDefaultTabLink(): string
     {
-        return $this->link->getAdminLink(Tab::getClassNameById((int) Context::getContext()->employee->default_tab));
+        return $this->context->getAdminLink(Tab::getClassNameById((int) $this->context->getContext()->employee->default_tab));
     }
 
     public function getPsVersion(): string
@@ -88,7 +80,7 @@ class NavBar
 
     private function buildTabs($parentId = 0, $level = 0): array
     {
-        $tabs = Tab::getTabs(Context::getContext()->language->id, $parentId);
+        $tabs = Tab::getTabs($this->context->getContext()->language->id, $parentId);
         $currentId = Tab::getCurrentParentId();
         $controllerName = Dispatcher::getInstance()->getController();
 
@@ -122,7 +114,7 @@ class NavBar
         $tab['img'] = null;
 
         try {
-            $tab['href'] = $this->link->getTabLink($tab);
+            $tab['href'] = $this->context->getContext()->link->getTabLink($tab);
         } catch (RouteNotFoundException $e) {
             $this->logger->warning(
                 sprintf('Route not found in one of the Tab %s', $tab['route_name'] ?? ''),

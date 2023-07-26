@@ -72,12 +72,7 @@ parameters:
 
 		-
 			message: "#^Namespace Configuration is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 4
-			path: src/PrestaShopBundle/Twig/Component/NavBar.php
-
-		-
-			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 3
+			count: 2
 			path: src/PrestaShopBundle/Twig/Component/NavBar.php
 
 		-
@@ -93,14 +88,4 @@ parameters:
 		-
 			message: "#^Namespace Tab is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 5
-			path: src/PrestaShopBundle/Twig/Component/NavBar.php
-
-		-
-			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 3
-			path: src/PrestaShopBundle/Twig/Component/NavBar.php
-
-		-
-			message: "#^Class Link is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 2
 			path: src/PrestaShopBundle/Twig/Component/NavBar.php
