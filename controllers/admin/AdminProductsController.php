@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
@@ -2891,19 +2890,13 @@ class AdminProductsControllerCore extends AdminController
                     // Should we generate high DPI images?
                     $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-                    $sfContainer = SymfonyContainer::getInstance();
-
                     /*
                     * Let's resolve which formats we will use for image generation.
-                    * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
                     *
                     * In case of .jpg images, the actual format inside is decided by ImageManager.
                     */
-                    if ($sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-                        $configuredImageFormats = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
-                    } else {
-                        $configuredImageFormats = ['jpg'];
-                    }
+                    $configuredImageFormats = $this->get(ImageFormatConfiguration::class)->getGenerationFormats();
+
                     foreach ($imagesTypes as $imageType) {
                         foreach ($configuredImageFormats as $imageFormat) {
                             // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.

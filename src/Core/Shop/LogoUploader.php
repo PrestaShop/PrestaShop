@@ -30,7 +30,6 @@ use Configuration;
 use Context;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfigurationInterface;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopException;
@@ -63,7 +62,11 @@ class LogoUploader
     private $imageDirection;
 
     /**
+     * @deprecated since 8.1.2, it was originally introduced in 8.1.0, but ended up no longer needed - will be removed in 9.0
+     *
      * @var FeatureFlagRepository
+     *
+     * @phpstan-ignore-next-line
      */
     private $featureFlagRepository;
 
@@ -156,15 +159,10 @@ class LogoUploader
                 } else {
                     /*
                     * Let's resolve which formats we will use for image generation.
-                    * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
                     *
                     * In case of .jpg images, the actual format inside is decided by ImageManager.
                     */
-                    if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-                        $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
-                    } else {
-                        $configuredImageFormats = ['jpg'];
-                    }
+                    $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
                     foreach ($configuredImageFormats as $imageFormat) {
                         // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
                         // For webp and avif extensions, we want it to follow our command and ignore the original format.
