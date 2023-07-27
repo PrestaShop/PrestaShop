@@ -22,7 +22,7 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_CRUDEmployee';
 
 // Create, Read, Update and Delete Employee in BO
-describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Employee in BO', async () => {
+describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
   const createEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Products',
     language: 'English (English)',
@@ -79,8 +79,8 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
     await expect(numberOfEmployees).to.be.above(0);
   });
 
-  // 1 : Create employee and go to FO to check sign in is OK
-  describe('Create employee in BO and check Sign in in BO', async () => {
+  // 1 : Create employee and go to BO to check sign in is OK
+  describe('Create employee and check Sign in', async () => {
     it('should go to add new employee page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
 
@@ -119,7 +119,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
   });
 
   // 2 : Update employee and check that employee can't sign in in BO (enabled = false)
-  describe('Update the employee created', async () => {
+  describe('Update employee', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -190,6 +190,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
         await loginCommon.logoutBO(this, page);
       });
     });
+
     describe('Disable the employee and check it', async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
@@ -249,7 +250,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
     });
   });
 
-  // 5 : Delete employee
+  // 3 : Delete employee
   describe('Delete employee', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
