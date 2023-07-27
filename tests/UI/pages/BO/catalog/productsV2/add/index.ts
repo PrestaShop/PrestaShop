@@ -25,7 +25,9 @@ class CreateProduct extends BOBasePage {
 
   public readonly successfulDuplicateMessage: string;
 
-  private readonly productNameInput: string;
+  private readonly productNameInput: (languageId: number) => string;
+
+  private readonly productTypeLabel: string;
 
   private readonly productActiveSwitchButton: string;
 
@@ -63,6 +65,8 @@ class CreateProduct extends BOBasePage {
 
   private readonly formProductPage: string;
 
+  private readonly tabLink: (tabName: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products V2 page
@@ -75,7 +79,8 @@ class CreateProduct extends BOBasePage {
     this.successfulDuplicateMessage = 'Successful duplication';
 
     // Header selectors
-    this.productNameInput = '#product_header_name_1';
+    this.productNameInput = (languageId: number) => `#product_header_name_${languageId}`;
+    this.productTypeLabel = '.product-type-preview-label';
     this.productActiveSwitchButton = '#product_header_active_1';
     this.productHeaderSummary = '.product-header-summary';
     this.productHeaderTaxExcluded = `${this.productHeaderSummary} div[data-role=price-tax-excluded]`;
@@ -100,6 +105,9 @@ class CreateProduct extends BOBasePage {
 
     // Form
     this.formProductPage = 'form.product-page';
+
+    // Tab
+    this.tabLink = (tabName: string) => `#product_${tabName}-tab-nav`;
   }
 
   /*
@@ -145,7 +153,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setProduct(page: Page, productData: ProductData): Promise<string> {
-    await this.setValue(page, this.productNameInput, productData.name);
+    await this.setValue(page, this.productNameInput(1), productData.name);
 
     await descriptionTab.setProductDescription(page, productData);
 
@@ -274,6 +282,68 @@ class CreateProduct extends BOBasePage {
    */
   async isChooseProductIframeVisible(page: Page): Promise<boolean> {
     return !(await this.elementNotVisible(page, `${productsPage.modalCreateProduct} iframe`, 1000));
+  }
+
+  /**
+   * Go to a tab
+   * @param page {Page} Browser tab
+   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @returns {Promise<void>}
+   */
+  async goToTab(page: Page, tabName: 'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock') : Promise<void> {
+    await this.waitForSelectorAndClick(page, this.tabLink(tabName));
+    await this.waitForVisibleSelector(page, `${this.tabLink(tabName)} a.active`, 2000);
+  }
+
+  /**
+   * Is Tab active
+   * @param page {Page} Browser tab
+   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @returns {Promise<boolean>}
+   */
+  async isTabActive(page: Page, tabName: 'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'): Promise<boolean> {
+    return this.elementVisible(page, `${this.tabLink(tabName)} a.active`, 2000);
+  }
+
+  /**
+   * Return the product type
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductType(page: Page): Promise<string> {
+    const typeLabel = await this.getTextContent(page, this.productTypeLabel);
+
+    switch (typeLabel) {
+      case 'Standard product':
+        return 'standard';
+      case 'Product with combinations':
+        return 'combinations';
+      case 'Pack of products':
+        return 'pack';
+      case 'Virtual product':
+        return 'virtual';
+      default:
+        throw new Error(`Type ${typeLabel} is not defined`);
+    }
+  }
+
+  /**
+   * Return the product name
+   * @param page {Page} Browser tab
+   * @param languageId {number} Language ID
+   * @returns {Promise<string>}
+   */
+  async getProductName(page: Page, languageId: number = 1): Promise<string> {
+    return this.getAttributeContent(page, this.productNameInput(languageId), 'value');
+  }
+
+  /**
+   * Get product status
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async getProductStatus(page: Page): Promise<boolean> {
+    return this.isChecked(page, this.productActiveSwitchButton);
   }
 }
 

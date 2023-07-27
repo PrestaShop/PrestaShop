@@ -81,6 +81,10 @@ export default {
    * @return {boolean}
    */
   isEmpty(element: Element): boolean {
+    if (element.nodeName === '#text') {
+      return true;
+    }
+
     if (element.childNodes.length > 0) {
       for (let o: number = 0; o < element.childNodes.length; o++) {
         if (!this.isEmpty(element.childNodes[o] as Element)) {
