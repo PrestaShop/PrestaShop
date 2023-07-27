@@ -34,6 +34,9 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/search_form.html.twig')]
 class SearchForm
 {
+    private const BO_QUERY_PARAM = 'bo_query';
+    private const BO_SEARCH_TYPE_PARAM = 'bo_search_type';
+
     public string $boQuery;
     public bool $showClearBtn;
     public int $searchType;
@@ -44,8 +47,9 @@ class SearchForm
 
     public function mount(): void
     {
-        $this->boQuery = $this->requestStack->getCurrentRequest()->query->get('bo_query') ?: "";
-        $this->searchType = (int) $this->requestStack->getCurrentRequest()->query->get('bo_search_type') ?: 0;
+        $request = $this->requestStack->getCurrentRequest();
+        $this->boQuery = $request->query->get(self::BO_QUERY_PARAM) ?: '';
+        $this->searchType = (int) $request->query->get(self::BO_SEARCH_TYPE_PARAM) ?: 0;
         $this->showClearBtn = !empty($this->boQuery);
     }
 }
