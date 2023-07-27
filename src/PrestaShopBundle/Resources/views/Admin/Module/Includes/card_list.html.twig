@@ -76,6 +76,16 @@
             {% endblock %}
           </div>
           <div>
+            {% if module.database.installed != true %}
+              {% if module.attributes.download_url is defined and module.attributes.download_url is not empty %}
+                <span class="badge badge-info my-1"><i class="material-icons mr-1" style="font-size: 1rem;">cloud_download</i>{{ 'Cloud installation'|trans({}, 'Admin.Modules.Feature') }}</span>
+              {% else %}
+                <span class="badge badge-info my-1"><i class="material-icons mr-1" style="font-size: 1rem;">save</i>{{ 'On disk, not installed'|trans({}, 'Admin.Modules.Feature') }}</span>
+              {% endif %}
+            {% endif %}
+            {% if module.database.active is not null and module.database.active != true %}
+              <span class="badge badge-danger my-1">{{ 'Module disabled'|trans({}, 'Admin.Modules.Feature') }}</span>
+            {% endif %}
             {% if module.attributes.urls.upgrade is defined %}
                 <span class="badge badge-success my-1">{{ 'Upgrade available'|trans({}, 'Admin.Modules.Feature') }}</span>
             {% endif %}
