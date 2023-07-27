@@ -188,6 +188,6 @@ class CustomizationFieldRepository extends AbstractMultiShopObjectModelRepositor
 
         return array_map(static function (array $customizationFieldId) {
             return new CustomizationFieldId((int) $customizationFieldId['id_customization_field']);
-        }, $qb->execute()->fetchAllAssociative());
+        }, $qb->executeQuery()->fetchAllAssociative());
     }
 }

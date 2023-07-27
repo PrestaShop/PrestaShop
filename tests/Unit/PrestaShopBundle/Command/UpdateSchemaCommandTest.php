@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Command;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Command\UpdateSchemaCommand;
@@ -183,7 +183,7 @@ class UpdateSchemaCommandTest extends TestCase
         );
     }
 
-    public function columnsNames(string $name): Statement
+    public function columnsNames(string $name): Result
     {
         $data = [
             'SHOW FULL COLUMNS FROM ps_pa_subcontractor WHERE Field="cutting_price"' => [
@@ -263,8 +263,8 @@ class UpdateSchemaCommandTest extends TestCase
             ],
         ];
 
-        $statement = $this
-            ->getMockBuilder(Statement::class)
+        $result = $this
+            ->getMockBuilder(Result::class)
             ->disableOriginalConstructor()
             ->setMethods(
                 [
@@ -273,12 +273,12 @@ class UpdateSchemaCommandTest extends TestCase
             )
             ->getMockForAbstractClass();
 
-        $statement
+        $result
             ->expects($this->any())
             ->method('fetchAllAssociative')
             ->willReturn($data[$name]);
 
-        return $statement;
+        return $result;
     }
 
     public function getQueries(): array

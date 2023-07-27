@@ -465,7 +465,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                     ->where('cp.id_category = :categoryId')
                     ->setParameter('categoryId', $categoryId)
                     ->addOrderBy('position', 'DESC')
-                    ->execute()
+                    ->executeQuery()
                     ->fetchOne()
                 ;
             }
@@ -654,7 +654,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 ->from($this->dbPrefix . 'feature_value')
                 ->select('id_feature_value')
                 ->addOrderBy('id_feature_value', 'DESC')
-                ->execute()
+                ->executeQuery()
                 ->fetchOne()
             ;
 
@@ -748,7 +748,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             ->from($this->dbPrefix . 'customization_field')
             ->select('id_customization_field')
             ->addOrderBy('id_customization_field', 'DESC')
-            ->execute()
+            ->executeQuery()
             ->fetchOne()
         ;
 
@@ -1102,7 +1102,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         }
 
         try {
-            $rows = $qb->execute()->fetchAllAssociative();
+            $rows = $qb->executeQuery()->fetchAllAssociative();
         } catch (Exception $e) {
             throw new CannotDuplicateProductException(
                 sprintf('Cannot select rows from table %s', $this->dbPrefix . $table),

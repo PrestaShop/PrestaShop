@@ -123,7 +123,7 @@ class AliasRepository extends AbstractObjectModelRepository
             ->setParameter('alias', $alias)
         ;
 
-        return (bool) $qb->execute()->fetchOne();
+        return (bool) $qb->executeQuery()->fetchOne();
     }
 
     /**
@@ -140,7 +140,7 @@ class AliasRepository extends AbstractObjectModelRepository
             ->setParameter('search', $searchTerm)
         ;
 
-        return $qb->execute()->fetchFirstColumn();
+        return $qb->executeQuery()->fetchFirstColumn();
     }
 
     public function delete(AliasId $aliasId): void
@@ -175,7 +175,7 @@ class AliasRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :searchTerm')
             ->setParameter('searchTerm', $searchTerm)
-            ->execute()
+            ->executeQuery()
             ->fetchFirstColumn()
         ;
 
@@ -216,7 +216,7 @@ class AliasRepository extends AbstractObjectModelRepository
             ->setMaxResults($limit)
             ->where('a.search LIKE :searchPhrase')
             ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
     }
 }

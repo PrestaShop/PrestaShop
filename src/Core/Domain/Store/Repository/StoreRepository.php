@@ -127,7 +127,7 @@ class StoreRepository extends AbstractObjectModelRepository
             }, $this->connection->createQueryBuilder()
                 ->select('id_shop')
                 ->from($this->dbPrefix . 'store_shop', 'ss')
-                ->execute()
+                ->executeQuery()
                 ->fetchAllAssociative()
             );
         }
@@ -159,6 +159,6 @@ class StoreRepository extends AbstractObjectModelRepository
 
         return array_map(static function (array $result): ShopId {
             return new ShopId((int) $result['id_shop']);
-        }, $qb->execute()->fetchAllAssociative());
+        }, $qb->executeQuery()->fetchAllAssociative());
     }
 }

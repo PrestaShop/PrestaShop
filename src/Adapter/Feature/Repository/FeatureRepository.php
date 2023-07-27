@@ -146,7 +146,7 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
                 'featureId' => $featureIdValue,
                 'languageId' => $languageId->getValue(),
             ])
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -168,11 +168,11 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
     {
         $qb = $this->getFeaturesQueryBuilder($filters)
             ->select('f.*, fl.*')
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
             ->setMaxResults($limit)
         ;
 
-        $results = $qb->execute()->fetchAll();
+        $results = $qb->executeQuery()->fetchAllAssociative();
         $localizedNames = [];
         $featuresById = [];
         foreach ($results as $result) {
@@ -213,7 +213,7 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
             }, $this->connection->createQueryBuilder()
                 ->select('id_shop')
                 ->from($this->dbPrefix . 'feature_shop', 'fs')
-                ->execute()
+                ->executeQuery()
                 ->fetchAllAssociative()
             );
         }
@@ -245,7 +245,7 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
 
         return array_map(static function (array $result): ShopId {
             return new ShopId((int) $result['id_shop']);
-        }, $qb->execute()->fetchAllAssociative());
+        }, $qb->executeQuery()->fetchAllAssociative());
     }
 
     /**

@@ -168,11 +168,11 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     {
         $qb = $this->getFeatureValuesQueryBuilder($filters)
             ->select('fv.*')
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
             ->setMaxResults($limit)
         ;
 
-        $featureValues = $qb->execute()->fetchAll();
+        $featureValues = $qb->executeQuery()->fetchAllAssociative();
         foreach ($featureValues as $index => $featureValue) {
             $featureValues[$index]['localized_values'] = $this->getFeatureValueLocalizedValues((int) $featureValue['id_feature_value']);
         }
@@ -202,7 +202,7 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->select('COUNT(fv.id_feature_value) AS total_feature_values')
         ;
 
-        return (int) $qb->execute()->fetch()['total_feature_values'];
+        return (int) $qb->executeQuery()->fetchAssociative()['total_feature_values'];
     }
 
     public function delete(FeatureValueId $featureValueId): void
@@ -224,7 +224,7 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->setParameter('featureValueId', $featureValueId)
         ;
 
-        $values = $qb->execute()->fetchAll();
+        $values = $qb->executeQuery()->fetchAllAssociative();
         $localizedValues = [];
         foreach ($values as $value) {
             $localizedValues[(int) $value['id_lang']] = $value['value'];

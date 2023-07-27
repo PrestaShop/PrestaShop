@@ -184,11 +184,11 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 country_lang.name as country_name,
                 gl.name as group_name'
             )
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
             ->setMaxResults($limit)
         ;
 
-        return $qb->execute()->fetchAllAssociative();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -206,7 +206,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->select('sp.id_specific_price')
             ->where('sp.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
-            ->execute()->fetchAllAssociative());
+            ->executeQuery()->fetchAllAssociative());
     }
 
     /**
@@ -222,7 +222,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->select('COUNT(sp.id_specific_price) AS total_specific_prices')
         ;
 
-        return (int) $qb->execute()->fetch()['total_specific_prices'];
+        return (int) $qb->executeQuery()->fetchAssociative()['total_specific_prices'];
     }
 
     /**
@@ -298,7 +298,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $result = $qb->execute()->fetchOne();
+        $result = $qb->executeQuery()->fetchOne();
 
         if (!$result) {
             return null;

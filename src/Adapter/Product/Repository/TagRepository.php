@@ -148,7 +148,7 @@ class TagRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAllAssociative();
+        $result = $qb->executeQuery()->fetchAllAssociative();
         if (empty($result)) {
             return [];
         }

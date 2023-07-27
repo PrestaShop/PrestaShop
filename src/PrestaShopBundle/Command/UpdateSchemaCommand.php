@@ -102,7 +102,7 @@ class UpdateSchemaCommand extends Command
                 throw ($e);
             }
         }
-        if (!$connection->getWrappedConnection() instanceof PDO || $connection->getWrappedConnection()->inTransaction()) {
+        if (!$connection->getNativeConnection() instanceof PDO || $connection->getNativeConnection()->inTransaction()) {
             $connection->commit();
         }
 
@@ -284,8 +284,8 @@ class UpdateSchemaCommand extends Command
                 $originalFieldName = $fieldName;
                 $fieldName = str_replace('`', '', $fieldName);
                 // get old default value
-                $query = $connection->executeQuery('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
-                $results = $query->fetchAllAssociative();
+                $result = $connection->executeQuery('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
+                $results = $result->fetchAllAssociative();
                 if (empty($results[0])) {
                     continue;
                 }
