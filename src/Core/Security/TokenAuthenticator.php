@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Security;
 
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\InvalidTokenStructure;
+use Lcobucci\JWT\Token\Parser;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
@@ -69,6 +72,20 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request): bool
     {
+        try {
+            $authorization = $request->headers->get('Authorization') ?? null;
+            if (null === $authorization) {
+                return false;
+            }
+            $explode = explode(' ', $authorization);
+            if (count($explode) >= 2) {
+                $token = $explode[1];
+                (new Parser(new JoseEncoder()))->parse($token);
+            }
+        } catch (InvalidTokenStructure $e) {
+            return false;
+        }
+
         // Every request to the API should be handled by this Authenticator
         return true;
     }
