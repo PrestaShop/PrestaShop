@@ -192,7 +192,6 @@
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9.3",
         "phpunit/phpunit": "~9.6.7",
-        "prestashop/keycloak_connector_demo": "^1.0",
         "rector/rector": "^0.15.17",
         "spaze/phpstan-disallowed-calls": "^2.10",
         "symfony/browser-kit": "5.4.*",
@@ -246,12 +245,6 @@
             "Tests\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrestaShop/keycloak_connector_demo"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
