@@ -1955,6 +1955,7 @@ class AdminControllerCore extends Controller
             $this->context->smarty->assign(
                 [
                     'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
+                    'page_header_toolbar_template' => $page_header_toolbar,
                 ]
             );
         }
