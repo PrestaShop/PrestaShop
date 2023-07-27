@@ -108,5 +108,3 @@ api_platform:
       - '%kernel.project_dir%/app/config/api_platform'
 
   metadata_backward_compatibility_layer: false
-  exception_to_status:
-    Lcobucci\JWT\Token\InvalidTokenStructure: 401
