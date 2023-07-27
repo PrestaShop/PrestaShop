@@ -41,6 +41,6 @@ export default {
   keycloak: new ModuleData({
     tag: 'keycloak_connector_demo',
     name: 'Keycloak OAuth2 connector demo',
-    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.2/keycloak_connector_demo.zip',
+    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.3/keycloak_connector_demo.zip',
   }),
 };
