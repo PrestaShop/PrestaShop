@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,47 +27,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Hook\Command;
+namespace PrestaShopBundle\ApiPlatform\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Hook\ValueObject\HookId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class UpdateHookStatusCommand update a given hook status
+ * Is thrown when the query provider does not match any extra properties.
  */
-class UpdateHookStatusCommand
+class NoExtraPropertiesFoundException extends DomainException
 {
-    private HookId $id;
-
-    /**
-     * New hook status
-     */
-    private bool $active;
-
-    /**
-     * UpdateHookStatusCommand constructor.
-     *
-     * @param int $id
-     * @param bool $active
-     */
-    public function __construct(int $id, bool $active)
-    {
-        $this->id = new HookId($id);
-        $this->active = $active;
-    }
-
-    /**
-     * @return HookId
-     */
-    public function getHookId(): HookId
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
 }

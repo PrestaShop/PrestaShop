@@ -46,7 +46,7 @@ final class GetHookStatusHandler implements GetHookStatusHandlerInterface
      */
     public function handle(GetHookStatus $query)
     {
-        $hookId = $query->getHookId()->getValue();
+        $hookId = $query->getId()->getValue();
         $hook = new Hook($hookId);
 
         if ($hook->id !== $hookId) {

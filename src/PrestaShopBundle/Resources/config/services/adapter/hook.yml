@@ -10,6 +10,9 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetHookStatusHandler
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetHookHandler:
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\HookManager: ~
 
   prestashop.adapter.hook.manager:

@@ -26,47 +26,21 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Hook\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Hook\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Hook\ValueObject\HookId;
 
-/**
- * Class UpdateHookStatusCommand update a given hook status
- */
-class UpdateHookStatusCommand
+class GetHook
 {
     private HookId $id;
 
-    /**
-     * New hook status
-     */
-    private bool $active;
-
-    /**
-     * UpdateHookStatusCommand constructor.
-     *
-     * @param int $id
-     * @param bool $active
-     */
-    public function __construct(int $id, bool $active)
+    public function __construct(int $id)
     {
         $this->id = new HookId($id);
-        $this->active = $active;
     }
 
-    /**
-     * @return HookId
-     */
-    public function getHookId(): HookId
+    public function getId(): HookId
     {
         return $this->id;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
     }
 }

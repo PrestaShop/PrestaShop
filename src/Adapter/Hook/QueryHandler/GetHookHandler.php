@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,47 +27,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Hook\Command;
+namespace PrestaShop\PrestaShop\Adapter\Hook\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Hook\ValueObject\HookId;
+use Hook;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
+use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\Hook as HookQueryResult;
 
-/**
- * Class UpdateHookStatusCommand update a given hook status
- */
-class UpdateHookStatusCommand
+#[AsQueryHandler]
+final class GetHookHandler implements GetHookHandlerInterface
 {
-    private HookId $id;
-
-    /**
-     * New hook status
-     */
-    private bool $active;
-
-    /**
-     * UpdateHookStatusCommand constructor.
-     *
-     * @param int $id
-     * @param bool $active
-     */
-    public function __construct(int $id, bool $active)
+    public function handle(GetHook $query)
     {
-        $this->id = new HookId($id);
-        $this->active = $active;
-    }
+        $hookId = $query->getId()->getValue();
+        $hook = new Hook($hookId);
 
-    /**
-     * @return HookId
-     */
-    public function getHookId(): HookId
-    {
-        return $this->id;
-    }
+        if ($hook->id !== $hookId) {
+            throw new HookNotFoundException(sprintf('Hook with id "%d" was not found.', $hookId));
+        }
 
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
+        return new HookQueryResult(
+            $hook->id,
+            (bool) $hook->active,
+            $hook->name,
+            $hook->title,
+            $hook->description
+        );
     }
 }
