@@ -28,23 +28,33 @@
 
   {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/showcase_card.html.twig' %}
 
-  {% block cms_page_category_breadcrumb %}
-    {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig' %}
-  {% endblock %}
+  {% if cmsCategoryGrid.data.records_total > 0 or cmsCategoryParentId != 1 %}
+    {% block cms_page_category_breadcrumb %}
+      {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig' %}
+    {% endblock %}
 
-  {% block cms_category_grid %}
-    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
-      {% block grid_panel_footer %}
-        {% if app.request.query.get('id_cms_category') and app.request.query.get('id_cms_category') != cmsPageView.root_category_id %}
-          {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
-        {% endif %}
-      {% endblock %}
-    {% endembed %}
-  {% endblock %}
+    {% block cms_category_grid %}
+      {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
+        {% block grid_panel_footer %}
+          {% if app.request.query.get('id_cms_category') and app.request.query.get('id_cms_category') != cmsPageView.root_category_id %}
+            {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
+          {% endif %}
+        {% endblock %}
+      {% endembed %}
+    {% endblock %}
+  {% endif %}
 
   {% block cms_grid %}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsGrid} %}
   {% endblock %}
+
+  {% if cmsCategoryGrid.data.records_total == 0 and cmsCategoryParentId == 1 %}
+    <div class="alert alert-info" role="alert">
+      <p class="alert-text">
+        {{ 'If needed, you can also organize pages into categories. To start, simply create a new category by clicking the button in the toolbar.'|trans({}, 'Admin.Design.Help')|raw }}
+      </p>
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block javascripts %}

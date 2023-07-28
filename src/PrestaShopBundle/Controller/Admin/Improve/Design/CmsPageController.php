@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsP
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
@@ -126,6 +127,21 @@ class CmsPageController extends FrameworkBundleAdminController
 
         $helperBlockLinkProvider = $this->get(DocumentationLinkProviderInterface::class);
 
+        // Prepare layout title, we will specify the category if needed
+        if ($cmsCategoryParentId > 1) {
+            $layoutTitle = $this->trans(
+                'Pages in category "%name%"',
+                'Admin.Navigation.Menu',
+                ['%name%' => $this->getQueryBus()->handle(new GetCmsPageCategoryNameForListing())],
+            );
+        } else {
+            $layoutTitle = $this->trans(
+                'Pages',
+                'Admin.Navigation.Menu',
+                []
+            );
+        }
+
         return $this->render(
             '@PrestaShop/Admin/Improve/Design/Cms/index.html.twig',
             [
@@ -138,6 +154,8 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsPageShowcaseCardName' => ShowcaseCard::CMS_PAGES_CARD,
                 'layoutHeaderToolbarBtn' => $this->getCmsPageIndexToolbarButtons($cmsCategoryParentId),
                 'showcaseCardIsClosed' => $showcaseCardIsClosed,
+                'cmsCategoryParentId' => $cmsCategoryParentId,
+                'layoutTitle' => $layoutTitle,
             ]
         );
     }
