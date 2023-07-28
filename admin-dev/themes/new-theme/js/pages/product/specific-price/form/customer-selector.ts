@@ -31,9 +31,13 @@ export default class CustomerSelector {
   }
 
   private init(): void {
-    const customerSearchInput = this.initCustomerSearchInput();
-    // clear selected customers whenever shop is changed, because customers may differ between shops
-    this.getShopIdSelect().addEventListener('change', () => customerSearchInput.setValues([]));
+    // This check is here for when the multishop is not enabled.
+    // The selector returned by the this.getShopIdSelect does not exist when multishop is not enabled.
+    if (this.getShopIdSelect() !== null) {
+      const customerSearchInput = this.initCustomerSearchInput();
+      // clear selected customers whenever shop is changed, because customers may differ between shops
+      this.getShopIdSelect().addEventListener('change', () => customerSearchInput.setValues([]));
+    }
   }
 
   private initCustomerSearchInput(): EntitySearchInput {
