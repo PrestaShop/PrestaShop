@@ -14,7 +14,7 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
-import foCartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import foCheckoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
@@ -91,15 +91,15 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
 
       await foProductPage.addProductToTheCart(page, 1);
 
-      const pageTitle = await foCartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foCartPage.pageTitle);
+      const pageTitle = await cartPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
       // Proceed to checkout the shopping cart
-      await foCartPage.clickOnProceedToCheckout(page);
+      await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await foCheckoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage).to.be.true;

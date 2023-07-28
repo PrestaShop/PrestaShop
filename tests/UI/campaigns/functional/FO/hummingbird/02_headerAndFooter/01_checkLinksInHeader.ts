@@ -18,7 +18,7 @@ import Customers from '@data/demo/customers';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_headerAndFooter_checkLinksInHeader';
+const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_checkLinksInHeader';
 
 /*
 Go to FO

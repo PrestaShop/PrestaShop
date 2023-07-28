@@ -11,7 +11,7 @@ import {
 // Import BO pages
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 

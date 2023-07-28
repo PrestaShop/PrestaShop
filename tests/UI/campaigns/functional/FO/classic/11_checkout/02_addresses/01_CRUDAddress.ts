@@ -10,7 +10,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import Products from '@data/demo/products';
-import foCartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
@@ -98,14 +98,14 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
 
       await foProductPage.addProductToTheCart(page);
 
-      const pageTitle = await foCartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foCartPage.pageTitle);
+      const pageTitle = await cartPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await foCartPage.clickOnProceedToCheckout(page);
+      await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage).to.be.true;
