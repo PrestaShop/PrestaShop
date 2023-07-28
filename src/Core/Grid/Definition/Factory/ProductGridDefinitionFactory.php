@@ -372,6 +372,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'extra_route_params' => [
                     'shopId' => $shopId,
                 ],
+                'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
                 'modal_options' => new ModalOptions([
                     'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
                     'confirm_button_label' => $duplicateLabel,
@@ -475,6 +476,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'extra_route_params' => $extraRouteParams,
+                'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
                 'modal_options' => new ModalOptions([
                     'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
                     'confirm_button_label' => $duplicateLabel,
