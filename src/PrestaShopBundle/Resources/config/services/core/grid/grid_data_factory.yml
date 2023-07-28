@@ -202,6 +202,12 @@ services:
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'profile'
 
+  PrestaShop\PrestaShop\Core\Grid\Data\Factory\ProfileGridDataFactoryDecorator:
+    autowire: true
+    public: false
+    arguments:
+      $profileGridDataFactory: '@prestashop.core.grid.data_factory.profiles'
+
   prestashop.core.grid.data_provider.cms_page_category:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:
