@@ -87,7 +87,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
       await statusesPage.goToNewOrderReturnStatusPage(page);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleCreate);
+      await expect(pageTitle).to.eq(addOrderReturnStatusPage.pageTitleCreate);
     });
 
     it('should create order return status and check result', async function () {
@@ -125,7 +125,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
       await statusesPage.goToEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit);
+      await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit(createOrderReturnStatusData.name));
     });
 
     it('should update order return status', async function () {

@@ -94,7 +94,7 @@ class Statuses extends BOBasePage {
 
     // Header selectors
     this.newOrderStatusLink = '#page-header-desc-configuration-add[title=\'Add new order status\']';
-    this.newOrderReturnStatusLink = '#page-header-desc-configuration-add_return_state[title=\'Add new order return status\']';
+    this.newOrderReturnStatusLink = '#page-header-desc-configuration-add_return_state[title=\'Add new return status\']';
 
     // Form selectors
     this.gridPanel = (tableName: string) => `#${tableName}_states_grid_panel`;
@@ -296,7 +296,7 @@ class Statuses extends BOBasePage {
     await this.clickAndWaitForURL(page, this.confirmDeleteButton(tableName));
 
     // Get successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
@@ -458,7 +458,7 @@ class Statuses extends BOBasePage {
    */
   async setStatus(page: Page, tableName: string, row: number, columnName: string, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, tableName, row, columnName) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.tableColumnActionsStatus(tableName, row, columnName));
+      await this.clickAndWaitForLoadState(page, this.tableColumnActionsStatus(tableName, row, columnName));
       return true;
     }
 

@@ -14,7 +14,7 @@ import {Page} from 'playwright';
 class AddOrderReturnStatus extends BOBasePage {
   public readonly pageTitleCreate: string;
 
-  public readonly pageTitleEdit: string;
+  public readonly pageTitleEdit: (name: string) => string;
 
   private readonly nameInput: string;
 
@@ -29,8 +29,8 @@ class AddOrderReturnStatus extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Return statuses •';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitleCreate = `New return status • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (name: string) => `Editing return status ${name} • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
     this.nameInput = '#order_return_state_name_1';
