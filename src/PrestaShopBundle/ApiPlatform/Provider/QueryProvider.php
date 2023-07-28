@@ -33,19 +33,15 @@ use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
 use Symfony\Component\Serializer\Serializer;
+use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
 
 class QueryProvider implements ProviderInterface
 {
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly SerializerInterface $apiPlatformSerializer,
-        private readonly iterable $converters
+        private readonly iterable $converters,
+        private readonly Serializer $apiPlatformSerializer
     ) {
     }
 
