@@ -239,6 +239,7 @@ class Statuses extends BOBasePage {
 
       case 'select':
         await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No');
+        await page.click(this.filterSearchButton(tableName));
         break;
 
       default:

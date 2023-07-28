@@ -12,7 +12,7 @@ import type {Page} from 'playwright';
 class AddOrderStatus extends BOBasePage {
   public readonly pageTitleCreate: string;
 
-  public readonly pageTitleEdit: string;
+  public readonly pageTitleEdit: (name: string) => string;
 
   private readonly nameInput: string;
 
@@ -45,8 +45,8 @@ class AddOrderStatus extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Add new order status •';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitleCreate = `New order status • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (name: string) => `Editing order status ${name} • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
     this.nameInput = '#order_state_name_1';
