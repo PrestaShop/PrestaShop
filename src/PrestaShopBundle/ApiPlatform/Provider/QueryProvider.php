@@ -32,9 +32,9 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
+use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
 
 class QueryProvider implements ProviderInterface
 {
