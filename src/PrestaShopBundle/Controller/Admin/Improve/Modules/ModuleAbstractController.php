@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -61,7 +62,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
 
     protected function getModuleRepository(): ModuleRepositoryInterface
     {
-        return $this->get('prestashop.core.admin.module.repository');
+        return $this->get(ModuleRepository::class);
     }
 
     /**

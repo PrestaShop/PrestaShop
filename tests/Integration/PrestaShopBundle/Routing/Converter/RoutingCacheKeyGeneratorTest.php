@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
 use Tools;
@@ -57,7 +58,7 @@ class RoutingCacheKeyGeneratorTest extends KernelTestCase
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/demo', _PS_MODULE_DIR_ . '/demo');
         }
 
-        $this->module = self::$kernel->getContainer()->get('prestashop.core.admin.module.repository')->getModule('demo');
+        $this->module = self::$kernel->getContainer()->get(ModuleRepository::class)->getModule('demo');
         $this->module->onInstall();
         self::$kernel->getContainer()->get('prestashop.core.cache.clearer.cache_clearer_chain')->clear();
     }

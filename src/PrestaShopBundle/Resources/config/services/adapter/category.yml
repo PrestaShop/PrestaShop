@@ -106,10 +106,6 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  prestashop.adapter.category.repository.category_repository:
-    alias: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository
-    deprecated: ~
-
   PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'

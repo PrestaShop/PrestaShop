@@ -12,18 +12,3 @@ services:
   PrestaShop\PrestaShop\Core\Backup\Manager\BackupRemoverInterface:
     class: PrestaShop\PrestaShop\Adapter\Backup\BackupRemover
     public: true
-
-  prestashop.adapter.backup.database_creator:
-    alias: PrestaShop\PrestaShop\Core\Backup\BackupInterface
-    public: true
-    deprecated: ~
-
-  prestashop.adapter.backup.backup_provider:
-    alias: PrestaShop\PrestaShop\Core\Backup\Repository\BackupRepositoryInterface
-    public: true
-    deprecated: ~
-
-  prestashop.adapter.backup.backup_remover:
-    alias: PrestaShop\PrestaShop\Core\Backup\Manager\BackupRemoverInterface
-    public: true
-    deprecated: ~

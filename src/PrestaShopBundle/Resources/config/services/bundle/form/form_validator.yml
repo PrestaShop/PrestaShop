@@ -1,5 +1,6 @@
 # This file will be removed in next version, do not add any service here
 services:
+  # Deprecated in 9.0.0
   validator.unique.tinymce_max_length_validator:
     alias: PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator
     deprecated: ~
