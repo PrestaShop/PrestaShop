@@ -11,7 +11,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Cart extends FOBasePage {
+class CartPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly cartRuleAlreadyUsedErrorText: string;
@@ -450,4 +450,5 @@ class Cart extends FOBasePage {
   }
 }
 
-export default new Cart();
+const cartPage = new CartPage();
+export {cartPage, CartPage};

@@ -18,7 +18,7 @@ import productsPage from '@pages/BO/catalog/productsV2';
 import ordersPage from '@pages/BO/orders';
 import {homePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/myAccount';

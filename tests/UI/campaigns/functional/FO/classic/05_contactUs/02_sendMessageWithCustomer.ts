@@ -11,7 +11,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
-import foContactUsPage from '@pages/FO/contactUs';
+import {contactUsPage} from '@pages/FO/contactUs';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 
@@ -90,17 +90,17 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     // Go to contact us page
     await foLoginPage.goToFooterLink(page, 'Contact us');
 
-    const pageTitle = await foContactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(foContactUsPage.pageTitle);
+    const pageTitle = await contactUsPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(contactUsPage.pageTitle);
   });
 
   it('should send message to customer service', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-    await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-    const validationMessage = await foContactUsPage.getAlertSuccess(page);
-    await expect(validationMessage).to.equal(foContactUsPage.validationMessage);
+    const validationMessage = await contactUsPage.getAlertSuccess(page);
+    await expect(validationMessage).to.equal(contactUsPage.validationMessage);
   });
 
   it('should login in BO', async function () {

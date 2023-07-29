@@ -11,7 +11,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import {passwordReminderPage} from '@pages/FO/passwordReminder';
 import {myAccountPage} from '@pages/FO/myAccount';

@@ -12,7 +12,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import FO pages
 import aboutUsPage from '@pages/FO/aboutUs';
 import bestSalesPage from '@pages/FO/bestSales';
-import contactUsPage from '@pages/FO/contactUs';
+import {contactUsPage} from '@pages/FO/contactUs';
 import deliveryPage from '@pages/FO/delivery';
 import {homePage} from '@pages/FO/home';
 import legalNoticePage from '@pages/FO/legalNotice';

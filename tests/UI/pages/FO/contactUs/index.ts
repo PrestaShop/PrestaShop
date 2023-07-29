@@ -11,7 +11,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class ContactUs extends FOBasePage {
+class ContactUsPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly validationMessage: string;
@@ -139,4 +139,5 @@ class ContactUs extends FOBasePage {
   }
 }
 
-export default new ContactUs();
+const contactUsPage = new ContactUsPage();
+export {contactUsPage, ContactUsPage};

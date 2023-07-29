@@ -127,6 +127,8 @@ export default class FOBasePage extends CommonPage {
 
   protected readonly languageSelector: string;
 
+  private readonly cartProductsCountHummingbird: string;
+
   protected readonly navbarLink: string;
 
   protected theme: string;
@@ -215,6 +217,7 @@ export default class FOBasePage extends CommonPage {
     // Hummingbird
     this.userMenuDropdown = '#userMenuButton';
     this.languageSelector = '#language-selector';
+    this.cartProductsCountHummingbird = '#_desktop_cart .header-block__action-btn span.header-block__badge';
     this.navbarLink = '.navbar-brand';
 
     this.theme = 'classic';
@@ -225,6 +228,7 @@ export default class FOBasePage extends CommonPage {
    * Go to header link
    * @param page {Page} Browser tab
    * @param link {string} Header selector that contain link to click on to
+   * @param hasPageChange {boolean}
    * @returns {Promise<void>}
    */
   async clickOnHeaderLink(page: Page, link: string, hasPageChange: boolean = true): Promise<void> {
@@ -244,7 +248,7 @@ export default class FOBasePage extends CommonPage {
         break;
 
       case 'Logo':
-        selector = this.desktopLogoLink;
+        selector = this.theme === 'hummingbird' ? this.navbarLink : this.desktopLogoLink;
         break;
 
       default:
@@ -481,7 +485,11 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<number>}
    */
   async getCartNotificationsNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.cartProductsCount, 2000);
+    return this.getNumberFromText(
+      page,
+      this.theme === 'hummingbird' ? this.cartProductsCountHummingbird : this.cartProductsCount,
+      2000,
+    );
   }
 
   /**

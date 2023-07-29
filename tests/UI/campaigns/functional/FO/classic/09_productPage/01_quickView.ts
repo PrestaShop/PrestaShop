@@ -18,7 +18,7 @@ import boProductsPage from '@pages/BO/catalog/products';
 import boAddProductPage from '@pages/BO/catalog/products/add';
 // FO
 import {homePage} from '@pages/FO/home';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 
