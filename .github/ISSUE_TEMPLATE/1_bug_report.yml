@@ -4,7 +4,6 @@ labels: [ "Bug", "New" ]
 body:
   - type: markdown
     attributes:
-      label: Basic information ❗
       value: |
          - Provide as much DETAILS as possible - error logs, screenshots, your exact configuration. If no one can reproduce it, no one will fix it.
          - Follow [bug report guidelines](https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) to help maintainers qualify your report faster.
