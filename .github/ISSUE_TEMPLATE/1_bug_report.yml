@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-      #### Basic information ❗
+         #### Basic information ❗
          - Provide as much DETAILS as possible - error logs, screenshots, your exact configuration. If no one can reproduce it, no one will fix it.
          - Follow [bug report guidelines](https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) to help maintainers qualify your report faster.
          - DO NOT report bugs with "error 500" or "white page" - this is a universal error and will tell us nothing. Enable debug mode in the Performance section of PrestaShop or manually in `/config/defines.inc.php` and try again. You should get a proper error message.
