@@ -10,7 +10,7 @@ body:
          - Follow [bug report guidelines](https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) to help maintainers qualify your report faster.
          - DO NOT report bugs with "error 500" or "white page" - this is a universal error and will tell us nothing. Enable debug mode in the Performance section of PrestaShop or manually in `/config/defines.inc.php` and try again. You should get a proper error message.
          - Use ENGLISH, reports in all other languages will be closed.
-         - If you report problem with upgrade process, open `/admin/autoupgrade/tmp` and attach `log.txt` to the issue. It contains all the information about the upgrade process.
+         - If you report problem with upgrade process, open `/admin/autoupgrade/tmp` and attach anonymized `log.txt` to the issue. It contains all the information about the upgrade process.
   - type: checkboxes
     attributes:
       label: Prerequisites
