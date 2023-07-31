@@ -12,6 +12,24 @@ class Import extends BOBasePage {
 
   public readonly importModalTitle: string;
 
+  public readonly importFileChangFileButton: string;
+
+  public readonly chooseFromHistoryButton: string;
+
+  public readonly fileHistoryTable: string;
+
+  public readonly fileHistoryTableBody: string;
+
+  public readonly fileHistoryTableRow: (row: number) => string;
+
+  public readonly fileHistoryTableRowColumn: (row: number, column: number) => string;
+
+  public readonly fileHistoryTableRowDropDownButton: (row: number) => string;
+
+  public readonly fileHistoryTableRowDeleteButton: (row: number) => string;
+
+  public readonly fileHistoryTableRowUseButton: (row: number) => string;
+
   public readonly importPanelTitle: string;
 
   private readonly downloadSampleFileLink: (type: string) => string;
@@ -55,6 +73,16 @@ class Import extends BOBasePage {
 
     // Selectors
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} p.alert-text.js-import-file`;
+    this.importFileChangFileButton = 'div.js-import-file-alert button.js-change-import-file-btn';
+    this.chooseFromHistoryButton = '#main-div button.js-from-files-history-btn';
+    this.fileHistoryTable = '#fileHistoryTable';
+    this.fileHistoryTableBody = `${this.fileHistoryTable} tbody`;
+    this.fileHistoryTableRow = (row: number) => `${this.fileHistoryTableBody} tr:nth-child(${row})`;
+    this.fileHistoryTableRowColumn = (row: number, column: number) => `${this.fileHistoryTableRow(row)} td:nth-child(${column})`;
+    this.fileHistoryTableRowDropDownButton = (row: number) => `${this.fileHistoryTableRowColumn(row, 2)}`
+      + ' button.dropdown-toggle-split';
+    this.fileHistoryTableRowDeleteButton = (row: number) => `${this.fileHistoryTableRowColumn(row, 2)} a:nth-child(3)`;
+    this.fileHistoryTableRowUseButton = (row: number) => `${this.fileHistoryTableRowColumn(row, 2)} button.js-use-file-btn`;
     this.downloadSampleFileLink = (type: string) => `#download-sample-${type}-file-link`;
     this.fileInputField = '#file';
     this.nextStepButton = 'button[name=submitImportFile]';
@@ -84,6 +112,12 @@ class Import extends BOBasePage {
     return this.clickAndWaitForDownload(page, this.downloadSampleFileLink(type));
   }
 
+  /**
+   * Select file type
+   * @param page {Page} Browser tab
+   * @param fileType {string}
+   * @return {Promise<void>}
+   */
   async selectFileType(page: Page, fileType: string): Promise<void> {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
   }
@@ -103,34 +137,66 @@ class Import extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
+  /**
+   * Click on downloaded file
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
   async clickOnDownloadedFile(page: Page): Promise<void> {
-    await this.waitForSelectorAndClick(page, '#main-div div.alert.alert-success.js-import-file-alert button.js-change-import-file-btn');
+    await this.waitForSelectorAndClick(page, this.importFileChangFileButton);
   }
 
+  /**
+   * Is choose from history button visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
   async isChooseFromHistoryButtonVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, '#main-div button.js-from-files-history-btn', 2000);
+    return this.elementVisible(page, this.chooseFromHistoryButton, 2000);
   }
 
+  /**
+   * Choose from history FTP
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
   async chooseFromHistoryFTP(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, '#main-div button.js-from-files-history-btn');
+    await this.waitForSelectorAndClick(page, this.chooseFromHistoryButton);
 
-    return this.elementVisible(page, '#fileHistoryTable');
+    return this.elementVisible(page, this.fileHistoryTable);
   }
 
+  /**
+   * Get imported files list
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
   async getImportedFilesList(page: Page): Promise<string> {
-    return this.getTextContent(page, '#fileHistoryTable tbody');
+    return this.getTextContent(page, this.fileHistoryTableBody);
   }
 
+  /**
+   * Delete file
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the files table
+   * @return {Promise<boolean>}
+   */
   async deleteFile(page: Page, row: number = 1): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, `#fileHistoryTable tbody tr:nth-child(${row + 1}) td:nth-child(2) button.dropdown-toggle.dropdown-toggle-split`);
-    await this.waitForSelectorAndClick(page, `#fileHistoryTable tbody tr:nth-child(${row + 1}) td:nth-child(2) a:nth-child(3)`);
+    await this.waitForSelectorAndClick(page, this.fileHistoryTableRowDropDownButton(row + 1));
+    await this.waitForSelectorAndClick(page, this.fileHistoryTableRowDeleteButton(row + 1));
 
     return this.isChooseFromHistoryButtonVisible(page);
   }
 
+  /**
+   * Use file
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the files table
+   * @return {Promise<string>}
+   */
   async useFile(page: Page, row: number = 1): Promise<string> {
-    await this.waitForSelectorAndClick(page, `#fileHistoryTable tbody tr:nth-child(${row + 1}) td:nth-child(2) button.js-use-file-btn`);
-    await page.waitForTimeout(2000);
+    await this.waitForSelectorAndClick(page, this.fileHistoryTableRowUseButton(row + 1));
+    await this.waitForVisibleSelector(page, this.importFileChangFileButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

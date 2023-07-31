@@ -9,10 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import importPage from '@pages/BO/advancedParameters/import';
-import categoriesPage from '@pages/BO/catalog/categories';
-
-// Import data
-import ImportCategories from '@data/import/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,6 +20,8 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
   let page: Page;
   let filePath: string | null;
   let secondFilePath: string | null;
+  const firstFile:string = 'alias.csv';
+  const secondFile:string = 'suppliers.csv';
 
   // before and after functions
   before(async function () {
@@ -33,6 +31,9 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    // Delete downloaded csv files
+    await files.deleteFile(firstFile);
+    await files.deleteFile(secondFile);
   });
 
   it('should login in BO', async function () {
@@ -53,23 +54,23 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
     await expect(pageTitle).to.contains(importPage.pageTitle);
   });
 
-  describe('Download then import categories simple file', async () => {
-    it('should download \'Sample categories file\' file', async function () {
+  describe('Download then import alias simple file', async () => {
+    it('should download \'Sample alias file\' file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadFile', baseContext);
 
-      filePath = await importPage.downloadSampleFile(page, 'categories_import');
+      filePath = await importPage.downloadSampleFile(page, 'alias_import');
 
       const doesFileExist = await files.doesFileExist(filePath);
-      await expect(doesFileExist, 'categories_import sample file was not downloaded').to.be.true;
+      await expect(doesFileExist, 'alias_import sample file was not downloaded').to.be.true;
     });
 
     it('should upload the file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      await files.renameFile(filePath, 'categories.csv');
+      await files.renameFile(filePath, 'alias.csv');
 
-      const uploadSuccessText = await importPage.uploadImportFile(page, 'Categories', 'categories.csv');
-      await expect(uploadSuccessText).contain('categories.csv');
+      const uploadSuccessText = await importPage.uploadImportFile(page, 'Alias', firstFile);
+      await expect(uploadSuccessText).contain(firstFile);
     });
 
     it('should go to next import file step', async function () {
@@ -110,7 +111,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
       secondFilePath = await importPage.downloadSampleFile(page, 'suppliers_import');
 
       const doesFileExist = await files.doesFileExist(secondFilePath);
-      await expect(doesFileExist, 'categories_suppliers sample file was not downloaded').to.be.true;
+      await expect(doesFileExist, 'suppliers sample file was not downloaded').to.be.true;
     });
 
     it('should upload the file', async function () {
@@ -118,7 +119,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
       await files.renameFile(secondFilePath, 'suppliers.csv');
 
-      const uploadSuccessText = await importPage.uploadImportFile(page, 'Suppliers', 'suppliers.csv');
+      const uploadSuccessText = await importPage.uploadImportFile(page, 'Suppliers', secondFile);
       await expect(uploadSuccessText).contain('suppliers.csv');
     });
 
@@ -142,8 +143,8 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkImportedFilesList', baseContext);
 
       const importedFilesList = await importPage.getImportedFilesList(page);
-      await expect(importedFilesList).to.contains('categories.csv')
-        .and.to.contains('suppliers.csv');
+      await expect(importedFilesList).to.contains(firstFile)
+        .and.to.contains(secondFile);
     });
 
     it('should delete the first imported file', async function () {
@@ -160,7 +161,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
       await importPage.chooseFromHistoryFTP(page);
 
       const uploadSuccessText = await importPage.useFile(page, 1);
-      await expect(uploadSuccessText).contain('suppliers.csv');
+      await expect(uploadSuccessText).contain(secondFile);
     });
 
     it('should go to next import file step', async function () {
