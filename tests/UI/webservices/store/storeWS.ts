@@ -4,6 +4,11 @@ import {APIRequestContext, APIResponse} from 'playwright';
 export default class StoreWS extends BaseWS {
   public static endpoint = 'api/stores';
 
+  /**
+   * Get Blank
+   * @param apiContext {APIRequestContext}
+   * @param authorization {string}
+   */
   public static async getBlank(
     apiContext: APIRequestContext,
     authorization: string,
@@ -11,6 +16,11 @@ export default class StoreWS extends BaseWS {
     return super.getBlank(apiContext, this.endpoint, authorization);
   }
 
+  /**
+   * Get Synopsis
+   * @param apiContext {APIRequestContext}
+   * @param authorization {string}
+   */
   public static async getSynopsis(
     apiContext: APIRequestContext,
     authorization: string,

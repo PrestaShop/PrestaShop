@@ -130,7 +130,7 @@ class AddStore extends BOBasePage {
   }
 
   /**
-   *
+   * Get Inputs values
    * @param page {Page}
    * @param inputName {string}
    * @param languageId {string | undefined}
@@ -214,7 +214,7 @@ class AddStore extends BOBasePage {
   }
 
   /**
-   *
+   * Get value of a select
    * @param page {Page}
    * @param name {string}
    */
@@ -236,7 +236,7 @@ class AddStore extends BOBasePage {
   }
 
   /**
-   *
+   * Get Toggle value
    * @param page {Page}
    * @param toggle {string}
    */
