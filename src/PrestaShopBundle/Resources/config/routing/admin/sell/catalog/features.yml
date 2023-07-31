@@ -29,7 +29,6 @@ admin_features_add:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::createAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures:addfeature
-    _legacy_feature_flag: feature
 
 admin_features_edit:
   path: /{featureId}/edit
