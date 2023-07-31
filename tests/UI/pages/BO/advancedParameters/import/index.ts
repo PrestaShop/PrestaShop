@@ -80,8 +80,12 @@ class Import extends BOBasePage {
    * @param type {string} Type of the data to import
    * @return {Promise<string|null>}
    */
-  downloadSampleFile(page: Page, type: string): Promise<string|null> {
+  downloadSampleFile(page: Page, type: string): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.downloadSampleFileLink(type));
+  }
+
+  async selectFileType(page: Page, fileType: string): Promise<void> {
+    await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
   }
 
   /**
@@ -94,6 +98,39 @@ class Import extends BOBasePage {
   async uploadImportFile(page: Page, fileType: string, filePath: string): Promise<string> {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
     await page.setInputFiles(this.fileInputField, filePath);
+
+    await page.waitForTimeout(2000);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  async clickOnDownloadedFile(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, '#main-div div.alert.alert-success.js-import-file-alert button.js-change-import-file-btn');
+  }
+
+  async isChooseFromHistoryButtonVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, '#main-div button.js-from-files-history-btn', 2000);
+  }
+
+  async chooseFromHistoryFTP(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, '#main-div button.js-from-files-history-btn');
+
+    return this.elementVisible(page, '#fileHistoryTable');
+  }
+
+  async getImportedFilesList(page: Page): Promise<string> {
+    return this.getTextContent(page, '#fileHistoryTable tbody');
+  }
+
+  async deleteFile(page: Page, row: number = 1): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, `#fileHistoryTable tbody tr:nth-child(${row + 1}) td:nth-child(2) button.dropdown-toggle.dropdown-toggle-split`);
+    await this.waitForSelectorAndClick(page, `#fileHistoryTable tbody tr:nth-child(${row + 1}) td:nth-child(2) a:nth-child(3)`);
+
+    return this.isChooseFromHistoryButtonVisible(page);
+  }
+
+  async useFile(page: Page, row: number = 1): Promise<string> {
+    await this.waitForSelectorAndClick(page, `#fileHistoryTable tbody tr:nth-child(${row + 1}) td:nth-child(2) button.js-use-file-btn`);
+    await page.waitForTimeout(2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
