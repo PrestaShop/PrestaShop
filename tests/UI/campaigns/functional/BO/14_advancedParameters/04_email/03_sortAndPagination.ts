@@ -254,13 +254,13 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     {
       args:
         {
-          testIdentifier: 'sortByDateAddDesc', sortBy: 'date_add', sortDirection: 'desc',
+          testIdentifier: 'sortByDateAddDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
         },
     },
     {
       args:
         {
-          testIdentifier: 'sortByDateAddAsc', sortBy: 'date_add', sortDirection: 'asc',
+          testIdentifier: 'sortByDateAddAsc', sortBy: 'date_add', sortDirection: 'asc', isDate: true,
         },
     },
     {
@@ -303,6 +303,14 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
+        } else if (test.args.isDate) {
+          const expectedResult = await basicHelper.sortArrayDate(nonSortedTable);
+
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);

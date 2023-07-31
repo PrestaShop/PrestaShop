@@ -461,7 +461,7 @@ class Email extends BOBasePage {
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
-      await page.click(sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
