@@ -163,7 +163,7 @@ class Import extends BOBasePage {
   async chooseFromHistoryFTP(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.chooseFromHistoryButton);
 
-    return this.elementVisible(page, this.fileHistoryTable);
+    return this.elementVisible(page, this.fileHistoryTable, 2000);
   }
 
   /**
