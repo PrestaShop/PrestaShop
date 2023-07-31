@@ -106,7 +106,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
   describe('Check choose from history / FTP then import suppliers simple file', async () => {
     it('should download \'Sample suppliers file\' file', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'downloadFile', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'downloadFile2', baseContext);
 
       secondFilePath = await importPage.downloadSampleFile(page, 'suppliers_import');
 
@@ -115,7 +115,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
     });
 
     it('should upload the file', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'importFile2', baseContext);
 
       await files.renameFile(secondFilePath, 'suppliers.csv');
 
@@ -133,7 +133,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
     });
 
     it('should click on \'Choose from history / FTP\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnChooseFromHistory', baseContext);
 
       const isFilesListTableVisible = await importPage.chooseFromHistoryFTP(page);
       await expect(isFilesListTableVisible).to.be.true;
