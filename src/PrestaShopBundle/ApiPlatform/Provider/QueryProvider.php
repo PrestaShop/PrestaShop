@@ -76,7 +76,16 @@ class QueryProvider implements ProviderInterface
         }
 
         $queryResult = $this->queryBus->handle($query);
+        $isCollectionResult = is_array($queryResult);
         $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
+
+        if ($isCollectionResult) {
+            foreach ($normalizedQueryResult as $key => $result) {
+                $normalizedQueryResult[$key] = $this->apiPlatformSerializer->denormalize($result, $operation->getClass());
+            }
+
+            return $normalizedQueryResult;
+        }
 
         return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
     }
