@@ -103,11 +103,17 @@ class AdminImagesControllerCore extends AdminController
         $formFields = [];
 
         if ($this->isMultipleImageFormatFeatureEnabled) {
+            /* We will disable few image formats
+             * Base JPG is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
+             * AVIF support depends on platform - PHP version and required libraries available
+             */
             $imageFormatsDisabled = [];
-            $imageFormatsDisabled['jpg'] = true; // jpg is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
-            if (false === $this->canGenerateAvif) {
+            $imageFormatsDisabled['jpg'] = true;
+            if (!$this->canGenerateAvif) {
                 $imageFormatsDisabled['avif'] = true;
             }
+
+            // Load configured formats to see what to check
             $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
             $fields = [
@@ -474,6 +480,19 @@ class AdminImagesControllerCore extends AdminController
                 ],
             ],
         ];
+    }
+
+    public function beforeUpdateOptions()
+    {
+        // Unset AVIF if not supported, add JPG if missing
+        foreach ($_POST['PS_IMAGE_FORMAT'] as $k => $v) {
+            if ($v == 'avif' && !$this->canGenerateAvif) {
+                unset($_POST['PS_IMAGE_FORMAT'][$k]);
+            }
+        }
+        if (!in_array('jpg', $_POST['PS_IMAGE_FORMAT'])) {
+            $_POST['PS_IMAGE_FORMAT'][] = 'jpg';
+        }
     }
 
     public function updateOptionPsImageFormat($value): void
