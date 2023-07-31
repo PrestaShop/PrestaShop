@@ -1,6 +1,6 @@
 declare module 'maildev' {
-  import type MailDevEmail from '@data/types/maildevEmail';
   import fs from 'fs';
+  import type MailDevEmail from '@data/types/maildevEmail';
 
   /**
    * Interface for {@link MailDev}.
