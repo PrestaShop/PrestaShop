@@ -1255,13 +1255,21 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
+        // 3 attempts to download the language pack
+        for ($i = 1; $i <= 3; $i++) {
+            $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
 
-        //Check if response is empty or not a valid zip file
-        if (empty($content) || strpos($content, "\x50\x4b\x03\x04") === false) {
-            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
+            // If we managed to download the pack successfully and it's a valid zip file, we stop
+            if (!empty($content) && strpos($content, "\x50\x4b\x03\x04") !== false) {
+                break;
+            }
 
-            return false;
+            // If not, we will give it another try, unless we are on our last attempt
+            if ($i == 3) {
+                $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
+
+                return false;
+            }
         }
 
         return false !== file_put_contents($file, $content);
