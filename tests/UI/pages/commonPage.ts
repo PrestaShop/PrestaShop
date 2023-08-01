@@ -2,7 +2,7 @@
 import type {PageWaitForSelectorOptionsState, WaitForNavigationWaitUntil} from '@data/types/playwright';
 
 import type {
-  BrowserContext, ElementHandle, JSHandle, FileChooser, Frame, Page,
+  BrowserContext, ElementHandle, JSHandle, FileChooser, Frame, Page, Locator,
 } from 'playwright';
 
 /**
@@ -107,6 +107,19 @@ export default class CommonPage {
   }
 
   /**
+   * Wait for locator to be visible
+   * @param locator {Locator}
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
+   * @return {Promise<void>}
+   */
+  async waitForVisibleLocator(locator: Locator, timeout: number = 10000): Promise<void> {
+    await locator.waitFor({
+      state: 'visible',
+      timeout,
+    });
+  }
+
+  /**
    * Get Text from element
    * @param page {Page} Browser tab
    * @param selector{string} From where to get text
@@ -154,7 +167,7 @@ export default class CommonPage {
   /**
    * Is element not visible
    * @param page {Page} Browser tab
-   * @param selector, element to check
+   * @param selector {string} Element to check
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<boolean>} True if not visible, false if visible
    */

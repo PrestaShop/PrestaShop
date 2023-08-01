@@ -14,7 +14,9 @@ import type {Page} from 'playwright';
 class PricingTab extends BOBasePage {
   private readonly pricingTabLink: string;
 
-  private readonly retailPriceInput: string;
+  private readonly retailPriceInputTaxExcl: string;
+
+  private readonly retailPriceInputTaxIncl: string;
 
   private readonly taxRuleID: string;
 
@@ -43,7 +45,8 @@ class PricingTab extends BOBasePage {
 
     // Selectors in pricing tab
     this.pricingTabLink = '#product_pricing-tab-nav';
-    this.retailPriceInput = '#product_pricing_retail_price_price_tax_excluded';
+    this.retailPriceInputTaxExcl = '#product_pricing_retail_price_price_tax_excluded';
+    this.retailPriceInputTaxIncl = '#product_pricing_retail_price_price_tax_included';
     this.taxRuleID = 'product_pricing_retail_price_tax_rules_group_id';
     this.taxRuleSelect = `#${this.taxRuleID}`;
     this.taxRuleSpan = `#select2-${this.taxRuleID}-container`;
@@ -67,13 +70,28 @@ class PricingTab extends BOBasePage {
    */
   async setProductPricing(page: Page, productData: ProductData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.pricingTabLink);
-    await this.setValue(page, this.retailPriceInput, productData.price);
+    await this.setRetailPrice(page, true, productData.price);
     // Select tax rule by ID
     await Promise.all([
       this.waitForSelectorAndClick(page, this.taxRuleSpan),
       this.waitForVisibleSelector(page, this.taxRuleList),
     ]);
     await page.locator(`li:has-text('${productData.taxRule}')`).click();
+  }
+
+  /**
+   * Set retail price
+   * @param page {Page} Browser tab
+   * @param isTaxExcluded {boolean} is Tax Excluded
+   * @param price {number} Retail price
+   * @returns {Promise<void>}
+   */
+  async setRetailPrice(page: Page, isTaxExcluded: boolean, price: number): Promise<void> {
+    await this.setValue(
+      page,
+      isTaxExcluded ? this.retailPriceInputTaxExcl : this.retailPriceInputTaxIncl,
+      price,
+    );
   }
 
   /**

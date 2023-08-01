@@ -943,7 +943,7 @@ export default class BOBasePage extends CommonPage {
    * @param timeout {number} Timeout to wait for the selector
    * @return {Promise<string|null>}
    */
-  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
+  async getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
     return page.textContent(this.growlMessageBlock, {timeout});
   }
 

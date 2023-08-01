@@ -6,13 +6,8 @@ import basicHelper from '@utils/basicHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
@@ -49,9 +44,6 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     minimumQuantity: 1,
     status: true,
   });
-
-  // Pre-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -271,7 +263,4 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

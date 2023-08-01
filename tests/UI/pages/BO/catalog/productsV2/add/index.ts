@@ -25,11 +25,25 @@ class CreateProduct extends BOBasePage {
 
   public readonly successfulDuplicateMessage: string;
 
-  private readonly productNameInput: (languageId: number) => string;
+  private readonly productImageUrl: string;
+
+  private readonly productName: string;
+
+  private readonly productNameInput: (locale: string) => string;
+
+  private readonly productNameLanguageButton: string;
+
+  private readonly productNameLanguageDropdown: string;
+
+  private readonly productNameLanguageDropdownItem: (locale: string) => string;
 
   private readonly productTypeLabel: string;
 
-  private readonly productActiveSwitchButton: string;
+  private readonly productTypePreview: string;
+
+  private readonly productTypePreviewLabel: string;
+
+  private readonly productActiveSwitchButton: (status: number) => string;
 
   private readonly productHeaderSummary: string;
 
@@ -39,7 +53,9 @@ class CreateProduct extends BOBasePage {
 
   private readonly productHeaderQuantity: string;
 
-  private readonly productHeaderReference: string;
+  private readonly productHeaderReferences: string;
+
+  private readonly productHeaderReference: (type: string) => string;
 
   private readonly footerProductDropDown: string;
 
@@ -67,6 +83,16 @@ class CreateProduct extends BOBasePage {
 
   private readonly tabLink: (tabName: string) => string;
 
+  private readonly modalSwitchType: string;
+
+  private readonly modalSwitchTypeBtnChoice: (productType: string) => string;
+
+  private readonly modalSwitchTypeBtnSubmit: string;
+
+  private readonly modalConfirmType: string;
+
+  private readonly modalConfirmTypeBtnSubmit: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products V2 page
@@ -79,14 +105,24 @@ class CreateProduct extends BOBasePage {
     this.successfulDuplicateMessage = 'Successful duplication';
 
     // Header selectors
-    this.productNameInput = (languageId: number) => `#product_header_name_${languageId}`;
+    this.productImageUrl = '#product_header_cover_thumbnail';
+    this.productName = '#product_header_name';
+    this.productNameInput = (locale: string) => `${this.productName} div.js-locale-${locale} input`;
+    this.productNameLanguageButton = `${this.productName}_dropdown`;
+    this.productNameLanguageDropdown = `${this.productName} .dropdown .dropdown-menu`;
+    this.productNameLanguageDropdownItem = (locale: string) => `${this.productNameLanguageDropdown} span`
+      + `[data-locale="${locale}"]`;
+    this.productTypePreview = '.product-type-preview';
+    this.productTypePreviewLabel = `${this.productTypePreview}-label`;
     this.productTypeLabel = '.product-type-preview-label';
     this.productActiveSwitchButton = '#product_header_active_1';
     this.productHeaderSummary = '.product-header-summary';
     this.productHeaderTaxExcluded = `${this.productHeaderSummary} div[data-role=price-tax-excluded]`;
     this.productHeaderTaxIncluded = `${this.productHeaderSummary} div[data-role=price-tax-included]`;
     this.productHeaderQuantity = `${this.productHeaderSummary} div[data-role=quantity]`;
-    this.productHeaderReference = '.product-header-references';
+    this.productHeaderReferences = '.product-header-references';
+    this.productHeaderReference = (type: string) => `${this.productHeaderReferences} .product-reference`
+      + `[data-reference-type="${type}"] span`;
 
     // Footer selectors
     this.footerProductDropDown = '#product_footer_actions_dropdown';
@@ -108,11 +144,59 @@ class CreateProduct extends BOBasePage {
 
     // Tab
     this.tabLink = (tabName: string) => `#product_${tabName}-tab-nav`;
+
+    // Modal : Switch Product Type
+    this.modalSwitchType = '#switch-product-type-modal';
+    this.modalSwitchTypeBtnChoice = (productType: string) => `${this.modalSwitchType} button.product-type-choice`
+        + `[data-value="${productType}"]`;
+    this.modalSwitchTypeBtnSubmit = `${this.modalSwitchType} .modal-footer button.btn-confirm-submit`;
+    this.modalConfirmType = '#modal-confirm-product-type';
+    this.modalConfirmTypeBtnSubmit = `${this.modalConfirmType} .modal-footer button.btn-confirm-submit`;
   }
 
   /*
   Methods
    */
+  /**
+   * Go to a tab
+   * @param page {Page} Browser tab
+   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @returns {Promise<void>}
+   */
+  async goToTab(
+    page: Page,
+    tabName: 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
+  ): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.tabLink(tabName));
+    await this.waitForVisibleSelector(page, `${this.tabLink(tabName)} a.active`, 2000);
+  }
+
+  /**
+   * Is Tab active
+   * @param page {Page} Browser tab
+   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @returns {Promise<boolean>}
+   */
+  async isTabActive(
+    page: Page,
+    tabName: 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
+  ): Promise<boolean> {
+    return this.elementVisible(page, `${this.tabLink(tabName)} a.active`, 2000);
+  }
+
+  /**
+   * Is Tab visible
+   * @param page {Page} Browser tab
+   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @returns {Promise<boolean>}
+   */
+  async isTabVisible(
+    page: Page,
+    tabName: 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
+  ): Promise<boolean> {
+    return this.elementVisible(page, `${this.tabLink(tabName)} a`, 2000);
+  }
+
   /**
    * Get product header summary
    * @param page {Page} Browser tab
@@ -120,10 +204,23 @@ class CreateProduct extends BOBasePage {
    */
   async getProductHeaderSummary(page: Page): Promise<ProductHeaderSummary> {
     return {
+      imageUrl: await this.getAttributeContent(page, this.productImageUrl, 'value'),
       priceTaxExc: await this.getTextContent(page, this.productHeaderTaxExcluded),
       priceTaxIncl: await this.getTextContent(page, this.productHeaderTaxIncluded),
       quantity: await this.getTextContent(page, this.productHeaderQuantity, false),
-      reference: await this.getTextContent(page, this.productHeaderReference),
+      reference: await this.getTextContent(page, this.productHeaderReference('reference'), false),
+      mpn: (await page.locator(this.productHeaderReference('mpn')).count())
+        ? await this.getTextContent(page, this.productHeaderReference('mpn'), false)
+        : '',
+      upc: (await page.locator(this.productHeaderReference('upc')).count())
+        ? await this.getTextContent(page, this.productHeaderReference('upc'), false)
+        : '',
+      ean_13: (await page.locator(this.productHeaderReference('ean_13')).count())
+        ? await this.getTextContent(page, this.productHeaderReference('ean_13'), false)
+        : '',
+      isbn: (await page.locator(this.productHeaderReference('isbn')).count())
+        ? await this.getTextContent(page, this.productHeaderReference('isbn'), false)
+        : '',
     };
   }
 
@@ -137,13 +234,25 @@ class CreateProduct extends BOBasePage {
   }
 
   /**
-   * Set product status
+   * Return the product type
    * @param page {Page} Browser tab
-   * @param status {boolean} The product status
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async setProductStatus(page: Page, status: boolean): Promise<void> {
-    await this.setChecked(page, this.productActiveSwitchButton, status);
+  async getProductType(page: Page): Promise<string> {
+    const typeLabel = await this.getTextContent(page, this.productTypePreviewLabel);
+
+    switch (typeLabel) {
+      case 'Standard product':
+        return 'standard';
+      case 'Product with combinations':
+        return 'combinations';
+      case 'Pack of products':
+        return 'pack';
+      case 'Virtual product':
+        return 'virtual';
+      default:
+        throw new Error(`Type ${typeLabel} is not defined`);
+    }
   }
 
   /**
@@ -153,7 +262,8 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setProduct(page: Page, productData: ProductData): Promise<string> {
-    await this.setValue(page, this.productNameInput(1), productData.name);
+    await this.setProductName(page, productData.name, 'en');
+    await this.setProductName(page, productData.nameFR, 'fr');
 
     await descriptionTab.setProductDescription(page, productData);
 
@@ -174,6 +284,35 @@ class CreateProduct extends BOBasePage {
     await this.setProductStatus(page, productData.status);
 
     return this.saveProduct(page);
+  }
+
+  /**
+   * Set product status
+   * @param page {Page} Browser tab
+   * @param status {boolean} The product status
+   * @returns {Promise<void>}
+   */
+  async setProductStatus(page: Page, status: boolean): Promise<void> {
+    await this.setChecked(page, this.productActiveSwitchButton(status ? 1 : 0), true);
+  }
+
+  /**
+   * Set product name
+   * @param page {Page} Browser tab
+   * @param name {string} Name of the product
+   * @param locale {string} Locale
+   * @returns {Promise<void>}
+   */
+  async setProductName(page: Page, name: string, locale: string = 'en'): Promise<void> {
+    console.log(this.productNameLanguageButton);
+    console.log(await this.elementVisible(page, this.productNameLanguageButton));
+    await this.waitForSelectorAndClick(page, this.productNameLanguageButton);
+    console.log(this.productNameLanguageDropdownItem(locale));
+    console.log(await this.elementVisible(page, this.productNameLanguageDropdownItem(locale)));
+    await this.waitForSelectorAndClick(page, this.productNameLanguageDropdownItem(locale));
+    console.log(this.productNameInput(locale));
+    console.log(await this.elementVisible(page, this.productNameInput(locale)));
+    await this.setValue(page, this.productNameInput(locale), name);
   }
 
   /**
@@ -273,6 +412,27 @@ class CreateProduct extends BOBasePage {
     await productsPage.selectProductType(page, productType);
     await productsPage.clickOnAddNewProduct(page);
     await page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'});
+  }
+
+  /**
+   * Change product type
+   * @param page {Page} Browser tab
+   * @param productType {string} Data to choose in product type
+   * @returns {Promise<string>}
+   */
+  async changeProductType(page: Page, productType: string): Promise<string> {
+    // Click on the type label
+    await page.click(this.productTypePreview);
+    // Modal "Change the product type"
+    await this.elementVisible(page, this.modalSwitchType, 2000);
+    await this.waitForSelectorAndClick(page, this.modalSwitchTypeBtnChoice(productType));
+    await this.waitForSelectorAndClick(page, this.modalSwitchTypeBtnSubmit);
+    // Modal "Are you sure you want to change the product type?"
+    await this.elementVisible(page, this.modalConfirmType, 2000);
+    await this.elementVisible(page, this.modalConfirmTypeBtnSubmit, 2000);
+    await this.waitForSelectorAndClick(page!, this.modalConfirmTypeBtnSubmit);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
