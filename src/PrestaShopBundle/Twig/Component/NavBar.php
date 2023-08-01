@@ -39,27 +39,23 @@ use Tab;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/nav_bar.html.twig')]
 class NavBar
 {
+    private ?array $tabs = null;
+
     public function __construct(
         private readonly LegacyContext $context,
         private readonly LoggerInterface $logger,
+        private readonly string $psVersion,
     ) {
     }
 
-    public function getToggleNavigationUrl(): string
+    public function getDefaultTab(): string
     {
-        return $this->context->getAdminLink('AdminEmployees', true, [
-            'action' => 'toggleMenu',
-        ]);
-    }
-
-    public function getDefaultTabLink(): string
-    {
-        return $this->context->getAdminLink(Tab::getClassNameById((int) $this->context->getContext()->employee->default_tab));
+        return Tab::getClassNameById((int) $this->context->getContext()->employee->default_tab);
     }
 
     public function getPsVersion(): string
     {
-        return _PS_VERSION_;
+        return $this->psVersion;
     }
 
     public function isCollapseMenu(): bool
@@ -75,7 +71,11 @@ class NavBar
 
     public function getTabs(): array
     {
-        return $this->buildTabs();
+        if (null === $this->tabs) {
+            $this->tabs = $this->buildTabs();
+        }
+
+        return $this->tabs;
     }
 
     private function buildTabs($parentId = 0, $level = 0): array
