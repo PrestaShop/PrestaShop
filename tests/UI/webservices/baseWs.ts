@@ -21,7 +21,7 @@ export default class BaseWS {
         display: 'full',
       },
     });
-  };
+  }
 
   /**
    * Returns a blank XML tree of the chosen resource, with the format that is expected for each value and specific indicators
@@ -43,7 +43,7 @@ export default class BaseWS {
         display: 'full',
       },
     });
-  };
+  }
 
   /**
    * Get all element
@@ -51,7 +51,7 @@ export default class BaseWS {
    * @param url {string}
    * @param authorization {string}
    */
-  protected static getAll(
+  protected static async getAll(
     apiContext: APIRequestContext,
     url: string,
     authorization: string,
@@ -61,7 +61,7 @@ export default class BaseWS {
         Authorization: authorization,
       },
     });
-  };
+  }
 
   /**
    * Get element by id
@@ -81,7 +81,7 @@ export default class BaseWS {
         Authorization: authorization,
       },
     });
-  };
+  }
 
   /**
    * Add new element
@@ -102,7 +102,7 @@ export default class BaseWS {
       },
       data,
     });
-  };
+  }
 
   /**
    * Update an element
@@ -125,7 +125,7 @@ export default class BaseWS {
       },
       data,
     });
-  };
+  }
 
   /**
    * Delete an element
@@ -145,5 +145,5 @@ export default class BaseWS {
         Authorization: authorization,
       },
     });
-  };
+  }
 }
