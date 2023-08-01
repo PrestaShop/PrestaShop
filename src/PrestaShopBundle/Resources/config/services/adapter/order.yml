@@ -200,10 +200,8 @@ services:
     autoconfigure: true
     arguments:
       - '@translator'
-      - '@validator'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-      - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
+      - '@prestashop.adapter.mail_template.partial_template_renderer'
+      - '@prestashop.core.localization.locale.repository'
 
   prestashop.adapter.order.command_handler.cancel_order_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\CancelOrderProductHandler

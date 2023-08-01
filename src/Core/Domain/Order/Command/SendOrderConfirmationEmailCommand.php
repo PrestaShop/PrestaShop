@@ -39,11 +39,17 @@ class SendOrderConfirmationEmailCommand
     private $orderId;
 
     /**
+     * @var array
+     */
+    private $extraVariables;
+
+    /**
      * @param int $orderId
      */
-    public function __construct(int $orderId)
+    public function __construct(int $orderId, array $extraVariables = [])
     {
         $this->orderId = new OrderId($orderId);
+        $this->extraVariables = $extraVariables;
     }
 
     /**
@@ -52,5 +58,13 @@ class SendOrderConfirmationEmailCommand
     public function getOrderId(): OrderId
     {
         return $this->orderId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtraVariables(): array
+    {
+        return $this->extraVariables;
     }
 }

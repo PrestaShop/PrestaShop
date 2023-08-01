@@ -50,6 +50,15 @@ admin_orders_generate_delivery_slip_pdf:
   requirements:
     orderId: \d+
 
+admin_orders_resend_confirmation:
+  path: /{orderId}/resend-confirmation
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::resendOrderConfirmation
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
 admin_orders_change_orders_status:
   path: /change-orders-status
   methods: [ POST ]

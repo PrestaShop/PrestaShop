@@ -95,6 +95,16 @@
     </form>
   {% endif %}
 
+  <form class="order-actions-resend-confirmation">
+    <div class="input-group">
+      <a href="{{ path('admin_orders_resend_confirmation', {'orderId': orderForViewing.id}) }}" 
+        class="btn btn-action" data-role="resend-confirmation">
+        <i class="material-icons">mail</i>
+        {{ 'Re-send confirmation email'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </a>
+    </div>
+  </form>
+
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
 
   {% if merchandiseReturnEnabled %}
