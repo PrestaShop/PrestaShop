@@ -108,8 +108,6 @@ services:
     tags: [ 'api_platform.state_provider' ]
     public: false
     autowire: true
-    arguments:
-      - '@prestashop.core.query_bus'
 
   PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
     tags: [ 'api_platform.state_processor' ]
@@ -130,3 +128,12 @@ services:
       - '@doctrine.orm.entity_manager'
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
+
+  Symfony\Component\Serializer\Serializer $apiPlatformSerializer:
+    class: Symfony\Component\Serializer\Serializer
+    arguments:
+      $normalizers:
+        - '@prestashop.api_platform.property_normalizer'
+
+  prestashop.api_platform.property_normalizer:
+    class: Symfony\Component\Serializer\Normalizer\ObjectNormalizer

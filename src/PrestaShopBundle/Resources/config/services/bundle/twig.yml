@@ -40,7 +40,7 @@ services:
     arguments:
       - "@prestashop.core.hook.dispatcher"
       - "@prestashop.adapter.data_provider.module"
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('PrestaShop\\\\PrestaShop\\\\Core\\\\Module\\\\ModuleRepository'):null"
 
   PrestaShopBundle\Twig\Extension\GridExtension:
     arguments:

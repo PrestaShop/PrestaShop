@@ -111,7 +111,15 @@
       <div class="header-right">
         {if !isset($hideLegacyStoreContextSelector) || !$hideLegacyStoreContextSelector}
           <div class="component" id="header-shop-list-container">
-            {include file="components/layout/shop_list.tpl"}
+            {render_template
+              smarty_template="components/layout/shop_list.tpl"
+              twig_template="@PrestaShop/Admin/Layout/shop_list.html.twig"
+              base_url=$base_url
+              is_multishop= $is_multishop|default:null
+              shop_list= $shop_list|default:null
+              multishop_context= $multishop_context|default:null
+              current_shop_name= $current_shop_name|default:null
+            }
           </div>
         {/if}
         {if $show_new_orders || $show_new_customers || $show_new_messages}
@@ -119,12 +127,6 @@
               {render_template
                 smarty_template="components/layout/notifications_center.tpl"
                 twig_template="@PrestaShop/Admin/Layout/notifications_center.html.twig"
-                show_new_orders=$show_new_orders
-                show_new_customers=$show_new_customers
-                show_new_messages=$show_new_messages
-                no_order_tip=$no_order_tip
-                no_customer_tip=$no_customer_tip
-                no_customer_message_tip=$no_customer_message_tip
               }
           </div>
         {/if}
@@ -153,7 +155,20 @@
     }
 {/if}
 
-{if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
+{if isset($page_header_toolbar_template)}
+    {render_template
+      smarty_template=$page_header_toolbar_template
+      twig_template="@PrestaShop/Admin/Layout/tool_bar.html.twig"
+      multistore_header=$multistore_header
+      breadcrumbs2=$breadcrumbs2
+      title=$title
+      toolbar_btn=$toolbar_btn
+      table=$table
+      help_link=$help_link
+      enableSidebar=$enableSidebar
+      current_tab_level=$current_tab_level
+    }
+{/if}
 
 <div id="main-div">
     {if $install_dir_exists}
@@ -198,11 +213,7 @@
 {/if}
 
 {if isset($php_errors)}
-    {render_template
-      smarty_template="error.tpl"
-      twig_template="@PrestaShop/Admin/Layout/php_errors.html.twig"
-      php_errors=$php_errors
-    }
+  {include file="error.tpl"}
 {/if}
 
 {if (!isset($lite_display) || (isset($lite_display) && !$lite_display))}

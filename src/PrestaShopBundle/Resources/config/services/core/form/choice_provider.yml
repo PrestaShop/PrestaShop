@@ -63,7 +63,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider:
     arguments:
-      - '@=service("prestashop.core.admin.module.repository").getInstalledModules()'
+      - '@=service("PrestaShop\\PrestaShop\\Core\\Module\\ModuleRepository").getInstalledModules()'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider:
     arguments:
@@ -108,7 +108,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider:
     arguments:
-      - '@=service("prestashop.adapter.data_provider.tab").getViewableTabsForContextEmployee(service("prestashop.adapter.legacy.context").getLanguage().id)'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Tab\\TabDataProvider").getViewableTabsForContextEmployee(service("prestashop.adapter.legacy.context").getLanguage().id)'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider:
     arguments:

@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
-import foCartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import foCheckoutPage from '@pages/FO/checkout';
 import foProductPage from '@pages/FO/product';
 import {homePage as foHomePage} from '@pages/FO/home';
@@ -98,7 +98,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
-        await foCartPage.clickOnProceedToCheckout(page);
+        await cartPage.clickOnProceedToCheckout(page);
 
         // Checkout the order
         if (index === 0) {

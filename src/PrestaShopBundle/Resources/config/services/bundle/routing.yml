@@ -16,10 +16,6 @@ services:
     class: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
     public: true
 
-  prestashop.bundle.routing.converter.router_provider:
-    alias: PrestaShopBundle\Routing\Converter\RouterProvider
-    deprecated: ~
-
   PrestaShopBundle\Routing\Converter\RouterProvider:
     autowire: true
 
@@ -35,7 +31,7 @@ services:
   prestashop.bundle.routing.converter.cache_provider:
     class: 'PrestaShopBundle\Routing\Converter\CacheProvider'
     arguments:
-      - '@prestashop.bundle.routing.converter.router_provider'
+      - '@PrestaShopBundle\Routing\Converter\RouterProvider'
       - '@prestashop.bundle.routing.converter.cache'
       - '@prestashop.bundle.routing.converter.routing_cache_key_generator'
 

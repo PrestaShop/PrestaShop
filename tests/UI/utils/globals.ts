@@ -1,5 +1,5 @@
-import {config} from 'dotenv';
 import path from 'path';
+import {config} from 'dotenv';
 
 config();
 

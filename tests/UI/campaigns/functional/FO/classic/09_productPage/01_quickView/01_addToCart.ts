@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {homePage} from '@pages/FO/home';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data

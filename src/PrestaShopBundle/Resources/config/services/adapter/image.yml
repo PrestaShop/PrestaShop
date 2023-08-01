@@ -53,10 +53,6 @@ services:
       - '@=service("prestashop.core.configuration.upload_size_configuration").getMaxUploadSizeInBytes()'
       - '@prestashop.adapter.upload_quota.configuration'
 
-  prestashop.adapter.image.image_validator:
-    alias: PrestaShop\PrestaShop\Adapter\Image\ImageValidator
-    deprecated: ~
-
   prestashop.adapter.image.category_image_path_factory:
     class: 'PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory'
     arguments:

@@ -1,4 +1,6 @@
-{#**
+<?php
+
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,24 +23,45 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% if phpErrors|length > 0 %}
-<div class="bootstrap">
-  <div id="error-modal" class="modal fade">
-    <div class="modal-dialog">
-      <div class="alert alert-danger clearfix">
-        {% for phpError in phpErrors %}
-          {{ '%1$s on line %2$s in file %3$s'|trans({
-            '%1$s': phpError.type,
-            '%2$s': phpError.errline,
-            '%3$s': phpError.errfile,
-            }, 'Admin.Notifications.Error')
-          }}<br />
-          [{{ phpError.errno }}] {{ phpError.errstr }}<br /><br />
-        {% endfor %}
-        <button type="button" class="btn btn-default float-right" data-dismiss="modal"><i class="icon-remove"></i> {{ 'Close'|trans({}, 'Admin.Actions') }}</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult;
+
+class Hook
+{
+    public function __construct(
+        public readonly int $id,
+        public readonly bool $active,
+        public readonly string $name,
+        public readonly string $title,
+        public readonly string $description
+    ) {
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+}

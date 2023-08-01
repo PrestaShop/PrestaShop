@@ -1,6 +1,6 @@
-import type {APIResponse} from 'playwright';
 import crypto from 'crypto';
 import {readFileSync} from 'fs';
+import type {APIResponse} from 'playwright';
 
 type HttpHeader = {
   name: string

@@ -2,11 +2,6 @@ services:
   _defaults:
     public: false
 
-  prestashop.core.util.helper_card.documentation_link_provider:
-    alias: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
-    public: true
-    deprecated: ~
-
   PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface:
     alias: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
     public: true

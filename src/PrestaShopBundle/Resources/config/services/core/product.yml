@@ -9,10 +9,6 @@ services:
       - '@prestashop.core.admin.data_provider.product_interface'
     deprecated: ~
 
-  prestashop.core.product.csv_exporter:
-    alias: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
-    deprecated: ~
-
   PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator: ~
   PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface: '@PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator'
 

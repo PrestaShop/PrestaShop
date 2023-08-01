@@ -11,7 +11,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import contactUsPage from '@pages/FO/contactUs';
+import {contactUsPage} from '@pages/FO/contactUs';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';

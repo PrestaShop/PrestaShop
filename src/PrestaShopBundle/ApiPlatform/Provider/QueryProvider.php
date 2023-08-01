@@ -31,20 +31,30 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use Symfony\Component\Serializer\Serializer;
 
 class QueryProvider implements ProviderInterface
 {
-    private $queryBus;
-
-    public function __construct(CommandBusInterface $queryBus)
-    {
-        $this->queryBus = $queryBus;
+    public function __construct(
+        private readonly CommandBusInterface $queryBus,
+        private readonly Serializer $apiPlatformSerializer
+    ) {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $query = $operation->getExtraProperties()['query'];
+        $extraProperties = $operation->getExtraProperties();
 
-        return $this->queryBus->handle(new $query(...$uriVariables));
+        $query = $extraProperties['query'] ?? null;
+
+        if (null === $query) {
+            throw new NoExtraPropertiesFoundException();
+        }
+
+        $queryResult = $this->queryBus->handle(new $query(...$uriVariables));
+        $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
+
+        return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
     }
 }

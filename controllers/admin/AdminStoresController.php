@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
@@ -425,7 +426,7 @@ class AdminStoresControllerCore extends AdminController
         * In case of .jpg images, the actual format inside is decided by ImageManager.
         */
         $sfContainer = SymfonyContainer::getInstance();
-        if ($sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+        if ($sfContainer->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
             $configuredImageFormats = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
         } else {
             $configuredImageFormats = ['jpg'];

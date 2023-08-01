@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,12 +27,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Twig\Component;
+namespace PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler;
 
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
 
-#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/php_errors.html.twig')]
-class PHPErrors
+interface GetHookHandlerInterface
 {
-    public array $phpErrors;
+    public function handle(GetHook $query);
 }

@@ -19,7 +19,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import searchResultsPage from '@pages/FO/searchResults';

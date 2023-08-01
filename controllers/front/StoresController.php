@@ -34,117 +34,6 @@ class StoresControllerCore extends FrontController
     protected $storePresenter;
 
     /**
-     * Get formatted string address.
-     *
-     * @param array $store
-     *
-     * @return string
-     */
-    protected function processStoreAddress(array $store)
-    {
-        $ignore_field = [
-            'firstname',
-            'lastname',
-        ];
-
-        $out_datas = [];
-
-        $address_datas = AddressFormat::getOrderedAddressFields($store['id_country'], false, true);
-        $state = (isset($store['id_state'])) ? new State($store['id_state']) : null;
-
-        foreach ($address_datas as $data_line) {
-            $data_fields = explode(' ', $data_line);
-            $addr_out = [];
-
-            $data_fields_mod = false;
-            foreach ($data_fields as $field_item) {
-                $field_item = trim($field_item);
-                if (!in_array($field_item, $ignore_field) && !empty($store[$field_item])) {
-                    $addr_out[] = ($field_item == 'city' && $state && !empty($state->iso_code)) ?
-                        $store[$field_item] . ', ' . $state->iso_code : $store[$field_item];
-                    $data_fields_mod = true;
-                }
-            }
-            if ($data_fields_mod) {
-                $out_datas[] = implode(' ', $addr_out);
-            }
-        }
-
-        $out = implode('<br />', $out_datas);
-
-        return $out;
-    }
-
-    public function getStoresForXml()
-    {
-        $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
-        if (!in_array($distance_unit, ['km', 'mi'])) {
-            $distance_unit = 'km';
-        }
-
-        $distance = (int) Tools::getValue('radius', 100);
-        $multiplicator = ($distance_unit == 'km' ? 6371 : 3959);
-
-        $langId = (int) Tools::getValue('lang', Configuration::get('PS_LANG_DEFAULT'));
-
-        $stores = Db::getInstance()->executeS('
-        SELECT s.*, sl.*, cl.name country, st.iso_code state,
-        (' . (int) $multiplicator . '
-            * acos(
-                cos(radians(' . (float) Tools::getValue('latitude') . '))
-                * cos(radians(latitude))
-                * cos(radians(longitude) - radians(' . (float) Tools::getValue('longitude') . '))
-                + sin(radians(' . (float) Tools::getValue('latitude') . '))
-                * sin(radians(latitude))
-            )
-        ) distance,
-        cl.id_country id_country
-        FROM ' . _DB_PREFIX_ . 'store s
-        LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = s.id_country AND cl.id_lang = ' . (int) $langId . ')
-        LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (sl.id_store = s.id_store AND sl.id_lang = ' . (int) $langId . ')
-        LEFT JOIN ' . _DB_PREFIX_ . 'state st ON (st.id_state = s.id_state)
-        WHERE s.active = 1
-        HAVING distance < ' . (int) $distance . '
-        ORDER BY distance ASC
-        LIMIT 0,20');
-
-        return $stores;
-    }
-
-    /**
-     * Display the Xml for showing the nodes in the google map.
-     */
-    protected function displayAjax()
-    {
-        $stores = $this->getStoresForXml();
-        $parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
-
-        foreach ($stores as $store) {
-            $newnode = $parnode->addChild('marker');
-            $newnode->addAttribute('name', $store['name']);
-            $address = $this->processStoreAddress($store);
-
-            $newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
-            $newnode->addAttribute('address', $address);
-            $newnode->addAttribute('hours', trim($store['hours']));
-            $newnode->addAttribute('phone', $store['phone']);
-            $newnode->addAttribute('fax', $store['fax']);
-            $newnode->addAttribute('note', $store['note']);
-            $newnode->addAttribute('id_store', (string) (int) $store['id_store']);
-            $newnode->addAttribute('has_store_picture', (string) file_exists(_PS_STORE_IMG_DIR_ . (int) $store['id_store'] . '.jpg'));
-            $newnode->addAttribute('lat', (string) (float) $store['latitude']);
-            $newnode->addAttribute('lng', (string) (float) $store['longitude']);
-            if (isset($store['distance'])) {
-                $newnode->addAttribute('distance', (string) (int) $store['distance']);
-            }
-        }
-
-        header('Content-type: text/xml');
-
-        $this->ajaxRender($parnode->asXML());
-    }
-
-    /**
      * Initialize stores controller.
      *
      * @see FrontController::init()
@@ -172,15 +61,23 @@ class StoresControllerCore extends FrontController
             $distance_unit = 'km';
         }
 
-        $this->context->smarty->assign([
-            'mediumSize' => Image::getSize(ImageType::getFormattedName('medium')),
-            'searchUrl' => $this->context->link->getPageLink('stores'),
-            'distance_unit' => $distance_unit,
-            'stores' => $this->getTemplateVarStores(),
-        ]);
+        // Load stores and present them
+        $stores = $this->getTemplateVarStores();
 
-        parent::initContent();
-        $this->setTemplate('cms/stores');
+        // If no stores are configured, we hide this page
+        if (!empty($stores)) {
+            $this->context->smarty->assign([
+                'mediumSize' => Image::getSize(ImageType::getFormattedName('medium')),
+                'searchUrl' => $this->context->link->getPageLink('stores'),
+                'distance_unit' => $distance_unit,
+                'stores' => $stores,
+            ]);
+            parent::initContent();
+            $this->setTemplate('cms/stores');
+        } else {
+            $this->redirect_after = '404';
+            $this->redirect();
+        }
     }
 
     public function getTemplateVarStores()

@@ -2166,6 +2166,11 @@
       <title>Store Presenter</title>
       <description>This hook is called before a store is presented</description>
     </hook>
+    <hook id="actionPresentCategory">
+      <name>actionPresentCategory</name>
+      <title>Category Presenter</title>
+      <description>This hook is called before a category is presented</description>
+    </hook>
     <hook id="actionAdminAdminPreferencesControllerPostProcessBefore">
       <name>actionAdminAdminPreferencesControllerPostProcessBefore</name>
       <title>On post-process in Admin Preferences</title>

@@ -15,7 +15,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';

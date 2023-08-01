@@ -15,10 +15,10 @@ import customerServiceMessageViewPage from '@pages/BO/customerService/customerSe
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
+import {contactUsPage} from '@pages/FO/contactUs';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import contactUsPage from '@pages/FO/contactUs';
 
 // Import data
 import Customers from '@data/demo/customers';
