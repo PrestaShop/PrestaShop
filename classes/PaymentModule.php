@@ -530,7 +530,7 @@ abstract class PaymentModuleCore extends Module
                 /** @var CommandBusInterface $commandBus */
                 $commandBus = SymfonyContainer::getInstance()->get('prestashop.core.command_bus');
                 try {
-                    $commandBus->handle(new SendOrderConfirmationEmailCommand((int) $order->id));
+                    $commandBus->handle(new SendOrderConfirmationEmailCommand((int) $order->id), $extra_vars);
                 } catch (CoreException $e) {
                 }
             }

@@ -100,7 +100,7 @@ class SendOrderConfirmationEmailHandler implements SendOrderConfirmationEmailHan
         $order = new Order($command->getOrderId()->getValue());
         $customer = new Customer((int) $order->id_customer);
         if (!Validate::isLoadedObject($customer) || !Validate::isEmail($customer->email)) {
-            return; // throw some exception?
+            return; // @TODO THROW EXCEPTION
         }
 
         // Initialize currency and language
@@ -110,7 +110,7 @@ class SendOrderConfirmationEmailHandler implements SendOrderConfirmationEmailHan
 
         $order_status = new OrderState((int) $order->current_state, (int) $order->id_lang);
         if (!Validate::isLoadedObject($order_status)) {
-            return; // throw some exception?
+            return; // @TODO THROW EXCEPTION
         }
 
         // Assign basic customer data
@@ -172,6 +172,11 @@ class SendOrderConfirmationEmailHandler implements SendOrderConfirmationEmailHan
         $product_var_tpl_list = [];
         $virtual_product = true;
         foreach ($order->getProducts() as $product) {
+
+            // @TODO ADD ALL PRODUCT DATA INCL CUSTOMIZATIONS
+            // CHECK VAT
+            // CHECK UNIT PRICES ETC
+            // ADD MORE INFO
 
             // Basic product information
             $product_var_tpl = [
@@ -257,6 +262,7 @@ class SendOrderConfirmationEmailHandler implements SendOrderConfirmationEmailHan
         // Join PDF invoice if configured for current order status
         if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
 
+            // @TODO TEST INVOICE IS RENDER IN CUSTOMER'S LANGUAGE
             // Assign order language into context
             Context::getContext()->language = $orderLanguage;
             Context::getContext()->getTranslator()->setLocale($orderLanguage->locale);
@@ -273,7 +279,7 @@ class SendOrderConfirmationEmailHandler implements SendOrderConfirmationEmailHan
         }
 
         if (!empty($command->getExtraVariables())) {
-            $data = array_merge($emailVariables, $command->getExtraVariables());
+            $emailVariables = array_merge($emailVariables, $command->getExtraVariables());
         }
 
         Mail::Send(
