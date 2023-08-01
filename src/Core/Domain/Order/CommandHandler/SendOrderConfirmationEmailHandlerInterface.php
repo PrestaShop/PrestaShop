@@ -24,33 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendOrderConfirmationEmailCommand;
 
 /**
- * Sends email with order confirmation to the customer
+ * Interface SendOrderConfirmationEmailHandlerInterface
  */
-class SendOrderConfirmationEmailCommand
+interface SendOrderConfirmationEmailHandlerInterface
 {
-    /**
-     * @var OrderId
-     */
-    private $orderId;
-
-    /**
-     * @param int $orderId
-     */
-    public function __construct(int $orderId)
-    {
-        $this->orderId = new OrderId($orderId);
-    }
-
-    /**
-     * @return OrderId
-     */
-    public function getOrderId(): OrderId
-    {
-        return $this->orderId;
-    }
+    public function handle(SendOrderConfirmationEmailCommand $command);
 }

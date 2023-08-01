@@ -195,6 +195,16 @@ services:
       - '@translator'
       - '@=service("prestashop.adapter.legacy.context").getContext().link'
 
+  prestashop.adapter.order.command_handler.send_order_confirmation_email_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SendOrderConfirmationEmailHandler
+    autoconfigure: true
+    arguments:
+      - '@translator'
+      - '@validator'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
+
   prestashop.adapter.order.command_handler.cancel_order_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\CancelOrderProductHandler
     autoconfigure: true
