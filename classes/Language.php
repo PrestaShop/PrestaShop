@@ -1256,7 +1256,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         // 3 attempts to download the language pack
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 3; ++$i) {
             $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
 
             // If we managed to download the pack successfully and it's a valid zip file, we stop
