@@ -48,8 +48,8 @@ class SearchForm
     public function mount(): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        $this->boQuery = $request->query->get(self::BO_QUERY_PARAM) ?: '';
-        $this->searchType = (int) $request->query->get(self::BO_SEARCH_TYPE_PARAM) ?: 0;
+        $this->boQuery = $request->query->get(self::BO_QUERY_PARAM, '');
+        $this->searchType = (int) $request->query->get(self::BO_SEARCH_TYPE_PARAM, 0);
         $this->showClearBtn = !empty($this->boQuery);
     }
 }
