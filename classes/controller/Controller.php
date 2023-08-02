@@ -644,7 +644,7 @@ abstract class ControllerCore
         $this->context->cookie->write();
 
         $js_tag = 'js_def';
-        $this->context->smarty->assign($js_tag, $js_tag);
+        $this->context->smarty->assign($js_tag, \Media::getJsDef());
 
         if (!is_array($templates)) {
             $templates = [$templates];

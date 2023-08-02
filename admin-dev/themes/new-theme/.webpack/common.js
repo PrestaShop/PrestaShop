@@ -424,6 +424,11 @@ module.exports = {
       templateContent: '{{{preloadLinks}}}',
       inject: false,
     }),
+    new HtmlWebpackPlugin({
+      filename: 'preload.html.twig',
+      templateContent: '{{{preloadLinks}}}',
+      inject: false,
+    }),
     new webpack.DefinePlugin({
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false,
@@ -434,6 +439,13 @@ module.exports = {
       filter: /preload/,
       // eslint-disable-next-line
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{$admin_dir}')),
+    }),
+    new FontPreloadPlugin({
+      index: 'preload.html.twig',
+      extensions: ['woff2'],
+      filter: /preload/,
+      // eslint-disable-next-line
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{{ admin_dir }}')),
     }),
     new CssoWebpackPlugin({
       forceMediaMerge: true,

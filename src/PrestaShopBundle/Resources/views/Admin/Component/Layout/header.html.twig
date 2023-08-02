@@ -1,0 +1,81 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale={{ viewport_scale ? viewport_scale : '1' }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="NOFOLLOW, NOINDEX">
+
+<link rel="icon" type="image/x-icon" href="{{ img_dir }}favicon.ico" />
+<link rel="apple-touch-icon" href="{{ img_dir }}app_icon.png" />
+
+<title>{% if meta_title %}{{ meta_title }} • {% endif %}{{ shop_name }}</title>
+
+{% if display_header_javascript %}
+  <script type="text/javascript">
+    var help_class_name = '{{ controller_name|e('js') }}';
+    var iso_user = '{{ iso_user|e('js') }}';
+    var lang_is_rtl = '{{ lang_is_rtl|intCast }}';
+    var full_language_code = '{{ full_language_code|e('js') }}';
+    var full_cldr_language_code = '{{ full_cldr_language_code|e('js') }}';
+    var country_iso_code = '{{ country_iso_code|e('js') }}';
+    var _PS_VERSION_ = '{{ ps_version|e('js') }}';
+    var roundMode = {{ round_mode|intCast }};
+    var youEditFieldFor = '';
+    {% if shop_context %}
+      {% if shop_context == constant('\Shop::CONTEXT_ALL') %}
+    youEditFieldFor = '{{ 'This field will be modified for all your shops.'|trans({}, 'Admin.Notifications.Info') }}';
+      {% elseif shop_context == constant('\Shop::CONTEXT_GROUP') %}
+    youEditFieldFor = '{{ 'This field will be modified for all shops in this shop group:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ shop_name|e('js') }}</b>';
+      {% else %}
+    youEditFieldFor = '{{ 'This field will be modified for this shop:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ shop_name|e('js') }}</b>
+      {% endif %}
+    {% endif %}
+    var new_order_msg = '{{ 'A new order has been placed on your store.'|trans({}, 'Admin.Navigation.Header') }}';
+    var order_number_msg = '{{ 'Order number:'|trans({}, 'Admin.Navigation.Header') }} ';
+    var total_msg = '{{ 'Total:'|trans({}, 'Admin.Global') }} ';
+    var from_msg = '{{ 'From:'|trans({}, 'Admin.Global') }} ';
+    var see_order_msg = '{{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature') }}';
+    var new_customer_msg = '{{ 'A new customer registered on your store.'|trans({}, 'Admin.Navigation.Header') }}';
+    var customer_name_msg = '{{ 'Customer name:'|trans({}, 'Admin.Navigation.Header') }} ';
+    var new_msg = '{{ 'A new message was posted on your store.'|trans({}, 'Admin.Navigation.Header') }}';
+    var see_msg = '{{ 'Read this message'|trans({}, 'Admin.Navigation.Header') }}';
+    var token = '{{ token|e('js') }}';
+    var currentIndex = '{{ currentIndex|e('js') }}';
+    var employee_token = '{{ this.employeeToken|e('js') }}';
+    var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
+    var default_language = '{{ default_language|intCast }}';
+    var admin_modules_link = '{{ link.getAdminLink("AdminModulesSf", true, {'route': "admin_module_manage"})|e('js')}}';
+    var admin_notification_get_link = '{{ link.getAdminLink("AdminCommon")|e('js') }}';
+    var admin_notification_push_link = adminNotificationPushLink = '{{ link.getAdminLink("AdminCommon", true, {'route': 'admin_common_notifications_ack'})|e('js') }}';
+    var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
+    var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
+  </script>
+{% endif %}
+
+{% include "@AdminNewTheme/public/preload.html.twig" ignore missing with { 'admin_dir': '/admin-dev/themes/new-theme/public/' } %}
+
+{% for css_uri, css_media in css_files %}
+  <link href="{{ css_uri|e('html_attr') }}" rel="stylesheet" type="text/css" media="{{ css_media }}"/>
+{% endfor %}
+
+{% if this.jsDef %}
+  <script type="text/javascript">
+    {% for k, def in this.jsDef %}
+    var {{ k }} = {{ def|json_encode|raw }};
+    {% endfor %}
+  </script>
+{% endif %}
+
+{% for js_uri in js_files %}
+  <script type="text/javascript" src="{{ js_uri|e('html_attr') }}"></script>
+{% endfor %}
+
+{% if js_inline %}
+<script type="text/javascript">
+  {% for inline in js_inline %}
+    {{ inline|raw }}
+  {% endfor %}
+</script>
+{% endif %}
+
+{% if displayBackOfficeHeader %}
+  {{ displayBackOfficeHeader|raw }}
+{% endif %}
