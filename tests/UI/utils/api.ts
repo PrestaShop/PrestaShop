@@ -115,8 +115,8 @@ export default {
     const payloadString: string = JSON.stringify(payload);
 
     // Transform string in base64
-    const headerBase64: string = sodium.to_base64(headerString, sodium.base64_variants.URLSAFE_NO_PADDING)
-    const payloadBase64: string = sodium.to_base64(payloadString, sodium.base64_variants.URLSAFE_NO_PADDING)
+    const headerBase64: string = sodium.to_base64(headerString, sodium.base64_variants.URLSAFE_NO_PADDING);
+    const payloadBase64: string = sodium.to_base64(payloadString, sodium.base64_variants.URLSAFE_NO_PADDING);
 
     // Sign the header & payload
     const signatureFunction: crypto.Sign = crypto.createSign('RSA-SHA256');
@@ -130,8 +130,8 @@ export default {
     const headerBuffer: Buffer = Buffer.from(headerString);
     const payloadBuffer: Buffer = Buffer.from(payloadString);
 
-    const headerBufferBase64: string = sodium.to_base64(headerBuffer.toString(), sodium.base64_variants.URLSAFE_NO_PADDING)
-    const payloadBufferBase64: string = sodium.to_base64(payloadBuffer.toString(), sodium.base64_variants.URLSAFE_NO_PADDING)
+    const headerBufferBase64: string = sodium.to_base64(headerBuffer.toString(), sodium.base64_variants.URLSAFE_NO_PADDING);
+    const payloadBufferBase64: string = sodium.to_base64(payloadBuffer.toString(), sodium.base64_variants.URLSAFE_NO_PADDING);
 
     return `${headerBufferBase64}.${payloadBufferBase64}.${signatureBase64.toString()}`;
   },
