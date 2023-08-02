@@ -32,6 +32,7 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use PrestaShopBundle\Security\OAuth2\Entity\Client;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -77,9 +78,18 @@ class ClientRepository implements ClientRepositoryInterface
         if ($grantType !== 'client_credentials' || $clientSecret === null) {
             return false;
         }
+
         $client = $this->getUser($clientIdentifier);
 
-        return $client !== null && $this->passwordEncoder->isPasswordValid($client, $clientSecret);
+        if ($client === null) {
+            return false;
+        }
+
+        if (!$client instanceof PasswordAuthenticatedUserInterface) {
+            throw new \LogicException(sprintf('The class %s should implement %s.', $client::class, PasswordAuthenticatedUserInterface::class));
+        }
+
+        return $this->passwordEncoder->isPasswordValid($client, $clientSecret);
     }
 
     private function getUser($clientIdentifier): ?UserInterface
