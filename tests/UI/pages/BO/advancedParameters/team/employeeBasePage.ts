@@ -80,4 +80,4 @@ export default class EmployeeBasePage extends BOBasePage {
   async cancel(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.cancelButton);
   }
-};
+}

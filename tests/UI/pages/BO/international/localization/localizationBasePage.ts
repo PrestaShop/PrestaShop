@@ -53,4 +53,4 @@ export default class LocalizationBasePage extends BOBasePage {
   async goToSubTabCurrencies(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.currenciesNavItemLink);
   }
-};
+}
