@@ -48,7 +48,9 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
   it('should disable \'Cookie\'s IP address\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableCookiesIPAddress', baseContext);
 
-    const successMessage = await administrationPage.setCookiesIPAddress(page, false);
+    await administrationPage.setCookiesIPAddress(page, false);
+
+    const successMessage = await administrationPage.saveGeneralForm(page);
     await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
@@ -62,7 +64,9 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
   it('should enable \'Cookie\'s IP address\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableCookiesIPAddress', baseContext);
 
-    const successMessage = await administrationPage.setCookiesIPAddress(page, true);
+    await administrationPage.setCookiesIPAddress(page, true);
+
+    const successMessage = await administrationPage.saveGeneralForm(page);
     await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
@@ -73,19 +77,48 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await expect(isEnabled).to.be.true;
   });
 
-  it('should update \'Lifetime of front office cookies\'', async function(){
+  it('should update \'Lifetime of front office cookies\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateLifetimeOfFOCookies', baseContext);
 
-    const successMessage = await administrationPage.setLifetimeFOCookies(page, 500);
+    await administrationPage.setLifetimeFOCookies(page, 500);
+
+    const successMessage = await administrationPage.saveGeneralForm(page);
     await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
-  it('should update \' Lifetime of back office cookies\'', async function(){
+  it('should update \' Lifetime of back office cookies\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateLifetimeOfFOCookies', baseContext);
 
-    const successMessage = await administrationPage.setLifetimeBOCookies(page, 500);
+    await administrationPage.setLifetimeBOCookies(page, 500);
+
+    const successMessage = await administrationPage.saveGeneralForm(page);
     await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
-  it('should update \'Cookie SameSite\'', async )
+  it('should update \'Cookie SameSite\' to \'Strict\' value', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'updateCookieSameSite1', baseContext);
+
+    await administrationPage.setCookieSameSite(page, 'Strict');
+
+    const successMessage = await administrationPage.saveGeneralForm(page);
+    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+  });
+
+  it('should update \'Cookie SameSite\' to \'None\' value', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'updateCookieSameSite2', baseContext);
+
+    await administrationPage.setCookieSameSite(page, 'None');
+
+    const successMessage = await administrationPage.saveGeneralForm(page);
+    await expect(successMessage).to.eq(administrationPage.dangerAlertCookieSameSite);
+  });
+
+  it('should update \'Cookie SameSite\' to \'default\' value', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'updateCookieSameSite3', baseContext);
+
+    await administrationPage.setCookieSameSite(page, 'Lax');
+
+    const successMessage = await administrationPage.saveGeneralForm(page);
+    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+  });
 });
