@@ -98,7 +98,6 @@ class AdminSuppliersControllerCore extends AdminController
      */
     public function renderForm()
     {
-        // loads current warehouse
         if (!($obj = $this->loadObject(true))) {
             return;
         }
@@ -531,8 +530,6 @@ class AdminSuppliersControllerCore extends AdminController
         } elseif (Tools::isSubmit('delete' . $this->table)) {
             if (!($obj = $this->loadObject(true))) {
                 return;
-            } elseif (SupplyOrder::supplierHasPendingOrders($obj->id)) {
-                $this->errors[] = $this->trans('It is not possible to delete a supplier if there are pending supplier orders.', [], 'Admin.Catalog.Notification');
             } else {
                 //delete all product_supplier linked to this supplier
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_supplier` WHERE `id_supplier`=' . (int) $obj->id);

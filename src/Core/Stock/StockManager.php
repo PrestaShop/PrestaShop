@@ -400,10 +400,6 @@ class StockManager
                     $stockMvt->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
                 }
 
-                if (!empty($params['id_supply_order'])) {
-                    $stockMvt->setIdSupplyOrder((int) $params['id_supply_order']);
-                }
-
                 $stockMvt->setSign($deltaQuantity >= 1 ? 1 : -1);
                 $stockMvt->setPhysicalQuantity(abs($deltaQuantity));
 

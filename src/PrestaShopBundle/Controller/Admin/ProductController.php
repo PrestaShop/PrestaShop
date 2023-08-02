@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -63,7 +62,6 @@ use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
-use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
 use PrestaShopBundle\Service\Hook\HookFinder;
 use Product;
@@ -561,14 +559,7 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductController->processSpecificPricePriorities();
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
-                        // For now, each attribute set the same value.
-                        $adminProductWrapper->processDependsOnStock(
-                            $product,
-                            ($_POST['depends_on_stock'] == '1'),
-                            $combinationValues['id_product_attribute']
-                        );
                     }
-                    $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
                     // If there is no combination, then quantity and location are managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
@@ -584,8 +575,6 @@ class ProductController extends FrameworkBundleAdminController
                         ->processProductCustomization($product, $_POST['custom_fields']);
 
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
-
-                    $adminProductController->processWarehouses();
 
                     $response = new JsonResponse();
                     $response->setData([
@@ -615,12 +604,6 @@ class ProductController extends FrameworkBundleAdminController
 
             throw $e;
         }
-
-        /** @var StockInterface $stockManager */
-        $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
-
-        /** @var WarehouseDataProvider $warehouseProvider */
-        $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
 
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isGroupShopContext()) {
@@ -658,8 +641,6 @@ class ProductController extends FrameworkBundleAdminController
             'ids_product_attribute' => (isset($formData['step3']['id_product_attributes']) ? implode(',', $formData['step3']['id_product_attributes']) : ''),
             'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
             'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
-            'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
-            'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->getConfiguration()->getBoolean('PS_COMBINATION_FEATURE_ACTIVE'),
             'showContentHeader' => false,

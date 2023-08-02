@@ -38,12 +38,11 @@ class AddressCore extends ObjectModel
     /** @var int Supplier ID which address belongs to */
     public $id_supplier = null;
 
-    /**
-     * @since 1.5.0
+    /** @var int Id warehouse the address belongs to
      *
-     * @var int Warehouse ID which address belongs to
+     * @deprecated since 9.0, advanced stock management has been completely removed
      */
-    public $id_warehouse = null;
+    public $id_warehouse = 0;
 
     /** @var int Country ID */
     public $id_country;
@@ -156,7 +155,6 @@ class AddressCore extends ObjectModel
             'id_customer' => ['xlink_resource' => 'customers'],
             'id_manufacturer' => ['xlink_resource' => 'manufacturers'],
             'id_supplier' => ['xlink_resource' => 'suppliers'],
-            'id_warehouse' => ['xlink_resource' => 'warehouse'],
             'id_country' => ['xlink_resource' => 'countries'],
             'id_state' => ['xlink_resource' => 'states'],
         ],
@@ -611,7 +609,6 @@ class AddressCore extends ObjectModel
         $query->where('deleted = 0');
         $query->where('id_customer = 0');
         $query->where('id_manufacturer = 0');
-        $query->where('id_warehouse = 0');
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }

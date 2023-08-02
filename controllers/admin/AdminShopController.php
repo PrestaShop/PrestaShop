@@ -585,7 +585,6 @@ class AdminShopControllerCore extends AdminController
             'product_attribute' => $this->trans('Product combinations', [], 'Admin.Advparameters.Feature'),
             'stock_available' => $this->trans('Available quantities for sale', [], 'Admin.Advparameters.Feature'),
             'store' => $this->trans('Stores', [], 'Admin.Global'),
-            'warehouse' => $this->trans('Warehouses', [], 'Admin.Advparameters.Feature'),
             'webservice_account' => $this->trans('Webservice accounts', [], 'Admin.Advparameters.Feature'),
             'attribute_group' => $this->trans('Attribute groups', [], 'Admin.Advparameters.Feature'),
             'feature' => $this->trans('Features', [], 'Admin.Global'),

@@ -77,14 +77,6 @@
     <!--<access id="access_3_50"  id_profile="Logistician"   id_authorization_role="Price_Ranges" view="1" add="1" edit="1" delete="1"/>-->
     <!--<access id="access_3_51"  id_profile="Logistician"   id_authorization_role="Weight_Ranges" view="1" add="1" edit="1" delete="1"/>-->
     <!--<access id="access_3_61"  id_profile="Logistician"   id_authorization_role="Modules_1" view="1" add="0" edit="1" delete="0"/>-->
-    <access id="access_3_67"  id_profile="Logistician"   id_authorization_role="TAB_ADMINWAREHOUSES_CREATE"/>
-    <access id="access_3_68"  id_profile="Logistician"   id_authorization_role="TAB_ADMINWAREHOUSES_READ"/>
-    <access id="access_3_69"  id_profile="Logistician"   id_authorization_role="TAB_ADMINWAREHOUSES_UPDATE"/>
-    <access id="access_3_70"  id_profile="Logistician"   id_authorization_role="TAB_ADMINWAREHOUSES_DELETE"/>
-    <access id="access_3_71"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_CREATE"/>
-    <access id="access_3_72"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_READ"/>
-    <access id="access_3_73"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_UPDATE"/>
-    <access id="access_3_74"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_DELETE"/>
     <access id="access_3_87" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_CREATE"/>
     <access id="access_3_88" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_READ"/>
     <access id="access_3_89" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_UPDATE"/>

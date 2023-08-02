@@ -52,14 +52,11 @@ use Psr\Log\LoggerInterface;
 use Shop;
 use SpecificPrice;
 use StockAvailable;
-use StockManagerFactory;
 use Supplier;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tag;
 use TaxManagerFactory;
 use TaxRulesGroup;
-use Warehouse;
-use WarehouseProductLocation;
 
 /**
  * Class ProductImportHandler is responsible for product import.
@@ -182,8 +179,6 @@ final class ProductImportHandler extends AbstractImportHandler
             'customizable' => 0,
             'uploadable_files' => 0,
             'text_fields' => 0,
-            'advanced_stock_management' => 0,
-            'depends_on_stock' => 0,
             'is_virtual' => 0,
         ];
         $this->shopAddress = $shopAddress;
@@ -1228,72 +1223,6 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveStock(Product $product, $validateOnly, $productExists)
     {
-        $asmEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
-
-        // set advanced stock managment
-        if (!$validateOnly) {
-            /* @phpstan-ignore-next-line Data of the property `advanced_stock_management` comes from database */
-            if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
-                $this->warning(
-                    $this->translator->trans(
-                        'Advanced stock management has incorrect value. Not set for product %name%',
-                        ['%name%' => $product->name[$this->languageId]],
-                        'Admin.Advparameters.Notification'
-                    )
-                );
-            } elseif (!$asmEnabled && $product->advanced_stock_management == 1) {
-                $this->warning(
-                    $this->translator->trans(
-                        'Advanced stock management is not enabled, cannot enable on product %name%',
-                        ['%name%' => $product->name[$this->languageId]],
-                        'Admin.Advparameters.Notification'
-                    )
-                );
-            } elseif ($productExists) {
-                $product->setAdvancedStockManagement($product->advanced_stock_management);
-            }
-            // automaticly disable depends on stock, if a_s_m set to disabled
-            if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0) {
-                StockAvailable::setProductDependsOnStock($product->id, false);
-            }
-        }
-
-        // Check if warehouse exists
-        if (isset($product->warehouse) && $product->warehouse) {
-            if (!$asmEnabled) {
-                $this->warning(
-                    $this->translator->trans(
-                        'Advanced stock management is not enabled, warehouse not set on product %name%',
-                        ['%name%' => $product->name[$this->languageId]],
-                        'Admin.Advparameters.Notification'
-                    )
-                );
-            } elseif (!$validateOnly) {
-                if (Warehouse::exists($product->warehouse)) {
-                    // Get already associated warehouses
-                    $associatedWarehousesCollection = WarehouseProductLocation::getCollection($product->id);
-                    // Delete any entry in warehouse for this product
-                    foreach ($associatedWarehousesCollection as $awc) {
-                        $awc->delete();
-                    }
-                    $warehouseLocationEntity = new WarehouseProductLocation();
-                    $warehouseLocationEntity->id_product = $product->id;
-                    $warehouseLocationEntity->id_product_attribute = 0;
-                    $warehouseLocationEntity->id_warehouse = $product->warehouse;
-                    $warehouseLocationEntity->save();
-                    StockAvailable::synchronize($product->id);
-                } else {
-                    $this->warning(
-                        $this->translator->trans(
-                            'Warehouse did not exist, cannot set on product %name%',
-                            ['%name%' => $product->name[$this->languageId]],
-                            'Admin.Advparameters.Notification'
-                        )
-                    );
-                }
-            }
-        }
-
         if ($this->isMultistoreEnabled) {
             $shopIds = $product->id_shop_list;
         } else {
@@ -1302,62 +1231,7 @@ final class ProductImportHandler extends AbstractImportHandler
             ];
         }
 
-        // stock available
-        if (isset($product->depends_on_stock)) {
-            /* @phpstan-ignore-next-line Data of the property `depends_on_stock` comes from database */
-            if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
-                $this->warning(
-                    $this->translator->trans(
-                        'Incorrect value for "Depends on stock" for product %name%',
-                        ['%name%' => $product->name[$this->languageId]],
-                        'Admin.Advparameters.Notification'
-                    )
-                );
-            /* @phpstan-ignore-next-line Data of properties `advanced_stock_management` & `depends_on_stock` comes from database */
-            } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
-                $this->warning(
-                    $this->translator->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
-                        ['%name%' => $product->name[$this->languageId]],
-                        'Admin.Advparameters.Notification'
-                    )
-                );
-            } elseif (!$validateOnly) {
-                StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
-            }
-
-            // This code allows us to set qty and disable depends on stock
-            if (!$validateOnly) {
-                // if depends on stock and quantity, add quantity to stock
-                if ($product->depends_on_stock == 1) {
-                    $stockManager = StockManagerFactory::getManager();
-                    $price = str_replace(',', '.', (string) $product->wholesale_price);
-                    if ($price == 0) {
-                        $price = 0.000001;
-                    }
-                    $price = round(floatval($price), 6);
-                    $warehouse = new Warehouse($product->warehouse);
-                    $productAdded = $stockManager->addProduct(
-                        (int) $product->id,
-                        0,
-                        $warehouse,
-                        (int) $product->quantity,
-                        1,
-                        $price,
-                        true
-                    );
-
-                    if ($productAdded) {
-                        StockAvailable::synchronize((int) $product->id);
-                    }
-                } else {
-                    foreach ($shopIds as $shop) {
-                        StockAvailable::setQuantity((int) $product->id, 0, (int) $product->quantity, (int) $shop);
-                    }
-                }
-            }
-        } elseif (!$validateOnly) {
-            // if not depends_on_stock set, use normal qty
+        if (!$validateOnly) {
             foreach ($shopIds as $shop) {
                 StockAvailable::setQuantity((int) $product->id, 0, (int) $product->quantity, (int) $shop);
             }

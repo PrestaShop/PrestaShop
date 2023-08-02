@@ -26,7 +26,6 @@
  */
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
@@ -78,7 +77,7 @@ class ProductCore extends ObjectModel
     public $description_short;
 
     /**
-     * @deprecated since 1.7.8
+     * @deprecated since 1.7.8 and will be removed in future version.
      * @see StockAvailable::$quantity instead
      *
      * @var int Quantity available
@@ -274,15 +273,15 @@ class ProductCore extends ObjectModel
     public $id_color_default = 0;
 
     /**
-     * @deprecated since 1.7.8
-     * The advanced stock management feature is not maintained anymore
+     * @deprecated since 1.7.8 and will be removed in future version.
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
      *
      * @var bool Tells if the product uses the advanced stock management
      */
     public $advanced_stock_management = false;
 
     /**
-     * @deprecated since 1.7.8
+     * @deprecated since 1.7.8 and will be removed in future version.
      * @see StockAvailable::$out_of_stock instead
      *
      * @var int
@@ -293,12 +292,12 @@ class ProductCore extends ObjectModel
     public $out_of_stock = OutOfStockType::OUT_OF_STOCK_DEFAULT;
 
     /**
-     * @deprecated since 1.7.8
-     * This property was only relevant to advanced stock management and that feature is not maintained anymore
+     * @deprecated since 1.7.8 and will be removed in future version.
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
      *
      * @var bool|null
      */
-    public $depends_on_stock;
+    public $depends_on_stock = false;
 
     /**
      * @var bool
@@ -841,17 +840,6 @@ class ProductCore extends ObjectModel
         $this->setGroupReduction();
         $this->updateUnitRatio();
 
-        // Sync stock Reference, EAN13, MPN and UPC
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id)) {
-            Db::getInstance()->update('stock', [
-                'reference' => pSQL($this->reference),
-                'ean13' => pSQL($this->ean13),
-                'isbn' => pSQL($this->isbn),
-                'upc' => pSQL($this->upc),
-                'mpn' => pSQL($this->mpn),
-            ], 'id_product = ' . (int) $this->id . ' AND id_product_attribute = 0');
-        }
-
         Hook::exec('actionProductSave', ['id_product' => (int) $this->id, 'product' => $this]);
         Hook::exec('actionProductUpdate', ['id_product' => (int) $this->id, 'product' => $this]);
         if ($this->getType() == Product::PTYPE_VIRTUAL && $this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE')) {
@@ -1303,33 +1291,6 @@ class ProductCore extends ObjectModel
      */
     public function delete()
     {
-        /*
-         * @since 1.5.0
-         * It is NOT possible to delete a product if there are currently:
-         * - physical stock for this product
-         * - supply order(s) for this product
-         */
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->advanced_stock_management) {
-            $stock_manager = StockManagerFactory::getManager();
-            $physical_quantity = $stock_manager->getProductPhysicalQuantities($this->id, 0);
-            $real_quantity = $stock_manager->getProductRealQuantities($this->id, 0);
-            if ($physical_quantity > 0) {
-                return false;
-            }
-            if ($real_quantity > $physical_quantity) {
-                return false;
-            }
-
-            $warehouse_product_locations = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
-            foreach ($warehouse_product_locations as $warehouse_product_location) {
-                $warehouse_product_location->delete();
-            }
-
-            $stocks = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
-            foreach ($stocks as $stock) {
-                $stock->delete();
-            }
-        }
         $result = parent::delete();
 
         // Removes the product from StockAvailable, for the current shop
@@ -1810,7 +1771,6 @@ class ProductCore extends ObjectModel
      * The supplier_reference params now set the supplier reference of the default supplier of the product if possible
      *
      * @deprecated since 1.5.0
-     * @see StockManager if you want to manage real stock
      * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
      * @see ProductSupplier for manage supplier reference(s)
      *
@@ -2353,17 +2313,6 @@ class ProductCore extends ObjectModel
             $this->cache_default_attribute = $id_default_attribute;
         }
 
-        // Sync stock Reference, EAN13, ISBN, MPN and UPC for this attribute
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id)) {
-            Db::getInstance()->update('stock', [
-                'reference' => pSQL($reference),
-                'ean13' => pSQL($ean13),
-                'isbn' => pSQL($isbn),
-                'upc' => pSQL($upc),
-                'mpn' => pSQL($mpn),
-            ], 'id_product = ' . $this->id . ' AND id_product_attribute = ' . (int) $id_product_attribute);
-        }
-
         Hook::exec('actionProductAttributeUpdate', ['id_product_attribute' => (int) $id_product_attribute]);
 
         return true;
@@ -2480,36 +2429,7 @@ class ProductCore extends ObjectModel
             $combination->setImages($id_images);
         }
 
-        if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-            $warehouse_location_entity = new WarehouseProductLocation();
-            $warehouse_location_entity->id_product = $this->id;
-            $warehouse_location_entity->id_product_attribute = (int) $combination->id;
-            $warehouse_location_entity->id_warehouse = (int) Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
-            $warehouse_location_entity->location = pSQL('');
-            $warehouse_location_entity->save();
-        }
-
         return (int) $combination->id;
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * @return bool
-     */
-    public function updateQuantityProductWithAttributeQuantity()
-    {
-        Tools::displayAsDeprecated();
-
-        return Db::getInstance()->execute('
-        UPDATE `' . _DB_PREFIX_ . 'product`
-        SET `quantity` = IFNULL(
-        (
-            SELECT SUM(`quantity`)
-            FROM `' . _DB_PREFIX_ . 'product_attribute`
-            WHERE `id_product` = ' . (int) $this->id . '
-        ), \'0\')
-        WHERE `id_product` = ' . (int) $this->id);
     }
 
     /**
@@ -4920,7 +4840,7 @@ class ProductCore extends ObjectModel
             Tools::displayParameterAsDeprecated('context');
         }
         $sql = new DbQuery();
-        $sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
+        $sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, p.`customizable`');
         $sql->from('product', 'p');
         $sql->join(Shop::addSqlAssociation('product', 'p'));
         $sql->leftJoin(
@@ -6754,81 +6674,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Add a stock movement for current product.
-     *
-     * Since 1.5, this method only permit to add/remove available quantities of the current product in the current shop
-     *
-     * @see StockManager if you want to manage real stock
-     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-     * @deprecated since 1.5.0
-     *
-     * @param int $quantity
-     * @param int $id_reason StockMvtReason identifier - useless
-     * @param int|null $id_product_attribute Attribute identifier
-     * @param int|null $id_order Order identifier - DEPRECATED
-     * @param int|null $id_employee Employee identifier - DEPRECATED
-     *
-     * @return bool
-     */
-    public function addStockMvt($quantity, $id_reason, $id_product_attribute = null, $id_order = null, $id_employee = null)
-    {
-        if (!$this->id || !$id_reason) {
-            return false;
-        }
-
-        if ($id_product_attribute == null) {
-            $id_product_attribute = 0;
-        }
-
-        $reason = new StockMvtReason((int) $id_reason);
-        if (!Validate::isLoadedObject($reason)) {
-            return false;
-        }
-
-        $quantity = abs((int) $quantity) * $reason->sign;
-
-        return StockAvailable::updateQuantity($this->id, $id_product_attribute, $quantity);
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * @param int $id_lang Language identifier
-     *
-     * @return array
-     */
-    public function getStockMvts($id_lang)
-    {
-        Tools::displayAsDeprecated();
-
-        return Db::getInstance()->executeS('
-            SELECT sm.id_stock_mvt, sm.date_add, sm.quantity, sm.id_order,
-            CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason
-            FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
-            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-                sm.id_product = pl.id_product
-                AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'stock_mvt_reason_lang` mrl ON (
-                sm.id_stock_mvt_reason = mrl.id_stock_mvt_reason
-                AND mrl.id_lang = ' . (int) $id_lang . '
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON (
-                e.id_employee = sm.id_employee
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (
-                pac.id_product_attribute = sm.id_product_attribute
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (
-                al.id_attribute = pac.id_attribute
-                AND al.id_lang = ' . (int) $id_lang . '
-            )
-            WHERE sm.id_product=' . (int) $this->id . '
-            GROUP BY sm.id_stock_mvt
-        ');
-    }
-
-    /**
      * @return int TaxRulesGroup identifier
      */
     public function getIdTaxRulesGroup()
@@ -7752,28 +7597,21 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product Product identifier
      * @param int $id_product_attribute Attribute identifier
-     * @param int $id_warehouse Warehouse identifier
+     * @param int $id_warehouse Warehouse identifier - not used anymore
      * @param int|null $id_shop Shop identifier
      *
      * @return int real_quantity
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0 - use StockAvailable::getQuantityAvailableByProduct directly
      */
     public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = 0, $id_shop = null)
     {
-        static $manager = null;
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && null === $manager) {
-            $manager = StockManagerFactory::getManager();
-        }
-
-        if (
-            Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-            && Product::usesAdvancedStockManagement($id_product)
-            && StockAvailable::dependsOnStock($id_product, $id_shop)
-        ) {
-            return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
-        } else {
-            return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
-        }
+        return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
     }
 
     /**
@@ -7784,16 +7622,17 @@ class ProductCore extends ObjectModel
      * @param int $id_product Product identifier
      *
      * @return bool
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public static function usesAdvancedStockManagement($id_product)
     {
-        $query = new DbQuery();
-        $query->select('product_shop.advanced_stock_management');
-        $query->from('product', 'p');
-        $query->join(Shop::addSqlAssociation('product', 'p'));
-        $query->where('p.id_product = ' . (int) $id_product);
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        return (bool) Db::getInstance()->getValue($query);
+        return false;
     }
 
     /**
@@ -7844,50 +7683,7 @@ class ProductCore extends ObjectModel
         // Default product quantity is available quantity to sell in current shop
         $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
         $this->out_of_stock = StockAvailable::outOfStock($this->id);
-        $this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
         $this->location = StockAvailable::getLocation($this->id) ?: '';
-
-        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
-            $this->advanced_stock_management = $this->useAdvancedStockManagement();
-        }
-    }
-
-    /**
-     * Get Advanced Stock Management status for this product
-     *
-     * @return bool 0 for disabled, 1 for enabled
-     */
-    public function useAdvancedStockManagement()
-    {
-        return (bool) Db::getInstance()->getValue(
-            'SELECT `advanced_stock_management`
-            FROM ' . _DB_PREFIX_ . 'product_shop
-            WHERE id_product=' . (int) $this->id . Shop::addSqlRestriction()
-        );
-    }
-
-    /**
-     * Set Advanced Stock Management status for this product
-     *
-     * @param bool $value false for disabled, true for enabled
-     */
-    public function setAdvancedStockManagement($value)
-    {
-        $this->advanced_stock_management = (bool) $value;
-        if (
-            Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP
-            && Context::getContext()->shop->getContextShopGroup()->share_stock == 1
-        ) {
-            Db::getInstance()->execute(
-                '
-                UPDATE `' . _DB_PREFIX_ . 'product_shop`
-                SET `advanced_stock_management`=' . (int) $value . '
-                WHERE id_product=' . (int) $this->id . Shop::addSqlRestriction()
-            );
-        } else {
-            $this->setFieldsToUpdate(['advanced_stock_management' => true]);
-            $this->save();
-        }
     }
 
     /**
@@ -7905,6 +7701,36 @@ class ProductCore extends ObjectModel
         );
 
         return (int) ($defaultCategory ?? Context::getContext()->shop->id_category);
+    }
+
+    /**
+     * Get Advanced Stock Management status for this product
+     *
+     * @return bool 0 for disabled, 1 for enabled
+     */
+    public function useAdvancedStockManagement()
+    {
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return false;
+    }
+
+    /**
+     * Set Advanced Stock Management status for this product
+     *
+     * @param bool $value false for disabled, true for enabled
+     */
+    public function setAdvancedStockManagement($value)
+    {
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return;
     }
 
     /**

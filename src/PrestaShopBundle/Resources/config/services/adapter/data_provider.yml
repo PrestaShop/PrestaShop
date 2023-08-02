@@ -20,10 +20,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
     deprecated: ~
 
-  prestashop.adapter.data_provider.warehouse:
-    class: PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider
-    deprecated: ~
-
   prestashop.adapter.data_provider.category:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
     arguments: [ "@=service('prestashop.adapter.legacy.context')" ]

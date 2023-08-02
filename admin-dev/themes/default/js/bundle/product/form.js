@@ -31,7 +31,6 @@ $(() => {
   formCategory.init();
   stock.init();
   supplier.init();
-  warehouseCombinations.init();
   customFieldCollection.init();
   virtualProduct.init();
   attachmentProduct.init();
@@ -543,22 +542,6 @@ window.stock = (function () {
         }
       });
 
-      /** if GSA : Show depends_on_stock choice only if advanced_stock_management checked */
-      $('#form_step3_advanced_stock_management').on('change', (e) => {
-        if (e.target.checked) {
-          $('#depends_on_stock_div').show();
-        } else {
-          $('#depends_on_stock_div').hide();
-        }
-        warehouseCombinations.refresh();
-      });
-
-      /** if GSA activation change on 'depend on stock', update quantities fields */
-      // eslint-disable-next-line
-      $('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1, #form_step3_advanced_stock_management').on('change', (e) => {
-        displayFieldsManager.refresh();
-        warehouseCombinations.refresh();
-      });
       displayFieldsManager.refresh();
     },
   };
@@ -584,63 +567,6 @@ window.nav = (function () {
           window.location.hash = e.target.hash.replace('#', `#${prefix}`);
         }
       });
-    },
-  };
-}());
-
-/**
- * Warehouse combination collection management (ASM only)
- */
-window.warehouseCombinations = (function () {
-  const idProduct = $('#form_id_product').val();
-  const collectionHolder = $('#warehouse_combination_collection');
-
-  return {
-    init() {
-      // toggle all button action
-      $(document).on('click', 'div[id^="warehouse_combination_"] button.check_all_warehouse', function () {
-        const checkboxes = $(this).closest('div[id^="warehouse_combination_"]')
-          .find('input[type="checkbox"][id$="_activated"]');
-        checkboxes.prop('checked', checkboxes.filter(':checked').length === 0);
-      });
-      // location disablation depending on 'stored' checkbox
-      // eslint-disable-next-line
-      $(document).on('change', 'div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', function () {
-        const checked = $(this).prop('checked');
-        const location = $(this).closest('div.form-group')
-          .find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
-        location.prop('disabled', !checked);
-        if (!checked) {
-          location.val('');
-        }
-      });
-      this.locationDisabler();
-    },
-    locationDisabler() {
-      // eslint-disable-next-line
-      $('div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', collectionHolder).each(function () {
-        const checked = $(this).prop('checked');
-        const location = $(this).closest('div.form-group')
-          .find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
-        location.prop('disabled', !checked);
-      });
-    },
-    refresh() {
-      const show = $('input#form_step3_advanced_stock_management:checked').length > 0;
-
-      if (show) {
-        const url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, `/${idProduct}`);
-        $.ajax({
-          url,
-          success(response) {
-            collectionHolder.empty().append(response);
-            collectionHolder.show();
-            warehouseCombinations.locationDisabler();
-          },
-        });
-      } else {
-        collectionHolder.hide();
-      }
     },
   };
 }());

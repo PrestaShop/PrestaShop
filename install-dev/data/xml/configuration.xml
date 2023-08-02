@@ -242,9 +242,6 @@
   <configuration id="PS_BLOCK_SPECIALS_DISPLAY" name="PS_BLOCK_SPECIALS_DISPLAY">
     <value>0</value>
   </configuration>
-  <configuration id="PS_STOCK_MVT_REASON_DEFAULT" name="PS_STOCK_MVT_REASON_DEFAULT">
-    <value>3</value>
-  </configuration>
   <configuration id="PS_SPECIFIC_PRICE_PRIORITIES" name="PS_SPECIFIC_PRICE_PRIORITIES">
     <value>id_group;id_currency;id_country;id_shop</value>
   </configuration>
@@ -449,42 +446,25 @@
   <configuration id="PS_CARRIER_DEFAULT_SORT" name="PS_CARRIER_DEFAULT_SORT">
     <value>0</value>
   </configuration>
-  <configuration id="PS_STOCK_MVT_INC_REASON_DEFAULT" name="PS_STOCK_MVT_INC_REASON_DEFAULT">
+
+  <!-- Stock movement reasons -->
+  <configuration id="PS_STOCK_CUSTOMER_ORDER_REASON" name="PS_STOCK_CUSTOMER_ORDER_REASON">
     <value>1</value>
   </configuration>
-  <configuration id="PS_STOCK_MVT_DEC_REASON_DEFAULT" name="PS_STOCK_MVT_DEC_REASON_DEFAULT">
+  <configuration id="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON" name="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON">
     <value>2</value>
   </configuration>
-  <configuration id="PS_ADVANCED_STOCK_MANAGEMENT" name="PS_ADVANCED_STOCK_MANAGEMENT">
-    <value>0</value>
-  </configuration>
-  <configuration id="PS_STOCK_MVT_TRANSFER_TO" name="PS_STOCK_MVT_TRANSFER_TO">
-    <value>7</value>
-  </configuration>
-  <configuration id="PS_STOCK_MVT_TRANSFER_FROM" name="PS_STOCK_MVT_TRANSFER_FROM">
-    <value>6</value>
-  </configuration>
-  <configuration id="PS_CARRIER_DEFAULT_ORDER" name="PS_CARRIER_DEFAULT_ORDER">
-    <value>0</value>
-  </configuration>
-  <configuration id="PS_STOCK_MVT_SUPPLY_ORDER" name="PS_STOCK_MVT_SUPPLY_ORDER">
-    <value>8</value>
-  </configuration>
-  <configuration id="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON" name="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON">
-    <value>9</value>
-</configuration>
   <configuration id="PS_STOCK_CUSTOMER_RETURN_REASON" name="PS_STOCK_CUSTOMER_RETURN_REASON">
-    <value>10</value>
-  </configuration>
-  <configuration id="PS_STOCK_MVT_INC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_INC_EMPLOYEE_EDITION">
-    <value>11</value>
-  </configuration>
-  <configuration id="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION">
-    <value>12</value>
-  </configuration>
-  <configuration id="PS_STOCK_CUSTOMER_ORDER_REASON" name="PS_STOCK_CUSTOMER_ORDER_REASON">
     <value>3</value>
   </configuration>
+  <configuration id="PS_STOCK_MVT_INC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_INC_EMPLOYEE_EDITION">
+    <value>4</value>
+  </configuration>
+  <configuration id="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION">
+    <value>5</value>
+  </configuration>
+
+  <!-- Default customer group IDs -->
   <configuration id="PS_UNIDENTIFIED_GROUP" name="PS_UNIDENTIFIED_GROUP">
     <value>1</value>
   </configuration>
@@ -493,6 +473,10 @@
   </configuration>
   <configuration id="PS_CUSTOMER_GROUP" name="PS_CUSTOMER_GROUP">
     <value>3</value>
+  </configuration>
+
+  <configuration id="PS_CARRIER_DEFAULT_ORDER" name="PS_CARRIER_DEFAULT_ORDER">
+    <value>0</value>
   </configuration>
   <configuration id="PS_SMARTY_CONSOLE" name="PS_SMARTY_CONSOLE">
     <value>0</value>

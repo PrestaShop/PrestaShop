@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use StockAvailable;
 
 /**
  * @internal
@@ -96,14 +95,6 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
                 $ordersWithFailedToSendEmail[] = $orderId;
 
                 continue;
-            }
-
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                foreach ($order->getProducts() as $product) {
-                    if (StockAvailable::dependsOnStock($product['product_id'])) {
-                        StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
-                    }
-                }
             }
         }
 

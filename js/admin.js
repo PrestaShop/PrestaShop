@@ -413,7 +413,6 @@ function stockManagementActivationAuthorization()
     getE('PS_ORDER_OUT_OF_STOCK_on').checked = true;
     getE('PS_ORDER_OUT_OF_STOCK_on').disabled = 'disabled';
     getE('PS_ORDER_OUT_OF_STOCK_off').disabled = 'disabled';
-    getE('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT').disabled = 'disabled';
   }
 }
 

@@ -1097,7 +1097,6 @@ class ProductLazyArray extends AbstractLazyArray
             'active',
             'add_to_cart_url',
             'additional_shipping_cost',
-            'advanced_stock_management',
             'allow_oosp',
             'attachments',
             'attribute_price',

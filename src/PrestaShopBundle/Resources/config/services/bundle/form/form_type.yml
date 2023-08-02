@@ -129,7 +129,6 @@ services:
     deprecated: ~
   PrestaShopBundle\Form\Admin\Product\ProductShipping:
     arguments:
-      $warehouseDataProvider: "@prestashop.adapter.data_provider.warehouse"
       $carrierDataProvider: "@prestashop.adapter.data_provider.carrier"
     deprecated: ~
   PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice:
@@ -147,8 +146,6 @@ services:
   PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination:
     deprecated: ~
   PrestaShopBundle\Form\Admin\Product\ProductVirtual:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination:
     deprecated: ~
   PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType:
     arguments:
