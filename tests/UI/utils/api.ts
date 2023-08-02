@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import {readFileSync} from 'fs';
+import sodium from 'libsodium-wrappers';
 import type {APIResponse} from 'playwright';
 
 type HttpHeader = {
@@ -114,8 +115,8 @@ export default {
     const payloadString: string = JSON.stringify(payload);
 
     // Transform string in base64
-    const headerBase64: string = Buffer.from(headerString, 'base64').toString();
-    const payloadBase64: string = Buffer.from(payloadString, 'base64').toString();
+    const headerBase64: string = sodium.to_base64(headerString, sodium.base64_variants.URLSAFE_NO_PADDING);
+    const payloadBase64: string = sodium.to_base64(payloadString, sodium.base64_variants.URLSAFE_NO_PADDING);
 
     // Sign the header & payload
     const signatureFunction: crypto.Sign = crypto.createSign('RSA-SHA256');
@@ -129,6 +130,9 @@ export default {
     const headerBuffer: Buffer = Buffer.from(headerString);
     const payloadBuffer: Buffer = Buffer.from(payloadString);
 
-    return `${headerBuffer.toString('base64')}.${payloadBuffer.toString('base64')}.${signatureBase64.toString()}`;
+    const headerBufferBase64: string = sodium.to_base64(headerBuffer.toString(), sodium.base64_variants.URLSAFE_NO_PADDING);
+    const payloadBufferBase64: string = sodium.to_base64(payloadBuffer.toString(), sodium.base64_variants.URLSAFE_NO_PADDING);
+
+    return `${headerBufferBase64}.${payloadBufferBase64}.${signatureBase64.toString()}`;
   },
 };
