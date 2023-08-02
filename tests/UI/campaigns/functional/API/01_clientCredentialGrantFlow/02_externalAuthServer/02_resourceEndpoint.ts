@@ -154,8 +154,6 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
           Authorization: `Bearer ${accessTokenExpiredKeycloak}`,
         },
       });
-      console.log((await apiResponse.body()).toString());
-      console.log(apiResponse.headersArray());
 
       await expect(apiResponse.status()).to.eq(401);
       await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
@@ -170,8 +168,6 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
           Authorization: `Bearer ${accessTokenKeycloak}`,
         },
       });
-      console.log((await apiResponse.body()).toString());
-      console.log(apiResponse.headersArray());
 
       await expect(apiResponse.status()).to.eq(200);
       await expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.be.true;

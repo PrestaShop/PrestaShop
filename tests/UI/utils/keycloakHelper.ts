@@ -1,8 +1,6 @@
 import {KeycloakAdminClient} from '@s3pweb/keycloak-admin-client-cjs';
 import type ClientRepresentation from '@keycloak/keycloak-admin-client/lib/defs/clientRepresentation.js';
-import type ClientScopeRepresentation from '@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation.js';
 
-console.log(global.keycloakConfig.keycloakExternalUrl);
 const kcAdminClient: KeycloakAdminClient = new KeycloakAdminClient({
   baseUrl: global.keycloakConfig.keycloakExternalUrl,
   realmName: 'master',
