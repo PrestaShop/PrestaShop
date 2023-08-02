@@ -331,8 +331,7 @@ admin_products_bulk_disable_shop_group:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableShopGroupAction
     _legacy_controller: AdminProducts
-    _legacy_link:
-      - AdminProducts:submitBulkdisableSelectionproduct
+    _legacy_link: AdminProducts:submitBulkdisableSelectionproduct
   requirements:
     productId: \d+
     shopGroupId: \d+
