@@ -69,11 +69,13 @@ class Category extends FOBasePage {
 
   private readonly searchFilters: string;
 
-  private readonly searchFiltersCheckbox: string;
+  private readonly searchFilter: (facetType: string) => string;
 
-  private readonly searchFiltersRadio: string;
+  private readonly searchFiltersCheckbox: (facetType: string) => string;
 
-  private readonly searchFiltersDropdown: string;
+  private readonly searchFiltersRadio: (facetType: string) => string;
+
+  private readonly searchFiltersDropdown: (facetType: string) => string;
 
   private readonly wishlistModal: string;
 
@@ -132,9 +134,11 @@ class Category extends FOBasePage {
 
     // Filter
     this.searchFilters = '#search_filters';
-    this.searchFiltersCheckbox = `${this.searchFilters} ul[id^="facet"] label.facet-label input[type="checkbox"]`;
-    this.searchFiltersRadio = `${this.searchFilters} ul[id^="facet"] label.facet-label input[type="radio"]`;
-    this.searchFiltersDropdown = `${this.searchFilters} ul[id^="facet"] .facet-dropdown`;
+    this.searchFilter = (facetType: string) => `${this.searchFilters} section[data-type="${facetType}] ul[id^="facet"]`;
+    this.searchFiltersCheckbox = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label `
+      + 'input[type="checkbox"]';
+    this.searchFiltersRadio = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label input[type="radio"]`;
+    this.searchFiltersDropdown = (facetType: string) => `${this.searchFilter(facetType)} .facet-dropdown`;
 
     // Wishlist
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
@@ -386,28 +390,31 @@ class Category extends FOBasePage {
   /**
    * Return if search filters use checkbox button
    * @param page {Page} Browser tab
+   * @param facetType {string} Facet type
    * @return {Promise<boolean>}
    */
-  async isSearchFiltersCheckbox(page: Page): Promise<boolean> {
-    return page.$$eval(this.searchFiltersCheckbox, (all) => all.length !== 0);
+  async isSearchFiltersCheckbox(page: Page, facetType: string): Promise<boolean> {
+    return page.$$eval(this.searchFiltersCheckbox(facetType), (all) => all.length !== 0);
   }
 
   /**
    * Return if search filters use radio button
    * @param page {Page} Browser tab
+   * @param facetType {string} Facet type
    * @return {Promise<boolean>}
    */
-  async isSearchFilterRadio(page: Page): Promise<boolean> {
-    return page.$$eval(this.searchFiltersRadio, (all) => all.length !== 0);
+  async isSearchFilterRadio(page: Page, facetType: string): Promise<boolean> {
+    return page.$$eval(this.searchFiltersRadio(facetType), (all) => all.length !== 0);
   }
 
   /**
    * Return if search filters use radio button
    * @param page {Page} Browser tab
+   * @param facetType {string} Facet type
    * @return {Promise<boolean>}
    */
-  async isSearchFilterDropdown(page: Page): Promise<boolean> {
-    return page.$$eval(this.searchFiltersDropdown, (all) => all.length !== 0);
+  async isSearchFilterDropdown(page: Page, facetType: string): Promise<boolean> {
+    return page.$$eval(this.searchFiltersDropdown(facetType), (all) => all.length !== 0);
   }
 
   /**

@@ -54,6 +54,9 @@ class PsFacetedSearchFilterTemplate extends ModuleConfiguration {
       case 'Product brand filter':
         selectorStatus = 'layered_selection_manufacturer';
         break;
+      case 'Product stock filter':
+        selectorStatus = 'layered_selection_stock';
+        break;
       default:
         throw new Error(`The filter "${filterName}" has no defined selector.`);
     }
