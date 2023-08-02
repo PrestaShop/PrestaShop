@@ -101,6 +101,7 @@ class CheckRequirements
             'json' => $this->translator->trans('Enable the JSON extension on your server.', [], 'Admin.Advparameters.Notification'),
             'mbstring' => $this->translator->trans('Enable the Mbstring extension on your server.', [], 'Admin.Advparameters.Notification'),
             'openssl' => $this->translator->trans('Enable the OpenSSL extension on your server.', [], 'Admin.Advparameters.Notification'),
+            'openssl_key_generation' => $this->translator->trans('Unable to generate private keys using openssl_pkey_new. Check your OpenSSL configuration, especially the path to openssl.cafile.', [], 'Admin.Advparameters.Notification'),
             'pdo_mysql' => $this->translator->trans('Enable the PDO Mysql extension on your server.', [], 'Admin.Advparameters.Notification'),
             'simplexml' => $this->translator->trans('Enable the XML extension on your server.', [], 'Admin.Advparameters.Notification'),
             'zip' => $this->translator->trans('Enable the ZIP extension on your server.', [], 'Admin.Advparameters.Notification'),
