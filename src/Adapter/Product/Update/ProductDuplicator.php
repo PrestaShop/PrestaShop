@@ -1087,12 +1087,12 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $arrayType = is_int(reset($value)) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY;
                 $qb
                     ->andWhere("$column IN (:$column)")
-                    ->setParameter(":$column", $value, $arrayType)
+                    ->setParameter($column, $value, $arrayType)
                 ;
             } else {
                 $qb
                     ->andWhere("$column = :$column")
-                    ->setParameter(":$column", $value)
+                    ->setParameter($column, $value)
                 ;
             }
         }
