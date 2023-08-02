@@ -268,6 +268,7 @@ class CmsPageType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_LONGTEXT_UTF8,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans(

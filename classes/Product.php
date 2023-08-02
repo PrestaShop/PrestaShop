@@ -1088,9 +1088,9 @@ class ProductCore extends ObjectModel
     /**
      * Get the default attribute for a product.
      *
-     * @param int $id_product Product identifier
-     * @param int $minimum_quantity
-     * @param bool $reset
+     * @param int $id_product Product ID
+     * @param int $minimum_quantity Minimal quantity there should be in stock of the combination
+     * @param bool $reset Force reload new values and not use cache
      *
      * @return int Attributes list
      */
@@ -1100,22 +1100,23 @@ class ProductCore extends ObjectModel
             return 0;
         }
 
-        if ($reset && isset(static::$_combinations[$id_product])) {
-            unset(static::$_combinations[$id_product]);
-        }
-
-        if (!isset(static::$_combinations[$id_product])) {
+        // If we should start fresh OR we did not want default combination for this product yet, we initialize cache
+        if ($reset || !isset(static::$_combinations[$id_product])) {
             static::$_combinations[$id_product] = [];
         }
+
+        // If we already have a value for this product and minimal quantity, we retrieve it from cache.
         if (isset(static::$_combinations[$id_product][$minimum_quantity])) {
             return static::$_combinations[$id_product][$minimum_quantity];
         }
 
+        // First attempt - check if the product even has some attributes
         $sql = 'SELECT product_attribute_shop.id_product_attribute
                 FROM ' . _DB_PREFIX_ . 'product_attribute pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
                 WHERE pa.id_product = ' . (int) $id_product;
 
+        // If none are found, we exit right away
         $result_no_filter = (int) Db::getInstance()->getValue($sql);
         if (!$result_no_filter) {
             static::$_combinations[$id_product][$minimum_quantity] = 0;
@@ -1123,6 +1124,7 @@ class ProductCore extends ObjectModel
             return 0;
         }
 
+        // Try to check if the default combination matches our minimum_quantity quantity condition, if yes - win
         $sql = 'SELECT product_attribute_shop.id_product_attribute
                 FROM ' . _DB_PREFIX_ . 'product_attribute pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
@@ -1132,6 +1134,7 @@ class ProductCore extends ObjectModel
                 ' AND pa.id_product = ' . (int) $id_product;
         $result = (int) Db::getInstance()->getValue($sql);
 
+        // If not, check if there is ANY combination matching minimum_quantity, if yes - not perfect, but works
         if (!$result) {
             $sql = 'SELECT product_attribute_shop.id_product_attribute
                     FROM ' . _DB_PREFIX_ . 'product_attribute pa
@@ -1143,6 +1146,7 @@ class ProductCore extends ObjectModel
             $result = (int) Db::getInstance()->getValue($sql);
         }
 
+        // If still nothing, we will return the default combination
         if (!$result) {
             $sql = 'SELECT product_attribute_shop.id_product_attribute
                     FROM ' . _DB_PREFIX_ . 'product_attribute pa
@@ -1153,10 +1157,12 @@ class ProductCore extends ObjectModel
             $result = (int) Db::getInstance()->getValue($sql);
         }
 
+        // If for some reason (database inconsistency) we still did not find any combination, we use the fallback one
         if (!$result) {
             $result = $result_no_filter;
         }
 
+        // Cache it for next time and return it
         static::$_combinations[$id_product][$minimum_quantity] = $result;
 
         return $result;
@@ -5642,7 +5648,12 @@ class ProductCore extends ObjectModel
         $row['category'] = Category::getLinkRewrite((int) $row['id_category_default'], (int) $id_lang);
         $row['category_name'] = Db::getInstance()->getValue('SELECT name FROM ' . _DB_PREFIX_ . 'category_lang WHERE id_shop = ' . (int) $context->shop->id . ' AND id_lang = ' . (int) $id_lang . ' AND id_category = ' . (int) $row['id_category_default']);
         $row['link'] = $context->link->getProductLink((int) $row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
-        $row['manufacturer_name'] = !empty((int) $row['id_manufacturer']) ? Manufacturer::getNameById((int) $row['id_manufacturer']) : null;
+
+        if (empty($row['manufacturer_name']) && (isset($row['id_manufacturer']) && !empty((int) $row['id_manufacturer']))) {
+            $row['manufacturer_name'] = Manufacturer::getNameById((int) $row['id_manufacturer']);
+        } else {
+            $row['manufacturer_name'] = null;
+        }
 
         if (isset($row['quantity_wanted'])) {
             // 'quantity_wanted' may very well be zero even if set
@@ -5755,6 +5766,11 @@ class ProductCore extends ObjectModel
 
         $row['specific_prices'] = $specific_prices;
 
+        /* Get quantity of the base product.
+         * For products without combinations - self explanatory.
+         * For products with combinations - this value is a SUM of quantities of all combinations.
+         * You have 2 black shirts + 2 white shirts = $quantity 4.
+         */
         $row['quantity'] = Product::getQuantity(
             (int) $row['id_product'],
             0,
@@ -5765,6 +5781,7 @@ class ProductCore extends ObjectModel
 
         $row['quantity_all_versions'] = $row['quantity'];
 
+        // If we have some combination ID specified, we will return more precise stock and date for this combination
         if ($row['id_product_attribute']) {
             $row['quantity'] = Product::getQuantity(
                 (int) $row['id_product'],
@@ -5782,6 +5799,13 @@ class ProductCore extends ObjectModel
 
         $row['id_image'] = Product::defineProductImage($row, $id_lang);
 
+        /*
+         * Loading of files attached to product. This is using cache_has_attachments property which needs to be managed
+         * every time a file is changed. It can sometimes lead to database inconsistency.
+         *
+         * It would be better to lazy load it in ProductLazyArray so we can just always take the live data
+         * if needed and would not need to take care about cache_has_attachments.
+         */
         $row['attachments'] = [];
         if (!isset($row['cache_has_attachments']) || $row['cache_has_attachments']) {
             $row['attachments'] = Product::getAttachmentsStatic((int) $id_lang, $row['id_product']);
