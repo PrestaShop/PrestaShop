@@ -342,6 +342,9 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<boolean>}
    */
   async isLanguageListVisible(page: Page): Promise<boolean> {
+    if (this.theme === 'hummingbird') {
+      return this.elementVisible(page, this.languageSelector, 1000);
+    }
     return this.elementVisible(page, this.languageSelectorExpandIcon, 1000);
   }
 
@@ -387,6 +390,11 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<string>}
    */
   async getDefaultShopLanguage(page: Page): Promise<string> {
+    if (this.theme === 'hummingbird') {
+      return page
+        .locator(this.languageSelector)
+        .evaluate((el: HTMLSelectElement): string => el.options[el.options.selectedIndex].textContent ?? '');
+    }
     return this.getTextContent(page, this.defaultLanguageSpan);
   }
 
@@ -743,7 +751,6 @@ export default class FOBasePage extends CommonPage {
    * Get the value of an input
    *
    * @param page {Page} Browser tab
-   * @param input {string} ID of the input
    * @returns {Promise<string>}
    */
   async getSearchValue(page: Page): Promise<string> {
