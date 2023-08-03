@@ -422,7 +422,7 @@ class CreateProduct extends BOBasePage {
    */
   async changeProductType(page: Page, productType: string): Promise<string> {
     // Click on the type label
-    await page.click(this.productTypePreview);
+    await page.locator(this.productTypePreview).click();
     // Modal "Change the product type"
     await this.elementVisible(page, this.modalSwitchType, 2000);
     await this.waitForSelectorAndClick(page, this.modalSwitchTypeBtnChoice(productType));

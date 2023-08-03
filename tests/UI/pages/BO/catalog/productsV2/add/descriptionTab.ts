@@ -139,21 +139,21 @@ class DescriptionTab extends BOBasePage {
       await this.setCheckedWithIcon(page, this.productImageDropZoneCover, useAsCoverImage);
     }
     if (captionEn) {
-      await page.click(this.productImageDropZoneBtnLang);
+      await page.locator(this.productImageDropZoneBtnLang).click();
       await this.elementVisible(page, this.productImageDropZoneDropdown);
 
-      await page.click(this.productImageDropZoneDropdownItem('en'));
+      await page.locator(this.productImageDropZoneDropdownItem('en')).click();
       await this.setValue(page, this.productImageDropZoneCaption, captionEn);
     }
     if (captionFr) {
-      await page.click(this.productImageDropZoneBtnLang);
+      await page.locator(this.productImageDropZoneBtnLang).click();
       await this.elementVisible(page, this.productImageDropZoneDropdown);
 
-      await page.click(this.productImageDropZoneDropdownItem('fr'));
+      await page.locator(this.productImageDropZoneDropdownItem('fr')).click();
       await this.setValue(page, this.productImageDropZoneCaption, captionFr);
     }
 
-    await page.click(this.productImageDropZoneBtnSubmit);
+    await page.locator(this.productImageDropZoneBtnSubmit).click();
 
     return this.getGrowlMessageContent(page);
   }
@@ -187,11 +187,11 @@ class DescriptionTab extends BOBasePage {
 
     await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);
 
-    await page.click(this.productSummaryTabLocale('en'));
+    await page.locator(this.productSummaryTabLocale('en')).click();
     await this.elementVisible(page, `${this.productSummaryTabLocale('en')}.active`);
     await this.setValueOnTinymceInput(page, this.productSummary, productData.summary);
 
-    await page.click(this.productDescriptionTabLocale('en'));
+    await page.locator(this.productDescriptionTabLocale('en')).click();
     await this.elementVisible(page, `${this.productDescriptionTabLocale('en')}.active`);
     await this.setValueOnTinymceInput(page, this.productDescription, productData.description);
   }
