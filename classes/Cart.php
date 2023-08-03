@@ -4072,7 +4072,7 @@ class CartCore extends ObjectModel
      *
      * @param int $id_product Product ID
      * @param int|null $type Only return customization of this type, can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
-     * @param bool $not_in_cart Only return customizations that are not in the cart already.
+     * @param bool $not_in_cart Only return customizations that are not in the cart already
      *
      * @return array Result from DB
      */
