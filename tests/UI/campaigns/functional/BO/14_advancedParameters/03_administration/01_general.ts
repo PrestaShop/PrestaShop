@@ -42,7 +42,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     );
 
     const pageTitle = await administrationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(administrationPage.pageTitle);
+    expect(pageTitle).to.contains(administrationPage.pageTitle);
   });
 
   it('should disable \'Cookie\'s IP address\'', async function () {
@@ -51,7 +51,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await administrationPage.setCookiesIPAddress(page, false);
 
     const successMessage = await administrationPage.saveGeneralForm(page);
-    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
   it('should check that the \'Cookie\'s IP address\' is disabled', async function () {
@@ -67,7 +67,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await administrationPage.setCookiesIPAddress(page, true);
 
     const successMessage = await administrationPage.saveGeneralForm(page);
-    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
   it('should check that the \'Cookie\'s IP address\' is enabled', async function () {
@@ -83,7 +83,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await administrationPage.setLifetimeFOCookies(page, 500);
 
     const successMessage = await administrationPage.saveGeneralForm(page);
-    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
   it('should update \' Lifetime of back office cookies\'', async function () {
@@ -92,7 +92,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await administrationPage.setLifetimeBOCookies(page, 500);
 
     const successMessage = await administrationPage.saveGeneralForm(page);
-    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
   it('should update \'Cookie SameSite\' to \'Strict\' value', async function () {
@@ -101,7 +101,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await administrationPage.setCookieSameSite(page, 'Strict');
 
     const successMessage = await administrationPage.saveGeneralForm(page);
-    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 
   it('should update \'Cookie SameSite\' to \'None\' value', async function () {
@@ -109,8 +109,13 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
 
     await administrationPage.setCookieSameSite(page, 'None');
 
-    const successMessage = await administrationPage.saveGeneralForm(page);
-    await expect(successMessage).to.eq(administrationPage.dangerAlertCookieSameSite);
+    const message = await administrationPage.saveGeneralForm(page);
+
+    if (global.INSTALL.ENABLE_SSL) {
+      expect(message).to.eq(administrationPage.successfulUpdateMessage);
+    } else {
+      expect(message).to.eq(administrationPage.dangerAlertCookieSameSite);
+    }
   });
 
   it('should update \'Cookie SameSite\' to \'default\' value', async function () {
@@ -119,6 +124,6 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await administrationPage.setCookieSameSite(page, 'Lax');
 
     const successMessage = await administrationPage.saveGeneralForm(page);
-    await expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
   });
 });
