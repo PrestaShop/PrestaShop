@@ -101,7 +101,7 @@ class ProductSaleCore
 
         // no group by needed : there's only one attribute with default_on=1 for a given id_product + shop
         // same for image with cover=1
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
 					' . (Combination::isFeatureActive() ? 'product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity,IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute,' : '') . '
 					pl.`name`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
@@ -181,7 +181,7 @@ class ProductSaleCore
 		SELECT
 			p.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, pl.`name`, product_shop.`id_category_default`,
 			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
-			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
+			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity,
 			product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . (Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY')) . '" as new,
 			product_shop.`on_sale`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
 		FROM `' . _DB_PREFIX_ . 'product_sale` ps

@@ -346,7 +346,7 @@ class SupplierCore extends ObjectModel
             $alias = 'm.';
         }
 
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock,
+        $sql = 'SELECT p.*, product_shop.*,
 					IFNULL(stock.quantity, 0) as quantity,
 					pl.`name`,
 					s.`name` AS supplier_name,

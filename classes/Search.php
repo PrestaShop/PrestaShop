@@ -421,7 +421,7 @@ class SearchCore
         } elseif (in_array($order_by, ['date_upd', 'date_add'])) {
             $alias = 'p.';
         }
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
 				pl.`name`, m.`name` manufacturer_name ' . $sqlScore . ',
 				DATEDIFF(
 					p.`date_add`,
@@ -981,7 +981,7 @@ class SearchCore
             );
         }
 
-        $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`name`,
+        $sql = 'SELECT DISTINCT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity, pl.`name`,
 					m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
 						p.`date_add`,
