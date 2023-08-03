@@ -469,7 +469,7 @@ abstract class DbCore
         }
         $keys_stringified = implode(', ', $keys);
 
-        $sql = $insert_keyword . ' INTO `' . $table . '` (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
+        $sql = $insert_keyword . ' INTO `' . bqSQL($table) . '` (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
         if ($type == Db::ON_DUPLICATE_KEY) {
             $sql .= ' ON DUPLICATE KEY UPDATE ' . substr($duplicate_key_stringified, 0, -1);
         }
