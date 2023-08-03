@@ -94,8 +94,8 @@ twig:
     disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX
 
 api_platform:
-  title: PrestaShop API
-  version: 1.0.0
+  title: Backoffice API
+  version: 0.1.0
   enable_entrypoint: false
   formats:
     json:
