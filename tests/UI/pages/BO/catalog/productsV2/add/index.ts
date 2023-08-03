@@ -262,10 +262,13 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setProduct(page: Page, productData: ProductData): Promise<string> {
+    // Set status
+    await this.setProductStatus(page, productData.status);
+    // Set description
+    await descriptionTab.setProductDescription(page, productData);
+    // Set name
     await this.setProductName(page, productData.name, 'en');
     await this.setProductName(page, productData.nameFR, 'fr');
-
-    await descriptionTab.setProductDescription(page, productData);
 
     await detailsTab.setProductDetails(page, productData);
 
@@ -280,8 +283,6 @@ class CreateProduct extends BOBasePage {
     }
 
     await pricingTab.setProductPricing(page, productData);
-
-    await this.setProductStatus(page, productData.status);
 
     return this.saveProduct(page);
   }
@@ -304,14 +305,9 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setProductName(page: Page, name: string, locale: string = 'en'): Promise<void> {
-    console.log(this.productNameLanguageButton);
-    console.log(await this.elementVisible(page, this.productNameLanguageButton));
     await this.waitForSelectorAndClick(page, this.productNameLanguageButton);
-    console.log(this.productNameLanguageDropdownItem(locale));
-    console.log(await this.elementVisible(page, this.productNameLanguageDropdownItem(locale)));
     await this.waitForSelectorAndClick(page, this.productNameLanguageDropdownItem(locale));
-    console.log(this.productNameInput(locale));
-    console.log(await this.elementVisible(page, this.productNameInput(locale)));
+    await page.$eval(this.productNameLanguageDropdownItem(locale), (el: HTMLElement) => el.click());
     await this.setValue(page, this.productNameInput(locale), name);
   }
 
