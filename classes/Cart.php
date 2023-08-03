@@ -116,6 +116,10 @@ class CartCore extends ObjectModel
     protected static $cacheNbPackages = [];
     protected static $cachePackageList = [];
     protected static $cacheDeliveryOptionList = [];
+
+    /**
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     protected static $cacheMultiAddressDelivery = [];
 
     /**
