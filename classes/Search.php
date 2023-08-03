@@ -422,8 +422,7 @@ class SearchCore
             $alias = 'p.';
         }
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
-				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name ' . $sqlScore . ',
+				pl.`name`, m.`name` manufacturer_name ' . $sqlScore . ',
 				DATEDIFF(
 					p.`date_add`,
 					DATE_SUB(
@@ -442,9 +441,6 @@ class SearchCore
 				' . Product::sqlStock('p', 0) . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m FORCE INDEX (PRIMARY)
 				    ON m.`id_manufacturer` = p.`id_manufacturer`
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop FORCE INDEX (id_product)
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
 				WHERE p.`id_product` ' . $product_pool . '
 				GROUP BY product_shop.id_product';
 
@@ -471,13 +467,7 @@ class SearchCore
 				WHERE p.`id_product` ' . $product_pool;
         $total = $db->getValue($sql, false);
 
-        if (!$result) {
-            $result_properties = false;
-        } else {
-            $result_properties = Product::getProductsProperties((int) $id_lang, $result);
-        }
-
-        return ['total' => $total, 'result' => $result_properties];
+        return ['total' => $total, 'result' => $result];
     }
 
     /**
@@ -991,8 +981,8 @@ class SearchCore
             );
         }
 
-        $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`, pl.`available_now`, pl.`available_later`,
-					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name, 1 position,
+        $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`name`,
+					m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -1011,9 +1001,6 @@ class SearchCore
 				' . Shop::addSqlAssociation('product', 'p', false) . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
 				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON (cp.`id_product` = p.`id_product`)
 				' . (Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '') . '
@@ -1031,7 +1018,7 @@ class SearchCore
             return false;
         }
 
-        return Product::getProductsProperties((int) $id_lang, $result);
+        return $result;
     }
 
     /**

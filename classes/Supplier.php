@@ -348,15 +348,7 @@ class SupplierCore extends ObjectModel
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock,
 					IFNULL(stock.quantity, 0) as quantity,
-					pl.`description`,
-					pl.`description_short`,
-					pl.`link_rewrite`,
-					pl.`meta_description`,
-					pl.`meta_keywords`,
-					pl.`meta_title`,
 					pl.`name`,
-					image_shop.`id_image` id_image,
-					il.`legend`,
 					s.`name` AS supplier_name,
 					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00", INTERVAL ' . ($nbDaysNewProduct) . ' DAY)) > 0 AS new,
 					m.`name` AS manufacturer_name' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
@@ -367,10 +359,6 @@ class SupplierCore extends ObjectModel
 				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image`
-					AND il.`id_lang` = ' . (int) $idLang . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'supplier` s ON s.`id_supplier` = p.`id_supplier`
 				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				' . Product::sqlStock('p', 0);
@@ -408,7 +396,7 @@ class SupplierCore extends ObjectModel
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**

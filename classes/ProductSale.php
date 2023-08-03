@@ -103,11 +103,9 @@ class ProductSaleCore
         // same for image with cover=1
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					' . (Combination::isFeatureActive() ? 'product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity,IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute,' : '') . '
-					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-					pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
+					pl.`name`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-					image_shop.`id_image` id_image, il.`legend`,
-					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
+					ps.`quantity` AS sales,
 					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
             . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
@@ -121,14 +119,9 @@ class ProductSaleCore
         $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
 					AND tr.`id_country` = ' . (int) $context->country->id . '
 					AND tr.`id_state` = 0
-				LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				' . Product::sqlStock('p', 0);
 
         $sql .= '
@@ -158,7 +151,7 @@ class ProductSaleCore
             return false;
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**
@@ -186,8 +179,7 @@ class ProductSaleCore
         // same for image with cover=1
         $sql = '
 		SELECT
-			p.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, pl.`link_rewrite`, pl.`name`, pl.`description_short`, product_shop.`id_category_default`,
-			image_shop.`id_image` id_image, il.`legend`,
+			p.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, pl.`name`, product_shop.`id_category_default`,
 			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
 			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
 			product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . (Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY')) . '" as new,
@@ -201,9 +193,6 @@ class ProductSaleCore
 		LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
 			ON p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-			ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
 			ON cl.`id_category` = product_shop.`id_category_default`
 			AND cl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . Product::sqlStock('p', 0);
@@ -227,7 +216,7 @@ class ProductSaleCore
             return false;
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**
