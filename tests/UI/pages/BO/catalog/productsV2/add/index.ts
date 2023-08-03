@@ -307,7 +307,10 @@ class CreateProduct extends BOBasePage {
   async setProductName(page: Page, name: string, locale: string = 'en'): Promise<void> {
     await this.waitForSelectorAndClick(page, this.productNameLanguageButton);
     await this.waitForSelectorAndClick(page, this.productNameLanguageDropdownItem(locale));
-    await page.$eval(this.productNameLanguageDropdownItem(locale), (el: HTMLElement) => el.click());
+    await page.evaluate(
+      (selector: string) => (document.querySelector(selector) as HTMLElement).click(),
+      this.productNameLanguageDropdownItem(locale),
+    );
     await this.setValue(page, this.productNameInput(locale), name);
   }
 
