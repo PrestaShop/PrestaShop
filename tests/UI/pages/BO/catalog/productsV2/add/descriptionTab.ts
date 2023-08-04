@@ -125,6 +125,7 @@ class DescriptionTab extends BOBasePage {
   }
 
   /**
+   * Returns the value of a form element
    * @param page {Page}
    * @param inputName {string}
    * @param languageId {string | undefined}
@@ -134,9 +135,9 @@ class DescriptionTab extends BOBasePage {
       case 'description':
         return this.getTextContent(page, `${this.productDescription}_${languageId}`, false);
       case 'id_category_default':
-        return page.$eval(this.productDefaultCategory, (node: HTMLSelectElement) => node.value);
+        return page.locator(this.productDefaultCategory).evaluate((node: HTMLSelectElement) => node.value);
       case 'manufacturer':
-        return page.$eval(this.productManufacturer, (node: HTMLSelectElement) => node.value);
+        return page.locator(this.productManufacturer).evaluate((node: HTMLSelectElement) => node.value);
       case 'summary':
         return this.getTextContent(page, `${this.productSummary}_${languageId}`, false);
       default:

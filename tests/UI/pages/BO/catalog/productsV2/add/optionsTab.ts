@@ -36,6 +36,7 @@ class OptionsTab extends BOBasePage {
    */
 
   /**
+   * Returns the value of a form element
    * @param page {Page}
    * @param inputName {string}
    */
