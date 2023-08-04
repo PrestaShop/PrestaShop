@@ -97,7 +97,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
       await testContext.addContextItem(this, 'testIdentifier', 'resetBeforeFilter', baseContext);
 
       numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
-      await expect(numberOfCategories).to.be.above(0);
+      expect(numberOfCategories).to.be.above(0);
     });
 
     const tests = [

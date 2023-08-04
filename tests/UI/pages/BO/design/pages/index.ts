@@ -10,6 +10,8 @@ import type {Page} from 'playwright';
 class Pages extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly pageTitleCategory: (categoryName: string) => string;
+
   public readonly successfulUpdateStatusMessage: string;
 
   private readonly addNewPageCategoryLink: string;
@@ -21,8 +23,6 @@ class Pages extends BOBasePage {
   private readonly gridTitle: (table: string) => string;
 
   private readonly gridTable: (table: string) => string;
-
-  private readonly gridHeaderTitle: (table: string) => string;
 
   private readonly listForm: (table: string) => string;
 
@@ -94,6 +94,7 @@ class Pages extends BOBasePage {
     super();
 
     this.pageTitle = `Pages • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleCategory = (categoryName: string) => `Pages in category "${categoryName}" • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header link
@@ -104,7 +105,6 @@ class Pages extends BOBasePage {
     this.gridPanel = (table: string) => `#${table}_grid_panel`;
     this.gridTitle = (table: string) => `${this.gridPanel(table)} h3.card-header-title`;
     this.gridTable = (table: string) => `#${table}_grid_table`;
-    this.gridHeaderTitle = (table: string) => `${this.gridPanel(table)} h3.card-header-title`;
     this.listForm = (table: string) => `#${table}_grid`;
 
     // Sort Selectors
@@ -171,13 +171,16 @@ class Pages extends BOBasePage {
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page: Page, tableName: string): Promise<number> {
+    if (!(await this.elementVisible(page, this.gridPanel(tableName), 2000))) {
+      return 0;
+    }
     const resetButton = this.filterResetButton(tableName);
 
     if (await this.elementVisible(page, resetButton, 2000)) {
       await page.click(resetButton);
       await this.elementNotVisible(page, resetButton, 2000);
     }
-    return this.getNumberFromText(page, this.gridHeaderTitle(tableName));
+    return this.getNumberFromText(page, this.gridTitle(tableName));
   }
 
   /**
