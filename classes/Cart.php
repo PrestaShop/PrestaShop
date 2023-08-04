@@ -4125,7 +4125,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Duplicate this Cart in the database.
+     * Duplicate this Cart in the database. This is mainly used by the "reorder" feature. Customer can go to his my account zone
+     * and quickly create a new cart by using his previous order.
      *
      * @return array|bool Duplicated cart, with success bool
      */
@@ -4140,6 +4141,7 @@ class CartCore extends ObjectModel
         $cart->id_shop = $this->id_shop;
         $cart->id_shop_group = $this->id_shop_group;
 
+        // If the original addresses no longer exist or are deleted, we will treat it like a new cart in this regard
         if (!Customer::customerHasAddress((int) $cart->id_customer, (int) $cart->id_address_delivery)) {
             $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) $cart->id_customer);
         }
