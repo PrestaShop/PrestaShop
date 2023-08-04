@@ -27,7 +27,7 @@
 // Create a fake Db class on the global namespace
 
 namespace {
-    abstract class Db extends \DbCore
+    abstract class FakeParentDb extends \DbCore
     {
         public static function getInstance($master = true)
         {
@@ -35,7 +35,7 @@ namespace {
         }
     }
 
-    class FakeDb extends Db
+    class FakeDb extends FakeParentDb
     {
         public function __construct()
         {
