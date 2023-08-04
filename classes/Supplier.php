@@ -351,7 +351,7 @@ class SupplierCore extends ObjectModel
 					pl.`name`,
 					s.`name` AS supplier_name,
 					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00", INTERVAL ' . ($nbDaysNewProduct) . ' DAY)) > 0 AS new,
-					m.`name` AS manufacturer_name' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
+					m.`name` AS manufacturer_name
 				 FROM `' . _DB_PREFIX_ . 'product` p
 				' . Shop::addSqlAssociation('product', 'p') . '
 				JOIN `' . _DB_PREFIX_ . 'product_supplier` ps ON (ps.id_product = p.id_product) ' .

@@ -449,17 +449,9 @@ class ManufacturerCore extends ObjectModel
             $alias = 'p.';
         }
 
-        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity'
-            . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.`id_product_attribute`,0) id_product_attribute' : '') . '
-			, pl.`name`, m.`name` AS manufacturer_name,
-				DATEDIFF(
-					product_shop.`date_add`,
-					DATE_SUB(
-						"' . date('Y-m-d') . ' 00:00:00",
-						INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-					)
-				) > 0 AS new'
-            . ' FROM `' . _DB_PREFIX_ . 'product` p
+        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity
+			, pl.`name`, m.`name` AS manufacturer_name
+            FROM `' . _DB_PREFIX_ . 'product` p
 			' . Shop::addSqlAssociation('product', 'p') .
             (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
 						ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '

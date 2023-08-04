@@ -102,7 +102,6 @@ class ProductSaleCore
         // no group by needed : there's only one attribute with default_on=1 for a given id_product + shop
         // same for image with cover=1
         $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
-					' . (Combination::isFeatureActive() ? 'product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity,IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute,' : '') . '
 					pl.`name`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
 					ps.`quantity` AS sales,
@@ -120,8 +119,6 @@ class ProductSaleCore
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-					AND tr.`id_country` = ' . (int) $context->country->id . '
-					AND tr.`id_state` = 0
 				' . Product::sqlStock('p', 0);
 
         $sql .= '

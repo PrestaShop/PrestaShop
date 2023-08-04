@@ -3029,10 +3029,6 @@ class ProductCore extends ObjectModel
             $sql->limit($nb_products, (int) (($page_number - 1) * $nb_products));
         }
 
-        if (Combination::isFeatureActive()) {
-            $sql->select('product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute');
-            $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', 'p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id);
-        }
         $sql->join(Product::sqlStock('p', 0));
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -3147,10 +3143,7 @@ class ProductCore extends ObjectModel
 
             // no group by needed : there's only one attribute with cover=1 for a given id_product + shop
             $sql = 'SELECT p.*, product_shop.*,
-                        pl.`name`,
-                        DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-                        INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . '
-                            DAY)) > 0 AS new
+                        pl.`name`
                     FROM `' . _DB_PREFIX_ . 'product` p
                     LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
                         p.`id_product` = pl.`id_product`
@@ -3277,7 +3270,6 @@ class ProductCore extends ObjectModel
         $sql = '
         SELECT
             p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
-            IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
             pl.`name`, m.`name` AS manufacturer_name,
             DATEDIFF(
                 p.`date_add`,
@@ -4566,14 +4558,7 @@ class ProductCore extends ObjectModel
     public function getAccessories($id_lang, $active = true)
     {
         $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
-                    pl.`name`, m.`name` as manufacturer_name, cl.`name` AS category_default, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
-                    DATEDIFF(
-                        p.`date_add`,
-                        DATE_SUB(
-                            "' . date('Y-m-d') . ' 00:00:00",
-                            INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-                        )
-                    ) > 0 AS new
+                    pl.`name`, m.`name` as manufacturer_name, cl.`name` AS category_default
                 FROM `' . _DB_PREFIX_ . 'accessory`
                 LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = `id_product_2`
                 ' . Shop::addSqlAssociation('product', 'p') . '

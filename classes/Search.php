@@ -422,14 +422,7 @@ class SearchCore
             $alias = 'p.';
         }
         $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
-				pl.`name`, m.`name` manufacturer_name ' . $sqlScore . ',
-				DATEDIFF(
-					p.`date_add`,
-					DATE_SUB(
-						"' . date('Y-m-d') . ' 00:00:00",
-						INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-					)
-				) > 0 new' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.`id_product_attribute`,0) id_product_attribute' : '') . '
+				pl.`name`, m.`name` manufacturer_name ' . $sqlScore . '
 				FROM ' . _DB_PREFIX_ . 'product p
 				' . Shop::addSqlAssociation('product', 'p') . '
 				INNER JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
@@ -982,14 +975,7 @@ class SearchCore
         }
 
         $sql = 'SELECT DISTINCT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity, pl.`name`,
-					m.`name` manufacturer_name, 1 position,
-					DATEDIFF(
-						p.`date_add`,
-						DATE_SUB(
-							"' . date('Y-m-d') . ' 00:00:00",
-							INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-						)
-					) > 0 new
+					m.`name` manufacturer_name, 1 position
 				FROM
 				`' . _DB_PREFIX_ . 'tag` t
 				STRAIGHT_JOIN `' . _DB_PREFIX_ . 'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = ' . (int) $id_lang . ')

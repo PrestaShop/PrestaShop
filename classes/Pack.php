@@ -413,7 +413,7 @@ class PackCore extends Product
         $context = Context::getContext();
 
         $sql = '
-		SELECT p.*, product_shop.*, pl.*, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute
+		SELECT p.*, product_shop.*, pl.*
 		FROM `' . _DB_PREFIX_ . 'product` p
 		NATURAL LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
 		' . Shop::addSqlAssociation('product', 'p') . '
