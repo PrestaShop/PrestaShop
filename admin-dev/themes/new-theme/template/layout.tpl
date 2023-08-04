@@ -169,11 +169,6 @@
     {render_template
       smarty_template="components/layout/nav_bar.tpl"
       twig_template="@PrestaShop/Admin/Layout/nav_bar.html.twig"
-      toggle_navigation_url=$toggle_navigation_url
-      default_tab_link=$default_tab_link
-      ps_version=$ps_version
-      collapse_menu=$collapse_menu
-      tabs=$tabs
     }
 {/if}
 

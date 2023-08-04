@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <nav class="nav-bar d-none d-print-none d-md-block">
-  <span class="menu-collapse" data-toggle-url="{{ toggleNavigationUrl }}">
+  <span class="menu-collapse" data-toggle-url="{{ path('AdminEmployees', ['action' => 'toggleMenu']) }}">
     <i class="material-icons rtl-flip">chevron_left</i>
     <i class="material-icons rtl-flip">chevron_left</i>
   </span>
@@ -31,16 +31,16 @@
   <div class="nav-bar-overflow">
     <div class="logo-container">
       <div class="d-flex align-items-center">
-        <a id="header_logo" class="logo float-left" href="{{ defaultTabLink|escape('html_attr') }}"></a>
-        <span id="shop_version" class="header-version">{{ psVersion }}</span>
+        <a id="header_logo" class="logo float-left" href="{{ path(this.defaultTab)|escape('html_attr') }}"></a>
+        <span id="shop_version" class="header-version">{{ this.psVersion }}</span>
       </div>
       <div class="logo-container__close js-mobile-menu">
         <i class="material-icons close-btn">close</i>
       </div>
     </div>
 
-    <ul class="main-menu{% if collapseMenu %} sidebar-closed{% endif %}">
-      {% for level1 in tabs %}
+    <ul class="main-menu{% if this.collapseMenu %} sidebar-closed{% endif %}">
+      {% for level1 in this.tabs %}
         {% if level1.active %}
 
         {% set level1Href = level1.href %}
@@ -78,9 +78,9 @@
         {% endif %}
         {% set levelOneClass = '' %}
 
-        {% if level2.current and not collapseMenu %}
+        {% if level2.current and not this.collapseMenu %}
           {% set levelOneClass = " link-active open ul-open" %}
-        {% elseif level2.current and collapseMenu %}
+        {% elseif level2.current and this.collapseMenu %}
           {% set levelOneClass =" link-active" %}
         {% endif %}
 
