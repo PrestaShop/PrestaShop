@@ -2985,17 +2985,7 @@ class ProductCore extends ObjectModel
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
         $sql = new DbQuery();
-        $sql->select(
-            'p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity, 
-            pl.`name`, m.`name` AS manufacturer_name,
-            (DATEDIFF(product_shop.`date_add`,
-                DATE_SUB(
-                    "' . $now . '",
-                    INTERVAL ' . $nb_days_new_product . ' DAY
-                )
-            ) > 0) as new'
-        );
-
+        $sql->select('p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity');
         $sql->from('product', 'p');
         $sql->join(Shop::addSqlAssociation('product', 'p'));
         $sql->leftJoin(
@@ -3269,19 +3259,9 @@ class ProductCore extends ObjectModel
 
         $sql = '
         SELECT
-            p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
-            pl.`name`, m.`name` AS manufacturer_name,
-            DATEDIFF(
-                p.`date_add`,
-                DATE_SUB(
-                    "' . date('Y-m-d') . ' 00:00:00",
-                    INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-                )
-            ) > 0 AS new
+            p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity
         FROM `' . _DB_PREFIX_ . 'product` p
         ' . Shop::addSqlAssociation('product', 'p') . '
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-            ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
         ' . Product::sqlStock('p', 0, false, $context->shop) . '
         LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
             p.`id_product` = pl.`id_product`
@@ -4557,13 +4537,10 @@ class ProductCore extends ObjectModel
      */
     public function getAccessories($id_lang, $active = true)
     {
-        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
-                    pl.`name`, m.`name` as manufacturer_name, cl.`name` AS category_default
+        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity
                 FROM `' . _DB_PREFIX_ . 'accessory`
                 LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = `id_product_2`
                 ' . Shop::addSqlAssociation('product', 'p') . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-                    ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $this->id_shop . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
                     p.`id_product` = pl.`id_product`
                     AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '

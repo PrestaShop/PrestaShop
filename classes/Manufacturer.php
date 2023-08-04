@@ -450,12 +450,9 @@ class ManufacturerCore extends ObjectModel
         }
 
         $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity
-			, pl.`name`, m.`name` AS manufacturer_name
             FROM `' . _DB_PREFIX_ . 'product` p
 			' . Shop::addSqlAssociation('product', 'p') .
-            (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-						ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
-			LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
+			' LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
 				ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . ')
 			LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m
 				ON (m.`id_manufacturer` = p.`id_manufacturer`)

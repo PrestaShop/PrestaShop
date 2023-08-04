@@ -346,17 +346,10 @@ class SupplierCore extends ObjectModel
             $alias = 'm.';
         }
 
-        $sql = 'SELECT p.*, product_shop.*,
-					IFNULL(stock.quantity, 0) as quantity,
-					pl.`name`,
-					s.`name` AS supplier_name,
-					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00", INTERVAL ' . ($nbDaysNewProduct) . ' DAY)) > 0 AS new,
-					m.`name` AS manufacturer_name
-				 FROM `' . _DB_PREFIX_ . 'product` p
+        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
+				FROM `' . _DB_PREFIX_ . 'product` p
 				' . Shop::addSqlAssociation('product', 'p') . '
-				JOIN `' . _DB_PREFIX_ . 'product_supplier` ps ON (ps.id_product = p.id_product) ' .
-                (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
+				JOIN `' . _DB_PREFIX_ . 'product_supplier` ps ON (ps.id_product = p.id_product)
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'supplier` s ON s.`id_supplier` = p.`id_supplier`

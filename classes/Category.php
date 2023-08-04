@@ -1020,14 +1020,12 @@ class CategoryCore extends ObjectModel
             $nbDaysNewProduct = 20;
         }
 
-        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) AS quantity, pl.`name`, m.`name` AS manufacturer_name, cl.`name` AS category_default
+        $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) AS quantity
 				FROM `' . _DB_PREFIX_ . 'category_product` cp
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
 					ON p.`id_product` = cp.`id_product`
 				' . Shop::addSqlAssociation('product', 'p') .
-                (Combination::isFeatureActive() ? ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
-				' . Product::sqlStock('p', 0) . '
+				    Product::sqlStock('p', 0) . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
 					ON (product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')

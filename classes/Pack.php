@@ -330,7 +330,7 @@ class PackCore extends Product
 
         $context = Context::getContext();
 
-        $sql = 'SELECT p.*, product_shop.*, pl.*, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack, a.id_product_attribute_item
+        $sql = 'SELECT p.*, product_shop.*, pl.*, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack, a.id_product_attribute_item
 				FROM `' . _DB_PREFIX_ . 'pack` a
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.id_product = a.id_product_item
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
@@ -410,15 +410,11 @@ class PackCore extends Product
             return [];
         }
 
-        $context = Context::getContext();
-
         $sql = '
 		SELECT p.*, product_shop.*, pl.*
 		FROM `' . _DB_PREFIX_ . 'product` p
 		NATURAL LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
 		' . Shop::addSqlAssociation('product', 'p') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-	   		ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
 		WHERE pl.`id_lang` = ' . (int) $id_lang . '
 			' . Shop::addSqlRestrictionOnLang('pl') . '
 			AND p.`id_product` IN (' . $packs . ')

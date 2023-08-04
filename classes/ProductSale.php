@@ -97,23 +97,13 @@ class ProductSaleCore
             $orderWay = 'DESC';
         }
 
-        $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-
         // no group by needed : there's only one attribute with default_on=1 for a given id_product + shop
         // same for image with cover=1
         $sql = 'SELECT p.*, product_shop.*, IFNULL(stock.quantity, 0) as quantity,
-					pl.`name`,
-					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-					ps.`quantity` AS sales,
-					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
-            . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
+					ps.`quantity` AS sales
+                FROM `' . _DB_PREFIX_ . 'product_sale` ps
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
 				' . Shop::addSqlAssociation('product', 'p', false);
-        if (Combination::isFeatureActive()) {
-            $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-							ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')';
-        }
 
         $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
