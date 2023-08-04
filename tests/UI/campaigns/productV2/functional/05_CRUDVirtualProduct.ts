@@ -2,9 +2,11 @@
 import helper from '@utils/helpers';
 import basicHelper from '@utils/basicHelper';
 import files from '@utils/files';
+import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
 
 // Import common tests
+import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import loginCommon from '@commonTests/BO/loginBO';
 import {
   resetNewProductPageAsDefault, setFeatureFlag,
@@ -30,17 +32,21 @@ import OrderStatuses from '@data/demo/orderStatuses';
 import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
+import type MailDevEmail from '@data/types/maildevEmail';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import type MailDev from 'maildev';
 
 const baseContext: string = 'productV2_functional_CRUDVirtualProduct';
 
 describe('BO - Catalog - Products : CRUD virtual product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+  let mailListener: MailDev;
 
   // Data to create standard product
+  const mails: MailDevEmail[] = [];
   const newProductData: ProductData = new ProductData({
     type: 'virtual',
     coverImage: 'cover.jpg',
@@ -66,6 +72,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
   // Pre-condition: Enable new product page
   setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
+  // Pre-Condition: Setup config SMTP
+  setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -78,6 +86,15 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await files.generateImage(newProductData.thumbImage);
     }
     await files.generateImage(newProductData.fileName);
+
+    // Start listening to maildev server
+    mailListener = mailHelper.createMailListener();
+    mailHelper.startListener(mailListener);
+
+    // Handle every new email
+    mailListener.on('new', (email: MailDevEmail) => {
+      mails.push(email);
+    });
   });
 
   after(async () => {
@@ -89,6 +106,9 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await files.deleteFile(newProductData.thumbImage);
     }
     await files.deleteFile(newProductData.fileName);
+
+    // Stop listening to maildev server
+    mailHelper.stopListener(mailListener);
   });
 
   // 1 - Create product
@@ -320,6 +340,20 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         const doesFileExist: boolean = await files.doesFileExist(newProductData.fileName, 5000);
         await expect(doesFileExist, 'File is not downloaded!').to.be.true;
       });
+
+      it('should check if the mail is in mailbox', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkIfMailIsInMailbox', baseContext);
+
+        // 0 : [Mon Shop] Awaiting bank wire payment
+        // 1 : [Mon Shop] Order confirmation
+        // 2 : [Mon Shop] The virtual product that you bought is available for download
+        // 3 : [Mon Shop] Payment accepted
+        expect(mails.length).to.be.gte(3);
+        expect(mails[2].subject).to.be.equal(
+          `[${global.INSTALL.SHOP_NAME}] The virtual product that you bought is available for download`,
+        );
+        expect(mails[2].text).to.contains('Product(s) to download');
+      });
     });
   });
 
@@ -432,4 +466,6 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
   // Post-condition: Reset initial state
   resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
+  // Post-Condition: Reset SMTP config
+  resetSmtpConfigTest(`${baseContext}_postTest_1`);
 });
