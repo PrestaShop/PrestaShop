@@ -93,7 +93,6 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
-      console.log(email.subject);
       mails.push(email);
     });
   });
