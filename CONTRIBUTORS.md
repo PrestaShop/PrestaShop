@@ -648,6 +648,7 @@ GitHub contributors:
 - Petyuska
 - Philip Iezzi
 - PhpMadman
+- PICHAT Morgan
 - Pierre
 - Pierre Avizou
 - Pierre Joube
@@ -851,6 +852,7 @@ GitHub contributors:
 - tiledcode
 - timactive
 - timsit
+- tleon
 - tmackay
 - TMMeilleur
 - tolispy
