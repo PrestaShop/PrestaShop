@@ -549,6 +549,7 @@ GitHub contributors:
 - Molka DJEMAL
 - moncef102
 - montes
+- Morgan Pichat
 - mplh
 - mrAKAR
 - mRaigne

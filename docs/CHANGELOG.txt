@@ -24,6 +24,27 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.10 - (2023-07-19)
+####################################
+- Core:
+  - Improvement:
+    - GHSA-xw2r-f8xv-c8xp add missing html attributes (by @matthieu-rolland)
+  - Bug fix:
+    - #33028: Bump to mysql 8 in CI (by @lartist)
+- Back Office:
+  - Improvement:
+    - GHSA-gf46-prm4-56pc protect from writing files on server through SQL form (by @matthieu-rolland)
+- Tests:
+  - Improvement:
+    - #32893: Nightly : 1.7.8.x - Move to Github Actions (by @Progi1984)
+  - Bug fix:
+    - #33013: Nightly : Fixed mocha loader (1.7.8.x) (by @Progi1984)
+    - #32896: Fix github action runs on 1.7.8.x (by @boubkerbribri)
+  - Refactoring:
+    - #33231: Nightly : 1.7.8.x - Skip test for the issue 32914 (by @Progi1984)
+    - #32995: Functional tests - Fix random errors in the nightly 1.7.8.x (by @nesrineabdmouleh)
+
+####################################
 #   v1.7.8.9 - (2023-20-04)
 ####################################
 - Back Office:
@@ -6887,4 +6908,3 @@ Release Notes for PrestaShop 1.7
 #   v1.7.0.0 - (2016-11-03)
 ####################################
   New Release!
-
