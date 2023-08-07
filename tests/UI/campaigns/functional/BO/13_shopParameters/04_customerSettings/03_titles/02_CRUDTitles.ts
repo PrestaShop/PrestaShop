@@ -90,7 +90,7 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
       await titlesPage.goToAddNewTitle(page);
 
       const pageTitle = await addTitlePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addTitlePage.pageTitleCreate);
+      await expect(pageTitle).to.eq(addTitlePage.pageTitleCreate);
     });
 
     it('should create title and check result', async function () {
@@ -109,9 +109,9 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
       await titlesPage.resetFilter(page);
-      await titlesPage.filterTitles(page, 'input', 'b!name', createTitleData.name);
+      await titlesPage.filterTitles(page, 'input', 'name', createTitleData.name);
 
-      const textEmail = await titlesPage.getTextColumn(page, 1, 'b!name');
+      const textEmail = await titlesPage.getTextColumn(page, 1, 'name');
       await expect(textEmail).to.contains(createTitleData.name);
     });
 
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
       await titlesPage.gotoEditTitlePage(page, 1);
 
       const pageTitle = await addTitlePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addTitlePage.pageTitleEdit);
+      await expect(pageTitle).to.contains(addTitlePage.pageTitleEdit(createTitleData.name));
     });
 
     it('should update title', async function () {
@@ -140,9 +140,9 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await titlesPage.resetFilter(page);
-      await titlesPage.filterTitles(page, 'input', 'b!name', editTitleData.name);
+      await titlesPage.filterTitles(page, 'input', 'name', editTitleData.name);
 
-      const textEmail = await titlesPage.getTextColumn(page, 1, 'b!name');
+      const textEmail = await titlesPage.getTextColumn(page, 1, 'name');
       await expect(textEmail).to.contains(editTitleData.name);
     });
 

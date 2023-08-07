@@ -2,10 +2,9 @@ admin_title_index:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::indexAction'
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::indexAction
     _legacy_controller: AdminGenders
     _legacy_link: AdminGenders
-    _legacy_feature_flag: title
 
 admin_title_search:
   path: /
@@ -16,25 +15,22 @@ admin_title_search:
     redirectRoute: admin_title_index
     _legacy_controller: AdminGenders
     _legacy_link: AdminGenders:submitFiltergenders
-    _legacy_feature_flag: title
 
 admin_title_create:
   path: /new
   methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::createAction'
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::createAction
     _legacy_controller: AdminGenders
     _legacy_link: AdminGenders:addgender
-    _legacy_feature_flag: title
 
 admin_title_edit:
   path: /{titleId}/edit
   methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::editAction'
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::editAction
     _legacy_controller: AdminGenders
     _legacy_link: AdminGenders:updategender
-    _legacy_feature_flag: title
   requirements:
     titleId: \d+
 
@@ -42,10 +38,9 @@ admin_title_delete:
   path: /{titleId}/delete
   methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::deleteAction'
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::deleteAction
     _legacy_controller: AdminGenders
     _legacy_link: AdminGenders:deletegender
-    _legacy_feature_flag: title
   requirements:
     titleId: \d+
 
@@ -53,7 +48,6 @@ admin_title_bulk_delete:
   path: /bulk-delete
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::bulkDeleteAction'
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TitleController::bulkDeleteAction
     _legacy_controller: AdminGenders
     _legacy_link: AdminGenders:submitBulkdeletegender
-    _legacy_feature_flag: title
