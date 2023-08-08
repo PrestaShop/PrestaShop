@@ -122,7 +122,7 @@ class UpdateSchemaCommand extends Command
      */
     public function dropExistingForeignKeys(Connection $connection, OutputInterface $output): int
     {
-        // First drop any existing FK
+        // Get foreign key list in all tables with our prefix
         $query = $connection->executeQuery(
             'SELECT CONSTRAINT_NAME, TABLE_NAME ' .
             'FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS ' .
@@ -132,16 +132,16 @@ class UpdateSchemaCommand extends Command
         );
 
         $results = $query->fetchAllAssociative();
-        $nbQueries = 0;
+        $affectedRows = 0;
 
         foreach ($results as $result) {
             $drop = 'ALTER TABLE ' . $result['TABLE_NAME'] . ' DROP FOREIGN KEY ' . $result['CONSTRAINT_NAME'];
             $output->writeln('Executing: ' . $drop);
 
-            $nbQueries += $connection->executeQuery($drop);
+            $affectedRows += $connection->executeQuery($drop)->rowCount();
         }
 
-        return $nbQueries;
+        return $affectedRows;
     }
 
     /**
