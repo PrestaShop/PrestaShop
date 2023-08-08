@@ -188,11 +188,6 @@ class RetailPriceType extends TranslatorAwareType
                     'data-place-holder-with-state' => $taxRateHelpPlaceholderWithState,
                     'data-is-tax-enabled' => $this->isTaxEnabled,
                 ],
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
-                    'href' => $this->router->generate('admin_taxes_index'),
-                    'align' => 'right',
-                ],
                 'modify_all_shops' => true,
             ]);
 
@@ -230,6 +225,11 @@ class RetailPriceType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
+                ],
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_taxes_index'),
+                    'align' => 'right',
                 ],
                 'default_empty_data' => 0.0,
                 'modify_all_shops' => true,
