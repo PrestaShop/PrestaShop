@@ -143,8 +143,6 @@ class Titles extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTitles(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
-    const currentUrl: string = page.url();
-
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
