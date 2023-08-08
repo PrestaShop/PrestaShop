@@ -200,7 +200,7 @@ if (defined('_PS_ADMIN_DIR_')) {
 
     /* Auth on shops are recached after employee assignation */
     if ($employee->id_profile != _PS_ADMIN_PROFILE_) {
-        Shop::cacheShops(true);
+        Shop::cacheShops();
     }
 
     $cookie->id_lang = (int) $employee->id_lang;

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use Symfony\Contracts\Cache\ItemInterface;
+
 /**
  * Class ConfigurationCore.
  */
@@ -62,9 +64,6 @@ class ConfigurationCore extends ObjectModel
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
-
-    /** @var array|null Configuration cache (kept for backward compat) */
-    protected static $_cache = null;
 
     /** @var array|null Configuration cache with optimised key order */
     protected static $_new_cache_shop = null;
@@ -159,11 +158,11 @@ class ConfigurationCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
-        self::$_cache = null;
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
     }
 
     /**
@@ -171,41 +170,44 @@ class ConfigurationCore extends ObjectModel
      */
     public static function loadConfiguration()
     {
-        $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
+        $value = SymfonyCache::getInstance()->get('configuration', function (ItemInterface $item) {
+            $item->tag('configuration');
+            $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(
-               self::$definition['primary']
-            ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
-        $db = Db::getInstance();
-        $results = $db->executeS($sql);
-        if ($results) {
-            foreach ($results as $row) {
-                $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
-                self::$types[$row['name']] = (bool) $lang;
+                    self::$definition['primary']
+                ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
+            $db = Db::getInstance();
+            $results = $db->executeS($sql);
+            $value = [];
+            if ($results) {
+                foreach ($results as $row) {
+                    $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
+                    self::$types[$row['name']] = (bool) $lang;
 
-                if (!isset(self::$_cache[self::$definition['table']][$lang])) {
-                    self::$_cache[self::$definition['table']][$lang] = [
-                        'global' => [],
-                        'group' => [],
-                        'shop' => [],
-                    ];
-                }
+                    if ($row['value'] === null) {
+                        $row['value'] = '';
+                    }
 
-                if ($row['value'] === null) {
-                    $row['value'] = '';
+                    if ($row['id_shop']) {
+                        $value['shop'][$row['name']][$lang][$row['id_shop']] = $row['value'];
+                    } elseif ($row['id_shop_group']) {
+                        $value['group'][$row['name']][$lang][$row['id_shop_group']] = $row['value'];
+                    } else {
+                        $value['global'][$row['name']][$lang] = $row['value'];
+                    }
                 }
-
-                if ($row['id_shop']) {
-                    self::$_cache[self::$definition['table']][$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
-                    self::$_new_cache_shop[$row['name']][$lang][$row['id_shop']] = $row['value'];
-                } elseif ($row['id_shop_group']) {
-                    self::$_cache[self::$definition['table']][$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
-                    self::$_new_cache_group[$row['name']][$lang][$row['id_shop_group']] = $row['value'];
-                } else {
-                    self::$_cache[self::$definition['table']][$lang]['global'][$row['name']] = $row['value'];
-                    self::$_new_cache_global[$row['name']][$lang] = $row['value'];
-                }
+            } else {
+                $value = false;
             }
+
+            return $value;
+        });
+
+        if ($value) {
+            self::$_new_cache_shop = $value['shop'] ?? null;
+            self::$_new_cache_group = $value['group'] ?? null;
+            self::$_new_cache_global = $value['global'] ?? null;
             self::$_initialized = true;
         }
     }
@@ -394,13 +396,10 @@ class ConfigurationCore extends ObjectModel
         foreach ($values as $lang => $value) {
             if ($idShop) {
                 self::$_new_cache_shop[$key][$lang][$idShop] = $value;
-                self::$_cache[self::$definition['table']][$lang]['shop'][$idShop][$key] = $value;
             } elseif ($idShopGroup) {
                 self::$_new_cache_group[$key][$lang][$idShopGroup] = $value;
-                self::$_cache[self::$definition['table']][$lang]['group'][$idShopGroup][$key] = $value;
             } else {
                 self::$_new_cache_global[$key][$lang] = $value;
-                self::$_cache[self::$definition['table']][$lang]['global'][$key] = $value;
             }
         }
     }
@@ -551,7 +550,7 @@ class ConfigurationCore extends ObjectModel
                 }
             }
         }
-
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
         Configuration::set($key, $values, $idShopGroup, $idShop);
 
         return (bool) $result;
@@ -582,11 +581,11 @@ class ConfigurationCore extends ObjectModel
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
         WHERE `name` = "' . pSQL($key) . '"');
 
-        self::$_cache = null;
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
 
         return $result && $result2;
     }
@@ -634,11 +633,11 @@ class ConfigurationCore extends ObjectModel
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang`
         WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
 
-        self::$_cache = null;
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
         self::$_initialized = false;
+        SymfonyCache::getInstance()->invalidateTags(['configuration']);
     }
 
     /**

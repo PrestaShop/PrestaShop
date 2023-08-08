@@ -581,6 +581,11 @@ class DispatcherCore
         if (isset($context->shop) && $id_shop === null) {
             $id_shop = (int) $context->shop->id;
         }
+        $language_ids = Language::getIDs();
+
+        if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
+            $language_ids[] = (int) $context->language->id;
+        }
 
         // Load custom routes from modules
         $modules_routes = Hook::exec('moduleRoutes', ['id_shop' => $id_shop], null, true, false);
@@ -601,12 +606,6 @@ class DispatcherCore
                     }
                 }
             }
-        }
-
-        $language_ids = Language::getIDs();
-
-        if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
-            $language_ids[] = (int) $context->language->id;
         }
 
         // Set default routes
@@ -658,10 +657,6 @@ class DispatcherCore
             // Load custom routes
             foreach ($this->default_routes as $route_id => $route_data) {
                 if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
-                    if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
-                        $language_ids[] = (int) $context->language->id;
-                    }
-
                     $route = $this->computeRoute(
                         $custom_route,
                         $route_data['controller'],

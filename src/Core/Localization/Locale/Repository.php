@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Factory as Specificati
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use Symfony\Contracts\Cache\ItemInterface;
+use SymfonyCache;
 
 /**
  * Locale repository.
@@ -143,12 +145,14 @@ class Repository implements RepositoryInterface
     public function getLocale($localeCode)
     {
         if (!isset($this->locales[$localeCode])) {
-            $this->locales[$localeCode] = new Locale(
-                $localeCode,
-                $this->getNumberSpecification($localeCode),
-                $this->getPriceSpecifications($localeCode),
-                new NumberFormatter($this->roundingMode, $this->numberingSystem)
-            );
+            $this->locales[$localeCode] = SymfonyCache::getInstance()->get('locale_' . $localeCode, function (ItemInterface $item) use ($localeCode) {
+                return new Locale(
+                    $localeCode,
+                    $this->getNumberSpecification($localeCode),
+                    $this->getPriceSpecifications($localeCode),
+                    new NumberFormatter($this->roundingMode, $this->numberingSystem)
+                );
+            });
         }
 
         return $this->locales[$localeCode];
