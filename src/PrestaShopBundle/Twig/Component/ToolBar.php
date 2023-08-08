@@ -33,7 +33,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/tool_bar.html.twig')]
 class ToolBar
 {
-    public string $multistoreHeader;
+    public bool $lockedToAllShopContext;
     public array $breadcrumbs2;
     public array $toolbarBtn;
     public array|string $title;

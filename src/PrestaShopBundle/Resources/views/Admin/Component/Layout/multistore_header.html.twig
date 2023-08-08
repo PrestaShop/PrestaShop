@@ -1,0 +1,132 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% block multistore_header %}
+  {% if this.isMultistoreUsed and app.request is not null %}
+    <div
+      id="header-multishop"
+      class="header-multishop{% if this.isAllShopContext %} header-multishop-allshops{% elseif this.currentContextColor is empty %} header-multishop-default{% endif %}{% if this.isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
+      {% if this.isShopContext %}data-shop-id="{{ this.currentContextId }}"{% elseif this.isGroupContext %}data-group-id="{{ this.currentContextId }}"{% else %}data-all-shops="1"{% endif %}
+      {% if this.colorConfigLink %}data-header-color-notification="{{ "Customize your multistore header, [1]pick a color[/1] for this store context."|trans({'[1]': '<a href="' ~ this.colorConfigLink ~ '">', '[/1]': '</a>'}, 'Admin.Navigation.Header') }}"{% endif %}
+      data-checkbox-notification="{{ "To apply specific settings to a store or a group of stores, select the parameter to modify, make your changes and save."|trans({}, 'Admin.Navigation.Header') ~ ' '}}"
+    >
+      <div class="header-multishop-top-bar"{% if this.currentContextColor is not empty %} style="background-color: {{this.currentContextColor}};"{% endif %}>
+        <div class="header-multishop-center js-header-multishop-open-modal">
+
+          {#
+          This setting avoid to duplicate @PrestaShop/Admin/Multistore/shop_icon.html.twig and
+          @PrestaShop/Admin/Multistore/multi_shops_icon.html.twig and then replace isTitleDark by this.isTitleDark
+          Todo: remove this line when the two templates above are not used anymore except in twig component and replace
+          isTitleDark by this.isTitleDark in these templates
+          #}
+          {% set isTitleDark = this.isTitleDark %}
+
+          {% if this.isShopContext %}
+            {% include '@PrestaShop/Admin/Multistore/shop_icon.html.twig' %}
+          {% else %}
+            {% include '@PrestaShop/Admin/Multistore/multi_shops_icon.html.twig' %}
+          {% endif %}
+
+          <h2 class="header-multishop-title">
+            {% if this.isGroupContext %}{{ "Group"|trans({}, 'Admin.Global') ~ ' '}} {% endif %}{{ this.currentContextName }}
+          </h2>
+
+          <button class="header-multishop-button">
+            <i class="material-icons">expand_more</i>
+          </button>
+        </div>
+      </div>
+
+      {% if this.isShopContext %}
+        <div class="header-multishop-right">
+          {% block multishop_header_right %}
+            <a class="header-multishop-view-action" href="{{ this.link.getBaseLink(this.currentContextId) }}" target="_blank" rel="nofollow">{{ "View my store"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
+          {% endblock %}
+        </div>
+      {% endif %}
+
+      <div id="multishop-modal" class="multishop-modal multishop-modal-hidden js-multishop-modal" tabindex="-1" role="dialog" aria-labelledby="multishop-modal" aria-hidden="true">
+        <div class="multishop-modal-dialog js-multishop-modal-dialog" role="document">
+          <div class="multishop-modal-body">
+            {% block search_shops %}
+              {% if lockedToAllShopContext == false %}
+                <div class="multishop-modal-search-container">
+                  <i class="material-icons">search</i>
+                  <input type="text" class="form-control multishop-modal-search js-multishop-modal-search" placeholder="{{ 'Search store name'|trans({}, 'Admin.Navigation.Header') }}" data-no-results="{{ "No results found for"|trans({}, 'Admin.Global') }}" data-searching="{{ "Searching for"|trans({}, 'Admin.Global') }}">
+                </div>
+              {% endif %}
+            {% endblock %}
+
+            <ul class="multishop-modal-group-list js-multishop-scrollbar">
+              {% block all_shops_item %}
+                <li class="multishop-modal-all multishop-modal-item">
+                  {% if this.isAllShopContext %}
+                    <i class="material-icons">check</i>
+                  {% else %}
+                    <span class="multishop-modal-color" style="background-color:#25b9d7;"></span>
+                  {% endif %}
+                  <a class="multishop-modal-all-name" href="{{ multistore_url() }}">
+                    <span>{{ "All stores"|trans({}, 'Admin.Global') }}</span>
+                  </a>
+                </li>
+              {% endblock %}
+              {% for group in this.groupList %}
+                <li class="multishop-modal-group-item multishop-modal-item{% if loop.first %} first-group-item{% endif %}">
+                  {% block shop_group_item %}
+                    <span class="multishop-modal-color-container{% if this.isGroupContext and this.currentContextId == group.id %} multishop-modal-color-check{% endif %}">
+                    <i class="material-icons">check</i>
+                    <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
+                  </span>
+                    <a class="multishop-modal-group-name" href="{{ multistore_group_url(group) }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
+                  {% endblock %}
+                </li>
+
+                {% for shop in group.shops %}
+                  <li class="multishop-modal-shop-item multishop-modal-item">
+                    {% block shop_item %}
+                      <div class="multishop-modal-item-left">
+                      <span class="multishop-modal-color-container{% if this.isShopContext and this.currentContextId == shop.id %} multishop-modal-color-check{% endif %}">
+                        <i class="material-icons">check</i>
+                        <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
+                      </span>
+                        <a class="multishop-modal-shop-name{% if shop.hasMainUrl() == false %} multishop-modal-no-url"{% else %}" href="{{ multistore_shop_url(shop) }}"{% endif %}>{{ shop.name }}</a>
+                      </div>
+                      {% if shop.hasMainUrl() %}
+                        <a class="multishop-modal-shop-view" href="{{ this.link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my store"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
+                      {% else %}
+                        <a class="multishop-modal-shop-view" href="{{ getAdminLink('AdminShopUrl', true, {'shop_id' : shop.id, 'addshop_url' : 1}) }}" rel="noreferrer">{{ "Configure URL"|trans({}, 'Admin.Actions') }} <i class="material-icons">visibility</i></a>
+                      {% endif %}
+                    {% endblock %}
+                  </li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ asset('themes/new-theme/public/multistore_header.bundle.js') }}"></script>
+  {% endif %}
+{% endblock %}
