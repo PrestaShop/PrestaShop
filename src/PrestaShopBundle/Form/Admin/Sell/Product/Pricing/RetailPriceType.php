@@ -166,6 +166,7 @@ class RetailPriceType extends TranslatorAwareType
             ])
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoicesProvider->getChoices(),
+                'disabled' => !$this->isTaxEnabled,
                 'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
