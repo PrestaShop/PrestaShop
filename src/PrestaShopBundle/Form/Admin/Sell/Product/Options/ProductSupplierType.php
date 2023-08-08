@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
@@ -52,7 +53,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ProductSupplierType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var FormChoiceProviderInterface&FormChoiceAttributeProviderInterface
      */
     private $currencyByIdChoiceProvider;
 
@@ -74,13 +75,13 @@ class ProductSupplierType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $currencyByIdChoiceProvider
+     * @param FormChoiceProviderInterface&FormChoiceAttributeProviderInterface $currencyByIdChoiceProvider
      * @param string $defaultCurrencyIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $currencyByIdChoiceProvider,
+        $currencyByIdChoiceProvider,
         string $defaultCurrencyIsoCode,
         CurrencyRepository $currencyRepository,
         FormCloner $formCloner
@@ -135,6 +136,7 @@ class ProductSupplierType extends TranslatorAwareType
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
+                'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
             ])
         ;
 
