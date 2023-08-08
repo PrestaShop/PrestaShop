@@ -70,7 +70,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $builder
             ->add('reduction', PriceReductionType::class, [
                 'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'label_subtitle' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
+                'alert_message' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'constraints' => [
                     new Reduction([
