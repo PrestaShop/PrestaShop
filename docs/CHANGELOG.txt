@@ -335,6 +335,41 @@ Changelog for PrestaShop 8
     - #31357: Functional tests - Add new test 'FO > checkout page > Select carrier' (by @nesrineabdmouleh)
 
 ####################################
+#   v8.0.5 - (2023-07-19)
+####################################
+
+- Core:
+  - Improvement:
+    - GHSA-xw2r-f8xv-c8xp add missing html attributes (by @matthieu-rolland)
+- Back Office:
+  - Improvement:
+    - #33276: Add file headers and bump some dependencies (by @mflasquin)
+    - GHSA-gf46-prm4-56pc protect from writing files on server through SQL form (by @matthieu-rolland)
+  - Bug fix:
+    - #33234: Update module's information cache and add clear cache for doctrine (by @M0rgan01)
+    - #33008: Fix 'New' Translation domain (by @mflasquin)
+    - #33124: Fix issue when disable tax, do not delete tax rules (by @mflasquin)
+    - #33048: Add string casting for boolean fields (by @nicosomb)
+    - #31379: Fix disabling a module for a specific shop applied to all shops (by @matthieu-rolland)
+    - #32790: Fix PDF translations in backoffice (by @mflasquin)
+    - #32715: Fix: [BO] : Error notification displayed in Multistore page (by @Codencode)
+- Front Office:
+  - Bug fix:
+    - #32596: Fix availability display logic (by @mflasquin)
+    - #32345: Hide vouchers with no available quantities (by @tleon)
+- Tests:
+  - Bug fix:
+    - #33279: Nightly : 8.0.x : Unskip test for the issue 32914 (by @Progi1984)
+    - #33131: Nightly : 8.0.x : Fixed error in filterTaxes (by @Progi1984)
+    - #33033: Nightly : Fixed install Node 14 (by @Progi1984)
+    - #33012: Nightly : Fixed mocha loader (8.0.x) (by @Progi1984)
+    - #32834: Nightly : 8.0.x : Fixed error in package.json (by @Progi1984)
+    - #32829: Nightly : Fixed functional/BO/02*/01*/viewAndEditOrder/11* (by @Progi1984)
+  - Refactoring:
+    - #33230: Nightly : 8.0.x - Skip test for the issue 32914 (by @Progi1984)
+    - #33174: Sanity Tests - Fix bug in product V2 tests (by @nesrineabdmouleh)
+
+####################################
 #   v8.0.4 - (2023-04-13)
 ####################################
 
