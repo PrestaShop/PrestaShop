@@ -83,7 +83,7 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       });
       await expect(apiResponse.status()).to.eq(200);
       await expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/ld+json');
+      await expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       const jsonResponse = await apiResponse.json();
       await expect(jsonResponse).to.have.property('id');

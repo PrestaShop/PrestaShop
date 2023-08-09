@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -39,8 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShopBundle\ApiPlatform\Converters\StringToIntConverter;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
+use PrestaShopBundle\ApiPlatform\Resources\FoundProduct as FoundProductDto;
 use PrestaShopBundle\ApiPlatform\Resources\Hook;
-use PrestaShopBundle\ApiPlatform\Resources\SearchProduct;
 use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -99,10 +100,10 @@ class QueryProviderTest extends TestCase
     public function testSearchProduct(): void
     {
         $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
-        $get = new Get();
+        $get = new GetCollection();
         $get = $get
             ->withExtraProperties(['query' => SearchProducts::class])
-            ->withClass(SearchProduct::class);
+            ->withClass(FoundProductDto::class);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'mug', 'resultsLimit' => 10, 'isoCode' => 'EUR']);
         self::assertCount(1, $searchProducts);
 

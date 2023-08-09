@@ -97,6 +97,11 @@ api_platform:
   title: PrestaShop API
   version: 1.0.0
   enable_entrypoint: false
+  formats:
+    json:
+      mime_types: [ 'application/json' ]
+    jsonld:
+      mime_types: [ 'application/ld+json' ]
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'

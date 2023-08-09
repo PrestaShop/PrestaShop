@@ -28,14 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Resources;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
     operations: [
-        new Get(
+        new GetCollection(
             uriTemplate: '/products/search/{phrase}/{resultsLimit}/{isoCode}',
             openapiContext: [
                 'parameters' => [
@@ -78,12 +81,63 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
                 'query' => SearchProducts::class,
             ]
         ),
-    ]
+    ],
 )]
-class SearchProduct
+class FoundProduct
 {
-    public string $phrase;
-    public int $resultsLimit;
-    public string $isoCode;
-    public int $orderId;
+    /**
+     * @var int
+     */
+    #[ApiProperty(identifier: true)]
+    public $productId;
+
+    /**
+     * @var bool
+     */
+    public $availableOutOfStock;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var float
+     */
+    public $taxRate;
+
+    /**
+     * @var string
+     */
+    public $formattedPrice;
+
+    /**
+     * @var float
+     */
+    public $priceTaxIncl;
+
+    /**
+     * @var float
+     */
+    public $priceTaxExcl;
+
+    /**
+     * @var int
+     */
+    public $stock;
+
+    /**
+     * @var string
+     */
+    public $location;
+
+    /**
+     * @var ProductCombination[]
+     */
+    public $combinations;
+
+    /**
+     * @var ProductCustomizationField[]
+     */
+    public $customizationFields;
 }

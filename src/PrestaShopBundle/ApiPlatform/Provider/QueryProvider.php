@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Provider;
 
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -76,10 +77,9 @@ class QueryProvider implements ProviderInterface
         }
 
         $queryResult = $this->queryBus->handle($query);
-        $isCollectionResult = is_array($queryResult);
         $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
 
-        if ($isCollectionResult) {
+        if ($operation instanceof CollectionOperationInterface) {
             foreach ($normalizedQueryResult as $key => $result) {
                 $normalizedQueryResult[$key] = $this->apiPlatformSerializer->denormalize($result, $operation->getClass());
             }

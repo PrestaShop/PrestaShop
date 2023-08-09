@@ -49,11 +49,11 @@ class GetHookTest extends ApiTestCase
 
         $bearerToken = $this->getBearerToken();
 
-        $response = static::createClient()->request('GET', '/new-api/hooks/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
+        $response = static::createClient()->request('GET', '/new-api/hooks/' . (int) $hook->id, ['auth_bearer' => $bearerToken, 'headers' => ['accept' => ['application/json']]]);
         self::assertEquals(json_decode($response->getContent())->active, $hook->active);
         self::assertResponseStatusCodeSame(200);
 
-        static::createClient()->request('GET', '/new-api/hooks/' . 9999, ['auth_bearer' => $bearerToken]);
+        static::createClient()->request('GET', '/new-api/hooks/' . 9999, ['auth_bearer' => $bearerToken, 'headers' => ['accept' => ['application/json']]]);
         self::assertResponseStatusCodeSame(404);
 
         static::createClient()->request('GET', '/new-api/hooks/' . $hook->id);
