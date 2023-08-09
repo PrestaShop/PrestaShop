@@ -95,6 +95,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'gd' => $this->translator->trans('GD library is not installed', [], 'Install'),
                         'json' => $this->translator->trans('JSON extension is not loaded', [], 'Install'),
                         'openssl' => $this->translator->trans('PHP OpenSSL extension is not loaded', [], 'Install'),
+                        'openssl_key_generation' => $this->translator->trans('Unable to generate private keys using openssl_pkey_new. Check your OpenSSL configuration, especially the path to openssl.cafile.', [], 'Install'),
                         'pdo_mysql' => $this->translator->trans('PDO MySQL extension is not loaded', [], 'Install'),
                         'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', [], 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', [], 'Install'),

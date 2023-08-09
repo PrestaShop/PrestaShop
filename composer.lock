@@ -6212,16 +6212,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.12.1",
+            "version": "v3.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "25d0a3fb8707632f865a9311dadaf5c0db307215"
+                "reference": "42f30f0999791cf00d6d371d982e6257adb41b24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/25d0a3fb8707632f865a9311dadaf5c0db307215",
-                "reference": "25d0a3fb8707632f865a9311dadaf5c0db307215",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/42f30f0999791cf00d6d371d982e6257adb41b24",
+                "reference": "42f30f0999791cf00d6d371d982e6257adb41b24",
                 "shasum": ""
             },
             "require": {
@@ -6257,9 +6257,9 @@
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.12.1"
+                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.13.0"
             },
-            "time": "2023-03-22T16:15:40+00:00"
+            "time": "2023-07-27T17:38:24+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",

@@ -30,31 +30,41 @@
   <div class="card-body">
     <div class="timeline">
       {% for timelineItem in customerThreadView.timeline.timelineItems %}
-        <article class="timeline-item {% if timelineItem.arrow == 'right' %}alt{% endif %}">
-          <div class="timeline-caption">
-            <div class="timeline-panel arrow arrow-{{ timelineItem.arrow }}">
-              <span class="timeline-icon"
-                    {% if timelineItem.color %}style="background-color: {{ timelineItem.color }}"{% endif %}
-              >
-                <i class="material-icons text-white">{{ timelineItem.icon }}</i>
-              </span>
+        {# We are using left-right styling for the timeline #}
+        <div class="timeline-item {% if timelineItem.arrow == 'right' %}right{% else %}left{% endif %}">
 
-              <span class="timeline-date">
-                <i class="material-icons font-16">calendar_today</i>
-                {{ format_date(timelineItem.date) }}
-                <i class="material-icons font-16">access_time</i>
-                {{ timelineItem.date|date('H:i') }}
-              </span>
+          {# Icon #}
+          <div class="timeline-icon-wrapper">
+            <div class="timeline-icon" 
+              {% if timelineItem.color %}
+                style="background-color: {{ timelineItem.color }};"
+              {% endif %}
+            >
+              <i class="material-icons text-white">{{ timelineItem.icon }}</i>
+            </div>
+          </div>
 
-              <span>
+          {# Date #} 
+          <div class="timeline-date-wrapper">
+            <div class="timeline-date">
+              <i class="material-icons font-16">calendar_today</i>
+              <span class="timeline-date-day">{{ format_date(timelineItem.date) }}</span>
+              <i class="material-icons font-16">access_time</i>
+              <span>{{ timelineItem.date|date('H:i') }}</span>
+            </div>
+          </div>
+
+          {# Content #}
+          <div class="timeline-content-wrapper">
+            <div class="timeline-content">
+              <div>
                 {{ timelineItem.content|raw|nl2br }}
-              </span>
-
+              </div>
               {% if timelineItem.relatedOrderId %}
                 <p class="mb-0 mt-2">
                   <a href="{{ getAdminLink('AdminOrders', true, {'vieworder': 1, 'id_order': timelineItem.relatedOrderId}) }}"
-                     class="btn btn-outline-secondary btn-sm"
-                     target="_blank"
+                      class="btn btn-outline-secondary btn-sm"
+                      target="_blank"
                   >
                     {{ 'See more'|trans({}, 'Admin.Actions') }}
                   </a>
@@ -62,7 +72,7 @@
               {% endif %}
             </div>
           </div>
-        </article>
+        </div>
       {% endfor %}
     </div>
   </div>
