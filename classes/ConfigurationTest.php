@@ -82,6 +82,7 @@ class ConfigurationTestCore
             'files' => false,
             'mails_dir' => 'mails',
             'openssl' => false,
+            'openssl_key_generation' => false,
             'simplexml' => false,
             'zip' => false,
             'fileinfo' => false,
@@ -396,6 +397,20 @@ class ConfigurationTestCore
     public static function test_openssl()
     {
         return function_exists('openssl_encrypt');
+    }
+
+    public static function test_openssl_key_generation()
+    {
+        $privateKey = openssl_pkey_new([
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ]);
+
+        if ($privateKey === false) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function test_sessions()

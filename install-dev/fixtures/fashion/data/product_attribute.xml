@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_product_attribute>
-  <fields class="Combination">
+  <fields class="Combination" low_stock_threshold="0">
     <field name="id_product" relation="product"/>
     <field name="reference"/>
     <field name="supplier_reference"/>
@@ -16,123 +16,124 @@
     <field name="default_on"/>
     <field name="minimal_quantity"/>
     <field name="available_date"/>
+    <field name="low_stock_threshold"/>
   </fields>
   <entities>
-    <product_attribute id="product_attribute_46" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_46" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_47" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_47" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_48" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_48" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_49" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_49" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_50" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_50" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_51" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_51" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_52" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_52" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_53" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_53" id_product="Hummingbird_printed_t-shirt" reference="demo_1" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_62" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_62" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_63" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_63" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_64" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_64" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_65" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_65" id_product="Hummingbird_printed_sweater" reference="demo_3" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_70" id_product="The_best_is_yet_to_come_Framed_poster" reference="demo_6" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_70" id_product="The_best_is_yet_to_come_Framed_poster" reference="demo_6" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_71" id_product="The_best_is_yet_to_come_Framed_poster" reference="demo_6" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="20.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_71" id_product="The_best_is_yet_to_come_Framed_poster" reference="demo_6" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="20.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_72" id_product="The_best_is_yet_to_come_Framed_poster" reference="demo_6" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="50.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_72" id_product="The_best_is_yet_to_come_Framed_poster" reference="demo_6" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="50.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_73" id_product="The_adventure_begins_Framed_poster" reference="demo_5" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_73" id_product="The_adventure_begins_Framed_poster" reference="demo_5" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_74" id_product="The_adventure_begins_Framed_poster" reference="demo_5" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="20.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_74" id_product="The_adventure_begins_Framed_poster" reference="demo_5" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="20.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_75" id_product="The_adventure_begins_Framed_poster" reference="demo_5" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="50.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_75" id_product="The_adventure_begins_Framed_poster" reference="demo_5" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="50.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_76" id_product="Today_is_a_good_day_Framed_poster" reference="demo_7" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_76" id_product="Today_is_a_good_day_Framed_poster" reference="demo_7" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_77" id_product="Today_is_a_good_day_Framed_poster" reference="demo_7" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="20.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_77" id_product="Today_is_a_good_day_Framed_poster" reference="demo_7" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="20.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_78" id_product="Today_is_a_good_day_Framed_poster" reference="demo_7" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="50.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_78" id_product="Today_is_a_good_day_Framed_poster" reference="demo_7" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="50.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_79" id_product="Mountain_fox_cushion" reference="demo_15" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_79" id_product="Mountain_fox_cushion" reference="demo_15" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_80" id_product="Mountain_fox_cushion" reference="demo_15" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_80" id_product="Mountain_fox_cushion" reference="demo_15" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_81" id_product="Brown_bear_cushion" reference="demo_16" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_81" id_product="Brown_bear_cushion" reference="demo_16" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_82" id_product="Brown_bear_cushion" reference="demo_16" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_82" id_product="Brown_bear_cushion" reference="demo_16" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_83" id_product="Hummingbird_cushion" reference="demo_17" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_83" id_product="Hummingbird_cushion" reference="demo_17" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_84" id_product="Hummingbird_cushion" reference="demo_17" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_84" id_product="Hummingbird_cushion" reference="demo_17" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_85" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_85" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_86" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_86" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_87" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_87" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_88" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_88" id_product="Mountain_fox_notebook" reference="demo_8" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_89" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_89" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_90" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_90" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_91" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_91" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_92" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_92" id_product="Brown_bear_notebook" reference="demo_9" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_93" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_93" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="1" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_94" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_94" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_95" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_95" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
-    <product_attribute id="product_attribute_96" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00">
+    <product_attribute id="product_attribute_96" id_product="Hummingbird_notebook" reference="demo_10" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="300" weight="0.000000" unit_price_impact="0.000000" default_on="" minimal_quantity="1" available_date="0000-00-00" low_stock_threshold="0">
       <location/>
     </product_attribute>
   </entities>

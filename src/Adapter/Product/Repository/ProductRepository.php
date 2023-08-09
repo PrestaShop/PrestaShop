@@ -889,7 +889,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->addGroupBy('p.id_product')
         ;
 
-        $dbSearchPhrase = sprintf('"%%%s%%"', $searchPhrase);
+        $dbSearchPhrase = sprintf('"%%%s%%"', pSQL($searchPhrase));
         $qb->where($qb->expr()->or(
             $qb->expr()->like('pl.name', $dbSearchPhrase),
 
