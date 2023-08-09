@@ -55,17 +55,17 @@ class QueryProvider implements ProviderInterface
     {
         $queryClass = $operation->getExtraProperties()['query'] ?? null;
         $filters = $context['filters'] ?? [];
-        $uriVariables = array_merge($uriVariables, $filters);
+        $queryParameters = array_merge($uriVariables, $filters);
 
         if (null === $queryClass) {
             throw new NoExtraPropertiesFoundException();
         }
 
-        $query = $this->apiPlatformSerializer->denormalize($uriVariables, $queryClass);
+        $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
 
         //Try to call setter on additional query params
-        if (count($uriVariables)) {
-            foreach ($uriVariables as $param => $value) {
+        if (count($queryParameters)) {
+            foreach ($queryParameters as $param => $value) {
                 if ($reflectionMethod = $this->findSetterMethod($param, $queryClass)) {
                     $methodParameter = $reflectionMethod->getParameters()[0];
                     if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($value)) {

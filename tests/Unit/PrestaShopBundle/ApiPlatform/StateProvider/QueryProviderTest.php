@@ -68,9 +68,6 @@ class QueryProviderTest extends TestCase
         $this->queryBus
             ->method('handle')
             ->willReturnCallback(function ($query) {
-                return $this->createHookStatusResultBasedOnQuery($query);
-            })
-            ->willReturnCallback(function ($query) {
                 switch (get_class($query)) {
                     case GetHookStatus::class:
                         return $this->createHookStatusResultBasedOnQuery($query);
