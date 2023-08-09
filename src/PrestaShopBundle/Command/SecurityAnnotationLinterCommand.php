@@ -66,7 +66,6 @@ final class SecurityAnnotationLinterCommand extends Command
         'admin_common_reset_search',
         'admin_common_reset_search_by_filter_id',
         'admin_security_compromised',
-        'admin_get_ajax_categories',
         'admin_product_list', // Back-office product page v1 has its own security system
         'admin_product_bulk_action', // Back-office product page v1 has its own security system
         'admin_product_unit_action', // Back-office product page v1 has its own security system
