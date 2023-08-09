@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
-use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
 
 /**

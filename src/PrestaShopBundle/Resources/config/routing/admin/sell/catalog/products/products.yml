@@ -1,22 +1,6 @@
 _product:
   resource: "product.yml"
 
-_product_attributes:
-  resource: "attributes.yml"
-  prefix: /attributes/
-
-_product_categories:
-  resource: "categories.yml"
-  prefix: /categories/
-
-_product_combinations:
-  resource: "combinations.yml"
-  prefix: /combinations/
-
-_product_features:
-  resource: "features.yml"
-  prefix: /features/
-
 _product_specific_prices:
   resource: "specific_prices.yml"
   prefix: /specific-prices/
