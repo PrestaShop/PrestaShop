@@ -426,7 +426,7 @@ class AdminDashboardControllerCore extends AdminController
         if (!in_array($hook, self::DASHBOARD_ALLOWED_HOOKS))
         {
             $return['has_errors'] = true;
-            $return['errors'][] = sprintf('Hook "%s" is not allowed here.', $hook);
+            $return['errors'][] = 'This hook is not allowed here.';
             die(json_encode($return));
         }
 
