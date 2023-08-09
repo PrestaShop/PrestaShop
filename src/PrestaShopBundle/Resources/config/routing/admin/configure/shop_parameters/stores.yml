@@ -6,8 +6,6 @@ admin_stores_index:
     _legacy_controller: AdminStores
     # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
     # _legacy_link: AdminStores
-<<<<<<< HEAD
-=======
 
 admin_stores_search:
   path: /
@@ -81,4 +79,3 @@ admin_stores_bulk_disable:
     _legacy_controller: AdminStores
     # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
     # _legacy_link: AdminStores:submitBulkdisableSelectionstore
->>>>>>> af36b905e3 ( integrate delete and bulkDelete & bulk status actions into grid)

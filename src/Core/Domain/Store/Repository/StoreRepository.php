@@ -108,7 +108,6 @@ class StoreRepository extends AbstractObjectModelRepository
             CannotDeleteStoreException::class,
             CannotDeleteStoreException::FAILED_DELETE
         );
-<<<<<<< HEAD
     }
 
     /**
@@ -161,7 +160,5 @@ class StoreRepository extends AbstractObjectModelRepository
         return array_map(static function (array $result): ShopId {
             return new ShopId((int) $result['id_shop']);
         }, $qb->execute()->fetchAllAssociative());
-=======
->>>>>>> af36b905e3 ( integrate delete and bulkDelete & bulk status actions into grid)
     }
 }

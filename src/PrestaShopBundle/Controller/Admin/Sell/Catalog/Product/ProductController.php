@@ -1147,11 +1147,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new BulkDuplicateProductCommand(
-<<<<<<< HEAD
                     $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
-=======
-                    $this->getBulkActionIds($request, 'product_bulk'),
->>>>>>> af36b905e3 ( integrate delete and bulkDelete & bulk status actions into grid)
                     $shopConstraint
                 )
             );
@@ -1207,11 +1203,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand(
-<<<<<<< HEAD
                 $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
-=======
-                $this->getBulkActionIds($request, 'product_bulk'),
->>>>>>> af36b905e3 ( integrate delete and bulkDelete & bulk status actions into grid)
                 $shopConstraint
             ));
             $this->addFlash(
@@ -1294,11 +1286,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new BulkUpdateProductStatusCommand(
-<<<<<<< HEAD
                     $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
-=======
-                    $this->getBulkActionIds($request, 'product_bulk'),
->>>>>>> af36b905e3 ( integrate delete and bulkDelete & bulk status actions into grid)
                     $newStatus,
                     $shopConstraint
                 )
