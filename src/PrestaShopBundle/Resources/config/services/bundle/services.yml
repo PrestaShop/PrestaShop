@@ -13,10 +13,6 @@ services:
     public: true
 
   # Interfaced services to decorate
-  prestashop.core.admin.data_provider.product_interface:
-    class: PrestaShopBundle\Service\DataProvider\Admin\ProductInterface
-  prestashop.core.admin.data_updater.product_interface:
-    class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
   prestashop.core.admin.page_preference_interface:
     class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
   prestashop.core.admin.data_provider.module_interface:
@@ -41,12 +37,6 @@ services:
   prestashop.database.naming_strategy:
     class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
     arguments: [ "%database_prefix%" ]
-
-  prestashop.service.product:
-    class: PrestaShopBundle\Service\ProductService
-    arguments:
-      - "@prestashop.adapter.data_provider.product"
-    deprecated: ~
 
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService

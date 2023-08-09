@@ -16,10 +16,6 @@ services:
     decorates: prestashop.core.admin.data_provider.module_interface
     public: false
 
-  prestashop.adapter.data_provider.supplier:
-    class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
-    deprecated: ~
-
   prestashop.adapter.data_provider.category:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
     arguments: [ "@=service('prestashop.adapter.legacy.context')" ]
@@ -27,24 +23,8 @@ services:
   prestashop.adapter.data_provider.group:
     class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
 
-  prestashop.adapter.data_provider.tax:
-    class: PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider
-    deprecated: ~
-
   prestashop.adapter.data_provider.manufacturer:
     class: PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider
-
-  prestashop.adapter.data_provider.product:
-    class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
-    deprecated: ~
-
-  prestashop.adapter.data_provider.attachment:
-    class: PrestaShop\PrestaShop\Adapter\Product\AttachmentDataProvider
-    deprecated: ~
-
-  prestashop.adapter.data_provider.feature:
-    class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
-    deprecated: ~
 
   prestashop.adapter.data_provider.carrier:
     class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
@@ -65,18 +45,8 @@ services:
   prestashop.adapter.data_provider.customer:
     class: PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider
 
-  prestashop.adapter.data_provider.combination:
-    class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
-    arguments:
-      - "@prestashop.core.localization.locale.context_locale"
-    deprecated: ~
-
   prestashop.adapter.data_provider.cms:
     class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider
-
-  prestashop.adapter.data_provider.pack:
-    class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
-    deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider:
     class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider

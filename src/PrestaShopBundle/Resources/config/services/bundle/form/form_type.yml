@@ -46,8 +46,6 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
   PrestaShopBundle\Form\Admin\Sell\Product\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Product/*"
-  PrestaShopBundle\Form\Admin\Category\:
-    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Category/*"
   PrestaShopBundle\Form\Admin\Type\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Type/*"
   PrestaShopBundle\Form\Admin\AdvancedParameters\:
@@ -73,92 +71,13 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\LocaleChoiceType:
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
-  PrestaShopBundle\Form\Admin\Category\SimpleCategory:
-    deprecated: ~
   PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType:
   PrestaShopBundle\Form\Admin\Type\TranslateType:
-  PrestaShopBundle\Form\Admin\Feature\ProductFeature:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.legacy.context"
-      - "@router"
-      - "@prestashop.adapter.data_provider.feature"
-    deprecated: ~
 
-  PrestaShopBundle\Form\Admin\Product\ProductAttachement:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductCombination:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductCustomField:
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductInformation:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.legacy.context"
-      - "@router"
-      - "@prestashop.adapter.data_provider.category"
-      - "@prestashop.adapter.data_provider.product"
-      - "@prestashop.adapter.data_provider.feature"
-      - "@prestashop.adapter.data_provider.manufacturer"
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductOptions:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.data_provider.supplier"
-      - "@prestashop.adapter.data_provider.attachment"
-      - "@router"
-
-  PrestaShopBundle\Form\Admin\Product\ProductPrice:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.data_provider.tax"
-      - "@router"
-      - "@prestashop.adapter.shop.context"
-      - "@prestashop.adapter.data_provider.country"
-      - "@prestashop.adapter.data_provider.currency"
-      - "@prestashop.adapter.data_provider.group"
-      - "@prestashop.adapter.legacy.context"
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductQuantity:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductSeo:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductShipping:
-    arguments:
-      $carrierDataProvider: "@prestashop.adapter.data_provider.carrier"
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice:
-    arguments:
-      - "@router"
-      - "@translator"
-      - "@prestashop.adapter.shop.context"
-      - "@prestashop.adapter.data_provider.country"
-      - "@prestashop.adapter.data_provider.currency"
-      - "@prestashop.adapter.data_provider.group"
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.data_provider.customer"
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductVirtual:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType:
-    arguments:
-      - "@prestashop.adapter.data_provider.product"
-      - "@prestashop.adapter.data_provider.category"
   PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType:
     arguments:
       - "@prestashop.adapter.data_provider.customer"
 
-  PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductCategories:
-    deprecated: ~
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType:
 
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType:
@@ -188,7 +107,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType:
     arguments:
-      $taxChoices: '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
+      $taxChoices: '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType:
     arguments:
