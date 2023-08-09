@@ -100,6 +100,7 @@ api_platform:
   formats:
     json:
       mime_types: [ 'application/json' ]
+    # Allow this format for other API endpoint than native endpoint (by default we will use json)
     jsonld:
       mime_types: [ 'application/ld+json' ]
   mapping:

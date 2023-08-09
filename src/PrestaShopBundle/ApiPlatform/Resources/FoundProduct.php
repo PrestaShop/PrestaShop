@@ -32,8 +32,6 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
@@ -85,59 +83,26 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 )]
 class FoundProduct
 {
-    /**
-     * @var int
-     */
     #[ApiProperty(identifier: true)]
-    public $productId;
+    public int $productId;
 
-    /**
-     * @var bool
-     */
-    public $availableOutOfStock;
+    public bool $availableOutOfStock;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public string $name;
 
-    /**
-     * @var float
-     */
-    public $taxRate;
+    public float $taxRate;
 
-    /**
-     * @var string
-     */
-    public $formattedPrice;
+    public string $formattedPrice;
 
-    /**
-     * @var float
-     */
-    public $priceTaxIncl;
+    public float $priceTaxIncl;
 
-    /**
-     * @var float
-     */
-    public $priceTaxExcl;
+    public float $priceTaxExcl;
 
-    /**
-     * @var int
-     */
-    public $stock;
+    public int $stock;
 
-    /**
-     * @var string
-     */
-    public $location;
+    public string $location;
 
-    /**
-     * @var ProductCombination[]
-     */
-    public $combinations;
+    public array $combinations;
 
-    /**
-     * @var ProductCustomizationField[]
-     */
-    public $customizationFields;
+    public array $customizationFields;
 }

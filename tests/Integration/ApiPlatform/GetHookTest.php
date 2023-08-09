@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use Tests\Resources\DatabaseDump;
 
 class GetHookTest extends ApiTestCase
@@ -49,11 +48,11 @@ class GetHookTest extends ApiTestCase
 
         $bearerToken = $this->getBearerToken();
 
-        $response = static::createClient()->request('GET', '/new-api/hooks/' . (int) $hook->id, ['auth_bearer' => $bearerToken, 'headers' => ['accept' => ['application/json']]]);
+        $response = static::createClient()->request('GET', '/new-api/hooks/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $hook->active);
         self::assertResponseStatusCodeSame(200);
 
-        static::createClient()->request('GET', '/new-api/hooks/' . 9999, ['auth_bearer' => $bearerToken, 'headers' => ['accept' => ['application/json']]]);
+        static::createClient()->request('GET', '/new-api/hooks/' . 9999, ['auth_bearer' => $bearerToken]);
         self::assertResponseStatusCodeSame(404);
 
         static::createClient()->request('GET', '/new-api/hooks/' . $hook->id);
