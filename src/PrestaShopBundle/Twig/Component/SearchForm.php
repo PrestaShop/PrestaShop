@@ -28,20 +28,28 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
-use Link;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/search_form.html.twig')]
 class SearchForm
 {
-    public string $boQuery;
-    public Link $link;
-    public bool $showClearBtn;
-    public bool $searchType;
+    private const BO_QUERY_PARAM = 'bo_query';
+    private const BO_SEARCH_TYPE_PARAM = 'bo_search_type';
 
-    public function mount(bool $showClearBtn = null, bool $searchType = null): void
+    public string $boQuery;
+    public bool $showClearBtn;
+    public int $searchType;
+
+    public function __construct(private readonly RequestStack $requestStack)
     {
-        $this->showClearBtn = $showClearBtn ?? false;
-        $this->searchType = $searchType ?? false;
+    }
+
+    public function mount(): void
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $this->boQuery = $request->query->get(self::BO_QUERY_PARAM, '');
+        $this->searchType = (int) $request->query->get(self::BO_SEARCH_TYPE_PARAM, 0);
+        $this->showClearBtn = !empty($this->boQuery);
     }
 }
