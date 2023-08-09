@@ -26,7 +26,7 @@
 class AdminDashboardControllerCore extends AdminController
 {
     private const DASHBOARD_ALLOWED_HOOKS = ['dashboardData', 'dashboardZoneOne', 'dashboardZoneTwo', 'displayDashboardToolbarIcons', 'displayDashboardToolbarTopMenu', 'displayDashboardTop'];
-    
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -423,6 +423,13 @@ class AdminDashboardControllerCore extends AdminController
         $hook = Tools::getValue('hook');
         $configs = Tools::getValue('configs');
 
+        if (!in_array($hook, self::DASHBOARD_ALLOWED_HOOKS))
+        {
+            $return['has_errors'] = true;
+            $return['errors'][] = sprintf('Hook "%s" is not allowed here.', $hook);
+            die(json_encode($return));
+        }
+
         $params = [
             'date_from' => $this->context->employee->stats_date_from,
             'date_to' => $this->context->employee->stats_date_to,
@@ -438,7 +445,7 @@ class AdminDashboardControllerCore extends AdminController
             }
         }
 
-        if (in_array($hook, self::DASHBOARD_ALLOWED_HOOKS) && method_exists($module_obj, $hook)) {
+        if (method_exists($module_obj, $hook)) {
             $return['widget_html'] = $module_obj->$hook($params);
         }
 
