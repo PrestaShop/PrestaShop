@@ -59,7 +59,7 @@ class UserProvider
         }
 
         if ($this->legacyContext->getContext()->employee && !empty($this->legacyContext->getContext()->employee->email)) {
-            return $this->userProvider->loadUserByUsername($this->legacyContext->getContext()->employee->email);
+            return $this->userProvider->loadUserByIdentifier($this->legacyContext->getContext()->employee->email);
         }
 
         return null;
@@ -69,7 +69,7 @@ class UserProvider
     {
         $user = $this->getUser();
         if ($user instanceof UserInterface) {
-            return $user->getUsername();
+            return $user->getUserIdentifier();
         }
 
         return self::ANONYMOUS_USER;

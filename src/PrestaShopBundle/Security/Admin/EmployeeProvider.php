@@ -72,7 +72,7 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @throws UserNotFoundException
      */
-    public function loadUserByUsername($username)
+    public function loadUserByIdentifier(string $username): Employee
     {
         $cacheKey = sha1($username);
         $cachedEmployee = $this->cache->getItem("app.employees_{$cacheKey}");
@@ -112,7 +112,7 @@ class EmployeeProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $employee::class));
         }
 
-        return $this->loadUserByUsername($employee->getUsername());
+        return $this->loadUserByIdentifier($employee->getUserIdentifier());
     }
 
     /**
@@ -125,5 +125,15 @@ class EmployeeProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return $class === 'PrestaShopBundle\Security\Admin\Employee';
+    }
+
+    /**
+     * Needed by the interface but not used.
+     *
+     * @deprecated since 9.0, to be removed when Symfony > 6.à
+     */
+    public function loadUserByUsername(string $username)
+    {
+        return $this->loadUserByIdentifier($username);
     }
 }

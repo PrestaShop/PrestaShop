@@ -64,7 +64,7 @@ class ResourceServer implements ResourceServerInterface
     {
         try {
             $this->leagueResourceServer->validateAuthenticatedRequest($request);
-        } catch (OAuthServerException $e) {
+        } catch (OAuthServerException) {
             return false;
         }
 
@@ -79,7 +79,7 @@ class ResourceServer implements ResourceServerInterface
         }
 
         try {
-            return $this->userProvider->loadUserByUsername($audience);
+            return $this->userProvider->loadUserByIdentifier($audience);
         } catch (UserNotFoundException $exception) {
             return null;
         }
@@ -89,7 +89,7 @@ class ResourceServer implements ResourceServerInterface
     {
         try {
             return $this->leagueResourceServer->validateAuthenticatedRequest($request)->getAttribute('oauth_client_id');
-        } catch (OAuthServerException $exception) {
+        } catch (OAuthServerException) {
             return null;
         }
     }
