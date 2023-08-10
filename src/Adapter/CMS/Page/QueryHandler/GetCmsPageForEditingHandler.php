@@ -84,7 +84,6 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $cms->meta_title,
                 $cms->head_seo_title,
                 $cms->meta_description,
-                [],
                 $cms->link_rewrite,
                 $cms->content,
                 $cms->indexation,

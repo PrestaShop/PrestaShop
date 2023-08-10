@@ -78,7 +78,6 @@ class EditableCmsPageCategory
      * @param int $parentId
      * @param array $localisedDescription
      * @param array $localisedMetaDescription
-     * @param array $localisedMetaKeywords
      * @param array $metaTitle
      * @param array $localisedFriendlyUrl
      * @param array $shopIds
@@ -91,7 +90,6 @@ class EditableCmsPageCategory
         $parentId,
         array $localisedDescription,
         array $localisedMetaDescription,
-        array $localisedMetaKeywords,
         array $metaTitle,
         array $localisedFriendlyUrl,
         array $shopIds

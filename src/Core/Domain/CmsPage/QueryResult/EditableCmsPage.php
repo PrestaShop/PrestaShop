@@ -99,7 +99,6 @@ class EditableCmsPage
      * @param string[] $localizedTitle
      * @param string[] $localizedMetaTitle
      * @param string[] $localizedMetaDescription
-     * @param string[] $localizedMetaKeyword
      * @param string[] $localizedFriendlyUrl
      * @param string[] $localizedContent
      * @param bool $indexedForSearch
@@ -116,7 +115,6 @@ class EditableCmsPage
         array $localizedTitle,
         array $localizedMetaTitle,
         array $localizedMetaDescription,
-        array $localizedMetaKeyword,
         array $localizedFriendlyUrl,
         array $localizedContent,
         $indexedForSearch,

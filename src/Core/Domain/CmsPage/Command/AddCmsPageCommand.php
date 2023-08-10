@@ -84,7 +84,6 @@ class AddCmsPageCommand
      * @param string[] $localizedTitle
      * @param string[] $localizedMetaTitle
      * @param string[] $localizedMetaDescription
-     * @param string[] $LocalizedMetaKeyword
      * @param string[] $localizedFriendlyUrl
      * @param string[] $localizedContent
      * @param bool $indexedForSearch
@@ -98,7 +97,6 @@ class AddCmsPageCommand
         array $localizedTitle,
         array $localizedMetaTitle,
         array $localizedMetaDescription,
-        array $LocalizedMetaKeyword,
         array $localizedFriendlyUrl,
         array $localizedContent,
         $indexedForSearch,

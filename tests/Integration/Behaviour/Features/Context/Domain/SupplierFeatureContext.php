@@ -109,7 +109,6 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
                 $data['description'],
                 $data['meta title'],
                 $data['meta description'],
-                [],
                 $this->getShopIdsByReferences($data['shops']),
                 $data['address2'] ?? null,
                 $data['post code'] ?? null,

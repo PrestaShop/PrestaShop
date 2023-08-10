@@ -68,7 +68,6 @@ final class GetCmsPageCategoryForEditingHandler implements GetCmsPageCategoryFor
             (int) $cmsPageCategory->id_parent,
             $cmsPageCategory->description,
             $cmsPageCategory->meta_description,
-            [],
             $cmsPageCategory->meta_title,
             $cmsPageCategory->link_rewrite,
             $shopIds

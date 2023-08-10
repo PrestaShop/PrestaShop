@@ -115,7 +115,6 @@ class AddSupplierCommand
      * @param string[] $localizedDescriptions
      * @param string[] $localizedMetaTitles
      * @param string[] $localizedMetaDescriptions
-     * @param string[] $localizedMetaKeywords
      * @param array $shopAssociation
      * @param string|null $address2
      * @param string|null $postCode
@@ -133,7 +132,6 @@ class AddSupplierCommand
         array $localizedDescriptions,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
-        array $localizedMetaKeywords,
         array $shopAssociation,
         ?string $address2 = null,
         ?string $postCode = null,
