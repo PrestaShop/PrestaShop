@@ -78,7 +78,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
             $data['description'],
             $data['meta_title'],
             $data['meta_description'],
-            $data['meta_keyword'],
+            [],
             $data['shop_association'],
             $data['address2'],
             $data['post_code'],

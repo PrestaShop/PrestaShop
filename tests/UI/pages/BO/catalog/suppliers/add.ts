@@ -96,9 +96,6 @@ class AddSupplier extends BOBasePage {
     this.metaDescriptionTextarea = (id: number) => `#supplier_meta_description_${id}`;
     this.statusToggleInput = (toggle: number) => `#supplier_is_enabled_${toggle}`;
 
-    // Selectors for Meta keywords
-    this.taggableFieldDiv = (lang: string) => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = (lang: string) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 
@@ -131,13 +128,13 @@ class AddSupplier extends BOBasePage {
     // Add logo
     await this.uploadFile(page, this.logoFileInput, supplierData.logo);
 
-    // Fill Description, meta title, meta description and meta keywords in english
+    // Fill Description, meta title and meta description in english
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(1), supplierData.description);
     await this.setValue(page, this.metaTitleInput(1), supplierData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea(1), supplierData.metaDescription);
 
-    // Fill Description, meta title, meta description and meta keywords in french
+    // Fill Description, meta title and meta description in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(2), supplierData.descriptionFr);
     await this.setValue(page, this.metaTitleInput(2), supplierData.metaTitleFr);

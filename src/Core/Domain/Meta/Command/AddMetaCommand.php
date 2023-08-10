@@ -132,14 +132,6 @@ class AddMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getLocalisedMetaKeywords()
-    {
-        return $this->localisedMetaKeywords;
-    }
-
-    /**
-     * @return string[]
-     */
     public function getLocalisedRewriteUrls()
     {
         return $this->LocalisedRewriteUrls;

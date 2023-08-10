@@ -200,35 +200,6 @@ class CmsPageType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => sprintf(
-                    '%s %s',
-                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help'),
-                    $invalidCharsText
-                ),
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'generic_name',
-                        ]),
-                        new Length([
-                            'max' => self::META_KEYWORD_MAX_CHARS,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => self::META_KEYWORD_MAX_CHARS]
-                            ),
-                        ]),
-                    ],
-                ],
-            ])
             ->add('friendly_url', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
                 'help' => $this->trans('Only letters and the hyphen (-) character are allowed.', 'Admin.Design.Feature'),

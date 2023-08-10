@@ -29,7 +29,6 @@ type ImportBrand = {
   description: string
   shortDescription: string
   metaTitle: string
-  metaKeywords: string[]
   metaDescription: string
   imageURL: string
 };

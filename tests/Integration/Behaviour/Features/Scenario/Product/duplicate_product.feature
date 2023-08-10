@@ -418,7 +418,6 @@ Feature: Duplicate product from Back Office (BO).
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
     When I associate suppliers to product "productWithSuppliers"
       | supplier  | product_supplier  |

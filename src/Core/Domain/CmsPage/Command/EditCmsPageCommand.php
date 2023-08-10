@@ -194,26 +194,6 @@ class EditCmsPageCommand
     /**
      * @return string[]|null
      */
-    public function getLocalizedMetaKeyword()
-    {
-        return $this->LocalizedMetaKeyword;
-    }
-
-    /**
-     * @param string[] $LocalizedMetaKeyword
-     *
-     * @return self
-     */
-    public function setLocalizedMetaKeyword(array $LocalizedMetaKeyword)
-    {
-        $this->LocalizedMetaKeyword = $LocalizedMetaKeyword;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
     public function getLocalizedFriendlyUrl()
     {
         return $this->localizedFriendlyUrl;

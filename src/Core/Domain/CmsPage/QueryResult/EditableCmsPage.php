@@ -134,7 +134,6 @@ class EditableCmsPage
         $this->localizedTitle = $localizedTitle;
         $this->localizedMetaTitle = $localizedMetaTitle;
         $this->localizedMetaDescription = $localizedMetaDescription;
-        $this->localizedMetaKeyword = $localizedMetaKeyword;
         $this->localizedFriendlyUrl = $localizedFriendlyUrl;
         $this->localizedContent = $localizedContent;
         $this->indexedForSearch = $indexedForSearch;
@@ -181,14 +180,6 @@ class EditableCmsPage
     public function getLocalizedMetaDescription()
     {
         return $this->localizedMetaDescription;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeyword()
-    {
-        return $this->localizedMetaKeyword;
     }
 
     /**

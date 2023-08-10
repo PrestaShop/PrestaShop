@@ -3,7 +3,6 @@ type CmsPageCreator = {
   title?: string
   metaTitle?: string
   metaDescription?: string
-  metaKeywords?: string
   content?: string
   url?: string
   displayed?: boolean

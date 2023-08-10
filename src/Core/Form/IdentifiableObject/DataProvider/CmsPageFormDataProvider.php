@@ -72,7 +72,6 @@ class CmsPageFormDataProvider implements FormDataProviderInterface
             'title' => $editableCmsPage->getLocalizedTitle(),
             'meta_title' => $editableCmsPage->getLocalizedMetaTitle(),
             'meta_description' => $editableCmsPage->getLocalizedMetaDescription(),
-            'meta_keyword' => $editableCmsPage->getLocalizedMetaKeyword(),
             'friendly_url' => $editableCmsPage->getLocalizedFriendlyUrl(),
             'content' => $editableCmsPage->getLocalizedContent(),
             'is_indexed_for_search' => $editableCmsPage->isIndexedForSearch(),

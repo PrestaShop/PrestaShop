@@ -5,8 +5,6 @@ type SeoPageCreator = {
   frTitle?: string
   metaDescription?: string
   frMetaDescription?: string
-  metaKeywords?: string[]
-  frMetaKeywords?: string[]
   friendlyUrl?: string
   frFriendlyUrl?: string
 };

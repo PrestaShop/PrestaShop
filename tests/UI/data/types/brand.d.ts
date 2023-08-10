@@ -10,8 +10,6 @@ type BrandCreator = {
   metaTitleFr?: string
   metaDescription?: string
   metaDescriptionFr?: string
-  metaKeywords?: string[]
-  metaKeywordsFr?: string[]
   enabled?: boolean
   addresses?: number
   products?: number

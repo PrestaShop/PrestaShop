@@ -62,9 +62,6 @@ class AddBrand extends BOBasePage {
     this.metaDescriptionInput = (id: number) => `#manufacturer_meta_description_${id}`;
     this.statusToggleInput = (toggle: number) => `#manufacturer_is_enabled_${toggle}`;
 
-    // Selectors for Meta keywords
-    this.taggableFieldDiv = (lang: string) => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = (lang: string) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 

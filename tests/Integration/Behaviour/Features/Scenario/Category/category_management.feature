@@ -41,8 +41,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
     Then category "category1" should have following details:
       | name[en-US]                   | PC parts                       |
       | name[fr-FR]                   | PC parts fr                    |
@@ -60,8 +58,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
 
   Scenario: Edit category
     Given I add new category "category2" with following details:
@@ -88,8 +84,6 @@ Feature: Category Management
       | meta description[fr-FR]       |                                       |
       | meta title[en-US]             |                                       |
       | meta title[fr-FR]             |                                       |
-      | meta keywords[en-US]          |                                       |
-      | meta keywords[fr-FR]          |                                       |
     When I edit category "category2" with following details:
       | name[en-US]                   | Mobile phones super            |
       | name[fr-FR]                   | Mobile phones super fr         |
@@ -106,8 +100,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
     Then category "category2" should have following details:
       | name[en-US]                   | Mobile phones super            |
       | name[fr-FR]                   | Mobile phones super fr         |
@@ -125,8 +117,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
 
   Scenario: Delete category
     Given I add new category "category3" with following details:
@@ -592,8 +582,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
     Then category "home" should have following details:
       | name[en-US]                   | PC parts                       |
       | name[fr-FR]                   | PC parts fr                    |
@@ -611,8 +599,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
 
   Scenario: Add new home category
     When I add new home category "home2" with following details:
@@ -631,8 +617,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,english                   |
-      | meta keywords[fr-FR]          | meta,french                    |
     Then category "home2" should have following details:
       | name[en-US]                   | Home sweet home                |
       | name[fr-FR]                   | Home sweet home fr             |
@@ -650,8 +634,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,english                   |
-      | meta keywords[fr-FR]          | meta,french                    |
 
   # We cannot test the actual image upload due to its dependency from real HTTP upload,
   # but we can mimic the upload and test EditableCategory construct and images deletion

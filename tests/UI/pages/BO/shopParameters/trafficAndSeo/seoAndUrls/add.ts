@@ -26,10 +26,6 @@ class AddSeoUrl extends BOBasePage {
 
   private readonly friendlyUrlInput: (id: number) => string;
 
-  private readonly taggableFieldDiv: (lang: string) => string;
-
-  private readonly deleteKeywordLink: (lang: string) => string;
-
   private readonly saveButton: string;
 
   /**
@@ -51,9 +47,6 @@ class AddSeoUrl extends BOBasePage {
     this.metaDescriptionInput = (id: number) => `#meta_meta_description_${id}`;
     this.friendlyUrlInput = (id: number) => `#meta_url_rewrite_${id}`;
 
-    // Selectors for Meta keywords
-    this.taggableFieldDiv = (lang: string) => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = (lang: string) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '#save-button';
   }
 

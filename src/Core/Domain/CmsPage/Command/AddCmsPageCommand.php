@@ -114,7 +114,6 @@ class AddCmsPageCommand
         $this->localizedTitle = $localizedTitle;
         $this->localizedMetaTitle = $localizedMetaTitle;
         $this->localizedMetaDescription = $localizedMetaDescription;
-        $this->LocalizedMetaKeyword = $LocalizedMetaKeyword;
         $this->localizedFriendlyUrl = $localizedFriendlyUrl;
         $this->localizedContent = $localizedContent;
         $this->indexedForSearch = $indexedForSearch;
@@ -152,14 +151,6 @@ class AddCmsPageCommand
     public function getLocalizedMetaDescription()
     {
         return $this->localizedMetaDescription;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeyword()
-    {
-        return $this->LocalizedMetaKeyword;
     }
 
     /**

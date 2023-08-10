@@ -174,24 +174,6 @@ class ManufacturerType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help')
-                 . '<br>' . $invalidCharactersForNameLabel,
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'generic_name',
-                        ]),
-                    ],
-                ],
-            ])
             ->add('is_enabled', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => false,
