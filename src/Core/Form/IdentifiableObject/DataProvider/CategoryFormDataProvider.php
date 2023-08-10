@@ -149,7 +149,6 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'additional_description' => $editableCategory->getAdditionalDescription(),
             'meta_title' => $editableCategory->getMetaTitle(),
             'meta_description' => $editableCategory->getMetaDescription(),
-            'meta_keyword' => $editableCategory->getMetaKeywords(),
             'link_rewrite' => $editableCategory->getLinkRewrite(),
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),

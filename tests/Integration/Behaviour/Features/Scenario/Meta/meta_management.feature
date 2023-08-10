@@ -12,7 +12,6 @@ Feature: Meta management (Traffic & Seo)
       | pageName                       | pdf-order-return                      |
       | localisedPageTitle             | page title in default language        |
       | localisedMetaDescription      | meta description in default language  |
-      | localisedMetaKeywords          | meta keywords in default language     |
       | localisedRewriteUrls           | rewrite-url-default                   |
     Then meta "meta1" page should be "pdf-order-return"
     And meta "meta1" field "title" for default language should be "page title in default language"
@@ -58,7 +57,6 @@ Feature: Meta management (Traffic & Seo)
       | pageName                       | index                                 |
       | localisedPageTitles             | page title in default language        |
       | localisedMetaDescriptions       | meta description in default language  |
-      | localisedMetaKeywords          | meta keywords in default language     |
       | localisedRewriteUrls           | rewrite-url-default                   |
     Then meta "meta7" page should be "index"
     And meta "meta7" field "title" for default language should be "page title in default language"
@@ -115,7 +113,6 @@ Feature: Meta management (Traffic & Seo)
       | pageName                        | index                                 |
       | localisedPageTitles             | page title in default language        |
       | localisedMetaDescriptions       | meta description in default language  |
-      | localisedMetaKeywords          | meta keywords in default language     |
       | localisedRewriteUrls           | rewrite-url-default                   |
     When I get meta "meta13" with specified properties
       | metaId                          | 4                                     |

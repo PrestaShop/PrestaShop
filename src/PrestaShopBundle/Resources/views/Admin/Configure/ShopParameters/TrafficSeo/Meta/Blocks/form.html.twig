@@ -65,17 +65,6 @@
           'help': metaDescriptionHelpLabel
         }) }}
 
-        {% set metaKeywordsHelpLabel %}
-          {{ 'List of keywords for search engines.'|trans({}, 'Admin.Shopparameters.Help') }}
-          {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
-          {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' <>={}' }}
-        {% endset %}
-
-        {{ ps.form_group_row(metaForm.meta_keywords, {}, {
-          'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-          'help': metaKeywordsHelpLabel
-        }) }}
-
         {% set rewriteUrlHelpLabel %}
           {{ 'For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php'|trans({}, 'Admin.Shopparameters.Help') }}
           {{ 'Only letters and hyphens are allowed.'|trans({}, 'Admin.Shopparameters.Help') }}

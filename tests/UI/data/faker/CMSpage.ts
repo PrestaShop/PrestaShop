@@ -15,8 +15,6 @@ export default class CMSPageData {
 
   public readonly metaDescription: string;
 
-  public readonly metaKeywords: string;
-
   public readonly content: string;
 
   public readonly url: string;
@@ -43,9 +41,6 @@ export default class CMSPageData {
 
     /** @type {string} Meta description for the page */
     this.metaDescription = pageToCreate.metaDescription || faker.lorem.sentence();
-
-    /** @type {string} Meta keyword for the page */
-    this.metaKeywords = pageToCreate.metaKeywords || faker.lorem.word();
 
     /** @type {string} Content of the page */
     this.content = pageToCreate.content || faker.lorem.sentence();

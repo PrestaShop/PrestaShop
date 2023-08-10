@@ -67,7 +67,6 @@ class AdminImportControllerCore extends AdminController
         'description' => ['AdminImportController', 'createMultiLangField'],
         'description_short' => ['AdminImportController', 'createMultiLangField'],
         'meta_title' => ['AdminImportController', 'createMultiLangField'],
-        'meta_keywords' => ['AdminImportController', 'createMultiLangField'],
         'meta_description' => ['AdminImportController', 'createMultiLangField'],
         'link_rewrite' => ['AdminImportController', 'createMultiLangField'],
         'available_now' => ['AdminImportController', 'createMultiLangField'],
@@ -190,7 +189,6 @@ class AdminImportControllerCore extends AdminController
                     ],
                     'description' => ['label' => $this->trans('Description', [], 'Admin.Global')],
                     'meta_title' => ['label' => $this->trans('Meta title', [], 'Admin.Global')],
-                    'meta_keywords' => ['label' => $this->trans('Meta keywords', [], 'Admin.Global')],
                     'meta_description' => ['label' => $this->trans('Meta description', [], 'Admin.Global')],
                     'link_rewrite' => ['label' => $this->trans('Rewritten URL', [], 'Admin.Shopparameters.Feature')],
                     'image' => ['label' => $this->trans('Image URL', [], 'Admin.Advparameters.Feature')],
@@ -267,7 +265,6 @@ class AdminImportControllerCore extends AdminController
                     'description' => ['label' => $this->trans('Description', [], 'Admin.Global')],
                     'tags' => ['label' => $this->trans('Tags (x,y,z...)', [], 'Admin.Advparameters.Feature')],
                     'meta_title' => ['label' => $this->trans('Meta title', [], 'Admin.Global')],
-                    'meta_keywords' => ['label' => $this->trans('Meta keywords', [], 'Admin.Global')],
                     'meta_description' => ['label' => $this->trans('Meta description', [], 'Admin.Global')],
                     'link_rewrite' => ['label' => $this->trans('Rewritten URL', [], 'Admin.Advparameters.Feature')],
                     'available_now' => ['label' => $this->trans('Label when in stock', [], 'Admin.Catalog.Feature')],
@@ -422,7 +419,6 @@ class AdminImportControllerCore extends AdminController
                     'description' => ['AdminImportController', 'createMultiLangField'],
                     'short_description' => ['AdminImportController', 'createMultiLangField'],
                     'meta_title' => ['AdminImportController', 'createMultiLangField'],
-                    'meta_keywords' => ['AdminImportController', 'createMultiLangField'],
                     'meta_description' => ['AdminImportController', 'createMultiLangField'],
                 ];
 
@@ -434,7 +430,6 @@ class AdminImportControllerCore extends AdminController
                     'description' => ['label' => $this->trans('Description', [], 'Admin.Global')],
                     'short_description' => ['label' => $this->trans('Short description', [], 'Admin.Catalog.Feature')],
                     'meta_title' => ['label' => $this->trans('Meta title', [], 'Admin.Global')],
-                    'meta_keywords' => ['label' => $this->trans('Meta keywords', [], 'Admin.Global')],
                     'meta_description' => ['label' => $this->trans('Meta description', [], 'Admin.Global')],
                     'image' => ['label' => $this->trans('Image URL', [], 'Admin.Advparameters.Feature')],
                     'shop' => [
@@ -1775,17 +1770,6 @@ class AdminImportControllerCore extends AdminController
             $product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
         } else {
             $product->link_rewrite[(int) $id_lang] = $link_rewrite;
-        }
-
-        // replace the value of separator by coma
-        if ($this->multiple_value_separator != ',') {
-            if (is_array($product->meta_keywords)) {
-                foreach ($product->meta_keywords as &$meta_keyword) {
-                    if (!empty($meta_keyword)) {
-                        $meta_keyword = str_replace($this->multiple_value_separator, ',', $meta_keyword);
-                    }
-                }
-            }
         }
 
         // Convert comma into dot for all floating values

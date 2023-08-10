@@ -60,24 +60,6 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->addJs(__PS_BASE_URI__ . 'js/vendor/ladda.js');
     }
 
-    protected function _cleanMetaKeywords($keywords)
-    {
-        if (!empty($keywords) && $keywords != '') {
-            $out = [];
-            $words = explode(',', $keywords);
-            foreach ($words as $word_item) {
-                $word_item = trim($word_item);
-                if (!empty($word_item) && $word_item != '') {
-                    $out[] = $word_item;
-                }
-            }
-
-            return (count($out) > 0) ? implode(',', $out) : '';
-        } else {
-            return '';
-        }
-    }
-
     protected function copyFromPost(&$object, $table)
     {
         parent::copyFromPost($object, $table);
@@ -86,13 +68,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
 
         /* Additional fields */
-        foreach (Language::getIDs(false) as $id_lang) {
-            if (isset($_POST['meta_keywords_' . $id_lang])) {
-                $_POST['meta_keywords_' . $id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_' . $id_lang]));
-                // preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$id_lang]));
-                $object->meta_keywords[$id_lang] = $_POST['meta_keywords_' . $id_lang];
-            }
-        }
         $_POST['width'] = empty($_POST['width']) ? '0' : str_replace(',', '.', $_POST['width']);
         $_POST['height'] = empty($_POST['height']) ? '0' : str_replace(',', '.', $_POST['height']);
         $_POST['depth'] = empty($_POST['depth']) ? '0' : str_replace(',', '.', $_POST['depth']);

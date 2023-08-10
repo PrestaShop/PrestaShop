@@ -378,26 +378,6 @@ class EditSupplierCommand
     }
 
     /**
-     * @return string[]|null
-     */
-    public function getLocalizedMetaKeywords(): ?array
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[] $localizedMetaKeywords
-     *
-     * @return EditSupplierCommand
-     */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords): self
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
-
-        return $this;
-    }
-
-    /**
      * @return bool|null
      */
     public function isEnabled(): ?bool

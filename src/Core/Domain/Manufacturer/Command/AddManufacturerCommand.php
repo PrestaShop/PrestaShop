@@ -97,7 +97,6 @@ class AddManufacturerCommand
         $this->localizedDescriptions = $localizedDescriptions;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->shopAssociation = $shopAssociation;
     }
 
@@ -139,14 +138,6 @@ class AddManufacturerCommand
     public function getLocalizedMetaDescriptions()
     {
         return $this->localizedMetaDescriptions;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
     }
 
     /**

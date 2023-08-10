@@ -88,10 +88,6 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
                 $cmsPageCategory->meta_description = $command->getLocalisedMetaDescription();
             }
 
-            if (null !== $command->getLocalisedMetaKeywords()) {
-                $cmsPageCategory->meta_keywords = $command->getLocalisedMetaKeywords();
-            }
-
             if (null !== $command->getLocalisedFriendlyUrl()) {
                 if (!$this->assertHasDefaultLanguage($command->getLocalisedFriendlyUrl())) {
                     throw new CmsPageCategoryConstraintException('Missing friendly url in default language', CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL);

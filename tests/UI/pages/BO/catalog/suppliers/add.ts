@@ -54,8 +54,6 @@ class AddSupplier extends BOBasePage {
 
   private readonly metaDescriptionTextarea: (id: number) => string;
 
-  private readonly metaKeywordsInput: (id: number) => string;
-
   private readonly statusToggleInput: (toggle: number) => string;
 
   private readonly taggableFieldDiv: (lang: string) => string;
@@ -96,7 +94,6 @@ class AddSupplier extends BOBasePage {
       + ` span[data-locale='${lang}']`;
     this.metaTitleInput = (id: number) => `#supplier_meta_title_${id}`;
     this.metaDescriptionTextarea = (id: number) => `#supplier_meta_description_${id}`;
-    this.metaKeywordsInput = (id: number) => `#supplier_meta_keyword_${id}-tokenfield`;
     this.statusToggleInput = (toggle: number) => `#supplier_is_enabled_${toggle}`;
 
     // Selectors for Meta keywords
@@ -140,19 +137,11 @@ class AddSupplier extends BOBasePage {
     await this.setValue(page, this.metaTitleInput(1), supplierData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea(1), supplierData.metaDescription);
 
-    // delete Keywords and other new ones
-    await this.deleteKeywords(page, 'en');
-    await this.addKeywords(page, supplierData.metaKeywords, 1);
-
     // Fill Description, meta title, meta description and meta keywords in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(2), supplierData.descriptionFr);
     await this.setValue(page, this.metaTitleInput(2), supplierData.metaTitleFr);
     await this.setValue(page, this.metaDescriptionTextarea(2), supplierData.metaDescriptionFr);
-
-    // delete Keywords and other new ones
-    await this.deleteKeywords(page, 'fr');
-    await this.addKeywords(page, supplierData.metaKeywords, 2);
 
     // Set status value
     await this.setChecked(page, this.statusToggleInput(supplierData.enabled ? 1 : 0));
@@ -160,38 +149,6 @@ class AddSupplier extends BOBasePage {
     // Save Supplier
     await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
-  }
-
-  /**
-   * Delete all keywords
-   * @param page {Page} Browser tab
-   * @param lang {string} To specify which input to empty
-   * @return {Promise<void>}
-   */
-  async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtons = await page.$$(this.deleteKeywordLink(lang));
-
-    /* eslint-disable no-restricted-syntax */
-    for (const closeButton of closeButtons) {
-      await closeButton.click();
-    }
-    /* eslint-enable no-restricted-syntax */
-  }
-
-  /**
-   * Add keywords
-   * @param page {Page} Browser tab
-   * @param keywords {array} Array of keywords
-   * @param idLang {number} To choose which lang (1 for en, 2 for fr)
-   * @return {Promise<void>}
-   */
-  async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
-    /* eslint-disable no-restricted-syntax */
-    for (const keyword of keywords) {
-      await page.type(this.metaKeywordsInput(idLang), keyword);
-      await page.keyboard.press('Enter');
-    }
-    /* eslint-enable no-restricted-syntax */
   }
 
   /**

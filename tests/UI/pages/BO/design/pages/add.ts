@@ -20,8 +20,6 @@ class AddPage extends BOBasePage {
 
   private readonly metaDescriptionInput: string;
 
-  private readonly metaKeywordsInput: string;
-
   private readonly pageContentIframe: string;
 
   private readonly indexationToggleInput: (toggle: number) => string;
@@ -48,7 +46,6 @@ class AddPage extends BOBasePage {
     this.titleInput = '#cms_page_title_1';
     this.metaTitleInput = '#cms_page_meta_title_1';
     this.metaDescriptionInput = '#cms_page_meta_description_1';
-    this.metaKeywordsInput = '#cms_page_meta_keyword_1-tokenfield';
     this.pageContentIframe = '#cms_page_content_1_ifr';
     this.indexationToggleInput = (toggle: number) => `#cms_page_is_indexed_for_search_${toggle}`;
     this.displayedToggleInput = (toggle: number) => `#cms_page_is_displayed_${toggle}`;
@@ -72,7 +69,6 @@ class AddPage extends BOBasePage {
     await this.setValue(page, this.titleInput, pageData.title);
     await this.setValue(page, this.metaTitleInput, pageData.metaTitle);
     await this.setValue(page, this.metaDescriptionInput, pageData.metaDescription);
-    await this.setValue(page, this.metaKeywordsInput, pageData.metaKeywords);
     await this.setValueOnTinymceInput(page, this.pageContentIframe, pageData.content);
     await this.setChecked(page, this.indexationToggleInput(pageData.indexation ? 1 : 0));
     await this.setChecked(page, this.displayedToggleInput(pageData.displayed ? 1 : 0));

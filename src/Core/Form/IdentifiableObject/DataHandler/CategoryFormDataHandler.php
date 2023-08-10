@@ -98,7 +98,6 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedAdditionalDescriptions($data['additional_description']);
         $command->setLocalizedMetaTitles($data['meta_title']);
         $command->setLocalizedMetaDescriptions($data['meta_description']);
-        $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
         $command->setCoverImage($data['cover_image']);
         $command->setThumbnailImage($data['thumbnail_image']);
@@ -134,7 +133,6 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedAdditionalDescriptions($data['additional_description']);
         $command->setLocalizedMetaTitles($data['meta_title']);
         $command->setLocalizedMetaDescriptions($data['meta_description']);
-        $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
 
         $command->setCoverImage($data['cover_image']);

@@ -271,17 +271,6 @@ class AdminSuppliersControllerCore extends AdminController
                     'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 ],
                 [
-                    'type' => 'tags',
-                    'label' => $this->trans('Meta keywords', [], 'Admin.Global'),
-                    'name' => 'meta_keywords',
-                    'lang' => true,
-                    'col' => 6,
-                    'hint' => [
-                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', [], 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                    ],
-                ],
-                [
                     'type' => 'switch',
                     'label' => $this->trans('Enable', [], 'Admin.Actions'),
                     'name' => 'active',

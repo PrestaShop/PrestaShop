@@ -19,10 +19,6 @@ export default class SeoPageData {
 
   public readonly frMetaDescription: string;
 
-  public readonly metaKeywords: string[];
-
-  public readonly frMetaKeywords: string[];
-
   public readonly friendlyUrl: string;
 
   public readonly frFriendlyUrl: string;
@@ -49,12 +45,6 @@ export default class SeoPageData {
 
     /** @type {string} French meta description of the page */
     this.frMetaDescription = seoPageToCreate.frMetaDescription || this.metaDescription;
-
-    /** @type {Array<string>} Meta keywords of the page */
-    this.metaKeywords = seoPageToCreate.metaKeywords || [faker.lorem.word(), faker.lorem.word()];
-
-    /** @type {Array<string>} French meta keywords of the page */
-    this.frMetaKeywords = seoPageToCreate.frMetaKeywords || this.metaKeywords;
 
     /** @type {string} Friendly url to display when accessing the page */
     this.friendlyUrl = seoPageToCreate.friendlyUrl || this.page.replace(/ /g, '-');

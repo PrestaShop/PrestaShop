@@ -1170,13 +1170,6 @@ class CmsPageController extends FrameworkBundleAdminController
                         sprintf('"%s"', $this->trans('Meta description', 'Admin.Global')),
                     ]
                 ),
-                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS => $this->trans(
-                    'The %s field is not valid',
-                    'Admin.Notifications.Error',
-                    [
-                        sprintf('"%s"', $this->trans('Meta keywords', 'Admin.Global')),
-                    ]
-                ),
             ],
             CmsPageCategoryNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',

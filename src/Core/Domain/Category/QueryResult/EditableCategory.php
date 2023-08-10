@@ -164,7 +164,6 @@ class EditableCategory
         $this->parentId = $parentId;
         $this->metaTitle = $metaTitle;
         $this->metaDescription = $metaDescription;
-        $this->metaKeywords = $metaKeywords;
         $this->linkRewrite = $linkRewrite;
         $this->groupAssociationIds = $groupAssociationIds;
         $this->shopAssociationIds = $shopAssociationIds;
@@ -238,14 +237,6 @@ class EditableCategory
     public function getMetaDescription()
     {
         return $this->metaDescription;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getMetaKeywords()
-    {
-        return $this->metaKeywords;
     }
 
     /**

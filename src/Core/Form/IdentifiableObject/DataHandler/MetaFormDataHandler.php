@@ -60,7 +60,6 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
         $addMetaCommand = (new AddMetaCommand($data['page_name']))
             ->setLocalisedPageTitle($data['page_title'])
             ->setLocalisedMetaDescription($data['meta_description'])
-            ->setLocalisedMetaKeywords($data['meta_keywords'])
             ->setLocalisedRewriteUrls($data['url_rewrite'])
         ;
 
@@ -81,7 +80,6 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
             ->setPageName($data['page_name'])
             ->setLocalisedPageTitles($data['page_title'])
             ->setLocalisedMetaDescriptions($data['meta_description'])
-            ->setLocalisedMetaKeywords($data['meta_keywords'])
             ->setLocalisedRewriteUrls($data['url_rewrite'])
         ;
 

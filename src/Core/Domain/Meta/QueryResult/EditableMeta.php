@@ -91,7 +91,6 @@ class EditableMeta
         $this->pageName = new Name($pageName);
         $this->localisedPageTitles = $localisedPageTitles;
         $this->localisedMetaDescriptions = $localisedMetaDescriptions;
-        $this->localisedMetaKeywords = $localisedMetaKeywords;
         $this->localisedUrlRewrites = $localisedUrlRewrites;
     }
 
@@ -125,14 +124,6 @@ class EditableMeta
     public function getLocalisedMetaDescriptions()
     {
         return $this->localisedMetaDescriptions;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalisedMetaKeywords()
-    {
-        return $this->localisedMetaKeywords;
     }
 
     /**

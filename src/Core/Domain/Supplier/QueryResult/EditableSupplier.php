@@ -178,7 +178,6 @@ class EditableSupplier
         $this->logoImage = $logoImage;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->enabled = $enabled;
         $this->dni = $dni;
         $this->associatedShops = $associatedShops;
@@ -294,14 +293,6 @@ class EditableSupplier
     public function getLocalizedMetaDescriptions(): array
     {
         return $this->localizedMetaDescriptions;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords(): array
-    {
-        return $this->localizedMetaKeywords;
     }
 
     /**

@@ -165,29 +165,6 @@ class CmsPageCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keywords', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $invalidCharactersForNameLabel,
-                'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'generic_name',
-                        ]),
-                        new Length([
-                            'max' => self::META_KEYWORDS_MAX_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => self::META_KEYWORDS_MAX_LENGTH]
-                            ),
-                        ]),
-                    ],
-                    'attr' => [
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                ],
-            ])
             ->add('friendly_url', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
                 'help' => $this->trans('Unless the \'Accented URL\' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.', 'Admin.Catalog.Help'),

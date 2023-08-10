@@ -32,8 +32,6 @@ class AddBrand extends BOBasePage {
 
   private readonly metaDescriptionInput: (id: number) => string;
 
-  private readonly metaKeywordsInput: (id: number) => string;
-
   private readonly statusToggleInput: (toggle: number) => string;
 
   private readonly taggableFieldDiv: (lang: string) => string;
@@ -62,7 +60,6 @@ class AddBrand extends BOBasePage {
     this.logoFileInput = '#manufacturer_logo';
     this.metaTitleInput = (id: number) => `#manufacturer_meta_title_${id}`;
     this.metaDescriptionInput = (id: number) => `#manufacturer_meta_description_${id}`;
-    this.metaKeywordsInput = (id: number) => `#manufacturer_meta_keyword_${id}-tokenfield`;
     this.statusToggleInput = (toggle: number) => `#manufacturer_is_enabled_${toggle}`;
 
     // Selectors for Meta keywords
@@ -90,8 +87,6 @@ class AddBrand extends BOBasePage {
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(1), brandData.description);
     await this.setValue(page, this.metaTitleInput(1), brandData.metaTitle);
     await this.setValue(page, this.metaDescriptionInput(1), brandData.metaDescription);
-    await this.deleteKeywords(page, 'en');
-    await this.addKeywords(page, brandData.metaKeywords, 1);
 
     // Fill Information in french
     await this.changeLanguage(page, 'fr');
@@ -99,8 +94,6 @@ class AddBrand extends BOBasePage {
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(2), brandData.descriptionFr);
     await this.setValue(page, this.metaTitleInput(2), brandData.metaTitleFr);
     await this.setValue(page, this.metaDescriptionInput(2), brandData.metaDescriptionFr);
-    await this.deleteKeywords(page, 'fr');
-    await this.addKeywords(page, brandData.metaKeywordsFr, 2);
 
     // Add logo
     await this.uploadFile(page, this.logoFileInput, brandData.logo);
@@ -111,38 +104,6 @@ class AddBrand extends BOBasePage {
     // Save Created brand
     await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
-  }
-
-  /**
-   * Delete all keywords
-   * @param page {Page} Browser tab
-   * @param lang {string} To specify which input to empty
-   * @return {Promise<void>}
-   */
-  async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtons = await page.$$(this.deleteKeywordLink(lang));
-
-    /* eslint-disable no-await-in-loop, no-restricted-syntax */
-    for (const closeButton of closeButtons) {
-      await closeButton.click();
-    }
-    /* eslint-enable no-await-in-loop, no-restricted-syntax */
-  }
-
-  /**
-   * Add keywords
-   * @param page {Page} Browser tab
-   * @param keywords {Array<string>} Array of keywords
-   * @param id {number} ID for lang (1 for en, 2 for fr)
-   * @return {Promise<void>}
-   */
-  async addKeywords(page: Page, keywords: string[], id: number = 1): Promise<void> {
-    /* eslint-disable no-await-in-loop, no-restricted-syntax */
-    for (const keyword of keywords) {
-      await page.type(this.metaKeywordsInput(id), keyword);
-      await page.keyboard.press('Enter');
-    }
-    /* eslint-enable no-await-in-loop, no-restricted-syntax */
   }
 
   /**

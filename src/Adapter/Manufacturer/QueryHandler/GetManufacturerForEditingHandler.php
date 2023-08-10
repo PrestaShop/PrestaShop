@@ -68,7 +68,7 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
             $manufacturer->description,
             $manufacturer->meta_title,
             $manufacturer->meta_description,
-            $manufacturer->meta_keywords,
+            [],
             $this->getLogoImage($manufacturerId),
             $manufacturer->getAssociatedShops()
         );

@@ -126,9 +126,6 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['meta_description'])) {
             [$this->defaultLangId => $command->setLocalizedMetaDescriptions($data['meta_description'])];
         }
-        if (isset($data['meta_keywords'])) {
-            [$this->defaultLangId => $command->setLocalizedMetaKeywords($data['meta_keywords'])];
-        }
         if (isset($data['logo image'])) {
             $this->pretendImageUploaded(_PS_MANU_IMG_DIR_, $data['logo image'], $manufacturerId);
         }
@@ -369,7 +366,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLangId => $data['description']],
             [$this->defaultLangId => $data['meta_title']],
             [$this->defaultLangId => $data['meta_description']],
-            [$this->defaultLangId => $data['meta_keywords']],
+            [],
             [$this->defaultShopId]
         );
 

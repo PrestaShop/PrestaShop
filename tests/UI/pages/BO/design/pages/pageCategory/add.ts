@@ -24,8 +24,6 @@ class AddPageCategory extends BOBasePage {
 
   private readonly metaDescriptionInput: string;
 
-  private readonly metaKeywordsInput: string;
-
   private readonly saveCategoryButton: string;
 
   /**
@@ -44,7 +42,6 @@ class AddPageCategory extends BOBasePage {
     this.descriptionIframe = '#cms_page_category_description_1';
     this.metaTitleInput = '#cms_page_category_meta_title_1';
     this.metaDescriptionInput = '#cms_page_category_meta_description_1';
-    this.metaKeywordsInput = '#cms_page_category_meta_keywords_1-tokenfield';
     this.saveCategoryButton = '#save-button';
   }
 
@@ -64,7 +61,6 @@ class AddPageCategory extends BOBasePage {
     await this.setValue(page, this.descriptionIframe, pageCategoryData.description);
     await this.setValue(page, this.metaTitleInput, pageCategoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionInput, pageCategoryData.metaDescription);
-    await this.setValue(page, this.metaKeywordsInput, pageCategoryData.metaKeywords);
     await this.clickAndWaitForURL(page, this.saveCategoryButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

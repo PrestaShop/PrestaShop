@@ -88,9 +88,6 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
         if (null !== $command->getLocalizedMetaDescriptions()) {
             $manufacturer->meta_description = $command->getLocalizedMetaDescriptions();
         }
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $manufacturer->meta_keywords = $command->getLocalizedMetaKeywords();
-        }
         if (null !== $command->getLocalizedMetaTitles()) {
             $manufacturer->meta_title = $command->getLocalizedMetaTitles();
         }

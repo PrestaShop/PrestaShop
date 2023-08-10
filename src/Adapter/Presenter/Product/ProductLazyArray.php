@@ -1157,7 +1157,6 @@ class ProductLazyArray extends AbstractLazyArray
             'main_variants',
             'manufacturer_name',
             'meta_description',
-            'meta_keywords',
             'meta_title',
             'minimal_quantity',
             'name',

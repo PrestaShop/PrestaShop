@@ -43,10 +43,6 @@ export default class SupplierData {
 
   public metaDescriptionFr: string;
 
-  public metaKeywords: string[];
-
-  public metaKeywordsFr: string[];
-
   public enabled: boolean;
 
   public products: number;
@@ -103,12 +99,6 @@ export default class SupplierData {
 
     /** @type {string} French meta description of the supplier */
     this.metaDescriptionFr = supplierToCreate.metaDescriptionFr || this.metaDescription;
-
-    /** @type {Array<string>} Meta keywords of the supplier */
-    this.metaKeywords = supplierToCreate.metaKeywords || [faker.lorem.word(), faker.lorem.word()];
-
-    /** @type {Array<string>} French meta keywords of the supplier */
-    this.metaKeywordsFr = supplierToCreate.metaKeywordsFr || this.metaKeywords;
 
     /** @type {boolean} Status of the supplier */
     this.enabled = supplierToCreate.enabled === undefined ? true : supplierToCreate.enabled;

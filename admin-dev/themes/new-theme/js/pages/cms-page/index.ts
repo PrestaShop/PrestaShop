@@ -72,13 +72,6 @@ $(() => {
   const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
 
-  new TaggableField({
-    tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
   const cmsGrid = new Grid('cms_page');
   cmsGrid.addExtension(new ReloadListActionExtension());
   cmsGrid.addExtension(new ExportToSqlManagerExtension());

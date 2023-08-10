@@ -29,10 +29,6 @@ export default class BrandData {
 
   public readonly metaDescriptionFr: string;
 
-  public readonly metaKeywords: string[];
-
-  public readonly metaKeywordsFr: string[];
-
   public readonly enabled: boolean;
 
   public addresses: number;
@@ -76,12 +72,6 @@ export default class BrandData {
 
     /** @type {string} French meta description of the brand */
     this.metaDescriptionFr = brandToCreate.metaDescriptionFr || this.metaDescription;
-
-    /** @type {Array<string>} Meta Keywords of the brand */
-    this.metaKeywords = brandToCreate.metaKeywords || [faker.lorem.word(), faker.lorem.word()];
-
-    /** @type {Array<string>} French meta keywords of the brand */
-    this.metaKeywordsFr = brandToCreate.metaKeywordsFr || this.metaKeywords;
 
     /** @type {boolean} Status of the brand */
     this.enabled = brandToCreate.enabled === undefined ? true : brandToCreate.enabled;

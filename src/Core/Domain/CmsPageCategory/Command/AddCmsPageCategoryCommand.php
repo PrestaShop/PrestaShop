@@ -200,28 +200,6 @@ class AddCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getLocalisedMetaKeywords()
-    {
-        return $this->localisedMetaKeywords;
-    }
-
-    /**
-     * @param string[] $localisedMetaKeywords
-     *
-     * @return self
-     *
-     * @throws CmsPageCategoryConstraintException
-     */
-    public function setLocalisedMetaKeywords(array $localisedMetaKeywords)
-    {
-        $this->assertIsGenericNameForMetaKeywords($localisedMetaKeywords);
-        $this->localisedMetaKeywords = $localisedMetaKeywords;
-
-        return $this;
-    }
 
     /**
      * @return int[]

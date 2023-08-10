@@ -106,7 +106,6 @@ class EditableCmsPageCategory
         $this->parentId = new CmsPageCategoryId($parentId);
         $this->localisedDescription = $localisedDescription;
         $this->localisedMetaDescription = $localisedMetaDescription;
-        $this->localisedMetaKeywords = $localisedMetaKeywords;
         $this->localisedFriendlyUrl = $localisedFriendlyUrl;
         $this->metaTitle = $metaTitle;
         $this->shopIds = $shopIds;
@@ -150,14 +149,6 @@ class EditableCmsPageCategory
     public function getLocalisedMetaDescription()
     {
         return $this->localisedMetaDescription;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLocalisedMetaKeywords()
-    {
-        return $this->localisedMetaKeywords;
     }
 
     /**

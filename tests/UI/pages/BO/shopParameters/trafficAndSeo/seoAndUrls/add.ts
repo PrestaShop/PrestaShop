@@ -24,8 +24,6 @@ class AddSeoUrl extends BOBasePage {
 
   private readonly metaDescriptionInput: (id: number) => string;
 
-  private readonly metaKeywordsInput: (id: number) => string;
-
   private readonly friendlyUrlInput: (id: number) => string;
 
   private readonly taggableFieldDiv: (lang: string) => string;
@@ -51,7 +49,6 @@ class AddSeoUrl extends BOBasePage {
     this.pageNameSelect = '#meta_page_name';
     this.pageTitleInput = (id: number) => `#meta_page_title_${id}`;
     this.metaDescriptionInput = (id: number) => `#meta_meta_description_${id}`;
-    this.metaKeywordsInput = (id: number) => `#meta_meta_keywords_${id}-tokenfield`;
     this.friendlyUrlInput = (id: number) => `#meta_url_rewrite_${id}`;
 
     // Selectors for Meta keywords
@@ -80,34 +77,6 @@ class AddSeoUrl extends BOBasePage {
   }
 
   /**
-   * Delete all keywords
-   * @param page {Page} Browser tab
-   * @param lang {string} To specify which input to empty
-   * @return {Promise<void>}
-   */
-  async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtons = await page.$$(this.deleteKeywordLink(lang));
-
-    for (let i = 0; i < closeButtons.length; i++) {
-      await closeButtons[i].click();
-    }
-  }
-
-  /**
-   * Add keywords
-   * @param page {Page} Browser tab
-   * @param keywords {array} Array of keywords
-   * @param idLang {number} To choose which lang (1 for en, 2 for fr)
-   * @return {Promise<void>}
-   */
-  async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
-    for (let i = 0; i < keywords.length; i++) {
-      await page.type(this.metaKeywordsInput(idLang), keywords[i]);
-      await page.keyboard.press('Enter');
-    }
-  }
-
-  /**
    * Create/Edit seo page
    * @param page {Page} Browser tab
    * @param seoPageData {SeoPageData} Data to set on seo form
@@ -119,15 +88,11 @@ class AddSeoUrl extends BOBasePage {
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValue(page, this.pageTitleInput(1), seoPageData.title);
     await this.setValue(page, this.metaDescriptionInput(1), seoPageData.metaDescription);
-    await this.deleteKeywords(page, 'en');
-    await this.addKeywords(page, seoPageData.metaKeywords, 1);
     await this.setValue(page, this.friendlyUrlInput(1), seoPageData.friendlyUrl);
     // Fill form in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.pageTitleInput(2), seoPageData.frTitle);
     await this.setValue(page, this.metaDescriptionInput(2), seoPageData.frMetaDescription);
-    await this.deleteKeywords(page, 'fr');
-    await this.addKeywords(page, seoPageData.frMetaKeywords, 2);
     await this.setValue(page, this.friendlyUrlInput(2), seoPageData.frFriendlyUrl);
 
     // Save seo page

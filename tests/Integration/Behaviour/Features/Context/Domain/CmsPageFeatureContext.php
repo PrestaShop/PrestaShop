@@ -117,9 +117,6 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['meta_description'])) {
             $command->setLocalizedMetaDescription([$this->defaultLangId => $data['meta_description']]);
         }
-        if (isset($data['meta_keywords'])) {
-            $command->setLocalizedMetaKeyword([$this->defaultLangId => $data['meta_keywords']]);
-        }
         if (isset($data['link_rewrite'])) {
             $command->setLocalizedFriendlyUrl([$this->defaultLangId => $data['link_rewrite']]);
         }
@@ -344,7 +341,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLangId => $data['meta_title']],
             [$this->defaultLangId => $data['head_seo_title']],
             [$this->defaultLangId => $data['meta_description']],
-            [$this->defaultLangId => $data['meta_keywords']],
+            [],
             [$this->defaultLangId => $data['link_rewrite']],
             [$this->defaultLangId => $data['content']],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['indexation']),
@@ -370,7 +367,6 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             'meta_title' => 'Special delivery options',
             'head_seo_title' => 'delivery options',
             'meta_description' => 'Our special delivery options',
-            'meta_keywords' => 'delivery,configure,special',
             'link_rewrite' => 'delivery-options',
             'content' => '<div> <h5> Delivery <img src="../delivery/options.jpg" alt="" /></h5> </div>',
             'indexation' => true,

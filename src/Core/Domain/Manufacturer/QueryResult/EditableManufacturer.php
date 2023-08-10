@@ -114,7 +114,6 @@ class EditableManufacturer
         $this->logoImage = $logoImage;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->enabled = $enabled;
         $this->associatedShops = $associatedShops;
     }
@@ -173,14 +172,6 @@ class EditableManufacturer
     public function getLocalizedMetaDescriptions()
     {
         return $this->localizedMetaDescriptions;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
     }
 
     /**

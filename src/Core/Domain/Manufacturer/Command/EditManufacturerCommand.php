@@ -195,26 +195,6 @@ class EditManufacturerCommand
     }
 
     /**
-     * @return string[]|null
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[]|null $localizedMetaKeywords
-     *
-     * @return self
-     */
-    public function setLocalizedMetaKeywords($localizedMetaKeywords)
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
-
-        return $this;
-    }
-
-    /**
      * @return bool|null
      */
     public function isEnabled()

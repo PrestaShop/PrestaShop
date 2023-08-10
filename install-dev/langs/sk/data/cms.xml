@@ -3,7 +3,6 @@
   <cms id="Delivery">
     <meta_title>Doručenie</meta_title>
     <meta_description>Doručovanie objednávok</meta_description>
-    <meta_keywords>dodanie, doručenie, preprava, balenie</meta_keywords>
     <content>&lt;h2&gt;Doručovanie objednávok&lt;/h2&gt;&lt;h3&gt;Balenie zásielok&lt;/h3&gt;&lt;p&gt;Balíky sú obvykle odosielané do 2 dní po obdržaní platby a sú dodávané prostredníctvom kuriéra UPS. Ak dávate prednosť doručeniu UPS Extra s požadovaným popisom balíka (budú použité dodatočné náklady) tak nás prosím kontaktujte pred voľbou tejto metódy. Bez ohľadu na vybraný spôsob doručenia vám bude zaslaný odkaz na sledovanie pohybu zásielky.&lt;/p&gt;&lt;p&gt;
 Poplatky za dopravu zahŕňajú manipuláciu a balné, ako aj náklady na prepravu. Manipulačné poplatky sú stanovené, cena za prepravu sa líši v závislosti od celkovej hmotnosti zásielky. Odporúčame vám zoskupiť položky v jednej objednávke. Pri vytvorení dvoch rôznych objednávok budú prepravné náklady vyúčtované na obe objednávky zvlásť. Váš balík bude odoslaný na vlastnú zodpovednosť, budeme však dbať na to, aby boli pri balení krehké veci zabalené a ochránené pred rozbitím.&lt;br /&gt;&lt;br /&gt;Boxy sú dostatočne dimenzované a vaše položky sú dobre chránené.&lt;/p&gt;</content>
     <link_rewrite>dorucovanie-objednavok</link_rewrite>
@@ -11,14 +10,12 @@ Poplatky za dopravu zahŕňajú manipuláciu a balné, ako aj náklady na prepra
   <cms id="Legal_Notice">
     <meta_title>Právna doložka</meta_title>
     <meta_description>Právna doložka</meta_description>
-    <meta_keywords>právna doložka, práva</meta_keywords>
     <content>&lt;h2&gt;Právna doložka&lt;/h2&gt;&lt;h3&gt;Credits&lt;/h3&gt;&lt;p&gt;Koncept a produkcia:&lt;/p&gt;&lt;p&gt;Tento internetový obchod bol vytvorený pomocou &lt;a href="http://www.prestashop.com"&gt;Prestashop Shopping Cart softvéru&lt;/a&gt;,odporúčame návštevu PrestaShop &lt;a href="http://www.prestashop.com/blog/en/"&gt;ecommerce blogu&lt;/a&gt;, kde zistíte novinky, rady ako predávať a prevádzkovať internetový obchod.&lt;/p&gt;</content>
     <link_rewrite>pravna-dolozka</link_rewrite>
   </cms>
   <cms id="Terms_and_conditions_of_use">
     <meta_title>Obchodné podmienky</meta_title>
     <meta_description>Naše obchodné podmienky</meta_description>
-    <meta_keywords>obchodne podmienky, podmienky predaja, podmienky e-shopu</meta_keywords>
     <content>&lt;h1 class=&quot;page-heading&quot;&gt;Obchodné podmienky&lt;/h1&gt;
 &lt;h3 class=&quot;page-subheading&quot;&gt;Pravidlo 1&lt;/h3&gt;
 &lt;p class=&quot;bottom-indent&quot;&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
@@ -31,7 +28,6 @@ Poplatky za dopravu zahŕňajú manipuláciu a balné, ako aj náklady na prepra
   <cms id="About_us">
     <meta_title>O nás</meta_title>
     <meta_description>Zistite viac o našej spoločnosti</meta_description>
-    <meta_keywords>o nás, informácie</meta_keywords>
     <content>&lt;h1 class=&quot;page-heading bottom-indent&quot;&gt;O nás&lt;/h1&gt;
 &lt;div class=&quot;row&quot;&gt;
 &lt;div class=&quot;col-xs-12 col-sm-4&quot;&gt;
@@ -72,7 +68,6 @@ Poplatky za dopravu zahŕňajú manipuláciu a balné, ako aj náklady na prepra
   <cms id="Secure_payment">
     <meta_title>Bezpečná platba</meta_title>
     <meta_description>Naše zabezpečené spôsoby platby</meta_description>
-    <meta_keywords>zabezpečená platba, ssl, visa, mastercard, paypal</meta_keywords>
     <content>&lt;h2&gt;Bezpečná platba&lt;/h2&gt;&#xD;
 &lt;h3&gt;Naše bezpečné platby&lt;/h3&gt;&lt;p&gt;S použitím SSL&lt;/p&gt;&#xD;
 &lt;h3&gt;Pomocou Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;Viac o tejto službe&lt;/p&gt;</content>

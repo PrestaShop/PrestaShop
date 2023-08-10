@@ -614,16 +614,6 @@ class MetaController extends FrameworkBundleAdminController
                             ),
                         ]
                     ),
-                MetaConstraintException::INVALID_META_KEYWORDS => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Meta keywords', 'Admin.Global')
-                            ),
-                        ]
-                    ),
             ],
         ];
 

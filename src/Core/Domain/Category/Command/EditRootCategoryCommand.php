@@ -284,26 +284,6 @@ class EditRootCategoryCommand
     }
 
     /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[] $localizedMetaKeywords
-     *
-     * @return $this
-     */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
-
-        return $this;
-    }
-
-    /**
      * @return int[]
      */
     public function getAssociatedGroupIds()

@@ -102,7 +102,6 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('description', $this->trans('Description', 'Admin.Global')),
             new EntityField('tags', $this->trans('Tags (x,y,z...)', 'Admin.Advparameters.Feature')),
             new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
-            new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
             new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
             new EntityField('link_rewrite', $this->trans('Rewritten URL', 'Admin.Advparameters.Feature')),
             new EntityField('available_now', $this->trans('Label when in stock', 'Admin.Catalog.Feature')),

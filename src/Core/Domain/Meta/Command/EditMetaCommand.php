@@ -159,32 +159,6 @@ class EditMetaCommand extends AbstractMetaCommand
     }
 
     /**
-     * @param string[] $localisedMetaKeywords
-     *
-     * @return self
-     *
-     * @throws MetaConstraintException
-     */
-    public function setLocalisedMetaKeywords(array $localisedMetaKeywords)
-    {
-        foreach ($localisedMetaKeywords as $idLang => $metaKeyword) {
-            $this->assertNameMatchesRegexPattern($idLang, $metaKeyword, MetaConstraintException::INVALID_META_KEYWORDS);
-        }
-
-        $this->localisedMetaKeywords = $localisedMetaKeywords;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalisedMetaKeywords()
-    {
-        return $this->localisedMetaKeywords;
-    }
-
-    /**
      * @return string[]
      */
     public function getLocalisedRewriteUrls()

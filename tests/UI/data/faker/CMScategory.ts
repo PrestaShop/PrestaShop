@@ -17,8 +17,6 @@ export default class CMSCategoryData {
 
   public readonly metaDescription: string;
 
-  public readonly metaKeywords: string;
-
   /**
    * Constructor for class CMSCategoryData
    * @param categoryToCreate {CmsCategoryCreator} Could be used to force the value of some members
@@ -38,8 +36,5 @@ export default class CMSCategoryData {
 
     /** @type {string} Meta description of the category */
     this.metaDescription = faker.lorem.sentence();
-
-    /** @type {string} Meta keyword of the category */
-    this.metaKeywords = faker.commerce.department();
   }
 }
