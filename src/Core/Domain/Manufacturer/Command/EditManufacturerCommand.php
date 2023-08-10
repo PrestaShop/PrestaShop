@@ -61,7 +61,7 @@ class EditManufacturerCommand
     /**
      * @var string[]|null
      */
-    private $localizedMetaDescriptions;;
+    private $localizedMetaDescriptions;
 
     /**
      * @var bool|null
