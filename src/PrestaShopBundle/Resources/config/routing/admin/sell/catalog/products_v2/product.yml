@@ -17,11 +17,15 @@ admin_products_index:
 
 # Old route temporarily kept for backward compatibility
 admin_product_catalog:
-  path: /
+  path: /{offset}/{limit}/{orderBy}/{sortOrder}
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::backwardCompatibleListAction
     _legacy_controller: AdminProducts
+    limit: last
+    offset: 0
+    orderBy: last
+    sortOrder: last
   deprecated:
     message: 'The admin_product_catalog route is deprecated and will be removed in version 10.0. Use the admin_products_index route instead.'
 
