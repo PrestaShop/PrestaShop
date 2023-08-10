@@ -32,7 +32,7 @@
     {% for product in viewableSupplier.supplierProducts %}
       <div class="card">
         <div class="card-header clearfix">
-          <a href="{{ path('admin_product_form', {'id': product.id}) }}">{{ product.name }}</a>
+          <a href="{{ path('admin_products_edit', {'productId': product.id}) }}">{{ product.name }}</a>
         </div>
         <div class="card-body">
           <table class="table">

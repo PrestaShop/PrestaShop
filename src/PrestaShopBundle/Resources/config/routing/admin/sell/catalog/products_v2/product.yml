@@ -15,6 +15,16 @@ admin_products_index:
     _legacy_controller: AdminProducts
     _legacy_link: AdminProducts
 
+# Old route temporarily kept for backward compatibility
+admin_product_catalog:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::backwardCompatibleListAction
+    _legacy_controller: AdminProducts
+  deprecated:
+    message: 'The admin_product_catalog route is deprecated and will be removed in version 10.0. Use the admin_products_index route instead.'
+
 admin_products_light_list:
   path: /light-list
   methods: [ GET ]
@@ -92,6 +102,20 @@ admin_products_edit:
     productId: \d+
   options:
     expose: true
+
+# Old route temporarily kept for backward compatibility
+admin_product_form:
+  path: /{id}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::backwardCompatibleEditAction
+    _legacy_controller: AdminProducts
+  requirements:
+    id: \d+
+  options:
+    expose: true
+  deprecated:
+    message: 'The admin_product_form route is deprecated and will be removed in version 10.0. Use the admin_products_edit route instead.'
 
 admin_products_select_shops:
   path: /{productId}/shops
@@ -196,6 +220,18 @@ admin_products_toggle_status_for_shop:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusForShopAction
+    _legacy_controller: AdminProducts
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+
+admin_products_toggle_status_for_all_shops:
+  path: /{productId}/toggle-status-for-all-shops
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusForAllShopsAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:statusproduct

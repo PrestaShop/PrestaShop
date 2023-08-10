@@ -45,7 +45,7 @@
             <tr>
               <td>{{ product.image|raw }}</td>
               <td>
-                <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+                <a href="{{ path('admin_products_edit', {'productId': product.id}) }}">
                   {{ product.name }}
 
                   {% if product.attributes %}
@@ -102,7 +102,7 @@
             <tr>
               <td>{{ product.image|raw }}</td>
               <td>
-                <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+                <a href="{{ path('admin_products_edit', {'productId': product.id}) }}">
                   {{ product.name }}
 
                   {% if product.attributes %}
