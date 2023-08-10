@@ -34,10 +34,6 @@ class AddBrand extends BOBasePage {
 
   private readonly statusToggleInput: (toggle: number) => string;
 
-  private readonly taggableFieldDiv: (lang: string) => string;
-
-  private readonly deleteKeywordLink: (lang: string) => string;
-
   private readonly saveButton: string;
 
   /**
