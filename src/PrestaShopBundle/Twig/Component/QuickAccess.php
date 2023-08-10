@@ -30,8 +30,6 @@ namespace PrestaShopBundle\Twig\Component;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Entity\Repository\TabRepository;
@@ -86,7 +84,6 @@ class QuickAccess
         private readonly CsrfTokenManagerInterface $tokenManager,
         private readonly UserProvider $userProvider,
         private readonly RequestStack $requestStack,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private readonly MenuBuilder $menuBuilder
     ) {
     }
@@ -127,11 +124,9 @@ class QuickAccess
                         unset($quickAccesses[$index]);
                         continue;
                     }
-                    // if new product page feature is enabled we create new product v2 modal popup
-                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
-                        $quick['link'] = self::NEW_PRODUCT_V2_LINK;
-                        $quick['class'] = 'new-product-button';
-                    }
+                    // We create new product v2 modal popup link
+                    $quick['link'] = self::NEW_PRODUCT_V2_LINK;
+                    $quick['class'] = 'new-product-button';
                 }
 
                 // Preparation of the link to display in component view.

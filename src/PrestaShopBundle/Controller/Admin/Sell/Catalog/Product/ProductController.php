@@ -57,8 +57,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
@@ -137,10 +135,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, ProductFilters $filters): Response
     {
-        if ($this->shouldRedirectToV1()) {
-            return $this->redirectToRoute('admin_product_catalog');
-        }
-
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $productGrid = $productGridFactory->getGrid($filters);
 
@@ -453,10 +447,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
-        if ($this->shouldRedirectToV1()) {
-            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
-        }
-
         if ($request->query->get('switchToShop')) {
             $this->addFlash('success', $this->trans('Your store context has been automatically modified.', 'Admin.Notifications.Success'));
 
@@ -1559,14 +1549,6 @@ class ProductController extends FrameworkBundleAdminController
         $shopId = $this->getContext()->shop->id;
 
         return $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, ProductGridDefinitionFactory::GRID_ID);
-    }
-
-    /**
-     * @return bool
-     */
-    private function shouldRedirectToV1(): bool
-    {
-        return $this->get(FeatureFlagStateCheckerInterface::class)->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 
     /**

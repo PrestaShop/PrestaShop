@@ -24,23 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Product feature flag in 1.7.8
-trans('Experimental product page', 'Admin.Advparameters.Feature');
-trans(
-    'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.',
-    'Admin.Advparameters.Help'
-);
-
-// Product feature flag in 8.0
-trans('New product page - Single store', 'Admin.Advparameters.Feature');
-// Product feature flag in 8.1
-trans('New product page', 'Admin.Advparameters.Feature');
-trans('This page benefits from increased performance and includes new features such as a new combination management system.', 'Admin.Advparameters.Help');
-
-// Product multi store feature flag in 8.0
-trans('New product page - Multistore', 'Admin.Advparameters.Feature');
-trans('Access the new product page, even in a multistore context. This is a work in progress and some features are not available.', 'Admin.Advparameters.Help');
-
 // Legacy link feature flags
 trans('Attribute groups', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
