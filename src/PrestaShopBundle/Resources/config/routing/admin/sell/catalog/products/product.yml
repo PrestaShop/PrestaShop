@@ -17,7 +17,7 @@ admin_products_index:
 
 # Old route temporarily kept for backward compatibility
 admin_product_catalog:
-  path: /{offset}/{limit}/{orderBy}/{sortOrder}
+  path: /legacy-list
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::backwardCompatibleListAction
