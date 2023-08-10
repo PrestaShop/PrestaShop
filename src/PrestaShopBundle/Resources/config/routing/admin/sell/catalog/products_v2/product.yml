@@ -26,8 +26,6 @@ admin_product_catalog:
     offset: 0
     orderBy: last
     sortOrder: last
-  deprecated:
-    message: 'The admin_product_catalog route is deprecated and will be removed in version 10.0. Use the admin_products_index route instead.'
 
 admin_products_light_list:
   path: /light-list
@@ -118,8 +116,6 @@ admin_product_form:
     id: \d+
   options:
     expose: true
-  deprecated:
-    message: 'The admin_product_form route is deprecated and will be removed in version 10.0. Use the admin_products_edit route instead.'
 
 admin_products_select_shops:
   path: /{productId}/shops
