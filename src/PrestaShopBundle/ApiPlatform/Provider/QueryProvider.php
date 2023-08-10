@@ -28,33 +28,105 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Provider;
 
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
 
 class QueryProvider implements ProviderInterface
 {
     public function __construct(
         private readonly CommandBusInterface $queryBus,
+        private readonly iterable $converters,
         private readonly Serializer $apiPlatformSerializer
     ) {
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws \Exception
+     * @throws ExceptionInterface
+     */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $extraProperties = $operation->getExtraProperties();
+        $queryClass = $operation->getExtraProperties()['query'] ?? null;
+        $filters = $context['filters'] ?? [];
+        $queryParameters = array_merge($uriVariables, $filters);
 
-        $query = $extraProperties['query'] ?? null;
-
-        if (null === $query) {
+        if (null === $queryClass) {
             throw new NoExtraPropertiesFoundException();
         }
 
-        $queryResult = $this->queryBus->handle(new $query(...$uriVariables));
+        $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
+
+        //Try to call setter on additional query params
+        if (count($queryParameters)) {
+            foreach ($queryParameters as $param => $value) {
+                if ($reflectionMethod = $this->findSetterMethod($param, $queryClass)) {
+                    $methodParameter = $reflectionMethod->getParameters()[0];
+                    if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($value)) {
+                        $value = $this->findConverter($methodParameter->getType()->getName())->convert($value);
+                    }
+                    $reflectionMethod->invoke($query, $value);
+                }
+            }
+        }
+
+        $queryResult = $this->queryBus->handle($query);
         $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
 
+        if ($operation instanceof CollectionOperationInterface) {
+            foreach ($normalizedQueryResult as $key => $result) {
+                $normalizedQueryResult[$key] = $this->apiPlatformSerializer->denormalize($result, $operation->getClass());
+            }
+
+            return $normalizedQueryResult;
+        }
+
         return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
+    }
+
+    /**
+     * @param $type
+     *
+     * @return ConverterInterface
+     *
+     * @throws \Exception
+     */
+    private function findConverter($type): ConverterInterface
+    {
+        foreach ($this->converters as $converter) {
+            if ($converter->supports($type)) {
+                return $converter;
+            }
+        }
+
+        throw new \Exception(sprintf('Converter for type %s not found', $type));
+    }
+
+    /**
+     * @param $propertyName
+     * @param $queryClass
+     *
+     * @return false|\ReflectionMethod
+     */
+    private function findSetterMethod($propertyName, $queryClass): bool|\ReflectionMethod
+    {
+        $reflectionClass = new \ReflectionClass($queryClass);
+
+        foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if (str_starts_with($method->getName(), 'set')) {
+                $methodName = lcfirst(substr($method->getName(), 3));
+                if ($methodName === $propertyName) {
+                    return $method;
+                }
+            }
+        }
+
+        return false;
     }
 }

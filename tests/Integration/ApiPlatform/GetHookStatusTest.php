@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use Tests\Resources\DatabaseDump;
 
 class GetHookStatusTest extends ApiTestCase

@@ -50,3 +50,7 @@ services:
   PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
     autowire: true
     autoconfigure: true
+
+  PrestaShopBundle\ApiPlatform\Converters\:
+    resource: "../../../../ApiPlatform/Converters/*"
+    tags: [ 'prestashop.api.converters' ]

@@ -97,8 +97,18 @@ api_platform:
   title: PrestaShop API
   version: 1.0.0
   enable_entrypoint: false
+  formats:
+    json:
+      mime_types: [ 'application/json' ]
+    # Allow this format for other API endpoint than native endpoint (by default we will use json)
+    jsonld:
+      mime_types: [ 'application/ld+json' ]
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
-
+  swagger:
+    api_keys:
+      JWT:
+        name: Authorization
+        type: header
   metadata_backward_compatibility_layer: false
