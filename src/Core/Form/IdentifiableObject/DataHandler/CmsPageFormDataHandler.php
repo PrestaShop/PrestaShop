@@ -70,7 +70,6 @@ final class CmsPageFormDataHandler implements FormDataHandlerInterface
             $data['title'],
             $data['meta_title'],
             $data['meta_description'],
-            [],
             $data['friendly_url'],
             $data['content'],
             $data['is_indexed_for_search'],

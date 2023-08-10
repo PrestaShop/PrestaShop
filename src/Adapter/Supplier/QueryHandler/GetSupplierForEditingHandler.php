@@ -72,7 +72,6 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
             $address->phone_mobile,
             $supplier->meta_title,
             $supplier->meta_description,
-            [],
             (bool) $supplier->active,
             $supplier->getAssociatedShops(),
             $address->dni,

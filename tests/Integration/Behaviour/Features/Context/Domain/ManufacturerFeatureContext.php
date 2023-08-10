@@ -366,7 +366,6 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLangId => $data['description']],
             [$this->defaultLangId => $data['meta_title']],
             [$this->defaultLangId => $data['meta_description']],
-            [],
             [$this->defaultShopId]
         );
 

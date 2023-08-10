@@ -64,11 +64,6 @@ class EditableCmsPage
     /**
      * @var string[]
      */
-    private $localizedMetaKeyword;
-
-    /**
-     * @var string[]
-     */
     private $localizedFriendlyUrl;
 
     /**

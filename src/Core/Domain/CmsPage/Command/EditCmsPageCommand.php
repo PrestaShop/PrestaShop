@@ -64,11 +64,6 @@ class EditCmsPageCommand
     /**
      * @var string[]|null
      */
-    private $LocalizedMetaKeyword;
-
-    /**
-     * @var string[]|null
-     */
     private $localizedFriendlyUrl;
 
     /**

@@ -57,11 +57,6 @@ class AddCmsPageCommand
     /**
      * @var string[]
      */
-    private $LocalizedMetaKeyword;
-
-    /**
-     * @var string[]
-     */
     private $localizedFriendlyUrl;
 
     /**

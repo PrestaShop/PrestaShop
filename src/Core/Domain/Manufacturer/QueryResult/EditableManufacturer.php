@@ -86,7 +86,6 @@ class EditableManufacturer
      * @param array $localizedDescriptions
      * @param array $localizedMetaTitles
      * @param array $localizedMetaDescriptions
-     * @param array $localizedMetaKeywords
      * @param array|null $logoImage
      * @param array $associatedShops
      */
@@ -98,7 +97,6 @@ class EditableManufacturer
         array $localizedDescriptions,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
-        array $localizedMetaKeywords,
         $logoImage,
         array $associatedShops
     ) {

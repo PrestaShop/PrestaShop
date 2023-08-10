@@ -133,7 +133,6 @@ class EditableSupplier
      * @param string $mobilePhone
      * @param string[] $localizedMetaTitles
      * @param string[] $localizedMetaDescriptions
-     * @param string[] $localizedMetaKeywords
      * @param bool $enabled
      * @param array $associatedShops
      * @param string $dni
@@ -153,7 +152,6 @@ class EditableSupplier
         string $mobilePhone,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
-        array $localizedMetaKeywords,
         bool $enabled,
         array $associatedShops,
         string $dni,

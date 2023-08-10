@@ -68,7 +68,6 @@ class EditableMeta
      * @param string $pageName
      * @param string[] $localisedPageTitles
      * @param string[] $localisedMetaDescriptions
-     * @param string[] $localisedMetaKeywords
      * @param string[] $localisedUrlRewrites
      *
      * @throws Exception\MetaConstraintException
@@ -79,7 +78,6 @@ class EditableMeta
         $pageName,
         array $localisedPageTitles,
         array $localisedMetaDescriptions,
-        array $localisedMetaKeywords,
         array $localisedUrlRewrites
     ) {
         $this->metaId = new MetaId($metaId);

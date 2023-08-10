@@ -83,7 +83,6 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $data['description'],
             $data['meta_title'],
             $data['meta_description'],
-            [],
             $data['shop_association']
         ));
 

@@ -122,7 +122,6 @@ class EditableCategory
      * @param int $parentId
      * @param string[] $metaTitle
      * @param string[] $metaDescription
-     * @param string[] $metaKeywords
      * @param string[] $linkRewrite
      * @param int[] $groupAssociationIds
      * @param int[] $shopAssociationIds
@@ -141,7 +140,6 @@ class EditableCategory
         $parentId,
         array $metaTitle,
         array $metaDescription,
-        array $metaKeywords,
         array $linkRewrite,
         array $groupAssociationIds,
         array $shopAssociationIds,

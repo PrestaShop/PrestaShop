@@ -341,7 +341,6 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLangId => $data['meta_title']],
             [$this->defaultLangId => $data['head_seo_title']],
             [$this->defaultLangId => $data['meta_description']],
-            [],
             [$this->defaultLangId => $data['link_rewrite']],
             [$this->defaultLangId => $data['content']],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['indexation']),
