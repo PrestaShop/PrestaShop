@@ -72,11 +72,6 @@ class EditableCategory
     /**
      * @var string[]
      */
-    private $metaKeywords;
-
-    /**
-     * @var string[]
-     */
     private $linkRewrite;
 
     /**

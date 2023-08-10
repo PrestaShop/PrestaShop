@@ -100,11 +100,6 @@ class EditSupplierCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]|null
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var bool|null
      */
     private $enabled;

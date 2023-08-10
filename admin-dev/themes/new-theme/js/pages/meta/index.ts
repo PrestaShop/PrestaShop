@@ -35,7 +35,6 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
-import TaggableField from '@components/taggable-field';
 import TranslatableInput from '@components/translatable-input';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
@@ -58,13 +57,6 @@ $(() => {
 
   const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
-
-  new TaggableField({
-    tokenFieldSelector: 'input.js-taggable-field',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
 
   new TranslatableInput();
   new MetaPageNameOptionHandler();

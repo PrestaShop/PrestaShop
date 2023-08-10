@@ -76,11 +76,6 @@ class EditCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
     private $localisedMetaDescription;
 
     /**
-     * @var string[]
-     */
-    private $localisedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $shopAssociation;

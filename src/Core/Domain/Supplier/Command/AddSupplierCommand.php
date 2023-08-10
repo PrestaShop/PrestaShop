@@ -73,11 +73,6 @@ class AddSupplierCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $shopAssociation;

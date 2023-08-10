@@ -71,11 +71,6 @@ class AddCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
     private $localisedMetaDescription;
 
     /**
-     * @var string[]
-     */
-    private $localisedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $shopAssociation;
@@ -199,7 +194,6 @@ class AddCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
 
         return $this;
     }
-
 
     /**
      * @return int[]

@@ -62,11 +62,6 @@ class EditableCmsPageCategory
     /**
      * @var array
      */
-    private $localisedMetaKeywords;
-
-    /**
-     * @var array
-     */
     private $localisedFriendlyUrl;
     /**
      * @var array

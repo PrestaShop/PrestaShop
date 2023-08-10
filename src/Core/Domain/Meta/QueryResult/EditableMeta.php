@@ -59,11 +59,6 @@ class EditableMeta
     /**
      * @var string[]
      */
-    private $localisedMetaKeywords;
-
-    /**
-     * @var string[]
-     */
     private $localisedUrlRewrites;
 
     /**

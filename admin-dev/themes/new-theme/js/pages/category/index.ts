@@ -108,13 +108,6 @@ $(() => {
 
   new FormSubmitButton();
 
-  new window.prestashop.component.TaggableField({
-    tokenFieldSelector: 'input.js-taggable-field',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
   new window.prestashop.component.ChoiceTree('#category_id_parent');
   new window.prestashop.component.ChoiceTree('#category_shop_association').enableAutoCheckChildren();
 

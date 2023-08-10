@@ -59,11 +59,6 @@ class EditMetaCommand extends AbstractMetaCommand
     /**
      * @var string[]
      */
-    private $localisedMetaKeywords;
-
-    /**
-     * @var string[]
-     */
     private $localisedRewriteUrls;
 
     /**

@@ -75,11 +75,6 @@ class AddCategoryCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $associatedGroupIds;

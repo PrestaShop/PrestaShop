@@ -81,11 +81,6 @@ class EditCategoryCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $associatedGroupIds;

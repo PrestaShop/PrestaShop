@@ -62,13 +62,6 @@ $(() => {
     ],
   );
 
-  new window.prestashop.component.TaggableField({
-    tokenFieldSelector: 'input.js-taggable-field',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
   new window.prestashop.component.ChoiceTree('#manufacturer_shop_association').enableAutoCheckChildren();
 
   new FormSubmitButton();

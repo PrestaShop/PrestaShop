@@ -57,11 +57,6 @@ class AddManufacturerCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var bool
      */
     private $enabled;

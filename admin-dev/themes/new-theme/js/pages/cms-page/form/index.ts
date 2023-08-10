@@ -57,13 +57,6 @@ $(() => {
     $('#serp-app').data('cms-url'),
   );
 
-  new window.prestashop.component.TaggableField({
-    tokenFieldSelector: 'input.js-taggable-field',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
   new window.prestashop.component.PreviewOpener('.js-preview-url');
 
   textToLinkRewriteCopier({

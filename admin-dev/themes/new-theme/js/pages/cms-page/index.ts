@@ -38,7 +38,6 @@ import ChoiceTree from '@components/form/choice-tree';
 import TranslatableInput from '@components/translatable-input';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import TaggableField from '@components/taggable-field';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 

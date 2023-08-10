@@ -49,12 +49,5 @@ $(() => {
     ],
   );
 
-  new window.prestashop.component.TaggableField({
-    tokenFieldSelector: 'input.js-taggable-field',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
   new FormSubmitButton();
 });
