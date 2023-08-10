@@ -71,7 +71,6 @@ class AdvancedFormType extends TranslatorAwareType
             ->add('target', ChoiceType::class, [
                 'required' => false,
                 'error_bubbling' => false,
-                'limit' => 1,
             ])
         ;
 
