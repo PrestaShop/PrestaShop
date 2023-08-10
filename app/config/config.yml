@@ -92,7 +92,6 @@ twig:
   form_themes:
     - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
   paths:
-    '%admin_page%/Product': Product
     '%admin_page%/TwigTemplateForm': Twig
     '%admin_page%/Common': Common
     '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
