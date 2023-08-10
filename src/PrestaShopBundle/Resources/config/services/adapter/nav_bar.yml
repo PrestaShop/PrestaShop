@@ -1,8 +1,0 @@
-services:
-  _defaults:
-    public: false
-    autowire: true
-    bind:
-      $psVersion: !php/const _PS_VERSION_
-
-  PrestaShopBundle\Twig\Component\NavBar: ~
