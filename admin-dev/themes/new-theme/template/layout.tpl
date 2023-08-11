@@ -171,7 +171,7 @@
 {if isset($page_header_toolbar_template)}
     {render_template
       smarty_template=$page_header_toolbar_template
-      twig_template="@PrestaShop/Admin/Layout/tool_bar.html.twig"
+      twig_template="@PrestaShop/Admin/Layout/toolbar.html.twig"
       locked_to_all_shop_context=$locked_to_all_shop_context
       breadcrumbs2=$breadcrumbs2
       title=$title

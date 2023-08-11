@@ -48,7 +48,7 @@ class MultistoreHeader
     private bool $isTitleDark;
     private bool $isShopContext;
     private bool $isGroupContext;
-    private ShopGroup $currentContext;
+    private ShopGroup|Shop $currentContext;
     private string|false $colorConfigLink;
     private array $groupList = [];
     private Link $link;
@@ -120,7 +120,7 @@ class MultistoreHeader
         return $this->isAllShopContext;
     }
 
-    public function getCurrentContextId(): int
+    public function getCurrentShopContextId(): int
     {
         return $this->currentContext->getId();
     }
