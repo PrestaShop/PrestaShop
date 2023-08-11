@@ -1148,13 +1148,32 @@ class FrontControllerCore extends Controller
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        $css_theme_path = '/js/jquery/ui/themes/' . $theme . '/minified/jquery.ui.theme.min.css';
-        $css_path = '/js/jquery/ui/themes/' . $theme . '/minified/jquery-ui.min.css';
-        $js_path = '/js/jquery/ui/jquery-ui.min.js';
+        // If the component does not start with ui. prefix, we need to add it
+        if (substr($component, 0, 3) !== 'ui.') {
+            $component = 'ui.' . $component;
+        }
 
-        $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
-        $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
-        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 49]);
+        if (!is_array($component)) {
+            $component = [$component];
+        }
+
+        foreach ($component as $ui) {
+            $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
+            foreach ($ui_path['css'] as $uiPathCss => $uiMediaCss) {
+                $this->registerStylesheet(
+                    str_replace(_PS_JS_DIR_ . 'jquery/ui/themes/' . $theme . '/', '', $uiPathCss),
+                    str_replace(_PS_JS_DIR_, '/js/', $uiPathCss),
+                    ['media' => $uiMediaCss, 'priority' => 95]
+                );
+            }
+            foreach ($ui_path['js'] as $uiPathJs) {
+                $this->registerJavascript(
+                    str_replace(_PS_JS_DIR_ . 'jquery/ui/', '', $uiPathJs),
+                    str_replace(_PS_JS_DIR_, '/js/', $uiPathJs),
+                    ['position' => 'bottom', 'priority' => 49]
+                );
+            }
+        }
     }
 
     /**
