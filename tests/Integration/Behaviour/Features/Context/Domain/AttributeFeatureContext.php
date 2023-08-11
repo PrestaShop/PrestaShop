@@ -47,20 +47,13 @@ use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpecte
 class AttributeFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var int default language id from configs
-     */
-    private $defaultLangId;
-
-    /**
      * @var int default shop id from configs
      */
     private $defaultShopId;
 
     public function __construct()
     {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
+        $this->defaultShopId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_DEFAULT');
     }
 
     /**

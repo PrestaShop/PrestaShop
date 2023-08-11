@@ -75,7 +75,6 @@ class AttributeType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param bool $isMultistoreEnabled
      * @param AttributeGroupRepository $attributeGroupRepository
      * @param int $contextShopId
      */
