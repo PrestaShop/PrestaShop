@@ -15,18 +15,12 @@ services:
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\AddAttributeHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler:
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator:
