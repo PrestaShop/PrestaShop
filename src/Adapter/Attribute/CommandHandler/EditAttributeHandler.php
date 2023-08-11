@@ -30,12 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\EditAttributeHandlerInterface;
 
 /**
  * Handles editing of attribute groups using legacy logic.
  */
+#[AsCommandHandler]
 final class EditAttributeHandler extends AbstractObjectModelHandler implements EditAttributeHandlerInterface
 {
     /**
