@@ -47,9 +47,15 @@ class QueryProvider implements ProviderInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @param Operation $operation
+     * @param array $uriVariables
+     * @param array $context
+     *
+     * @return \ApiPlatform\State\Pagination\PartialPaginatorInterface|array|\ArrayObject|bool|float|int|mixed|string|null
+     *
      * @throws ExceptionInterface
+     * @throws NoExtraPropertiesFoundException
+     * @throws \ReflectionException
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
@@ -58,7 +64,7 @@ class QueryProvider implements ProviderInterface
         $queryParameters = array_merge($uriVariables, $filters);
 
         if (null === $queryClass) {
-            throw new NoExtraPropertiesFoundException();
+            throw new NoExtraPropertiesFoundException('Extra property "query" is not found');
         }
 
         $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);

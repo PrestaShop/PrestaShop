@@ -29,10 +29,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Resources;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 
@@ -40,7 +38,7 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
     operations: [
         new Post(
             uriTemplate: '/customers/group',
-            provider: CommandProcessor::class,
+            processor: CommandProcessor::class,
             extraProperties: [
                 'command' => AddCustomerGroupCommand::class,
             ],
@@ -49,30 +47,13 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 )]
 class CustomerGroup
 {
-    /**
-     * @param string[] $localizedNames
-     * @param int[] $shopIds
-     */
-    public function __construct(
-        #[ApiProperty(
-            example: 'array<string>',
-        )]
-        public array $localizedNames,
-        #[ApiProperty(
-            openapiContext: [
-                'example' => [
-                    'exponent' => 'int',
-                    'number' => 'string',
-                ],
-            ],
-        )]
-        public DecimalNumber $reductionPercent,
-        public bool $displayPriceTaxExcluded,
-        public bool $showPrice,
-        #[ApiProperty(
-            example: 'array<int>',
-        )]
-        public array $shopIds
-    ) {
-    }
+    public array $localizedNames;
+
+    public array $reductionPercent;
+
+    public bool $displayPriceTaxExcluded;
+
+    public bool $showPrice;
+
+    public array $shopIds;
 }

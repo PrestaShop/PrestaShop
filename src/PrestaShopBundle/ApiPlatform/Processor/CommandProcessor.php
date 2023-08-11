@@ -31,32 +31,41 @@ namespace PrestaShopBundle\ApiPlatform\Processor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use Symfony\Component\Serializer\Serializer;
 
 class CommandProcessor implements ProcessorInterface
 {
     /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
      * @param CommandBusInterface $commandBus
+     * @param Serializer $apiPlatformSerializer
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
-        $this->commandBus = $commandBus;
+    public function __construct(
+        private readonly CommandBusInterface $commandBus,
+        private readonly Serializer $apiPlatformSerializer
+    ) {
     }
 
+    /**
+     * @param $data
+     * @param Operation $operation
+     * @param array $uriVariables
+     * @param array $context
+     *
+     * @return void
+     *
+     * @throws NoExtraPropertiesFoundException
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $command = $operation->getExtraProperties()['command'];
-        $reflectionMethod = new \ReflectionMethod($command, '__construct');
-        $constructParameters = $reflectionMethod->getParameters();
-        $parameters = [];
-        foreach ($constructParameters as $parameter) {
-            $parameters[] = $data->{$parameter->name};
+        $commandClass = $operation->getExtraProperties()['command'] ?? null;
+
+        if (null === $commandClass) {
+            throw new NoExtraPropertiesFoundException('Extra property "command" is not found');
         }
 
-        $this->commandBus->handle(new $command(...array_values($parameters)));
+        $command = $this->apiPlatformSerializer->denormalize($data, $commandClass);
+        $this->commandBus->handle($command);
     }
 }
