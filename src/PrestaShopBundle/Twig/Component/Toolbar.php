@@ -41,4 +41,5 @@ class Toolbar
     public bool|string $helpLink;
     public bool $enableSidebar;
     public int $currentTabLevel;
+    public array $tabs;
 }

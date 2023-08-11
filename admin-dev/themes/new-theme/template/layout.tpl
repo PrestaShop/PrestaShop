@@ -180,6 +180,7 @@
       help_link=$help_link
       enableSidebar=$enableSidebar
       current_tab_level=$current_tab_level
+      tabs=$tabs
     }
 {/if}
 
