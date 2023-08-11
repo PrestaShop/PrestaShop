@@ -75,8 +75,13 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\PriceFormatter
 
   # Other adapters
+  PrestaShop\PrestaShop\Adapter\Shop\Context:
+    public: false
+
   prestashop.adapter.shop.context:
-    class: PrestaShop\PrestaShop\Adapter\Shop\Context
+    alias: PrestaShop\PrestaShop\Adapter\Shop\Context
+    public: true
+    deprecated: ~
 
   PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface: '@prestashop.adapter.shop.context'
   PrestaShop\PrestaShop\Core\Shop\ShopContextInterface: '@prestashop.adapter.shop.context'

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,14 +22,23 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{{ component('ToolBar', {
-  multistoreHeader: multistore_header,
-  breadcrumbs2: breadcrumbs2,
-  title: title,
-  toolbarBtn: toolbar_btn,
-  table: table,
-  helpLink: help_link,
-  enableSidebar: enableSidebar,
-  currentTabLevel: current_tab_level,
-}) }}
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Twig\Component;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/toolbar.html.twig')]
+class Toolbar
+{
+    public bool $lockedToAllShopContext;
+    public array $breadcrumbs2;
+    public array $toolbarBtn;
+    public array|string $title;
+    public string $table;
+    public bool|string $helpLink;
+    public bool $enableSidebar;
+    public int $currentTabLevel;
+}
