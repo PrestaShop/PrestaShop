@@ -3,6 +3,8 @@ services:
     public: false
     autowire: true
     autoconfigure: true
+    bind:
+      $psVersion: !php/const _PS_VERSION_
 
   Twig\Extension\StringLoaderExtension: ~
 
