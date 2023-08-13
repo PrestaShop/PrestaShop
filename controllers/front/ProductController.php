@@ -1329,7 +1329,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        if(! $this->product) {
+        if (!$this->product) {
             return $breadcrumb;
         }
 
@@ -1352,7 +1352,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ];
         }
 
-        if( ! $this->product ) {
+        if (!$this->product) {
             return $breadcrumb;
         }
 
