@@ -35,6 +35,7 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import TranslatableInput from '@components/translatable-input';
+import SearchTermSearchInput from '@components/form/search-term-search-input';
 
 const {$} = window;
 
@@ -43,6 +44,7 @@ const {$} = window;
  */
 $(() => {
   const aliasGrid = new Grid('alias');
+  const searchTermInputContainer = '#alias_search_terms';
 
   aliasGrid.addExtension(new ReloadListActionExtension());
   aliasGrid.addExtension(new ExportToSqlManagerExtension());
@@ -56,4 +58,13 @@ $(() => {
   aliasGrid.addExtension(new ColumnTogglingExtension());
 
   new TranslatableInput();
+
+  new window.prestashop.component.TaggableField({
+    tokenFieldSelector: 'input.js-taggable-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
+
+  new SearchTermSearchInput(searchTermInputContainer);
 });

@@ -277,3 +277,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TitleFormDataHandler:
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AliasFormDataHandler:
+    autowire: true

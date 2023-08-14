@@ -24,17 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-/**
- * Defines contract to handle @see UpdateAliasCommand
- */
-interface UpdateAliasHandlerInterface
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
+
+class AliasFormDataHandler implements FormDataHandlerInterface
 {
     /**
-     * @param UpdateAliasCommand $command
+     * @var CommandBusInterface
      */
-    public function handle(UpdateAliasCommand $command): void;
+    private $commandBus;
+
+    public function __construct(
+        CommandBusInterface $commandBus,
+    ) {
+        $this->commandBus = $commandBus;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function create(array $data)
+    {
+        $command = new AddAliasCommand(explode(',', $data['aliases']), $data['search_terms']);
+        $this->commandBus->handle($command);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function update($id, array $data)
+    {
+        // TODO: Implement update() method.
+    }
 }

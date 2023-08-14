@@ -5,8 +5,8 @@ admin_search_index:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::indexAction
     _legacy_controller: AdminSearchConf
-    # _legacy_link: AdminSearchConf
-    # _legacy_feature_flag: search
+    _legacy_link: AdminSearchConf
+    _legacy_feature_flag: search
 
 admin_alias_search:
   path: /
@@ -15,13 +15,21 @@ admin_alias_search:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.alias
     redirectRoute: admin_search_index
-#    _legacy_controller: AdminSearchConf
-#    _legacy_link: AdminSearchConf:submitFilteralias
+    _legacy_controller: AdminSearchConf
+    _legacy_link: AdminSearchConf:submitFilteralias
 
 admin_alias_search_search_term_action:
   path: /
   methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::searchAliasesForAssociationAction
-#    _legacy_controller: AdminSearchConf
-#    _legacy_link: AdminSearchConf
+    _legacy_controller: AdminSearchConf
+    _legacy_link: AdminSearchConf
+
+admin_alias_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::createAction'
+    _legacy_controller: AdminSearchConf
+    _legacy_link: AdminSearchConf

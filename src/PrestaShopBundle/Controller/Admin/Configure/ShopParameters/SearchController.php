@@ -64,9 +64,55 @@ class SearchController extends FrameworkBundleAdminController
                 'add' => [
                     'desc' => $this->trans('Add new alias', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
-                    'href' => $this->generateUrl('admin_search_index'), // @TODO change when add new alias route will be implemented
+                    'href' => $this->generateUrl('admin_alias_create'),
                 ],
             ],
+        ]);
+    }
+
+    /**
+     * Display the Alias creation form.
+     *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_search_index",
+     *     message="You do not have permission to add this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request): Response
+    {
+        $aliasFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.alias_form_builder');
+        $aliasForm = $aliasFormBuilder->getForm();
+        $aliasForm->handleRequest($request);
+
+        try {
+            $aliasFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.alias_form_handler');
+            $result = $aliasFormHandler->handle($aliasForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_search_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, [$this->getErrorMessage($e)])
+            );
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/Alias/create.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'aliasForm' => $aliasForm->createView(),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New alias', 'Admin.Navigation.Menu'),
         ]);
     }
 
