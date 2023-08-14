@@ -322,7 +322,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
             }
             if (!$merged) {
-                $modules[] = new Module($externalModule);
+                $modules->add(new Module($externalModule));
             }
         }
 
