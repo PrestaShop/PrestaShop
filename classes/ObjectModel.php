@@ -1103,8 +1103,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Checks if multilingual object field values are valid before database interaction.
      *
-     * @param bool $die
-     * @param bool $errorReturn
+     * @param bool $die [default=true] If false, return a value instead of throwing an exception on error
+     * @param bool $errorReturn [default=false] If true, return error message instead of false on error
      *
      * @return bool|string true, false or error message
      *
@@ -1286,7 +1286,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns field name translation.
+     * Returns the human readable, translated field name.
      *
      * @param string $field Field name
      * @param string $class ObjectModel class name
@@ -1297,24 +1297,23 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public static function displayFieldName($field, $class = __CLASS__, $htmlentities = true, Context $context = null)
     {
-        global $_FIELDS;
-
         if (!isset($context)) {
             $context = Context::getContext();
         }
 
-        if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_ . $context->language->iso_code . '/fields.php')) {
-            @trigger_error(
-                 'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
-                E_USER_DEPRECATED
+        if (isset(static::$definition['fields'][$field]['trans'])) {
+            $message = static::$definition['fields'][$field]['trans'];
+            $translated = $context->getTranslator()->trans(
+                $message['key'],
+                [],
+                $message['domain'],
+                $context->language->locale
             );
-
-            include_once _PS_TRANSLATIONS_DIR_ . $context->language->iso_code . '/fields.php';
+        } else {
+            $translated = $field;
         }
 
-        $key = $class . '_' . md5($field);
-
-        return (is_array($_FIELDS) && array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field;
+        return $htmlentities ? htmlentities($translated, ENT_QUOTES, 'utf-8') : $translated;
     }
 
     /**

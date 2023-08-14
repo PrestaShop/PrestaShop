@@ -354,7 +354,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $mPath_to = _PS_MAIL_DIR_ . (string) $iso_to . '/';
         }
 
-        $lFiles = ['admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php'];
+        $lFiles = ['admin.php', 'errors.php', 'pdf.php', 'tabs.php'];
 
         // Added natives mails files
         $mFiles = [

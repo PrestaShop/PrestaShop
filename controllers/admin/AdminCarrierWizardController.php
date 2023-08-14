@@ -954,11 +954,6 @@ class AdminCarrierWizardControllerCore extends AdminController
         return $definition;
     }
 
-    public static function displayFieldName($field)
-    {
-        return $field;
-    }
-
     public function duplicateLogo($new_id, $old_id)
     {
         $old_logo = _PS_SHIP_IMG_DIR_ . '/' . (int) $old_id . '.jpg';
