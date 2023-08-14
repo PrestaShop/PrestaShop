@@ -94,7 +94,7 @@ class ThemeExtractor
         foreach ($catalogue->getMetadata('', '') as $domain => $metadata) {
             $newDomain = $this->normalizeDomain($domain);
             foreach ($metadata as $key => $value) {
-                $newCatalogue->setMetadata($key, $value, $newDomain);
+                $newCatalogue->setMetadata((string) $key, $value, $newDomain);
             }
         }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b88c467dd6901d0a85beedf63bc3aae2",
+    "content-hash": "60fdd414e98620e1f4a41b8cf8ff8198",
     "packages": [
         {
             "name": "api-platform/core",
@@ -7667,33 +7667,32 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v5.0.4",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "4aaef89ee0b4913157a76559bed52f4f35b2fb70"
+                "reference": "74d39adb54490e54ef9bd2d1dc98a9fad15dba85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/4aaef89ee0b4913157a76559bed52f4f35b2fb70",
-                "reference": "4aaef89ee0b4913157a76559bed52f4f35b2fb70",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/74d39adb54490e54ef9bd2d1dc98a9fad15dba85",
+                "reference": "74d39adb54490e54ef9bd2d1dc98a9fad15dba85",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^4",
-                "php": ">=7.2",
+                "php": ">=8.1",
                 "smarty/smarty": "^3.1 || ^4.0",
                 "symfony/twig-bridge": "^3.4 || ^4.4 || ^5.0",
                 "twig/twig": "^1.38 || ^2.7 || ^3.0"
             },
             "require-dev": {
-                "doctrine/common": "^2.10.0",
+                "doctrine/common": "^3",
                 "friendsofphp/php-cs-fixer": "^3.2",
-                "phpunit/phpunit": "^7.5 || ^8.5",
+                "phpunit/phpunit": "~9.5.10",
                 "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0",
-                "symfony/symfony": "^4",
-                "symfony/translation": "^3.4 || ^4.4 || ^5.0",
-                "symfony/twig-bundle": "^4"
+                "symfony/symfony": "^5.4",
+                "symfony/translation": "^3.4 || ^4.4 || ^5.0"
             },
             "type": "bundle",
             "autoload": {
@@ -7723,9 +7722,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v5.0.4"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.0.0"
             },
-            "time": "2022-09-01T08:33:26+00:00"
+            "time": "2023-05-30T08:46:24+00:00"
         },
         {
             "name": "psr/cache",
