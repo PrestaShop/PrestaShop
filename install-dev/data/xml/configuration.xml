@@ -696,9 +696,6 @@ Country</value>
   <configuration id="PS_MAIL_SUBJECT_PREFIX" name="PS_MAIL_SUBJECT_PREFIX">
     <value>1</value>
   </configuration>
-  <configuration id="PS_SHOP_ACTIVITY" name="PS_SHOP_ACTIVITY">
-    <value>Animaux</value>
-  </configuration>
   <configuration id="PS_LOGO" name="PS_LOGO">
     <value>logo.png</value>
   </configuration>

@@ -214,35 +214,6 @@ class PreferencesType extends TranslatorAwareType
                     'The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.',
                     'Admin.Shopparameters.Help'
                 ),
-            ])
-            ->add('shop_activity', ChoiceType::class, [
-                'required' => false,
-                'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),
-                'choices' => [
-                    'Animals and Pets' => 2,
-                    'Art and Culture' => 3,
-                    'Babies' => 4,
-                    'Beauty and Personal Care' => 5,
-                    'Cars' => 6,
-                    'Computer Hardware and Software' => 7,
-                    'Download' => 8,
-                    'Fashion and accessories' => 9,
-                    'Flowers, Gifts and Crafts' => 10,
-                    'Food and beverage' => 11,
-                    'HiFi, Photo and Video' => 12,
-                    'Home and Garden' => 13,
-                    'Home Appliances' => 14,
-                    'Jewelry' => 15,
-                    'Lingerie and Adult' => 1,
-                    'Mobile and Telecom' => 16,
-                    'Services' => 17,
-                    'Shoes and accessories' => 18,
-                    'Sport and Entertainment' => 19,
-                    'Travel' => 20,
-                ],
-                'label' => $this->trans('Main Shop Activity', 'Admin.Shopparameters.Feature'),
-                'choice_translation_domain' => 'Install',
-                'autocomplete' => true,
             ]);
     }
 
