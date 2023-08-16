@@ -149,8 +149,8 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     it('should close upload module modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalVisible = await moduleManagerPage.closeUploadModuleModal(page);
-      await expect(isModalVisible).to.be.false;
+      const isModalNotVisible = await moduleManagerPage.closeUploadModuleModal(page);
+      await expect(isModalNotVisible).to.be.true;
     });
 
     it(`should search the module '${Modules.psFacetedSearch.name}'`, async function () {
