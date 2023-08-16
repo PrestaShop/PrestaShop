@@ -74,7 +74,7 @@ describe('BO - Header : My profile', async () => {
       await loginPage.successLogin(page, employeeData.email, employeeData.password);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to \'Your profile\' page', async function () {
@@ -84,7 +84,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.closeSfToolBar(page);
 
       const pageTitle = await myProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
+      expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
     });
   });
 
@@ -98,13 +98,13 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertError(page);
-      await expect(textResult).to.equal(myProfilePage.errorInvalidFirstNameMessage);
+      expect(textResult).to.equal(myProfilePage.errorInvalidFirstNameMessage);
 
       const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
-      await expect(lastNameResult).to.equal(employeeData.lastName);
+      expect(lastNameResult).to.equal(employeeData.lastName);
 
       const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
-      await expect(firstNameResult).to.equal(employeeData.firstName);
+      expect(firstNameResult).to.equal(employeeData.firstName);
     });
 
     it('should update with valid firstname and invalid lastname and check error message', async function () {
@@ -115,13 +115,13 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertError(page);
-      await expect(textResult).to.equal(myProfilePage.errorInvalidLastNameMessage);
+      expect(textResult).to.equal(myProfilePage.errorInvalidLastNameMessage);
 
       const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
-      await expect(lastNameResult).to.equal(employeeData.lastName);
+      expect(lastNameResult).to.equal(employeeData.lastName);
 
       const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
-      await expect(firstNameResult).to.equal(employeeData.firstName);
+      expect(firstNameResult).to.equal(employeeData.firstName);
     });
 
     it('should update firstname and lastname with valid values', async function () {
@@ -133,16 +133,16 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
 
       const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
-      await expect(lastNameResult).to.equal(employeeData.lastName);
+      expect(lastNameResult).to.equal(employeeData.lastName);
 
       const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
-      await expect(firstNameResult).to.equal(employeeData.firstName);
+      expect(firstNameResult).to.equal(employeeData.firstName);
 
       const pageTitle = await myProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
+      expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
     });
 
     it('should upload an invalid format image and check error message', async function () {
@@ -154,7 +154,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertError(page);
-      await expect(textResult).to.contains(myProfilePage.errorInvalidFormatImageMessage);
+      expect(textResult).to.contains(myProfilePage.errorInvalidFormatImageMessage);
 
       // Delete created file
       await files.deleteFile('image.svg');
@@ -169,7 +169,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
 
       // Delete created file
       await files.deleteFile('image.jpg');
@@ -184,13 +184,13 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
 
       const isChecked = await myProfilePage.isGravatarEnabled(page);
-      await expect(isChecked).to.be.true;
+      expect(isChecked).to.eq(true);
 
       const avatarURL = await myProfilePage.getCurrentEmployeeAvatar(page);
-      await expect(avatarURL).to.contains('https://www.gravatar.com/avatar/');
+      expect(avatarURL).to.contains('https://www.gravatar.com/avatar/');
 
       // Reset value
       employeeData.enableGravatar = false;
@@ -206,7 +206,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
     });
 
     it('should logout from BO', async function () {
@@ -220,7 +220,7 @@ describe('BO - Header : My profile', async () => {
       await loginPage.successLogin(page, employeeData.email, employeeData.password);
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
     });
 
     it('should reset the language', async function () {
@@ -233,7 +233,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
     });
   });
 
@@ -248,7 +248,7 @@ describe('BO - Header : My profile', async () => {
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      expect(pageTitle).to.contains(employeesPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
@@ -257,14 +257,14 @@ describe('BO - Header : My profile', async () => {
       await employeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-      await expect(textEmail).to.contains(employeeData.email);
+      expect(textEmail).to.contains(employeeData.email);
     });
 
     it('should delete employee and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
       const textResult = await employeesPage.deleteEmployeeAndFail(page, 1);
-      await expect(textResult).to.equal(employeesPage.errorDeleteOwnAccountMessage);
+      expect(textResult).to.equal(employeesPage.errorDeleteOwnAccountMessage);
     });
   });
 

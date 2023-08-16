@@ -48,7 +48,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(carriersPage.pageTitle);
+    expect(pageTitle).to.contains(carriersPage.pageTitle);
   });
 
   describe('Change carrier position', async () => {
@@ -57,7 +57,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCarriersFilters', baseContext);
 
       const numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCarriers).to.be.above(2);
+      expect(numberOfCarriers).to.be.above(2);
     });
 
     it('should sort by \'position\' \'asc\' And check result', async function () {
@@ -74,7 +74,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-      await expect(sortedTableFloat).to.deep.equal(expectedResult);
+      expect(sortedTableFloat).to.deep.equal(expectedResult);
     });
 
     it('should change first carrier position to 3', async function () {
@@ -85,11 +85,11 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       // Change position and check successful message
       const textResult = await carriersPage.changePosition(page, 1, 3);
-      await expect(textResult, 'Unable to change position').to.contains(carriersPage.successfulUpdateMessage);
+      expect(textResult, 'Unable to change position').to.contains(carriersPage.successfulUpdateMessage);
 
       // Get third row carrier name and check if is equal the first row carrier name before changing position
       const thirdRowCarrierName = await carriersPage.getTextColumn(page, 3, 'name');
-      await expect(thirdRowCarrierName, 'Changing position was done wrongly').to.equal(firstRowCarrierName);
+      expect(thirdRowCarrierName, 'Changing position was done wrongly').to.equal(firstRowCarrierName);
     });
 
     it('should reset third carrier position to 1', async function () {
@@ -100,11 +100,11 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       // Change position and check successful message
       const textResult = await carriersPage.changePosition(page, 3, 1);
-      await expect(textResult, 'Unable to change position').to.contains(carriersPage.successfulUpdateMessage);
+      expect(textResult, 'Unable to change position').to.contains(carriersPage.successfulUpdateMessage);
 
       // Get first row carrier name and check if is equal the first row carrier name before changing position
       const firstRowCarrierName = await carriersPage.getTextColumn(page, 1, 'name');
-      await expect(firstRowCarrierName, 'Changing position was done wrongly').to.equal(thirdRowCarrierName);
+      expect(firstRowCarrierName, 'Changing position was done wrongly').to.equal(thirdRowCarrierName);
     });
   });
 });

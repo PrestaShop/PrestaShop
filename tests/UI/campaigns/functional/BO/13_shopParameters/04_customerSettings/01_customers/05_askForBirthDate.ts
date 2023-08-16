@@ -56,7 +56,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birt
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -74,7 +74,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birt
         test.args.enable,
       );
 
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
     it('should go to customer account in FO and check birth day input', async function () {
@@ -92,7 +92,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birt
 
       // Check birthday
       const isBirthDateInputVisible = await foCreateAccountPage.isBirthDateVisible(page);
-      await expect(isBirthDateInputVisible).to.be.equal(test.args.enable);
+      expect(isBirthDateInputVisible).to.be.equal(test.args.enable);
     });
 
     it('should go back to BO', async function () {
@@ -102,7 +102,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birt
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
   });
 });

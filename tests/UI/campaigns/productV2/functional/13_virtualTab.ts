@@ -351,7 +351,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLabelOutOfStock', baseContext);
 
       const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
-      await expect(availabilityLabel).to.contains('Out of stock');
+      expect(availabilityLabel).to.contains('Out of stock');
 
       const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(true);

@@ -87,7 +87,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset filter and get the last reference', async function () {
@@ -96,21 +96,21 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
       await ordersPage.resetFilter(page);
 
       orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
-      await expect(orderReference).to.not.equal(null);
+      expect(orderReference).to.not.equal(null);
     });
 
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
-      await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
     it('should check that the status is updated successfully', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+      expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
     });
   });
 
@@ -127,7 +127,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
       await outstandingPage.closeSfToolBar(page);
 
       const pageTitle = await outstandingPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      expect(pageTitle).to.contains(outstandingPage.pageTitle);
     });
 
     it('should reset filter and get the last outstanding ID', async function () {
@@ -139,7 +139,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
         await outstandingPage.getTextColumn(page, 'id_invoice', 1),
         10,
       );
-      await expect(outstandingId).to.be.at.least(1);
+      expect(outstandingId).to.be.at.least(1);
     });
 
     it('should view the Invoice and check the order reference', async function () {
@@ -148,7 +148,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
       filePath = await outstandingPage.viewInvoice(page, 'invoice', 1);
 
       const doesFileExist = await files.doesFileExist(filePath, 5000);
-      await expect(doesFileExist, 'The file is not existing!').to.be.true;
+      expect(doesFileExist, 'The file is not existing!').to.eq(true);
     });
 
     it('should check reference in the invoice pdf file', async function () {
@@ -156,7 +156,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
 
       // Check Reference in pdf
       const referenceOrder = await files.isTextInPDF(filePath, orderReference);
-      await expect(referenceOrder).to.be.true;
+      expect(referenceOrder).to.eq(true);
     });
   });
 

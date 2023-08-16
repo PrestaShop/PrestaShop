@@ -98,7 +98,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it(`should search for the product '${Products.demo_6.name}'`, async function () {
@@ -107,7 +107,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await homePage.searchProduct(page, Products.demo_6.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
@@ -116,14 +116,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_6.name);
+      expect(pageTitle).to.contains(Products.demo_6.name);
     });
 
     it('should check the new tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewTag', baseContext);
 
       const flagText = await productPage.getProductTag(page);
-      await expect(flagText).to.eq('New');
+      expect(flagText).to.eq('New');
     });
   });
 
@@ -142,14 +142,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it('should change the number of days to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays0', baseContext);
 
       const result = await productSettingsPage.updateNumberOfDays(page, 0);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -160,7 +160,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it(`should search for the product '${Products.demo_6.name}'`, async function () {
@@ -169,7 +169,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await homePage.searchProduct(page, Products.demo_6.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
@@ -178,14 +178,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_6.name);
+      expect(pageTitle).to.contains(Products.demo_6.name);
     });
 
     it('should check that the new tag is not displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIsNewTagNotVisible', baseContext);
 
       const isTagVisible = await productPage.isProductTagVisible(page);
-      await expect(isTagVisible).to.be.false;
+      expect(isTagVisible).to.eq(false);
     });
   });
 
@@ -196,7 +196,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productPage.goTo(page, global.BO.URL);
 
       const pageTitle = await dashboardPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      expect(pageTitle).to.contains(dashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
@@ -210,14 +210,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter by product name', async function () {
@@ -226,7 +226,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.filterProducts(page, 'name', Products.demo_6.name, 'input');
 
       const numberOfProducts = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProducts).to.eq(1);
+      expect(numberOfProducts).to.eq(1);
     });
 
     it('should go to the product page', async function () {
@@ -235,14 +235,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.goToEditProductPage(page, 1);
 
       const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should add a specific price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addSpecificPrice', baseContext);
 
       const message = await addProductPage.addSpecificPrices(page, specificPriceData.specificPrice);
-      await expect(message).to.equal(addProductPage.settingUpdatedMessage);
+      expect(message).to.equal(addProductPage.settingUpdatedMessage);
     });
   });
 
@@ -253,14 +253,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       page = await addProductPage.previewProduct(page);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_6.name);
+      expect(pageTitle).to.contains(Products.demo_6.name);
     });
 
     it('should check the discount tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
       const flagText = await productPage.getProductTag(page);
-      await expect(flagText).to.eq(`-€${specificPriceData.specificPrice.discount.toFixed(2)}`);
+      expect(flagText).to.eq(`-€${specificPriceData.specificPrice.discount.toFixed(2)}`);
     });
   });
 
@@ -271,7 +271,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
@@ -281,7 +281,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to add product page', async function () {
@@ -290,14 +290,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.goToAddProductPage(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it(`create product '${packOfProducts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
       const createProductMessage = await addProductPage.setProduct(page, packOfProducts);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
   });
 
@@ -308,14 +308,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       page = await addProductPage.previewProduct(page);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(packOfProducts.name);
+      expect(pageTitle).to.contains(packOfProducts.name);
     });
 
     it('should check the pack tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPackTag', baseContext);
 
       const flagText = await productPage.getProductTag(page);
-      await expect(flagText).to.eq('Pack');
+      expect(flagText).to.eq('Pack');
     });
   });
 
@@ -326,7 +326,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should edit the quantity', async function () {
@@ -335,7 +335,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await addProductPage.setProductQuantity(page, 0);
 
       const message = await addProductPage.saveProduct(page);
-      await expect(message).to.eq(addProductPage.settingUpdatedMessage);
+      expect(message).to.eq(addProductPage.settingUpdatedMessage);
     });
   });
 
@@ -346,14 +346,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       page = await addProductPage.previewProduct(page);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(packOfProducts.name);
+      expect(pageTitle).to.contains(packOfProducts.name);
     });
 
     it('should check the out-of-stock and pack tags', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOutOfStockTag', baseContext);
 
       const flagText = await productPage.getProductTag(page);
-      await expect(flagText).to.contain('Pack')
+      expect(flagText).to.contain('Pack')
         .and.contain('Out-of-Stock');
     });
   });
@@ -366,7 +366,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
@@ -379,14 +379,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it('should change the number of days to 12', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays', baseContext);
 
       const result = await productSettingsPage.updateNumberOfDays(page, 12);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -403,14 +403,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter by product name', async function () {
@@ -419,7 +419,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.filterProducts(page, 'name', Products.demo_6.name, 'input');
 
       const numberOfProducts = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProducts).to.eq(1);
+      expect(numberOfProducts).to.eq(1);
     });
 
     it('should go to the product page', async function () {
@@ -428,14 +428,14 @@ describe('FO - Navigation and display : Display tags', async () => {
       await productsPage.goToEditProductPage(page, 1);
 
       const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should delete the specific price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSpecificPrice', baseContext);
 
       const message = await addProductPage.deleteSpecificPrice(page);
-      await expect(message).to.equal(addProductPage.successfulDeleteMessage);
+      expect(message).to.equal(addProductPage.successfulDeleteMessage);
     });
   });
 

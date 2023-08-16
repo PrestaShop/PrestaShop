@@ -60,7 +60,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -82,7 +82,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
         CustomerSettingsOptions.OPTION_CART_LOGIN,
         test.args.enable,
       );
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop and login FO', async function () {
@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
-      await expect(connected, 'Customer is not connected in FO').to.be.true;
+      expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
     it('should add the first product to the cart then logout', async function () {
@@ -109,7 +109,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Check number of product in cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.above(0);
+      expect(notificationsNumber).to.be.above(0);
 
       // Logout from FO
       await homePage.logout(page);
@@ -123,7 +123,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
-      await expect(connected, 'Customer is not connected in FO').to.be.true;
+      expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
     it('should check the cart then logout', async function () {
@@ -133,11 +133,11 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
 
       if (test.args.enable) {
-        await expect(notificationsNumber).to.be.above(0);
+        expect(notificationsNumber).to.be.above(0);
         // Logout from FO
         await homePage.logout(page);
       } else {
-        await expect(notificationsNumber).to.be.equal(0);
+        expect(notificationsNumber).to.be.equal(0);
       }
     });
 
@@ -149,7 +149,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
         page = await homePage.closePage(browserContext, page, 0);
 
         const pageTitle = await customerSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
       });
     }
   });

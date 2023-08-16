@@ -57,7 +57,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
   it('should go to \'Tags\' page', async function () {
@@ -67,7 +67,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
     numberOfTags = await tagsPage.getNumberOfElementInGrid(page);
 
     const pageTitle = await tagsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(tagsPage.pageTitle);
+    expect(pageTitle).to.contains(tagsPage.pageTitle);
   });
 
   // 1 - Create tag
@@ -78,17 +78,17 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
       await tagsPage.goToAddNewTagPage(page);
 
       const pageTitle = await addTagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
     });
 
     it('should create tag and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createTag', baseContext);
 
       const textResult = await addTagPage.setTag(page, createTagData);
-      await expect(textResult).to.contains(tagsPage.successfulCreationMessage);
+      expect(textResult).to.contains(tagsPage.successfulCreationMessage);
 
       const numberOfElementAfterCreation = await tagsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1);
+      expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1);
     });
   });
 
@@ -100,17 +100,17 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
       await tagsPage.gotoEditTagPage(page, 1);
 
       const pageTitle = await addTagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addTagPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addTagPage.pageTitleEdit);
     });
 
     it('should update tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateTag', baseContext);
 
       const textResult = await addTagPage.setTag(page, editTagData);
-      await expect(textResult).to.contains(tagsPage.successfulUpdateMessage);
+      expect(textResult).to.contains(tagsPage.successfulUpdateMessage);
 
       const numberOfTagsAfterUpdate = await tagsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfTagsAfterUpdate).to.be.equal(numberOfTags + 1);
+      expect(numberOfTagsAfterUpdate).to.be.equal(numberOfTags + 1);
     });
   });
 
@@ -120,10 +120,10 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
       await testContext.addContextItem(this, 'testIdentifier', 'deleteTag', baseContext);
 
       const textResult = await tagsPage.deleteTag(page, 1);
-      await expect(textResult).to.contains(tagsPage.successfulDeleteMessage);
+      expect(textResult).to.contains(tagsPage.successfulDeleteMessage);
 
       const numberOfTagsAfterDelete = await tagsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfTagsAfterDelete).to.be.equal(numberOfTags);
+      expect(numberOfTagsAfterDelete).to.be.equal(numberOfTags);
     });
   });
 });

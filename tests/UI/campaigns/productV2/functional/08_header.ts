@@ -95,7 +95,7 @@ describe('BO - Catalog - Products : Header', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
     const isModalVisible = await productsPage.clickOnNewProductButton(page);
-    await expect(isModalVisible).to.be.true;
+    expect(isModalVisible).to.eq(true);
   });
 
   it('should check the standard product description', async function () {
@@ -195,7 +195,7 @@ describe('BO - Catalog - Products : Header', async () => {
     await createProductsPage.goToTab(page, 'pricing');
 
     const isTabActive = await createProductsPage.isTabActive(page, 'pricing');
-    await expect(isTabActive).to.be.true;
+    expect(isTabActive).to.eq(true);
   });
 
   it('should edit the retail price', async function () {
@@ -219,7 +219,7 @@ describe('BO - Catalog - Products : Header', async () => {
     await createProductsPage.goToTab(page, 'stock');
 
     const isTabActive = await createProductsPage.isTabActive(page, 'stock');
-    await expect(isTabActive).to.be.true;
+    expect(isTabActive).to.eq(true);
   });
 
   it('should add items to stock', async function () {
@@ -252,7 +252,7 @@ describe('BO - Catalog - Products : Header', async () => {
     await createProductsPage.goToTab(page, 'description');
 
     const isTabActive = await createProductsPage.isTabActive(page, 'description');
-    await expect(isTabActive).to.be.true;
+    expect(isTabActive).to.eq(true);
   });
 
   it('should add image', async function () {
@@ -295,7 +295,7 @@ describe('BO - Catalog - Products : Header', async () => {
 
     // FYI : stock is the ID for the "Virtual product" tab
     const isTabVisible = await createProductsPage.isTabVisible(page, 'stock');
-    await expect(isTabVisible).to.be.true;
+    expect(isTabVisible).to.eq(true);
   });
 
   it('should go to the Details tab', async function () {
@@ -304,7 +304,7 @@ describe('BO - Catalog - Products : Header', async () => {
     await createProductsPage.goToTab(page, 'details');
 
     const isTabActive = await createProductsPage.isTabActive(page, 'details');
-    await expect(isTabActive).to.be.true;
+    expect(isTabActive).to.eq(true);
   });
 
   it('should set references', async function () {

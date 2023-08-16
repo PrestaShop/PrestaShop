@@ -51,7 +51,7 @@ describe('FO - Catalog : Check the Product page', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to the first product page', async function () {
@@ -60,7 +60,7 @@ describe('FO - Catalog : Check the Product page', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should check the product page', async function () {

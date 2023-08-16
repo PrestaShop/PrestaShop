@@ -59,7 +59,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   // Go to suppliers page
@@ -69,7 +69,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
     await brandsPage.goToSubTabSuppliers(page);
 
     const pageTitle = await suppliersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(suppliersPage.pageTitle);
+    expect(pageTitle).to.contains(suppliersPage.pageTitle);
 
     numberOfSuppliers = await suppliersPage.resetAndGetNumberOfLines(page);
   });
@@ -87,17 +87,17 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
         await suppliersPage.goToAddNewSupplierPage(page);
 
         const pageTitle = await addSupplierPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addSupplierPage.pageTitle);
+        expect(pageTitle).to.contains(addSupplierPage.pageTitle);
       });
 
       it(`should create supplier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index}`, baseContext);
 
         const result = await addSupplierPage.createEditSupplier(page, createSupplierData);
-        await expect(result).to.equal(suppliersPage.successfulCreationMessage);
+        expect(result).to.equal(suppliersPage.successfulCreationMessage);
 
         const numberOfSuppliersAfterCreation = await suppliersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfSuppliersAfterCreation).to.be.equal(numberOfSuppliers + 1 + index);
+        expect(numberOfSuppliersAfterCreation).to.be.equal(numberOfSuppliers + 1 + index);
       });
 
       after(() => files.deleteFile(createSupplierData.logo));
@@ -183,17 +183,17 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
             const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult);
+              expect(sortedTableFloat).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+              expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
             const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTable).to.deep.equal(expectedResult);
+              expect(sortedTable).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+              expect(sortedTable).to.deep.equal(expectedResult.reverse());
             }
           }
         },
@@ -214,7 +214,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
       );
 
       const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
-      await expect(textColumn).to.contains('todelete');
+      expect(textColumn).to.contains('todelete');
     });
 
     [
@@ -226,15 +226,15 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
 
         const disableTextResult = await suppliersPage.bulkSetStatus(page, test.args.enabledValue);
 
-        await expect(disableTextResult).to.be.equal(suppliersPage.successfulUpdateStatusMessage);
+        expect(disableTextResult).to.be.equal(suppliersPage.successfulUpdateStatusMessage);
 
         // Check that element in grid are disabled
         const numberOfSuppliersInGrid = await suppliersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfSuppliersInGrid).to.be.at.most(11);
+        expect(numberOfSuppliersInGrid).to.be.at.most(11);
 
         for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
           const supplierStatus = await suppliersPage.getStatus(page, i);
-          await expect(supplierStatus).to.equal(test.args.enabledValue);
+          expect(supplierStatus).to.equal(test.args.enabledValue);
         }
       });
     });
@@ -243,14 +243,14 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteSuppliers', baseContext);
 
       const deleteTextResult = await suppliersPage.deleteWithBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(suppliersPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(suppliersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkDelete', baseContext);
 
       const numberOfSuppliersAfterReset = await suppliersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
+      expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
     });
   });
 });

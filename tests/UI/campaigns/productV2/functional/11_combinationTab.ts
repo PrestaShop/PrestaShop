@@ -214,7 +214,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await combinationsTab.clickOnPreviousCombinationButton(page);
 
       const combinationName = await combinationsTab.getCombinationNameFromModal(page);
-      await expect(combinationName).to.equal('Size - S, Color - Gray');
+      expect(combinationName).to.equal('Size - S, Color - Gray');
     });
 
     it('should close the modal', async function () {

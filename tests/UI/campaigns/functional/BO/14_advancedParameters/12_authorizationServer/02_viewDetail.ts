@@ -59,14 +59,14 @@ describe('BO - Advanced Parameter - Authorization Server : View detail', async (
         );
 
         const pageTitle = await authorizationServerPage.getPageTitle(page);
-        await expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
+        expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
       });
 
       it('should check that no records found', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
         const noRecordsFoundText = await authorizationServerPage.getTextForEmptyTable(page);
-        await expect(noRecordsFoundText).to.contains('warning No records found');
+        expect(noRecordsFoundText).to.contains('warning No records found');
       });
 
       it('should go to add New Authorized App page', async function () {
@@ -75,17 +75,17 @@ describe('BO - Advanced Parameter - Authorization Server : View detail', async (
         await authorizationServerPage.goToNewAuthorizedAppPage(page);
 
         const pageTitle = await addNewAuthorizedAppPage.getPageTitle(page);
-        await expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleCreate);
+        expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleCreate);
       });
 
       it('should create authorized app', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createAuthorizedApp', baseContext);
 
         const textResult = await addNewAuthorizedAppPage.addAuthorizedApplication(page, application);
-        await expect(textResult).to.equal(addNewAuthorizedAppPage.successfulCreationMessage);
+        expect(textResult).to.equal(addNewAuthorizedAppPage.successfulCreationMessage);
 
         const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
-        await expect(numElements).to.equal(1);
+        expect(numElements).to.equal(1);
       });
     });
 
@@ -96,15 +96,15 @@ describe('BO - Advanced Parameter - Authorization Server : View detail', async (
         await authorizationServerPage.goToViewAuthorizedAppPage(page, 1);
 
         const pageTitle = await viewAuthorizedAppPage.getPageTitle(page);
-        await expect(pageTitle).to.eq(viewAuthorizedAppPage.pageTitle(application.appName));
+        expect(pageTitle).to.eq(viewAuthorizedAppPage.pageTitle(application.appName));
       });
 
       it('should check details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkDetailsInformations', baseContext);
 
         const appInformation = await viewAuthorizedAppPage.getAppInformation(page);
-        await expect(appInformation.appName).to.eq(application.appName);
-        await expect(appInformation.description).to.eq(application.description);
+        expect(appInformation.appName).to.eq(application.appName);
+        expect(appInformation.description).to.eq(application.description);
       });
     });
 
@@ -119,17 +119,17 @@ describe('BO - Advanced Parameter - Authorization Server : View detail', async (
         );
 
         const pageTitle = await authorizationServerPage.getPageTitle(page);
-        await expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
+        expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
       });
 
       it('should delete authorized app', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteAuthorizedApp', baseContext);
 
         const textResult = await authorizationServerPage.deleteAuthorizationApplication(page, 1);
-        await expect(textResult).to.equal(addNewAuthorizedAppPage.successfulDeleteMessage);
+        expect(textResult).to.equal(addNewAuthorizedAppPage.successfulDeleteMessage);
 
         const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
-        await expect(numElements).to.equal(0);
+        expect(numElements).to.equal(0);
       });
     });
   });

@@ -99,7 +99,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
       await imageSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await imageSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
     });
 
     it('should enable WebP image format', async function () {
@@ -114,15 +114,15 @@ describe('BO - Design - Image Settings - Check category image format', async () 
 
       // JPEG/PNG should be checked
       const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
-      await expect(jpegChecked).to.be.true;
+      expect(jpegChecked).to.eq(true);
 
       // JPEG/PNG should be checked
       const jpegDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
-      await expect(jpegDisabled).to.be.true;
+      expect(jpegDisabled).to.eq(true);
 
       // WebP should be checked
       const webpChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
-      await expect(webpChecked).to.be.true;
+      expect(webpChecked).to.eq(true);
     });
   });
 
@@ -160,7 +160,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
             await categoryPage.goToBO(page);
 
             const pageTitle = await dashboardPage.getPageTitle(page);
-            await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+            expect(pageTitle).to.contains(dashboardPage.pageTitle);
           });
         }
 
@@ -176,7 +176,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           await categoriesPage.closeSfToolBar(page);
 
           const pageTitle = await categoriesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+          expect(pageTitle).to.contains(categoriesPage.pageTitle);
         });
 
         it('should click on \'Add new category\' button', async function () {
@@ -185,7 +185,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           await categoriesPage.goToAddNewCategoryPage(page);
 
           const pageTitle = await addCategoryPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
+          expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
         });
 
         it('should create category', async function () {
@@ -194,7 +194,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           await addCategoryPage.closeSfToolBar(page);
 
           const textResult = await addCategoryPage.createEditCategory(page, arg.category);
-          await expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
+          expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
         });
 
         it('should search for the new category and fetch the ID', async function () {
@@ -209,7 +209,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           );
 
           const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-          await expect(textColumn).to.contains(arg.category.name);
+          expect(textColumn).to.contains(arg.category.name);
 
           idCategory = parseInt(await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
         });
@@ -221,19 +221,19 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const pathImageJPG: string = `${files.getRootPath()}/img/c/${idCategory}.jpg`;
 
           const fileExistsJPG = await files.doesFileExist(pathImageJPG);
-          await expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.be.true;
+          expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
           const imageTypeJPG = await files.getImageType(pathImageJPG);
-          await expect(imageTypeJPG).to.be.eq(arg.extOriginal);
+          expect(imageTypeJPG).to.be.eq(arg.extOriginal);
 
           // Check the cover image file
           const pathImageCoverJPG: string = `${files.getRootPath()}/img/c/${idCategory}-category_default.jpg`;
 
           const fileExistsCoverJPG = await files.doesFileExist(pathImageCoverJPG);
-          await expect(fileExistsCoverJPG, `The file ${pathImageCoverJPG} doesn't exist!`).to.be.true;
+          expect(fileExistsCoverJPG, `The file ${pathImageCoverJPG} doesn't exist!`).to.eq(true);
 
           const imageTypeCoverJPG = await files.getImageType(pathImageCoverJPG);
-          await expect(imageTypeCoverJPG).to.be.eq(arg.extImageType);
+          expect(imageTypeCoverJPG).to.be.eq(arg.extImageType);
 
           // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
           /*
@@ -241,20 +241,20 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const pathImageWEBP: string = `${files.getRootPath()}/img/c/${idCategory}-large_default.webp`;
 
           const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
-          await expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.be.true;
+          expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
           const imageTypeWEBP = await files.getImageType(pathImageWEBP);
-          await expect(imageTypeWEBP).to.be.eq('webp');
+          expect(imageTypeWEBP).to.be.eq('webp');
           */
 
           // Check the Menu image file
           const pathImageMetaJPG: string = `${files.getRootPath()}/img/c/${idCategory}-small_default.jpg`;
 
           const fileExistsMetaJPG = await files.doesFileExist(pathImageMetaJPG);
-          await expect(fileExistsMetaJPG, `The file ${pathImageMetaJPG} doesn't exist!`).to.be.true;
+          expect(fileExistsMetaJPG, `The file ${pathImageMetaJPG} doesn't exist!`).to.eq(true);
 
           const imageTypeMetaJPG = await files.getImageType(pathImageMetaJPG);
-          await expect(imageTypeMetaJPG).to.be.eq(arg.extOriginal);
+          expect(imageTypeMetaJPG).to.be.eq(arg.extOriginal);
 
           // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
           /*
@@ -262,10 +262,10 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const pathImageWEBP: string = `${files.getRootPath()}/img/c/${idCategory}-large_default.webp`;
 
           const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
-          await expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.be.true;
+          expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
           const imageTypeWEBP = await files.getImageType(pathImageWEBP);
-          await expect(imageTypeWEBP).to.be.eq('webp');
+          expect(imageTypeWEBP).to.be.eq('webp');
           */
         });
 
@@ -276,7 +276,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           await homePage.changeLanguage(page, 'en');
 
           const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to all products page', async function () {
@@ -285,19 +285,19 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           await homePage.goToAllProductsPage(page);
 
           const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
-          await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+          expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
         });
 
         it('should check that the main image of the quick view is a WebP', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${argExtension}`, baseContext);
 
           const categoryImage = await categoryPage.getCategoryImageMain(page, arg.category.name);
-          await expect(categoryImage).to.be.not.null;
+          expect(categoryImage).to.not.eq(null);
 
           await files.downloadFile(categoryImage as string, 'image.img');
 
           const categoryImageType = await files.getImageType('image.img');
-          await expect(categoryImageType).to.be.eq('webp');
+          expect(categoryImageType).to.be.eq('webp');
 
           await files.deleteFile('image.img');
         });

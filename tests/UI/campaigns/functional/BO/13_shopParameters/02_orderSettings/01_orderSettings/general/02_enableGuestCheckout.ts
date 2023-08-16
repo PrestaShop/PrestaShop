@@ -49,7 +49,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
     await orderSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -70,7 +70,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       await testContext.addContextItem(this, 'testIdentifier', `guestCheckout${index}`, baseContext);
 
       const result = await orderSettingsPage.setGuestCheckoutStatus(page, test.args.exist);
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -82,7 +82,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should verify the guest checkout', async function () {
@@ -99,10 +99,10 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
 
       // Check guest checkout
       const isNoticeVisible = await checkoutPage.getActiveLinkFromPersonalInformationBlock(page);
-      await expect(isNoticeVisible).to.be.equal(test.args.tabName);
+      expect(isNoticeVisible).to.be.equal(test.args.tabName);
 
       const isPasswordRequired = await checkoutPage.isPasswordRequired(page);
-      await expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);
+      expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);
     });
 
     it('should go back to BO', async function () {
@@ -111,7 +111,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       page = await checkoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
   });
 });

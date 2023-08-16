@@ -51,14 +51,14 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
     await stocksPage.closeSfToolBar(page);
 
     const pageTitle = await stocksPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(stocksPage.pageTitle);
+    expect(pageTitle).to.contains(stocksPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts', baseContext);
 
     numberOfProducts = await stocksPage.getTotalNumberOfProducts(page);
-    await expect(numberOfProducts).to.be.above(0);
+    expect(numberOfProducts).to.be.above(0);
   });
 
   /*
@@ -77,10 +77,10 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
         await stocksPage.simpleFilter(page, productStock.name);
 
         const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
-        await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
+        expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
         const textColumn = await stocksPage.getTextColumnFromTableStocks(page, 1, 'name');
-        await expect(textColumn).to.contains(productStock.name);
+        expect(textColumn).to.contains(productStock.name);
 
         // Get physical and available quantities of product
         productStock.stocks = {
@@ -88,8 +88,8 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
           available: parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10),
         };
 
-        await expect(productStock.stocks.physical).to.be.above(0);
-        await expect(productStock.stocks.available).to.be.above(0);
+        expect(productStock.stocks.physical).to.be.above(0);
+        expect(productStock.stocks.available).to.be.above(0);
       });
 
       it(`should ${test.args.action} quantity by setting input value`, async function () {
@@ -97,15 +97,15 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
 
         // Update Quantity and check successful message
         const updateMessage = await stocksPage.updateRowQuantityWithInput(page, 1, test.args.updateValue);
-        await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+        expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
 
         // Check physical and available quantities of product after update
         const quantityToCheck = await stocksPage.getStockQuantityForProduct(page, 1);
 
-        await expect(quantityToCheck.physical).to.be.equal(productStock.stocks.physical + test.args.updateValue);
+        expect(quantityToCheck.physical).to.be.equal(productStock.stocks.physical + test.args.updateValue);
         productStock.stocks.physical = quantityToCheck.physical;
 
-        await expect(quantityToCheck.available).to.be.equal(productStock.stocks.available + test.args.updateValue);
+        expect(quantityToCheck.available).to.be.equal(productStock.stocks.available + test.args.updateValue);
         productStock.stocks.available = quantityToCheck.available;
       });
 
@@ -115,7 +115,7 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
         await stocksPage.goToSubTabMovements(page);
 
         const pageTitle = await movementsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(movementsPage.pageTitle);
+        expect(pageTitle).to.contains(movementsPage.pageTitle);
       });
 
       it(`should filter by product name '${productStock.name}' and check result`, async function () {
@@ -124,14 +124,14 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
         await movementsPage.simpleFilter(page, productStock.name);
 
         const numberOfMovements = await movementsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfMovements).to.be.at.least(1);
+        expect(numberOfMovements).to.be.at.least(1);
 
         const productName = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'product_name');
-        await expect(productName).to.contain(productStock.name);
+        expect(productName).to.contain(productStock.name);
 
         // Check movement quantity
         const movementQuantity = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'quantity');
-        await expect(parseFloat(movementQuantity)).to.equal(test.args.updateValue);
+        expect(parseFloat(movementQuantity)).to.equal(test.args.updateValue);
       });
 
       it('should go back to stocks page', async function () {
@@ -140,14 +140,14 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
         await movementsPage.goToSubTabStocks(page);
 
         const pageTitle = await stocksPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(stocksPage.pageTitle);
+        expect(pageTitle).to.contains(stocksPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterStocks${index}`, baseContext);
 
         const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
-        await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+        expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });
   });

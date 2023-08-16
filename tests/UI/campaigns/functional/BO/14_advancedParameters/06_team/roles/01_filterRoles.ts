@@ -49,7 +49,7 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should go to \'Roles\' page', async function () {
@@ -58,14 +58,14 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
     await employeesPage.goToRolesPage(page);
 
     const pageTitle = await rolesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(rolesPage.pageTitle);
+    expect(pageTitle).to.contains(rolesPage.pageTitle);
   });
 
   it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfProfiles = await rolesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProfiles).to.be.above(0);
+    expect(numberOfProfiles).to.be.above(0);
   });
 
   // 1 : Filter roles table
@@ -90,11 +90,11 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
         await rolesPage.filterRoles(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
 
         const numberOfProfilesAfterFilter = await rolesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
+        expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
 
         for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
           const textName = await rolesPage.getTextColumnFromTable(page, i, test.args.filterBy);
-          await expect(textName).to.contains(test.args.filterValue);
+          expect(textName).to.contains(test.args.filterValue);
         }
       });
 
@@ -102,7 +102,7 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfProfilesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
+        expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
       });
     });
   });

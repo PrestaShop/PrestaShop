@@ -42,20 +42,20 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
     await logsPage.closeSfToolBar(page);
 
     const pageTitle = await logsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(logsPage.pageTitle);
+    expect(pageTitle).to.contains(logsPage.pageTitle);
   });
 
   it('should enter an invalid email in \'Send emails to\' input and check the error message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setInvalidEmail', baseContext);
 
     const errorMessage = await logsPage.setEmail(page, 'demo@prestashop.');
-    await expect(errorMessage).to.eq('Invalid email: demo@prestashop..');
+    expect(errorMessage).to.eq('Invalid email: demo@prestashop..');
   });
 
   it('should enter a valid email in \'Send emails to\' input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setValidEmail', baseContext);
 
     const errorMessage = await logsPage.setEmail(page, Employees.DefaultEmployee.email);
-    await expect(errorMessage).to.eq(logsPage.successfulUpdateMessage);
+    expect(errorMessage).to.eq(logsPage.successfulUpdateMessage);
   });
 });

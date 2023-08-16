@@ -53,7 +53,7 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
     await ordersPage.closeSfToolBar(page);
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should go to the first order page', async function () {
@@ -62,21 +62,21 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
     await ordersPage.goToOrder(page, 1);
 
     const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+    expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
   });
 
   it('should modify the product quantity and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderQuantity', baseContext);
 
     const newQuantity = await orderPageProductsBlock.modifyProductQuantity(page, 1, 5);
-    await expect(newQuantity, 'Quantity was not updated').to.equal(5);
+    expect(newQuantity, 'Quantity was not updated').to.equal(5);
   });
 
   it('should modify the order status and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
 
     const orderStatus = await orderPageProductsBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-    await expect(orderStatus).to.equal(OrderStatuses.paymentAccepted.name);
+    expect(orderStatus).to.equal(OrderStatuses.paymentAccepted.name);
   });
 
   // Logout from BO

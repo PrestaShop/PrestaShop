@@ -47,14 +47,14 @@ function setMultiStoreStatus(status: boolean, baseContext: string = 'commonTests
       await generalPage.closeSfToolBar(page);
 
       const pageTitle = await generalPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(generalPage.pageTitle);
+      expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
     it(`should ${status ? 'enable' : 'disable'} the webservice`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMultiStoreStatus', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, status);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
+      expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
   });
 }

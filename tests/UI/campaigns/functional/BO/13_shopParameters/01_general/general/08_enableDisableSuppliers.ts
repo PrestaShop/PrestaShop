@@ -60,14 +60,14 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       await generalPage.closeSfToolBar(page);
 
       const pageTitle = await generalPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(generalPage.pageTitle);
+      expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
     it(`should ${test.args.action} display suppliers`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplaySuppliers`, baseContext);
 
       const result = await generalPage.setDisplaySuppliers(page, test.args.exist);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
+      expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
 
     it('should go to \'Brands & Suppliers\' page', async function () {
@@ -80,7 +80,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       );
 
       const pageTitle = await brandsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(brandsPage.pageTitle);
+      expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
 
     it('should go to \'Suppliers\' tab', async function () {
@@ -89,14 +89,14 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       await brandsPage.goToSubTabSuppliers(page);
 
       const pageTitle = await suppliersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(suppliersPage.pageTitle);
+      expect(pageTitle).to.contains(suppliersPage.pageTitle);
     });
 
     it(`should check that the message alert contains '${test.args.action}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
 
       const text = await suppliersPage.getAlertInfoBlockParagraphContent(page);
-      await expect(text).to.contains(test.args.action);
+      expect(text).to.contains(test.args.action);
     });
 
     it('should go to FO', async function () {
@@ -108,7 +108,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should verify the existence of the suppliers page link', async function () {
@@ -117,10 +117,10 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       await homePage.goToFooterLink(page, 'Sitemap');
 
       const pageTitle = await siteMapPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(siteMapPage.pageTitle);
+      expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
       const exist = await siteMapPage.isSuppliersLinkVisible(page);
-      await expect(exist).to.be.equal(test.args.exist);
+      expect(exist).to.be.equal(test.args.exist);
     });
 
     it('should go back to BO', async function () {
@@ -129,7 +129,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       page = await siteMapPage.closePage(browserContext, page, 0);
 
       const pageTitle = await suppliersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(suppliersPage.pageTitle);
+      expect(pageTitle).to.contains(suppliersPage.pageTitle);
     });
   });
 });

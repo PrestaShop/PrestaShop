@@ -85,7 +85,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         );
 
         const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        expect(pageTitle).to.contains(cartRulesPage.pageTitle);
       });
 
       it('should go to new cart rule page', async function () {
@@ -94,14 +94,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await cartRulesPage.goToAddNewCartRulesPage(page);
 
         const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        expect(pageTitle).to.contains(addCartRulePage.pageTitle);
       });
 
       it('should create cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createCartRule2', baseContext);
 
         const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleEnabledPartialUse);
-        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+        expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
       });
     });
 
@@ -114,7 +114,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to the first product page', async function () {
@@ -123,7 +123,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -132,20 +132,20 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await foProductPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(1);
+        expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should verify the total after discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount1', baseContext);
 
         const priceATI = await cartPage.getATIPrice(page);
-        await expect(priceATI).to.equal(0);
+        expect(priceATI).to.equal(0);
 
         const cartRuleName = await cartPage.getCartRuleName(page);
-        await expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
+        expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
         const discountValue = await cartPage.getDiscountValue(page);
-        await expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
+        expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
@@ -154,7 +154,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await cartPage.clickOnProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-        await expect(isCheckoutPage).to.be.true;
+        expect(isCheckoutPage).to.eq(true);
       });
 
       it('should sign in by created customer', async function () {
@@ -163,7 +163,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await checkoutPage.clickOnSignIn(page);
 
         const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-        await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+        expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
       it('should go to delivery step', async function () {
@@ -171,7 +171,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should go to payment step', async function () {
@@ -179,7 +179,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should confirm the order', async function () {
@@ -190,7 +190,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to vouchers page', async function () {
@@ -200,14 +200,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await myAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-        await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+        expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
       });
 
       it('should get the number of vouchers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers', baseContext);
 
         const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
-        await expect(numberOfVouchers).to.equal(1);
+        expect(numberOfVouchers).to.equal(1);
       });
 
       [
@@ -225,7 +225,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
             cartRule.args.row,
             cartRule.args.column,
           );
-          await expect(cartRuleTextColumn).to.equal(cartRule.args.value);
+          expect(cartRuleTextColumn).to.equal(cartRule.args.value);
         });
       });
     });
@@ -240,14 +240,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await cartRulesPage.reloadPage(page);
 
         const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        expect(pageTitle).to.contains(cartRulesPage.pageTitle);
       });
 
       it('should check the number of cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCartRules', baseContext);
 
         const numberOfCartRules = await cartRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCartRules).to.equal(2);
+        expect(numberOfCartRules).to.equal(2);
       });
 
       it('should go to edit the first cart rule', async function () {
@@ -256,14 +256,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await cartRulesPage.goToEditCartRulePage(page, 1);
 
         const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.editPageTitle);
+        expect(pageTitle).to.contains(addCartRulePage.editPageTitle);
       });
 
       it('should check the cart rule limit customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleCustomer', baseContext);
 
         const customer = await addCartRulePage.getLimitSingleCustomer(page);
-        await expect(customer).to.equal(
+        expect(customer).to.equal(
           `${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} (${Customers.johnDoe.email})`);
       });
 
@@ -271,7 +271,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleAmountValue', baseContext);
 
         const amount = await addCartRulePage.getAmountValue(page);
-        await expect(amount).to.equal(amountValue.toString());
+        expect(amount).to.equal(amountValue.toString());
       });
     });
 
@@ -282,14 +282,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await addCartRulePage.clickOnCancelButton(page);
 
         const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        expect(pageTitle).to.contains(cartRulesPage.pageTitle);
       });
 
       it('should bulk delete cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCartRules', baseContext);
 
         const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
-        await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+        expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
       });
     });
   });
@@ -302,14 +302,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await cartRulesPage.goToAddNewCartRulesPage(page);
 
         const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        expect(pageTitle).to.contains(addCartRulePage.pageTitle);
       });
 
       it('should create cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createCartRule1', baseContext);
 
         const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleDisabledPartialUse);
-        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+        expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
       });
     });
 
@@ -322,7 +322,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to the first product page', async function () {
@@ -331,7 +331,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -340,20 +340,20 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await foProductPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(1);
+        expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should verify the total after discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount2', baseContext);
 
         const priceATI = await cartPage.getATIPrice(page);
-        await expect(priceATI).to.equal(0);
+        expect(priceATI).to.equal(0);
 
         const cartRuleName = await cartPage.getCartRuleName(page);
-        await expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
+        expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
         const discountValue = await cartPage.getDiscountValue(page);
-        await expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
+        expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
@@ -362,7 +362,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await cartPage.clickOnProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-        await expect(isCheckoutPage).to.be.true;
+        expect(isCheckoutPage).to.eq(true);
       });
 
       it('should go to delivery step', async function () {
@@ -370,7 +370,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should go to payment step', async function () {
@@ -378,7 +378,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should confirm the order', async function () {
@@ -389,7 +389,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to vouchers page', async function () {
@@ -399,14 +399,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await myAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-        await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+        expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
       });
 
       it('should get the number of vouchers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers2', baseContext);
 
         const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
-        await expect(numberOfVouchers).to.equal(0);
+        expect(numberOfVouchers).to.equal(0);
       });
     });
 
@@ -420,14 +420,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await cartRulesPage.reloadPage(page);
 
         const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        expect(pageTitle).to.contains(cartRulesPage.pageTitle);
       });
 
       it('should check the number of cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCartRules2', baseContext);
 
         const numberOfCartRules = await cartRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCartRules).to.equal(1);
+        expect(numberOfCartRules).to.equal(1);
       });
     });
 
@@ -436,7 +436,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
         const deleteTextResult = await cartRulesPage.deleteCartRule(page);
-        await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulDeleteMessage);
+        expect(deleteTextResult).to.be.contains(cartRulesPage.successfulDeleteMessage);
       });
     });
   });

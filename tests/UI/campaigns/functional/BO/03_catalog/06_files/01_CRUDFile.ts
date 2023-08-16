@@ -68,7 +68,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
     await filesPage.closeSfToolBar(page);
 
     const pageTitle = await filesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(filesPage.pageTitle);
+    expect(pageTitle).to.contains(filesPage.pageTitle);
   });
 
   describe('Create file', async () => {
@@ -78,14 +78,14 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       await filesPage.goToAddNewFilePage(page);
 
       const pageTitle = await addFilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addFilePage.pageTitle);
+      expect(pageTitle).to.contains(addFilePage.pageTitle);
     });
 
     it('should create file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFile', baseContext);
 
       const result = await addFilePage.createEditFile(page, createFileData);
-      await expect(result).to.equal(filesPage.successfulCreationMessage);
+      expect(result).to.equal(filesPage.successfulCreationMessage);
     });
   });
 
@@ -96,7 +96,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       const filePath = await filesPage.viewFile(page, 1);
 
       const found = await files.doesFileExist(filePath);
-      await expect(found, `${createFileData.filename} was not downloaded`).to.be.true;
+      expect(found, `${createFileData.filename} was not downloaded`).to.eq(true);
     });
   });
 
@@ -107,14 +107,14 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       await filesPage.goToEditFilePage(page, 1);
 
       const pageTitle = await addFilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addFilePage.pageTitleEdit);
+      expect(pageTitle).to.contains(addFilePage.pageTitleEdit);
     });
 
     it('should edit file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateFile', baseContext);
 
       const result = await addFilePage.createEditFile(page, editFileData);
-      await expect(result).to.equal(filesPage.successfulUpdateMessage);
+      expect(result).to.equal(filesPage.successfulUpdateMessage);
     });
   });
 
@@ -125,7 +125,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       const filePath = await filesPage.viewFile(page, 1);
 
       const found = await files.doesFileExist(filePath);
-      await expect(found, `${editFileData.filename} was not downloaded`).to.be.true;
+      expect(found, `${editFileData.filename} was not downloaded`).to.eq(true);
     });
   });
 
@@ -135,7 +135,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
 
       // delete file in first row
       const result = await filesPage.deleteFile(page, 1);
-      await expect(result).to.be.equal(filesPage.successfulDeleteMessage);
+      expect(result).to.be.equal(filesPage.successfulDeleteMessage);
     });
   });
 });

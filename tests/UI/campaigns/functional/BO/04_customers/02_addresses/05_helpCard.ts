@@ -43,23 +43,23 @@ describe('BO - Customers - Addresses - Help card on addresses page', async () =>
     );
 
     const pageTitle = await addressesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addressesPage.pageTitle);
+    expect(pageTitle).to.contains(addressesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await addressesPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await addressesPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarNotVisible = await addressesPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarNotVisible).to.be.true;
+    expect(isHelpSidebarNotVisible).to.eq(true);
   });
 });

@@ -65,7 +65,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       );
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
     it('should go to \'Shop Urls\' page', async function () {
@@ -74,7 +74,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       await multiStorePage.goToShopURLPage(page, 1);
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
   });
 
@@ -86,21 +86,21 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       await shopUrlPage.goToEditShopURLPage(page, 1);
 
       const pageTitle = await editShopUrlPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(editShopUrlPage.pageTitleEdit);
+      expect(pageTitle).to.contains(editShopUrlPage.pageTitleEdit);
     });
 
     it('should disable the main URL and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMainURL', baseContext);
 
       const errorAlertMessage = await editShopUrlPage.setMainURL(page, 'off');
-      await expect(errorAlertMessage).to.contains(editShopUrlPage.errorDisableMainURLMessage);
+      expect(errorAlertMessage).to.contains(editShopUrlPage.errorDisableMainURLMessage);
     });
 
     it('should disable the shop and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableShop', baseContext);
 
       const errorAlertMessage = await editShopUrlPage.setShopStatus(page, 'off');
-      await expect(errorAlertMessage).to.contains(editShopUrlPage.errorDisableMainURLMessage)
+      expect(errorAlertMessage).to.contains(editShopUrlPage.errorDisableMainURLMessage)
         .and.to.contains(editShopUrlPage.ErrorDisableShopMessage);
     });
 
@@ -110,14 +110,14 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       await shopUrlPage.goToAddNewUrl(page);
 
       const pageTitle = await editShopUrlPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(editShopUrlPage.pageTitleCreate);
+      expect(pageTitle).to.contains(editShopUrlPage.pageTitleCreate);
     });
 
     it('should create shop URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
       const textResult = await editShopUrlPage.setVirtualUrl(page, ShopUrlData);
-      await expect(textResult).to.contains(editShopUrlPage.successfulCreationMessage);
+      expect(textResult).to.contains(editShopUrlPage.successfulCreationMessage);
     });
 
     it('should disable the shop URL for the created url', async function () {
@@ -126,7 +126,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       await shopUrlPage.setStatus(page, 2, '6', false);
 
       const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
-      await expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
+      expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
     });
 
     it('should enable the main URL for the created url', async function () {
@@ -136,11 +136,11 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
 
       if (isActionPerformed) {
         const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
-        await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
+        expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
       }
 
       const status = await shopUrlPage.getStatus(page, 1, '6');
-      await expect(status).to.be.true;
+      expect(status).to.eq(true);
     });
 
     it('should enable the main URL for the first url', async function () {
@@ -149,10 +149,10 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       await shopUrlPage.setStatus(page, 1, '5', true);
 
       const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
-      await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
+      expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
 
       const mainStatus = await shopUrlPage.getStatus(page, 1, '6');
-      await expect(mainStatus).to.be.true;
+      expect(mainStatus).to.eq(true);
     });
   });
 
@@ -162,7 +162,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'deleteShop', baseContext);
 
       const textResult = await shopUrlPage.deleteShopURL(page, 2);
-      await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
+      expect(textResult).to.contains(shopPage.successfulDeleteMessage);
     });
   });
 

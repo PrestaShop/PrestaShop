@@ -47,7 +47,7 @@ describe('BO - Design - Theme & Logo : Reset module', async () => {
     await themeAndLogoPage.closeSfToolBar(page);
 
     const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Pages configuration\' page', async function () {
@@ -56,13 +56,13 @@ describe('BO - Design - Theme & Logo : Reset module', async () => {
     await themeAndLogoPage.goToSubTabPagesConfiguration(page);
 
     const pageTitle = await pagesConfigurationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesConfigurationPage.pageTitle);
+    expect(pageTitle).to.contains(pagesConfigurationPage.pageTitle);
   });
 
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
     const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, 'reset');
-    await expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
+    expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
   });
 });

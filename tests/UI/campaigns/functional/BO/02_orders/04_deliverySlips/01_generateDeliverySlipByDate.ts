@@ -58,7 +58,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the last order page', async function () {
@@ -67,21 +67,21 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check the delivery slip document name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentName', baseContext);
 
       const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
-      await expect(documentType).to.be.equal('Delivery slip');
+      expect(documentType).to.be.equal('Delivery slip');
     });
   });
 
@@ -96,7 +96,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       );
 
       const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
@@ -106,7 +106,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       const filePath = await deliverySlipsPage.generatePDFByDateAndDownload(page);
 
       const exist = await files.doesFileExist(filePath);
-      await expect(exist).to.be.true;
+      expect(exist).to.eq(true);
     });
 
     it('should check the error message when there is no delivery slip at the entered date', async function () {
@@ -114,7 +114,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
 
       // Generate delivery slips and get error message
       const textMessage = await deliverySlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
-      await expect(textMessage).to.equal(deliverySlipsPage.errorMessageWhenGenerateFileByDate);
+      expect(textMessage).to.equal(deliverySlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });

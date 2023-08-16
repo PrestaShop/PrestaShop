@@ -53,7 +53,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should check and get the products number', async function () {
@@ -62,7 +62,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
       await homePage.goToAllProductsPage(page);
 
       allProductsNumber = await homePage.getProductsNumber(page);
-      await expect(allProductsNumber).to.be.above(0);
+      expect(allProductsNumber).to.be.above(0);
     });
 
     it('should filter products by the category \'Accessories\' and check result', async function () {
@@ -71,7 +71,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
       await homePage.goToCategory(page, Categories.accessories.id);
 
       const numberOfProducts = await homePage.getProductsNumber(page);
-      await expect(numberOfProducts).to.be.below(allProductsNumber);
+      expect(numberOfProducts).to.be.below(allProductsNumber);
     });
 
     it('should filter products by the subcategory \'Stationery\' and check result', async function () {
@@ -80,7 +80,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
       await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
 
       const numberOfProducts = await homePage.getProductsNumber(page);
-      await expect(numberOfProducts).to.be.below(allProductsNumber);
+      expect(numberOfProducts).to.be.below(allProductsNumber);
     });
   });
 

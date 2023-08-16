@@ -107,7 +107,7 @@ describe('FO - Header and Footer : Change language', async () => {
           expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
         }
         const languageStatus = await languagesPage.getStatus(page, 1);
-        await expect(languageStatus).to.be.false;
+        expect(languageStatus).to.eq(false);
       });
 
       it('should reset all filters', async function () {
@@ -126,14 +126,14 @@ describe('FO - Header and Footer : Change language', async () => {
         await homePage.goToFo(page);
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage).to.be.true;
+        expect(isHomePage).to.eq(true);
       });
 
       it('should check that the languages list is not visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLanguageListNotVisible', baseContext);
 
         const isVisible = await homePage.isLanguageListVisible(page);
-        await expect(isVisible, 'Language list is visible!').to.be.false;
+        expect(isVisible, 'Language list is visible!').to.eq(false);
       });
 
       it('should check that the shop language is \'English\'', async function () {
@@ -202,7 +202,7 @@ describe('FO - Header and Footer : Change language', async () => {
           expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
         }
         const languageStatus = await languagesPage.getStatus(page, 1);
-        await expect(languageStatus).to.be.true;
+        expect(languageStatus).to.eq(true);
       });
 
       it('should reset all filters', async function () {
@@ -221,14 +221,14 @@ describe('FO - Header and Footer : Change language', async () => {
         await homePage.goToFo(page);
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage).to.be.true;
+        expect(isHomePage).to.eq(true);
       });
 
       it('should check that the languages list is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLanguageListVisible', baseContext);
 
         const isVisible = await homePage.isLanguageListVisible(page);
-        await expect(isVisible, 'Language list is not visible!').to.be.true;
+        expect(isVisible, 'Language list is not visible!').to.eq(true);
       });
 
       it('should change the shop language to \'French\'', async function () {

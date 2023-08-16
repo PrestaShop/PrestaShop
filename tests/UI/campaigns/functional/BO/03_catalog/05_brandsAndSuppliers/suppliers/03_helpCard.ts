@@ -44,7 +44,7 @@ describe('BO - Catalog - Brands & Suppliers : Help card on Suppliers page', asyn
     await brandsPage.closeSfToolBar(page);
 
     const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should go to Suppliers page', async function () {
@@ -53,23 +53,23 @@ describe('BO - Catalog - Brands & Suppliers : Help card on Suppliers page', asyn
     await brandsPage.goToSubTabSuppliers(page);
 
     const pageTitle = await suppliersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(suppliersPage.pageTitle);
+    expect(pageTitle).to.contains(suppliersPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await suppliersPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await suppliersPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarClosed = await suppliersPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarClosed).to.be.true;
+    expect(isHelpSidebarClosed).to.eq(true);
   });
 });

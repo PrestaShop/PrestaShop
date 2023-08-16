@@ -57,7 +57,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to the first product page', async function () {
@@ -66,7 +66,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should add product to cart and check that the number of products was updated in cart header', async function () {
@@ -75,7 +75,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await productPage.addProductToTheCart(page);
       // getNumberFromText is used to get the notifications number in the cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should go to the home page', async function () {
@@ -84,7 +84,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await homePage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to the second product page', async function () {
@@ -93,7 +93,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await homePage.goToProductPage(page, 2);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_3.name);
+      expect(pageTitle).to.contains(Products.demo_3.name);
     });
 
     it('should add product to cart and check that the number of products was updated in cart header', async function () {
@@ -103,7 +103,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       // getNumberFromText is used to get the notifications number in the cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(2);
+      expect(notificationsNumber).to.be.equal(2);
     });
 
     it('should check the first product details', async function () {
@@ -134,7 +134,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       // getNumberFromText is used to get the price ATI
       totalATI = await cartPage.getATIPrice(page);
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/9779
-      // await expect(totalATI.toString()).to.be.equal((Products.demo_3.finalPrice + Products.demo_1.finalPrice)
+      // expect(totalATI.toString()).to.be.equal((Products.demo_3.finalPrice + Products.demo_1.finalPrice)
       // .toFixed(2));
     });
 
@@ -143,7 +143,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       // getNumberFromText is used to get the products number
       itemsNumber = await cartPage.getProductsNumber(page);
-      await expect(itemsNumber).to.be.equal(2);
+      expect(itemsNumber).to.be.equal(2);
     });
 
     it('should edit the quantity of the first product ordered', async function () {
@@ -153,11 +153,11 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       // getNumberFromText is used to get the new price ATI
       const totalPrice = await cartPage.getATIPrice(page);
-      await expect(totalPrice).to.be.above(totalATI);
+      expect(totalPrice).to.be.above(totalATI);
 
       // getNumberFromText is used to get the new products number
       const productsNumber = await cartPage.getProductsNumber(page);
-      await expect(productsNumber).to.be.above(itemsNumber);
+      expect(productsNumber).to.be.above(itemsNumber);
     });
 
     it('should edit the quantity of the second product ordered', async function () {
@@ -167,11 +167,11 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       // getNumberFromText is used to get the new price ATI
       const totalPrice = await cartPage.getATIPrice(page);
-      await expect(totalPrice).to.be.above(totalATI);
+      expect(totalPrice).to.be.above(totalATI);
 
       // getNumberFromText is used to get the new products number
       const productsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(productsNumber).to.be.above(itemsNumber);
+      expect(productsNumber).to.be.above(itemsNumber);
     });
   });
 

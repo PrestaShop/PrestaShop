@@ -104,7 +104,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await creditSlipsPage.closeSfToolBar(page);
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
     });
 
     it(`should change the credit slip prefix to ${prefixToEdit}`, async function () {
@@ -113,7 +113,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await creditSlipsPage.changePrefix(page, prefixToEdit);
 
       const textMessage = await creditSlipsPage.saveCreditSlipOptions(page);
-      await expect(textMessage).to.contains(creditSlipsPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(creditSlipsPage.successfulUpdateMessage);
     });
   });
 
@@ -128,7 +128,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the last order page', async function () {
@@ -137,14 +137,14 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should create a partial refund', async function () {
@@ -153,7 +153,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await orderPageTabListBlock.clickOnPartialRefund(page);
 
       const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
-      await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+      expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {
@@ -161,7 +161,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
       // Get document name
       const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
-      await expect(documentType).to.be.equal('Credit slip');
+      expect(documentType).to.be.equal('Credit slip');
     });
 
     it(`should check that the credit slip file name contain the prefix '${prefixToEdit}'`, async function () {
@@ -184,7 +184,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       );
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
     });
 
     it('should delete the credit slip prefix', async function () {
@@ -193,7 +193,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await creditSlipsPage.deletePrefix(page);
 
       const textMessage = await creditSlipsPage.saveCreditSlipOptions(page);
-      await expect(textMessage).to.contains(creditSlipsPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(creditSlipsPage.successfulUpdateMessage);
     });
   });
 
@@ -208,7 +208,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -217,7 +217,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it('should check the credit slip file name', async function () {

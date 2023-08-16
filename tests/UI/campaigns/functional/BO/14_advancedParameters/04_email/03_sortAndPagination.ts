@@ -66,17 +66,17 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
     it('should erase all emails', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'eraseEmails', baseContext);
 
       const textResult = await emailPage.eraseAllEmails(page);
-      await expect(textResult).to.equal(emailPage.successfulDeleteMessage);
+      expect(textResult).to.equal(emailPage.successfulDeleteMessage);
 
       const numberOfLines = await emailPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLines).to.be.equal(0);
+      expect(numberOfLines).to.be.equal(0);
     });
   });
 
@@ -92,7 +92,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -101,7 +101,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -110,7 +110,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     const tests: number[] = new Array(6).fill(0, 0, 6);
@@ -133,18 +133,18 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
         // Payment step - Choose payment step
         await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
     });
 
@@ -153,7 +153,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
 
       await orderConfirmationPage.logout(page);
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
     it('should go back to BO', async function () {
@@ -163,7 +163,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      expect(pageTitle).to.contains(emailPage.pageTitle);
     });
   });
 
@@ -175,7 +175,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await emailPage.reloadPage(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
     it('should change the items number to 10 per page', async function () {
@@ -300,25 +300,25 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.isDate) {
           const expectedResult = await basicHelper.sortArrayDate(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -331,7 +331,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await emailPage.deleteEmailLogsBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(emailPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(emailPage.successfulMultiDeleteMessage);
     });
   });
 });

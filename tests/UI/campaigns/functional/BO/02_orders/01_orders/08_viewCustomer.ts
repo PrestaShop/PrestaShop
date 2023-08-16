@@ -52,14 +52,14 @@ describe('BO - Orders : View customer from orders page', async () => {
     await ordersPage.closeSfToolBar(page);
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
     const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrders).to.be.above(0);
+    expect(numberOfOrders).to.be.above(0);
   });
 
   it('should filter order by customer name', async function () {
@@ -73,7 +73,7 @@ describe('BO - Orders : View customer from orders page', async () => {
     );
 
     const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
-    await expect(numberOfOrders).to.be.at.least(1);
+    expect(numberOfOrders).to.be.at.least(1);
   });
 
   it('should check customer link', async function () {
@@ -83,7 +83,7 @@ describe('BO - Orders : View customer from orders page', async () => {
     page = await ordersPage.viewCustomer(page, 1);
 
     const pageTitle = await viewCustomerPage.getPageTitle(page);
-    await expect(pageTitle).to
+    expect(pageTitle).to
       .eq(viewCustomerPage.pageTitle(`${Customers.johnDoe.firstName[0]}. ${Customers.johnDoe.lastName}`));
   });
 
@@ -97,13 +97,13 @@ describe('BO - Orders : View customer from orders page', async () => {
     );
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersAfterCheck', baseContext);
 
     const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrders).to.be.above(0);
+    expect(numberOfOrders).to.be.above(0);
   });
 });

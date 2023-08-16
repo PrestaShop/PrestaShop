@@ -57,14 +57,14 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all filters and get number of addresses in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAddressesTable', baseContext);
 
     numberOfAddresses = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfAddresses).to.be.above(0);
+    expect(numberOfAddresses).to.be.above(0);
   });
 
   // 1 : Create 10 new addresses
@@ -79,17 +79,17 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
         await brandsPage.goToAddNewBrandAddressPage(page);
 
         const pageTitle = await addBrandAddressPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addBrandAddressPage.pageTitle);
+        expect(pageTitle).to.contains(addBrandAddressPage.pageTitle);
       });
 
       it(`should create address n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAddress${index}`, baseContext);
 
         const result = await addBrandAddressPage.createEditBrandAddress(page, createAddressData);
-        await expect(result).to.equal(brandsPage.successfulCreationMessage);
+        expect(result).to.equal(brandsPage.successfulCreationMessage);
 
         const numberOfAddressesAfterCreation = await brandsPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1 + index);
+        expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1 + index);
       });
     });
   });
@@ -185,17 +185,17 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
             const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult);
+              expect(sortedTableFloat).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+              expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
             const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTable).to.deep.equal(expectedResult);
+              expect(sortedTable).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+              expect(sortedTable).to.deep.equal(expectedResult.reverse());
             }
           }
         },
@@ -211,21 +211,21 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
       await brandsPage.filterAddresses(page, 'input', 'city', 'todelete');
 
       const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, 1, 'city');
-      await expect(textColumn).to.contains('todelete');
+      expect(textColumn).to.contains('todelete');
     });
 
     it('should delete with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddresses', baseContext);
 
       const deleteTextResult = await brandsPage.deleteWithBulkActions(page, tableName);
-      await expect(deleteTextResult).to.be.equal(brandsPage.successfulDeleteMessage);
+      expect(deleteTextResult).to.be.equal(brandsPage.successfulDeleteMessage);
     });
 
     it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteAddresses', baseContext);
 
       const numberOfAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfAddressesAfterReset).to.be.equal(numberOfAddresses);
+      expect(numberOfAddressesAfterReset).to.be.equal(numberOfAddresses);
     });
   });
 });

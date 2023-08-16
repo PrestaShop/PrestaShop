@@ -133,7 +133,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
           await productsPage.closeSfToolBar(page);
 
           const pageTitle = await productsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productsPage.pageTitle);
+          expect(pageTitle).to.contains(productsPage.pageTitle);
         });
       }
 
@@ -141,7 +141,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}_resetFirst`, baseContext);
 
         numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProducts).to.be.above(0);
+        expect(numberOfProducts).to.be.above(0);
       });
 
       it('should create product and check the products number', async function () {
@@ -160,7 +160,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
           );
         }
 
-        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+        expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
     });
 
@@ -180,13 +180,13 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         );
 
         const pageTitle = await monitoringPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+        expect(pageTitle).to.contains(monitoringPage.pageTitle);
 
         numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(
           page,
           test.args.gridName,
         );
-        await expect(numberOfProductsIngrid).to.be.at.least(1);
+        expect(numberOfProductsIngrid).to.be.at.least(1);
       });
 
       it(`should filter products ${test.args.productType} grid and check existence of new product`, async function () {
@@ -211,7 +211,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
           1,
           'name',
         );
-        await expect(textColumn).to.contains(test.args.productToCreate.name);
+        expect(textColumn).to.contains(test.args.productToCreate.name);
       });
 
       it(`should reset filter in products ${test.args.productType} grid`, async function () {
@@ -223,7 +223,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         );
 
         numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(page, test.args.gridName);
-        await expect(numberOfProductsIngrid).to.be.at.least(1);
+        expect(numberOfProductsIngrid).to.be.at.least(1);
       });
     });
 
@@ -250,7 +250,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
           1,
           'name',
         );
-        await expect(textColumn).to.contains(test.args.productToCreate.name);
+        expect(textColumn).to.contains(test.args.productToCreate.name);
       });
 
       it('should delete product', async function () {
@@ -262,10 +262,10 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         );
 
         const textResult = await monitoringPage.deleteProductInGrid(page, test.args.gridName, 1);
-        await expect(textResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+        expect(textResult).to.equal(productsPage.productDeletedSuccessfulMessage);
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       it('should reset filter check number of products', async function () {
@@ -277,7 +277,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         );
 
         const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProductsAfterDelete).to.be.equal(numberOfProducts);
+        expect(numberOfProductsAfterDelete).to.be.equal(numberOfProducts);
       });
     });
   });

@@ -28,11 +28,11 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
           grant_type: 'client_credentials',
         },
       });
-      await expect(apiResponse.status()).to.eq(200);
+      expect(apiResponse.status()).to.eq(200);
 
       const jsonResponse = await apiResponse.json();
-      await expect(jsonResponse).to.have.property('access_token');
-      await expect(jsonResponse.access_token).to.be.a('string');
+      expect(jsonResponse).to.have.property('access_token');
+      expect(jsonResponse.access_token).to.be.a('string');
 
       accessToken = jsonResponse.access_token;
       accessTokenExpired = api.setAccessTokenAsExpired(accessToken);
@@ -42,9 +42,9 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
       const apiResponse = await apiContext.get('api/hook-status/1');
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {
@@ -55,9 +55,9 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
           Authorization: 'Bearer INVALIDTOKEN',
         },
       });
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 with expired access token', async function () {
@@ -68,9 +68,9 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
           Authorization: `Bearer ${accessTokenExpired}`,
         },
       });
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 with valid access token', async function () {
@@ -81,15 +81,15 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      await expect(apiResponse.status()).to.eq(200);
-      await expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+      expect(apiResponse.status()).to.eq(200);
+      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       const jsonResponse = await apiResponse.json();
-      await expect(jsonResponse).to.have.property('id');
-      await expect(jsonResponse.id).to.be.a('number');
-      await expect(jsonResponse).to.have.property('active');
-      await expect(jsonResponse.active).to.be.a('boolean');
+      expect(jsonResponse).to.have.property('id');
+      expect(jsonResponse.id).to.be.a('number');
+      expect(jsonResponse).to.have.property('active');
+      expect(jsonResponse.active).to.be.a('boolean');
     });
   });
 });

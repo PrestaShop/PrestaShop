@@ -64,14 +64,14 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters and get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
   });
 
@@ -169,17 +169,17 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -202,14 +202,14 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
         await productsPage.goToAddProductPage(page);
 
         const pageTitle = await addProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addProductPage.pageTitle);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
       });
 
       it(`should create product n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
         const createProductMessage = await addProductPage.createEditBasicProduct(page, createProductData);
-        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+        expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
 
       it('should go to catalog page', async function () {
@@ -218,7 +218,7 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
         await addProductPage.goToCatalogPage(page);
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
     });
   });
@@ -263,14 +263,14 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
       await productsPage.filterProducts(page, 'name', 'todelete');
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProductsAfterFilter).to.equal(3);
+      expect(numberOfProductsAfterFilter).to.equal(3);
     });
 
     it('should delete products by bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await productsPage.deleteAllProductsWithBulkActions(page);
-      await expect(deleteTextResult).to.equal(productsPage.productMultiDeletedSuccessfulMessage);
+      expect(deleteTextResult).to.equal(productsPage.productMultiDeletedSuccessfulMessage);
     });
 
     it('should reset all filters', async function () {
@@ -279,7 +279,7 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
       await productsPage.resetFilterCategory(page);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
   });
 

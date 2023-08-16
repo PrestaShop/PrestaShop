@@ -51,14 +51,14 @@ describe('BO - International - Taxes : Bulk actions', async () => {
     );
 
     const pageTitle = await taxesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(taxesPage.pageTitle);
+    expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfTaxes = await taxesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfTaxes).to.be.above(0);
+    expect(numberOfTaxes).to.be.above(0);
   });
 
   // 1 : Create 2 taxes with data from faker
@@ -75,17 +75,17 @@ describe('BO - International - Taxes : Bulk actions', async () => {
         await taxesPage.goToAddNewTaxPage(page);
 
         const pageTitle = await addTaxPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
       });
 
       it('should create tax and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateTax${index + 1}`, baseContext);
 
         const textResult = await addTaxPage.createEditTax(page, test.args.taxToCreate);
-        await expect(textResult).to.equal(taxesPage.successfulCreationMessage);
+        expect(textResult).to.equal(taxesPage.successfulCreationMessage);
 
         const numberOfTaxesAfterCreation = await taxesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + index + 1);
+        expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + index + 1);
       });
     });
   });
@@ -103,7 +103,7 @@ describe('BO - International - Taxes : Bulk actions', async () => {
       );
 
       const textResult = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
-      await expect(textResult).to.contains('TVA to delete');
+      expect(textResult).to.contains('TVA to delete');
     });
 
     [
@@ -117,14 +117,14 @@ describe('BO - International - Taxes : Bulk actions', async () => {
           page,
           test.args.enabledValue,
         );
-        await expect(textResult).to.be.equal(taxesPage.successfulUpdateStatusMessage);
+        expect(textResult).to.be.equal(taxesPage.successfulUpdateStatusMessage);
 
         const numberOfTaxesInGrid = await taxesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
+        expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
 
         for (let i = 1; i <= numberOfTaxesInGrid; i++) {
           const taxStatus = await taxesPage.getStatus(page, i);
-          await expect(taxStatus).to.equal(test.args.enabledValue);
+          expect(taxStatus).to.equal(test.args.enabledValue);
         }
       });
     });
@@ -133,7 +133,7 @@ describe('BO - International - Taxes : Bulk actions', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkEdit', baseContext);
 
       const numberOfTaxesAfterReset = await taxesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes + 2);
+      expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes + 2);
     });
   });
 
@@ -150,17 +150,17 @@ describe('BO - International - Taxes : Bulk actions', async () => {
       );
 
       const textResult = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
-      await expect(textResult).to.contains('TVA to delete');
+      expect(textResult).to.contains('TVA to delete');
     });
 
     it('should delete Taxes with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await taxesPage.deleteTaxesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(taxesPage.successfulDeleteMessage);
+      expect(deleteTextResult).to.be.equal(taxesPage.successfulDeleteMessage);
 
       const numberOfTaxesAfterReset = await taxesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes);
+      expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes);
     });
   });
 });

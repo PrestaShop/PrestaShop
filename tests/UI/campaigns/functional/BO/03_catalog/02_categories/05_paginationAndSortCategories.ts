@@ -75,14 +75,14 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
     it('should reset all filters and get number of categories in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategories).to.be.above(0);
+      expect(numberOfCategories).to.be.above(0);
     });
   });
 
@@ -174,17 +174,17 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

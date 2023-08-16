@@ -73,14 +73,14 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
       );
 
       const pageTitle = await monitoringPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+      expect(pageTitle).to.contains(monitoringPage.pageTitle);
     });
 
     it('should check that the number of imported products is greater than 10', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
       const numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfProductsIngrid).to.be.at.least(10);
+      expect(numberOfProductsIngrid).to.be.at.least(10);
     });
 
     const sortTests = [
@@ -132,17 +132,17 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
             const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult);
+              expect(sortedTableFloat).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+              expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
             const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTable).to.deep.equal(expectedResult);
+              expect(sortedTable).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+              expect(sortedTable).to.deep.equal(expectedResult.reverse());
             }
           }
         },

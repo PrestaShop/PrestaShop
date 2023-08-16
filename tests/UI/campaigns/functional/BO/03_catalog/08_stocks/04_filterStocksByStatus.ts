@@ -65,7 +65,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
@@ -74,7 +74,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       await productsPage.resetFilterCategory(page);
 
       numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it('should create disabled Product', async function () {
@@ -83,7 +83,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       await productsPage.goToAddProductPage(page);
 
       const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
   });
 
@@ -98,7 +98,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       );
 
       const pageTitle = await stocksPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(stocksPage.pageTitle);
+      expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
     it('should filter by status \'disabled\' and check the existence of the created product', async function () {
@@ -107,7 +107,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       await stocksPage.filterByStatus(page, 'disabled');
 
       const textColumn = await stocksPage.getTextColumnFromTableStocks(page, 1, 'name');
-      await expect(textColumn).to.contains(productData.name);
+      expect(textColumn).to.contains(productData.name);
     });
   });
 
@@ -122,17 +122,17 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       );
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const testResult = await productsPage.deleteProduct(page, productData);
-      await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
 
       const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
+      expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
     });
   });
 

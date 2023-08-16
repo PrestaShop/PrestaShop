@@ -57,14 +57,14 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
       await generalPage.closeSfToolBar(page);
 
       const pageTitle = await generalPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(generalPage.pageTitle);
+      expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
     it(`should ${test.args.action} display brands`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayBrands`, baseContext);
 
       const result = await generalPage.setDisplayBrands(page, test.args.exist);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
+      expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
 
     it('should go to \'Brands & Suppliers\' page', async function () {
@@ -77,14 +77,14 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
       );
 
       const pageTitle = await brandsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(brandsPage.pageTitle);
+      expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
 
     it(`should check that the message alert contains '${test.args.action}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
 
       const text = await brandsPage.getAlertInfoBlockParagraphContent(page);
-      await expect(text).to.contains(test.args.action);
+      expect(text).to.contains(test.args.action);
     });
 
     it('should go to FO', async function () {
@@ -97,7 +97,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should verify the existence of the brands page link', async function () {
@@ -106,10 +106,10 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
       await homePage.goToFooterLink(page, 'Sitemap');
 
       const pageTitle = await siteMapPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(siteMapPage.pageTitle);
+      expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
       const exist = await siteMapPage.isBrandsLinkVisible(page);
-      await expect(exist).to.be.equal(test.args.exist);
+      expect(exist).to.be.equal(test.args.exist);
     });
 
     it('should go back to BO', async function () {
@@ -118,7 +118,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
       page = await siteMapPage.closePage(browserContext, page, 0);
 
       const pageTitle = await brandsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(brandsPage.pageTitle);
+      expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
   });
 });

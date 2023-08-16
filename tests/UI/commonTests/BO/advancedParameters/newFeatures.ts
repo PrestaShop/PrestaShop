@@ -76,14 +76,14 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
       await featureFlagPage.closeSfToolBar(page);
 
       const pageTitle = await featureFlagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+      expect(pageTitle).to.contains(featureFlagPage.pageTitle);
     });
 
     it(`should ${expectedStatus ? 'enable' : 'disable'} "${title}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setFeatureFlag', baseContext);
 
       const successMessage = await featureFlagPage.setFeatureFlag(page, featureFlag, expectedStatus);
-      await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+      expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
     });
   });
 }

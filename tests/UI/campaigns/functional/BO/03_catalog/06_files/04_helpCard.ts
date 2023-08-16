@@ -43,23 +43,23 @@ describe('BO - Catalog - Files : Help card on files page', async () => {
     await filesPage.closeSfToolBar(page);
 
     const pageTitle = await filesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(filesPage.pageTitle);
+    expect(pageTitle).to.contains(filesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await filesPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await filesPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarClosed = await filesPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarClosed).to.be.true;
+    expect(isHelpSidebarClosed).to.eq(true);
   });
 });

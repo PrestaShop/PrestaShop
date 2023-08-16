@@ -57,7 +57,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(contactPage.pageTitle);
+    expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
   it('should go to stores page', async function () {
@@ -66,14 +66,14 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
     await contactPage.goToStoresPage(page);
 
     const pageTitle = await storesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(storesPage.pageTitle);
+    expect(pageTitle).to.contains(storesPage.pageTitle);
   });
 
   it('should reset all filters and get number of stores in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfStores).to.be.above(0);
+    expect(numberOfStores).to.be.above(0);
   });
 
   describe('Sort stores', async () => {
@@ -167,17 +167,17 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -198,17 +198,17 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
             await storesPage.goToNewStorePage(page);
 
             const pageTitle = await addStorePage.getPageTitle(page);
-            await expect(pageTitle).to.contains(addStorePage.pageTitleCreate);
+            expect(pageTitle).to.contains(addStorePage.pageTitleCreate);
           });
 
           it('should create store and check result', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `createStore${index}`, baseContext);
 
             const textResult = await addStorePage.createEditStore(page, createStoreData);
-            await expect(textResult).to.contains(storesPage.successfulCreationMessage);
+            expect(textResult).to.contains(storesPage.successfulCreationMessage);
 
             const numberOfStoresAfterCreation = await storesPage.getNumberOfElementInGrid(page);
-            await expect(numberOfStoresAfterCreation).to.be.equal(numberOfStores + 1 + index);
+            expect(numberOfStoresAfterCreation).to.be.equal(numberOfStores + 1 + index);
           });
         });
       });
@@ -251,11 +251,11 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
         await storesPage.filterTable(page, 'input', 'sl!name', 'todelete');
 
         const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfStoresAfterFilter).to.be.at.least(16);
+        expect(numberOfStoresAfterFilter).to.be.at.least(16);
 
         for (let i = 1; i <= numberOfStoresAfterFilter; i++) {
           const textColumn = await storesPage.getTextColumn(page, i, 'sl!name');
-          await expect(textColumn).to.contains('todelete');
+          expect(textColumn).to.contains('todelete');
         }
       });
 
@@ -263,14 +263,14 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
         await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStores', baseContext);
 
         const deleteTextResult = await storesPage.bulkDeleteStores(page);
-        await expect(deleteTextResult).to.be.contains(storesPage.successfulMultiDeleteMessage);
+        expect(deleteTextResult).to.be.contains(storesPage.successfulMultiDeleteMessage);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
         const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfStoresAfterReset).to.be.equal(numberOfStores);
+        expect(numberOfStoresAfterReset).to.be.equal(numberOfStores);
       });
     });
   });

@@ -43,7 +43,7 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
     await emailThemesPage.closeSfToolBar(page);
 
     const pageTitle = await emailThemesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+    expect(pageTitle).to.contains(emailThemesPage.pageTitle);
   });
 
   ['classic', 'modern'].forEach((emailTheme: string) => {
@@ -56,7 +56,7 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
       );
 
       const textMessage = await emailThemesPage.selectDefaultEmailTheme(page, emailTheme);
-      await expect(textMessage).to.contains(emailThemesPage.emailThemeConfigurationSuccessfulMessage);
+      expect(textMessage).to.contains(emailThemesPage.emailThemeConfigurationSuccessfulMessage);
     });
   });
 });

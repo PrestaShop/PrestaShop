@@ -36,25 +36,25 @@ describe('FO - Search Page : Search product', async () => {
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should search a string with less than 3 characters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchSmallString', baseContext);
 
     const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'te');
-    await expect(hasSearchResult, 'There are results in autocomplete search').to.be.false;
+    expect(hasSearchResult, 'There are results in autocomplete search').to.eq(false);
 
     await homePage.searchProduct(page, 'te');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
 
     const hasResults = await searchResultsPage.hasResults(page);
-    await expect(hasResults, 'There are results!').to.be.false;
+    expect(hasResults, 'There are results!').to.eq(false);
 
     const searchInputValue = await searchResultsPage.getSearchValue(page);
-    await expect(searchInputValue, 'A search value exists').to.be.equal('te');
+    expect(searchInputValue, 'A search value exists').to.be.equal('te');
   });
 
   it('should search an empty string', async function () {
@@ -63,12 +63,12 @@ describe('FO - Search Page : Search product', async () => {
     await homePage.searchProduct(page, '');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
 
     const hasResults = await searchResultsPage.hasResults(page);
-    await expect(hasResults, 'There are results!').to.be.false;
+    expect(hasResults, 'There are results!').to.eq(false);
 
     const searchInputValue = await searchResultsPage.getSearchValue(page);
-    await expect(searchInputValue, 'A search value exists').to.be.equal('');
+    expect(searchInputValue, 'A search value exists').to.be.equal('');
   });
 });

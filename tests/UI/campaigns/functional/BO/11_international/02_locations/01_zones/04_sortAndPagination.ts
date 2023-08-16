@@ -54,14 +54,14 @@ describe('BO - International - Zones : Sort and pagination', async () => {
     );
 
     const pageTitle = await zonesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(zonesPage.pageTitle);
+    expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
   it('should reset all filters and get number of zones in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfZones = await zonesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfZones).to.be.above(0);
+    expect(numberOfZones).to.be.above(0);
   });
 
   // 1 : Sort zones
@@ -104,17 +104,17 @@ describe('BO - International - Zones : Sort and pagination', async () => {
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -134,17 +134,17 @@ describe('BO - International - Zones : Sort and pagination', async () => {
         await zonesPage.goToAddNewZonePage(page);
 
         const pageTitle = await addZonePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addZonePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addZonePage.pageTitleCreate);
       });
 
       it('should create zone and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createZone${index}`, baseContext);
 
         const textResult = await addZonePage.createEditZone(page, createZoneData);
-        await expect(textResult).to.contains(zonesPage.successfulCreationMessage);
+        expect(textResult).to.contains(zonesPage.successfulCreationMessage);
 
         const numberOfZonesAfterCreation = await zonesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfZonesAfterCreation).to.be.equal(numberOfZones + 1 + index);
+        expect(numberOfZonesAfterCreation).to.be.equal(numberOfZones + 1 + index);
       });
     });
   });
@@ -200,7 +200,7 @@ describe('BO - International - Zones : Sort and pagination', async () => {
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -208,14 +208,14 @@ describe('BO - International - Zones : Sort and pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteZones', baseContext);
 
       const deleteTextResult = await zonesPage.bulkDeleteZones(page);
-      await expect(deleteTextResult).to.be.contains(zonesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(zonesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfZonesAfterReset = await zonesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfZonesAfterReset).to.be.equal(numberOfZones);
+      expect(numberOfZonesAfterReset).to.be.equal(numberOfZones);
     });
   });
 });

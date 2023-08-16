@@ -65,7 +65,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       await multiStorePage.closeSfToolBar(page);
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
     it('should go to add new shop page', async function () {
@@ -74,14 +74,14 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       await multiStorePage.goToNewShopPage(page);
 
       const pageTitle = await addShopPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
     });
 
     it('should create shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFirstShop', baseContext);
 
       const textResult = await addShopPage.setShop(page, shopCreate);
-      await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
+      expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
     });
   });
 
@@ -99,14 +99,14 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         await shopPage.goToNewShopPage(page);
 
         const pageTitle = await addShopPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
       });
 
       it(`should create shop n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createShop${index}`, baseContext);
 
         const textResult = await addShopPage.setShop(page, shopCreate);
-        await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
+        expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
       });
     });
   });
@@ -129,7 +129,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
           const textColumn = await shopPage.getTextColumn(page, i, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -137,7 +137,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
         const numberOfElement = await shopPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfElement).to.be.above(20);
+        expect(numberOfElement).to.be.above(20);
       });
     });
   });
@@ -252,17 +252,17 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -278,7 +278,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         await shopPage.filterTable(page, 'a!name', `Todelete${index}`);
 
         const textResult = await shopPage.deleteShop(page, 1);
-        await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
+        expect(textResult).to.contains(shopPage.successfulDeleteMessage);
       });
     });
   });

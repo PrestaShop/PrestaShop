@@ -57,14 +57,14 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should reset all filters and get number of employees', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfEmployees = await employeesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfEmployees).to.be.above(0);
+    expect(numberOfEmployees).to.be.above(0);
   });
 
   // 1 : Create 10 employees
@@ -79,17 +79,17 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
         await employeesPage.goToAddNewEmployeePage(page);
 
         const pageTitle = await addEmployeePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
       });
 
       it(`should create employee n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createEmployee${index + 1}`, baseContext);
 
         const textResult = await addEmployeePage.createEditEmployee(page, employeeToCreate);
-        await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
+        expect(textResult).to.equal(employeesPage.successfulCreationMessage);
 
         const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + index + 1);
+        expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + index + 1);
       });
     });
   });
@@ -134,17 +134,17 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -190,21 +190,21 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
       await employeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-      await expect(textEmail).to.contains(employeeData.email);
+      expect(textEmail).to.contains(employeeData.email);
     });
 
     it('should delete employees with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
 
       const deleteTextResult = await employeesPage.deleteBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(employeesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(employeesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+      expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
   });
 });

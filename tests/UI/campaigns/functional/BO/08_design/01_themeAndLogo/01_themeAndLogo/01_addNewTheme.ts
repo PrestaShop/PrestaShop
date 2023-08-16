@@ -53,7 +53,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     await themeAndLogoPage.closeSfToolBar(page);
 
     const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Add new theme\' page', async function () {
@@ -62,7 +62,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     await themeAndLogoPage.goToNewThemePage(page);
 
     const pageTitle = await themeImportPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(themeImportPage.pageTitle);
+    expect(pageTitle).to.contains(themeImportPage.pageTitle);
   });
 
   describe('Import from your computer', async () => {
@@ -72,7 +72,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       await files.downloadFile(urlTheme, 'theme.zip');
 
       const found = await files.doesFileExist('theme.zip');
-      await expect(found).to.be.true;
+      expect(found).to.eq(true);
     });
 
     it('should import theme from your computer', async function () {
@@ -81,20 +81,20 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       await themeImportPage.importFromYourComputer(page, 'theme.zip');
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(2);
     });
 
     it('should remove the theme Hummingbird', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird1', baseContext);
 
       const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(1);
     });
   });
 
@@ -105,7 +105,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       await themeAndLogoPage.goToNewThemePage(page);
 
       const pageTitle = await themeImportPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeImportPage.pageTitle);
+      expect(pageTitle).to.contains(themeImportPage.pageTitle);
     });
 
     it('should import from the web the Hummingbird theme', async function () {
@@ -114,20 +114,20 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       await themeImportPage.importFromWeb(page, urlTheme);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(2);
     });
 
     it('should remove the theme Hummingbird', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird2', baseContext);
 
       const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(1);
     });
   });
 
@@ -140,7 +140,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       await themeAndLogoPage.goToNewThemePage(page);
 
       const pageTitle = await themeImportPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeImportPage.pageTitle);
+      expect(pageTitle).to.contains(themeImportPage.pageTitle);
     });
 
     it('should import from FTP', async function () {
@@ -149,20 +149,20 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       await themeImportPage.importFromFTP(page, 'theme.zip');
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(2);
     });
 
     it('should remove the theme Hummingbird', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird3', baseContext);
 
       const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(1);
     });
   });
 });

@@ -57,7 +57,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
     );
 
     const pageTitle = await taxesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(taxesPage.pageTitle);
+    expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   it('should go to \'Tax Rules\' page', async function () {
@@ -66,14 +66,14 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
     await taxesPage.goToTaxRulesPage(page);
 
     const pageTitle = await taxRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+    expect(pageTitle).to.contains(taxRulesPage.pageTitle);
   });
 
   it('should reset all filters and get number of Tax rules in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfTaxRules = await taxRulesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfTaxRules).to.be.above(0);
+    expect(numberOfTaxRules).to.be.above(0);
   });
 
   // 1 - Filter tax rules
@@ -121,15 +121,15 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
         );
 
         const numberOfLinesAfterFilter = await taxRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTaxRules);
+        expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTaxRules);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           const textColumn = await taxRulesPage.getTextColumnFromTable(page, row, test.args.filterBy);
 
           if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+            expect(textColumn).to.contains(test.expected);
           } else {
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -138,7 +138,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfLinesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfLinesAfterReset).to.equal(numberOfTaxRules);
+        expect(numberOfLinesAfterReset).to.equal(numberOfTaxRules);
       });
     });
   });
@@ -185,17 +185,17 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -215,19 +215,19 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
         await taxRulesPage.goToAddNewTaxRulesGroupPage(page);
 
         const pageTitle = await addTaxRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
       });
 
       it('should create tax rule group and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createTaxRule${index}`, baseContext);
 
         const textResult = await addTaxRulesPage.createEditTaxRulesGroup(page, taxRuleData);
-        await expect(textResult).to.contains(addTaxRulesPage.successfulCreationMessage);
+        expect(textResult).to.contains(addTaxRulesPage.successfulCreationMessage);
 
         await taxesPage.goToTaxRulesPage(page);
 
         const numberOfLinesAfterCreation = await taxRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterCreation).to.be.equal(numberOfTaxRules + 1 + index);
+        expect(numberOfLinesAfterCreation).to.be.equal(numberOfTaxRules + 1 + index);
       });
     });
   });
@@ -283,7 +283,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -291,14 +291,14 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
 
       const deleteTextResult = await taxRulesPage.bulkDeleteTaxRules(page);
-      await expect(deleteTextResult).to.be.contains(taxRulesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(taxRulesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfLinesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLinesAfterReset).to.be.equal(numberOfTaxRules);
+      expect(numberOfLinesAfterReset).to.be.equal(numberOfTaxRules);
     });
   });
 });

@@ -77,7 +77,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -86,14 +86,14 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleCode);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
 
     it('should view my shop', async function () {
@@ -104,7 +104,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
 
@@ -119,7 +119,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         await foHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -128,7 +128,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         await foProductPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(1);
+        expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should set the promo code', async function () {
@@ -146,7 +146,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
             - await basicHelper.percentage(Products.demo_1.finalPrice, cartRuleCode.discountPercent!);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
-          await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
+          expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
         it('should proceed to checkout', async function () {
@@ -156,7 +156,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await cartPage.clickOnProceedToCheckout(page);
 
           const isCheckout = await checkoutPage.isCheckoutPage(page);
-          await expect(isCheckout).to.be.true;
+          expect(isCheckout).to.eq(true);
         });
 
         it('should sign in by default customer', async function () {
@@ -165,21 +165,21 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await checkoutPage.clickOnSignIn(page);
 
           const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-          await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+          expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should go to delivery address step', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
           const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-          await expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.be.true;
+          expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.eq(true);
         });
 
         it('should choose the shipping method', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'shippingMethodStep', baseContext);
 
           const isPaymentStep = await checkoutPage.goToPaymentStep(page);
-          await expect(isPaymentStep, 'Payment Step bloc is not displayed').to.be.true;
+          expect(isPaymentStep, 'Payment Step bloc is not displayed').to.eq(true);
         });
 
         it('should choose the payment type and confirm the order', async function () {
@@ -189,7 +189,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
           // Check the confirmation message
-          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should click on the logo of the shop', async function () {
@@ -198,7 +198,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await foHomePage.clickOnHeaderLink(page, 'Logo');
 
           const pageTitle = await foHomePage.getPageTitle(page);
-          await expect(pageTitle).to.equal(foHomePage.pageTitle);
+          expect(pageTitle).to.equal(foHomePage.pageTitle);
         });
       }
       if (test.args.testIdentifier === 'cartRuleNotAccepted') {
@@ -206,7 +206,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'searchExistingVoucher', baseContext);
 
           const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-          await expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyUsedErrorText);
+          expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyUsedErrorText);
         });
       }
     });

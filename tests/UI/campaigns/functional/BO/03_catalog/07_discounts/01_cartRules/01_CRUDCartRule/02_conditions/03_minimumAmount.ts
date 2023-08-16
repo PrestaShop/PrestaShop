@@ -79,7 +79,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -88,14 +88,14 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create new cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
   });
 
@@ -106,7 +106,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should add the third product to the cart', async function () {
@@ -117,7 +117,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(cartPage.pageTitle);
+      expect(pageTitle).to.eq(cartPage.pageTitle);
     });
 
     it('should add the promo code and check the error message', async function () {
@@ -126,7 +126,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
       const errorMessage = await cartPage.getCartRuleErrorMessage(page);
-      await expect(errorMessage).to.eq(
+      expect(errorMessage).to.eq(
         `${cartPage.minimumAmountErrorMessage} €${newCartRuleData.minimumAmount.value.toFixed(2)}.`);
     });
 
@@ -136,7 +136,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await cartPage.editProductQuantity(page, 1, 2);
 
       const totalBeforeDiscount = await cartPage.getATIPrice(page);
-      await expect(totalBeforeDiscount).to.eq(parseFloat((Products.demo_6.combinations[0].price * 2).toFixed(2)));
+      expect(totalBeforeDiscount).to.eq(parseFloat((Products.demo_6.combinations[0].price * 2).toFixed(2)));
     });
 
     it('should add the promo code and check the total', async function () {
@@ -147,7 +147,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       const discount = await basicHelper.percentage(Products.demo_6.combinations[0].price * 2, newCartRuleData.discountPercent!);
 
       const totalAfterDiscount = await cartPage.getATIPrice(page);
-      await expect(totalAfterDiscount).to.eq(parseFloat((Products.demo_6.combinations[0].price * 2 - discount).toFixed(2)));
+      expect(totalAfterDiscount).to.eq(parseFloat((Products.demo_6.combinations[0].price * 2 - discount).toFixed(2)));
     });
 
     it('should delete the last product from the cart', async function () {
@@ -156,7 +156,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.eq(0);
+      expect(notificationNumber).to.eq(0);
     });
   });
 

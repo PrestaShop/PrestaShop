@@ -19,14 +19,14 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodGET', baseContext);
 
       const apiResponse = await apiContext.get('api/oauth2/token');
-      await expect(apiResponse.status()).to.eq(405);
+      expect(apiResponse.status()).to.eq(405);
     });
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOST', baseContext);
 
       const apiResponse = await apiContext.post('api/oauth2/token');
-      await expect(apiResponse.status()).to.eq(400);
+      expect(apiResponse.status()).to.eq(400);
     });
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with unuseful data', async function () {
@@ -37,7 +37,7 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
           notUsed: 'notUsed',
         },
       });
-      await expect(apiResponse.status()).to.eq(400);
+      expect(apiResponse.status()).to.eq(400);
     });
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with invalid data', async function () {
@@ -50,7 +50,7 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
           grant_type: 'client_credentials',
         },
       });
-      await expect(apiResponse.status()).to.eq(401);
+      expect(apiResponse.status()).to.eq(401);
     });
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with valid + unuseful data', async function () {
@@ -64,7 +64,7 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
           notUsed: 'notUsed',
         },
       });
-      await expect(apiResponse.status()).to.eq(200);
+      expect(apiResponse.status()).to.eq(200);
     });
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with valid data', async function () {
@@ -78,17 +78,17 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
           grant_type: 'client_credentials',
         },
       });
-      await expect(apiResponse.status()).to.eq(200);
-      await expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+      expect(apiResponse.status()).to.eq(200);
+      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       const jsonResponse = await apiResponse.json();
-      await expect(jsonResponse).to.have.property('token_type');
-      await expect(jsonResponse.token_type).to.be.eq('Bearer');
-      await expect(jsonResponse).to.have.property('expires_in');
-      await expect(jsonResponse.expires_in).to.be.eq(3600);
-      await expect(jsonResponse).to.have.property('access_token');
-      await expect(jsonResponse.token_type).to.be.a('string');
+      expect(jsonResponse).to.have.property('token_type');
+      expect(jsonResponse.token_type).to.be.eq('Bearer');
+      expect(jsonResponse).to.have.property('expires_in');
+      expect(jsonResponse.expires_in).to.be.eq(3600);
+      expect(jsonResponse).to.have.property('access_token');
+      expect(jsonResponse.token_type).to.be.a('string');
     });
   });
 });

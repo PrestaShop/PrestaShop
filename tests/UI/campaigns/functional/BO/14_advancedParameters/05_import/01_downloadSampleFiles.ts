@@ -45,7 +45,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
     await importPage.closeSfToolBar(page);
 
     const pageTitle = await importPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(importPage.pageTitle);
+    expect(pageTitle).to.contains(importPage.pageTitle);
   });
 
   const sampleFiles = [
@@ -136,14 +136,14 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
         filePath = await importPage.downloadSampleFile(page, sampleFile.args.type);
 
         const doesFileExist = await files.doesFileExist(filePath);
-        await expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
+        expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.eq(true);
       });
 
       it(`should check ${sampleFile.args.type} sample text file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}checkTextFile`, baseContext);
 
         const textExist = await files.isTextInFile(filePath, sampleFile.args.textToCheck);
-        await expect(textExist, `Text was not found in ${sampleFile.args.type} sample file`).to.be.true;
+        expect(textExist, `Text was not found in ${sampleFile.args.type} sample file`).to.eq(true);
       });
     });
   });

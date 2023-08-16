@@ -45,13 +45,13 @@ describe('BO - Advanced Parameters - Email : Send test email', async () => {
     );
 
     const pageTitle = await emailPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(emailPage.pageTitle);
+    expect(pageTitle).to.contains(emailPage.pageTitle);
   });
 
   it('should check successful message after sending test email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail', baseContext);
 
     const textResult = await emailPage.sendTestEmail(page, global.BO.EMAIL);
-    await expect(textResult).to.contains(emailPage.sendTestEmailSuccessfulMessage);
+    expect(textResult).to.contains(emailPage.sendTestEmailSuccessfulMessage);
   });
 });

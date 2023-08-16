@@ -62,14 +62,14 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await foHomePage.goTo(page, global.FO.URL);
 
       const result = await foHomePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should subscribe to newsletter with already used email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
 
       const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, Customers.johnDoe.email);
-      await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.alreadyUsedEmailMessage);
+      expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.alreadyUsedEmailMessage);
     });
   });
 
@@ -80,7 +80,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await foHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
     });
 
     it('Should sign in FO', async function () {
@@ -89,7 +89,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go account information page', async function () {
@@ -99,14 +99,14 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await myAccountPage.goToInformationPage(page);
 
       const pageTitle = await accountIdentityPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
+      expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
     });
 
     it('should unsubscribe from newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'unsubscribeFromNewsLetter', baseContext);
 
       const unsubscribeAlertText = await accountIdentityPage.unsubscribeNewsletter(page, Customers.johnDoe.password);
-      await expect(unsubscribeAlertText).to.contains(accountIdentityPage.successfulUpdateMessage);
+      expect(unsubscribeAlertText).to.contains(accountIdentityPage.successfulUpdateMessage);
     });
   });
 
@@ -126,14 +126,14 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it(`should search for module ${moduleInformation.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
       const isModuleVisible = await moduleManagerPage.searchModule(page, moduleInformation);
-      await expect(isModuleVisible).to.be.true;
+      expect(isModuleVisible).to.eq(true);
     });
 
     it('should go to newsletter subscription module configuration page', async function () {
@@ -143,14 +143,14 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await moduleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
+      expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
     });
 
     it('should check if user is unsubscribed from newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatEmailIsNotInTable', baseContext);
 
       const subscribedUserList = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
-      await expect(subscribedUserList).to.not.contains(Customers.johnDoe.email);
+      expect(subscribedUserList).to.not.contains(Customers.johnDoe.email);
     });
 
     it('should logout from BO', async function () {
@@ -165,14 +165,14 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await foHomePage.goTo(page, global.FO.URL);
 
       const result = await foHomePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should subscribe to newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter', baseContext);
 
       const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, Customers.johnDoe.email);
-      await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
+      expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
     });
   });
 
@@ -192,7 +192,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it('should go to newsletter subscription module configuration page', async function () {
@@ -202,14 +202,14 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await moduleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
+      expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
     });
 
     it('should check if previous customer subscription is visible in table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfSubscriptionIsInTable', baseContext);
 
       const subscribedUserList = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
-      await expect(subscribedUserList).to.contains(Customers.johnDoe.email);
+      expect(subscribedUserList).to.contains(Customers.johnDoe.email);
     });
 
     it('should logout from BO', async function () {

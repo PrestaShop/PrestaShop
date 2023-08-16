@@ -51,14 +51,14 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
     await brandsPage.closeSfToolBar(page);
 
     const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all filters and get number of brands in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
     numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfBrands).to.be.above(0);
+    expect(numberOfBrands).to.be.above(0);
   });
 
   // 1 : Filter brands table
@@ -109,15 +109,15 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
         }
 
         const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
+        expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
         for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const brandStatus = await brandsPage.getBrandStatus(page, i);
-            await expect(brandStatus).to.equal(test.args.filterValue === '1');
+            expect(brandStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await brandsPage.getTextColumnFromTableBrands(page, i, test.args.filterBy);
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -126,7 +126,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-        await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
+        expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
       });
     });
   });
@@ -139,10 +139,10 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
       await brandsPage.filterBrands(page, 'input', 'name', Brands.first.name);
 
       const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, tableName);
-      await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
+      expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
-      await expect(textColumn).to.contains(Brands.first.name);
+      expect(textColumn).to.contains(Brands.first.name);
     });
 
     [
@@ -156,11 +156,11 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
 
         if (isActionPerformed) {
           const resultMessage = await brandsPage.getAlertSuccessBlockParagraphContent(page);
-          await expect(resultMessage).to.contains(brandsPage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(brandsPage.successfulUpdateStatusMessage);
         }
 
         const brandsStatus = await brandsPage.getBrandStatus(page, 1);
-        await expect(brandsStatus).to.be.equal(test.args.enabledValue);
+        expect(brandsStatus).to.be.equal(test.args.enabledValue);
       });
     });
 
@@ -168,7 +168,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
       const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
+      expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
   });
 });

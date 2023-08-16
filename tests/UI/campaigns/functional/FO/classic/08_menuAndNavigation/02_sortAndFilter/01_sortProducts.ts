@@ -66,7 +66,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should filter by Active Status', async function () {
@@ -76,7 +76,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
       await productsPage.filterProducts(page, 'active', 'Active', 'select');
 
       numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfActiveProducts).to.within(0, numberOfProducts);
+      expect(numberOfActiveProducts).to.within(0, numberOfProducts);
     });
   });
 
@@ -92,14 +92,14 @@ describe('FO - Menu and navigation : Sort products', async () => {
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it('should change the value of products per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeProductPerPage', baseContext);
 
       const result = await productSettingsPage.setProductsDisplayedPerPage(page, numberOfActiveProducts);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -113,7 +113,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
@@ -123,14 +123,14 @@ describe('FO - Menu and navigation : Sort products', async () => {
       await homePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check that the products as sorted by relevance', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultSort', baseContext);
 
       const isSortingLinkVisible = await categoryPageFO.getSortByValue(page);
-      await expect(isSortingLinkVisible).to.contain('Relevance');
+      expect(isSortingLinkVisible).to.contain('Relevance');
     });
 
     const tests = [
@@ -183,9 +183,9 @@ describe('FO - Menu and navigation : Sort products', async () => {
         const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          expect(sortedTable).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
     });
@@ -199,14 +199,14 @@ describe('FO - Menu and navigation : Sort products', async () => {
       page = await categoryPageFO.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it('should change the value of products per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'ResetProductPerPage', baseContext);
 
       const result = await productSettingsPage.setProductsDisplayedPerPage(page, 12);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
 

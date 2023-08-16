@@ -121,7 +121,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
@@ -130,7 +130,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await ordersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
     it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
@@ -139,7 +139,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-      await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+      expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
   });
 
@@ -199,7 +199,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await addOrderPage.removeVoucher(page, 1);
 
       const result = await addOrderPage.getVoucherDetailsFromTable(page);
-      await expect(result.name).to.contains(cartRuleWithoutCodeData.name);
+      expect(result.name).to.contains(cartRuleWithoutCodeData.name);
     });
   });
 
@@ -215,28 +215,28 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should reset and get number of cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCartRules).to.be.at.least(0);
+      expect(numberOfCartRules).to.be.at.least(0);
     });
 
     it('should delete cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
       const validationMessage = await cartRulesPage.deleteCartRule(page, 1, cartRuleWithoutCodeData.name);
-      await expect(validationMessage).to.contains(cartRulesPage.successfulDeleteMessage);
+      expect(validationMessage).to.contains(cartRulesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
       const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCartRulesAfterDelete).to.equal(numberOfCartRules - 1);
+      expect(numberOfCartRulesAfterDelete).to.equal(numberOfCartRules - 1);
     });
   });
 
@@ -253,7 +253,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
@@ -262,7 +262,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await ordersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
     it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
@@ -271,7 +271,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-      await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+      expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
 
     it('should add to cart the product \'demo_12\' and check details', async function () {
@@ -294,14 +294,14 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatVouchersBlockIsNotVisible', baseContext);
 
       const isVoucherTableNotVisible = await addOrderPage.isVouchersTableNotVisible(page);
-      await expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.be.true;
+      expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.eq(true);
     });
 
     it('should search for the created voucher with code and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchVoucher1', baseContext);
 
       const voucherToSelect = await addOrderPage.searchVoucher(page, cartRuleWithCodeData.name);
-      await expect(voucherToSelect).to.equal(`${cartRuleWithCodeData.name} - ${cartRuleWithCodeData.code}`);
+      expect(voucherToSelect).to.equal(`${cartRuleWithCodeData.name} - ${cartRuleWithCodeData.code}`);
 
       const result = await addOrderPage.getVoucherDetailsFromTable(page);
       await Promise.all([
@@ -338,7 +338,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await addOrderPage.searchVoucher(page, cartRuleWithCodeData.name);
 
       const voucherErrorText = await addOrderPage.getCartRuleErrorText(page);
-      await expect(voucherErrorText).to.equal(addOrderPage.cartRuleAlreadyExistErrorText);
+      expect(voucherErrorText).to.equal(addOrderPage.cartRuleAlreadyExistErrorText);
     });
 
     it('should remove voucher and check that vouchers table is not visible', async function () {
@@ -347,7 +347,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await addOrderPage.removeVoucher(page, 1);
 
       const isVoucherTableNotVisible = await addOrderPage.isVouchersTableNotVisible(page);
-      await expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.be.true;
+      expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.eq(true);
     });
 
     it('should check summary block', async function () {
@@ -373,7 +373,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'searchInvalidVoucher', baseContext);
 
       const searchResult = await addOrderPage.searchVoucher(page, 'testVoucher');
-      await expect(searchResult).to.equal(addOrderPage.noVoucherFoudErrorMessage);
+      expect(searchResult).to.equal(addOrderPage.noVoucherFoudErrorMessage);
     });
   });
 
@@ -383,10 +383,10 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'addVoucherAndGetIframe', baseContext);
 
       const isIframeVisible = await addOrderPage.clickOnAddVoucherButton(page);
-      await expect(isIframeVisible, 'Add cart rule frame is not visible!').to.be.true;
+      expect(isIframeVisible, 'Add cart rule frame is not visible!').to.eq(true);
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
-      await expect(addVoucherPage).to.be.not.null;
+      expect(addVoucherPage).to.not.eq(null);
     });
 
     it('should create then search for the disabled voucher and check the error message', async function () {
@@ -397,7 +397,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await addOrderPage.searchVoucher(page, disabledCartRuleData.name);
 
       const voucherErrorText = await addOrderPage.getCartRuleErrorText(page);
-      await expect(voucherErrorText).to.equal(addOrderPage.voucherDisabledErrorMessage);
+      expect(voucherErrorText).to.equal(addOrderPage.voucherDisabledErrorMessage);
     });
   });
 
@@ -407,14 +407,14 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'AddVoucherAndCheckIframe', baseContext);
 
       const isIframeVisible = await addOrderPage.clickOnAddVoucherButton(page);
-      await expect(isIframeVisible, 'Add cart rule frame is not visible!').to.be.true;
+      expect(isIframeVisible, 'Add cart rule frame is not visible!').to.eq(true);
     });
 
     it('should create the cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'CreateCArtRuleWithGift', baseContext);
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
-      await expect(addVoucherPage).to.be.not.null;
+      expect(addVoucherPage).to.not.eq(null);
 
       await addCartRulePage.createEditCartRules(addVoucherPage!, cartRuleWithGiftData, false);
     });
@@ -423,7 +423,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'searchVoucherWithGift', baseContext);
 
       const voucherToSelect = await addOrderPage.searchVoucher(page, cartRuleWithGiftData.name);
-      await expect(voucherToSelect).to.equal(`${cartRuleWithGiftData.name} - ${cartRuleWithGiftData.code}`);
+      expect(voucherToSelect).to.equal(`${cartRuleWithGiftData.name} - ${cartRuleWithGiftData.code}`);
 
       const result = await addOrderPage.getVoucherDetailsFromTable(page, 1);
       await Promise.all([
@@ -469,14 +469,14 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await addOrderPage.removeVoucher(page, 1);
 
       const isVoucherTableNotVisible = await addOrderPage.isVouchersTableNotVisible(page);
-      await expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.be.true;
+      expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.eq(true);
     });
 
     it('should check that the gift product is deleted', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'CheckGiftDeleted', baseContext);
 
       const isRowNotVisible = await addOrderPage.isProductTableRowNotVisible(page, 2);
-      await expect(isRowNotVisible, 'Gift product still visible on products table!').to.be.true;
+      expect(isRowNotVisible, 'Gift product still visible on products table!').to.eq(true);
     });
 
     it('should check summary block', async function () {
@@ -502,14 +502,14 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'clickToAddFreeShippingVoucher', baseContext);
 
       const isIframeVisible = await addOrderPage.clickOnAddVoucherButton(page);
-      await expect(isIframeVisible, 'Add cart rule frame is not visible!').to.be.true;
+      expect(isIframeVisible, 'Add cart rule frame is not visible!').to.eq(true);
     });
 
     it('should create the cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFreeShippingVoucher', baseContext);
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
-      await expect(addVoucherPage).to.be.not.null;
+      expect(addVoucherPage).to.not.eq(null);
 
       await addCartRulePage.createEditCartRules(addVoucherPage!, cartRuleFreeShippingData, false);
     });
@@ -518,7 +518,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'searchFreeShippingVoucher', baseContext);
 
       const voucherToSelect = await addOrderPage.searchVoucher(page, cartRuleFreeShippingData.name);
-      await expect(voucherToSelect).to.equal(`${cartRuleFreeShippingData.name} - ${cartRuleFreeShippingData.code}`);
+      expect(voucherToSelect).to.equal(`${cartRuleFreeShippingData.name} - ${cartRuleFreeShippingData.code}`);
 
       const result = await addOrderPage.getVoucherDetailsFromTable(page);
       await Promise.all([
@@ -534,7 +534,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       const shippingPriceTTC = await addOrderPage.setDeliveryOption(
         page, `${Carriers.myCarrier.name} - Delivery next day!`,
       );
-      await expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+      expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
     });
 
     it('should re-check voucher details', async function () {

@@ -84,7 +84,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     describe('Create a percentage cart rule', async () => {
@@ -99,7 +99,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         await cartRulesPage.goToAddNewCartRulesPage(page);
 
         const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        expect(pageTitle).to.contains(addCartRulePage.pageTitle);
       });
 
       it('should create new cart rule', async function () {
@@ -114,7 +114,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
           page,
           percentCartRule,
         );
-        await expect(validationMessage).to.contains(
+        expect(validationMessage).to.contains(
           addCartRulePage.successfulCreationMessage,
         );
       });
@@ -136,7 +136,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         );
 
         const pageTitle = await orderSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
 
       it('should change the terms and conditions back to disabled', async function () {
@@ -148,7 +148,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         );
 
         const result = await orderSettingsPage.setTermsOfService(page, false);
-        await expect(result).to.contains(
+        expect(result).to.contains(
           orderSettingsPage.successfulUpdateMessage,
         );
       });
@@ -171,7 +171,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       page = await cartRulesPage.viewMyShop(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add first product to cart and Proceed to checkout', async function () {
@@ -186,7 +186,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(cartPage.pageTitle);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should add our discount code and check that the total price is 0', async function () {
@@ -200,7 +200,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await cartPage.addPromoCode(page, percentCartRule.code);
 
       const totalPrice = await cartPage.getATIPrice(page);
-      await expect(totalPrice, 'Order total price is incorrect').to.equal(0);
+      expect(totalPrice, 'Order total price is incorrect').to.equal(0);
     });
 
     it('should go to checkout process', async function () {
@@ -214,7 +214,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill personal information as a guest', async function () {
@@ -229,10 +229,10 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         page,
         customerData,
       );
-      await expect(
+      expect(
         isStepPersonalInfoCompleted,
         'Step personal information is not completed',
-      ).to.be.true;
+      ).to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
@@ -247,8 +247,8 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         page,
         addressData,
       );
-      await expect(isStepAddressComplete, 'Step Address is not complete')
-        .to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete')
+        .to.eq(true);
     });
 
     it('should go to last step', async function () {
@@ -261,8 +261,8 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete')
-        .to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete')
+        .to.eq(true);
     });
 
     it('should contain no payment needed text', async function () {
@@ -274,7 +274,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       );
 
       const noPaymentNeededText = await checkoutPage.getNoPaymentNeededBlockContent(page);
-      await expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
+      expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
     });
 
     it('should check that complete order button is enabled', async function () {
@@ -288,7 +288,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       const confirmButtonVisible = await checkoutPage.isPaymentConfirmationButtonVisibleAndEnabled(
         page,
       );
-      await expect(confirmButtonVisible, 'Confirm button visible').to.be.true;
+      expect(confirmButtonVisible, 'Confirm button visible').to.eq(true);
     });
 
     it('should complete the order', async function () {
@@ -306,7 +306,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(
         page,
       );
-      await expect(cardTitle).to.contains(
+      expect(cardTitle).to.contains(
         orderConfirmationPage.orderConfirmationCardTitle,
       );
     });
@@ -329,7 +329,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       page = await checkoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
 
     describe('Delete created cart rules', async () => {
@@ -348,7 +348,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         );
 
         const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        expect(pageTitle).to.contains(cartRulesPage.pageTitle);
       });
 
       it('should delete our 100% cart rules', async function () {
@@ -360,7 +360,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         );
 
         const validationMessage = await cartRulesPage.deleteCartRule(page);
-        await expect(validationMessage).to.contains(
+        expect(validationMessage).to.contains(
           cartRulesPage.successfulDeleteMessage,
         );
       });
@@ -382,7 +382,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         );
 
         const pageTitle = await orderSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
 
       it('should change the terms and conditions back to enabled', async function () {
@@ -398,7 +398,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
           true,
           'Terms and conditions of use',
         );
-        await expect(result).to.contains(
+        expect(result).to.contains(
           orderSettingsPage.successfulUpdateMessage,
         );
       });

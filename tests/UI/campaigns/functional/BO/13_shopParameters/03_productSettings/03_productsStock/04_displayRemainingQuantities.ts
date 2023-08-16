@@ -73,7 +73,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to create product page and create a product', async function () {
@@ -82,7 +82,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
       await productsPage.goToAddProductPage(page);
 
       const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     const tests = [
@@ -108,7 +108,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
         await testContext.addContextItem(this, 'testIdentifier', `setDisplayRemainingQuantity${index}`, baseContext);
 
         const result = await productSettingsPage.setDisplayRemainingQuantities(page, test.args.quantity);
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
@@ -117,7 +117,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
         page = await productSettingsPage.viewMyShop(page);
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Home page was not opened').to.be.true;
+        expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should search for the product and go to product page', async function () {
@@ -127,7 +127,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
         await searchResultsPage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productData.name);
+        expect(pageTitle).to.contains(productData.name);
       });
 
       it('should check the product availability', async function () {
@@ -139,7 +139,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
         );
 
         const lastQuantityIsVisible = await productPage.isAvailabilityQuantityDisplayed(page);
-        await expect(lastQuantityIsVisible).to.be.equal(test.args.exist);
+        expect(lastQuantityIsVisible).to.be.equal(test.args.exist);
       });
 
       it('should close the page and go back to BO', async function () {
@@ -148,7 +148,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
         page = await productPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     });
   });

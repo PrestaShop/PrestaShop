@@ -50,7 +50,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   it('should go to \'Groups\' page', async function () {
@@ -59,14 +59,14 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
     await customerSettingsPage.goToGroupsPage(page);
 
     const pageTitle = await groupsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(groupsPage.pageTitle);
+    expect(pageTitle).to.contains(groupsPage.pageTitle);
   });
 
   it('should reset all filters and get number of groups in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfGroups).to.be.above(0);
+    expect(numberOfGroups).to.be.above(0);
   });
 
   describe('Filter groups', async () => {
@@ -131,15 +131,15 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
         );
 
         const numberOfGroupsAfterFilter = await groupsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfGroups);
+        expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfGroups);
 
         for (let row = 1; row <= numberOfGroupsAfterFilter; row++) {
           const textColumn = await groupsPage.getTextColumn(page, row, test.args.filterBy);
 
           if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+            expect(textColumn).to.contains(test.expected);
           } else {
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -148,7 +148,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfGroupsAfterReset = await groupsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfGroupsAfterReset).to.equal(numberOfGroups);
+        expect(numberOfGroupsAfterReset).to.equal(numberOfGroups);
       });
     });
   });

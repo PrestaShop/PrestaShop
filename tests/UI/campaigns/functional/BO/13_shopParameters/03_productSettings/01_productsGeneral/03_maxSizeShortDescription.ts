@@ -73,14 +73,14 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
         await productSettingsPage.closeSfToolBar(page);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
 
       it(`should update max size of short description to ${test.args.descriptionSize}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateMaxSizeSummaryValue${index + 1}`, baseContext);
 
         const result = await productSettingsPage.UpdateMaxSizeOfSummary(page, test.args.descriptionSize);
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -93,7 +93,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
         );
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       if (test.args.descriptionSize === maxSummarySizeValue) {
@@ -104,10 +104,10 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
           await productsPage.goToAddProductPage(page);
 
           let errorMessage = await addProductPage.createEditBasicProduct(page, productData);
-          await expect(errorMessage).to.equal(addProductPage.errorMessage);
+          expect(errorMessage).to.equal(addProductPage.errorMessage);
 
           errorMessage = await addProductPage.getErrorMessageWhenSummaryIsTooLong(page);
-          await expect(errorMessage).to.equal(
+          expect(errorMessage).to.equal(
             addProductPage.errorMessageWhenSummaryTooLong(maxSummarySizeValue),
           );
         });
@@ -118,7 +118,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
           await productsPage.goToAddProductPage(page);
 
           const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
-          await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+          expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
         });
       }
     });
@@ -127,7 +127,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const testResult = await addProductPage.deleteProduct(page);
-      await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
     });
   });
 

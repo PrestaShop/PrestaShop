@@ -237,14 +237,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters and get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersBeforeCreate', baseContext);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     [
@@ -269,7 +269,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
           }
 
           const pageTitle = await addProductPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addProductPage.pageTitle);
+          expect(pageTitle).to.contains(addProductPage.pageTitle);
         });
 
         it('should create Product', async function () {
@@ -288,7 +288,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
           if (product === productWithEcoTax) {
             await addProductPage.addEcoTax(page, productWithEcoTax.ecoTax);
           }
-          await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+          expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
         });
       });
     });
@@ -304,7 +304,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         );
 
         const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        expect(pageTitle).to.contains(cartRulesPage.pageTitle);
       });
 
       it('should go to new cart rule page', async function () {
@@ -313,14 +313,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await cartRulesPage.goToAddNewCartRulesPage(page);
 
         const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        expect(pageTitle).to.contains(addCartRulePage.pageTitle);
       });
 
       it('should create new cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
         const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
-        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+        expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
       });
     });
   });
@@ -338,14 +338,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
@@ -354,7 +354,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(customerData.lastName);
+      expect(textColumn).to.contains(customerData.lastName);
     });
 
     it('should view the order', async function () {
@@ -363,7 +363,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
     });
   });
 
@@ -373,14 +373,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const textResult = await orderPageProductsBlock.deleteProduct(page, 1);
-      await expect(textResult).to.contains(orderPageProductsBlock.successfulDeleteProductMessage);
+      expect(textResult).to.contains(orderPageProductsBlock.successfulDeleteProductMessage);
     });
 
     it('should check number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts0', baseContext);
 
       const productCount = await orderPageProductsBlock.getProductsNumber(page);
-      await expect(productCount).to.equal(productNumber);
+      expect(productCount).to.equal(productNumber);
     });
 
     describe('Add \'Simple product\' 2 times and check the error message', async () => {
@@ -401,7 +401,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addSimpleProductToTheCart1', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -426,7 +426,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await orderPageProductsBlock.searchProduct(page, simpleProduct.name);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.errorAddSameProduct);
+        expect(textResult).to.contains(orderPageProductsBlock.errorAddSameProduct);
       });
 
       it('should click on cancel button', async function () {
@@ -435,7 +435,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await orderPageProductsBlock.cancelAddProductToCart(page);
 
         const isVisible = await orderPageProductsBlock.isAddProductTableRowVisible(page);
-        await expect(isVisible).to.be.false;
+        expect(isVisible).to.eq(false);
       });
     });
 
@@ -456,7 +456,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addCombinationProduct', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -493,7 +493,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addVirtualProductToTheCart', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -532,14 +532,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addPackOfProductsToTheCart', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.errorMinimumQuantityMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.errorMinimumQuantityMessage);
       });
 
       it('should increase the quantity and check ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPackOfProductsDetails', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page, packOfProducts.minimumQuantity);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
         const result = await orderPageProductsBlock.getProductDetails(page, 3);
         await Promise.all([
@@ -572,7 +572,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addCustomizedProductToTheCart', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
         productNumber += 1;
       });
 
@@ -608,7 +608,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addProductOutOfStockAllowed', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -630,7 +630,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityOutOfStockAllowed', baseContext);
 
         const quantity = await orderPageProductsBlock.modifyProductQuantity(page, 1, newQuantity);
-        await expect(quantity, 'Quantity was not updated').to.equal(newQuantity);
+        expect(quantity, 'Quantity was not updated').to.equal(newQuantity);
       });
     });
 
@@ -652,7 +652,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatAddButtonIsDisabled', baseContext);
 
         const isDisabled = await orderPageProductsBlock.isAddButtonDisabled(page);
-        await expect(isDisabled).to.be.true;
+        expect(isDisabled).to.eq(true);
       });
 
       it('should increase the quantity of the product and check that cancel button still disabled', async function () {
@@ -661,7 +661,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await orderPageProductsBlock.addQuantity(page, newQuantity);
 
         const isDisabled = await orderPageProductsBlock.isAddButtonDisabled(page);
-        await expect(isDisabled).to.be.true;
+        expect(isDisabled).to.eq(true);
       });
 
       it('should click on cancel button', async function () {
@@ -670,7 +670,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await orderPageProductsBlock.cancelAddProductToCart(page);
 
         const isVisible = await orderPageProductsBlock.isAddProductTableRowVisible(page);
-        await expect(isVisible).to.be.false;
+        expect(isVisible).to.eq(false);
       });
     });
 
@@ -691,7 +691,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addProductWithSpecificPriceToTheCart', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -729,7 +729,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
 
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
         productNumber += 1;
       });
 
@@ -765,7 +765,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'addProductWithCartRuleToTheCart', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -789,7 +789,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
         const quantity = await orderPageProductsBlock.modifyProductQuantity(page, 1, newQuantity);
-        await expect(quantity, 'Quantity was not updated').to.equal(newQuantity);
+        expect(quantity, 'Quantity was not updated').to.equal(newQuantity);
       });
 
       it('should update the price', async function () {
@@ -810,7 +810,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
         const productCount = await orderPageProductsBlock.getProductsNumber(page);
-        await expect(productCount).to.equal(productNumber);
+        expect(productCount).to.equal(productNumber);
       });
 
       describe('Paginate between pages', async () => {
@@ -818,35 +818,35 @@ describe('BO - Orders - View and edit order : Check product block in view order 
           await testContext.addContextItem(this, 'testIdentifier', 'displayDefaultItemsNumber', baseContext);
 
           const isNextLinkVisible = await orderPageProductsBlock.selectPaginationLimit(page, 8);
-          await expect(isNextLinkVisible).to.be.true;
+          expect(isNextLinkVisible).to.eq(true);
         });
 
         it('should click on next', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
           const paginationNumber = await orderPageProductsBlock.paginationNext(page);
-          await expect(paginationNumber).to.equal('2');
+          expect(paginationNumber).to.equal('2');
         });
 
         it('should click on previous', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
           const paginationNumber = await orderPageProductsBlock.paginationPrevious(page);
-          await expect(paginationNumber).to.equal('1');
+          expect(paginationNumber).to.equal('1');
         });
 
         it('should display 20 items', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'displayAllItems', baseContext);
 
           const isNextLinkVisible = await orderPageProductsBlock.selectPaginationLimit(page, 20);
-          await expect(isNextLinkVisible).to.be.false;
+          expect(isNextLinkVisible).to.eq(false);
         });
 
         it('should display 8 items', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'redisplayDefaultItemsNumber', baseContext);
 
           const isNextLinkVisible = await orderPageProductsBlock.selectPaginationLimit(page, 8);
-          await expect(isNextLinkVisible).to.be.true;
+          expect(isNextLinkVisible).to.eq(true);
         });
       });
     });

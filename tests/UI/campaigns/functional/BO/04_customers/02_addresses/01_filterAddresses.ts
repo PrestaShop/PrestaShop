@@ -49,14 +49,14 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
     );
 
     const pageTitle = await addressesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addressesPage.pageTitle);
+    expect(pageTitle).to.contains(addressesPage.pageTitle);
   });
 
   it('should reset all filters and get number of addresses in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAddresses).to.be.above(0);
+    expect(numberOfAddresses).to.be.above(0);
   });
 
   // Filter addresses with all inputs and selects in grid table
@@ -139,7 +139,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
         );
 
         const numberOfAddressesAfterFilter = await addressesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
+        expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
 
         for (let i = 1; i <= numberOfAddressesAfterFilter; i++) {
           const textColumn = await addressesPage.getTextColumnFromTableAddresses(
@@ -147,7 +147,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             i,
             test.args.filterBy === 'id_country' ? 'country_name' : test.args.filterBy,
           );
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -155,7 +155,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
+        expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
       });
     });
   });

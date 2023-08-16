@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         await productSettingsPage.closeSfToolBar(page);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} default activation status`, async function () {
@@ -78,7 +78,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         );
 
         const result = await productSettingsPage.setDefaultActivationStatus(page, test.args.enable);
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -91,7 +91,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         );
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       it('should go to create product page and check the new product online status', async function () {
@@ -100,7 +100,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         await productsPage.goToAddProductPage(page);
 
         const online = await addProductPage.getOnlineButtonStatus(page);
-        await expect(online).to.be.equal(test.args.enable);
+        expect(online).to.be.equal(test.args.enable);
       });
     });
   });

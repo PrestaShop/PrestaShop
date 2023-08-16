@@ -48,7 +48,7 @@ describe('BO - Modules - Alerts : Configure module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it('should go to \'Alerts\' tab', async function () {
@@ -57,7 +57,7 @@ describe('BO - Modules - Alerts : Configure module', async () => {
     await moduleManagerPage.goToAlertsTab(page);
 
     const pageTitle = await moduleAlertsPage.getPageTitle(page);
-    await expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
+    expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
   });
 
   it('should go to module configuration page', async function () {
@@ -66,6 +66,6 @@ describe('BO - Modules - Alerts : Configure module', async () => {
     await moduleAlertsPage.goToConfigurationPage(page, Modules.psCheckPayment.tag);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-    await expect(pageSubtitle).to.contains(Modules.psCheckPayment.name);
+    expect(pageSubtitle).to.contains(Modules.psCheckPayment.name);
   });
 });

@@ -56,7 +56,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   it('should go to \'Groups\' page', async function () {
@@ -65,14 +65,14 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
     await customerSettingsPage.goToGroupsPage(page);
 
     const pageTitle = await groupsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(groupsPage.pageTitle);
+    expect(pageTitle).to.contains(groupsPage.pageTitle);
   });
 
   it('should reset all filters and get number of groups in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfGroups).to.be.above(0);
+    expect(numberOfGroups).to.be.above(0);
   });
 
   describe('Create 2 groups in BO', async () => {
@@ -83,17 +83,17 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
         await groupsPage.goToNewGroupPage(page);
 
         const pageTitle = await addGroupPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
       });
 
       it('should create group and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createGroup${index + 1}`, baseContext);
 
         const textResult = await addGroupPage.createEditGroup(page, groupToCreate);
-        await expect(textResult).to.contains(groupsPage.successfulCreationMessage);
+        expect(textResult).to.contains(groupsPage.successfulCreationMessage);
 
         const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + index + 1);
+        expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + index + 1);
       });
     });
   });
@@ -105,11 +105,11 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
       await groupsPage.filterTable(page, 'input', 'b!name', 'todelete');
 
       const numberOfGroupsAfterFilter = await groupsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfGroups);
+      expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfGroups);
 
       for (let i = 1; i <= numberOfGroupsAfterFilter; i++) {
         const textColumn = await groupsPage.getTextColumn(page, i, 'b!name');
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -117,14 +117,14 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteGroups', baseContext);
 
       const deleteTextResult = await groupsPage.bulkDeleteGroups(page);
-      await expect(deleteTextResult).to.be.contains(groupsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(groupsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfGroupsAfterReset = await groupsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfGroupsAfterReset).to.be.equal(numberOfGroups);
+      expect(numberOfGroupsAfterReset).to.be.equal(numberOfGroups);
     });
   });
 });

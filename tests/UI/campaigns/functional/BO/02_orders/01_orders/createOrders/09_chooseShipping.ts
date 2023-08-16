@@ -91,7 +91,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await orderSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
 
     it(`should configure gift options: price '€${giftOptions.price}' and tax '${giftOptions.tax}`, async function () {
@@ -104,7 +104,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
         giftOptions.tax,
         giftOptions.isRecyclablePackage,
       );
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -121,7 +121,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
@@ -130,7 +130,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await ordersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
     it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
@@ -139,7 +139,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-      await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+      expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
   });
 
@@ -149,7 +149,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatShippingBlockNotVisible', baseContext);
 
       const isVisible = await addOrderPage.isShippingBlockVisible(page);
-      await expect(isVisible, 'Shipping block is visible!').to.be.false;
+      expect(isVisible, 'Shipping block is visible!').to.eq(false);
     });
 
     it('should add product to cart', async function () {
@@ -169,7 +169,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatShippingBlockVisible', baseContext);
 
       const isVisible = await addOrderPage.isShippingBlockVisible(page);
-      await expect(isVisible, 'Shipping block is not visible!').to.be.true;
+      expect(isVisible, 'Shipping block is not visible!').to.eq(true);
     });
 
     it(`should choose the carrier '${Carriers.myCarrier.name}' and check shipping price`, async function () {
@@ -178,7 +178,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       const shippingPriceTTC = await addOrderPage.setDeliveryOption(
         page, `${Carriers.myCarrier.name} - Delivery next day!`,
       );
-      await expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+      expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
     });
 
     it('should check summary block', async function () {
@@ -201,7 +201,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await addOrderPage.setFreeShipping(page, true);
 
       const shippingPrice = await addOrderPage.getShippingCost(page);
-      await expect(shippingPrice).to.be.equal('€0.00');
+      expect(shippingPrice).to.be.equal('€0.00');
     });
 
     it('should re-check summary block', async function () {
@@ -246,14 +246,14 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
     });
 
     it('should check \'Recycled packaging\' and \'gift wrapping\' badges', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBadges', baseContext);
 
       const recyclePackagingBadge = await orderPageTabListBlock.getSuccessBadge(page, 2);
-      await expect(recyclePackagingBadge).to.contain('Recycled packaging')
+      expect(recyclePackagingBadge).to.contain('Recycled packaging')
         .and.to.contain('Gift wrapping');
     });
 
@@ -261,7 +261,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGiftMessage', baseContext);
 
       const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
-      await expect(giftMessageText).to.be.equal(giftMessage);
+      expect(giftMessageText).to.be.equal(giftMessage);
     });
   });
 
@@ -278,7 +278,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await orderSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
 
     it('should go back to default configuration', async function () {
@@ -291,7 +291,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
         defaultGiftOptions.tax,
         defaultGiftOptions.isRecyclablePackage,
       );
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
   });
 

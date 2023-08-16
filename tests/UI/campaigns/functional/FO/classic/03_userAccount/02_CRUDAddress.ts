@@ -76,7 +76,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToFo(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -85,7 +85,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToLoginPage(page);
 
       const pageHeaderTitle = await loginPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
     });
 
     it('Should sign in FO', async function () {
@@ -94,7 +94,7 @@ describe('FO - Account : CRUD address', async () => {
       await loginPage.customerLogin(page, newCustomerData);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to \'My Account\' page', async function () {
@@ -103,7 +103,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToMyAccountPage(page);
 
       const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go to \'Add first address\' page', async function () {
@@ -112,14 +112,14 @@ describe('FO - Account : CRUD address', async () => {
       await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(addressesPage.addressPageTitle);
+      expect(pageHeaderTitle).to.equal(addressesPage.addressPageTitle);
     });
 
     it('should create new address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
       const textResult = await addAddressPage.setAddress(page, createAddressData);
-      await expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
+      expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
     });
   });
 
@@ -131,14 +131,14 @@ describe('FO - Account : CRUD address', async () => {
       await addressesPage.goToEditAddressPage(page, addressPosition);
 
       const pageHeaderTitle = await addAddressPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(addAddressPage.updateFormTitle);
+      expect(pageHeaderTitle).to.equal(addAddressPage.updateFormTitle);
     });
 
     it('should update the address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAddress', baseContext);
 
       const textResult = await addAddressPage.setAddress(page, editAddressData);
-      await expect(textResult).to.equal(addressesPage.updateAddressSuccessfulMessage);
+      expect(textResult).to.equal(addressesPage.updateAddressSuccessfulMessage);
     });
 
     it('should go back to \'Your account page\'', async function () {
@@ -147,14 +147,14 @@ describe('FO - Account : CRUD address', async () => {
       await addAddressPage.clickOnBreadCrumbLink(page, 'my-account');
 
       const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should check that \'Add first address\' is changed to \'Addresses\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddFirstAddress', baseContext);
 
       const isAddFirstAddressLinkVisible = await myAccountPage.isAddFirstAddressLinkVisible(page);
-      await expect(isAddFirstAddressLinkVisible, 'Add first address link is still visible!').to.be.false;
+      expect(isAddFirstAddressLinkVisible, 'Add first address link is still visible!').to.eq(false);
     });
   });
 
@@ -165,7 +165,7 @@ describe('FO - Account : CRUD address', async () => {
       await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
     });
 
     it('should go to \'Create new address\' page', async function () {
@@ -174,14 +174,14 @@ describe('FO - Account : CRUD address', async () => {
       await addressesPage.openNewAddressForm(page);
 
       const pageHeaderTitle = await addAddressPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(addAddressPage.creationFormTitle);
+      expect(pageHeaderTitle).to.equal(addAddressPage.creationFormTitle);
     });
 
     it('should create new address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress2', baseContext);
 
       const textResult = await addAddressPage.setAddress(page, secondAddressData);
-      await expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
+      expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
     });
   });
 
@@ -192,7 +192,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to product page', async function () {
@@ -201,7 +201,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should add product to the cart', async function () {
@@ -210,7 +210,7 @@ describe('FO - Account : CRUD address', async () => {
       await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should check that the two created addresses are displayed', async function () {
@@ -220,7 +220,7 @@ describe('FO - Account : CRUD address', async () => {
       await cartPage.clickOnProceedToCheckout(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
-      await expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
+      expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
     });
   });
 
@@ -231,7 +231,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to \'My Account\' page', async function () {
@@ -240,7 +240,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToMyAccountPage(page);
 
       const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go to addresses page', async function () {
@@ -249,7 +249,7 @@ describe('FO - Account : CRUD address', async () => {
       await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
     });
 
     it('should try to delete the first address and check the error message', async function () {
@@ -259,7 +259,7 @@ describe('FO - Account : CRUD address', async () => {
       secondAddressPosition = await addressesPage.getAddressPosition(page, secondAddressData.alias);
 
       const textResult = await addressesPage.deleteAddress(page, firstAddressPosition);
-      await expect(textResult).to.equal(addressesPage.deleteAddressErrorMessage);
+      expect(textResult).to.equal(addressesPage.deleteAddressErrorMessage);
     });
 
     it('should go to cart page', async function () {
@@ -268,7 +268,7 @@ describe('FO - Account : CRUD address', async () => {
       await addressesPage.goToCartPage(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(cartPage.pageTitle);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should select the second address and continue', async function () {
@@ -281,7 +281,7 @@ describe('FO - Account : CRUD address', async () => {
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to home page', async function () {
@@ -290,7 +290,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to \'My Account\' page', async function () {
@@ -299,7 +299,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToMyAccountPage(page);
 
       const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go to addresses page', async function () {
@@ -308,7 +308,7 @@ describe('FO - Account : CRUD address', async () => {
       await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
     });
 
     it('should delete the first address and check the success message', async function () {
@@ -317,7 +317,7 @@ describe('FO - Account : CRUD address', async () => {
       const addressPosition = await addressesPage.getAddressPosition(page, editAddressData.alias);
 
       const textResult = await addressesPage.deleteAddress(page, addressPosition);
-      await expect(textResult).to.equal(addressesPage.deleteAddressSuccessfulMessage);
+      expect(textResult).to.equal(addressesPage.deleteAddressSuccessfulMessage);
     });
   });
 

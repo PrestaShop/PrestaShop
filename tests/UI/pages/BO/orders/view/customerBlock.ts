@@ -5,8 +5,6 @@ import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import AddressData from '@data/faker/address';
 
 import type {Frame, Page} from 'playwright';
-import {expect} from 'chai';
-
 /**
  * Customer block, contains functions that can be used on view/edit customer block
  * @class
@@ -83,6 +81,22 @@ class CustomerBlock extends ViewOrderBasePage {
   /*
   Methods
    */
+
+  /**
+   * Get Address frame
+   * @param page {Page} Browser tab
+   * @returns {Promise<Frame>}
+   */
+  async getAddressFrame(page: Page): Promise<Frame> {
+    const addressFrame: Frame|null = await page.frame({url: /sell\/addresses\/order/gmi});
+
+    if (addressFrame === null) {
+      throw new Error('Create product frame was not found');
+    }
+
+    return addressFrame;
+  }
+
   /**
    * Get customer information
    * @param page {Frame|Page} Browser tab
@@ -149,10 +163,9 @@ class CustomerBlock extends ViewOrderBasePage {
 
     await this.waitForVisibleSelector(page, this.editAddressIframe);
 
-    const addressFrame: Frame|null = await page.frame({url: /sell\/addresses\/order/gmi});
-    await expect(addressFrame).to.be.not.null;
+    const addressFrame = await this.getAddressFrame(page);
 
-    await addAddressPage.createEditAddress(addressFrame!, addressData, true, false);
+    await addAddressPage.createEditAddress(addressFrame, addressData, true, false);
 
     await this.waitForHiddenSelector(page, this.editAddressIframe);
 
@@ -187,8 +200,7 @@ class CustomerBlock extends ViewOrderBasePage {
 
     await this.waitForVisibleSelector(page, this.editAddressIframe);
 
-    const addressFrame: Frame|null = await page.frame({url: /sell\/addresses\/order/gmi});
-    await expect(addressFrame).to.be.not.null;
+    const addressFrame = await this.getAddressFrame(page);
 
     await addAddressPage.createEditAddress(addressFrame!, addressData, true, false);
 

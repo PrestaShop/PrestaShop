@@ -54,7 +54,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
     await preferencesPage.closeSfToolBar(page);
 
     const pageTitle = await preferencesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+    expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
   [
@@ -72,7 +72,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
         test.args.paymentModule,
         test.args.exist,
       );
-      await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
+      expect(result).to.contains(preferencesPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -84,7 +84,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       await homePage.changeLanguage(page, 'en');
 
       const pageTitle = await homePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(homePage.pageTitle);
+      expect(pageTitle).to.contains(homePage.pageTitle);
     });
 
     it('should add the first product to the cart and checkout', async function () {
@@ -103,7 +103,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     // Personal information step - Login
@@ -115,7 +115,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
         await checkoutPage.clickOnSignIn(page);
 
         const isStepLoginComplete = await checkoutPage.customerLogin(page, Customers.johnDoe);
-        await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
+        expect(isStepLoginComplete, 'Step Personal information is not complete').to.eq(true);
       }
     });
 
@@ -124,7 +124,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should continue to payment step and check the existence of payment method', async function () {
@@ -132,11 +132,11 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Check payment method
       const isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModule);
-      await expect(isVisible).to.be.equal(test.args.exist);
+      expect(isVisible).to.be.equal(test.args.exist);
     });
 
     it('should go back to BO', async function () {
@@ -146,7 +146,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
   });
 });

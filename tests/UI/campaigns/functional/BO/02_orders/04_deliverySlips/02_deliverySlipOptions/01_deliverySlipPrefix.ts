@@ -60,7 +60,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       await deliverySlipsPage.closeSfToolBar(page);
 
       const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
 
     it(`should update the delivery slip prefix to ${deliverySlipData.prefix}`, async function () {
@@ -69,7 +69,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       await deliverySlipsPage.changePrefix(page, deliverySlipData.prefix);
 
       const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
-      await expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
     });
   });
 
@@ -84,7 +84,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -93,14 +93,14 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it(`should check that the delivery slip file name contain '${deliverySlipData.prefix}'`, async function () {
@@ -124,7 +124,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       await deliverySlipsPage.closeSfToolBar(page);
 
       const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
 
     it(`should update the delivery slip prefix to '${defaultPrefix}'`, async function () {
@@ -133,7 +133,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       await deliverySlipsPage.changePrefix(page, defaultPrefix);
 
       const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
-      await expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
     });
   });
 });

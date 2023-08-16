@@ -59,7 +59,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
     numberOfFiles = await filesPage.resetAndGetNumberOfLines(page);
 
     const pageTitle = await filesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(filesPage.pageTitle);
+    expect(pageTitle).to.contains(filesPage.pageTitle);
   });
 
   // 1: Create 11 files
@@ -75,17 +75,17 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
         await filesPage.goToAddNewFilePage(page);
 
         const pageTitle = await addFilePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addFilePage.pageTitle);
+        expect(pageTitle).to.contains(addFilePage.pageTitle);
       });
 
       it(`should create file n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createFile${index}`, baseContext);
 
         const result = await addFilePage.createEditFile(page, createFileData);
-        await expect(result).to.equal(filesPage.successfulCreationMessage);
+        expect(result).to.equal(filesPage.successfulCreationMessage);
 
         const numberOfFilesAfterCreation = await filesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfFilesAfterCreation).to.be.equal(numberOfFiles + 1 + index);
+        expect(numberOfFilesAfterCreation).to.be.equal(numberOfFiles + 1 + index);
       });
 
       after(() => files.deleteFile(createFileData.filename));
@@ -124,7 +124,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
 
         for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
           const textName = await filesPage.getTextColumnFromTable(page, i, test.args.filterBy);
-          await expect(textName).to.contains(test.args.filterValue);
+          expect(textName).to.contains(test.args.filterValue);
         }
       });
 
@@ -132,7 +132,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfFilesAfterReset = await filesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);
+        expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);
       });
     });
   });
@@ -217,17 +217,17 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
             const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult);
+              expect(sortedTableFloat).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+              expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
             const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTable).to.deep.equal(expectedResult);
+              expect(sortedTable).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+              expect(sortedTable).to.deep.equal(expectedResult.reverse());
             }
           }
         },
@@ -243,7 +243,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
       await filesPage.filterTable(page, 'name', 'todelete');
 
       const numberOfFilesAfterFilter = await filesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfFilesAfterFilter).to.be.above(0);
+      expect(numberOfFilesAfterFilter).to.be.above(0);
 
       for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
         const textColumn = await filesPage.getTextColumnFromTable(
@@ -251,7 +251,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -259,14 +259,14 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await filesPage.deleteFilesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(filesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(filesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfFilesAfterReset = await filesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
+      expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
     });
   });
 });

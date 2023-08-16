@@ -44,14 +44,14 @@ describe('BO - International - Taxes : Sort and pagination', async () => {
     );
 
     const pageTitle = await taxesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(taxesPage.pageTitle);
+    expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   it('should reset all filters and get Number of Taxes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfTaxes = await taxesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfTaxes).to.be.above(0);
+    expect(numberOfTaxes).to.be.above(0);
   });
 
   describe('Sort taxes', async () => {
@@ -110,17 +110,17 @@ describe('BO - International - Taxes : Sort and pagination', async () => {
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -139,21 +139,21 @@ describe('BO - International - Taxes : Sort and pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await taxesPage.paginationNext(page);
-      await expect(paginationNumber).to.contains('(page 2 / 4)');
+      expect(paginationNumber).to.contains('(page 2 / 4)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await taxesPage.paginationPrevious(page);
-      await expect(paginationNumber).to.contains('(page 1 / 4)');
+      expect(paginationNumber).to.contains('(page 1 / 4)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await taxesPage.selectPaginationLimit(page, 50);
-      await expect(paginationNumber).to.contains('(page 1 / 1)');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 });

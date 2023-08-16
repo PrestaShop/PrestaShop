@@ -45,21 +45,21 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       await employeesPage.closeSfToolBar(page);
 
       const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      expect(pageTitle).to.contains(employeesPage.pageTitle);
     });
 
     it('should go to \'Permissions\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPermissionsTab', baseContext);
 
       const isTabOpened = await employeesPage.goToPermissionsTab(page);
-      await expect(isTabOpened, 'Permissions tab is not opened!').to.be.true;
+      expect(isTabOpened, 'Permissions tab is not opened!').to.eq(true);
     });
 
     it('should click on \'Logistician\' profile', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProfileSubTab', baseContext);
 
       const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, 'logistician');
-      await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
+      expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
   });
 
@@ -68,7 +68,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllCheckbox', baseContext);
 
       const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, 'all');
-      await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+      expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
     });
 
     [
@@ -81,7 +81,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
         await testContext.addContextItem(this, 'testIdentifier', `check_${test.args.action}1`, baseContext);
 
         const isBulkPermissionPerformed = await permissionsPage.isBulkPermissionPerformed(page, test.args.action);
-        await expect(isBulkPermissionPerformed).to.be.true;
+        expect(isBulkPermissionPerformed).to.eq(true);
       });
     });
   });
@@ -91,7 +91,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'uncheckAllCheckbox', baseContext);
 
       const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, 'all', false);
-      await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+      expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
     });
 
     [
@@ -104,7 +104,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
         await testContext.addContextItem(this, 'testIdentifier', `unchecked_${test.args.action}1`, baseContext);
 
         const isBulkPermissionPerformed = await permissionsPage.isBulkPermissionPerformed(page, test.args.action, false);
-        await expect(isBulkPermissionPerformed).to.be.false;
+        expect(isBulkPermissionPerformed).to.eq(false);
       });
     });
   });
@@ -120,14 +120,14 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
         await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckbox_${index}`, baseContext);
 
         const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, test.args.action);
-        await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+        expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
       });
 
       it(`should check that everything in '${test.args.action}' permission is checked`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckboxForpermission${index}`, baseContext);
 
         const isBulkPermissionPerformed = await permissionsPage.isBulkPermissionPerformed(page, test.args.action);
-        await expect(isBulkPermissionPerformed).to.be.true;
+        expect(isBulkPermissionPerformed).to.eq(true);
       });
     });
   });
@@ -139,7 +139,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       await permissionsPage.reloadPage(page);
 
       const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, 'logistician');
-      await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
+      expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
 
     [
@@ -165,14 +165,14 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       await permissionsPage.setPermissionOnAllPages(page, 'all', false);
 
       const isPermissionDefined = await permissionsPage.setPermissionOnAllPages(page, 'all', false);
-      await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+      expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
     });
 
     it('should set the permission \'All\' for \'Orders\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPermission', baseContext);
 
       const isPermissionDefined = await permissionsPage.setPermission(page, 'AdminParentOrders', 'all');
-      await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+      expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
     });
 
     it('should check the number of checkbox checked', async function () {
@@ -181,7 +181,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
       const numberOfCheckBoxes = await permissionsPage.getNumberOfElementInMenu(page);
 
       const number = await permissionsPage.getNumberOfPagesUnChecked(page, 'all');
-      await expect(numberOfCheckBoxes - number).to.eq(6);
+      expect(numberOfCheckBoxes - number).to.eq(6);
     });
 
     [
@@ -196,7 +196,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
         await testContext.addContextItem(this, 'testIdentifier', `checkMenu${index}`, baseContext);
 
         const isChecked = await permissionsPage.isPageChecked(page, test.args.className, 'all');
-        await expect(isChecked).to.be.true;
+        expect(isChecked).to.eq(true);
       });
     });
   });

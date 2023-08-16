@@ -46,14 +46,14 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
   it('should disable the Fuzzy Search', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableFuzzySearch', baseContext);
 
     const textResult = await searchPage.setFuzzySearch(page, false);
-    await expect(textResult).to.be.eq(searchPage.settingsUpdateMessage);
+    expect(textResult).to.be.eq(searchPage.settingsUpdateMessage);
   });
 
   it('should go to the Front Office', async function () {
@@ -69,10 +69,10 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteWoFuzzy', baseContext);
 
     const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'test');
-    await expect(hasSearchResult).to.be.false;
+    expect(hasSearchResult).to.eq(false);
 
     const inputValue = await homePage.getSearchValue(page);
-    await expect(inputValue).equal('test');
+    expect(inputValue).equal('test');
   });
 
   it('should check the search page', async function () {
@@ -81,13 +81,13 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
     await homePage.searchProduct(page, 'test');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
 
     const hasResults = await searchResultsPage.hasResults(page);
-    await expect(hasResults).to.be.false;
+    expect(hasResults).to.eq(false);
 
     const searchInputValue = await searchResultsPage.getSearchValue(page);
-    await expect(searchInputValue).to.be.equal('test');
+    expect(searchInputValue).to.be.equal('test');
   });
 
   it('should go to BO', async function () {
@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
     await searchResultsPage.goToBO(page);
 
     const pageTitle = await dashboardPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    expect(pageTitle).to.contains(dashboardPage.pageTitle);
   });
 
   it('should go to \'Shop Parameters > Search\' page', async function () {
@@ -109,14 +109,14 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
   it('should disable the Fuzzy Search', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableFuzzySearch', baseContext);
 
     const textResult = await searchPage.setFuzzySearch(page, true);
-    await expect(textResult).to.be.eq(searchPage.settingsUpdateMessage);
+    expect(textResult).to.be.eq(searchPage.settingsUpdateMessage);
   });
 
   it('should go to the Front Office', async function () {
@@ -132,13 +132,13 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteWFuzzy', baseContext);
 
     const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'test');
-    await expect(hasSearchResult).to.be.true;
+    expect(hasSearchResult).to.eq(true);
 
     const countSearchResult = await homePage.countAutocompleteSearchResult(page, 'test');
-    await expect(countSearchResult).to.be.eq(7);
+    expect(countSearchResult).to.be.eq(7);
 
     const inputValue = await homePage.getSearchValue(page);
-    await expect(inputValue).equal('test');
+    expect(inputValue).equal('test');
   });
 
   it('should check the search page', async function () {
@@ -147,15 +147,15 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
     await homePage.searchProduct(page, 'test');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
 
     const hasResults = await searchResultsPage.hasResults(page);
-    await expect(hasResults).to.be.true;
+    expect(hasResults).to.eq(true);
 
     const countResults = await searchResultsPage.getSearchResultsNumber(page);
-    await expect(countResults).to.be.eq(7);
+    expect(countResults).to.be.eq(7);
 
     const searchInputValue = await searchResultsPage.getSearchValue(page);
-    await expect(searchInputValue).to.be.equal('test');
+    expect(searchInputValue).to.be.equal('test');
   });
 });

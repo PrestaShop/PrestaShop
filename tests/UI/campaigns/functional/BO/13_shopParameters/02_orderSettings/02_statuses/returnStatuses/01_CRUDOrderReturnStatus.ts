@@ -60,7 +60,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
     );
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   it('should go to \'Statuses\' page', async function () {
@@ -69,14 +69,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
     await orderSettingsPage.goToStatusesPage(page);
 
     const pageTitle = await statusesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(statusesPage.pageTitle);
+    expect(pageTitle).to.contains(statusesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order return statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfOrderReturnStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfOrderReturnStatuses).to.be.above(0);
+    expect(numberOfOrderReturnStatuses).to.be.above(0);
   });
 
   // 1 - Create order return status
@@ -87,17 +87,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
       await statusesPage.goToNewOrderReturnStatusPage(page);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(addOrderReturnStatusPage.pageTitleCreate);
+      expect(pageTitle).to.eq(addOrderReturnStatusPage.pageTitleCreate);
     });
 
     it('should create order return status and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderStatus', baseContext);
 
       const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, createOrderReturnStatusData);
-      await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
+      expect(textResult).to.contains(statusesPage.successfulCreationMessage);
 
       const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
-      await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderReturnStatuses + 1);
+      expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderReturnStatuses + 1);
     });
   });
 
@@ -116,7 +116,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
       );
 
       const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
-      await expect(textEmail).to.contains(createOrderReturnStatusData.name);
+      expect(textEmail).to.contains(createOrderReturnStatusData.name);
     });
 
     it('should go to edit order return status page', async function () {
@@ -125,17 +125,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
       await statusesPage.goToEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit(createOrderReturnStatusData.name));
+      expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit(createOrderReturnStatusData.name));
     });
 
     it('should update order return status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderReturnStatus', baseContext);
 
       const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, editOrderStatusData);
-      await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
+      expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
 
       const numberOfOrderReturnStatusesAfterUpdate = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfOrderReturnStatusesAfterUpdate).to.be.equal(numberOfOrderReturnStatuses + 1);
+      expect(numberOfOrderReturnStatusesAfterUpdate).to.be.equal(numberOfOrderReturnStatuses + 1);
     });
   });
 
@@ -154,17 +154,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
       );
 
       const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
-      await expect(textEmail).to.contains(editOrderStatusData.name);
+      expect(textEmail).to.contains(editOrderStatusData.name);
     });
 
     it('should delete order return status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
       const textResult = await statusesPage.deleteOrderStatus(page, tableName, 1);
-      await expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
+      expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
 
       const numberOfOrderReturnStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfOrderReturnStatusesAfterDelete).to.be.equal(numberOfOrderReturnStatuses);
+      expect(numberOfOrderReturnStatusesAfterDelete).to.be.equal(numberOfOrderReturnStatuses);
     });
   });
 });

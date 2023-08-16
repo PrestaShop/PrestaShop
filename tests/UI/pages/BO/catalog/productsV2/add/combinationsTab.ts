@@ -573,7 +573,7 @@ class CombinationsTab extends BOBasePage {
     await this.waitForVisibleSelector(page, this.editCombinationIframe);
 
     const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
-    await expect(combinationFrame).to.be.not.null;
+    expect(combinationFrame).to.not.eq(null);
 
     await this.setValue(combinationFrame!, this.editCombinationModalQuantityInput, combinationData.quantity);
     if (combinationData.minimalQuantity) {
@@ -603,7 +603,7 @@ class CombinationsTab extends BOBasePage {
    */
   async getRecentStockMovements(page: Page, row: number = 1): Promise<ProductStockMovement> {
     const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
-    await expect(combinationFrame).to.be.not.null;
+    expect(combinationFrame).to.not.eq(null);
 
     return {
       dateTime: await this.getTextContent(combinationFrame!, this.combinationStockMovementsDate(row)),
@@ -619,7 +619,7 @@ class CombinationsTab extends BOBasePage {
    */
   async closeEditCombinationModal(page: Page): Promise<boolean> {
     const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
-    await expect(combinationFrame).to.be.not.null;
+    expect(combinationFrame).to.not.eq(null);
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
     if (await this.elementVisible(page, this.editCombinationModalDiscardButton, 2000)) {
@@ -925,7 +925,7 @@ class CombinationsTab extends BOBasePage {
    */
   async editCombinationsByBulkActions(page: Page, editCombinationsData: ProductCombinationBulk): Promise<string> {
     const bulkEditCombinationFrame: Frame|null = await page.frame('bulk-combination-form-modal-iframe');
-    await expect(bulkEditCombinationFrame).to.be.not.null;
+    expect(bulkEditCombinationFrame).to.not.eq(null);
 
     // Edit stocks
     if (editCombinationsData.stocks) {

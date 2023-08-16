@@ -91,7 +91,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     await zonesPage.closeSfToolBar(page);
 
     const pageTitle = await zonesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(zonesPage.pageTitle);
+    expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
   it('should go to \'Countries\' page', async function () {
@@ -100,14 +100,14 @@ describe('BO - International - Countries : CRUD country', async () => {
     await zonesPage.goToSubTabCountries(page);
 
     const pageTitle = await countriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(countriesPage.pageTitle);
+    expect(pageTitle).to.contains(countriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of countries in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCountries).to.be.above(0);
+    expect(numberOfCountries).to.be.above(0);
   });
 
   describe('Create country', async () => {
@@ -117,24 +117,24 @@ describe('BO - International - Countries : CRUD country', async () => {
       await countriesPage.goToAddNewCountryPage(page);
 
       const pageTitle = await addCountryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCountryPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addCountryPage.pageTitleCreate);
     });
 
     it('should try to create new country with a used ISO code and an invalid prefix', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreateNewCountry', baseContext);
 
       const textResult = await addCountryPage.createEditCountry(page, countryDataIncorrectDate);
-      await expect(textResult).to.to.contains(addCountryPage.errorMessageIsoCode).and.contains(addCountryPage.errorMessagePrefix);
+      expect(textResult).to.to.contains(addCountryPage.errorMessageIsoCode).and.contains(addCountryPage.errorMessagePrefix);
     });
 
     it('should create new country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewCountry', baseContext);
 
       const textResult = await addCountryPage.createEditCountry(page, createCountryData);
-      await expect(textResult).to.to.contains(countriesPage.successfulCreationMessage);
+      expect(textResult).to.to.contains(countriesPage.successfulCreationMessage);
 
       const numberOfCountriesAfterCreation = await countriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCountriesAfterCreation).to.be.equal(numberOfCountries + 1);
+      expect(numberOfCountriesAfterCreation).to.be.equal(numberOfCountries + 1);
     });
 
     it('should view my shop', async function () {
@@ -145,7 +145,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -154,7 +154,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foHomePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -163,7 +163,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to addresses page', async function () {
@@ -173,7 +173,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await myAccountPage.goToAddressesPage(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
+      expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
     });
 
     it(`should check that the new country '${createCountryData.name}' exist`, async function () {
@@ -182,7 +182,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await addressesPage.openNewAddressForm(page);
 
       const countryExist = await addAddressPage.countryExist(page, createCountryData.name);
-      await expect(countryExist, 'Country does not exist').to.be.true;
+      expect(countryExist, 'Country does not exist').to.eq(true);
     });
 
     it('should sign out from FO', async function () {
@@ -191,7 +191,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await addressesPage.logout(page);
 
       const isCustomerConnected = await addressesPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
     it('should go back to BO', async function () {
@@ -201,7 +201,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await countriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(countriesPage.pageTitle);
+      expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
   });
 
@@ -214,11 +214,11 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       // Check number of countries
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCountriesAfterFilter).to.be.at.least(1);
+      expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
       // row = 1 (first row)
       const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      await expect(textColumn).to.contains(createCountryData.name);
+      expect(textColumn).to.contains(createCountryData.name);
     });
 
     it('should go to edit country page', async function () {
@@ -227,17 +227,17 @@ describe('BO - International - Countries : CRUD country', async () => {
       await countriesPage.goToEditCountryPage(page, 1);
 
       const pageTitle = await addCountryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
     });
 
     it('should edit country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editCountry', baseContext);
 
       const textResult = await addCountryPage.createEditCountry(page, editCountryData);
-      await expect(textResult).to.to.contains(countriesPage.successfulUpdateMessage);
+      expect(textResult).to.to.contains(countriesPage.successfulUpdateMessage);
 
       const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries + 1);
+      expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries + 1);
     });
 
     it('should view my shop', async function () {
@@ -248,7 +248,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -257,7 +257,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foHomePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -266,7 +266,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to addresses page', async function () {
@@ -276,7 +276,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await myAccountPage.goToAddressesPage(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
+      expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
     });
 
     it(`should check that the edited country '${editCountryData.name}' not exist`, async function () {
@@ -285,7 +285,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await addressesPage.openNewAddressForm(page);
 
       const countryExist = await addAddressPage.countryExist(page, editCountryData.name);
-      await expect(countryExist, 'Country exist').to.be.false;
+      expect(countryExist, 'Country exist').to.eq(false);
     });
 
     it('should go back to BO', async function () {
@@ -295,7 +295,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await countriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(countriesPage.pageTitle);
+      expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
   });
 
@@ -308,24 +308,24 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       // Check number of countries
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCountriesAfterFilter).to.be.at.least(1);
+      expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
       const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      await expect(textColumn).to.contains(editCountryData.name);
+      expect(textColumn).to.contains(editCountryData.name);
     });
 
     it('should delete country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCountry', baseContext);
 
       const textResult = await countriesPage.deleteCountriesByBulkActions(page);
-      await expect(textResult).to.to.contains(countriesPage.successfulMultiDeleteMessage);
+      expect(textResult).to.to.contains(countriesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries);
+      expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries);
     });
   });
 });

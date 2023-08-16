@@ -58,7 +58,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await testContext.addContextItem(this, 'testIdentifier', 'checkThatCookieIpAddressDisabled', baseContext);
 
     const isEnabled = await administrationPage.isCheckCookiesAddressEnabled(page);
-    await expect(isEnabled).to.be.false;
+    expect(isEnabled).to.eq(false);
   });
 
   it('should enable \'Cookie\'s IP address\'', async function () {
@@ -74,7 +74,7 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
     await testContext.addContextItem(this, 'testIdentifier', 'checkThatCookieIpAddressEnabled', baseContext);
 
     const isEnabled = await administrationPage.isCheckCookiesAddressEnabled(page);
-    await expect(isEnabled).to.be.true;
+    expect(isEnabled).to.eq(true);
   });
 
   it('should update \'Lifetime of front office cookies\'', async function () {

@@ -42,10 +42,10 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
       await themeAndLogoPage.closeSfToolBar(page);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(1);
     });
 
     it('should go to \'Add new theme\' page', async function () {
@@ -54,7 +54,7 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
       await themeAndLogoPage.goToNewThemePage(page);
 
       const pageTitle = await themeImportPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeImportPage.pageTitle);
+      expect(pageTitle).to.contains(themeImportPage.pageTitle);
     });
 
     it('should import from the web the Hummingbird theme', async function () {
@@ -63,17 +63,17 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
       await themeImportPage.importFromWeb(page, urlTheme);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(2);
     });
 
     it('should enable the theme Hummingbird', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableThemeHummingbird', baseContext);
 
       const result = await themeAndLogoPage.enableTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulUpdateMessage);
+      expect(result).to.eq(themeAndLogoPage.successfulUpdateMessage);
     });
   });
 }
@@ -108,27 +108,27 @@ function uninstallHummingbird(baseContext: string = 'commonTests-uninstallHummin
       await themeAndLogoPage.closeSfToolBar(page);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(2);
     });
 
     it('should enable the theme Classic', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableThemeClassic', baseContext);
 
       const result = await themeAndLogoPage.enableTheme(page, 'classic');
-      await expect(result).to.eq(themeAndLogoPage.successfulUpdateMessage);
+      expect(result).to.eq(themeAndLogoPage.successfulUpdateMessage);
     });
 
     it('should remove the theme Hummingbird', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird', baseContext);
 
       const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(1);
     });
   });
 }

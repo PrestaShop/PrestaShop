@@ -86,7 +86,7 @@ describe('BO - Catalog - Products : Description tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Standard product\'', async function () {
@@ -130,14 +130,14 @@ describe('BO - Catalog - Products : Description tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'zoomImage', baseContext);
 
       const isImageZoomed = await descriptionTab.clickOnMagnifyingGlass(page);
-      await expect(isImageZoomed).to.be.true;
+      expect(isImageZoomed).to.eq(true);
     });
 
     it('should close the image zoom', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeZoom', baseContext);
 
       const isZoomClosed = await descriptionTab.closeImageZoom(page);
-      await expect(isZoomClosed).to.be.true;
+      expect(isZoomClosed).to.eq(true);
     });
 
     it('should replace image selection', async function () {
@@ -185,13 +185,13 @@ describe('BO - Catalog - Products : Description tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeleteIcon', baseContext);
 
       let isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 0);
-      await expect(isDeleteIconVisible).to.be.false;
+      expect(isDeleteIconVisible).to.eq(false);
 
       isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 1);
-      await expect(isDeleteIconVisible).to.be.true;
+      expect(isDeleteIconVisible).to.eq(true);
 
       isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 2);
-      await expect(isDeleteIconVisible).to.be.true;
+      expect(isDeleteIconVisible).to.eq(true);
     });
 
     it('should choose default category', async function () {
@@ -207,13 +207,13 @@ describe('BO - Catalog - Products : Description tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeleteIcon2', baseContext);
 
       let isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 0);
-      await expect(isDeleteIconVisible).to.be.true;
+      expect(isDeleteIconVisible).to.eq(true);
 
       isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 1);
-      await expect(isDeleteIconVisible).to.be.false;
+      expect(isDeleteIconVisible).to.eq(false);
 
       isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 2);
-      await expect(isDeleteIconVisible).to.be.true;
+      expect(isDeleteIconVisible).to.eq(true);
     });
 
     it('should choose brand', async function () {

@@ -76,7 +76,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should update orders status with bulk action', async function () {
@@ -88,7 +88,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
         false,
         [1, 2],
       );
-      await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
     ['first', 'second'].forEach((arg: string, index: number) => {
@@ -96,7 +96,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderStatus${index + 1}`, baseContext);
 
         const orderStatus = await ordersPage.getTextColumn(page, 'osname', index + 1);
-        await expect(orderStatus, 'Order status is not correct').to.equal(OrderStatuses.paymentAccepted.name);
+        expect(orderStatus, 'Order status is not correct').to.equal(OrderStatuses.paymentAccepted.name);
       });
     });
   });

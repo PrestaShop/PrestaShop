@@ -67,14 +67,14 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters and get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     [firstProductData, secondProductData].forEach((productData: ProductData, index: number) => {
@@ -84,7 +84,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
         await productsPage.goToAddProductPage(page);
 
         const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+        expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
 
       it('should go to catalog page', async function () {
@@ -93,7 +93,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
         await addProductPage.goToCatalogPage(page);
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
     });
   });
@@ -105,7 +105,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await productsPage.filterProducts(page, 'name', 'TO DELETE');
 
       const textColumn = await productsPage.getProductNameFromList(page, 1);
-      await expect(textColumn).to.contains('TO DELETE');
+      expect(textColumn).to.contains('TO DELETE');
     });
 
     [
@@ -116,7 +116,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}Products`, baseContext);
 
         const textResult = await productsPage.bulkSetStatus(page, test.status);
-        await expect(textResult)
+        expect(textResult)
           .to.equal(
             test.status
               ? productsPage.productMultiActivatedSuccessfulMessage
@@ -125,7 +125,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
 
         for (let row = 1; row <= 2; row++) {
           const productStatus = await productsPage.getProductStatusFromList(page, row);
-          await expect(productStatus).to.equal(test.status);
+          expect(productStatus).to.equal(test.status);
         }
       });
     });
@@ -134,7 +134,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkSetStatus', baseContext);
 
       const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts + 2);
+      expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts + 2);
     });
   });
 
@@ -145,24 +145,24 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await productsPage.filterProducts(page, 'name', 'TO DELETE');
 
       const textColumn = await productsPage.getProductNameFromList(page, 1);
-      await expect(textColumn).to.contains('TO DELETE');
+      expect(textColumn).to.contains('TO DELETE');
     });
 
     it('should duplicate products by bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDuplicate', baseContext);
 
       const duplicateTextResult = await productsPage.duplicateAllProductsWithBulkActions(page);
-      await expect(duplicateTextResult).to.equal(productsPage.productMultiDuplicatedSuccessfulMessage);
+      expect(duplicateTextResult).to.equal(productsPage.productMultiDuplicatedSuccessfulMessage);
 
       numberOfFilteredProductsAfterDuplicate = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfFilteredProductsAfterDuplicate).to.be.below(numberOfProducts);
+      expect(numberOfFilteredProductsAfterDuplicate).to.be.below(numberOfProducts);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDuplicate', baseContext);
 
       const numberOfProductsAfterDuplicate = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterDuplicate)
+      expect(numberOfProductsAfterDuplicate)
         .to.be.equal(numberOfProducts + numberOfFilteredProductsAfterDuplicate);
     });
   });
@@ -174,21 +174,21 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await productsPage.filterProducts(page, 'name', 'TO DELETE');
 
       const textColumn = await productsPage.getProductNameFromList(page, 1);
-      await expect(textColumn).to.contains('TO DELETE');
+      expect(textColumn).to.contains('TO DELETE');
     });
 
     it('should delete products by bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await productsPage.deleteAllProductsWithBulkActions(page);
-      await expect(deleteTextResult).to.equal(productsPage.productMultiDeletedSuccessfulMessage);
+      expect(deleteTextResult).to.equal(productsPage.productMultiDeletedSuccessfulMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
       const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts);
+      expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts);
     });
   });
 

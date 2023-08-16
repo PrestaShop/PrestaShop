@@ -30,38 +30,38 @@ describe('FO - Home Page : Check slider', async () => {
     await homePage.goTo(page, global.FO.URL);
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should click in right arrow of the slider', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnRightSlideArrow', baseContext);
 
     let isVisible = await homePage.isSliderVisible(page, 1);
-    await expect(isVisible).to.be.true;
+    expect(isVisible).to.eq(true);
 
     await homePage.clickOnLeftOrRightArrow(page, 'right');
 
     isVisible = await homePage.isSliderVisible(page, 2);
-    await expect(isVisible).to.be.true;
+    expect(isVisible).to.eq(true);
   });
 
   it('should click in left arrow of the slider', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnLeftSlideArrow', baseContext);
 
     let isVisible = await homePage.isSliderVisible(page, 2);
-    await expect(isVisible).to.be.true;
+    expect(isVisible).to.eq(true);
 
     await homePage.clickOnLeftOrRightArrow(page, 'left');
 
     isVisible = await homePage.isSliderVisible(page, 1);
-    await expect(isVisible).to.be.true;
+    expect(isVisible).to.eq(true);
   });
 
   it('should check the slider URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
 
     const currentURL = await homePage.getSliderURL(page);
-    await expect(currentURL)
+    expect(currentURL)
       .to.contains('www.prestashop-project.org')
       .and.to.contains('homeslider&utm_campaign=back-office-EN&utm_content=download');
   });

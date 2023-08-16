@@ -44,6 +44,6 @@ describe('BO - logout : log out from BO', async () => {
     await loginCommon.logoutBO(this, page);
 
     const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(loginPage.pageTitle);
+    expect(pageTitle).to.contains(loginPage.pageTitle);
   });
 });

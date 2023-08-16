@@ -49,14 +49,14 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
 
       numberOfProducts = await productsPage.getNumberOfProductsFromHeader(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it(`should filter by reference '${Products.demo_14.reference}'`, async function () {
@@ -65,28 +65,28 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       await productsPage.filterProducts(page, 'reference', Products.demo_14.reference);
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProductsAfterFilter).to.equal(1);
+      expect(numberOfProductsAfterFilter).to.equal(1);
     });
 
     it('should click on duplicate button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDuplicateProduct', baseContext);
 
       const isModalVisible = await productsPage.clickOnDuplicateProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should duplicate product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'duplicateProduct', baseContext);
 
       const textMessage = await productsPage.clickOnConfirmDialogButton(page);
-      await expect(textMessage).to.equal(createProductsPage.successfulDuplicateMessage);
+      expect(textMessage).to.equal(createProductsPage.successfulDuplicateMessage);
     });
 
     it('should click on duplicate button from the footer of create product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickDuplicateFromFooterPage', baseContext);
 
       const textMessage = await createProductsPage.duplicateProduct(page);
-      await expect(textMessage).to.equal(createProductsPage.successfulDuplicateMessage);
+      expect(textMessage).to.equal(createProductsPage.successfulDuplicateMessage);
     });
 
     it('should click on \'Go to catalog\' button', async function () {
@@ -95,14 +95,14 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       await createProductsPage.goToCatalogPage(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should check the number of duplicated products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
       const numberOfProductsAfterDuplicate = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProductsAfterDuplicate).to.equal(3);
+      expect(numberOfProductsAfterDuplicate).to.equal(3);
     });
 
     it('should check the name of the duplicated product', async function () {
@@ -111,10 +111,10 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       await productsPage.filterProducts(page, 'product_name', 'copy of');
 
       let textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
-      await expect(textColumn).to.contain(`copy of copy of ${Products.demo_14.name}`);
+      expect(textColumn).to.contain(`copy of copy of ${Products.demo_14.name}`);
 
       textColumn = await productsPage.getTextColumn(page, 'product_name', 2);
-      await expect(textColumn).to.contain(`copy of ${Products.demo_14.name}`);
+      expect(textColumn).to.contain(`copy of ${Products.demo_14.name}`);
     });
   });
 
@@ -123,35 +123,35 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
 
       const isBulkDeleteButtonEnabled = await productsPage.bulkSelectProducts(page);
-      await expect(isBulkDeleteButtonEnabled).to.be.true;
+      expect(isBulkDeleteButtonEnabled).to.eq(true);
     });
 
     it('should click on bulk actions button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnBulkDeleteButton', baseContext);
 
       const textMessage = await productsPage.clickOnBulkActionsProducts(page, 'delete');
-      await expect(textMessage).to.equal('Deleting 2 products');
+      expect(textMessage).to.equal('Deleting 2 products');
     });
 
     it('should bulk delete products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteProduct', baseContext);
 
       const textMessage = await productsPage.bulkActionsProduct(page, 'delete');
-      await expect(textMessage).to.equal('Deleting 2 / 2 products');
+      expect(textMessage).to.equal('Deleting 2 / 2 products');
     });
 
     it('should close progress modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeProgressModal', baseContext);
 
       const isModalVisible = await productsPage.closeBulkActionsProgressModal(page, 'delete');
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+      expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });
 });

@@ -52,7 +52,7 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(contactPage.pageTitle);
+    expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
   it('should go to \'Stores\' page', async function () {
@@ -61,14 +61,14 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
     await contactPage.goToStoresPage(page);
 
     const pageTitle = await storesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(storesPage.pageTitle);
+    expect(pageTitle).to.contains(storesPage.pageTitle);
   });
 
   it('should reset all filters and get number of stores in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfStores).to.be.above(0);
+    expect(numberOfStores).to.be.above(0);
   });
 
   describe('Create store in BO', async () => {
@@ -78,17 +78,17 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
       await storesPage.goToNewStorePage(page);
 
       const pageTitle = await addStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addStorePage.pageTitleCreate);
+      expect(pageTitle).to.contains(addStorePage.pageTitleCreate);
     });
 
     it('should create store and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStore', baseContext);
 
       const textResult = await addStorePage.createEditStore(page, createStoreData);
-      await expect(textResult).to.contains(storesPage.successfulCreationMessage);
+      expect(textResult).to.contains(storesPage.successfulCreationMessage);
 
       const numberOfStoresAfterCreation = await storesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfStoresAfterCreation).to.be.equal(numberOfStores + 1);
+      expect(numberOfStoresAfterCreation).to.be.equal(numberOfStores + 1);
     });
   });
 
@@ -100,7 +100,7 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
       await storesPage.filterTable(page, 'input', 'sl!name', createStoreData.name);
 
       const textEmail = await storesPage.getTextColumn(page, 1, 'sl!name');
-      await expect(textEmail).to.contains(createStoreData.name);
+      expect(textEmail).to.contains(createStoreData.name);
     });
 
     it('should go to edit store page', async function () {
@@ -109,17 +109,17 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
       await storesPage.gotoEditStorePage(page, 1);
 
       const pageTitle = await addStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
+      expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
     });
 
     it('should update store', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStore', baseContext);
 
       const textResult = await addStorePage.createEditStore(page, editStoreData);
-      await expect(textResult).to.contains(storesPage.successfulUpdateMessage);
+      expect(textResult).to.contains(storesPage.successfulUpdateMessage);
 
       const numberOfStoresAfterUpdate = await storesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfStoresAfterUpdate).to.be.equal(numberOfStores + 1);
+      expect(numberOfStoresAfterUpdate).to.be.equal(numberOfStores + 1);
     });
   });
 
@@ -131,17 +131,17 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
       await storesPage.filterTable(page, 'input', 'sl!name', editStoreData.name);
 
       const textEmail = await storesPage.getTextColumn(page, 1, 'sl!name');
-      await expect(textEmail).to.contains(editStoreData.name);
+      expect(textEmail).to.contains(editStoreData.name);
     });
 
     it('should delete store', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteStore', baseContext);
 
       const textResult = await storesPage.deleteStore(page, 1);
-      await expect(textResult).to.contains(storesPage.successfulDeleteMessage);
+      expect(textResult).to.contains(storesPage.successfulDeleteMessage);
 
       const numberOfStoresAfterDelete = await storesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfStoresAfterDelete).to.be.equal(numberOfStores);
+      expect(numberOfStoresAfterDelete).to.be.equal(numberOfStores);
     });
   });
 });

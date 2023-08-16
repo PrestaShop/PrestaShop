@@ -53,14 +53,14 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
   it('should reset all filters and get number of aliases in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfSearch = await searchPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfSearch).to.be.above(0);
+    expect(numberOfSearch).to.be.above(0);
   });
 
   // 1 - Create 2 aliases
@@ -75,17 +75,17 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
         await searchPage.goToAddNewAliasPage(page);
 
         const pageTitle = await addSearchPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
       });
 
       it(`should create alias n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAlias${index}`, baseContext);
 
         const textResult = await addSearchPage.setAlias(page, aliasData);
-        await expect(textResult).to.contains(searchPage.successfulCreationMessage);
+        expect(textResult).to.contains(searchPage.successfulCreationMessage);
 
         const numberOfElementAfterCreation = await searchPage.getNumberOfElementInGrid(page);
-        await expect(numberOfElementAfterCreation).to.be.equal(numberOfSearch + 1 + index);
+        expect(numberOfElementAfterCreation).to.be.equal(numberOfSearch + 1 + index);
       });
     });
   });
@@ -99,7 +99,7 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
       await searchPage.filterTable(page, 'input', 'alias', 'todelete');
 
       const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
-      await expect(textAlias).to.contains('todelete');
+      expect(textAlias).to.contains('todelete');
     });
 
     [
@@ -110,13 +110,13 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Status`, baseContext);
 
         const textResult = await searchPage.bulkSetStatus(page, test.args.value);
-        await expect(textResult).to.contains(searchPage.successfulUpdateStatusMessage);
+        expect(textResult).to.contains(searchPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await searchPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementInGrid; i++) {
           const textColumn = await searchPage.getStatus(page, i);
-          await expect(textColumn).to.equal(test.args.value);
+          expect(textColumn).to.equal(test.args.value);
         }
       });
     });
@@ -131,17 +131,17 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
       await searchPage.filterTable(page, 'input', 'alias', 'todelete');
 
       const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
-      await expect(textAlias).to.contains('todelete');
+      expect(textAlias).to.contains('todelete');
     });
 
     it('should delete aliases', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAliases', baseContext);
 
       const textResult = await searchPage.bulkDeleteAliases(page);
-      await expect(textResult).to.contains(searchPage.successfulMultiDeleteMessage);
+      expect(textResult).to.contains(searchPage.successfulMultiDeleteMessage);
 
       const numberOfSearchAfterDelete = await searchPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSearchAfterDelete).to.be.equal(numberOfSearch);
+      expect(numberOfSearchAfterDelete).to.be.equal(numberOfSearch);
     });
   });
 });

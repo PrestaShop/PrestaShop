@@ -72,7 +72,7 @@ describe('BO - Header : Quick access links', async () => {
         await dashboardPage.quickAccessToPage(page, test.args.idLink);
 
         const pageTitle = await dashboardPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(test.args.pageTitle);
+        expect(pageTitle).to.contains(test.args.pageTitle);
       });
     });
 
@@ -80,7 +80,7 @@ describe('BO - Header : Quick access links', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'removeLinkFromQuickAccess', baseContext);
 
       const validationMessage = await newVoucherPage.removeLinkFromQuickAccess(page);
-      await expect(validationMessage).to.contains(newVoucherPage.successfulUpdateMessage);
+      expect(validationMessage).to.contains(newVoucherPage.successfulUpdateMessage);
     });
 
     it('should refresh the page and add current page to Quick access', async function () {
@@ -89,7 +89,7 @@ describe('BO - Header : Quick access links', async () => {
       await newVoucherPage.reloadPage(page);
 
       const validationMessage = await newVoucherPage.addCurrentPageToQuickAccess(page, 'New voucher');
-      await expect(validationMessage).to.contains(newVoucherPage.successfulUpdateMessage);
+      expect(validationMessage).to.contains(newVoucherPage.successfulUpdateMessage);
     });
 
     it('should go to \'Manage quick access\' page', async function () {
@@ -99,7 +99,7 @@ describe('BO - Header : Quick access links', async () => {
       await newVoucherPage.goToManageQuickAccessPage(page);
 
       const pageTitle = await quickAccessPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
+      expect(pageTitle).to.contains(quickAccessPage.pageTitle);
     });
 
     it('should go to \'Add new quick access\' page', async function () {
@@ -108,14 +108,14 @@ describe('BO - Header : Quick access links', async () => {
       await quickAccessPage.goToAddNewQuickAccessPage(page);
 
       const pageTitle = await addNewQuickAccessPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addNewQuickAccessPage.pageTitle);
+      expect(pageTitle).to.contains(addNewQuickAccessPage.pageTitle);
     });
 
     it('should create new quick access link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createQuickAccessLink', baseContext);
 
       const validationMessage = await addNewQuickAccessPage.setQuickAccessLink(page, quickAccessLinkData);
-      await expect(validationMessage).to.contains(addNewQuickAccessPage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addNewQuickAccessPage.successfulCreationMessage);
     });
 
     it('should check the new link from Quick access', async function () {
@@ -124,7 +124,7 @@ describe('BO - Header : Quick access links', async () => {
       page = await dashboardPage.quickAccessToPageNewWindow(page, 4);
 
       const pageTitle = await newCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);
+      expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);
     });
 
     it('should go to \'Manage quick access\' page', async function () {
@@ -133,7 +133,7 @@ describe('BO - Header : Quick access links', async () => {
       await newCustomerPage.goToManageQuickAccessPage(page);
 
       const pageTitle = await quickAccessPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
+      expect(pageTitle).to.contains(quickAccessPage.pageTitle);
     });
 
     it('should filter quick access table by link name', async function () {
@@ -142,14 +142,14 @@ describe('BO - Header : Quick access links', async () => {
       await quickAccessPage.filterTable(page, 'input', 'name', quickAccessLinkData.name);
 
       const textColumn = await quickAccessPage.getTextColumn(page, 1, 'name');
-      await expect(textColumn).to.contains(quickAccessLinkData.name);
+      expect(textColumn).to.contains(quickAccessLinkData.name);
     });
 
     it('should delete the created quick access link by bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteByBulkActions', baseContext);
 
       const textColumn = await quickAccessPage.bulkDeleteQuickAccessLink(page);
-      await expect(textColumn).to.be.contains(quickAccessPage.successfulMultiDeleteMessage);
+      expect(textColumn).to.be.contains(quickAccessPage.successfulMultiDeleteMessage);
     });
   });
 

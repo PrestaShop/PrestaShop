@@ -56,7 +56,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
     await orderSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -69,7 +69,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await testContext.addContextItem(this, 'testIdentifier', `setReorderingOption${index}`, baseContext);
 
       const result = await orderSettingsPage.setReorderOptionStatus(page, test.args.status);
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -81,7 +81,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should verify the reordering option', async function () {
@@ -92,7 +92,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
+      expect(isCustomerConnected).to.eq(true);
 
       // Go to order history page
       await homePage.goToMyAccountPage(page);
@@ -100,7 +100,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
 
       // Check reorder link
       const isReorderLinkVisible = await orderHistoryPage.isReorderLinkVisible(page);
-      await expect(isReorderLinkVisible).to.be.equal(test.args.reorderOption);
+      expect(isReorderLinkVisible).to.be.equal(test.args.reorderOption);
     });
 
     it('should go back to BO', async function () {
@@ -111,7 +111,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       page = await orderHistoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
   });
 });

@@ -66,7 +66,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add the first product to the cart', async function () {
@@ -79,7 +79,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await productPage.addProductToTheCart(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartPage.pageTitle);
+      expect(pageTitle).to.contains(cartPage.pageTitle);
     });
 
     it('should proceed to checkout and sign in', async function () {
@@ -98,7 +98,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to payment step', async function () {
@@ -106,7 +106,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should pay the order', async function () {
@@ -117,7 +117,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should logout from FO', async function () {
@@ -127,7 +127,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await orderConfirmationPage.logout(page);
 
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(false);
     });
 
     it('should go back to BO', async function () {
@@ -137,7 +137,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await dashboardPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      expect(pageTitle).to.contains(dashboardPage.pageTitle);
     });
   });
 
@@ -152,14 +152,14 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       );
 
       const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
     it('should reset all filters and get number of email logs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
       numberOfEmails = await emailPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmails).to.be.above(0);
+      expect(numberOfEmails).to.be.above(0);
     });
     const tests = [
       {
@@ -221,11 +221,11 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
         );
 
         const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
-        await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
+        expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
         for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
           const textColumn = await emailPage.getTextColumn(page, test.args.filterBy, row);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -233,7 +233,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
 
         const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
+        expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
       });
     });
 
@@ -243,11 +243,11 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await emailPage.filterEmailLogsByDate(page, today, today);
 
       const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
-      await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
+      expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await emailPage.getTextColumn(page, 'date_add', row);
-        await expect(textColumn).to.contains(today);
+        expect(textColumn).to.contains(today);
       }
     });
 
@@ -255,7 +255,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
 
       const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
+      expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
     });
   });
 
@@ -266,21 +266,21 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await emailPage.filterEmailLogs(page, 'input', 'subject', PaymentMethods.wirePayment.name);
 
       const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
-      await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
+      expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
     });
 
     it('should delete email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmail', baseContext);
 
       const textResult = await emailPage.deleteEmailLog(page, 1);
-      await expect(textResult).to.equal(emailPage.successfulMultiDeleteMessage);
+      expect(textResult).to.equal(emailPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails - 1);
+      expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails - 1);
     });
   });
 
@@ -289,7 +289,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await emailPage.deleteEmailLogsBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(emailPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(emailPage.successfulMultiDeleteMessage);
     });
   });
 });

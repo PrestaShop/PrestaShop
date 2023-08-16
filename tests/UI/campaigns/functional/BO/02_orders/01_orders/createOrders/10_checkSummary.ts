@@ -108,7 +108,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
@@ -117,7 +117,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       await ordersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
     it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
@@ -126,14 +126,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
       await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-      await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+      expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
 
     it('should check that summary block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryNotVisible', baseContext);
 
       const isSummaryBlockVisible = await addOrderPage.isSummaryBlockVisible(page);
-      await expect(isSummaryBlockVisible, 'Summary block is visible!').to.be.false;
+      expect(isSummaryBlockVisible, 'Summary block is visible!').to.eq(false);
     });
 
     it(`should add to cart '${Products.demo_12.name}'`, async function () {
@@ -155,7 +155,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryVisible', baseContext);
 
       const isSummaryBlockVisible = await addOrderPage.isSummaryBlockVisible(page);
-      await expect(isSummaryBlockVisible, 'Summary block is not visible!').to.be.true;
+      expect(isSummaryBlockVisible, 'Summary block is not visible!').to.eq(true);
     });
   });
 
@@ -182,7 +182,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'searchVoucher1', baseContext);
 
         const voucherToSelect = await addOrderPage.searchVoucher(page, cartRuleWithCodeData.name);
-        await expect(voucherToSelect).to.equal(`${cartRuleWithCodeData.name} - ${cartRuleWithCodeData.code}`);
+        expect(voucherToSelect).to.equal(`${cartRuleWithCodeData.name} - ${cartRuleWithCodeData.code}`);
 
         const result = await addOrderPage.getVoucherDetailsFromTable(page);
         await Promise.all([
@@ -218,7 +218,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await addOrderPage.removeVoucher(page, 1);
 
         const isVoucherTableNotVisible = await addOrderPage.isVouchersTableNotVisible(page);
-        await expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.be.true;
+        expect(isVoucherTableNotVisible, 'Vouchers table is visible!').to.eq(true);
       });
 
       it('should check summary block', async function () {
@@ -243,7 +243,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         const shippingPriceTTC = await addOrderPage.setDeliveryOption(
           page, `${Carriers.myCarrier.name} - Delivery next day!`,
         );
-        await expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+        expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
       });
 
       it('should check summary block', async function () {
@@ -266,14 +266,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'setMoreActions', baseContext);
 
         const textMessage = await addOrderPage.setMoreActionsPreFilledOrder(page);
-        await expect(textMessage, 'Invalid success message!').to.be.equal(addOrderPage.emailSendSuccessMessage);
+        expect(textMessage, 'Invalid success message!').to.be.equal(addOrderPage.emailSendSuccessMessage);
       });
 
       it('should check if the mail is in mailbox', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkIfMailIsInMailbox', baseContext);
 
-        await expect(newMail.subject).to.eq(`[${global.INSTALL.SHOP_NAME}] Process the payment of your order`);
-        await expect(newMail.text).to.contains('A new order has been generated on your behalf.');
+        expect(newMail.subject).to.eq(`[${global.INSTALL.SHOP_NAME}] Process the payment of your order`);
+        expect(newMail.text).to.contains('A new order has been generated on your behalf.');
       });
 
       it('should choose \'Proceed to checkout in the front office\' from more actions', async function () {
@@ -282,7 +282,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         page = await addOrderPage.setMoreActionsProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-        await expect(isCheckoutPage, 'Not redirected to checkout page!').to.be.true;
+        expect(isCheckoutPage, 'Not redirected to checkout page!').to.eq(true);
       });
 
       it('should close the checkout page and go back to BO', async function () {
@@ -291,7 +291,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         page = await checkoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await addOrderPage.getPageTitle(page);
-        await expect(pageTitle, 'Fo page not closed!').to.contains(addOrderPage.pageTitle);
+        expect(pageTitle, 'Fo page not closed!').to.contains(addOrderPage.pageTitle);
       });
     });
 
@@ -302,7 +302,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await addOrderPage.setOrderMessage(page, orderMessage);
 
         const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, false);
-        await expect(isOrderCreated, 'The order is created!').to.be.false;
+        expect(isOrderCreated, 'The order is created!').to.eq(false);
       });
 
       it('should choose payment method, click on create button then check that the order is not created',
@@ -312,7 +312,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
           await addOrderPage.setPaymentMethod(page, paymentMethodModuleName);
 
           const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, false);
-          await expect(isOrderCreated, 'The order is created!').to.be.false;
+          expect(isOrderCreated, 'The order is created!').to.eq(false);
         });
 
       it('should choose payment method, order status then click on create order and check that the order is create',
@@ -323,14 +323,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
           await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
 
           const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, true);
-          await expect(isOrderCreated, 'The order is created!').to.be.true;
+          expect(isOrderCreated, 'The order is created!').to.eq(true);
         });
 
       it('should check that the page displayed is view order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrder message', baseContext);
 
         const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-        await expect(pageTitle, 'View order page is not displayed!').to.contain(
+        expect(pageTitle, 'View order page is not displayed!').to.contain(
           orderPageMessagesBlock.pageTitle,
         );
       });
@@ -339,7 +339,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessage', baseContext);
 
         const textMessage = await orderPageMessagesBlock.getTextMessage(page, 1, 'customer');
-        await expect(textMessage, 'Message is not correct!').to.contains(orderMessage);
+        expect(textMessage, 'Message is not correct!').to.contains(orderMessage);
       });
     });
   });
