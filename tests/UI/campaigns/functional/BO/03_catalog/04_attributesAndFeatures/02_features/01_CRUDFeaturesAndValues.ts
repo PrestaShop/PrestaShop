@@ -11,7 +11,6 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
-import editFeaturePage from '@pages/BO/catalog/features/editFeature';
 import addValuePage from '@pages/BO/catalog/features/addValue';
 
 // Import data
@@ -39,7 +38,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
   let numberOfFeatures: number = 0;
   const numberOfValues: number = 0;
   const createFeatureData: FeatureData = new FeatureData({name: 'Texture'});
-  const editFeatureData: FeatureData = new FeatureData({name: 'Texture', metaTitle: 'Feature texture'});
+  const editFeatureData: FeatureData = new FeatureData({name: 'TextureEdit', metaTitle: 'Feature texture'});
   const createFeatureValueData: FeatureValueData = new FeatureValueData({
     featureName: createFeatureData.name,
     value: 'Smooth',
@@ -214,8 +213,8 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
 
       await featuresPage.clickOnEditFeature(page, 1);
 
-      const textResult = await editFeaturePage.editFeature(page, editFeatureData);
-      await expect(textResult).to.contains(editFeaturePage.successfulUpdateMessage);
+      const textResult = await addFeaturePage.setFeature(page, editFeatureData);
+      await expect(textResult).to.contains(addFeaturePage.successfulUpdateMessage);
     });
   });
 
@@ -250,10 +249,10 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should filter list of features by the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterFeatureForDelete', baseContext);
 
-      await featuresPage.filterTable(page, 'name', createFeatureData.name);
+      await featuresPage.filterTable(page, 'name', editFeatureData.name);
 
       const textColumn = await featuresPage.getTextColumn(page, 1, 'name');
-      await expect(textColumn).to.contains(createFeatureData.name);
+      await expect(textColumn).to.contains(editFeatureData.name);
     });
 
     it('should delete the created feature', async function () {
