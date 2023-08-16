@@ -4282,7 +4282,7 @@ class CartCore extends ObjectModel
 
                 if ((int) $custom['type'] == Product::CUSTOMIZE_FILE) {
                     $customized_value = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
-                    Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'], _PS_UPLOAD_DIR_ . $customized_value);
+                    Tools::copy(_PS_UPLOAD_DIR_ . basename($custom['value']), _PS_UPLOAD_DIR_ . basename($customized_value));
                     Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'] . '_small', _PS_UPLOAD_DIR_ . $customized_value . '_small');
                 }
 

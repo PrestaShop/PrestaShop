@@ -5142,7 +5142,7 @@ class ProductCore extends ObjectModel
         $data = [];
         foreach ($results as $row) {
             $new_filename = ProductDownload::getNewFilename();
-            copy(_PS_DOWNLOAD_DIR_ . $row['filename'], _PS_DOWNLOAD_DIR_ . $new_filename);
+            copy(_PS_DOWNLOAD_DIR_ . basename($row['filename']), _PS_DOWNLOAD_DIR_ . basename($new_filename));
 
             $data[] = [
                 'id_product' => (int) $id_product_new,
