@@ -332,8 +332,8 @@ class EmployeeCore extends ObjectModel
             return false;
         }
 
-        $this->id = $result['id_employee'];
-        $this->id_profile = $result['id_profile'];
+        $this->id = (int) $result['id_employee'];
+        $this->id_profile = (int) $result['id_profile'];
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
