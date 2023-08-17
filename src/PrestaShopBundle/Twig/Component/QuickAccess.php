@@ -185,6 +185,8 @@ class QuickAccess
                 if (isset($breadcrumbLinks['action'])) {
                     $this->currentUrlTitle .= ' - ' . $breadcrumbLinks['action']->name;
                 }
+            } else {
+                $this->currentUrlTitle = '';
             }
         }
 
