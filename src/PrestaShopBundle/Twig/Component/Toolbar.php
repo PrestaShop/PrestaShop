@@ -42,4 +42,5 @@ class Toolbar
     public bool $enableSidebar;
     public int $currentTabLevel;
     public array $tabs;
+    public bool $useRegularH1Structure = true;
 }
