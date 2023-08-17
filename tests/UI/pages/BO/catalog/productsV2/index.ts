@@ -315,7 +315,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertDangerBlockContent(page: Page): Promise<string> {
+  async getAlertDangerBlockContent(page: Page): Promise<string> {
     return this.getAlertDangerBlockParagraphContent(page);
   }
 
@@ -361,7 +361,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isResetButtonVisible(page: Page): Promise<boolean> {
+  async isResetButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.filterResetButton, 1000);
   }
 
@@ -753,7 +753,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getTextForEmptyTable(page: Page): Promise<string> {
+  async getTextForEmptyTable(page: Page): Promise<string> {
     return this.getTextContent(page, this.productEmptyRow);
   }
 

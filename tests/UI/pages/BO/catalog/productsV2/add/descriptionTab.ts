@@ -25,6 +25,10 @@ class DescriptionTab extends BOBasePage {
 
   private readonly productDescription: string;
 
+  private readonly productDefaultCategory: string;
+
+  private readonly productManufacturer: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on description tab
@@ -40,6 +44,8 @@ class DescriptionTab extends BOBasePage {
     this.imagePreviewCover = `${this.productImageDropZoneDiv} div.dz-preview.is-cover`;
     this.productSummary = '#product_description_description_short';
     this.productDescription = '#product_description_description';
+    this.productDefaultCategory = '#product_description_categories_default_category_id';
+    this.productManufacturer = '#product_description_manufacturer';
   }
 
   /*
@@ -116,6 +122,27 @@ class DescriptionTab extends BOBasePage {
    */
   async getProductIDImageCover(page: Page): Promise<number> {
     return parseInt(await page.getAttribute(this.imagePreviewCover, 'data-id') ?? '', 10);
+  }
+
+  /**
+   * Returns the value of a form element
+   * @param page {Page}
+   * @param inputName {string}
+   * @param languageId {string | undefined}
+   */
+  async getValue(page: Page, inputName: string, languageId?: string): Promise<string> {
+    switch (inputName) {
+      case 'description':
+        return this.getTextContent(page, `${this.productDescription}_${languageId}`, false);
+      case 'id_category_default':
+        return page.locator(this.productDefaultCategory).evaluate((node: HTMLSelectElement) => node.value);
+      case 'manufacturer':
+        return page.locator(this.productManufacturer).evaluate((node: HTMLSelectElement) => node.value);
+      case 'summary':
+        return this.getTextContent(page, `${this.productSummary}_${languageId}`, false);
+      default:
+        throw new Error(`Input ${inputName} was not found`);
+    }
   }
 }
 
