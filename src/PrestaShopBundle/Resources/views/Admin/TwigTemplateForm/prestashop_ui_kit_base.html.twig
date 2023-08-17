@@ -752,7 +752,7 @@
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|trans(errors|length, {}, 'Admin.Global') }}</u>
+          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|trans({'%count%': errors|length}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
