@@ -234,11 +234,17 @@ class AdminModuleController {
     this.updateModuleVisibility();
   }
 
+  /**
+   * Updates the modulesList object
+   *
+   * @param event a DOM element that contains module data such as id, name, version...
+   */
   updateModuleStatus(event) {
     this.modulesList = this.modulesList.map((module) => {
       const moduleElement = $(event);
 
-      if (moduleElement.data('tech-name') === module.techName) {
+      if ((moduleElement.data('tech-name') === module.techName)
+      && (moduleElement.data('version') !== undefined)) {
         const newModule = {
           domObject: moduleElement,
           id: moduleElement.data('id'),
