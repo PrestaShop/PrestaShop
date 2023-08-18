@@ -2491,7 +2491,7 @@ class OrderCore extends ObjectModel
             $discounted_price_tax_excl = $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
             // specific discount
             if (!empty($product_specific_discounts[$order_detail['product_id']])) {
-                $discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']];
+                $discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']] / $order_detail['product_quantity'];
             }
 
             $quantity = $order_detail['product_quantity'];
