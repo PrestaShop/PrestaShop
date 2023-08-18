@@ -2548,6 +2548,8 @@ class ToolsCore
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
 	ExpiresActive On
+    AddType image/webp .webp
+    ExpiresByType image/webp \"access plus 1 month\"
 	ExpiresByType image/gif \"access plus 1 month\"
 	ExpiresByType image/jpeg \"access plus 1 month\"
 	ExpiresByType image/png \"access plus 1 month\"
