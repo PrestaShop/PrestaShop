@@ -31,9 +31,12 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use Exception;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use ReflectionException;
+use ReflectionMethod;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -51,11 +54,11 @@ class QueryProvider implements ProviderInterface
      * @param array $uriVariables
      * @param array $context
      *
-     * @return \ApiPlatform\State\Pagination\PartialPaginatorInterface|array|\ArrayObject|bool|float|int|mixed|string|null
+     * @return mixed
      *
      * @throws ExceptionInterface
      * @throws NoExtraPropertiesFoundException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
@@ -64,7 +67,7 @@ class QueryProvider implements ProviderInterface
         $queryParameters = array_merge($uriVariables, $filters);
 
         if (null === $queryClass) {
-            throw new NoExtraPropertiesFoundException('Extra property "query" is not found');
+            throw new NoExtraPropertiesFoundException('Extra property "query" not found');
         }
 
         $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
@@ -101,7 +104,7 @@ class QueryProvider implements ProviderInterface
      *
      * @return ConverterInterface
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function findConverter($type): ConverterInterface
     {
@@ -111,20 +114,20 @@ class QueryProvider implements ProviderInterface
             }
         }
 
-        throw new \Exception(sprintf('Converter for type %s not found', $type));
+        throw new Exception(sprintf('Converter for type %s not found', $type));
     }
 
     /**
      * @param $propertyName
      * @param $queryClass
      *
-     * @return false|\ReflectionMethod
+     * @return false|ReflectionMethod
      */
-    private function findSetterMethod($propertyName, $queryClass): bool|\ReflectionMethod
+    private function findSetterMethod($propertyName, $queryClass): bool|ReflectionMethod
     {
         $reflectionClass = new \ReflectionClass($queryClass);
 
-        foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (str_starts_with($method->getName(), 'set')) {
                 $methodName = lcfirst(substr($method->getName(), 3));
                 if ($methodName === $propertyName) {
