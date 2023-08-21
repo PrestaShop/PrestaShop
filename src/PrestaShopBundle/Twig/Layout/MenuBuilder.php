@@ -58,6 +58,11 @@ class MenuBuilder
         return $this->tabRepository->findOneByClassName($className);
     }
 
+    public function getAncestorsTab(int $currentTabId): array
+    {
+        return $this->tabRepository->getAncestors($currentTabId);
+    }
+
     /**
      * @return array<string, MenuLink>
      */
@@ -68,11 +73,20 @@ class MenuBuilder
             return [];
         }
 
+        $tabAncestors = $this->getAncestorsTab($currentTab->getId());
+
+        return $this->convertTabsToBreadcrumbLinks($currentTab, $tabAncestors);
+    }
+
+    /**
+     * @return array<string, MenuLink>
+     */
+    public function convertTabsToBreadcrumbLinks(Tab $currentTab, array $tabAncestors): array
+    {
         $breadcrumbLinks = [
             'tab' => $this->convertTabToMenuLink($currentTab),
         ];
 
-        $tabAncestors = $this->tabRepository->getAncestors($currentTab->getId());
         if (!empty($tabAncestors)) {
             $breadcrumbLinks['container'] = $this->convertTabToMenuLink(reset($tabAncestors));
         }
@@ -88,14 +102,14 @@ class MenuBuilder
     private function convertTabToMenuLink(Tab $tab): MenuLink
     {
         if (!empty($tab->getRouteName())) {
-            $url = $this->urlGenerator->generate($tab->getRouteName());
+            $href = $this->urlGenerator->generate($tab->getRouteName());
         } else {
-            $url = $this->context->getAdminLink($tab->getClassName());
+            $href = $this->context->getAdminLink($tab->getClassName());
         }
 
         return new MenuLink(
             name: $this->getBreadcrumbLabel($tab),
-            url: $url,
+            href: $href,
             icon: 'icon-' . $tab->getClassName(),
         );
     }

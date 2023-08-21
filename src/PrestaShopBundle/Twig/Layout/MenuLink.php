@@ -32,7 +32,7 @@ class MenuLink
 {
     public function __construct(
         public readonly string $name,
-        public readonly string $url = '',
+        public readonly string $href = '',
         public readonly string $icon = '',
         public readonly array $attributes = [],
     ) {
