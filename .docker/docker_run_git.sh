@@ -35,8 +35,27 @@ else
 fi
 
 if [ "${DISABLE_MAKE}" != "1" ]; then
+  echo "\n* Installing composer ...";
+  mkdir -p /var/www/.composer
+  chown -R www-data:www-data /var/www/.composer
+  php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
+
   echo "\n* Running composer ...";
   runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
+
+  echo "\n* Installing node ...";
+  mkdir -p /var/www/.npm
+  chown -R www-data:www-data /var/www/.npm
+  NVM_DIR=/usr/local/nvm
+  mkdir -p $NVM_DIR \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+  NODE_PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin
+  export PATH=$PATH:$NODE_PATH
 
   echo "\n* Build assets ...";
   runuser -g www-data -u www-data -- /usr/bin/make assets
