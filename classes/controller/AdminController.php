@@ -29,15 +29,12 @@ use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
-use PrestaShopBundle\Bridge\Helper\AddFlashMessage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -1933,19 +1930,6 @@ class AdminControllerCore extends Controller
         foreach (['errors', 'warnings', 'informations', 'confirmations'] as $type) {
             if (!is_array($this->$type)) {
                 $this->$type = (array) $this->$type;
-            }
-
-            if (
-                SymfonyContainer::getInstance()
-                    ?->get(FeatureFlagStateCheckerInterface::class)
-                    ->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)
-            ) {
-                /** @var AddFlashMessage $addFlashMessage */
-                $addFlashMessage = SymfonyContainer::getInstance()->get(AddFlashMessage::class);
-                foreach ($this->$type as $message) {
-                    $addFlashMessage->addMessage($type, $message);
-                }
-                $this->$type = [];
             }
 
             $this->context->smarty->assign($type, $this->json ? json_encode(array_unique($this->$type)) : array_unique($this->$type));

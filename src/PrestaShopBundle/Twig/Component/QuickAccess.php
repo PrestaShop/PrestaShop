@@ -36,9 +36,9 @@ use PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/quick_access.html.twig')]
@@ -87,7 +87,7 @@ class QuickAccess
         private readonly UserProvider $userProvider,
         private readonly RequestStack $requestStack,
         private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly TranslatorInterface $translator,
+        private readonly MenuBuilder $menuBuilder
     ) {
     }
 
@@ -179,9 +179,15 @@ class QuickAccess
     public function getCurrentUrlTitle(): string
     {
         if (null === $this->currentUrlTitle) {
-            $class_name = $this->requestStack->getMainRequest()->attributes->get('_legacy_controller');
-            $tab = $this->tabRepository->findOneByClassName($class_name);
-            $this->currentUrlTitle = $tab ? $this->translator->trans($tab->getWording(), [], $tab->getWordingDomain()) : '';
+            $breadcrumbLinks = $this->menuBuilder->getBreadcrumbLinks();
+            if (isset($breadcrumbLinks['tab'])) {
+                $this->currentUrlTitle = $breadcrumbLinks['tab']->name;
+                if (isset($breadcrumbLinks['action'])) {
+                    $this->currentUrlTitle .= ' - ' . $breadcrumbLinks['action']->name;
+                }
+            } else {
+                $this->currentUrlTitle = '';
+            }
         }
 
         return $this->currentUrlTitle;

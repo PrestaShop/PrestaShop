@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +22,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{{ component('Toolbar', {
-  lockedToAllShopContext: locked_to_all_shop_context,
-  breadcrumbs2: breadcrumbs2,
-  title: title,
-  toolbarBtn: toolbar_btn,
-  table: table,
-  helpLink: help_link,
-  enableSidebar: enableSidebar,
-  currentTabLevel: current_tab_level,
-  tabs: tabs,
-  useRegularH1Structure: use_regular_h1_structure
-}) }}
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Twig\Layout;
+
+class MenuLink
+{
+    public function __construct(
+        public readonly string $name,
+        public readonly string $url = '',
+        public readonly string $icon = '',
+        public readonly array $attributes = [],
+    ) {
+    }
+}
