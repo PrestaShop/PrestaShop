@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 use AttributeGroup;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\AddAttributeGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupI
 /**
  * Handles adding of attribute groups using legacy logic.
  */
+#[AsCommandHandler]
 final class AddAttributeGroupHandler extends AbstractObjectModelHandler implements AddAttributeGroupHandlerInterface
 {
     /**

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler\GetAttributeGroupForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttribu
 /**
  * Handles query which gets attribute group for editing
  */
+#[AsQueryHandler]
 final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEditingHandlerInterface
 {
     /**

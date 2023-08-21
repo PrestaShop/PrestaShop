@@ -4,21 +4,15 @@ services:
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\AddAttributeGroupHandler:
     autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\EditAttributeGroupHandler:
     autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\GetAttributeGroupForEditingHandler:
     autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider:
     arguments:

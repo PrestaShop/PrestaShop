@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -131,6 +132,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
         $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
 
         $attributeGroupForm = $attributeGroupFormBuilder->getFormFor($attributeGroupId);
+
         $attributeGroupForm->handleRequest($request);
 
         try {
@@ -169,14 +171,36 @@ class AttributeGroupController extends FrameworkBundleAdminController
      * )
 
      *
-     * @param int $attributeGroupId
+     * @param AttributeGroupFilters $filters
      *
-     * @return RedirectResponse
+     * @return CsvResponse
      */
-    public function exportAction(int $attributeGroupId)
+    public function exportAction(AttributeGroupFilters $filters): CsvResponse
     {
-        //@todo: implement in antoher pr
-        return $this->redirectToRoute('admin_attribute_groups_index');
+        $filters = new AttributeGroupFilters(['limit' => null] + $filters->all());
+        $attributeGroupGridFactory = $this->get('prestashop.core.grid.factory.attribute_group');
+        $attributeGroupGrid = $attributeGroupGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_attribute_group' => $this->trans('ID', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'position' => $this->trans('Position', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($attributeGroupGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_attribute_group' => $record['id_attribute_group'],
+                'name' => $record['name'],
+                'position' => $record['position'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('attribute_group_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
