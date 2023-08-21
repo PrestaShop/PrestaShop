@@ -61,7 +61,7 @@ class Toolbar
             $tabs = [];
             $tabs[] = $tab;
             $ancestorsTab = $this->menuBuilder->getAncestorsTab($tab->getId());
-            if (!empty($ancestorsTab)) {
+            if (!empty($tabAncestors)) {
                 $tabs[] = $ancestorsTab;
             }
 
