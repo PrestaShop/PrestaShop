@@ -80,7 +80,7 @@ class PageType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'This option allows you to choose which image you want to use in listings for products with combinations. By default, it always uses the cover image of the product. If you enable this option and your filtering module is properly passing required information, you can show directly show the image of this combination.',
+                    'This option allows you to choose which image to display in listings for products with combinations. By default, the cover image of the product will be used. If you enable this option and your filtering module is properly passing the required information, then the default image of the combination found will be displayed.',
                     'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
