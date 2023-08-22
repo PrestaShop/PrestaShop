@@ -41,7 +41,7 @@ class Toolbar
     public string $table;
     public bool|string $helpLink;
     public bool $enableSidebar;
-    public int $currentTabLevel;
+    public int $currentTabLevel = 0;
     public array $tabs;
     public array $breadcrumbs;
     public bool $useRegularH1Structure = true;
@@ -61,8 +61,9 @@ class Toolbar
             $tabs = [];
             $tabs[] = $tab;
             $ancestorsTab = $this->menuBuilder->getAncestorsTab($tab->getId());
-            if (!empty($tabAncestors)) {
+            if (!empty($ancestorsTab)) {
                 $tabs[] = $ancestorsTab;
+                $this->currentTabLevel = count($ancestorsTab);
             }
 
             $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
