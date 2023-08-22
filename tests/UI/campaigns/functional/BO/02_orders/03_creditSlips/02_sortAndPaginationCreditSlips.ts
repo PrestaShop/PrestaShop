@@ -92,6 +92,18 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         await expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
+      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `updateCreatedOrderStatus${i}`,
+          `${baseContext}_preTest_${i}`,
+        );
+
+        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.shipped);
+        await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      });
+
       it('should go to the first order page', async function () {
         await testContext.addContextItem(
           this,
@@ -104,18 +116,6 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-      });
-
-      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `updateCreatedOrderStatus${i}`,
-          `${baseContext}_preTest_${i}`,
-        );
-
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-        await expect(result).to.equal(OrderStatuses.shipped.name);
       });
 
       it('should add a partial refund', async function () {
