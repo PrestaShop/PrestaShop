@@ -17,16 +17,41 @@
         <target>Cannot update settings</target>
         <note>Line: 325</note>
       </trans-unit>
-      <trans-unit id="2554b39ea61245301ddb2b8305d7e6fa">
-        <source>Please type one (or more) email address</source>
-        <target>Please type one (or more) email address</target>
-        <note>Line: 228</note>
+      <trans-unit id="d5f5c6acde4150404b8a54bcde944d9d">
+        <source>Please enter one (or more) email address for the new order notification.</source>
+        <target>Please enter one (or more) email address for the new order notification.</target>
+        <note>Line: 244</note>
       </trans-unit>
       <trans-unit id="fe053a0324335f0087da6683d77cba48">
         <source>Invalid email:</source>
         <target>Invalid email:</target>
         <note>Line: 299
 Comment: Add error message and remove it</note>
+      </trans-unit>
+      <trans-unit id="91854d7024aaeef9985ab4cb34eb754e">
+        <source>Cannot update new order emails.</source>
+        <target>Cannot update new order emails.</target>
+        <note>Line: 262</note>
+      </trans-unit>
+      <trans-unit id="09065e4b575415cbc308a7eab961a2be">
+        <source>Please enter one (or more) email address for "out of stock" notifications.</source>
+        <target>Please enter one (or more) email address for "out of stock" notifications.</target>
+        <note>Line: 268</note>
+      </trans-unit>
+      <trans-unit id="efeba9a86bc37b02f1893c508acef541">
+        <source>Cannot update email for "out of stock" notifications.</source>
+        <target>Cannot update email for "out of stock" notifications.</target>
+        <note>Line: 286</note>
+      </trans-unit>
+      <trans-unit id="23ca7e7b11802ed822636dd14064bc0b">
+        <source>Please enter one (or more) email address for "return slip" notifications.</source>
+        <target>Please enter one (or more) email address for "return slip" notifications.</target>
+        <note>Line: 292</note>
+      </trans-unit>
+      <trans-unit id="06c805399c80b36dcf1754acdba3609b">
+        <source>Cannot update "return slip" emails.</source>
+        <target>Cannot update "return slip" emails.</target>
+        <note>Line: 310</note>
       </trans-unit>
       <trans-unit id="462390017ab0938911d2d4e964c0cab7">
         <source>Settings updated successfully</source>
@@ -86,6 +111,21 @@ Comment: retro compat 1.5</note>
         <target>Receive a notification when an order is placed.</target>
         <note>Line: 1140</note>
       </trans-unit>
+      <trans-unit id="172123b1c4411da3c41a1eb36e4662d4">
+        <source>Send to:</source>
+        <target>Send to:</target>
+        <note>Line: 1246</note>
+      </trans-unit>
+      <trans-unit id="35fe6b0f0a1debcdf760477a2194bc6b">
+        <source>Add email</source>
+        <target>Add email</target>
+        <note>Line: 1248</note>
+      </trans-unit>
+      <trans-unit id="fb690a859d745afa33dc801efb5b8cb3">
+        <source>Enter one or more email address. Use 'Return' or a comma to separate each address.</source>
+        <target>Enter one or more email address. Use 'Return' or a comma to separate each address.</target>
+        <note>Line: 1249</note>
+      </trans-unit>
       <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
         <source>Out of stock</source>
         <target>Out of stock</target>
@@ -139,16 +179,6 @@ Comment: retro compat 1.5</note>
         <target>Receive a notification when a customer requests a merchandise return.</target>
         <note>Line: 1230</note>
       </trans-unit>
-      <trans-unit id="25b74a3fe7cc70e18e584e84d87875fa">
-        <source>Email addresses</source>
-        <target>Email addresses</target>
-        <note>Line: 1159</note>
-      </trans-unit>
-      <trans-unit id="dd2b285cd1709dfb3db7f4357b293425">
-        <source>One email address per line (e.g. bob@example.com).</source>
-        <target>One email address per line (e.g. bob@example.com).</target>
-        <note>Line: 1161</note>
-      </trans-unit>
       <trans-unit id="6f974bbda9064a9c0836370dbf5a6076">
         <source>Merchant notifications</source>
         <target>Merchant notifications</target>
@@ -163,51 +193,6 @@ Comment: retro compat 1.5</note>
         <source>Mail alert: Unable to export customer using email.</source>
         <target>Mail alert: Unable to export customer using email.</target>
         <note>Line: 1310</note>
-      </trans-unit>
-      <trans-unit id="d5f5c6acde4150404b8a54bcde944d9d">
-        <source>Please enter one (or more) email address for the new order notification.</source>
-        <target>Please enter one (or more) email address for the new order notification.</target>
-        <note>Line: 244</note>
-      </trans-unit>
-      <trans-unit id="91854d7024aaeef9985ab4cb34eb754e">
-        <source>Cannot update new order emails.</source>
-        <target>Cannot update new order emails.</target>
-        <note>Line: 262</note>
-      </trans-unit>
-      <trans-unit id="09065e4b575415cbc308a7eab961a2be">
-        <source>Please enter one (or more) email address for "out of stock" notifications.</source>
-        <target>Please enter one (or more) email address for "out of stock" notifications.</target>
-        <note>Line: 268</note>
-      </trans-unit>
-      <trans-unit id="efeba9a86bc37b02f1893c508acef541">
-        <source>Cannot update email for "out of stock" notifications.</source>
-        <target>Cannot update email for "out of stock" notifications.</target>
-        <note>Line: 286</note>
-      </trans-unit>
-      <trans-unit id="23ca7e7b11802ed822636dd14064bc0b">
-        <source>Please enter one (or more) email address for "return slip" notifications.</source>
-        <target>Please enter one (or more) email address for "return slip" notifications.</target>
-        <note>Line: 292</note>
-      </trans-unit>
-      <trans-unit id="06c805399c80b36dcf1754acdba3609b">
-        <source>Cannot update "return slip" emails.</source>
-        <target>Cannot update "return slip" emails.</target>
-        <note>Line: 310</note>
-      </trans-unit>
-      <trans-unit id="172123b1c4411da3c41a1eb36e4662d4">
-        <source>Send to:</source>
-        <target>Send to:</target>
-        <note>Line: 1246</note>
-      </trans-unit>
-      <trans-unit id="35fe6b0f0a1debcdf760477a2194bc6b">
-        <source>Add email</source>
-        <target>Add email</target>
-        <note>Line: 1248</note>
-      </trans-unit>
-      <trans-unit id="fb690a859d745afa33dc801efb5b8cb3">
-        <source>Enter one or more email address. Use 'Return' or a comma to separate each address.</source>
-        <target>Enter one or more email address. Use 'Return' or a comma to separate each address.</target>
-        <note>Line: 1249</note>
       </trans-unit>
     </body>
   </file>

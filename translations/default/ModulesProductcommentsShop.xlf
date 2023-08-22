@@ -50,6 +50,11 @@
   </file>
   <file original="modules/productcomments/controllers/front/ReportComment.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="198645056f217f726ff1dc6e65ccc322">
+        <source>Cannot find the requested product review.</source>
+        <target>Cannot find the requested product review.</target>
+        <note>Line: 63</note>
+      </trans-unit>
       <trans-unit id="4b6a3b2fdf3c89e9f83dfb44b34336fb">
         <source>You need to be logged in to report a review.</source>
         <target>You need to be logged in to report a review.</target>
@@ -59,11 +64,6 @@
         <source>You already reported this review as abusive.</source>
         <target>You already reported this review as abusive.</target>
         <note>Line: 83</note>
-      </trans-unit>
-      <trans-unit id="198645056f217f726ff1dc6e65ccc322">
-        <source>Cannot find the requested product review.</source>
-        <target>Cannot find the requested product review.</target>
-        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -188,15 +188,15 @@
   </file>
   <file original="modules/productcomments/views/templates/hook/product-additional-info.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a71a0229e164fecdcde3c4e0f40473fa">
-        <source>Read user reviews</source>
-        <target>Read user reviews</target>
-        <note>Line: 40</note>
-      </trans-unit>
       <trans-unit id="7966126831926ad29c528b239d69f855">
         <source>Write your review</source>
         <target>Write your review</target>
         <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="a71a0229e164fecdcde3c4e0f40473fa">
+        <source>Read user reviews</source>
+        <target>Read user reviews</target>
+        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>

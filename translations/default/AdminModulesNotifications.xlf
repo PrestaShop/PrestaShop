@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminModulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c913de38eb118ce08ddae76f27063126">
+        <source>Unfortunately, the module did not return additional details.</source>
+        <target>Unfortunately, the module did not return additional details.</target>
+        <note>Line: 244</note>
+      </trans-unit>
+      <trans-unit id="fbaf1c9434442c780f3eddff4406603c">
+        <source>Error when enabling module %module%. %error_details%.</source>
+        <target>Error when enabling module %module%. %error_details%.</target>
+        <note>Line: 250</note>
+      </trans-unit>
+      <trans-unit id="b58f4b4f4f870b40e52c42c161df0d60">
+        <source>Error when disabling module %module%. %error_details%.</source>
+        <target>Error when disabling module %module%. %error_details%.</target>
+        <note>Line: 251</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

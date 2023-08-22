@@ -44,6 +44,11 @@
   </file>
   <file original="classes/checkout/DeliveryOptionsFinder.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 92</note>
+      </trans-unit>
       <trans-unit id="464f47d6975750e4cbd91c90ccf1791e">
         <source>%price% tax incl.</source>
         <target>%price% tax incl.</target>
@@ -53,11 +58,6 @@
         <source>%price% tax excl.</source>
         <target>%price% tax excl.</target>
         <note>Line: 110</note>
-      </trans-unit>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 92</note>
       </trans-unit>
     </body>
   </file>
@@ -75,17 +75,17 @@
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
-        <note>Line: 128</note>
+        <note>Line: 130</note>
       </trans-unit>
       <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
         <source>Tax excluded</source>
         <target>Tax excluded</target>
-        <note>Line: 130</note>
+        <note>Line: 132</note>
       </trans-unit>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 171</note>
+        <note>Line: 177</note>
       </trans-unit>
     </body>
   </file>
@@ -118,65 +118,65 @@
   </file>
   <file original="src/Adapter/Presenter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Line: 399</note>
-      </trans-unit>
-      <trans-unit id="adc852563bca51fb6b10c7905010406d">
-        <source>Total (tax incl.)</source>
-        <target>Total (tax incl.)</target>
-        <note>Line: 407</note>
-      </trans-unit>
-      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
-        <source>Total (tax excl.)</source>
-        <target>Total (tax excl.)</target>
-        <note>Line: 413</note>
-      </trans-unit>
       <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
         <source>Subtotal</source>
         <target>Subtotal</target>
-        <note>Line: 340</note>
+        <note>Line: 343</note>
       </trans-unit>
       <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
         <source>Gift wrapping</source>
         <target>Gift wrapping</target>
-        <note>Line: 363</note>
+        <note>Line: 366</note>
+      </trans-unit>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 402</note>
+      </trans-unit>
+      <trans-unit id="adc852563bca51fb6b10c7905010406d">
+        <source>Total (tax incl.)</source>
+        <target>Total (tax incl.)</target>
+        <note>Line: 410</note>
+      </trans-unit>
+      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
+        <source>Total (tax excl.)</source>
+        <target>Total (tax excl.)</target>
+        <note>Line: 416</note>
       </trans-unit>
       <trans-unit id="40d906eb5dd9a2734d0c20c437e2ff68">
         <source>Discount(s)</source>
         <target>Discount(s)</target>
-        <note>Line: 348</note>
+        <note>Line: 351</note>
       </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
-        <note>Line: 378</note>
+        <note>Line: 381</note>
       </trans-unit>
       <trans-unit id="3b5a05f2c4a0373c7a6e8d1cfec7020f">
         <source>Included taxes</source>
         <target>Included taxes</target>
-        <note>Line: 389</note>
+        <note>Line: 392</note>
       </trans-unit>
       <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
         <source>Taxes</source>
         <target>Taxes</target>
-        <note>Line: 390</note>
+        <note>Line: 393</note>
       </trans-unit>
       <trans-unit id="7e0eb131cbb6280fe2b38edf92a3bcc5">
         <source>1 item</source>
         <target>1 item</target>
-        <note>Line: 424</note>
+        <note>Line: 427</note>
       </trans-unit>
       <trans-unit id="ca96f27e7d3e3b67b5d1f43a54296466">
         <source>%count% items</source>
         <target>%count% items</target>
-        <note>Line: 425</note>
+        <note>Line: 428</note>
       </trans-unit>
       <trans-unit id="2bd544f123f671c597c4b330ef05b5da">
         <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
         <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
-        <note>Line: 479</note>
+        <note>Line: 482</note>
       </trans-unit>
     </body>
   </file>
@@ -185,7 +185,7 @@
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
-        <note>Line: 254</note>
+        <note>Line: 250</note>
       </trans-unit>
     </body>
   </file>
@@ -352,11 +352,6 @@
         <target>Total products</target>
         <note>Line: 31</note>
       </trans-unit>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 30</note>
-      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/checkout/_partials/order-final-summary-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -385,6 +380,11 @@
         <target>Addresses</target>
         <note>Line: 35</note>
       </trans-unit>
+      <trans-unit id="baa63a898921164abe2d1d532ab27e79">
+        <source>Your Invoice Address</source>
+        <target>Your Invoice Address</target>
+        <note>Line: 52</note>
+      </trans-unit>
       <trans-unit id="7ce3a11073ffba68bd1e83e243aaabf7">
         <source>Please check your order before payment</source>
         <target>Please check your order before payment</target>
@@ -399,11 +399,6 @@
   </file>
   <file original="themes/classic/templates/checkout/_partials/steps/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="baa63a898921164abe2d1d532ab27e79">
-        <source>Your Invoice Address</source>
-        <target>Your Invoice Address</target>
-        <note>Line: 90</note>
-      </trans-unit>
       <trans-unit id="dc024b376ebf01abd90cf4d5e4dca1c7">
         <source>The selected address will be used as your personal address (for invoice).</source>
         <target>The selected address will be used as your personal address (for invoice).</target>
@@ -567,15 +562,20 @@
   </file>
   <file original="themes/classic/templates/customer/discount.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 72</note>
+      </trans-unit>
       <trans-unit id="ca0dbad92a874b2f69b549293387925e">
         <source>Code</source>
         <target>Code</target>
         <note>Line: 64</note>
       </trans-unit>
-      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
-        <source>Description</source>
-        <target>Description</target>
-        <note>Line: 68</note>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="689202409e48743b914713f96d93947c">
         <source>Value</source>
@@ -597,10 +597,10 @@
         <target>Expiration date</target>
         <note>Line: 88</note>
       </trans-unit>
-      <trans-unit id="49ee3087348e8d44e1feda1917443987">
-        <source>Name</source>
-        <target>Name</target>
-        <note>Line: 37</note>
+      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
+        <source>Description</source>
+        <target>Description</target>
+        <note>Line: 68</note>
       </trans-unit>
     </body>
   </file>

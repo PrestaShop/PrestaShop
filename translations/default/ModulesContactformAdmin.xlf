@@ -7,15 +7,10 @@
         <target>Contact form</target>
         <note>Line: 62</note>
       </trans-unit>
-      <trans-unit id="3d720dee87296628c1479b39b2cb6f5a">
-        <source>Adds a contact form to the "Contact us" page.</source>
-        <target>Adds a contact form to the "Contact us" page.</target>
-        <note>Line: 65</note>
-      </trans-unit>
-      <trans-unit id="212b06350965b6aa7339b5bee457dda9">
-        <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the %link%]]></source>
-        <target><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the %link%]]></target>
-        <note>Line: 89</note>
+      <trans-unit id="ae368b65e97b30e7ca67e2fcf19155ab">
+        <source>Help your customers get in touch when they need, add a contact form on your store.</source>
+        <target>Help your customers get in touch when they need, add a contact form on your store.</target>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="3225a10b07f1580f10dee4abc3779e6c">
         <source>Parameters</source>
@@ -41,11 +36,6 @@
         <source>By default, you will only receive contact messages through your Customer service tab.</source>
         <target>By default, you will only receive contact messages through your Customer service tab.</target>
         <note>Line: 163</note>
-      </trans-unit>
-      <trans-unit id="ae368b65e97b30e7ca67e2fcf19155ab">
-        <source>Help your customers get in touch when they need, add a contact form on your store.</source>
-        <target>Help your customers get in touch when they need, add a contact form on your store.</target>
-        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>

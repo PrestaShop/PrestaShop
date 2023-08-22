@@ -7,20 +7,15 @@
         <target>Google sitemap</target>
         <note>Line: 58</note>
       </trans-unit>
-      <trans-unit id="935a6bc13704a117d22333c3155b5dae">
-        <source>Generate your Google sitemap file</source>
-        <target>Generate your Google sitemap file</target>
-        <note>Line: 48</note>
+      <trans-unit id="400b56170a529d4644b068ade0a6e84f">
+        <source>Generate your Google sitemap file and keep it up to date with this module.</source>
+        <target>Generate your Google sitemap file and keep it up to date with this module.</target>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="b52bf50c73995780892b9945ddc98708">
         <source>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</source>
         <target>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</target>
         <note>Line: 630</note>
-      </trans-unit>
-      <trans-unit id="400b56170a529d4644b068ade0a6e84f">
-        <source>Generate your Google sitemap file and keep it up to date with this module.</source>
-        <target>Generate your Google sitemap file and keep it up to date with this module.</target>
-        <note>Line: 59</note>
       </trans-unit>
     </body>
   </file>

@@ -71,46 +71,51 @@
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 944</note>
+        <note>Line: 1015</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e0c04603cf0d081616d87bc69c92bbb8">
+        <source>Quick customers with no password, who don't have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.</source>
+        <target>Quick customers with no password, who don't have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.</target>
+        <note>Line: 166</note>
+      </trans-unit>
       <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
         <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
         <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
-        <note>Line: 165</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
         <source>Enable or disable customer login.</source>
         <target>Enable or disable customer login.</target>
-        <note>Line: 249</note>
+        <note>Line: 278</note>
       </trans-unit>
       <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
         <source>This customer will receive your ads via email.</source>
         <target>This customer will receive your ads via email.</target>
-        <note>Line: 257</note>
+        <note>Line: 286</note>
       </trans-unit>
       <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
         <source>Select all the groups that you would like to apply to this customer.</source>
         <target>Select all the groups that you would like to apply to this customer.</target>
-        <note>Line: 266</note>
+        <note>Line: 295</note>
       </trans-unit>
       <trans-unit id="395b64636636e968c756f7514313f760">
         <source>This group will be the user's default group.</source>
         <target>This group will be the user's default group.</target>
-        <note>Line: 277</note>
+        <note>Line: 306</note>
       </trans-unit>
       <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
         <source>Only the discount for the selected group will be applied to this customer.</source>
         <target>Only the discount for the selected group will be applied to this customer.</target>
-        <note>Line: 281</note>
+        <note>Line: 310</note>
       </trans-unit>
       <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
         <source>Valid characters:</source>
         <target>Valid characters:</target>
-        <note>Line: 337</note>
+        <note>Line: 362</note>
       </trans-unit>
     </body>
   </file>
@@ -119,12 +124,12 @@
       <trans-unit id="2c63abfb167f5934474544f8093b1ba9">
         <source>Maximum number of days to return a product after the delivery date.</source>
         <target>Maximum number of days to return a product after the delivery date.</target>
-        <note>Line: 66</note>
+        <note>Line: 67</note>
       </trans-unit>
       <trans-unit id="bd0a7bfae2c92edb50a9201ca47a1157">
         <source>Prefix used for merchandise returns (e.g. RE00001).</source>
         <target>Prefix used for merchandise returns (e.g. RE00001).</target>
-        <note>Line: 81</note>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -167,50 +172,50 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoiceOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="afda8f59762167c6720a8afe24345df1">
-        <source>If required, show the total amount per rate of the corresponding tax.</source>
-        <target>If required, show the total amount per rate of the corresponding tax.</target>
-        <note>Line: 104</note>
-      </trans-unit>
-      <trans-unit id="7b87585267aed27676374641013ab66e">
-        <source>Freely definable prefix for invoice number (e.g. #IN00001).</source>
-        <target>Freely definable prefix for invoice number (e.g. #IN00001).</target>
-        <note>Line: 129</note>
-      </trans-unit>
-      <trans-unit id="a93c4ec4b8ef325acf067112d7437c59">
-        <source>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</source>
-        <target>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</target>
-        <note>Line: 178</note>
-      </trans-unit>
-      <trans-unit id="e3501dec19c50333c49b4d7d66931abc">
-        <source>This text will appear at the bottom of the invoice, below your company details.</source>
-        <target>This text will appear at the bottom of the invoice, below your company details.</target>
-        <note>Line: 207</note>
-      </trans-unit>
-      <trans-unit id="41d8a2a057a1e1b9663d49896d3162f3">
-        <source>Saves memory but slows down the PDF generation.</source>
-        <target>Saves memory but slows down the PDF generation.</target>
-        <note>Line: 233</note>
-      </trans-unit>
       <trans-unit id="98d86a8619e0a20b6ff48546cb93a7c7">
         <source>When enabled, your customers will receive an invoice for the purchase.</source>
         <target>When enabled, your customers will receive an invoice for the purchase.</target>
-        <note>Line: 92</note>
+        <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="afda8f59762167c6720a8afe24345df1">
+        <source>If required, show the total amount per rate of the corresponding tax.</source>
+        <target>If required, show the total amount per rate of the corresponding tax.</target>
+        <note>Line: 105</note>
       </trans-unit>
       <trans-unit id="873ca0519130b8bbd52e53b7fb54e607">
         <source>Adds an image in front of the product name on the invoice.</source>
         <target>Adds an image in front of the product name on the invoice.</target>
-        <note>Line: 116</note>
+        <note>Line: 117</note>
+      </trans-unit>
+      <trans-unit id="7b87585267aed27676374641013ab66e">
+        <source>Freely definable prefix for invoice number (e.g. #IN00001).</source>
+        <target>Freely definable prefix for invoice number (e.g. #IN00001).</target>
+        <note>Line: 130</note>
+      </trans-unit>
+      <trans-unit id="a93c4ec4b8ef325acf067112d7437c59">
+        <source>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</source>
+        <target>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</target>
+        <note>Line: 179</note>
       </trans-unit>
       <trans-unit id="c6b13d22e9b7448de20e6cbff4b5e2c3">
         <source>Use this field to show additional information on the invoice such as specific legal information. It will be displayed below the payment methods summary.</source>
         <target>Use this field to show additional information on the invoice such as specific legal information. It will be displayed below the payment methods summary.</target>
-        <note>Line: 194</note>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="e3501dec19c50333c49b4d7d66931abc">
+        <source>This text will appear at the bottom of the invoice, below your company details.</source>
+        <target>This text will appear at the bottom of the invoice, below your company details.</target>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="225e2713c8433c0e3f5e62553f470deb">
         <source>Choose an invoice model</source>
         <target>Choose an invoice model</target>
-        <note>Line: 220</note>
+        <note>Line: 221</note>
+      </trans-unit>
+      <trans-unit id="41d8a2a057a1e1b9663d49896d3162f3">
+        <source>Saves memory but slows down the PDF generation.</source>
+        <target>Saves memory but slows down the PDF generation.</target>
+        <note>Line: 234</note>
       </trans-unit>
     </body>
   </file>
@@ -242,15 +247,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/personal_information.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fef9632f39b66ba488e163a665bb0e99">
-        <source>This feature generates a random password before sending an email to your customer.</source>
-        <target>This feature generates a random password before sending an email to your customer.</target>
-        <note>Line: 179</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/private_note.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="566d26ec62e9c51270b7243440227dbb">
@@ -275,30 +271,6 @@
         <source>You can also export orders which have not been charged yet.</source>
         <target>You can also export orders which have not been charged yet.</target>
         <note>Line: 42</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="60422879211a12247e5da14751a59ac3">
-        <source>If enabled, your customers will receive an invoice for the purchase.</source>
-        <target>If enabled, your customers will receive an invoice for the purchase.</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="0e963c5b7a1b6bb67429c7d0e7f45741">
-        <source>Adds an image in front of the product name on the invoice</source>
-        <target>Adds an image in front of the product name on the invoice</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="7a490daaa2605a4a5be08b30a0c6fe24">
-        <source>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</source>
-        <target>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</target>
-        <note>Line: 101</note>
-      </trans-unit>
-      <trans-unit id="4e00dcdfbf2f4a6156c01fb15ded75c5">
-        <source>Choose an invoice model.</source>
-        <target>Choose an invoice model.</target>
-        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>

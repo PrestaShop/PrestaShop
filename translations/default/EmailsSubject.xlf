@@ -2,10 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="classes/Customer.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="9a843f20677a52ca79af903123147af0">
+        <source>Welcome!</source>
+        <target>Welcome!</target>
+        <note>Line: 1282</note>
+      </trans-unit>
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>Line: 1285</note>
+        <note>Line: 1298</note>
       </trans-unit>
     </body>
   </file>
@@ -19,7 +24,7 @@
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>Line: 1224</note>
+        <note>Line: 1211</note>
       </trans-unit>
     </body>
   </file>
@@ -28,16 +33,7 @@
       <trans-unit id="caedcb9e2005bf6e522cf4536a1885bd">
         <source>Log: You have a new alert from your shop</source>
         <target>Log: You have a new alert from your shop</target>
-        <note>Line: 118</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerPersister.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9a843f20677a52ca79af903123147af0">
-        <source>Welcome!</source>
-        <target>Welcome!</target>
-        <note>Line: 265</note>
+        <note>Line: 121</note>
       </trans-unit>
     </body>
   </file>
@@ -61,15 +57,15 @@
   </file>
   <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
-        <source>Fwd: Customer message</source>
-        <target>Fwd: Customer message</target>
-        <note>Line: 408</note>
-      </trans-unit>
       <trans-unit id="26fabd8660373b86b9288dd72fd40e13">
         <source>An answer to your message is available #ct%thread_id% #tc%thread_token%</source>
         <target>An answer to your message is available #ct%thread_id% #tc%thread_token%</target>
         <note>Line: 479</note>
+      </trans-unit>
+      <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
+        <source>Fwd: Customer message</source>
+        <target>Fwd: Customer message</target>
+        <note>Line: 408</note>
       </trans-unit>
     </body>
   </file>
@@ -78,7 +74,16 @@
       <trans-unit id="a218495ad30949e8ea1f64a261e37463">
         <source>Import complete</source>
         <target>Import complete</target>
-        <note>Line: 4799</note>
+        <note>Line: 4199</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLoginController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
+        <source>Your new password</source>
+        <target>Your new password</target>
+        <note>Line: 464</note>
       </trans-unit>
     </body>
   </file>
@@ -102,11 +107,6 @@
   </file>
   <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
-        <source>Your new password</source>
-        <target>Your new password</target>
-        <note>Line: 203</note>
-      </trans-unit>
       <trans-unit id="61afad00abe3639b3ead655a1e8696d9">
         <source>Password query confirmation</source>
         <target>Password query confirmation</target>
@@ -195,7 +195,7 @@
       <trans-unit id="cad374f43e79ca774b2e8e00dcd8b842">
         <source>Process the payment of your order</source>
         <target>Process the payment of your order</target>
-        <note>Line: 65</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -204,7 +204,7 @@
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
         <source>New credit slip regarding your order</source>
         <target>New credit slip regarding your order</target>
-        <note>Line: 131</note>
+        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
@@ -222,7 +222,7 @@
       <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
         <source>New message regarding your order</source>
         <target>New message regarding your order</target>
-        <note>Line: 246</note>
+        <note>Line: 248</note>
       </trans-unit>
     </body>
   </file>

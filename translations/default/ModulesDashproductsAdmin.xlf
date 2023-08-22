@@ -7,10 +7,10 @@
         <target>Dashboard Products</target>
         <note>Line: 40</note>
       </trans-unit>
-      <trans-unit id="4a528e24be5aca96e8a15b256efe1f31">
-        <source>Adds a block with a table of your latest orders and a ranking of your products</source>
-        <target>Adds a block with a table of your latest orders and a ranking of your products</target>
-        <note>Line: 45</note>
+      <trans-unit id="f5e4a6e42440014476359f5c74e22966">
+        <source>Enrich your stats: display a table of your latest orders and a ranking of your products.</source>
+        <target>Enrich your stats: display a table of your latest orders and a ranking of your products.</target>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="2ea989f83006e233627987293f4bde0a">
         <source>Customer Name</source>
@@ -81,11 +81,6 @@
         <source>Number of "Top Searches" to display</source>
         <target>Number of "Top Searches" to display</target>
         <note>Line: 520</note>
-      </trans-unit>
-      <trans-unit id="f5e4a6e42440014476359f5c74e22966">
-        <source>Enrich your stats: display a table of your latest orders and a ranking of your products.</source>
-        <target>Enrich your stats: display a table of your latest orders and a ranking of your products.</target>
-        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>

@@ -31,6 +31,16 @@
         <target>Allow users to post reviews on your products and/or rate them based on specific criteria.</target>
         <note>Line: 56</note>
       </trans-unit>
+      <trans-unit id="9dc1140983196141368ceda7565128a8">
+        <source>Minimum time between 2 reviews from the same user</source>
+        <target>Minimum time between 2 reviews from the same user</target>
+        <note>Line: 391</note>
+      </trans-unit>
+      <trans-unit id="b6604006fb977868227d4fdea6186697">
+        <source>Number of comments per page</source>
+        <target>Number of comments per page</target>
+        <note>Line: 398</note>
+      </trans-unit>
       <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
         <source>Settings updated</source>
         <target>Settings updated</target>
@@ -89,16 +99,6 @@ Comment: retro compat 1.5</note>
         <source>Display only initials, e.g. John D.</source>
         <target>Display only initials, e.g. John D.</target>
         <note>Line: 375</note>
-      </trans-unit>
-      <trans-unit id="9dc1140983196141368ceda7565128a8">
-        <source>Minimum time between 2 reviews from the same user</source>
-        <target>Minimum time between 2 reviews from the same user</target>
-        <note>Line: 391</note>
-      </trans-unit>
-      <trans-unit id="b6604006fb977868227d4fdea6186697">
-        <source>Number of comments per page</source>
-        <target>Number of comments per page</target>
-        <note>Line: 398</note>
       </trans-unit>
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
         <source>Save</source>

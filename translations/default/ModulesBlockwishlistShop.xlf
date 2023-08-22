@@ -119,22 +119,17 @@
       <trans-unit id="4701eef0c0a005e2245180a983fe030e">
         <source>You do not have access to this wishlist.</source>
         <target>You do not have access to this wishlist.</target>
-        <note>Line: 84</note>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="d4e3353b723d705ed7a41ba11c17c9f2">
         <source>WishList: %wishlist_name%</source>
         <target>WishList: %wishlist_name%</target>
-        <note>Line: 139</note>
+        <note>Line: 137</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/add-to-wishlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2d96bb66d8541a89620d3c158ceef42b">
-        <source>Add to wishlist</source>
-        <target>Add to wishlist</target>
-        <note>Line: 37</note>
-      </trans-unit>
       <trans-unit id="31323452eb311e8fbef81c75d3062659">
         <source>No list found.</source>
         <target>No list found.</target>
@@ -144,11 +139,6 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/create.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
-        <source>Wishlist name</source>
-        <target>Wishlist name</target>
-        <note>Line: 24</note>
-      </trans-unit>
       <trans-unit id="2f745c01f53c6a617fbff3bc18028e33">
         <source>Create wishlist</source>
         <target>Create wishlist</target>
@@ -163,11 +153,6 @@
         <source>List title is too short</source>
         <target>List title is too short</target>
         <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 26</note>
       </trans-unit>
     </body>
   </file>
@@ -216,6 +201,16 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/rename.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
+        <source>Wishlist name</source>
+        <target>Wishlist name</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 25</note>
+      </trans-unit>
       <trans-unit id="3f122c673ce2e03b7ed71889b17ec119">
         <source>Rename wishlist</source>
         <target>Rename wishlist</target>

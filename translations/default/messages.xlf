@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/functions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e67615d6c998f1a013f1d27bbc555cff">
+        <source>You are configuring your store for group shop %s</source>
+        <target>You are configuring your store for group shop %s</target>
+        <note>Line: 397</note>
+      </trans-unit>
+      <trans-unit id="1165ec47ce359708f4a608d4decd04f6">
+        <source>You are configuring your store for shop %s</source>
+        <target>You are configuring your store for shop %s</target>
+        <note>Line: 399</note>
+      </trans-unit>
+      <trans-unit id="db26e10564e958809d798e8048fcbc0a">
+        <source>Invalid security token</source>
+        <target>Invalid security token</target>
+        <note>Line: 486</note>
+      </trans-unit>
+      <trans-unit id="a4da6f31ab268a5310bc475e63ab92db">
+        <source>I understand the risks and I really want to display this page</source>
+        <target>I understand the risks and I really want to display this page</target>
+        <note>Line: 493</note>
+      </trans-unit>
+      <trans-unit id="5196611ad1bf27e9cef5375b038c04db">
+        <source>Take me out of here!</source>
+        <target>Take me out of here!</target>
+        <note>Line: 496</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="62acf0bc057112bf91cd1ff9f1426c6c">
@@ -29,15 +58,6 @@
         <source>The product(s) are matching one of these:</source>
         <target>The product(s) are matching one of these:</target>
         <note>Line: 65</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
-        <source>Discount name</source>
-        <target>Discount name</target>
-        <note>Line: 209</note>
       </trans-unit>
     </body>
   </file>
@@ -212,257 +232,17 @@
       <trans-unit id="deccbe4e9083c3b5f7cd2632722765bb">
         <source>Translate</source>
         <target>Translate</target>
-        <note>Line: 84</note>
+        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="c439b45b0a80369402e0d6158b55590f">
         <source>Generate RTL Stylesheets</source>
         <target>Generate RTL Stylesheets</target>
-        <note>Line: 92</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="53103fcc4656f55c219b600ded3c7438">
         <source>Manage hooks</source>
         <target>Manage hooks</target>
-        <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Line: 79</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/content-legacy.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4181fcfe54e8fadc0644e1cadde3483f">
-        <source>To add a new module, simply connect to your PrestaShop Addons account and all your purchases will be automatically imported.</source>
-        <target>To add a new module, simply connect to your PrestaShop Addons account and all your purchases will be automatically imported.</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="82010160301993d2d752d8f185b31d0c">
-        <source>Can I add my own modules?</source>
-        <target>Can I add my own modules?</target>
-        <note>Line: 55</note>
-      </trans-unit>
-      <trans-unit id="bb2ee5b5f12b6eae3c1716d26cddeab7">
-        <source>Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.</source>
-        <target>Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.</target>
-        <note>Line: 56</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/favorites.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
-        <source>Modules list</source>
-        <target>Modules list</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="7e4a9cd054588a95b0394d92a2030e72">
-        <source>Normal view</source>
-        <target>Normal view</target>
-        <note>Line: 35</note>
-      </trans-unit>
-      <trans-unit id="d7af23f5f349f2c4eace4927943b2760">
-        <source>Favorites view</source>
-        <target>Favorites view</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="e55f75a29310d7b60f7ac1d390c8ae42">
-        <source>Module</source>
-        <target>Module</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="5c6ba25104401c9ee0650230fc6ba413">
-        <source>Tab</source>
-        <target>Tab</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
-        <source>Categories</source>
-        <target>Categories</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="920beb5dda21b04a332e0457cb0cfbec">
-        <source>Interest</source>
-        <target>Interest</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="01165dcf77c191e6c69b31d98b0ec6ff">
-        <source>Favorite</source>
-        <target>Favorite</target>
-        <note>Line: 55</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f0e9c979b965d24aa3c2c4b832c3ba1">
-        <source>Filter by</source>
-        <target>Filter by</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="7b4d2812164df0dceca0b53bb650e52d">
-        <source><![CDATA[Installed & Not Installed]]></source>
-        <target><![CDATA[Installed & Not Installed]]></target>
-        <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="d9e87fc7a13ba398295447791c67b586">
-        <source>Installed Modules</source>
-        <target>Installed Modules</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="94c8dec8d2fcfa80c9b6f4669be43eb0">
-        <source>Modules Not Installed </source>
-        <target>Modules Not Installed </target>
-        <note>Line: 35</note>
-      </trans-unit>
-      <trans-unit id="6b8f34307b46c249a91d84e52ae94caf">
-        <source><![CDATA[Enabled & Disabled]]></source>
-        <target><![CDATA[Enabled & Disabled]]></target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="dfe6e46e2d3e3ba76b5d9aee197c0747">
-        <source>Enabled Modules</source>
-        <target>Enabled Modules</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="a0f454ebaee933c7791ffcdda76944b3">
-        <source>Disabled Modules</source>
-        <target>Disabled Modules</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="02684cc6b6ea1811a064f475a5fd1d18">
-        <source>Authors</source>
-        <target>Authors</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="fbdc9a432c8e6a94bb54864ae4f5fb7f">
-        <source>All authors</source>
-        <target>All authors</target>
-        <note>Line: 51</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/js.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c0d19e251d0ff55ecb860e7349f779a4">
-        <source>Confirm reset</source>
-        <target>Confirm reset</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="45e06e5610d29d675a875a6f7731b73d">
-        <source>Would you like to delete the content related to this module ?</source>
-        <target>Would you like to delete the content related to this module ?</target>
-        <note>Line: 29</note>
-      </trans-unit>
-      <trans-unit id="d65c99010166606287266e4af4f0b934">
-        <source>No - reset only the parameters</source>
-        <target>No - reset only the parameters</target>
-        <note>Line: 30</note>
-      </trans-unit>
-      <trans-unit id="0426ba52f94430cf093652d1ea18fedf">
-        <source>Yes - reset everything</source>
-        <target>Yes - reset everything</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="25b22a00db3085743f478140b8281a26">
-        <source>Preferences saved</source>
-        <target>Preferences saved</target>
-        <note>Line: 38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
-        <source>Uninstall</source>
-        <target>Uninstall</target>
-        <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="4f9b5fa08f2ef86fdc5d0ceefc271981">
-        <source>Remove from Favorites</source>
-        <target>Remove from Favorites</target>
-        <note>Line: 156</note>
-      </trans-unit>
-      <trans-unit id="7263f59f5d8aeaf7d2117fcd4b70930a">
-        <source>Mark as Favorite</source>
-        <target>Mark as Favorite</target>
-        <note>Line: 159</note>
-      </trans-unit>
-      <trans-unit id="df3f079de6961496f0460dcfdbf9bca3">
-        <source>by</source>
-        <target>by</target>
-        <note>Line: 55</note>
-      </trans-unit>
-      <trans-unit id="ba6b1bc4d8bfe5e6e835afa72f102a02">
-        <source>You bought this module on PrestaShop Addons. Thank You.</source>
-        <target>You bought this module on PrestaShop Addons. Thank You.</target>
-        <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="fe5a7fc9d9c907efdf6a384a71cd53fc">
-        <source>Bought</source>
-        <target>Bought</target>
-        <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="0461779839539a8ee8fb2dca43cf5bec">
-        <source>This module is available on PrestaShop Addons</source>
-        <target>This module is available on PrestaShop Addons</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="2cc1943d4c0b46bfcf503a75c44f988b">
-        <source>Popular</source>
-        <target>Popular</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="0008feba81a131902ece95d59f1b8f21">
-        <source>Official</source>
-        <target>Official</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="28f60d4760851bab00345a3cb86871f7">
-        <source>Need update</source>
-        <target>Need update</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 84</note>
-      </trans-unit>
-      <trans-unit id="349838fb1d851d3e2014b9fe39203275">
-        <source>Install</source>
-        <target>Install</target>
-        <note>Line: 104</note>
-      </trans-unit>
-      <trans-unit id="59fcbc24a474d290fa540a3a27e2ff05">
-        <source>Module %1s </source>
-        <target>Module %1s </target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="3846bafee4cc9ce49c24a0b499d3e08d">
-        <source>Official, PrestaShop certified module. Free, secure and includes updates!</source>
-        <target>Official, PrestaShop certified module. Free, secure and includes updates!</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="52dd3893c24e9cf4be761dcaee6bea39">
-        <source>Update it!</source>
-        <target>Update it!</target>
-        <note>Line: 90</note>
-      </trans-unit>
-      <trans-unit id="29c632cf1c7f140b6e86f3af04df48d4">
-        <source>Install the selection</source>
-        <target>Install the selection</target>
-        <note>Line: 184</note>
-      </trans-unit>
-      <trans-unit id="7245ac07bbd56e6d0f7489a7dddb836f">
-        <source>Uninstall the selection</source>
-        <target>Uninstall the selection</target>
-        <note>Line: 190</note>
-      </trans-unit>
-      <trans-unit id="2c422a499f038293ed0c5a1e085cd827">
-        <source>No modules available in this section.</source>
-        <target>No modules available in this section.</target>
-        <note>Line: 200</note>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>
@@ -472,150 +252,6 @@
         <source>Manage translations</source>
         <target>Manage translations</target>
         <note>Line: 29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
-        <source>Add a new module</source>
-        <target>Add a new module</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="6dc2462f2851bdac265c852f023b6d3f">
-        <source>The module must either be a Zip file (.zip) or a tarball file (.tar, .tar.gz, .tgz).</source>
-        <target>The module must either be a Zip file (.zip) or a tarball file (.tar, .tar.gz, .tgz).</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="6779ef184c16fbd18a0bc13ebda839c5">
-        <source>Upload a module from your computer.</source>
-        <target>Upload a module from your computer.</target>
-        <note>Line: 35</note>
-      </trans-unit>
-      <trans-unit id="5b48d0f5735d2f9b73a8f3ec7c4858ba">
-        <source>Module file</source>
-        <target>Module file</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="92fbf0e5d97b8afd7e73126b52bdc4bb">
-        <source>Choose a file</source>
-        <target>Choose a file</target>
-        <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="8634e049945e0e8562673698a1abb485">
-        <source>Upload this module</source>
-        <target>Upload this module</target>
-        <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="f2063dc3ff5945f5bf0c430da46e1109">
-        <source>An upgrade is available for some of your modules!</source>
-        <target>An upgrade is available for some of your modules!</target>
-        <note>Line: 70</note>
-      </trans-unit>
-      <trans-unit id="d78986947356ddd37b43d57df289dee9">
-        <source>Favorites</source>
-        <target>Favorites</target>
-        <note>Line: 96</note>
-      </trans-unit>
-      <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
-        <source>All</source>
-        <target>All</target>
-        <note>Line: 99</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/page_header_toolbar-legacy.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="28080c3603fb7e10f228381b181cae2c">
-        <source>List of modules</source>
-        <target>List of modules</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="71803586f945801418d03befeb4acd99">
-        <source>Update all</source>
-        <target>Update all</target>
-        <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="a3105b7aa9edb1c07765bfdcdc2405b8">
-        <source>Check for update</source>
-        <target>Check for update</target>
-        <note>Line: 55</note>
-      </trans-unit>
-      <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0">
-        <source>Help</source>
-        <target>Help</target>
-        <note>Line: 78</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/quickview.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3424c86a3f3fdfcff4d8f310912ee82b">
-        <source>(%s votes)</source>
-        <target>(%s votes)</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="268cb3857932e260b03bf1334220f3bc">
-        <source>(%s vote)</source>
-        <target>(%s vote)</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
-        <source>Description</source>
-        <target>Description</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="7a66d21cf5a4354933980f6d79ec78a4">
-        <source>Merchant benefits</source>
-        <target>Merchant benefits</target>
-        <note>Line: 68</note>
-      </trans-unit>
-      <trans-unit id="8530d0ebaf22889c1b42061824f3769b">
-        <source>Install module</source>
-        <target>Install module</target>
-        <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="a6642661dcfc0e354c61f4e8b8b9ec5a">
-        <source>View on PrestaShop Addons</source>
-        <target>View on PrestaShop Addons</target>
-        <note>Line: 101</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/readmore-header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9e3669d19b675bd57058fd4664205d2a">
-        <source>v</source>
-        <target>v</target>
-        <note>Line: 30</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f248df0d4d7e4ae98485c5df8af58945">
-        <source>This module is available for free thanks to our partner.</source>
-        <target>This module is available for free thanks to our partner.</target>
-        <note>Line: 40</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ddd8eef6f86868a07f62b0e3810711f0">
-        <source>Not Installed</source>
-        <target>Not Installed</target>
-        <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="98dd43dfae05b11befe1f140e0ec787a">
-        <source>Installed</source>
-        <target>Installed</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="4d2fa24347806e2bcc9925a040f78382">
-        <source>More modules on addons.prestashop.com</source>
-        <target>More modules on addons.prestashop.com</target>
-        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -693,9 +329,9 @@
         <target>Wholesale price</target>
         <note>Line: 37</note>
       </trans-unit>
-      <trans-unit id="52eb5928a34db3e3da7ba52b0644273b">
-        <source>EAN13</source>
-        <target>EAN13</target>
+      <trans-unit id="a7b4930bf2fc5d57eec6b03097200152">
+        <source>EAN-13</source>
+        <target>EAN-13</target>
         <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
@@ -713,14 +349,9 @@
         <target>N/A</target>
         <note>Line: 69</note>
       </trans-unit>
-      <trans-unit id="a7b4930bf2fc5d57eec6b03097200152">
-        <source>EAN-13</source>
-        <target>EAN-13</target>
-        <note>Line: 39</note>
-      </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
@@ -732,15 +363,6 @@
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 40</note>
       </trans-unit>
-      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
-        <source>%d</source>
-        <target>%d</target>
-        <note>Line: 52</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
         <target>You must use this syntax in your translations. Here are several examples:</target>
@@ -748,8 +370,22 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
+        <source>%d</source>
+        <target>%d</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/helpers/calendar/calendar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>Line: 87</note>
+      </trans-unit>
       <trans-unit id="08ee10c9fa141c53ae44667dcc1adf1e">
         <source>Date range</source>
         <target>Date range</target>
@@ -1014,25 +650,25 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/dataviz/graph.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
-        <source>Customers</source>
-        <target>Customers</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
         <note>Line: 39</note>
       </trans-unit>
-      <trans-unit id="1f08d08fd864b99cbeebd88b9a0784a7">
-        <source>Income</source>
-        <target>Income</target>
-        <note>Line: 45</note>
-      </trans-unit>
       <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
         <source>Message</source>
         <target>Message</target>
         <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="1f08d08fd864b99cbeebd88b9a0784a7">
+        <source>Income</source>
+        <target>Income</target>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="e7935ae6c516d89405ec532359d2d75a">
         <source>Traffic</source>
@@ -1053,11 +689,6 @@
         <target>Group:</target>
         <note>Line: 99</note>
       </trans-unit>
-      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
-        <source>All stores</source>
-        <target>All stores</target>
-        <note>Line: 84</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1075,32 +706,32 @@
       <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
         <source>Now</source>
         <target>Now</target>
-        <note>Line: 811</note>
+        <note>Line: 808</note>
       </trans-unit>
       <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
         <source>Done</source>
         <target>Done</target>
-        <note>Line: 812</note>
+        <note>Line: 809</note>
       </trans-unit>
       <trans-unit id="3964fd83339fec5014c831822005653a">
         <source>Choose Time</source>
         <target>Choose Time</target>
-        <note>Line: 818</note>
+        <note>Line: 815</note>
       </trans-unit>
       <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
         <source>Time</source>
         <target>Time</target>
-        <note>Line: 819</note>
+        <note>Line: 816</note>
       </trans-unit>
       <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
         <source>Hour</source>
         <target>Hour</target>
-        <note>Line: 820</note>
+        <note>Line: 817</note>
       </trans-unit>
       <trans-unit id="62902641c38f3a4a8eb3212454360e24">
         <source>Minute</source>
         <target>Minute</target>
-        <note>Line: 821</note>
+        <note>Line: 818</note>
       </trans-unit>
     </body>
   </file>
@@ -1153,11 +784,6 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
-        <source>From</source>
-        <target>From</target>
-        <note>Line: 358</note>
-      </trans-unit>
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
         <target>Please fill at least one field to perform a search in this list.</target>
@@ -1178,6 +804,11 @@
         <target>Export to SQL Manager</target>
         <note>Line: 174</note>
       </trans-unit>
+      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
+        <source>and stay</source>
+        <target>and stay</target>
+        <note>Line: 206</note>
+      </trans-unit>
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
         <target>Shop group</target>
@@ -1187,6 +818,11 @@
         <source>To</source>
         <target>To</target>
         <note>Line: 365</note>
+      </trans-unit>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
+        <note>Line: 417</note>
       </trans-unit>
     </body>
   </file>
@@ -1211,11 +847,6 @@
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
         <note>Line: 224</note>
-      </trans-unit>
-      <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
-        <source>You can't change the value of this configuration field in the context of this shop.</source>
-        <target>You can't change the value of this configuration field in the context of this shop.</target>
-        <note>Line: 331</note>
       </trans-unit>
       <trans-unit id="fe73eda0f6569ec502fe52716a648370">
         <source>You can't change the value of this configuration field in this store's context.</source>
@@ -1250,14 +881,9 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
-        <source>%s group</source>
-        <target>%s group</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="804ccd6219996d12eda865d1c0707423">
-        <source>All shops</source>
-        <target>All shops</target>
+      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
+        <source>All stores</source>
+        <target>All stores</target>
         <note>Line: 32</note>
       </trans-unit>
     </body>
@@ -1380,39 +1006,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
-        <source>and stay</source>
-        <target>and stay</target>
-        <note>Line: 79</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/non-responsive.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ed95254a7068ffd8729fd94d07347d67">
-        <source>Oh no!</source>
-        <target>Oh no!</target>
-        <note>Line: 26</note>
-      </trans-unit>
-      <trans-unit id="93e2c2e3d9591e5d54b0e5e6f81d36e0">
-        <source>The mobile version of this page is not available yet.</source>
-        <target>The mobile version of this page is not available yet.</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="56c42d822d794bc33d5e25bc53cd385b">
-        <source>Please use a desktop computer to access this page, until is adapted to mobile.</source>
-        <target>Please use a desktop computer to access this page, until is adapted to mobile.</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="2d439011ecebc222e1feb2e3e005c0ac">
-        <source>Thank you.</source>
-        <target>Thank you.</target>
-        <note>Line: 34</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/new-theme/template/components/layout/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="855d2bf59043b81e76bc931e685a4f58">
@@ -1427,102 +1020,61 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
+        <source>%s group</source>
+        <target>%s group</target>
+        <note>Line: 38</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
         <source>List</source>
         <target>List</target>
-        <note>Line: 654</note>
+        <note>Line: 666</note>
       </trans-unit>
       <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
         <source>View details</source>
         <target>View details</target>
-        <note>Line: 660</note>
+        <note>Line: 672</note>
       </trans-unit>
       <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
         <source>Options</source>
         <target>Options</target>
-        <note>Line: 665</note>
+        <note>Line: 677</note>
       </trans-unit>
       <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
         <source>Generator</source>
         <target>Generator</target>
-        <note>Line: 670</note>
+        <note>Line: 682</note>
       </trans-unit>
       <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
         <source>%s: %s</source>
         <target>%s: %s</target>
-        <note>Line: 766</note>
+        <note>Line: 778</note>
       </trans-unit>
       <trans-unit id="921d54865f8169b84c90d4335c256494">
         <source>filter by %s</source>
         <target>filter by %s</target>
-        <note>Line: 773</note>
+        <note>Line: 785</note>
       </trans-unit>
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>Line: 4060</note>
+        <note>Line: 3983</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>Line: 1216</note>
+        <note>Line: 1228</note>
       </trans-unit>
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>Line: 1325</note>
-      </trans-unit>
-      <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
-        <source>Do you really want to uninstall this module?</source>
-        <target>Do you really want to uninstall this module?</target>
-        <note>Line: 4371</note>
-      </trans-unit>
-      <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
-        <source>Disable this module</source>
-        <target>Disable this module</target>
-        <note>Line: 4373</note>
-      </trans-unit>
-      <trans-unit id="668c99c1164d5348f99c0878770b53a8">
-        <source>Enable this module for all shops</source>
-        <target>Enable this module for all shops</target>
-        <note>Line: 4374</note>
-      </trans-unit>
-      <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
-        <source>Disable on mobiles</source>
-        <target>Disable on mobiles</target>
-        <note>Line: 4377</note>
-      </trans-unit>
-      <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
-        <source>Disable on tablets</source>
-        <target>Disable on tablets</target>
-        <note>Line: 4378</note>
-      </trans-unit>
-      <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
-        <source>Disable on computers</source>
-        <target>Disable on computers</target>
-        <note>Line: 4379</note>
-      </trans-unit>
-      <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
-        <source>Display on mobiles</source>
-        <target>Display on mobiles</target>
-        <note>Line: 4380</note>
-      </trans-unit>
-      <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
-        <source>Display on tablets</source>
-        <target>Display on tablets</target>
-        <note>Line: 4381</note>
-      </trans-unit>
-      <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
-        <source>Display on computers</source>
-        <target>Display on computers</target>
-        <note>Line: 4382</note>
-      </trans-unit>
-      <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
-        <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
-        <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
-        <note>Line: 4389</note>
+        <note>Line: 1337</note>
       </trans-unit>
     </body>
   </file>
@@ -1537,25 +1089,10 @@
   </file>
   <file original="controllers/admin/AdminModulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3182ea023795eb83ed0ce3beea5beb73">
-        <source>Other Modules</source>
-        <target>Other Modules</target>
-        <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="8290fb626ffacf21450997f25967efeb">
-        <source>Module not found</source>
-        <target>Module not found</target>
-        <note>Line: 651</note>
-      </trans-unit>
-      <trans-unit id="0c81f6a8e4b7b1d0a812d7285289f17d">
-        <source>Modules to update</source>
-        <target>Modules to update</target>
-        <note>Line: 1156</note>
-      </trans-unit>
       <trans-unit id="0f0c014bcfe255c6749d8e665ff8bb4e">
         <source>Translate this module</source>
         <target>Translate this module</target>
-        <note>Line: 1216</note>
+        <note>Line: 211</note>
       </trans-unit>
     </body>
   </file>
@@ -1564,172 +1101,162 @@
       <trans-unit id="43775ce1723057d9e3d21e5969324fd1">
         <source>Straight rows of keys are easy to guess</source>
         <target>Straight rows of keys are easy to guess</target>
-        <note>Line: 259</note>
+        <note>Line: 227</note>
       </trans-unit>
       <trans-unit id="bed5e315d09dedac517831b95571a7f4">
         <source>Short keyboard patterns are easy to guess</source>
         <target>Short keyboard patterns are easy to guess</target>
-        <note>Line: 260</note>
+        <note>Line: 228</note>
       </trans-unit>
       <trans-unit id="37ffb1976d12530b5c07821baaf5be39">
         <source>Use a longer keyboard pattern with more turns</source>
         <target>Use a longer keyboard pattern with more turns</target>
-        <note>Line: 261</note>
+        <note>Line: 229</note>
       </trans-unit>
       <trans-unit id="773ac0d662987369abf46eebc9000a09">
         <source>Repeats like "aaa" are easy to guess</source>
         <target>Repeats like "aaa" are easy to guess</target>
-        <note>Line: 262</note>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="97681c90722711e8081dcbd10620502e">
         <source>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</source>
         <target>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</target>
-        <note>Line: 263</note>
-      </trans-unit>
-      <trans-unit id="c0072984cd1f6cb90856cd8f00a4ad3b">
-        <source>Sequences like abc or 6543 are easy to guess</source>
-        <target>Sequences like abc or 6543 are easy to guess</target>
-        <note>Line: 264</note>
-      </trans-unit>
-      <trans-unit id="25096ab4fbb9994547ace751ca107515">
-        <source>Recent years are easy to guess</source>
-        <target>Recent years are easy to guess</target>
-        <note>Line: 265</note>
-      </trans-unit>
-      <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
-        <source>Dates are often easy to guess</source>
-        <target>Dates are often easy to guess</target>
-        <note>Line: 266</note>
-      </trans-unit>
-      <trans-unit id="954a21d373e3f1bd2446606700a37217">
-        <source>This is a top-10 common password</source>
-        <target>This is a top-10 common password</target>
-        <note>Line: 267</note>
-      </trans-unit>
-      <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
-        <source>This is a top-100 common password</source>
-        <target>This is a top-100 common password</target>
-        <note>Line: 268</note>
-      </trans-unit>
-      <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
-        <source>This is a very common password</source>
-        <target>This is a very common password</target>
-        <note>Line: 269</note>
-      </trans-unit>
-      <trans-unit id="c92578d4545d5aceb430aed0c7285398">
-        <source>This is similar to a commonly used password</source>
-        <target>This is similar to a commonly used password</target>
-        <note>Line: 270</note>
-      </trans-unit>
-      <trans-unit id="9769bc6be635c708fee72d29f5a08f30">
-        <source>A word by itself is easy to guess</source>
-        <target>A word by itself is easy to guess</target>
-        <note>Line: 271</note>
-      </trans-unit>
-      <trans-unit id="83812066e07a07e691d165c97ba89735">
-        <source>Names and surnames by themselves are easy to guess</source>
-        <target>Names and surnames by themselves are easy to guess</target>
-        <note>Line: 272</note>
-      </trans-unit>
-      <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
-        <source>Common names and surnames are easy to guess</source>
-        <target>Common names and surnames are easy to guess</target>
-        <note>Line: 273</note>
-      </trans-unit>
-      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
-        <source>Very weak</source>
-        <target>Very weak</target>
-        <note>Line: 274</note>
-      </trans-unit>
-      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
-        <source>Weak</source>
-        <target>Weak</target>
-        <note>Line: 275</note>
-      </trans-unit>
-      <trans-unit id="b1897515d548a960afe49ecf66a29021">
-        <source>Average</source>
-        <target>Average</target>
-        <note>Line: 276</note>
-      </trans-unit>
-      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
-        <source>Strong</source>
-        <target>Strong</target>
-        <note>Line: 277</note>
-      </trans-unit>
-      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
-        <source>Very strong</source>
-        <target>Very strong</target>
-        <note>Line: 278</note>
-      </trans-unit>
-      <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
-        <source>Use a few words, avoid common phrases</source>
-        <target>Use a few words, avoid common phrases</target>
-        <note>Line: 279</note>
-      </trans-unit>
-      <trans-unit id="db3fe1774e30b4103c663805d999043b">
-        <source>No need for symbols, digits, or uppercase letters</source>
-        <target>No need for symbols, digits, or uppercase letters</target>
-        <note>Line: 280</note>
-      </trans-unit>
-      <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
-        <source>Avoid repeated words and characters</source>
-        <target>Avoid repeated words and characters</target>
-        <note>Line: 281</note>
-      </trans-unit>
-      <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
-        <source>Avoid sequences</source>
-        <target>Avoid sequences</target>
-        <note>Line: 282</note>
-      </trans-unit>
-      <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
-        <source>Avoid recent years</source>
-        <target>Avoid recent years</target>
-        <note>Line: 283</note>
-      </trans-unit>
-      <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
-        <source>Avoid years that are associated with you</source>
-        <target>Avoid years that are associated with you</target>
-        <note>Line: 284</note>
-      </trans-unit>
-      <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
-        <source>Avoid dates and years that are associated with you</source>
-        <target>Avoid dates and years that are associated with you</target>
-        <note>Line: 285</note>
-      </trans-unit>
-      <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
-        <source>Capitalization doesn't help very much</source>
-        <target>Capitalization doesn't help very much</target>
-        <note>Line: 286</note>
-      </trans-unit>
-      <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
-        <source>All-uppercase is almost as easy to guess as all-lowercase</source>
-        <target>All-uppercase is almost as easy to guess as all-lowercase</target>
-        <note>Line: 287</note>
-      </trans-unit>
-      <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
-        <source>Reversed words aren't much harder to guess</source>
-        <target>Reversed words aren't much harder to guess</target>
-        <note>Line: 288</note>
-      </trans-unit>
-      <trans-unit id="e3c220047c05727a174783f106b69f2b">
-        <source>Predictable substitutions like '@' instead of 'a' don't help very much</source>
-        <target>Predictable substitutions like '@' instead of 'a' don't help very much</target>
-        <note>Line: 289</note>
-      </trans-unit>
-      <trans-unit id="a2bfda43aef35df5f7edb8f8de1f5f30">
-        <source>Add another word or two. Uncommon words are better.</source>
-        <target>Add another word or two. Uncommon words are better.</target>
-        <note>Line: 290</note>
+        <note>Line: 231</note>
       </trans-unit>
       <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
         <source>Sequences like "abc" or "6543" are easy to guess</source>
         <target>Sequences like "abc" or "6543" are easy to guess</target>
-        <note>Line: 264</note>
+        <note>Line: 232</note>
+      </trans-unit>
+      <trans-unit id="25096ab4fbb9994547ace751ca107515">
+        <source>Recent years are easy to guess</source>
+        <target>Recent years are easy to guess</target>
+        <note>Line: 233</note>
+      </trans-unit>
+      <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
+        <source>Dates are often easy to guess</source>
+        <target>Dates are often easy to guess</target>
+        <note>Line: 234</note>
+      </trans-unit>
+      <trans-unit id="954a21d373e3f1bd2446606700a37217">
+        <source>This is a top-10 common password</source>
+        <target>This is a top-10 common password</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
+        <source>This is a top-100 common password</source>
+        <target>This is a top-100 common password</target>
+        <note>Line: 236</note>
+      </trans-unit>
+      <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
+        <source>This is a very common password</source>
+        <target>This is a very common password</target>
+        <note>Line: 237</note>
+      </trans-unit>
+      <trans-unit id="c92578d4545d5aceb430aed0c7285398">
+        <source>This is similar to a commonly used password</source>
+        <target>This is similar to a commonly used password</target>
+        <note>Line: 238</note>
+      </trans-unit>
+      <trans-unit id="9769bc6be635c708fee72d29f5a08f30">
+        <source>A word by itself is easy to guess</source>
+        <target>A word by itself is easy to guess</target>
+        <note>Line: 239</note>
+      </trans-unit>
+      <trans-unit id="83812066e07a07e691d165c97ba89735">
+        <source>Names and surnames by themselves are easy to guess</source>
+        <target>Names and surnames by themselves are easy to guess</target>
+        <note>Line: 240</note>
+      </trans-unit>
+      <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
+        <source>Common names and surnames are easy to guess</source>
+        <target>Common names and surnames are easy to guess</target>
+        <note>Line: 241</note>
+      </trans-unit>
+      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
+        <source>Very weak</source>
+        <target>Very weak</target>
+        <note>Line: 242</note>
+      </trans-unit>
+      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
+        <source>Weak</source>
+        <target>Weak</target>
+        <note>Line: 243</note>
+      </trans-unit>
+      <trans-unit id="b1897515d548a960afe49ecf66a29021">
+        <source>Average</source>
+        <target>Average</target>
+        <note>Line: 244</note>
+      </trans-unit>
+      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
+        <source>Strong</source>
+        <target>Strong</target>
+        <note>Line: 245</note>
+      </trans-unit>
+      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
+        <source>Very strong</source>
+        <target>Very strong</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
+        <source>Use a few words, avoid common phrases</source>
+        <target>Use a few words, avoid common phrases</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="db3fe1774e30b4103c663805d999043b">
+        <source>No need for symbols, digits, or uppercase letters</source>
+        <target>No need for symbols, digits, or uppercase letters</target>
+        <note>Line: 248</note>
+      </trans-unit>
+      <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
+        <source>Avoid repeated words and characters</source>
+        <target>Avoid repeated words and characters</target>
+        <note>Line: 249</note>
+      </trans-unit>
+      <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
+        <source>Avoid sequences</source>
+        <target>Avoid sequences</target>
+        <note>Line: 250</note>
+      </trans-unit>
+      <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
+        <source>Avoid recent years</source>
+        <target>Avoid recent years</target>
+        <note>Line: 251</note>
+      </trans-unit>
+      <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
+        <source>Avoid years that are associated with you</source>
+        <target>Avoid years that are associated with you</target>
+        <note>Line: 252</note>
+      </trans-unit>
+      <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
+        <source>Avoid dates and years that are associated with you</source>
+        <target>Avoid dates and years that are associated with you</target>
+        <note>Line: 253</note>
+      </trans-unit>
+      <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
+        <source>Capitalization doesn't help very much</source>
+        <target>Capitalization doesn't help very much</target>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
+        <source>All-uppercase is almost as easy to guess as all-lowercase</source>
+        <target>All-uppercase is almost as easy to guess as all-lowercase</target>
+        <note>Line: 255</note>
+      </trans-unit>
+      <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
+        <source>Reversed words aren't much harder to guess</source>
+        <target>Reversed words aren't much harder to guess</target>
+        <note>Line: 256</note>
       </trans-unit>
       <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
         <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
         <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
-        <note>Line: 289</note>
+        <note>Line: 257</note>
+      </trans-unit>
+      <trans-unit id="a2bfda43aef35df5f7edb8f8de1f5f30">
+        <source>Add another word or two. Uncommon words are better.</source>
+        <target>Add another word or two. Uncommon words are better.</target>
+        <note>Line: 258</note>
       </trans-unit>
     </body>
   </file>
@@ -2113,31 +1640,7 @@ According to the Rec.30;Art.7(1)(c)</target>
       <trans-unit id="2871afea416378d2772937c4d67d6c2c">
         <source>Generate password</source>
         <target>Generate password</target>
-        <note>Line: 122</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="26ce1315d2bff025e8fb8a0c6259e58c">
-        <source>Change password...</source>
-        <target>Change password...</target>
-        <note>Line: 80</note>
-      </trans-unit>
-      <trans-unit id="d9c2d86a66aa5a45326c3757f3a272cc">
-        <source>Current password</source>
-        <target>Current password</target>
-        <note>Line: 89</note>
-      </trans-unit>
-      <trans-unit id="3544848f820b9d94a3f3871a382cf138">
-        <source>New password</source>
-        <target>New password</target>
-        <note>Line: 95</note>
-      </trans-unit>
-      <trans-unit id="4c231e0da3eaaa6a9752174f7f9cfb31">
-        <source>Confirm password</source>
-        <target>Confirm password</target>
-        <note>Line: 104</note>
+        <note>Line: 124</note>
       </trans-unit>
     </body>
   </file>

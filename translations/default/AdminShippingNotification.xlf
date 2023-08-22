@@ -106,7 +106,7 @@
       <trans-unit id="407ec7ad396ed1f5fc78bc006946af12">
         <source>An error occurred while updating carrier information.</source>
         <target>An error occurred while updating carrier information.</target>
-        <note>Line: 532</note>
+        <note>Line: 513</note>
       </trans-unit>
     </body>
   </file>
@@ -115,7 +115,7 @@
       <trans-unit id="0e8c87584e926658c275b850477aa3ff">
         <source>An error occurred while updating the free shipping status.</source>
         <target>An error occurred while updating the free shipping status.</target>
-        <note>Line: 371</note>
+        <note>Line: 369</note>
       </trans-unit>
     </body>
   </file>

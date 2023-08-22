@@ -7,20 +7,15 @@
         <target>Contact information</target>
         <note>Line: 49</note>
       </trans-unit>
-      <trans-unit id="3bef52cd2426ac538e6230c70d7b5929">
-        <source>Allows you to display additional information about your store's customer service.</source>
-        <target>Allows you to display additional information about your store's customer service.</target>
-        <note>Line: 51</note>
+      <trans-unit id="0d9dbffc83006542be2bab7419b6ad75">
+        <source>Let your customers know how to reach you, display contact information on your store.</source>
+        <target>Let your customers know how to reach you, display contact information on your store.</target>
+        <note>Line: 50</note>
       </trans-unit>
       <trans-unit id="fe460e42fcf313ca4da2d89767690fbc">
         <source>Your theme needs to be compatible with this feature</source>
         <target>Your theme needs to be compatible with this feature</target>
         <note>Line: 150</note>
-      </trans-unit>
-      <trans-unit id="0d9dbffc83006542be2bab7419b6ad75">
-        <source>Let your customers know how to reach you, display contact information on your store.</source>
-        <target>Let your customers know how to reach you, display contact information on your store.</target>
-        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>

@@ -7,6 +7,11 @@
         <target>Dashboard Activity</target>
         <note>Line: 42</note>
       </trans-unit>
+      <trans-unit id="db2564248ce7ffe0fa85f4f6d049005c">
+        <source>Check in one glance what is happening on your store with a list of KPI on your dashboard.</source>
+        <target>Check in one glance what is happening on your store with a list of KPI on your dashboard.</target>
+        <note>Line: 43</note>
+      </trans-unit>
       <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
         <source>(from %s to %s)</source>
         <target>(from %s to %s)</target>
@@ -56,11 +61,6 @@
         <source>How long (in hours) after the last action a cart is no longer to be considered as abandoned (default: 24 hrs).</source>
         <target>How long (in hours) after the last action a cart is no longer to be considered as abandoned (default: 24 hrs).</target>
         <note>Line: 400</note>
-      </trans-unit>
-      <trans-unit id="db2564248ce7ffe0fa85f4f6d049005c">
-        <source>Check in one glance what is happening on your store with a list of KPI on your dashboard.</source>
-        <target>Check in one glance what is happening on your store with a list of KPI on your dashboard.</target>
-        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>
@@ -135,11 +135,6 @@
         <source>Traffic</source>
         <target>Traffic</target>
         <note>Line: 142</note>
-      </trans-unit>
-      <trans-unit id="1a4aeb4ca6cd736a4a7b25d8657d9972">
-        <source>Link to your Google Analytics account</source>
-        <target>Link to your Google Analytics account</target>
-        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
         <source>Visits</source>

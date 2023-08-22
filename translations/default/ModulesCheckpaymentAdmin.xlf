@@ -7,6 +7,11 @@
         <target>Payments by check</target>
         <note>Line: 64</note>
       </trans-unit>
+      <trans-unit id="08aa5198d33cc5b74602b3235539321c">
+        <source>Display contact details blocks to make it easy for customers to pay by check on your store.</source>
+        <target>Display contact details blocks to make it easy for customers to pay by check on your store.</target>
+        <note>Line: 65</note>
+      </trans-unit>
       <trans-unit id="e09484ba6c16bc20236b63cc0d87ee95">
         <source>Are you sure you want to delete these details?</source>
         <target>Are you sure you want to delete these details?</target>
@@ -56,16 +61,6 @@
         <source>Address where the check should be sent to.</source>
         <target>Address where the check should be sent to.</target>
         <note>Line: 225</note>
-      </trans-unit>
-      <trans-unit id="bb56f3a51352fe2ddce129260770c440">
-        <source>%amount% (tax incl.)</source>
-        <target>%amount% (tax incl.)</target>
-        <note>Line: 269</note>
-      </trans-unit>
-      <trans-unit id="08aa5198d33cc5b74602b3235539321c">
-        <source>Display contact details blocks to make it easy for customers to pay by check on your store.</source>
-        <target>Display contact details blocks to make it easy for customers to pay by check on your store.</target>
-        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
         <source>(tax incl.)</source>

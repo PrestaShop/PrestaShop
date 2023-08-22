@@ -45,120 +45,105 @@
   </file>
   <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="48658689e18e12e430668e1f2419b0d0">
-        <source>JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.</source>
-        <target>JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.</target>
-        <note>Line: 279</note>
-      </trans-unit>
-      <trans-unit id="c031c7c1498d22082b4dcbac4fac27d4">
-        <source>WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".</source>
-        <target>WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".</target>
-        <note>Line: 280</note>
+      <trans-unit id="8f12dd450ceed5b4da6a4d6d11b1bd12">
+        <source>Choose which image formats you want to be generated. Base image will always have .jpg extension, other formats will have .webp or .avif.</source>
+        <target>Choose which image formats you want to be generated. Base image will always have .jpg extension, other formats will have .webp or .avif.</target>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="576d1a59cae85fc41c31d27433e17d37">
         <source>Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).</source>
         <target>Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).</target>
-        <note>Line: 195</note>
+        <note>Line: 187</note>
       </trans-unit>
       <trans-unit id="49caff79e5dca417b2b2c37fc7ef61af">
         <source>Recommended: 90.</source>
         <target>Recommended: 90.</target>
-        <note>Line: 178</note>
+        <note>Line: 170</note>
       </trans-unit>
       <trans-unit id="c1a1204bac358b5068446c93ec34bc87">
         <source>PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.</source>
         <target>PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.</target>
-        <note>Line: 186</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="ce1cd64739c592c80f58012b38f5c42f">
         <source>Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).</source>
         <target>Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).</target>
-        <note>Line: 186</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="4b1fa40679bbc322bc244f9f09830681">
         <source>Recommended: 7.</source>
         <target>Recommended: 7.</target>
-        <note>Line: 186</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="d9fe6fa30a999a9a89d81de9faf02df8">
         <source>Recommended: %d.</source>
         <target>Recommended: %d.</target>
-        <note>Line: 200</note>
+        <note>Line: 192</note>
       </trans-unit>
       <trans-unit id="e425d33122fa9152a34d746c60b0903b">
         <source>The maximum file size of pictures that customers can upload to customize a product (in bytes).</source>
         <target>The maximum file size of pictures that customers can upload to customize a product (in bytes).</target>
-        <note>Line: 231</note>
+        <note>Line: 223</note>
       </trans-unit>
       <trans-unit id="273ad45c9ec7fbd15b705f1d8b272bdb">
         <source>Width of product customization pictures that customers can upload (in pixels).</source>
         <target>Width of product customization pictures that customers can upload (in pixels).</target>
-        <note>Line: 241</note>
+        <note>Line: 233</note>
       </trans-unit>
       <trans-unit id="fd70ea0d8dbbe0a675d717812b3253fe">
         <source>Height of product customization pictures that customers can upload (in pixels).</source>
         <target>Height of product customization pictures that customers can upload (in pixels).</target>
-        <note>Line: 252</note>
+        <note>Line: 244</note>
       </trans-unit>
-      <trans-unit id="d20e2b80b07e17b035a7c8fe09deca44">
-        <source>This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.</source>
-        <target>This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.</target>
-        <note>Line: 266</note>
+      <trans-unit id="48658689e18e12e430668e1f2419b0d0">
+        <source>JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.</source>
+        <target>JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.</target>
+        <note>Line: 262</note>
       </trans-unit>
-      <trans-unit id="d869df123081c24a3d5f5145cb5368ea">
-        <source>Enable to optimize the display of your images on high pixel density screens.</source>
-        <target>Enable to optimize the display of your images on high pixel density screens.</target>
-        <note>Line: 267</note>
-      </trans-unit>
-      <trans-unit id="bc10c6548185bd449a823faf9c171596">
-        <source>This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.</source>
-        <target>This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.</target>
-        <note>Line: 289</note>
+      <trans-unit id="c031c7c1498d22082b4dcbac4fac27d4">
+        <source>WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".</source>
+        <target>WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".</target>
+        <note>Line: 263</note>
       </trans-unit>
       <trans-unit id="0e10ed6e73d3301bee138a59a23c5de9">
         <source>Letters, underscores and hyphens only (e.g. "small_custom", "cart_medium", "large", "thickbox_extra-large").</source>
         <target>Letters, underscores and hyphens only (e.g. "small_custom", "cart_medium", "large", "thickbox_extra-large").</target>
-        <note>Line: 309</note>
+        <note>Line: 280</note>
       </trans-unit>
       <trans-unit id="845d4d07d4cfe4d1ccadcbab72efe199">
         <source>Maximum image width in pixels.</source>
         <target>Maximum image width in pixels.</target>
-        <note>Line: 318</note>
+        <note>Line: 289</note>
       </trans-unit>
       <trans-unit id="0afd1617fde01be0d13f62668e7ad4f1">
         <source>Maximum image height in pixels.</source>
         <target>Maximum image height in pixels.</target>
-        <note>Line: 327</note>
+        <note>Line: 298</note>
       </trans-unit>
       <trans-unit id="a61f835bd3188471923b2da2717091ec">
         <source>This type will be used for Product images.</source>
         <target>This type will be used for Product images.</target>
-        <note>Line: 335</note>
+        <note>Line: 306</note>
       </trans-unit>
       <trans-unit id="1ad8a6b5f7d9fc6ca597ad11103fab6e">
         <source>This type will be used for Category images.</source>
         <target>This type will be used for Category images.</target>
-        <note>Line: 356</note>
+        <note>Line: 327</note>
       </trans-unit>
       <trans-unit id="f193abb289c02779dabbdae3beb6e9e1">
         <source>This type will be used for Brand images.</source>
         <target>This type will be used for Brand images.</target>
-        <note>Line: 376</note>
+        <note>Line: 347</note>
       </trans-unit>
       <trans-unit id="01e1e70a11e81d8327a7a565869fb268">
         <source>This type will be used for Supplier images.</source>
         <target>This type will be used for Supplier images.</target>
-        <note>Line: 396</note>
+        <note>Line: 367</note>
       </trans-unit>
       <trans-unit id="0096ae72d90ea092533743553617e0a5">
         <source>This type will be used for Store images.</source>
         <target>This type will be used for Store images.</target>
-        <note>Line: 416</note>
-      </trans-unit>
-      <trans-unit id="8f12dd450ceed5b4da6a4d6d11b1bd12">
-        <source>Choose which image formats you want to be generated. Base image will always have .jpg extension, other formats will have .webp or .avif.</source>
-        <target>Choose which image formats you want to be generated. Base image will always have .jpg extension, other formats will have .webp or .avif.</target>
-        <note>Line: 132</note>
+        <note>Line: 387</note>
       </trans-unit>
     </body>
   </file>
@@ -167,7 +152,26 @@
       <trans-unit id="a06929291c19a7718975cb8c24dea961">
         <source>E.g. address, addresses, attachment</source>
         <target>E.g. address, addresses, attachment</target>
-        <note>Line: 362</note>
+        <note>Line: 361</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/CmsPageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8109ac5ba127d78f35c53c148b467848">
+        <source>Edit page category</source>
+        <target>Edit page category</target>
+        <note>Line: 1214</note>
+      </trans-unit>
+      <trans-unit id="cabfe7563d12c3e047000dc5703d9709">
+        <source>Add new page category</source>
+        <target>Add new page category</target>
+        <note>Line: 1221</note>
+      </trans-unit>
+      <trans-unit id="aa6f77f824eff8e896510f1bbaf9f8e5">
+        <source>Add new page</source>
+        <target>Add new page</target>
+        <note>Line: 1227</note>
       </trans-unit>
     </body>
   </file>
@@ -215,20 +219,6 @@
         <source>Because it is not just selling products but also creating a universe, build pages to tell stories and catch your visitors’ interest, to turn them into loyal customers.</source>
         <target>Because it is not just selling products but also creating a universe, build pages to tell stories and catch your visitors’ interest, to turn them into loyal customers.</target>
         <note>Line: 34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Cms/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cabfe7563d12c3e047000dc5703d9709">
-        <source>Add new page category</source>
-        <target>Add new page category</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="aa6f77f824eff8e896510f1bbaf9f8e5">
-        <source>Add new page</source>
-        <target>Add new page</target>
-        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>
@@ -287,11 +277,6 @@
         <target>It is the small icon that appears in browser tabs, next to the title.</target>
         <note>Line: 131</note>
       </trans-unit>
-      <trans-unit id="3fb044d8f9136df5b2f0087f8a8fb0c9">
-        <source>Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!</source>
-        <target>Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!</target>
-        <note>Line: 147</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -310,7 +295,7 @@ Once you enable the "%generate_rtl_label%" option, any RTL-specific file that yo
       <trans-unit id="6894e313abf58dc29e27e6aef50b2f03">
         <source>You must select a shop from the above list if you wish to choose a theme.</source>
         <target>You must select a shop from the above list if you wish to choose a theme.</target>
-        <note>Line: 49</note>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>

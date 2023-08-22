@@ -57,30 +57,31 @@
         <target>Other</target>
         <note>Line: 233</note>
       </trans-unit>
-      <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
-        <source>First name</source>
-        <target>First name</target>
-        <note>Line: 207</note>
-      </trans-unit>
-      <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
-        <source>Last name</source>
-        <target>Last name</target>
-        <note>Line: 209</note>
-      </trans-unit>
-      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
-        <source>Company</source>
-        <target>Company</target>
-        <note>Line: 227</note>
-      </trans-unit>
-      <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
-        <source>Identification number</source>
-        <target>Identification number</target>
-        <note>Line: 231</note>
-      </trans-unit>
     </body>
   </file>
   <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
+        <source>First name</source>
+        <target>First name</target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
+        <source>Last name</source>
+        <target>Last name</target>
+        <note>Line: 131</note>
+      </trans-unit>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Company</target>
+        <note>Line: 147</note>
+      </trans-unit>
+      <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
+        <source>Identification number</source>
+        <target>Identification number</target>
+        <note>Line: 156
+Comment: Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.</note>
+      </trans-unit>
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>
         <target>Social title</target>
@@ -89,7 +90,7 @@
       <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
         <source>Birthdate</source>
         <target>Birthdate</target>
-        <note>Line: 207</note>
+        <note>Line: 209</note>
       </trans-unit>
     </body>
   </file>

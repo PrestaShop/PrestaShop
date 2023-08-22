@@ -11,6 +11,11 @@
   </file>
   <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="26beb437d3323bd4bfb0811b3e891315">
+        <source>%d image(s)</source>
+        <target>%d image(s)</target>
+        <note>Line: 470</note>
+      </trans-unit>
       <trans-unit id="ed9b5732158eef63ac4d236e04101d2b">
         <source>No currency mode for payment module</source>
         <target>No currency mode for payment module</target>
@@ -24,32 +29,27 @@
       <trans-unit id="3a6e70059673992f825826f7cf89278d">
         <source>The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart</source>
         <target>The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart</target>
-        <note>Line: 318</note>
+        <note>Line: 316</note>
       </trans-unit>
       <trans-unit id="b08d3867be98e6fff3233cd40ab8134a">
         <source>Order creation failed</source>
         <target>Order creation failed</target>
-        <note>Line: 404</note>
+        <note>Line: 402</note>
       </trans-unit>
       <trans-unit id="3a1048f8aa3a9f6b604fcf7982811752">
         <source>Warning: the secure key is empty, check your payment account before validation</source>
         <target>Warning: the secure key is empty, check your payment account before validation</target>
-        <note>Line: 409</note>
+        <note>Line: 407</note>
       </trans-unit>
       <trans-unit id="0791970c961c09eb8caaa61aba6a3ca4">
         <source>An error occurred while saving message</source>
         <target>An error occurred while saving message</target>
-        <note>Line: 544</note>
+        <note>Line: 542</note>
       </trans-unit>
       <trans-unit id="ed13b3693357ebed3751cb71cb639e65">
         <source>No carrier</source>
         <target>No carrier</target>
-        <note>Line: 668</note>
-      </trans-unit>
-      <trans-unit id="26beb437d3323bd4bfb0811b3e891315">
-        <source>%d image(s)</source>
-        <target>%d image(s)</target>
-        <note>Line: 472</note>
+        <note>Line: 666</note>
       </trans-unit>
     </body>
   </file>

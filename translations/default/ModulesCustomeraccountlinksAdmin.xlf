@@ -7,10 +7,10 @@
         <target>My Account block</target>
         <note>Line: 46</note>
       </trans-unit>
-      <trans-unit id="a8db2cf030f2420cc62c04c275422a01">
-        <source>Enrich your stats, add a registration progress tab to analyze your visitors’ behavior.</source>
-        <target>Enrich your stats, add a registration progress tab to analyze your visitors’ behavior.</target>
-        <note>Line: 46</note>
+      <trans-unit id="d03c37dd831b71ea0325997c25f89bc1">
+        <source>Welcome your customers with their personal information displayed right on your footer.</source>
+        <target>Welcome your customers with their personal information displayed right on your footer.</target>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="d1a365ea7809ae5831c6d9f86886630c">
         <source>Credit slips</source>
@@ -26,11 +26,6 @@
         <source>Merchandise returns</source>
         <target>Merchandise returns</target>
         <note>Line: 125</note>
-      </trans-unit>
-      <trans-unit id="d03c37dd831b71ea0325997c25f89bc1">
-        <source>Welcome your customers with their personal information displayed right on your footer.</source>
-        <target>Welcome your customers with their personal information displayed right on your footer.</target>
-        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>

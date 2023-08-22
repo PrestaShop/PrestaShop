@@ -5,17 +5,17 @@
       <trans-unit id="350bfcb1e3cfb28ddff48ce525d4f139">
         <source>DD</source>
         <target>DD</target>
-        <note>Line: 940</note>
+        <note>Line: 830</note>
       </trans-unit>
       <trans-unit id="ad05f78187c942f9dd521605fa81f1ba">
         <source>MM</source>
         <target>MM</target>
-        <note>Line: 941</note>
+        <note>Line: 831</note>
       </trans-unit>
       <trans-unit id="8df34bb962577b90d574a51ed2ca757f">
         <source>YYYY</source>
         <target>YYYY</target>
-        <note>Line: 942</note>
+        <note>Line: 832</note>
       </trans-unit>
     </body>
   </file>
@@ -29,7 +29,7 @@
       <trans-unit id="b8760dae14ad4963c909f83424de3e7f">
         <source>(E.g.: %date_format%)</source>
         <target>(E.g.: %date_format%)</target>
-        <note>Line: 215</note>
+        <note>Line: 217</note>
       </trans-unit>
     </body>
   </file>

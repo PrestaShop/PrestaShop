@@ -5,7 +5,7 @@
       <trans-unit id="a9e3d6296e9b194ee466230d8438935a">
         <source>Receive offers from our partners</source>
         <target>Receive offers from our partners</target>
-        <note>Line: 225</note>
+        <note>Line: 227</note>
       </trans-unit>
     </body>
   </file>
@@ -18,76 +18,76 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_customeraccountlinks/ps_customeraccountlinks.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_customeraccountlinks/ps_customeraccountlinks.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f2fc7490cbdb0db5cd6f1a4e7edb0da1">
         <source>Your account</source>
         <target>Your account</target>
-        <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="a82868319826fb092b73968e661b5b38">
-        <source>Vouchers</source>
-        <target>Vouchers</target>
-        <note>Line: 56</note>
+        <note>Line: 27</note>
       </trans-unit>
       <trans-unit id="d1a365ea7809ae5831c6d9f86886630c">
         <source>Credit slips</source>
         <target>Credit slips</target>
-        <note>Line: 53</note>
+        <note>Line: 40</note>
       </trans-unit>
-      <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb">
-        <source>Log me out</source>
-        <target>Log me out</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="d4151a9a3959bdd43690735737034f27">
-        <source>Log in to your customer account</source>
-        <target>Log in to your customer account</target>
-        <note>Line: 65</note>
+      <trans-unit id="a82868319826fb092b73968e661b5b38">
+        <source>Vouchers</source>
+        <target>Vouchers</target>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
         <source>Merchandise returns</source>
         <target>Merchandise returns</target>
-        <note>Line: 59</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>
         <target>Information</target>
-        <note>Line: 43</note>
+        <note>Line: 30</note>
       </trans-unit>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
         <target>Addresses</target>
-        <note>Line: 45</note>
+        <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="da4791bc9700aca963b560fcb7db0605">
         <source>Add first address</source>
         <target>Add first address</target>
-        <note>Line: 47</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>Line: 50</note>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="11035a6e3e5aceb6563c44c6e464e577">
         <source>Order tracking</source>
         <target>Order tracking</target>
-        <note>Line: 64</note>
+        <note>Line: 51</note>
       </trans-unit>
       <trans-unit id="42369faa6a6b243aac58683f3874bf99">
         <source>Create account</source>
         <target>Create account</target>
-        <note>Line: 66</note>
+        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb">
+        <source>Log me out</source>
+        <target>Log me out</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="d4151a9a3959bdd43690735737034f27">
+        <source>Log in to your customer account</source>
+        <target>Log in to your customer account</target>
+        <note>Line: 30</note>
+      </trans-unit>
       <trans-unit id="2cbfb6731610056e1d0aaacde07096c1">
         <source>View my customer account</source>
         <target>View my customer account</target>
-        <note>Line: 39</note>
+        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>
@@ -116,20 +116,6 @@
         <source>Not you? [1]Log out[/1]</source>
         <target>Not you? [1]Log out[/1]</target>
         <note>Line: 26</note>
-      </trans-unit>
-      <trans-unit id="2fdfd506efea08144c0794c32ca8250a">
-        <source>Create an account</source>
-        <target>Create an account</target>
-        <note>Line: 63</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/order-confirmation.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="755bb0834a77079fd1330b555b69e6bf">
-        <source>You have given permission to receive your order in recycled packaging.</source>
-        <target>You have given permission to receive your order in recycled packaging.</target>
-        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -331,6 +317,11 @@
   </file>
   <file original="themes/classic/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="755bb0834a77079fd1330b555b69e6bf">
+        <source>You have given permission to receive your order in recycled packaging.</source>
+        <target>You have given permission to receive your order in recycled packaging.</target>
+        <note>Line: 71</note>
+      </trans-unit>
       <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3">
         <source>Order details</source>
         <target>Order details</target>
@@ -370,16 +361,6 @@
   </file>
   <file original="themes/classic/templates/customer/order-follow.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
-        <source>Order</source>
-        <target>Order</target>
-        <note>Line: 68</note>
-      </trans-unit>
-      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
-        <source>Date issued</source>
-        <target>Date issued</target>
-        <note>Line: 80</note>
-      </trans-unit>
       <trans-unit id="9cf9ab35a1b24314913bb739d25a0b36">
         <source>Here is a list of pending merchandise returns</source>
         <target>Here is a list of pending merchandise returns</target>
@@ -473,6 +454,16 @@
   </file>
   <file original="themes/classic/templates/customer/order-slip.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
+        <source>Order</source>
+        <target>Order</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
+        <source>Date issued</source>
+        <target>Date issued</target>
+        <note>Line: 70</note>
+      </trans-unit>
       <trans-unit id="5996bd24bf8b740b8205e0d9fe1a0709">
         <source>Credit slips you have received after canceled orders.</source>
         <target>Credit slips you have received after canceled orders.</target>
@@ -515,6 +506,11 @@
   </file>
   <file original="themes/classic/templates/customer/registration.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2fdfd506efea08144c0794c32ca8250a">
+        <source>Create an account</source>
+        <target>Create an account</target>
+        <note>Line: 28</note>
+      </trans-unit>
       <trans-unit id="21bdc5689c12595ae14298354d5550d5">
         <source>Already have an account?</source>
         <target>Already have an account?</target>

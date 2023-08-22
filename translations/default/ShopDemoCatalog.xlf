@@ -339,20 +339,15 @@
         <target>2.76 in</target>
         <note>Line: 86</note>
       </trans-unit>
-      <trans-unit id="6b35230c6696a94f05785003d8c6ce85">
-        <source>120g</source>
-        <target>120g</target>
+      <trans-unit id="d576562cd8e23f2a8210efc25387bde2">
+        <source>120 g</source>
+        <target>120 g</target>
         <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="ed931dce45aac99e09664dff538648d3">
         <source>0.31 in</source>
         <target>0.31 in</target>
         <note>Line: 90</note>
-      </trans-unit>
-      <trans-unit id="d576562cd8e23f2a8210efc25387bde2">
-        <source>120 g</source>
-        <target>120 g</target>
-        <note>Line: 88</note>
       </trans-unit>
     </body>
   </file>

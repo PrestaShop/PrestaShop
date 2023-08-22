@@ -5,7 +5,7 @@
       <trans-unit id="34ddce12eacd79ced0e326360863888f">
         <source>No module has been installed.</source>
         <target>No module has been installed.</target>
-        <note>Line: 545</note>
+        <note>Line: 541</note>
       </trans-unit>
     </body>
   </file>
@@ -37,12 +37,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminTagsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
-        <note>Line: 86</note>
+        <note>Line: 68</note>
       </trans-unit>
     </body>
   </file>
@@ -60,16 +60,16 @@
       <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
-        <note>Line: 123</note>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Preferences/PreferencesConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/MerchandiseReturn/Configuration/MerchandiseReturnOptionsConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>Line: 77</note>
+        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>
@@ -102,6 +102,11 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationItemType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
+        <source>Delete item</source>
+        <target>Delete item</target>
+        <note>Line: 137</note>
+      </trans-unit>
       <trans-unit id="400555f6e34160c3f31e229d1f7c88a6">
         <source>Delete selected item from current store?</source>
         <target>Delete selected item from current store?</target>
@@ -114,30 +119,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
-        <source>Delete item</source>
-        <target>Delete item</target>
-        <note>Line: 228</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Type/IntegerMinMaxFilterType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c65196ecfecdada5e94d8d6ed8749789">
         <source>Maximum value must be higher than minimum value.</source>
         <target>Maximum value must be higher than minimum value.</target>
-        <note>Line: 61</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
-        <source>You can't change the value of this configuration field in the context of this shop.</source>
-        <target>You can't change the value of this configuration field in the context of this shop.</target>
-        <note>Line: 72</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
@@ -146,7 +133,7 @@
       <trans-unit id="043f2b6920e5c8a140301051d18d8618">
         <source>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</source>
         <target>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</target>
-        <note>Line: 34</note>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>
@@ -155,12 +142,12 @@
       <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
         <source>Are you sure you want to delete this item?</source>
         <target>Are you sure you want to delete this item?</target>
-        <note>Line: 326</note>
+        <note>Line: 320</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
-        <note>Line: 252</note>
+        <note>Line: 246</note>
       </trans-unit>
     </body>
   </file>

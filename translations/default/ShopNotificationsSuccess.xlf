@@ -48,20 +48,15 @@
   </file>
   <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6e05d9291d7796566bb503890da070bf">
-        <source>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</source>
-        <target>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</target>
+      <trans-unit id="bb6b5a34b7623ca921968d9181a1066b">
+        <source>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</source>
+        <target>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</target>
         <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
         <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>
         <target>Your password has been successfully reset and a confirmation has been sent to your email address: %s</target>
         <note>Line: 215</note>
-      </trans-unit>
-      <trans-unit id="bb6b5a34b7623ca921968d9181a1066b">
-        <source>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</source>
-        <target>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</target>
-        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>
