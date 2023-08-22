@@ -2666,7 +2666,7 @@ class ProductCore extends ObjectModel
                 ORDER BY pa.`id_product_attribute`');
 
         if (!$combinations) {
-            return false;
+            return [];
         }
 
         $combinations = array_column($combinations, null, 'id_product_attribute');
