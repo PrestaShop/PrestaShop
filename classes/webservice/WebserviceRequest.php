@@ -312,6 +312,7 @@ class WebserviceRequestCore
             'order_invoices' => ['description' => 'The Order invoices', 'class' => 'OrderInvoice'],
             'orders' => ['description' => 'The Customers orders', 'class' => 'Order'],
             'order_payments' => ['description' => 'The Order payments', 'class' => 'OrderPayment'],
+            'order_returns' => ['description' => 'The Customers orders returns', 'class' => 'OrderReturn'],
             'order_states' => ['description' => 'The Order statuses', 'class' => 'OrderState'],
             'order_slip' => ['description' => 'The Order slips', 'class' => 'OrderSlip'],
             'price_ranges' => ['description' => 'Price ranges', 'class' => 'RangePrice'],
