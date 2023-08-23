@@ -191,6 +191,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'redirect-option-widget',
                 ],
+                'alert_title' => $this->trans('Default behavior is specified in the Shop Parameters > Product settings page.', 'Admin.Catalog.Help'),
                 'alert_message' => $this->getRedirectionAlertMessages(),
             ])
             ->setRequired([
@@ -205,15 +206,20 @@ class RedirectOptionType extends TranslatorAwareType
      */
     private function getRedirectionAlertMessages(): array
     {
+        $formatParameters = [
+            '[1]' => '<strong>',
+            '[/1]' => '</strong>',
+            '[2]' => '<br>',
+        ];
+
         return [
-            $this->trans('Default behavior is specified in the Shop Parameters > Product settings page.', 'Admin.Catalog.Help'),
-            $this->trans('No redirection (200), display product = Do not redirect anywhere, display product as discontinued and return normal 200 response.', 'Admin.Catalog.Help'),
-            $this->trans('No redirection (404), display product = Do not redirect anywhere, display product as discontinued and return 404 "Not Found" response.', 'Admin.Catalog.Help'),
-            $this->trans('No redirection (410), display product = Do not redirect anywhere, display product as discontinued and return 410 "Gone" response.', 'Admin.Catalog.Help'),
-            $this->trans('No redirection (404), display error page = Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help'),
-            $this->trans('No redirection (410), display error page = Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help'),
-            $this->trans('Permanent redirection (301) = Permanently display another product or category instead.', 'Admin.Catalog.Help'),
-            $this->trans('Temporary redirection (302) = Temporarily display another product or category instead.', 'Admin.Catalog.Help'),
+            $this->trans('[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (404), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return 404 "Not Found" response.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (410), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return 410 "Gone" response.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]Permanent redirection (301)[/1] [2] Permanently display another product or category instead.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]Temporary redirection (302)[/1] [2] Temporarily display another product or category instead.', 'Admin.Catalog.Help', $formatParameters),
         ];
     }
 }

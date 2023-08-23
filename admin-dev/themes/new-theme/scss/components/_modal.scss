@@ -26,6 +26,12 @@
 // stylelint-disable-next-line
 $component-name: modal;
 
+.#{$component-name}.show {
+  .#{$component-name}-dialog {
+    margin: 10px auto;
+  }
+}
+
 .#{$component-name}-iframe {
   .#{$component-name}-dialog {
     width: 90%;
