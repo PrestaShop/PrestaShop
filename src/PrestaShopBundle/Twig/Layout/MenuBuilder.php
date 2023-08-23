@@ -101,17 +101,38 @@ class MenuBuilder
 
     private function convertTabToMenuLink(Tab $tab): MenuLink
     {
-        if (!empty($tab->getRouteName())) {
-            $href = $this->urlGenerator->generate($tab->getRouteName());
-        } else {
-            $href = $this->context->getAdminLink($tab->getClassName());
-        }
-
         return new MenuLink(
             name: $this->getBreadcrumbLabel($tab),
-            href: $href,
+            href: $this->getLinkFromTab($tab),
             icon: 'icon-' . $tab->getClassName(),
         );
+    }
+
+    /**
+     * @return array<int, MenuLink>
+     */
+    public function buildNavigationTabs(Tab $tab): array
+    {
+        $currentLevelTabs = $this->tabRepository->findByParentId($tab->getIdParent());
+        $navigationTabs = [];
+
+        /* @var $currentLevelTab Tab */
+        foreach ($currentLevelTabs as $currentLevelTab) {
+            $tabLang = $currentLevelTab->getTabLangByLanguageId($this->getContextLanguageId());
+            $menuLink = new MenuLink(
+                name: $tabLang ? $tabLang->getName() : $currentLevelTab->getWording(),
+                href: $this->getLinkFromTab($currentLevelTab),
+                attributes: [
+                    'id_tab' => $currentLevelTab->getId(),
+                    'class_name' => $currentLevelTab->getClassName(),
+                    'current' => $currentLevelTab->getId() == $tab->getId(),
+                    'active' => $currentLevelTab->getActive(),
+                ]
+            );
+            $navigationTabs[] = $menuLink;
+        }
+
+        return $navigationTabs;
     }
 
     private function getBreadcrumbLabel(Tab $tab): string
@@ -197,5 +218,16 @@ class MenuBuilder
     private function getLegacyControllerClassName(): ?string
     {
         return $this->requestStack->getMainRequest()->attributes->get('_legacy_controller');
+    }
+
+    private function getLinkFromTab(Tab $tab): string
+    {
+        if (!empty($tab->getRouteName())) {
+            $href = $this->urlGenerator->generate($tab->getRouteName());
+        } else {
+            $href = $this->context->getAdminLink($tab->getClassName());
+        }
+
+        return $href;
     }
 }

@@ -147,30 +147,22 @@
     </div>
   {% endif %}
 
-  {% if currentTabLevel is same as 3 %}
+  {% if currentTabLevel >= 3 %}
     <div class="page-head-tabs" id="head_tabs">
       <ul class="nav nav-pills">
-        {% for level_1 in tabs %}
-          {% for level_2 in level_1.sub_tabs %}
-            {% for level_3 in level_2.sub_tabs %}
-              {% if level_3.current %}
-                {% for level_4 in level_3.sub_tabs %}
-                  {% if level_4.active %}
-                    <li class="nav-item">
-                      <a href="{{ level_4.href }}" id="subtab-{{ level_4.class_name }}"
-                         class="nav-link tab {% if level_4.current %}active current{% endif %}"
-                         data-submenu="{{ level_4.id_tab }}">
-                        {{ level_4.name }}
-                        <span class="notification-container">
-                        <span class="notification-counter"></span>
-                      </span>
-                      </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
-          {% endfor %}
+        {% for tab in navigationTabs %}
+          {% if tab.attributes.active %}
+            <li class="nav-item">
+              <a href="{{ tab.href }}" id="subtab-{{ tab.attributes.class_name }}"
+                 class="nav-link tab {% if tab.attributes.current %}active current{% endif %}"
+                 data-submenu="{{ tab.attributes.id_tab }}">
+                {{ tab.name }}
+                <span class="notification-container">
+                <span class="notification-counter"></span>
+              </span>
+              </a>
+            </li>
+          {% endif %}
         {% endfor %}
       </ul>
     </div>
