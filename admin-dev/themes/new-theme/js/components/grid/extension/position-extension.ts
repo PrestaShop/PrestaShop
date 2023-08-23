@@ -82,6 +82,9 @@ export default class PositionExtension {
             .removeClass('hover');
         },
       );
+
+    this.setReorderButtonLabel();
+    this.getReorderButton().on('click', (event) => this.oncClickReorderButton(event));
   }
 
   /**
@@ -254,5 +257,66 @@ export default class PositionExtension {
     }
 
     return mapping;
+  }
+
+  /**
+   * Check if position reorder is active
+   *
+   * @private
+   */
+  private isPositionsReorderActive(): boolean {
+    return this.grid.getContainer()
+      .find('.ps-sortable-column[data-sort-col-name="position"]')
+      .first()
+      .data('sort-is-current');
+  }
+
+  /**
+   * Get reorder button
+   *
+   * @private
+   */
+  private getReorderButton(): JQuery<HTMLElement> {
+    return this.grid
+      .getContainer()
+      .find('.js-btn-reorder-positions')
+      .first();
+  }
+
+  /**
+   * Set reorder button label in function of sortable column state.
+   *
+   * @private
+   */
+  private setReorderButtonLabel(): void {
+    const rearrangeButton = this.getReorderButton();
+    const label = this.isPositionsReorderActive()
+      ? rearrangeButton.data('label-save')
+      : rearrangeButton.data('label-reorder');
+    rearrangeButton.html(label);
+  }
+
+  /**
+   * Onclick reorder button
+   *
+   * @param event
+   * @private
+   */
+  private oncClickReorderButton(event: JQuery.Event): void {
+    event.preventDefault();
+    // If positions are actually being reordered...
+    if (this.isPositionsReorderActive()) {
+      // we need to reset filters and order by of the grid
+      this.grid.getContainer()
+        .find('.ps-sortable-column')
+        .first()
+        .click();
+    } else {
+      // Else, we need to set the position column as the current sort ordering
+      this.grid.getContainer()
+        .find('.ps-sortable-column[data-sort-col-name="position"]')
+        .first()
+        .click();
+    }
   }
 }

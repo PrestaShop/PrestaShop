@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -204,11 +205,8 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new Filter('position', TextType::class))
+                (new Filter('position', ReorderPositionsButtonType::class))
                     ->setAssociatedColumn('position')
-                    ->setTypeOptions([
-                        'required' => false,
-                    ])
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

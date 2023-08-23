@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -197,13 +198,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('position', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                ],
-            ])
+            ->add((new Filter('position', ReorderPositionsButtonType::class))
             ->setAssociatedColumn('position')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
