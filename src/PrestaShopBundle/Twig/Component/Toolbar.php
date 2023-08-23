@@ -28,13 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/toolbar.html.twig')]
 class Toolbar
 {
     public bool $lockedToAllShopContext;
-    public array $breadcrumbs2;
     public array $toolbarBtn;
     public array|string $title;
     public string $table;
@@ -42,5 +43,30 @@ class Toolbar
     public bool $enableSidebar;
     public int $currentTabLevel;
     public array $tabs;
+    public array $breadcrumbs;
     public bool $useRegularH1Structure = true;
+
+    public function __construct(
+        private readonly HookDispatcherInterface $hookDispatcher,
+        private readonly MenuBuilder $menuBuilder
+    ) {
+    }
+
+    public function mount(): void
+    {
+        $tab = $this->menuBuilder->getCurrentTab();
+        if (null === $tab) {
+            $this->breadcrumbs = [];
+        } else {
+            $tabs = [];
+            $tabs[] = $tab;
+            $ancestorsTab = $this->menuBuilder->getAncestorsTab($tab->getId());
+            if (!empty($ancestorsTab)) {
+                $tabs[] = $ancestorsTab;
+            }
+
+            $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
+            $this->hookDispatcher->dispatchWithParameters('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$this->breadcrumbs]);
+        }
+    }
 }
