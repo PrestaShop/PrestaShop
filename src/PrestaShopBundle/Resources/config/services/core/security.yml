@@ -22,3 +22,6 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
       - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
+
+  PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher:
+    public: false
