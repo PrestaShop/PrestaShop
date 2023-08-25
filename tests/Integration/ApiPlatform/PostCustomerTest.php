@@ -49,7 +49,7 @@ class PostCustomerTest extends ApiTestCase
                     'test1',
                     'test2',
                 ],
-                'reductionPercent' => 10,
+                'reductionPercent' => 10.3,
                 'displayPriceTaxExcluded' => true,
                 'showPrice' => true,
                 'shopIds' => [1],
