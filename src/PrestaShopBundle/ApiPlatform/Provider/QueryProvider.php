@@ -31,21 +31,21 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use Exception;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\Serializer;
 use ReflectionException;
-use ReflectionMethod;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class QueryProvider implements ProviderInterface
 {
+    /**
+     * @param CommandBusInterface $queryBus
+     * @param Serializer $apiPlatformSerializer
+     */
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly iterable $converters,
-        private readonly Serializer $apiPlatformSerializer
+        private readonly Serializer $apiPlatformSerializer,
     ) {
     }
 
@@ -60,7 +60,7 @@ class QueryProvider implements ProviderInterface
      * @throws NoExtraPropertiesFoundException
      * @throws ReflectionException
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         $queryClass = $operation->getExtraProperties()['query'] ?? null;
         $filters = $context['filters'] ?? [];
@@ -72,20 +72,9 @@ class QueryProvider implements ProviderInterface
 
         $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
 
-        //Try to call setter on additional query params
-        if (count($queryParameters)) {
-            foreach ($queryParameters as $param => $value) {
-                if ($reflectionMethod = $this->findSetterMethod($param, $queryClass)) {
-                    $methodParameter = $reflectionMethod->getParameters()[0];
-                    if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($value)) {
-                        $value = $this->findConverter($methodParameter->getType()->getName())->convert($value);
-                    }
-                    $reflectionMethod->invoke($query, $value);
-                }
-            }
-        }
-
         $queryResult = $this->queryBus->handle($query);
+
+        //Handle return type
         $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
 
         if ($operation instanceof CollectionOperationInterface) {
@@ -97,45 +86,5 @@ class QueryProvider implements ProviderInterface
         }
 
         return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
-    }
-
-    /**
-     * @param $type
-     *
-     * @return ConverterInterface
-     *
-     * @throws Exception
-     */
-    private function findConverter($type): ConverterInterface
-    {
-        foreach ($this->converters as $converter) {
-            if ($converter->supports($type)) {
-                return $converter;
-            }
-        }
-
-        throw new Exception(sprintf('Converter for type %s not found', $type));
-    }
-
-    /**
-     * @param $propertyName
-     * @param $queryClass
-     *
-     * @return false|ReflectionMethod
-     */
-    private function findSetterMethod($propertyName, $queryClass): bool|ReflectionMethod
-    {
-        $reflectionClass = new \ReflectionClass($queryClass);
-
-        foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (str_starts_with($method->getName(), 'set')) {
-                $methodName = lcfirst(substr($method->getName(), 3));
-                if ($methodName === $propertyName) {
-                    return $method;
-                }
-            }
-        }
-
-        return false;
     }
 }

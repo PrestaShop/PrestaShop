@@ -26,11 +26,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Converters;
+namespace PrestaShopBundle\ApiPlatform\Denormalizers;
 
-interface ConverterInterface
+use PrestaShop\Decimal\DecimalNumber;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+
+class DecimalNumberDenormalizer implements DenormalizerInterface
 {
-    public function convert(mixed $value);
+    public function denormalize($data, string $type, string $format = null, array $context = [])
+    {
+        return new DecimalNumber((string) $data);
+    }
 
-    public function supports(string $type);
+    public function supportsDenormalization($data, string $type, string $format = null)
+    {
+        return DecimalNumber::class === $type;
+    }
 }

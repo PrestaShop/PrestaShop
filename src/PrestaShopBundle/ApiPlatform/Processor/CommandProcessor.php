@@ -32,8 +32,9 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\Serializer;
+use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class CommandProcessor implements ProcessorInterface
 {
@@ -43,7 +44,7 @@ class CommandProcessor implements ProcessorInterface
      */
     public function __construct(
         private readonly CommandBusInterface $commandBus,
-        private readonly Serializer $apiPlatformSerializer
+        private readonly Serializer $apiPlatformSerializer,
     ) {
     }
 
@@ -56,7 +57,7 @@ class CommandProcessor implements ProcessorInterface
      * @return void
      *
      * @throws NoExtraPropertiesFoundException
-     * @throws ExceptionInterface
+     * @throws ExceptionInterface|ReflectionException
      */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
@@ -67,6 +68,7 @@ class CommandProcessor implements ProcessorInterface
         }
 
         $command = $this->apiPlatformSerializer->denormalize($data, $commandClass);
+
         $this->commandBus->handle($command);
     }
 }

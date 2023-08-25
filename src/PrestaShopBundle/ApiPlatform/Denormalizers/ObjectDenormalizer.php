@@ -26,17 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Converters;
+namespace PrestaShopBundle\ApiPlatform\Denormalizers;
 
-class StringToIntConverter implements ConverterInterface
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+
+class ObjectDenormalizer extends ObjectNormalizer
 {
-    public function convert(mixed $value): int
-    {
-        return (int) $value;
-    }
-
-    public function supports(string $type): bool
-    {
-        return 'int' === $type;
-    }
 }

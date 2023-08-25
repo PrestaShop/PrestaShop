@@ -51,6 +51,6 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShopBundle\ApiPlatform\Converters\:
-    resource: "../../../../ApiPlatform/Converters/*"
-    tags: [ 'prestashop.api.converters' ]
+  PrestaShopBundle\ApiPlatform\Denormalizers\:
+    resource: "../../../../ApiPlatform/Denormalizers/*"
+    tags: [ 'prestashop.api.denormalizers' ]

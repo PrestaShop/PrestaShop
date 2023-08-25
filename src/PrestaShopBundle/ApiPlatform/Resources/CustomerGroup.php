@@ -49,7 +49,7 @@ class CustomerGroup
 {
     public array $localizedNames;
 
-    public array $reductionPercent;
+    public float $reductionPercent;
 
     public bool $displayPriceTaxExcluded;
 
