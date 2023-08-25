@@ -23,6 +23,10 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
 
+    api_token:
+      pattern: ^/api/oauth2/token
+      security: false
+
     api:
       pattern: '^(%api_base_path%)(?!/docs)'
       stateless: true
@@ -30,6 +34,7 @@ security:
       guard:
         authenticator:
           - PrestaShop\PrestaShop\Core\Security\TokenAuthenticator
+      request_matcher: PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher
 
     main:
       anonymous: ~

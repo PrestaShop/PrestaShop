@@ -26,19 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Api;
+namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
+
+use ApiPlatform\Action\PlaceholderAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 /**
- * @experimental
+ * Additional checker for api firewall, the pattern /api is too wide and matches
+ * with existing legacy APIs so we add a more detailed condition that the URI pattern
+ * matches AND it's an API handled by ApiPlatform.
+ *
+ * The legacy APIs should be moved/modified to use another prefix, then this matcher
+ * can be removed as it will be overkill.
  */
-final class Api
+class ApiRequestMatcher implements RequestMatcherInterface
 {
-    public const API_BASE_PATH = '/api';
-
-    /**
-     * This class is not meant to be instantiated as it is used to access encoding constants only.
-     */
-    private function __construct()
+    public function matches(Request $request)
     {
+        return in_array(
+            $request->attributes->get('_controller'),
+            [PlaceholderAction::class, 'api_platform.action.placeholder']
+        );
     }
 }
