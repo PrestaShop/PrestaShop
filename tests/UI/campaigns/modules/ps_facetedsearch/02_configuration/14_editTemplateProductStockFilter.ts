@@ -22,9 +22,9 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'modules_ps_facetedsearch_configuration_editTemplateProductBrandFilter';
+const baseContext: string = 'modules_ps_facetedsearch_configuration_editTemplateProductStockFilter';
 
-describe('Faceted search module - Edit template - Product brand filter', async () => {
+describe('Faceted search module - Edit template - Product stock filter', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -124,14 +124,14 @@ describe('Faceted search module - Edit template - Product brand filter', async (
     });
 
     it(
-      `should ${test.filterStatus ? 'enable' : 'disable'} the filter "Product brand filter" `
+      `should ${test.filterStatus ? 'enable' : 'disable'} the filter "Product stock filter" `
       + `${test.filterType ? `with filter mode "${test.filterType}"` : ''}`,
       async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `setProductBrandFilter_${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `setProductStockFilter_${index}`, baseContext);
 
         const textResult = await psFacetedSearchFilterTemplate.setFilterForm(
           page,
-          'Product brand filter',
+          'Product stock filter',
           test.filterStatus,
           test.filterType,
         );
@@ -158,13 +158,13 @@ describe('Faceted search module - Edit template - Product brand filter', async (
       const hasSearchFilters = await categoryPageFO.hasSearchFilters(page);
       await expect(hasSearchFilters).to.be.eq(test.expectedHasSearchFilters);
 
-      const isSearchFilterRadio = await categoryPageFO.isSearchFilterRadio(page, 'manufacturer');
+      const isSearchFilterRadio = await categoryPageFO.isSearchFilterRadio(page, 'availability');
       await expect(isSearchFilterRadio).to.be.eq(test.expectedIsSearchFilterRadio);
 
-      const isSearchFilterDropdown = await categoryPageFO.isSearchFilterDropdown(page, 'manufacturer');
+      const isSearchFilterDropdown = await categoryPageFO.isSearchFilterDropdown(page, 'availability');
       await expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await categoryPageFO.isSearchFiltersCheckbox(page, 'manufacturer');
+      const isSearchFiltersCheckbox = await categoryPageFO.isSearchFiltersCheckbox(page, 'availability');
       await expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
     });
 
