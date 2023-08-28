@@ -56,6 +56,9 @@ class LegacyContext
     /** @var Tools */
     private $tools;
 
+    /** @var LegacyLayoutData */
+    private LegacyLayoutData $legacyLayoutData;
+
     /**
      * @param string|null $mailThemesUri
      * @param Tools|null $tools
@@ -66,6 +69,16 @@ class LegacyContext
     ) {
         $this->mailThemesUri = $mailThemesUri;
         $this->tools = null !== $tools ? $tools : new Tools();
+    }
+
+    public function setLegacyLayoutData(LegacyLayoutData $legacyLayoutData)
+    {
+        $this->legacyLayoutData = $legacyLayoutData;
+    }
+
+    public function getLegacyLayoutData(): LegacyLayoutData
+    {
+        return $this->legacyLayoutData;
     }
 
     /**

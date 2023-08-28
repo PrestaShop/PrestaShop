@@ -30,6 +30,7 @@ use Currency;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyLayoutData;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Twig\Extension\AbstractExtension;
@@ -188,6 +189,13 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
 </html>
 EOF;
         }
+
+        // todo: Remove this when we definitively drop smarty...
+        $this->context->setLegacyLayoutData(new LegacyLayoutData(
+            $headerToolbarBtn,
+            $enableSidebar,
+            $helpLink
+        ));
 
         $layout = $this->context->getLegacyLayout(
             $controllerName,
