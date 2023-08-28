@@ -58,8 +58,18 @@ class StocksTab extends BOBasePage {
    */
   async setProductStock(page:Page, productData: ProductData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.stocksTabLink);
-    await this.setValue(page, this.productQuantityInput, productData.quantity);
+    await this.setQuantityDelta(page, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);
+  }
+
+  /**
+   * Set quantity delta
+   * @param page {Page} Browser tab
+   * @param quantity {number} Quantity delta
+   * @returns {Promise<void>}
+   */
+  async setQuantityDelta(page: Page, quantity: number): Promise<void> {
+    await this.setValue(page, this.productQuantityInput, quantity);
   }
 
   /**

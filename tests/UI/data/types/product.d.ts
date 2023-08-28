@@ -122,10 +122,15 @@ type ProductFilterMinMax = {
 }
 
 type ProductHeaderSummary = {
+  imageUrl: string
   reference: string
   quantity: string
   priceTaxIncl: string
   priceTaxExc: string
+  mpn: string
+  upc: string
+  ean_13: string
+  isbn: string
 };
 
 type ProductInformations = {

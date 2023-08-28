@@ -123,6 +123,7 @@ export default {
     summary: 'White Ceramic Mug, 325ml.',
     price: 11.90,
     finalPrice: 14.28,
+    tax: 20,
     quantity: 300,
     status: true,
   }),

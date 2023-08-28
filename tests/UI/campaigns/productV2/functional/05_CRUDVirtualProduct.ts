@@ -8,12 +8,8 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault, setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
@@ -70,8 +66,6 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     status: true,
   });
 
-  // Pre-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
   // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
@@ -464,8 +458,6 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     });
   });
 
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
   // Post-Condition: Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_1`);
 });

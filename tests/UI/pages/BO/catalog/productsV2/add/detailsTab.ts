@@ -61,6 +61,46 @@ class DetailsTab extends BOBasePage {
   }
 
   /**
+   * Set value for EAN 13
+   * @param page {Page} Browser tab
+   * @param value {string} Value
+   * @returns {Promise<void>}
+   */
+  async setEAN13(page: Page, value: string): Promise<void> {
+    await this.setValue(page, this.productEAN13Input, value);
+  }
+
+  /**
+   * Set value for setISBN
+   * @param page {Page} Browser tab
+   * @param value {string} Value
+   * @returns {Promise<void>}
+   */
+  async setISBN(page: Page, value: string): Promise<void> {
+    await this.setValue(page, this.productISBNInput, value);
+  }
+
+  /**
+   * Set value for MPN
+   * @param page {Page} Browser tab
+   * @param value {string} Value
+   * @returns {Promise<void>}
+   */
+  async setMPN(page: Page, value: string): Promise<void> {
+    await this.setValue(page, this.productMPNInput, value);
+  }
+
+  /**
+   * Set value for UPC
+   * @param page {Page} Browser tab
+   * @param value {string} Value
+   * @returns {Promise<void>}
+   */
+  async setUPC(page: Page, value: string): Promise<void> {
+    await this.setValue(page, this.productUPCInput, value);
+  }
+
+  /**
    * @param page {Page}
    * @param inputName {string}
    */

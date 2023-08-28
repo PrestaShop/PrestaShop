@@ -521,11 +521,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckName', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlCreate, 'name', '1');
-            const valueEn = (await createProductsPage.getProductName(page, 1));
+            const valueEn = (await createProductsPage.getProductName(page, 'en'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlCreate, 'name', '2');
-            const valueFr = (await createProductsPage.getProductName(page, 2));
+            const valueFr = (await createProductsPage.getProductName(page, 'fr'));
             expect(valueFr).to.eq(xmlValueFr);
           });
         });
@@ -1187,11 +1187,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckName', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlUpdate, 'name', '1');
-            const valueEn = (await createProductsPage.getProductName(page, 1));
+            const valueEn = (await createProductsPage.getProductName(page, 'en'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlUpdate, 'name', '2');
-            const valueFr = (await createProductsPage.getProductName(page, 2));
+            const valueFr = (await createProductsPage.getProductName(page, 'fr'));
             expect(valueFr).to.eq(xmlValueFr);
           });
         });

@@ -6,11 +6,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import FO pages
-import foProductPage from '@pages/FO/product';
-import dashboardPage from '@pages/BO/dashboard';
+// Import BO pages
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
+import dashboardPage from '@pages/BO/dashboard';
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductData from '@data/faker/product';
