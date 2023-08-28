@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -36,11 +37,8 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 class Toolbar
 {
     public bool $lockedToAllShopContext;
-    public array $toolbarBtn;
     public array|string $title;
     public string $table;
-    public bool|string $helpLink;
-    public bool $enableSidebar;
     public int $currentTabLevel;
     public array $tabs;
     public array $breadcrumbs;
@@ -48,7 +46,8 @@ class Toolbar
 
     public function __construct(
         private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly MenuBuilder $menuBuilder
+        private readonly MenuBuilder $menuBuilder,
+        private readonly LegacyContext $context,
     ) {
     }
 
@@ -68,5 +67,23 @@ class Toolbar
             $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
             $this->hookDispatcher->dispatchWithParameters('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$this->breadcrumbs]);
         }
+    }
+
+    public function getToolbarBtn()
+    {
+        // todo: Find a better way when we definitively drop smarty...
+        return $this->context->getLegacyLayoutData()->toolbarBtn;
+    }
+
+    public function getEnableSidebar()
+    {
+        // todo: Find a better way when we definitively drop smarty...
+        return $this->context->getLegacyLayoutData()->enableSidebar;
+    }
+
+    public function getHelpLink()
+    {
+        // todo: Find a better way when we definitively drop smarty...
+        return $this->context->getLegacyLayoutData()->helpLink;
     }
 }
