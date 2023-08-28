@@ -108,7 +108,7 @@ class PricingTab extends BOBasePage {
       case 'on_sale':
         return (await this.isChecked(page, this.onSaleCheckbox)) ? '1' : '0';
       case 'price':
-        return this.getAttributeContent(page, this.retailPriceInput, 'value');
+        return this.getAttributeContent(page, this.retailPriceInputTaxExcl, 'value');
       case 'unit_price':
         return this.getAttributeContent(page, this.unitPriceInput, 'value');
       case 'unity':

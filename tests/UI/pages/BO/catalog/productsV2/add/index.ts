@@ -115,7 +115,7 @@ class CreateProduct extends BOBasePage {
     this.productTypePreview = '.product-type-preview';
     this.productTypePreviewLabel = `${this.productTypePreview}-label`;
     this.productTypeLabel = '.product-type-preview-label';
-    this.productActiveSwitchButton = '#product_header_active_1';
+    this.productActiveSwitchButton = (status: number) => `#product_header_active_${status}`;
     this.productHeaderSummary = '.product-header-summary';
     this.productHeaderTaxExcluded = `${this.productHeaderSummary} div[data-role=price-tax-excluded]`;
     this.productHeaderTaxIncluded = `${this.productHeaderSummary} div[data-role=price-tax-included]`;
@@ -444,56 +444,13 @@ class CreateProduct extends BOBasePage {
   }
 
   /**
-   * Go to a tab
-   * @param page {Page} Browser tab
-   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
-   * @returns {Promise<void>}
-   */
-  async goToTab(page: Page, tabName: 'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock') : Promise<void> {
-    await this.waitForSelectorAndClick(page, this.tabLink(tabName));
-    await this.waitForVisibleSelector(page, `${this.tabLink(tabName)} a.active`, 2000);
-  }
-
-  /**
-   * Is Tab active
-   * @param page {Page} Browser tab
-   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
-   * @returns {Promise<boolean>}
-   */
-  async isTabActive(page: Page, tabName: 'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'): Promise<boolean> {
-    return this.elementVisible(page, `${this.tabLink(tabName)} a.active`, 2000);
-  }
-
-  /**
-   * Return the product type
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  async getProductType(page: Page): Promise<string> {
-    const typeLabel = await this.getTextContent(page, this.productTypeLabel);
-
-    switch (typeLabel) {
-      case 'Standard product':
-        return 'standard';
-      case 'Product with combinations':
-        return 'combinations';
-      case 'Pack of products':
-        return 'pack';
-      case 'Virtual product':
-        return 'virtual';
-      default:
-        throw new Error(`Type ${typeLabel} is not defined`);
-    }
-  }
-
-  /**
    * Return the product name
    * @param page {Page} Browser tab
-   * @param languageId {number} Language ID
+   * @param locale {string} Locale
    * @returns {Promise<string>}
    */
-  async getProductName(page: Page, languageId: number = 1): Promise<string> {
-    return this.getAttributeContent(page, this.productNameInput(languageId), 'value');
+  async getProductName(page: Page, locale: string = 'en'): Promise<string> {
+    return this.getAttributeContent(page, this.productNameInput(locale), 'value');
   }
 
   /**
@@ -502,7 +459,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async getProductStatus(page: Page): Promise<boolean> {
-    return this.isChecked(page, this.productActiveSwitchButton);
+    return this.isChecked(page, this.productActiveSwitchButton(1));
   }
 }
 
