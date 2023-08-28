@@ -92,5 +92,3 @@ admin_attribute_groups_update_position:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::updatePositionAction'
     _legacy_controller: AdminAttributesGroups
-    _legacy_link: AdminAttributesGroups:updateGroupsPositions
-    _legacy_feature_flag: attribute_group
