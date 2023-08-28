@@ -392,7 +392,7 @@
             {foreach from=$displayBackOfficeEmployeeMenu item=$menuItem}
               {assign var=menuItemProperties value=$menuItem->getProperties()}
               <li class="{$menuItem->getClass()}">
-                <a class="dropdown-item" href="{$menuItemProperties.link}" target="_blank" rel="noopener noreferrer nofollow">
+                <a class="dropdown-item" href="{$menuItemProperties.link}" {if !isset($menuItemProperties.samePage) || true !== $menuItemProperties.samePage} target="_blank"{/if} rel="noopener noreferrer nofollow">
                   {if isset($menuItemProperties.icon)}<i class="material-icons">{$menuItemProperties.icon}</i> {/if}{$menuItem->getContent()}
                 </a>
               </li>
