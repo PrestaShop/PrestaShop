@@ -77,7 +77,7 @@ describe('Faceted search module - Edit template - Product brand filter', async (
     {
       filterStatus: false,
       filterType: '',
-      expectedHasSearchFilters: false,
+      expectedHasSearchFilters: true,
       expectedIsSearchFilterRadio: false,
       expectedIsSearchFilterDropdown: false,
       expectedIsSearchFilterCheckbox: false,
