@@ -134,7 +134,7 @@ class Category extends FOBasePage {
 
     // Filter
     this.searchFilters = '#search_filters';
-    this.searchFilter = (facetType: string) => `${this.searchFilters} section[data-type="${facetType}] ul[id^="facet"]`;
+    this.searchFilter = (facetType: string) => `${this.searchFilters} section[data-type="${facetType}"] ul[id^="facet"]`;
     this.searchFiltersCheckbox = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label `
       + 'input[type="checkbox"]';
     this.searchFiltersRadio = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label input[type="radio"]`;
