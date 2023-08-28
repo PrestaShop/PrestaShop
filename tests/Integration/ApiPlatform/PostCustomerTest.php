@@ -42,7 +42,7 @@ class PostCustomerTest extends ApiTestCase
     public function testAddCustomerGroup(): void
     {
         $bearerToken = $this->getBearerToken();
-        static::createClient()->request('POST', '/new-api/customers/group', [
+        static::createClient()->request('POST', '/api/customers/group', [
             'auth_bearer' => $bearerToken,
             'json' => [
                 'localizedNames' => [
