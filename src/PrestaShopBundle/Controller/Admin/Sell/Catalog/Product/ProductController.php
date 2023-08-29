@@ -403,6 +403,11 @@ class ProductController extends FrameworkBundleAdminController
                     $redirectParams['setShopContext'] = 's-' . $createdData['shop_id'];
                 }
 
+                // When this configuration is enabled we pre-fill the online status in the redirected form
+                if ((bool) $this->getConfiguration()->get('PS_PRODUCT_ACTIVATION_DEFAULT')) {
+                    $redirectParams['forceDefaultActive'] = 1;
+                }
+
                 return $this->redirectToRoute('admin_products_edit', $redirectParams);
             }
         } catch (Exception $e) {
@@ -440,10 +445,14 @@ class ProductController extends FrameworkBundleAdminController
             return $this->renderIncompatibleContext($productId);
         }
 
+        // When query parameter is present we force the initial value in the form, but only in GET method, or you could never manually set false in the form on submit
+        $forceDefaultActive = $request->query->getBoolean('forceDefaultActive') && $request->isMethod(Request::METHOD_GET);
+
         try {
             $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
                 'product_id' => $productId,
                 'shop_id' => (int) $this->getContextShopId(),
+                'force_default_active' => $forceDefaultActive,
                 // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
                 // 'method' => Request::METHOD_PATCH,
                 'method' => Request::METHOD_POST,
