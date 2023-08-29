@@ -42,6 +42,7 @@ export default (productSuppliersId: string): Record<string, any> => {
       priceInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
       currencyIdInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'currency_id'),
       supplierNamePreview: (supplierIndex: string): string => `#product_supplier_row_${supplierIndex} .supplier_name .preview`,
+      currencySymbol: (supplierIndex: string): string => `#product_supplier_row_${supplierIndex} .money-type .input-group-text`,
     },
   };
 };

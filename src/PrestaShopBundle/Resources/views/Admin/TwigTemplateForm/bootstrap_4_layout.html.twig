@@ -506,7 +506,8 @@
 {%- endblock form_row %}
 
 {% block button_row -%}
-    <div class="form-group">
+  {% set rowClass = "form-group " ~ form.vars.row_attr.class|default('')|trim %}
+    <div class="{{ rowClass }}">
         {{- form_widget(form) -}}
     </div>
 {%- endblock button_row %}

@@ -6,8 +6,12 @@ $component-name: delta-quantity;
   flex-direction: row;
 
   &-quantity {
-    min-width: 120px;
+    min-width: 40px;
     font-weight: $font-weight-semibold;
+
+    @media screen and (min-width: 768px) {
+      min-width: 120px;
+    }
 
     .quantity-update {
       color: $brand-primary;
@@ -38,7 +42,12 @@ $component-name: delta-quantity;
   }
 
   label {
-    min-width: 240px;
+    min-width: 150px;
+
+    @media screen and (min-width: 768px) {
+      min-width: 240px;
+    }
+
     margin: 0 0.3125rem;
     overflow: hidden;
     line-height: 39px;

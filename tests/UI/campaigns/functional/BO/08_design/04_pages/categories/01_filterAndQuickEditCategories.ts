@@ -131,15 +131,6 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
       {
         args:
           {
-            testIdentifier: 'filterPosition',
-            filterType: 'input',
-            filterBy: 'position',
-            filterValue: '5',
-          },
-      },
-      {
-        args:
-          {
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',

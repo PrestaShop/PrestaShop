@@ -24,37 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Cache\Clearer;
+namespace PrestaShopBundle\Form\Admin\Type;
+
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class CacheClearerChain clears entire PrestaShop cache.
+ * Class ReorderPositionsButtonType.
  */
-final class CacheClearerChain implements CacheClearerInterface
+class ReorderPositionsButtonType extends TranslatorAwareType
 {
-    /**
-     * @var CacheClearerInterface[]
-     */
-    private $cacheClearers;
-
-    /**
-     * @param CacheClearerInterface ...$cacheClearers
-     */
-    public function __construct(CacheClearerInterface ...$cacheClearers)
-    {
-        $this->cacheClearers = $cacheClearers;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($this->cacheClearers as $cacheClearer) {
-            $cacheClearer->clear();
-        }
-
-        if (function_exists('opcache_reset')) {
-            opcache_reset();
-        }
+        $builder->add('position', ButtonType::class, [
+            'label' => $this->trans('Rearrange', 'Admin.Actions'),
+            'row_attr' => ['class' => 'mb-0'],
+            'attr' => [
+                'class' => 'btn-default js-btn-reorder-positions',
+                'data-label-reorder' => $this->trans('Rearrange', 'Admin.Actions'),
+                'data-label-save' => $this->trans('Done', 'Admin.Actions'),
+            ],
+        ]);
     }
 }
