@@ -41,6 +41,12 @@ class PostCustomerTest extends ApiTestCase
         DatabaseDump::restoreTables(['group', 'group_lang', 'group_reduction', 'group_shop', 'category_group']);
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(['group', 'group_lang', 'group_reduction', 'group_shop', 'category_group']);
+    }
+
     public function testAddCustomerGroup(): void
     {
         $bearerToken = $this->getBearerToken();

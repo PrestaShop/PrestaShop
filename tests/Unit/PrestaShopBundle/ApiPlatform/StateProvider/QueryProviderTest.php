@@ -30,7 +30,6 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
@@ -56,9 +55,9 @@ class QueryProviderTest extends TestCase
     private $queryBus;
 
     /**
-     * @var DomainSerializer|MockObject
+     * @var DomainSerializer
      */
-    private DomainSerializer|MockObject $serializer;
+    private DomainSerializer $serializer;
 
     /**
      * Set up dependencies for HookStatusProvider

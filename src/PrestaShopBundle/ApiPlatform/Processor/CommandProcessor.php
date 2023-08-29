@@ -62,12 +62,13 @@ class CommandProcessor implements ProcessorInterface
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $commandClass = $operation->getExtraProperties()['command'] ?? null;
+        $commandParameters = array_merge($this->apiPlatformSerializer->normalize($data), $uriVariables);
 
-        if (null === $commandClass) {
+        if (null === $commandClass || !class_exists($commandClass)) {
             throw new NoExtraPropertiesFoundException('Extra property "command" not found');
         }
 
-        $command = $this->apiPlatformSerializer->denormalize($data, $commandClass);
+        $command = $this->apiPlatformSerializer->denormalize($commandParameters, $commandClass);
 
         $this->commandBus->handle($command);
     }

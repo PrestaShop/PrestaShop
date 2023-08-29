@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\ApiPlatform;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
@@ -38,9 +38,9 @@ use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
 class DomainSerializerTest extends TestCase
 {
     /**
-     * @var DomainSerializer|MockObject
+     * @var DomainSerializer
      */
-    private DomainSerializer|MockObject $serializer;
+    private DomainSerializer $serializer;
 
     /**
      * Set up dependencies for HookStatusProvider
@@ -54,9 +54,9 @@ class DomainSerializerTest extends TestCase
     /**
      * @dataProvider getExpectedDenormalizedData
      */
-    public function testDenormalize(array $arrayToDenormalize, $denormalizedClass): void
+    public function testDenormalize(array $arrayToDenormalize, $denormalizedObject): void
     {
-        self::assertInstanceOf($denormalizedClass, $this->serializer->denormalize($arrayToDenormalize, $denormalizedClass));
+        self::assertEquals($denormalizedObject, $this->serializer->denormalize($arrayToDenormalize, get_class($denormalizedObject)));
     }
 
     public function getExpectedDenormalizedData()
@@ -64,15 +64,24 @@ class DomainSerializerTest extends TestCase
         yield [
             [
                 'localizedNames' => [
-                    'test1',
-                    'test2',
+                    1 => 'test1',
+                    2 => 'test2',
                 ],
                 'reductionPercent' => 10.3,
                 'displayPriceTaxExcluded' => true,
                 'showPrice' => true,
                 'shopIds' => [1],
             ],
-            AddCustomerGroupCommand::class,
+            new AddCustomerGroupCommand(
+                [
+                    1 => 'test1',
+                    2 => 'test2',
+                ],
+                new DecimalNumber('10.3'),
+                true,
+                true,
+                [1]
+            ),
         ];
     }
 }

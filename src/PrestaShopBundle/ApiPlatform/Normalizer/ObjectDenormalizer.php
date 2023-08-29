@@ -43,6 +43,6 @@ class ObjectDenormalizer extends SfObjectNormalizer
      */
     public static function getDefaultPriority(): int
     {
-        return 1;
+        return -1;
     }
 }
