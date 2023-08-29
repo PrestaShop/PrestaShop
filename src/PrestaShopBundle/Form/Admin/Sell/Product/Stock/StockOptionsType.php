@@ -96,7 +96,9 @@ class StockOptionsType extends TranslatorAwareType
                 'modify_all_shops' => true,
                 // @todo: need to trigger opening allShopscheckbox on "disabling_switch" change too.
                 'disabling_switch' => true,
+                'html5' => true,
                 'attr' => [
+                    'placeholder' => $this->trans('Enter threshold value', 'Admin.Catalog.Feature'),
                     'class' => 'small-input',
                 ],
             ])

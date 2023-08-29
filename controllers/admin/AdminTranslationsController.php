@@ -806,6 +806,9 @@ class AdminTranslationsControllerCore extends AdminController
             $array_check_duplicate = [];
         }
 
+        $module_name_lowercase = strtolower($module_name);
+        $theme_name_lowercase = strtolower((string) $theme_name);
+
         foreach ($files as $file) {
             if (preg_match('/^(.*)\.(tpl|php)$/', $file) && Tools::file_exists_cache($dir . $file) && !in_array($file, self::$ignore_folder)) {
                 // Get content for this file
@@ -817,16 +820,19 @@ class AdminTranslationsControllerCore extends AdminController
                 // Parse this content
                 $matches = $this->userParseFile($content, $this->type_selected, $type_file, $module_name);
 
+                unset($content);
+
                 // Write each translation on its module file
-                $template_name = substr(basename($file), 0, -4);
+                $template_name = strtolower(substr(basename($file), 0, -4));
 
                 foreach ($matches as $key) {
+                    $key_md5 = md5($key);
                     if ($theme_name) {
-                        $post_key = md5(strtolower($module_name) . '_' . strtolower($theme_name) . '_' . strtolower($template_name) . '_' . md5($key));
-                        $pattern = '\'<{' . strtolower($module_name) . '}' . strtolower($theme_name) . '>' . strtolower($template_name) . '_' . md5($key) . '\'';
+                        $post_key = md5($module_name_lowercase . '_' . $theme_name_lowercase . '_' . $template_name . '_' . $key_md5);
+                        $pattern = '\'<{' . $module_name_lowercase . '}' . $theme_name_lowercase . '>' . $template_name . '_' . $key_md5 . '\'';
                     } else {
-                        $post_key = md5(strtolower($module_name) . '_' . strtolower($template_name) . '_' . md5($key));
-                        $pattern = '\'<{' . strtolower($module_name) . '}prestashop>' . strtolower($template_name) . '_' . md5($key) . '\'';
+                        $post_key = md5($module_name_lowercase . '_' . $template_name . '_' . $key_md5);
+                        $pattern = '\'<{' . $module_name_lowercase . '}prestashop>' . $template_name . '_' . $key_md5 . '\'';
                     }
 
                     if (array_key_exists($post_key, $_POST) && !in_array($pattern, $array_check_duplicate)) {
@@ -913,12 +919,14 @@ class AdminTranslationsControllerCore extends AdminController
                 // Parse this content
                 $matches = $this->userParseFile($content, $this->type_selected, $type_file, $module_name);
 
+                unset($content);
+
                 // Write each translation on its module file
                 $template_name = substr(basename($file), 0, -4);
 
                 foreach ($matches as $key) {
                     $md5_key = md5($key);
-                    $module_key = '<{' . Tools::strtolower($module_name) . '}' . strtolower($theme_name) . '>' . Tools::strtolower($template_name) . '_' . $md5_key;
+                    $module_key = '<{' . Tools::strtolower($module_name) . '}' . strtolower((string) $theme_name) . '>' . Tools::strtolower($template_name) . '_' . $md5_key;
                     $default_key = '<{' . Tools::strtolower($module_name) . '}prestashop>' . Tools::strtolower($template_name) . '_' . $md5_key;
                     // to avoid duplicate entry
                     if (!in_array($module_key, $array_check_duplicate)) {

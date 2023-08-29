@@ -414,7 +414,7 @@
         {% for translationsFields in form %}
           <li class="nav-item">
             <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
-              {{ translationsFields.vars.label|capitalize }}
+              {{ translationsFields.vars.label|upper }}
             </a>
           </li>
         {% endfor %}
@@ -463,7 +463,7 @@
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
         >
-          {{ form.vars.default_locale.iso_code }}
+          {{ form.vars.default_locale.iso_code|upper }}
         </button>
 
         <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
@@ -501,7 +501,7 @@
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
         >
-          {{ form.vars.default_locale.iso_code }}
+          {{ form.vars.default_locale.iso_code|upper }}
         </button>
 
         <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
@@ -895,7 +895,7 @@
         {% for translationsFields in form %}
           <li class="nav-item">
             <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if default_locale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
-              {{ translationsFields.vars.label|capitalize }}
+              {{ translationsFields.vars.label|upper }}
             </a>
           </li>
         {% endfor %}
@@ -937,7 +937,7 @@
                   aria-expanded="false"
                   id="{{ form.vars.id }}_dropdown"
           >
-            {{ form.vars.default_locale.iso_code }}
+            {{ form.vars.default_locale.iso_code|upper }}
           </button>
           <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
             {% for locale in locales %}
@@ -1253,11 +1253,19 @@
 
     {% if alert_title is defined %}
       <div class="alert-more collapse" id="expandable_{{form.vars.id}}" style="">
-        {% for message in alert_message %}
-          <p>
-            {{ message|raw }}
-          </p>
-        {% endfor %}
+        {% if alert_message|length > 1 %}
+          <ul class="p-0">
+            {% for message in alert_message %}
+              <li>{{ message|raw }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          {% for message in alert_message %}
+            <p>
+              {{ message|raw }}
+            </p>
+          {% endfor %}
+        {% endif %}
       </div>
       <div class="read-more-container">
          <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{form.vars.id}}" aria-expanded="true" aria-controls="collapseDanger">

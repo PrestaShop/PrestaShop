@@ -515,8 +515,6 @@ services:
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
       $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:
       $outOfStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
@@ -700,3 +698,15 @@ services:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
     public: true
     deprecated: ~
+
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType:
+    autowire: true
+    autoconfigure: true
+    public: false
+    arguments:
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"

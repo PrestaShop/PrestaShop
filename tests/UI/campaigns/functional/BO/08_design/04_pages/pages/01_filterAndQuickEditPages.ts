@@ -96,15 +96,6 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
       {
         args:
           {
-            testIdentifier: 'filterByPosition',
-            filterType: 'input',
-            filterBy: 'position',
-            filterValue: CMSPages.securePayment.position.toString(),
-          },
-      },
-      {
-        args:
-          {
             testIdentifier: 'filterByActive',
             filterType: 'select',
             filterBy: 'active',

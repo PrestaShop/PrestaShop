@@ -92,6 +92,32 @@ export default class ProductSEOManager {
 
     const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
     resetLinkRewriteBtn.addEventListener('click', () => this.resetLinkRewrite());
+
+    // Disable or enable reset button depending on the name input value at init, on language change and on keyup inputs
+    this.linkRewriteStateRefresh();
+    this.eventEmitter.on('languageSelected', () => this.linkRewriteStateRefresh());
+
+    const linkRewriteInputs = document.querySelectorAll(`${ProductMap.productLocalizedLinkRewriteInput}`);
+
+    if (linkRewriteInputs) {
+      for (let i = 0; i < linkRewriteInputs.length; i += 1) {
+        linkRewriteInputs[i].addEventListener('keyup', () => this.linkRewriteStateRefresh());
+      }
+    }
+  }
+
+  private linkRewriteStateRefresh(): void {
+    const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
+    // eslint-disable-next-line max-len
+    const nameInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedNameInput}`);
+    // eslint-disable-next-line max-len
+    const linkRewriteInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedLinkRewriteInput}`);
+
+    if (!nameInput || !linkRewriteInput || !resetLinkRewriteBtn) {
+      return;
+    }
+
+    resetLinkRewriteBtn.disabled = linkRewriteInput.value === window.str2url(nameInput.value);
   }
 
   private resetLinkRewrite(): void {
@@ -99,8 +125,9 @@ export default class ProductSEOManager {
     const nameInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedNameInput}`);
     // eslint-disable-next-line max-len
     const linkRewriteInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedLinkRewriteInput}`);
+    const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
 
-    if (!nameInput || !linkRewriteInput) {
+    if (!nameInput || !linkRewriteInput || !resetLinkRewriteBtn) {
       console.error('Couldn\'t find product name or link rewrite input');
       return;
     }
@@ -113,5 +140,6 @@ export default class ProductSEOManager {
 
     linkRewriteInput.value = window.str2url(nameValue);
     linkRewriteInput.dispatchEvent(new Event('change', {bubbles: true}));
+    resetLinkRewriteBtn.disabled = true;
   }
 }
