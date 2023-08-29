@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
@@ -61,40 +60,42 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     [
                         'name' => 'Authorization',
                         'in' => 'scopes',
-                        'description' => 'read:hook-status <br> write:hook-status ',
+                        'description' => 'hook_read <br> hook_write ',
                     ],
                 ],
             ],
             exceptionToStatus: [HookNotFoundException::class => 404],
-            normalizationContext: [
-                'groups' => [
-                    'hook-status:read',
-                ],
-            ],
             provider: QueryProvider::class,
-            extraProperties: ['query' => GetHookStatus::class]
+            extraProperties: [
+                'query' => GetHookStatus::class,
+                'scopes' => ['hook_read'],
+            ]
         ),
         new Put(
             uriTemplate: '/hook-status',
             processor: CommandProcessor::class,
-            extraProperties: ['command' => UpdateHookStatusCommand::class]
+            extraProperties: [
+                'command' => UpdateHookStatusCommand::class,
+                'scopes' => ['hook_write'],
+            ]
         ),
         new Get(
             uriTemplate: '/hooks/{id}',
             requirements: ['id' => '\d+'],
             exceptionToStatus: [HookNotFoundException::class => 404],
             provider: QueryProvider::class,
-            extraProperties: ['query' => GetHook::class]
+            extraProperties: [
+                'query' => GetHook::class,
+                'scopes' => ['hook_read'],
+            ]
         ),
     ],
 )]
 class Hook
 {
     #[ApiProperty(identifier: true)]
-    #[Groups(['hook-status:read'])]
     public int $id;
 
-    #[Groups(['hook-status:read'])]
     public bool $active;
 
     public string $name;
