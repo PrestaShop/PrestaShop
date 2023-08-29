@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Denormalizers;
+namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
 use PrestaShop\Decimal\DecimalNumber;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -41,5 +41,15 @@ class DecimalNumberDenormalizer implements DenormalizerInterface
     public function supportsDenormalization($data, string $type, string $format = null)
     {
         return DecimalNumber::class === $type;
+    }
+
+    /**
+     * Set higher priority than ObjectDenormalizer.
+     *
+     * @return int
+     */
+    public static function getDefaultPriority(): int
+    {
+        return 10;
     }
 }

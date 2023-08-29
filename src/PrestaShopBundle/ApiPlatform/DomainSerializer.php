@@ -34,16 +34,16 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 use Traversable;
 
-class Serializer implements NormalizerInterface, DenormalizerInterface
+class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 {
     private SymfonySerializer $serializer;
 
     /**
-     * @param Traversable $normalizers
+     * @param Traversable $denormalizers
      */
-    public function __construct(Traversable $normalizers)
+    public function __construct(Traversable $denormalizers)
     {
-        $this->serializer = new SymfonySerializer(iterator_to_array($normalizers));
+        $this->serializer = new SymfonySerializer(iterator_to_array($denormalizers));
     }
 
     /**

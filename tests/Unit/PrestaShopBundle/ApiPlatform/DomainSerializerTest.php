@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,28 +26,43 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\ApiPlatform;
+namespace Tests\Unit\PrestaShopBundle\ApiPlatform;
 
-use Context;
-use Group;
-use Tests\Resources\DatabaseDump;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShopBundle\ApiPlatform\DomainSerializer;
+use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
+use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
 
-class PostCustomerTest extends ApiTestCase
+class DomainSerializerTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    /**
+     * @var DomainSerializer|MockObject
+     */
+    private DomainSerializer|MockObject $serializer;
+
+    /**
+     * Set up dependencies for HookStatusProvider
+     */
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['group', 'group_lang', 'group_reduction', 'group_shop', 'category_group']);
+        $denormalizers = new \ArrayIterator([new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
+        $this->serializer = new DomainSerializer($denormalizers);
     }
 
-    public function testAddCustomerGroup(): void
+    /**
+     * @dataProvider getExpectedDenormalizedData
+     */
+    public function testDenormalize(array $arrayToDenormalize, $denormalizedClass): void
     {
-        $bearerToken = $this->getBearerToken();
+        self::assertInstanceOf($denormalizedClass, $this->serializer->denormalize($arrayToDenormalize, $denormalizedClass));
+    }
 
-        $numberOfGroups = count(Group::getGroups(Context::getContext()->language->id));
-        static::createClient()->request('POST', '/api/customers/group', [
-            'auth_bearer' => $bearerToken,
-            'json' => [
+    public function getExpectedDenormalizedData()
+    {
+        yield [
+            [
                 'localizedNames' => [
                     'test1',
                     'test2',
@@ -58,21 +72,7 @@ class PostCustomerTest extends ApiTestCase
                 'showPrice' => true,
                 'shopIds' => [1],
             ],
-        ]);
-        self::assertResponseStatusCodeSame(201);
-        self::assertCount($numberOfGroups + 1, Group::getGroups(Context::getContext()->language->id));
-    }
-
-    private function getBearerToken(): string
-    {
-        $parameters = ['parameters' => [
-            'client_id' => 'my_client_id',
-            'client_secret' => 'prestashop',
-            'grant_type' => 'client_credentials',
-        ]];
-        $options = ['extra' => $parameters];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
-
-        return json_decode($response->getContent())->access_token;
+            AddCustomerGroupCommand::class,
+        ];
     }
 }

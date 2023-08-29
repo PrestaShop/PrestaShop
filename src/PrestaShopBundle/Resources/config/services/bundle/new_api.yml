@@ -51,6 +51,6 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShopBundle\ApiPlatform\Denormalizers\:
-    resource: "../../../../ApiPlatform/Denormalizers/*"
+  PrestaShopBundle\ApiPlatform\Normalizer\:
+    resource: "../../../../ApiPlatform/Normalizer/*"
     tags: [ 'prestashop.api.denormalizers' ]

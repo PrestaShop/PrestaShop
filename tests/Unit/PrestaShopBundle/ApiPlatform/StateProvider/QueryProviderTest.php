@@ -39,14 +39,14 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\Hook as HookQuery;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
-use PrestaShopBundle\ApiPlatform\Denormalizers\DecimalNumberDenormalizer;
+use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
+use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 use PrestaShopBundle\ApiPlatform\Resources\FoundProduct as FoundProductDto;
 use PrestaShopBundle\ApiPlatform\Resources\Hook;
-use PrestaShopBundle\ApiPlatform\Serializer;
 use RuntimeException;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class QueryProviderTest extends TestCase
 {
@@ -56,17 +56,17 @@ class QueryProviderTest extends TestCase
     private $queryBus;
 
     /**
-     * @var Serializer|MockObject
+     * @var DomainSerializer|MockObject
      */
-    private Serializer|MockObject $serializer;
+    private DomainSerializer|MockObject $serializer;
 
     /**
      * Set up dependencies for HookStatusProvider
      */
     public function setUp(): void
     {
-        $denormalizers = new \ArrayIterator([new DecimalNumberDenormalizer(), new ObjectNormalizer()]);
-        $this->serializer = new Serializer($denormalizers);
+        $denormalizers = new \ArrayIterator([new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
+        $this->serializer = new DomainSerializer($denormalizers);
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus
             ->method('handle')

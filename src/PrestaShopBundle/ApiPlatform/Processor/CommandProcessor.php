@@ -31,8 +31,8 @@ namespace PrestaShopBundle\ApiPlatform\Processor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
-use PrestaShopBundle\ApiPlatform\Serializer;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
@@ -40,11 +40,11 @@ class CommandProcessor implements ProcessorInterface
 {
     /**
      * @param CommandBusInterface $commandBus
-     * @param Serializer $apiPlatformSerializer
+     * @param DomainSerializer $apiPlatformSerializer
      */
     public function __construct(
         private readonly CommandBusInterface $commandBus,
-        private readonly Serializer $apiPlatformSerializer,
+        private readonly DomainSerializer $apiPlatformSerializer,
     ) {
     }
 

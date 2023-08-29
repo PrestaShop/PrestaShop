@@ -26,10 +26,23 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Denormalizers;
+namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer as SfObjectNormalizer;
 
-class ObjectDenormalizer extends ObjectNormalizer
+/**
+ * Used to be automatic injected in PrestaShopBundle/ApiPlatform/DomainSerializer::normalizers with
+ * prestashop.api.denormalizers tagged services.
+ */
+class ObjectDenormalizer extends SfObjectNormalizer
 {
+    /**
+     * ObjectDenormalizer must be the last denormalizer as a fallback.
+     *
+     * @return int
+     */
+    public static function getDefaultPriority(): int
+    {
+        return 1;
+    }
 }

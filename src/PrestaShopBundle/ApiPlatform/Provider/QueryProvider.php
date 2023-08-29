@@ -32,8 +32,8 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
-use PrestaShopBundle\ApiPlatform\Serializer;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
@@ -41,11 +41,11 @@ class QueryProvider implements ProviderInterface
 {
     /**
      * @param CommandBusInterface $queryBus
-     * @param Serializer $apiPlatformSerializer
+     * @param DomainSerializer $apiPlatformSerializer
      */
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly Serializer $apiPlatformSerializer,
+        private readonly DomainSerializer $apiPlatformSerializer,
     ) {
     }
 

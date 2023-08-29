@@ -131,7 +131,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
 
-  PrestaShopBundle\ApiPlatform\Serializer $apiPlatformSerializer:
-    class: PrestaShopBundle\ApiPlatform\Serializer
+  PrestaShopBundle\ApiPlatform\DomainSerializer $apiPlatformSerializer:
+    class: PrestaShopBundle\ApiPlatform\DomainSerializer
     arguments:
       [ !tagged prestashop.api.denormalizers ]
