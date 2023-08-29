@@ -23,6 +23,8 @@ if ($debug) {
     Debug::enable();
 }
 
+require_once __DIR__ . '/../app/AdminKernel.php';
+
 // Loads .env file from the root of project
 $dotEnvFile = dirname(__FILE__, 2) . '/.env';
   (new Dotenv())
@@ -31,6 +33,6 @@ $dotEnvFile = dirname(__FILE__, 2) . '/.env';
       ->loadEnv($dotEnvFile)
 ;
 
-$kernel = new AppKernel($env, $debug);
+$kernel = new AdminKernel($env, $debug);
 $application = new Application($kernel);
 $application->run($input);

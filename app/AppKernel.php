@@ -32,7 +32,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
-class AppKernel extends Kernel
+
+abstract class AppKernel extends Kernel
 {
     const VERSION = Version::VERSION;
     const MAJOR_VERSION_STRING = Version::MAJOR_VERSION_STRING;
@@ -62,7 +63,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new ApiPlatform\Symfony\Bundle\ApiPlatformBundle(),
             // PrestaShop Core bundle
-            new PrestaShopBundle\PrestaShopBundle(),
+            new PrestaShopBundle\PrestaShopBundle($this),
             // PrestaShop Translation parser
             new TranslationToolsBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
@@ -329,4 +330,14 @@ class AppKernel extends Kernel
             unlink($clearCacheLockPath);
         }
     }
+
+    /**
+     * Get App type of current Kernel based on kernel class name. (admin or front)
+     *
+     * @return string
+     */
+     public function getAppType(): string
+     {
+         return $this instanceof \AdminKernel ? 'admin' : 'front';
+     }
 }

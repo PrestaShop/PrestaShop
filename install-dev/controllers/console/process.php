@@ -363,7 +363,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
 
         global $kernel;
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     }
 

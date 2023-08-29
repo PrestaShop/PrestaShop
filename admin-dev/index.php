@@ -71,6 +71,7 @@ $apcLoader->register(true);
 if (_PS_MODE_DEV_) {
     Debug::enable();
 }
+require_once __DIR__ . '/../autoload.php';
 
 // Loads .env file from the root of project
 $dotEnvFile = dirname(__FILE__, 2) . '/.env';
@@ -80,18 +81,15 @@ $dotEnvFile = dirname(__FILE__, 2) . '/.env';
     ->loadEnv($dotEnvFile)
 ;
 
-require_once __DIR__ . '/../app/AppKernel.php';
-
-$kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+$kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
 
-$catch = strpos($request->getRequestUri(), Api::API_BASE_PATH) !== false;
+$catch = str_contains($request->getRequestUri(), Api::API_BASE_PATH);
 
 try {
-    require_once __DIR__ . '/../autoload.php';
     $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, $catch);
     $response->send();
     $kernel->terminate($request, $response);

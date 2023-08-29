@@ -4245,7 +4245,7 @@ class AdminControllerCore extends Controller
     /**
      * @return ContainerInterface
      */
-    protected function buildContainer()
+    protected function buildContainer(): ContainerInterface
     {
         return SymfonyContainer::getInstance();
     }

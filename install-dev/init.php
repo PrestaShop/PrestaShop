@@ -91,10 +91,11 @@ require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
 if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
+    require_once _PS_CORE_DIR_ . '/app/AdminKernel.php';
 
     global $kernel;
     try {
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     } catch (DBALException $e) {
         /*
