@@ -54,14 +54,14 @@ describe('Faceted search module - Edit template - Product brand filter', async (
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should search the module ${Modules.psFacetedSearch.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psFacetedSearch);
-    await expect(isModuleVisible).to.be.true;
+    expect(isModuleVisible).to.be.eq(true);
   });
 
   it(`should go to the configuration page of the module '${Modules.psFacetedSearch.name}'`, async function () {
@@ -70,7 +70,7 @@ describe('Faceted search module - Edit template - Product brand filter', async (
     await moduleManagerPage.goToConfigurationPage(page, Modules.psFacetedSearch.tag);
 
     const pageTitle = await psFacetedSearch.getPageSubtitle(page);
-    await expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);
+    expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);
   });
 
   [
@@ -120,7 +120,7 @@ describe('Faceted search module - Edit template - Product brand filter', async (
       await psFacetedSearch.editFilterTemplate(page, 1);
 
       const pageTitle = await psFacetedSearchFilterTemplate.getPanelTitle(page);
-      await expect(pageTitle).to.eq(psFacetedSearchFilterTemplate.title);
+      expect(pageTitle).to.eq(psFacetedSearchFilterTemplate.title);
     });
 
     it(
@@ -135,7 +135,7 @@ describe('Faceted search module - Edit template - Product brand filter', async (
           test.filterStatus,
           test.filterType,
         );
-        await expect(textResult).to.match(/× Your filter "[-A-Za-z0-9\s]+" was updated successfully./);
+        expect(textResult).to.match(/× Your filter "[-A-Za-z0-9\s]+" was updated successfully./);
       });
 
     it('should view my shop', async function () {
@@ -144,7 +144,7 @@ describe('Faceted search module - Edit template - Product brand filter', async (
       page = await psFacetedSearch.viewMyShop(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.be.eq(true);
     });
 
     it('should check the "All products" page', async function () {
@@ -153,19 +153,19 @@ describe('Faceted search module - Edit template - Product brand filter', async (
       await homePage.goToAllProductsBlockPage(page, 1);
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      await expect(isCategoryPageVisible).to.be.true;
+      expect(isCategoryPageVisible).to.be.eq(true);
 
       const hasSearchFilters = await categoryPageFO.hasSearchFilters(page);
-      await expect(hasSearchFilters).to.be.eq(test.expectedHasSearchFilters);
+      expect(hasSearchFilters).to.be.eq(test.expectedHasSearchFilters);
 
       const isSearchFilterRadio = await categoryPageFO.isSearchFilterRadio(page, 'manufacturer');
-      await expect(isSearchFilterRadio).to.be.eq(test.expectedIsSearchFilterRadio);
+      expect(isSearchFilterRadio).to.be.eq(test.expectedIsSearchFilterRadio);
 
       const isSearchFilterDropdown = await categoryPageFO.isSearchFilterDropdown(page, 'manufacturer');
-      await expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
+      expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
       const isSearchFiltersCheckbox = await categoryPageFO.isSearchFiltersCheckbox(page, 'manufacturer');
-      await expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
+      expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
     });
 
     it('should close the page and return to the backOffice', async function () {
@@ -174,7 +174,7 @@ describe('Faceted search module - Edit template - Product brand filter', async (
       page = await categoryPageFO.closePage(browserContext, page, 0);
 
       const pageTitle = await psFacetedSearch.getPageSubtitle(page);
-      await expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);
+      expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);
     });
   });
 });
