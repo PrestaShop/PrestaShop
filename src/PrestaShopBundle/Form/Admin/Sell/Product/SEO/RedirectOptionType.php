@@ -189,7 +189,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'label_help_box' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
                 'columns_number' => 2,
                 'row_attr' => [
-                    'class' => 'redirect-option-widget',
+                    'class' => 'redirect-option-widget typeahead-product-collection-type',
                 ],
                 'alert_message' => $this->getRedirectionAlertMessages(),
             ])
