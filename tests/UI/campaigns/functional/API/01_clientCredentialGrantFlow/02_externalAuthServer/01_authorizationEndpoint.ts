@@ -98,6 +98,7 @@ describe('API : External Auth Server - Authorization Endpoint', async () => {
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with valid data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTValidData', baseContext);
 
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/33710
       const apiResponse = await apiContextBO.post('api/oauth2/token', {
         form: {
           client_id: 'my_client_id',
