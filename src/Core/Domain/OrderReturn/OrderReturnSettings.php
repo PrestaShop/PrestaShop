@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,19 +22,23 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/OrderReturn/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+declare(strict_types=1);
 
-{% block javascripts %}
-  {{ parent() }}
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+class OrderReturnSettings
+{
+    /**
+     * Order return status ID's are hardcoded here because they are also hardcoded during the installation.
+     * In Legacy plain ID's where used, they should all be replaced with constants here.
+     * In case new Order Return status is added as part of update to the project then it should be saved in configuration table.
+     * In that case this part should be refactored so ID's here also stored in configuration table for consistency.
+     */
+    public const ORDER_RETURN_STATE_WAITING_FOR_CONFIRMATION = 1;
+    public const ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID = 2;
+    public const ORDER_RETURN_STATE_PACKAGE_RECEIVED = 3;
+    public const ORDER_RETURN_STATE_RETURN_DENIED = 4;
+    public const ORDER_RETURN_STATE_RETURN_COMPLETED = 5;
+}

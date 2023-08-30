@@ -22,30 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme orderReturnForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-
-{{ form_start(orderReturnForm) }}
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">person</i>
-    {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </h3>
-
-  <div class="card-body">
-    <div class="form-wrapper">
-      {{ form_widget(orderReturnForm) }}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/form.html.twig' %}
     </div>
   </div>
+{% endblock %}
 
-  <div class="card-footer">
-    <a href="{{ path('admin_merchandise_returns_index') }}" class="btn btn-outline-secondary">
-      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-    </a>
+{% block javascripts %}
+  {{ parent() }}
 
-    <button class="btn btn-primary float-right">
-      {{ 'Save'|trans({}, 'Admin.Actions') }}
-    </button>
-  </div>
-</div>
-{{ form_end(orderReturnForm) }}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+{% endblock %}

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
+
 /**
  * @property OrderState $object
  */
@@ -242,7 +244,16 @@ class AdminStatusesControllerCore extends AdminController
         //init and render the second list
         $this->list_skip_actions = [];
         $this->_filter = false;
-        $this->addRowActionSkipList('delete', [1, 2, 3, 4, 5]);
+        $this->addRowActionSkipList(
+            'delete',
+            [
+                OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_CONFIRMATION,
+                OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID,
+                OrderReturnSettings::ORDER_RETURN_STATE_PACKAGE_RECEIVED,
+                OrderReturnSettings::ORDER_RETURN_STATE_RETURN_DENIED,
+                OrderReturnSettings::ORDER_RETURN_STATE_RETURN_COMPLETED,
+            ]
+        );
         $this->initOrdersReturnsList();
         $this->checkFilterForOrdersReturnsList();
 
