@@ -112,6 +112,7 @@ class EditProductFormType extends TranslatorAwareType
             ])
             ->add('seo', SEOType::class, [
                 'product_id' => $productId,
+                'active' => $options['active'],
             ])
             ->add('options', OptionsType::class)
             ->add('extra_modules', ExtraModulesType::class, [
