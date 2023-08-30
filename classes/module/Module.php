@@ -209,19 +209,19 @@ abstract class ModuleCore implements ModuleInterface
     /** @var int Defines the multistore compatibility level of the module */
     public $multistoreCompatibility = self::MULTISTORE_COMPATIBILITY_UNKNOWN;
 
-    const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
+    const CACHE_FILE_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/modules_list.xml';
 
-    const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
+    const CACHE_FILE_TAB_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/tab_modules_list.xml';
 
-    const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
-    const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = '/config/xml/default_country_modules_list.xml';
+    const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/modules_native_addons.xml';
+    const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/default_country_modules_list.xml';
 
-    const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
+    const CACHE_FILE_CUSTOMER_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/customer_modules_list.xml';
 
-    const CACHE_FILE_MUST_HAVE_MODULES_LIST = '/config/xml/must_have_modules_list.xml';
+    const CACHE_FILE_MUST_HAVE_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/must_have_modules_list.xml';
 
-    const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
-    const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
+    const CACHE_FILE_TRUSTED_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/trusted_modules_list.xml';
+    const CACHE_FILE_UNTRUSTED_MODULES_LIST = _PS_ROOT_DIR_ .  '/config/xml/untrusted_modules_list.xml';
 
     public const MULTISTORE_COMPATIBILITY_NO = -20;
     public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = -10;
