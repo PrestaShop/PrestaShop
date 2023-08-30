@@ -1842,13 +1842,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Generate a URL corresponding to the current page but
-     * with the query string altered.
-     *
-     * If $extraParams is set to NULL, then all query params are stripped.
-     *
-     * Otherwise, params from $extraParams that have a null value are stripped,
-     * and other params are added. Params not in $extraParams are unchanged.
+     * @deprecated Since 9.0 and will be removed in the next major.
      */
     protected function updateQueryString(array $extraParams = null)
     {
