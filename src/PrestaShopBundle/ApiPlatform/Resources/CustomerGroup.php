@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,17 +27,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Converters;
+namespace PrestaShopBundle\ApiPlatform\Resources;
 
-class StringToIntConverter implements ConverterInterface
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/customers/group',
+            processor: CommandProcessor::class,
+            extraProperties: [
+                'command' => AddCustomerGroupCommand::class,
+            ],
+        ),
+    ]
+)]
+class CustomerGroup
 {
-    public function convert(mixed $value): int
-    {
-        return (int) $value;
-    }
+    public array $localizedNames;
 
-    public function supports(string $type): bool
-    {
-        return 'int' === $type;
-    }
+    public float $reductionPercent;
+
+    public bool $displayPriceTaxExcluded;
+
+    public bool $showPrice;
+
+    public array $shopIds;
 }

@@ -110,7 +110,6 @@ services:
     autowire: true
     arguments:
       - '@prestashop.core.query_bus'
-      - !tagged prestashop.api.converters
 
   PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
     tags: [ 'api_platform.state_processor' ]
@@ -132,11 +131,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
 
-  Symfony\Component\Serializer\Serializer $apiPlatformSerializer:
-    class: Symfony\Component\Serializer\Serializer
+  PrestaShopBundle\ApiPlatform\DomainSerializer $apiPlatformSerializer:
+    class: PrestaShopBundle\ApiPlatform\DomainSerializer
     arguments:
-      $normalizers:
-        - '@prestashop.api_platform.property_normalizer'
-
-  prestashop.api_platform.property_normalizer:
-    class: Symfony\Component\Serializer\Normalizer\ObjectNormalizer
+      [ !tagged prestashop.api.denormalizers ]

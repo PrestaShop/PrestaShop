@@ -30,7 +30,6 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
@@ -39,14 +38,14 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\Hook as HookQuery;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
-use PrestaShopBundle\ApiPlatform\Converters\StringToIntConverter;
+use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
+use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 use PrestaShopBundle\ApiPlatform\Resources\FoundProduct as FoundProductDto;
 use PrestaShopBundle\ApiPlatform\Resources\Hook;
 use RuntimeException;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class QueryProviderTest extends TestCase
 {
@@ -56,16 +55,17 @@ class QueryProviderTest extends TestCase
     private $queryBus;
 
     /**
-     * @var Serializer|MockObject
+     * @var DomainSerializer
      */
-    private Serializer|MockObject $serializer;
+    private DomainSerializer $serializer;
 
     /**
      * Set up dependencies for HookStatusProvider
      */
     public function setUp(): void
     {
-        $this->serializer = new Serializer([new ObjectNormalizer()]);
+        $denormalizers = new \ArrayIterator([new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
+        $this->serializer = new DomainSerializer($denormalizers);
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus
             ->method('handle')
@@ -85,7 +85,7 @@ class QueryProviderTest extends TestCase
 
     public function testProvideHookStatus(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
         $get = new Get();
         $get = $get
             ->withExtraProperties(['query' => GetHookStatus::class])
@@ -100,7 +100,7 @@ class QueryProviderTest extends TestCase
 
     public function testProvideHook(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
         $get = new Get();
         $get = $get
             ->withExtraProperties(['query' => GetHook::class])
@@ -121,7 +121,7 @@ class QueryProviderTest extends TestCase
 
     public function testSearchProduct(): void
     {
-        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
+        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer);
         $get = new GetCollection();
         $get = $get
             ->withExtraProperties(['query' => SearchProducts::class])
@@ -129,14 +129,14 @@ class QueryProviderTest extends TestCase
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'mug', 'resultsLimit' => 10, 'isoCode' => 'EUR']);
         self::assertCount(1, $searchProducts);
 
-        $searchProductProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
+        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'search with order id', 'resultsLimit' => 10, 'isoCode' => 'EUR'], ['filters' => ['orderId' => 1]]);
         self::assertCount(0, $searchProducts);
     }
 
     public function testProvideNoQueryThrowsException(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, [new StringToIntConverter()], $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
         $get = new Get();
 
         $this->expectException(NoExtraPropertiesFoundException::class);

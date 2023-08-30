@@ -31,32 +31,45 @@ namespace PrestaShopBundle\ApiPlatform\Processor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\ApiPlatform\DomainSerializer;
+use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use ReflectionException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class CommandProcessor implements ProcessorInterface
 {
     /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
      * @param CommandBusInterface $commandBus
+     * @param DomainSerializer $apiPlatformSerializer
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
-        $this->commandBus = $commandBus;
+    public function __construct(
+        private readonly CommandBusInterface $commandBus,
+        private readonly DomainSerializer $apiPlatformSerializer,
+    ) {
     }
 
+    /**
+     * @param $data
+     * @param Operation $operation
+     * @param array $uriVariables
+     * @param array $context
+     *
+     * @return void
+     *
+     * @throws NoExtraPropertiesFoundException
+     * @throws ExceptionInterface|ReflectionException
+     */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $command = $operation->getExtraProperties()['command'];
-        $reflectionMethod = new \ReflectionMethod($command, '__construct');
-        $constructParameters = $reflectionMethod->getParameters();
-        $parameters = [];
-        foreach ($constructParameters as $parameter) {
-            $parameters[] = $data->{$parameter->name};
+        $commandClass = $operation->getExtraProperties()['command'] ?? null;
+        $commandParameters = array_merge($this->apiPlatformSerializer->normalize($data), $uriVariables);
+
+        if (null === $commandClass || !class_exists($commandClass)) {
+            throw new NoExtraPropertiesFoundException('Extra property "command" not found');
         }
 
-        $this->commandBus->handle(new $command(...array_values($parameters)));
+        $command = $this->apiPlatformSerializer->denormalize($commandParameters, $commandClass);
+
+        $this->commandBus->handle($command);
     }
 }

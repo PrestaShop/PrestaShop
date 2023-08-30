@@ -26,11 +26,23 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Converters;
+namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
-interface ConverterInterface
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer as SfObjectNormalizer;
+
+/**
+ * Used to be automatic injected in PrestaShopBundle/ApiPlatform/DomainSerializer::normalizers with
+ * prestashop.api.denormalizers tagged services.
+ */
+class ObjectDenormalizer extends SfObjectNormalizer
 {
-    public function convert(mixed $value);
-
-    public function supports(string $type);
+    /**
+     * ObjectDenormalizer must be the last denormalizer as a fallback.
+     *
+     * @return int
+     */
+    public static function getDefaultPriority(): int
+    {
+        return -1;
+    }
 }
