@@ -1852,7 +1852,7 @@ class FrontControllerCore extends Controller
      */
     protected function updateQueryString(array $extraParams = null)
     {
-        return Tools:updateCurrentQueryString($extraParams);
+        return Tools::updateCurrentQueryString($extraParams);
     }
 
     protected function getCurrentURL()
