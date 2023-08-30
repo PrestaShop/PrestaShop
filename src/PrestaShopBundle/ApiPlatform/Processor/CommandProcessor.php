@@ -69,7 +69,6 @@ class CommandProcessor implements ProcessorInterface
         }
 
         $command = $this->apiPlatformSerializer->denormalize($commandParameters, $commandClass);
-
         $this->commandBus->handle($command);
     }
 }

@@ -30,8 +30,11 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
+use PrestaShopBundle\ApiPlatform\Normalizer\DateTimeImmutableDenormalizer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
 use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
 
@@ -47,7 +50,7 @@ class DomainSerializerTest extends TestCase
      */
     public function setUp(): void
     {
-        $denormalizers = new \ArrayIterator([new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
+        $denormalizers = new \ArrayIterator([new DateTimeImmutableDenormalizer(), new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
         $this->serializer = new DomainSerializer($denormalizers);
     }
 
@@ -82,6 +85,43 @@ class DomainSerializerTest extends TestCase
                 true,
                 [1]
             ),
+        ];
+
+        $editCartRuleCommand = new EditCartRuleCommand(1);
+        $editCartRuleCommand->setDescription('test description');
+        $editCartRuleCommand->setCode('test code');
+        $editCartRuleCommand->setMinimumAmount('10', 1, true, true);
+        $editCartRuleCommand->setCustomerId(1);
+        $editCartRuleCommand->setLocalizedNames([1 => 'test1', 2 => 'test2']);
+        $editCartRuleCommand->setHighlightInCart(true);
+        $editCartRuleCommand->setAllowPartialUse(true);
+        $editCartRuleCommand->setPriority(1);
+        $editCartRuleCommand->setActive(true);
+        $editCartRuleCommand->setValidityDateRange(new \DateTimeImmutable('2023-08-23'), new \DateTimeImmutable('2023-08-25'));
+        $editCartRuleCommand->setTotalQuantity(100);
+        $editCartRuleCommand->setQuantityPerUser(1);
+        $editCartRuleCommand->setCartRuleAction(new CartRuleAction(true));
+        yield [
+            [
+                'cartRuleId' => 1,
+                'description' => 'test description',
+                'code' => 'test code',
+                'minimumAmount' => ['minimumAmount' => '10', 'currencyId' => 1, 'taxIncluded' => true, 'shippingIncluded' => true],
+                'customerId' => 1,
+                'localizedNames' => [
+                    1 => 'test1',
+                    2 => 'test2',
+                ],
+                'highlightInCart' => true,
+                'allowPartialUse' => true,
+                'priority' => 1,
+                'active' => true,
+                'validityDateRange' => ['validFrom' => '2023-08-23', 'validTo' => '2023-08-25'],
+                'totalQuantity' => 100,
+                'quantityPerUser' => 1,
+                'cartRuleAction' => ['freeShipping' => true],
+            ],
+            $editCartRuleCommand,
         ];
     }
 }

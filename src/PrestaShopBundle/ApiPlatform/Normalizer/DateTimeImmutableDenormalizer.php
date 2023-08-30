@@ -26,51 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Resources;
+namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Put;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
-use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use PrestaShop\Decimal\DecimalNumber;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-#[ApiResource(
-    operations: [
-        new Put(
-            uriTemplate: '/cartRule',
-            processor: CommandProcessor::class,
-            extraProperties: ['command' => EditCartRuleCommand::class]
-        ),
-    ],
-)]
-class CartRule
+class DateTimeImmutableDenormalizer implements DenormalizerInterface
 {
-    public int $cartRuleId;
+    public function denormalize($data, string $type, string $format = null, array $context = [])
+    {
+        return new \DateTimeImmutable($data);
+    }
 
-    public string $description;
+    public function supportsDenormalization($data, string $type, string $format = null)
+    {
+        return \DateTimeImmutable::class === $type;
+    }
 
-    public string $code;
-
-    public array $minimumAmount;
-
-    public bool $minimumAmountShippingIncluded;
-
-    public int $customerId;
-
-    public array $localizedNames;
-
-    public bool $highlightInCart;
-
-    public bool $allowPartialUse;
-
-    public int $priority;
-
-    public bool $active;
-
-    public array $validityDateRange;
-
-    public int $totalQuantity;
-
-    public int $quantityPerUser;
-
-    public array $cartRuleAction;
+    /**
+     * Set higher priority than ObjectDenormalizer.
+     *
+     * @return int
+     */
+    public static function getDefaultPriority(): int
+    {
+        return 10;
+    }
 }

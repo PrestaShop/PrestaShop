@@ -53,7 +53,17 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     public function denormalize($data, string $type, string $format = null, array $context = []): mixed
     {
-        $action = $this->serializer->denormalize($data, $type, $format, $context);
+        $reflectionClass = new \ReflectionClass($type);
+        $constructParameters = $reflectionClass->getConstructor()->getParameters();
+        $dataConstruct = [];
+        foreach ($constructParameters as $constructParameter) {
+            if (isset($data[$constructParameter->getName()])) {
+                $dataConstruct[$constructParameter->getName()] = $data[$constructParameter->getName()];
+                unset($data[$constructParameter->getName()]);
+            }
+        }
+
+        $action = $this->serializer->denormalize($dataConstruct, $type, $format, $context);
 
         //Try to call setters
         foreach ($data as $param => $value) {
@@ -61,9 +71,11 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
             if ($reflectionMethod = $this->findSetterMethod($param, $type)) {
                 $methodParameters = $reflectionMethod->getParameters();
                 foreach ($methodParameters as $methodParameter) {
-                    $requestValue = is_array($value) ? $value[$methodParameter->getName()] : $value;
+                    $requestValue = is_array($value) && isset($value[$methodParameter->getName()]) ? $value[$methodParameter->getName()] : $value;
                     if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($requestValue)) {
                         $parameters[] = $this->serializer->denormalize($requestValue, $methodParameter->getType()->getName());
+                    } else {
+                        $parameters[] = $requestValue;
                     }
                 }
 

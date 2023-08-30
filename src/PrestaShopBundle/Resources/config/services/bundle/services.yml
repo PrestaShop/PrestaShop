@@ -117,7 +117,6 @@ services:
     autowire: true
     arguments:
       - '@prestashop.core.command_bus'
-      - !tagged prestashop.api.converters
 
   PrestaShopBundle\Security\Admin\SessionRenewer:
     arguments:
