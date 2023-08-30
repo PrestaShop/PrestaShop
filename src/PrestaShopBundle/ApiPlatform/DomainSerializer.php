@@ -53,13 +53,17 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     public function denormalize($data, string $type, string $format = null, array $context = []): mixed
     {
-        $reflectionClass = new \ReflectionClass($type);
-        $constructParameters = $reflectionClass->getConstructor()->getParameters();
         $dataConstruct = [];
-        foreach ($constructParameters as $constructParameter) {
-            if (isset($data[$constructParameter->getName()])) {
-                $dataConstruct[$constructParameter->getName()] = $data[$constructParameter->getName()];
-                unset($data[$constructParameter->getName()]);
+
+        $reflectionClass = new \ReflectionClass($type);
+        if($reflectionClass->getConstructor()) {
+            $constructParameters = $reflectionClass->getConstructor()->getParameters();
+
+            foreach ($constructParameters as $constructParameter) {
+                if (isset($data[$constructParameter->getName()])) {
+                    $dataConstruct[$constructParameter->getName()] = $data[$constructParameter->getName()];
+                    unset($data[$constructParameter->getName()]);
+                }
             }
         }
 
