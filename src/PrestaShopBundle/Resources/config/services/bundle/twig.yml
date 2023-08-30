@@ -5,6 +5,7 @@ services:
     autoconfigure: true
     bind:
       $psVersion: !php/const _PS_VERSION_
+      $debugMode: !php/const _PS_MODE_DEV_
 
   Twig\Extension\StringLoaderExtension: ~
 

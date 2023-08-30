@@ -36,13 +36,13 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
+use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/multistore_header.html.twig')]
 class MultistoreHeader
 {
-    public bool $lockedToAllShopContext = false;
     private bool $isMultistoreUsed;
     private string $contextColor = '';
     private string $contextName = '';
@@ -55,6 +55,7 @@ class MultistoreHeader
         private readonly EntityManagerInterface $entityManager,
         private readonly LegacyContext $legacyContext,
         private readonly TranslatorInterface $translator,
+        private readonly MenuBuilder $menuBuilder,
         private readonly ShopContext $shopContext
     ) {
     }
@@ -79,19 +80,32 @@ class MultistoreHeader
             $this->contextName = $this->translator->trans('All stores', domain: 'Admin.Global');
         }
 
-        if (!$this->lockedToAllShopContext) {
+        if (!$this->isLockedToAllShopContext()) {
             $this->groupList = array_filter(
                 $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]),
                 static fn (ShopGroup $shopGroup) => !$shopGroup->getShops()->isEmpty()
             );
         }
         $this->link = $this->legacyContext->getContext()->link;
-        $this->lockedToAllShopContext = false;
     }
 
     public function isLockedToAllShopContext(): bool
     {
-        return $this->lockedToAllShopContext;
+        $controllerName = $this->menuBuilder->getLegacyControllerClassName();
+        $controllers = [
+            'AdminAccess',
+            'AdminFeatureFlag',
+            'AdminLanguages',
+            'AdminProfiles',
+            'AdminSpecificPriceRule',
+            'AdminStatuses',
+            'AdminSecurity',
+            'AdminSecuritySessionEmployee',
+            'AdminSecuritySessionCustomer',
+            'AdminTranslations',
+        ];
+
+        return in_array($controllerName, $controllers);
     }
 
     public function isMultistoreUsed(): bool

@@ -66,6 +66,20 @@ class MenuBuilder
         return $tab;
     }
 
+    public function getCurrentTabLevel(): int
+    {
+        $currentTab = $this->getCurrentTab();
+        if ($currentTab) {
+            $ancestorsTab = $this->getAncestorsTab($currentTab->getId());
+            if (!empty($ancestorsTab)) {
+                return count($ancestorsTab);
+            }
+        }
+
+        return 0;
+    }
+
+    /* @return Tab[] */
     public function getAncestorsTab(int $currentTabId): array
     {
         return $this->tabRepository->getAncestors($currentTabId);

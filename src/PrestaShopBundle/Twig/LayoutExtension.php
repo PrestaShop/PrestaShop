@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -56,7 +57,8 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
         private readonly LegacyContext $context,
         private readonly string $environment,
         private readonly ShopConfigurationInterface $configuration,
-        private readonly CurrencyDataProvider $currencyDataProvider
+        private readonly CurrencyDataProvider $currencyDataProvider,
+        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ) {
     }
 
@@ -74,13 +76,19 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
 
         try {
             $defaultCurrency = $this->context->getEmployeeCurrency() ?: $this->currencyDataProvider->getDefaultCurrency();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $defaultCurrency = null;
         }
         try {
             $rootUrl = $this->context->getRootUrl();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $rootUrl = null;
+        }
+
+        try {
+            $useSymfonyLayout = $this->featureFlagStateChecker->isEnabled('symfony_layout');
+        } catch (\Exception) {
+            $useSymfonyLayout = false;
         }
 
         return [
@@ -90,6 +98,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
             'root_url' => $rootUrl,
             'js_translatable' => [],
             'rtl_suffix' => $this->context->getContext()->language->is_rtl ? '_rtl' : '',
+            'use_symfony_layout' => $useSymfonyLayout,
         ];
     }
 

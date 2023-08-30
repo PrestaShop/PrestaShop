@@ -28,31 +28,31 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/toolbar.html.twig')]
 class Toolbar
 {
-    public bool $lockedToAllShopContext;
     public array $toolbarBtn;
-    public array|string $title;
-    public string $table;
+    public string $title;
     public bool|string $helpLink;
     public bool $enableSidebar;
     public int $currentTabLevel = 0;
     public array $navigationTabs = [];
     public array $breadcrumbs;
-    public bool $useRegularH1Structure = true;
 
     public function __construct(
         private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly MenuBuilder $menuBuilder
+        private readonly MenuBuilder $menuBuilder,
+        private readonly LegacyContext $context,
     ) {
     }
 
-    public function mount(): void
+    public function mount(string $layoutTitle): void
     {
         $tab = $this->menuBuilder->getCurrentTab();
         if (null === $tab) {
@@ -70,8 +70,28 @@ class Toolbar
                 }
             }
 
-            $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
-            $this->hookDispatcher->dispatchWithParameters('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$this->breadcrumbs]);
+            $this->setBreadcrumbs($tab, $ancestorsTab, $tabs);
+            $this->setTitle($layoutTitle);
         }
+    }
+
+    private function setTitle(string $layoutTitle): void
+    {
+        if (empty($layoutTitle)) {
+            $this->title = $this->breadcrumbs['tab']->name;
+        } else {
+            $this->title = $layoutTitle;
+        }
+    }
+
+    private function setBreadcrumbs(Tab $tab, array $ancestorsTab, array $tabs): void
+    {
+        $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$this->breadcrumbs]);
+    }
+
+    public function getTable(): string
+    {
+        return $this->context->getContext()->controller->table;
     }
 }

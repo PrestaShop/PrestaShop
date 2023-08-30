@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,23 +21,31 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends(template_from_string(
-  getLegacyLayout(
-    app.request.attributes.get('_legacy_controller'),
-    layoutTitle is defined ? layoutTitle : '',
-    layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
-    layoutDisplayType is defined ? layoutDisplayType : '',
-    showContentHeader is defined ? showContentHeader : true,
-    headerTabContent is defined ? headerTabContent : '',
-    enableSidebar is defined ? enableSidebar : false,
-    help_link is defined ? help_link : '',
-    js_router_metadata(),
-    meta_title is defined ? meta_title : '',
-    use_regular_h1_structure is defined ? use_regular_h1_structure : true,
-    legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'
+ * #}
+
+{% set lightDisplay = app.request.query.get('liteDisplaying', false)  %}
+{% set showContentHeader = showContentHeader is defined ? showContentHeader : true  %}
+{% set table = table is defined ? table : false %}
+
+{% extends(use_symfony_layout
+  ? '@PrestaShop/Admin/Layout/default_layout.html.twig'
+  : template_from_string(
+    getLegacyLayout(
+      app.request.attributes.get('_legacy_controller'),
+      layoutTitle is defined ? layoutTitle : '',
+      layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
+      layoutDisplayType is defined ? layoutDisplayType : '',
+      showContentHeader,
+      headerTabContent is defined ? headerTabContent : '',
+      enableSidebar is defined ? enableSidebar : false,
+      help_link is defined ? help_link : '',
+      js_router_metadata(),
+      meta_title is defined ? meta_title : '',
+      use_regular_h1_structure is defined ? use_regular_h1_structure : true,
+      legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'
+    )
   )
-  )) %}
+) %}
 
 {% block javascripts %}
   <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>

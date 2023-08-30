@@ -25,7 +25,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set use_regular_h1_structure = false %}
 {% set layoutTitle %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+  {% block pageTitle %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+  {% endblock %}
 {% endset %}
 
 {% block stylesheets %}
