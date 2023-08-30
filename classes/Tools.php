@@ -3857,7 +3857,7 @@ exit;
         return $array;
     }
 
-     /**
+    /**
      * Generate a URL corresponding to the current page but
      * with the query string altered.
      *
