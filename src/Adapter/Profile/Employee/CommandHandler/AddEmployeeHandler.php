@@ -121,6 +121,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->id_last_customer_message = $employee->getLastElementsForNotify('customer_message');
         $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
         $employee->has_enabled_gravatar = $command->hasEnabledGravatar();
+        $employee->bo_theme = 'default';
 
         if (false === $employee->add()) {
             throw new EmployeeException(sprintf('Failed to add new employee with email "%s"', $command->getEmail()->getValue()));
