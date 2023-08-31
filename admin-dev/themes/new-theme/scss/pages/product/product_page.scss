@@ -2215,46 +2215,7 @@ $product-page-padding-bottom: 80px !default;
 #related-product,
 #id-product-redirected,
 .redirect-option-widget {
-  // list of added related products
-  .typeahead-list {
-    li {
-      @extend .p-1;
-      @extend .mt-1;
-      @extend .d-flex;
-      @extend .align-items-center;
-      border: 1px solid $gray-light;
-
-      // thumbnail
-      > .media-left {
-        img {
-          max-width: 50px;
-          max-height: 50px;
-        }
-      }
-
-      // text
-      > .media-body {
-        .label {
-          @extend .mx-1;
-        }
-
-        // delete button
-        i.delete {
-          float: right;
-          color: $medium-gray;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-  .autocomplete-search {
-    .search-suggestion {
-      img {
-        width: 50px;
-      }
-    }
-  }
+  @import "../../components/typeahead_product_collection_type";
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {
