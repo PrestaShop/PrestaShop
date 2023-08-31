@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Twig\Component;
 
 use Link;
 use Media;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
@@ -42,14 +43,9 @@ class Header
     public string $meta_title;
     public string $shop_name;
     public bool $display_header_javascript;
-
     public string $controller_name;
-
-    public string $iso_user;
-    public string $lang_is_rtl;
     public string $full_language_code;
     public string $full_cldr_language_code;
-    public string $country_iso_code;
     public string $round_mode;
     public ?string $shop_context;
     public string $token;
@@ -62,6 +58,7 @@ class Header
     public ?string $displayBackOfficeHeader;
 
     public function __construct(
+        private readonly LegacyContext $context,
         private readonly string $psVersion,
     ) {
     }
@@ -79,5 +76,20 @@ class Header
     public function getPsVersion(): string
     {
         return $this->psVersion;
+    }
+
+    public function getIsoUser(): string
+    {
+        return $this->context->getLanguage()->getIsoCode();
+    }
+
+    public function getCountryIsoCode(): string
+    {
+        return $this->context->getContext()->country->iso_code;
+    }
+
+    public function getLangIsRtl(): bool
+    {
+        return (bool) $this->context->getLanguage()->isRTL();
     }
 }

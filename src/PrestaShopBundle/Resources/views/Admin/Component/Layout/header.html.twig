@@ -11,11 +11,11 @@
 {% if display_header_javascript %}
   <script type="text/javascript">
     var help_class_name = '{{ controller_name|e('js') }}';
-    var iso_user = '{{ iso_user|e('js') }}';
-    var lang_is_rtl = '{{ lang_is_rtl|intCast }}';
+    var iso_user = '{{ this.isoUser|e('js') }}';
+    var lang_is_rtl = '{{ this.langIsRtl|intCast }}';
     var full_language_code = '{{ full_language_code|e('js') }}';
     var full_cldr_language_code = '{{ full_cldr_language_code|e('js') }}';
-    var country_iso_code = '{{ country_iso_code|e('js') }}';
+    var country_iso_code = '{{ this.countryIsoCode|e('js') }}';
     var _PS_VERSION_ = '{{ this.psVersion|e('js') }}';
     var roundMode = {{ round_mode|intCast }};
     var youEditFieldFor = '';
