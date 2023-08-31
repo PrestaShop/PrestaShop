@@ -120,6 +120,8 @@ class DomainSerializerTest extends TestCase
                 'totalQuantity' => 100,
                 'quantityPerUser' => 1,
                 'cartRuleAction' => ['freeShipping' => true],
+                //TODO: handle cartRuleAction with complex discount handle by business rules
+                // 'cartRuleAction' => ['freeShipping' => true, 'giftProduct' => ['productId': 1], 'discount' => ['amountDiscount' => ['amount' => 10]]]...
             ],
             $editCartRuleCommand,
         ];
