@@ -50,7 +50,6 @@ class Header
     public string $full_language_code;
     public string $full_cldr_language_code;
     public string $country_iso_code;
-    public string $ps_version;
     public string $round_mode;
     public ?string $shop_context;
     public string $token;
@@ -62,6 +61,11 @@ class Header
     public array $js_inline;
     public ?string $displayBackOfficeHeader;
 
+    public function __construct(
+        private readonly string $psVersion,
+    ) {
+    }
+
     public function getEmployeeToken(): string
     {
         return Tools::getAdminToken('AdminEmployees');
@@ -70,5 +74,10 @@ class Header
     public function getJsDef(): array
     {
         return Media::getJsDef();
+    }
+
+    public function getPsVersion(): string
+    {
+        return $this->psVersion;
     }
 }

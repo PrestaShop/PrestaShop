@@ -16,7 +16,7 @@
     var full_language_code = '{{ full_language_code|e('js') }}';
     var full_cldr_language_code = '{{ full_cldr_language_code|e('js') }}';
     var country_iso_code = '{{ country_iso_code|e('js') }}';
-    var _PS_VERSION_ = '{{ ps_version|e('js') }}';
+    var _PS_VERSION_ = '{{ this.psVersion|e('js') }}';
     var roundMode = {{ round_mode|intCast }};
     var youEditFieldFor = '';
     {% if shop_context %}

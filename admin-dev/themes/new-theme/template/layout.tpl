@@ -16,7 +16,6 @@
       full_language_code=$full_language_code
       full_cldr_language_code=$full_cldr_language_code
       country_iso_code=$country_iso_code
-      ps_version=$smarty.const._PS_VERSION_
       round_mode=$round_mode
       shop_context=(isset($shop_context)) ? $shop_context : null
       token=$token
