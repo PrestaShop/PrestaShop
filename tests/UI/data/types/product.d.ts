@@ -100,25 +100,25 @@ type ProductCombinationBulk = {
 
 type ProductCombinationBulkRetailPrice = {
   costPriceToEnable: boolean
-  costPrice: number
+  costPrice?: number
   impactOnPriceTIncToEnable: boolean
-  impactOnPriceTInc: number
+  impactOnPriceTInc?: number
   impactOnWeightToEnable: boolean
-  impactOnWeight: number
+  impactOnWeight?: number
 }
 
 type ProductCombinationBulkSpecificReferences = {
   referenceToEnable: boolean
-  reference: string
+  reference?: string
 }
 
 type ProductCombinationBulkStock = {
   quantityToEnable: boolean
-  quantity: number
+  quantity?: number
   minimalQuantityToEnable: boolean
-  minimalQuantity: number
+  minimalQuantity?: number
   stockLocationToEnable: boolean
-  stockLocation: string
+  stockLocation?: string
 };
 
 type ProductCustomization = {

@@ -49,7 +49,7 @@ export default class EmployeeData {
     this.firstName = employeeToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Employee lastname */
-    this.lastName = employeeToCreate.lastName || faker.person.lastName();
+    this.lastName = employeeToCreate.lastName || faker.person.lastName().replace('\'', '');
 
     /** @type {string} Email of the employee */
     this.email = employeeToCreate.email || faker.internet.email(

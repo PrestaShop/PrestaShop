@@ -2,6 +2,7 @@
 import CommonPage from '@pages/commonPage';
 
 import {Frame, Page} from 'playwright';
+import type {PageFunction} from 'playwright-core/types/structs';
 
 /**
  * BO parent page, contains functions that can be used on all BO page
@@ -933,7 +934,7 @@ export default class BOBasePage extends CommonPage {
   async setValueOnTinymceInput(page: Page, iFrameSelector: string, value: string): Promise<void> {
     const args = {selector: iFrameSelector, vl: value};
     // eslint-disable-next-line no-eval
-    const fn = eval(`({
+    const fn: {fnSetValueOnTinymceInput: PageFunction<{ selector: string, vl: string }, void>} = eval(`({
       async fnSetValueOnTinymceInput(args) {
         /* eslint-env browser */
         const iFrameElement = await document.querySelector(args.selector);
@@ -943,6 +944,30 @@ export default class BOBasePage extends CommonPage {
       }
     })`);
     await page.evaluate(fn.fnSetValueOnTinymceInput, args);
+  }
+
+  /**
+   * Set value on tinyMce textarea
+   * @param page {Page} Browser tab
+   * @param selector {string} Selector of the input to set value on
+   * @param value {string} Value
+   * @param onChange {boolean} Trigger the event 'change' on selector
+   * @return {Promise<void>}
+   */
+  async setValueOnDateTimePickerInput(page: Page, selector: string, value: string, onChange: boolean = false): Promise<void> {
+    const args = {selector, value, onChange};
+    // eslint-disable-next-line no-eval
+    const fn: {fnSetValueOnDTPickerInput: PageFunction<{ selector: string, value: string, onChange: boolean }, void>} = eval(`({
+      async fnSetValueOnDTPickerInput(args) {
+        /* eslint-env browser */
+        const textElement = await document.querySelector(args.selector);
+        textElement.value = args.value;
+        if (args.onChange) {
+          textElement.dispatchEvent(new Event('change'));
+        }
+      }
+    })`);
+    await page.evaluate(fn.fnSetValueOnDTPickerInput, args);
   }
 
   /**

@@ -165,7 +165,8 @@ class Stocks extends BOBasePage {
    */
   async goToSubTabMovements(page: Page): Promise<void> {
     await page.click(this.movementsNavItemLink);
-    await this.waitForVisibleSelector(page, `${this.movementsNavItemLink}.active`);
+    await page.waitForResponse('**/api/stock-movements/**');
+    await this.waitForVisibleSelector(page, `${this.movementsNavItemLink}.active`, 2000);
   }
 
   /**

@@ -601,8 +601,8 @@ class CombinationsTab extends BOBasePage {
     await page.waitForTimeout(2000);
     await this.waitForVisibleSelector(page, this.editCombinationIframe);
 
-    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
-    expect(combinationFrame).to.not.eq(null);
+    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    expect(combinationFrame).to.not.equal(null);
 
     await this.setValue(combinationFrame!, this.editCombinationModalQuantityInput, combinationData.quantity);
     if (combinationData.minimalQuantity) {
@@ -631,8 +631,8 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<ProductStockMovement>}
    */
   async getRecentStockMovements(page: Page, row: number = 1): Promise<ProductStockMovement> {
-    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
-    expect(combinationFrame).to.not.eq(null);
+    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    expect(combinationFrame).to.not.equal(null);
 
     return {
       dateTime: await this.getTextContent(combinationFrame!, this.combinationStockMovementsDate(row)),
@@ -647,8 +647,8 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeEditCombinationModal(page: Page): Promise<boolean> {
-    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
-    expect(combinationFrame).to.not.eq(null);
+    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    expect(combinationFrame).to.not.equal(null);
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
     if (await this.elementVisible(page, this.editCombinationModalDiscardButton, 2000)) {
@@ -827,7 +827,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getFilterBySizeButtonName(page: Page): Promise<string> {
+  async getFilterBySizeButtonName(page: Page): Promise<string> {
     return this.getTextContent(page, this.filterBySizeButton);
   }
 
@@ -882,29 +882,39 @@ class CombinationsTab extends BOBasePage {
    */
   async bulkEditStock(page: Frame | Page, editStockData: ProductCombinationBulkStock): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalStocksButton);
+
     await this.setChecked(
       page,
       this.bulkEditModalQuantitySwitchButton(editStockData.quantityToEnable ? 1 : 0),
     );
-    await this.setValue(page, this.bulkEditModalQuantityInput, editStockData.quantity);
+    if (editStockData.quantity) {
+      await this.setValue(page, this.bulkEditModalQuantityInput, editStockData.quantity);
+    }
+
     await this.setChecked(
       page,
       this.bulkEditModalMinimalQuantitySwitchButton(editStockData.minimalQuantityToEnable ? 1 : 0),
     );
-    await this.setValue(
-      page,
-      this.bulkEditModalMinimalQuantityInput,
-      editStockData.minimalQuantity,
-    );
+    if (editStockData.minimalQuantity) {
+      await this.setValue(
+        page,
+        this.bulkEditModalMinimalQuantityInput,
+        editStockData.minimalQuantity,
+      );
+    }
+
     await this.setChecked(
       page,
       this.bulkEditModalStockLocationSwitchButton(editStockData.stockLocationToEnable ? 1 : 0),
     );
-    await this.setValue(
-      page,
-      this.bulkEditModalStockLocationInput,
-      editStockData.stockLocation,
-    );
+    if (editStockData.stockLocation) {
+      await this.setValue(
+        page,
+        this.bulkEditModalStockLocationInput,
+        editStockData.stockLocation,
+      );
+    }
+
     await this.waitForSelectorAndClick(page, this.bulkEditModalStocksButton);
   }
 
@@ -916,18 +926,28 @@ class CombinationsTab extends BOBasePage {
    */
   async bulkEditRetailPrice(page: Frame | Page, editRetailPriceData: ProductCombinationBulkRetailPrice): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalRetailPriceButton);
+
     await this.setChecked(page, this.bulkEditModalCostPriceSwitchButton(editRetailPriceData.costPriceToEnable ? 1 : 0),
     );
-    await this.setValue(page, this.bulkEditModalCostPriceInput, editRetailPriceData.costPrice);
+    if (editRetailPriceData.costPrice) {
+      await this.setValue(page, this.bulkEditModalCostPriceInput, editRetailPriceData.costPrice);
+    }
+
     await this.setChecked(page,
       this.bulkEditModalImpactOnPriceTIncSwitchButton(editRetailPriceData.impactOnPriceTIncToEnable ? 1 : 0),
     );
-    await this.setValue(page, this.bulkEditModalImpactOnPriceTIncInput, editRetailPriceData.impactOnPriceTInc);
+    if (editRetailPriceData.impactOnPriceTInc) {
+      await this.setValue(page, this.bulkEditModalImpactOnPriceTIncInput, editRetailPriceData.impactOnPriceTInc);
+    }
+
     await this.setChecked(
       page,
       this.bulkEditModalImpactOnWeightSwitchButton(editRetailPriceData.impactOnWeightToEnable ? 1 : 0),
     );
-    await this.setValue(page, this.bulkEditModalImpactOnWeightInput, editRetailPriceData.impactOnWeight);
+    if (editRetailPriceData.impactOnWeight) {
+      await this.setValue(page, this.bulkEditModalImpactOnWeightInput, editRetailPriceData.impactOnWeight);
+    }
+
     await this.waitForSelectorAndClick(page, this.bulkEditModalRetailPriceButton);
   }
 
@@ -939,11 +959,14 @@ class CombinationsTab extends BOBasePage {
    */
   async bulkEditSpecificPrice(page: Frame|Page, specificReferencesData: ProductCombinationBulkSpecificReferences): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalSpecificReferences);
+
     await this.setChecked(
       page,
       this.bulkEditModalReferenceSwitchButton(specificReferencesData.referenceToEnable ? 1 : 0),
     );
-    await this.setValue(page, this.bulkEditModalReferenceInput, specificReferencesData.reference);
+    if (specificReferencesData.reference) {
+      await this.setValue(page, this.bulkEditModalReferenceInput, specificReferencesData.reference);
+    }
   }
 
   /**
@@ -954,7 +977,7 @@ class CombinationsTab extends BOBasePage {
    */
   async editCombinationsByBulkActions(page: Page, editCombinationsData: ProductCombinationBulk): Promise<string> {
     const bulkEditCombinationFrame: Frame|null = page.frame('bulk-combination-form-modal-iframe');
-    expect(bulkEditCombinationFrame).to.not.eq(null);
+    expect(bulkEditCombinationFrame).to.not.equal(null);
 
     // Edit stocks
     if (editCombinationsData.stocks) {
