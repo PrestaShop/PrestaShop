@@ -631,6 +631,8 @@
                 </tab>
                 <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1">
                     <class_name>AdminParentSecurity</class_name>
+                    <wording>Security</wording>
+                    <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
                     <tab id="Security_1" id_parent="Security" active="1" enabled="1" route_name="admin_security">
                         <class_name>AdminSecurity</class_name>
@@ -639,10 +641,13 @@
                     </tab>
                     <tab id="EmployeeSessions" id_parent="Security" active="1" enabled="1" route_name="admin_security_sessions_employee_list">
                         <class_name>AdminSecuritySessionEmployee</class_name>
+                        <wording>Employee Sessions</wording>
+                        <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
                     <tab id="CustomerSessions" id_parent="Security" active="1" enabled="1" route_name="admin_security_sessions_customer_list">
-
                         <class_name>AdminSecuritySessionCustomer</class_name>
+                        <wording>Customer Sessions</wording>
+                        <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
 
       <!--QUICK ACCESS-->
