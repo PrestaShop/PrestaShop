@@ -29,6 +29,7 @@ namespace PrestaShopBundle\ApiPlatform;
 
 use ReflectionException;
 use ReflectionMethod;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
@@ -54,11 +55,9 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     public function denormalize($data, string $type, string $format = null, array $context = []): mixed
     {
         $dataConstruct = [];
-
         $reflectionClass = new \ReflectionClass($type);
-        if($reflectionClass->getConstructor()) {
+        if ($reflectionClass->getConstructor()) {
             $constructParameters = $reflectionClass->getConstructor()->getParameters();
-
             foreach ($constructParameters as $constructParameter) {
                 if (isset($data[$constructParameter->getName()])) {
                     $dataConstruct[$constructParameter->getName()] = $data[$constructParameter->getName()];
@@ -69,6 +68,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 
         $action = $this->serializer->denormalize($dataConstruct, $type, $format, $context);
 
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
         //Try to call setters
         foreach ($data as $param => $value) {
             $parameters = [];
@@ -84,6 +84,8 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
                 }
 
                 $reflectionMethod->invoke($action, ...$parameters);
+            } elseif ($propertyAccessor->isWritable($action, $param)) {
+                $propertyAccessor->setValue($action, $param, $value);
             }
         }
 

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
-use PrestaShop\Decimal\DecimalNumber;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class DateTimeImmutableDenormalizer implements DenormalizerInterface
