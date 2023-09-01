@@ -3,14 +3,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="robots" content="NOFOLLOW, NOINDEX">
 
-<link rel="icon" type="image/x-icon" href="{{ img_dir }}favicon.ico" />
-<link rel="apple-touch-icon" href="{{ img_dir }}app_icon.png" />
+<link rel="icon" type="image/x-icon" href="{{ this.imgDir }}favicon.ico" />
+<link rel="apple-touch-icon" href="{{ this.imgDir }}app_icon.png" />
 
-<title>{% if meta_title %}{{ meta_title }} • {% endif %}{{ shop_name }}</title>
+<title>{% if meta_title %}{{ meta_title }} • {% endif %}{{ this.shopName }}</title>
 
 {% if display_header_javascript %}
   <script type="text/javascript">
-    var help_class_name = '{{ controller_name|e('js') }}';
+    var help_class_name = '{{ this.controllerName|e('js') }}';
     var iso_user = '{{ this.isoUser|e('js') }}';
     var lang_is_rtl = '{{ this.langIsRtl|intCast }}';
     var full_language_code = '{{ full_language_code|e('js') }}';
@@ -23,9 +23,9 @@
       {% if shop_context == constant('\Shop::CONTEXT_ALL') %}
     youEditFieldFor = '{{ 'This field will be modified for all your shops.'|trans({}, 'Admin.Notifications.Info') }}';
       {% elseif shop_context == constant('\Shop::CONTEXT_GROUP') %}
-    youEditFieldFor = '{{ 'This field will be modified for all shops in this shop group:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ shop_name|e('js') }}</b>';
+    youEditFieldFor = '{{ 'This field will be modified for all shops in this shop group:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ this.shopName|e('js') }}</b>';
       {% else %}
-    youEditFieldFor = '{{ 'This field will be modified for this shop:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ shop_name|e('js') }}</b>
+    youEditFieldFor = '{{ 'This field will be modified for this shop:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ this.shopName|e('js') }}</b>
       {% endif %}
     {% endif %}
     var new_order_msg = '{{ 'A new order has been placed on your store.'|trans({}, 'Admin.Navigation.Header') }}';

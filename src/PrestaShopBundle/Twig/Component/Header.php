@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Twig\Component;
 
 use Link;
 use Media;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
@@ -39,11 +40,8 @@ class Header
 {
     public Link $link;
     public ?string $viewport_scale;
-    public string $img_dir;
     public string $meta_title;
-    public string $shop_name;
     public bool $display_header_javascript;
-    public string $controller_name;
     public string $full_language_code;
     public string $full_cldr_language_code;
     public string $round_mode;
@@ -59,6 +57,7 @@ class Header
 
     public function __construct(
         private readonly LegacyContext $context,
+        private readonly Configuration $configuration,
         private readonly string $psVersion,
     ) {
     }
@@ -91,5 +90,20 @@ class Header
     public function getLangIsRtl(): bool
     {
         return (bool) $this->context->getLanguage()->isRTL();
+    }
+
+    public function getShopName(): string
+    {
+        return $this->configuration->get('PS_SHOP_NAME');
+    }
+
+    public function getControllerName(): string
+    {
+        return htmlentities(Tools::getValue('controller'));
+    }
+
+    public function getImgDir(): string
+    {
+        return _PS_IMG_;
     }
 }

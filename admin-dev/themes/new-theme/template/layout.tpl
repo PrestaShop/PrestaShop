@@ -6,11 +6,8 @@
       twig_template="@PrestaShop/Admin/Layout/header.html.twig"
       link=$link
       viewport_scale=(isset($viewport_scale)) ? $viewport_scale : null
-      img_dir=$img_dir
       meta_title=$meta_title
-      shop_name=$shop_name
       display_header_javascript=(isset($display_header_javascript)) ? $display_header_javascript : false
-      controller_name=$controller_name
       full_language_code=$full_language_code
       full_cldr_language_code=$full_cldr_language_code
       round_mode=$round_mode
