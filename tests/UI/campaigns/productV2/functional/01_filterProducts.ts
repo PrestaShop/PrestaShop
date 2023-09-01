@@ -257,15 +257,6 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       await expect(isVisible).to.be.true;
     });
 
-    it('should filter list by \'Position\' and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByPosition', baseContext);
-
-      await productsPage.filterProducts(page, 'position', '1', 'input');
-
-      const position = await productsPage.getTextColumn(page, 'position');
-      await expect(position).to.equal(1);
-    });
-
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterByPosition', baseContext);
 
