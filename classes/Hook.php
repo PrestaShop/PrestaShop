@@ -637,21 +637,52 @@ class HookCore extends ObjectModel
         return $return;
     }
 
-    public static function unregisterHook($module_instance, $hook_name, $shop_list = null)
+    /**
+     * Unhooks a module from given hook
+     *
+     * @param ModuleCore $module_instance The module to unhook
+     * @param int|string $hook_identifier Hook ID or hook name to unhook the module from
+     * @param int[]|null $shop_list List of shop ids
+     *
+     * @return bool
+     */
+    public static function unregisterHook($module_instance, $hook_identifier, $shop_list = null)
     {
-        if (is_numeric($hook_name)) {
-            // $hook_name passed it the id_hook
-            $hook_id = $hook_name;
-            $hook_name = Hook::getNameById((int) $hook_id);
+        if (is_numeric($hook_identifier)) {
+            // If we received hook ID as an integer directly, we try to find it's name
+            $hook_id = $hook_identifier;
+
+            /*
+             * Try to load hook name. The hook could be deleted, but we don't care, we can still do the job.
+             * Try/catch block is here because getNameById throws an exception when the hook is not found.
+             * It would be better if this method returned false in future versions.
+             */
+            try {
+                $hook_name = Hook::getNameById((int) $hook_identifier);
+            } catch (Exception $e) {
+            }
+
+            if (empty($hook_name)) {
+                $hook_name = '';
+            }
         } else {
-            $hook_id = Hook::getIdByName($hook_name, false);
+            // If we received hook name as a string, we try to find it's ID
+            $hook_id = Hook::getIdByName($hook_identifier, false);
+            $hook_name = $hook_identifier;
         }
 
-        if (!$hook_id) {
+        // Hook id is critical, we can't unhook anything if we don't know the ID
+        if (empty($hook_id)) {
             return false;
         }
 
-        Hook::exec('actionModuleUnRegisterHookBefore', ['object' => $module_instance, 'hook_name' => $hook_name]);
+        Hook::exec(
+            'actionModuleUnRegisterHookBefore',
+            [
+                'object' => $module_instance,
+                'hook_name' => $hook_name,
+            ]
+        );
 
         // Unregister module on hook by id
         $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'hook_module`

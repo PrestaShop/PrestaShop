@@ -731,7 +731,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Delete module from datable.
+     * Uninstalls the module from database.
      *
      * @return bool result
      */
@@ -739,14 +739,14 @@ abstract class ModuleCore implements ModuleInterface
     {
         Hook::exec('actionModuleUninstallBefore', ['object' => $this]);
 
-        // Check module installation id validation
+        // Check if module instance is valid
         if (!Validate::isUnsignedId($this->id)) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('The module is not installed.', [], 'Admin.Modules.Notification');
 
             return false;
         }
 
-        // Uninstall overrides
+        // Uninstall all overrides this module may have used
         if (!$this->uninstallOverrides()) {
             return false;
         }
@@ -755,10 +755,13 @@ abstract class ModuleCore implements ModuleInterface
         $sql = 'SELECT DISTINCT(`id_hook`) FROM `' . _DB_PREFIX_ . 'hook_module` WHERE `id_module` = ' . (int) $this->id;
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
+            // Unhook this module from each of the hooks
             $this->unregisterHook((int) $row['id_hook']);
+            // Remove all hook conditions that may have been configured - don't confuse it with error exception. :-)
             $this->unregisterExceptions((int) $row['id_hook']);
         }
 
+        // Remove all configured meta data (titles, URLs etc.) for this module's front controllers
         foreach ($this->controllers as $controller) {
             $page_name = 'module-' . $this->name . '-' . $controller;
             $meta = Db::getInstance()->getValue('SELECT id_meta FROM `' . _DB_PREFIX_ . 'meta` WHERE page="' . pSQL($page_name) . '"');
