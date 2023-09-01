@@ -15,7 +15,8 @@ https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/#pul
 | Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
-| How to test?      | Indicate how to verify that this change works as expected.
+| How to test?      | Indicate how to verify that this change works as expected. 
+| UI Tests          | Please run these tests (see https://github.com/PrestaShop/ga.tests.ui.pr/) and paste here the link to the run.
 | Fixed ticket?     | Fixes #{issue number here}, Fixes #{another issue number here}
 | Related PRs       | If theme, autoupgrade or other module change is needed to make this change work, provide a link to related PRs here.
 | Sponsor company   | Your company or customer's name goes here (if applicable).
