@@ -23,12 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
-{{ app.request.query.get('liteDisplaying', false) }}
+{% set liteDisplay = app.request.query.get('liteDisplaying', false)  %}
 
 {% extends(use_symfony_layout
-  ? component('DefaultLayout', {
-      display_header: display_header|default(true),
-    })
+  ? '@PrestaShop/Admin/Layout/default_layout.html.twig'
   : template_from_string(
     getLegacyLayout(
       app.request.attributes.get('_legacy_controller'),

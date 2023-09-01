@@ -39,8 +39,6 @@
   {% endblock %}
 </head>
 
-{#TODO: {% if lite_display|default(false) %} light_display_layout{% endif %}#}
-
 <body
   class="lang-{{ this.isoUser }}{% if this.langIsRtl %} lang-rtl{% endif %} {{ this.controllerName|escape|lower }}{% if this.collapseMenu %} page-sidebar-closed{% endif %}{% if this.multiShop|default(false) %} multishop-enabled{% endif %}{% if this.debugMode|default(false) %} developer-mode{% endif %}"
   {% if this.jsRouterMetadata is defined and this.jsRouterMetadata.base_url is defined %}data-base-url="{{ this.jsRouterMetadata.base_url }}"{% endif %}
@@ -59,18 +57,21 @@
         <a id="header_logo" class="logo float-left" href="{{ this.defaultTabLink }}"></a>
         <span id="shop_version">{{ this.psVersion }}</span>
 
+        {# TODO: Refactor this, insert div inside component#}
         <div class="component" id="quick-access-container">
           {{ component('QuickAccess') }}
         </div>
         <div class="component component-search" id="header-search-container">
           <div class="component-search-body">
             <div class="component-search-top">
+              {# TODO: Refactor this, insert div inside component#}
               {{ component('SearchForm') }}
               <button class="component-search-cancel d-none">
                 {{ 'Cancel'|trans({}, 'Admin.Actions') }}
               </button>
             </div>
-            {{ component('MobileQuickAccess') }}
+            {# TODO: Uncomment when independant #}
+            {# {{ component('MobileQuickAccess') }}#}
           </div>
 
           <div class="component-search-background d-none"></div>
@@ -129,12 +130,14 @@
         {% endif %}
 
         <div class="header-right">
+          {# TODO: Refactor this, insert condition and div inside component#}
           {% if this.showNewOrders or this.showNewCustomers or this.showNewMessages %}
             <div class="component header-right-component" id="header-notifications-container">
               {{ component('NotificationsCenter') }}
             </div>
           {% endif %}
 
+          {# TODO: Refactor this, insert div inside component#}
           <div class="component" id="header-employee-container">
             {{ component('EmployeeDropdown') }}
           </div>
