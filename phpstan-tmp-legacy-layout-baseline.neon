@@ -32,7 +32,12 @@ parameters:
 
 		-
 			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 2
+			count: 4
+			path: src/PrestaShopBundle/Twig/Component/Header.php
+
+		-
+			message: "#^Using _PS_IMG_ is forbidden, Use dependency injection instead$#"
+			count: 1
 			path: src/PrestaShopBundle/Twig/Component/Header.php
 
 		-
