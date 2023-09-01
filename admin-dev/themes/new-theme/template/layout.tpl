@@ -178,8 +178,6 @@
       table=$table
       help_link=$help_link
       enableSidebar=$enableSidebar
-      current_tab_level=$current_tab_level
-      tabs=$tabs
       use_regular_h1_structure=$use_regular_h1_structure
     }
 {/if}
