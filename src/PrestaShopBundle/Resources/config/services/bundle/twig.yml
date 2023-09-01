@@ -6,7 +6,6 @@ services:
     bind:
       $psVersion: !php/const _PS_VERSION_
       $debugMode: !php/const _PS_MODE_DEV_
-      $adminDir: !php/const _PS_ADMIN_DIR_
 
   Twig\Extension\StringLoaderExtension: ~
 

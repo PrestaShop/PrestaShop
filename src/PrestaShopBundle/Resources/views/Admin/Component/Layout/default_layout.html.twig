@@ -188,18 +188,11 @@
   {% endif %}
 </div>
 
-{{ renderSmarty('components/layout/non-responsive.tpl', {
-  'default_tab_link': default_tab_link,
-}) }}
 <div class="mobile-layer"></div>
 
 {% if display_footer %}
   {{ component('Footer') }}
 {% endif %}
-
-{{ renderSmarty('error.tpl', {
-  'php_errors': php_errors|default([])
-}) }}
 
 {% if modals is defined %}
   {{ modals }}

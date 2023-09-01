@@ -47,18 +47,16 @@ class DefaultLayout
     public bool $display_header;
 
     public function __construct(
-        private readonly LegacyContext             $context,
-        private readonly bool                      $debugMode,
-        private readonly RequestStack              $requestStack,
-        private readonly Configuration             $configuration,
+        private readonly LegacyContext $context,
+        private readonly bool $debugMode,
+        private readonly RequestStack $requestStack,
+        private readonly Configuration $configuration,
         private readonly CsrfTokenManagerInterface $tokenManager,
-        private readonly UserProvider              $userProvider,
-        private readonly TabRepository             $tabRepository,
-        private readonly string                    $psVersion,
-        private readonly string                    $adminDir,
+        private readonly UserProvider $userProvider,
+        private readonly TabRepository $tabRepository,
+        private readonly string $psVersion,
         private readonly MenuBuilder $menuBuilder,
-    )
-    {
+    ) {
     }
 
     public function getIsoUser(): string
@@ -146,7 +144,7 @@ class DefaultLayout
 
     public function isInstallDirExists(): bool
     {
-        return file_exists($this->adminDir . '/../install');
+        return file_exists(_PS_ADMIN_DIR_ . '/../install');
     }
 
     public function getCurrentTabLevel(): int
