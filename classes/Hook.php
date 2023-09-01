@@ -655,13 +655,14 @@ class HookCore extends ObjectModel
             /*
              * Try to load hook name. The hook could be deleted, but we don't care, we can still do the job.
              * Try/catch block is here because getNameById throws an exception when the hook is not found.
-             * It would be better if this method returned false in future versions.
+             * It would be better if getNameById returned false in future versions.
              */
             try {
                 $hook_name = Hook::getNameById((int) $hook_identifier);
-            } catch (Exception $e) {
+            } catch (PrestaShopObjectNotFoundException $e) {
             }
 
+            // If getting the name failed or we got some malformed hook name
             if (empty($hook_name)) {
                 $hook_name = '';
             }
@@ -676,13 +677,15 @@ class HookCore extends ObjectModel
             return false;
         }
 
-        Hook::exec(
-            'actionModuleUnRegisterHookBefore',
-            [
-                'object' => $module_instance,
-                'hook_name' => $hook_name,
-            ]
-        );
+        if (!empty($hook_name)) {
+            Hook::exec(
+                'actionModuleUnRegisterHookBefore',
+                [
+                    'object' => $module_instance,
+                    'hook_name' => $hook_name,
+                ]
+            );
+        }
 
         // Unregister module on hook by id
         $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'hook_module`
@@ -693,13 +696,15 @@ class HookCore extends ObjectModel
         // Clean modules position
         $module_instance->cleanPositions($hook_id, $shop_list);
 
-        Hook::exec(
-            'actionModuleUnRegisterHookAfter',
-            [
-                'object' => $module_instance,
-                'hook_name' => $hook_name,
-            ]
-        );
+        if (!empty($hook_name)) {
+            Hook::exec(
+                'actionModuleUnRegisterHookAfter',
+                [
+                    'object' => $module_instance,
+                    'hook_name' => $hook_name,
+                ]
+            );
+        }
 
         return $result;
     }
