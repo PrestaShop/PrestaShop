@@ -129,20 +129,6 @@
         {% endif %}
 
         <div class="header-right">
-          {% if hideLegacyStoreContextSelector is not defined or not hideLegacyStoreContextSelector %}
-            <div class="component" id="header-shop-list-container">
-{#              Remplace by multistore headere ?#}
-{#              {render_template#}
-{#              smarty_template="components/layout/shop_list.tpl"#}
-{#              twig_template="@PrestaShop/Admin/Layout/shop_list.html.twig"#}
-{#              base_url=$base_url#}
-{#              is_multishop= $is_multishop|default:null#}
-{#              shop_list= $shop_list|default:null#}
-{#              multishop_context= $multishop_context|default:null#}
-{#              current_shop_name= $current_shop_name|default:null#}
-{#              }#}
-            </div>
-          {% endif %}
           {% if this.showNewOrders or this.showNewCustomers or this.showNewMessages %}
             <div class="component header-right-component" id="header-notifications-container">
               {{ component('NotificationsCenter') }}
