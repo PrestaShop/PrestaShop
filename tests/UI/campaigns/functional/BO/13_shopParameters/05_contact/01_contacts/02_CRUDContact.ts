@@ -16,7 +16,7 @@ import ContactData from '@data/faker/contact';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_shopParameters_contact_CRUDContact';
+const baseContext: string = 'functional_BO_shopParameters_contact_contacts_CRUDContact';
 
 // Create, Update and Delete contact in BO
 describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in BO', async () => {

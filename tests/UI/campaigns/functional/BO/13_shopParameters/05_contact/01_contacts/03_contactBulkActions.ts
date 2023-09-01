@@ -16,7 +16,7 @@ import ContactData from '@data/faker/contact';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_shopParameters_contact_contactBulkActions';
+const baseContext: string = 'functional_BO_shopParameters_contact_contacts_contactBulkActions';
 
 // Create contacts then delete with Bulk actions
 describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {

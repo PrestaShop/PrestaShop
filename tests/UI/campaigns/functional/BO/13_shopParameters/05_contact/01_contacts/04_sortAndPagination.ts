@@ -13,7 +13,7 @@ import contactsPage from '@pages/BO/shopParameters/contact';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_shopParameters_contact_sortContacts';
+const baseContext: string = 'functional_BO_shopParameters_contact_contacts_sortAndPagination';
 
 // Sort contacts by id, name, email and description
 describe('BO - Shop Parameters - Contact : Sort Contacts list', async () => {
