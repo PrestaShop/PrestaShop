@@ -207,7 +207,8 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
 
         foreach ($catalogueFromPhpAndSmartyFiles->all() as $currentDomain => $items) {
             foreach (array_keys($items) as $translationKey) {
-                $legacyKey = md5($translationKey);
+                // Same as in Translate::getModuleTranslation()
+                $legacyKey = md5(preg_replace("/\\\*'/", "\'", $translationKey));
 
                 if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $currentDomain)) {
                     $legacyFilesCatalogue->set(
