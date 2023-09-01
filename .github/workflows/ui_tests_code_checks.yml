@@ -64,9 +64,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup NPM
-        run: npm install -g npm@${{ env.NPM_VERSION }}
-
       - name: Install dependencies in UI tests directory
         run: npm install
 
