@@ -648,7 +648,7 @@ class HookCore extends ObjectModel
      */
     public static function unregisterHook($module_instance, $hook_identifier, $shop_list = null)
     {
-        if (is_numeric($hook_identifier)) {
+        if (Validate::isUnsignedInt($hook_identifier)) {
             // If we received hook ID as an integer directly, we try to find it's name
             $hook_id = $hook_identifier;
 
