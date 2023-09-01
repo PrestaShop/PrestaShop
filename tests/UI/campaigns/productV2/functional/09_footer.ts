@@ -53,6 +53,7 @@ describe('BO - Catalog - Products : Footer', async () => {
   it(`should filter a product named "${Products.demo_12.name}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterProduct', baseContext);
 
+    await productsPage.resetFilter(page);
     await productsPage.filterProducts(page, 'product_name', Products.demo_12.name, 'input');
 
     const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
