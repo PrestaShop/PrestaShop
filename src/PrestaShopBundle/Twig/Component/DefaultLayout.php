@@ -42,6 +42,9 @@ use Tools;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/default_layout.html.twig')]
 class DefaultLayout
 {
+
+    public bool $display_header;
+
     public function __construct(
         private readonly LegacyContext             $context,
         private readonly bool                      $debugMode,
@@ -62,7 +65,7 @@ class DefaultLayout
 
     public function getLangIsRtl(): bool
     {
-        return $this->context->getLanguage()->isRTL();
+        return (bool) $this->context->getLanguage()->isRTL();
     }
 
     public function getControllerName(): string
@@ -93,12 +96,12 @@ class DefaultLayout
 
     public function isMaintenanceMode(): bool
     {
-        return !(bool)$this->configuration->get('PS_SHOP_ENABLE');
+        return !(bool) $this->configuration->get('PS_SHOP_ENABLE');
     }
 
     public function isMaintenanceAllowAdmins(): bool
     {
-        return (bool)$this->configuration->get('PS_MAINTENANCE_ALLOW_ADMINS');
+        return (bool) $this->configuration->get('PS_MAINTENANCE_ALLOW_ADMINS');
     }
 
     public function getJsRouterMetadata(): array
