@@ -24,6 +24,7 @@
  * #}
 
 {% set liteDisplay = app.request.query.get('liteDisplaying', false)  %}
+{% set showContentHeader = showContentHeader is defined ? showContentHeader : true  %}
 
 {% extends(use_symfony_layout
   ? '@PrestaShop/Admin/Layout/default_layout.html.twig'

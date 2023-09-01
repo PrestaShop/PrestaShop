@@ -152,5 +152,79 @@
   {% endblock %}
 {% endif %}
 
+{# Page header toolbar #}
+{% if showContentHeader and not liteDisplay %}
+  {# TODO #}
+  {#  {{ component('Toolbar') }}#}
+{% endif %}
+
+<div id="main-div">
+  {% if this.installDirExists %}
+    <div class="alert alert-warning">
+      {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
+    </div>
+  {% else %}
+
+    {# TODO: create compoment for this #}
+    {#    {% if modal_module_list is defined %}#}
+    {#      {{ modal_module_list }}#}
+    {#    {% endif %}#}
+
+    <div
+      class="{% if display_header %}content-div{% endif %}{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
+      {{ renderhook('displayAdminAfterHeader', {}) }}
+
+      {% if display_header %}
+        {{ renderSmarty('components/layout/error_messages.tpl', {
+          'errors': errors|default([]),
+          'disableDefaultErrorOutPut': disableDefaultErrorOutPut|default(false),
+        }) }}
+        {{ renderSmarty('components/layout/information_messages.tpl', {
+          'informations': informations|default([]),
+        }) }}
+        {{ renderSmarty('components/layout/confirmation_messages.tpl', {
+          'confirmations': confirmations|default([]),
+        }) }}
+        {{ renderSmarty('components/layout/warning_messages.tpl', {
+          'warnings': warnings|default([]),
+        }) }}
+      {% endif %}
+
+      <div id="ajax_confirmation" class="alert alert-success" style="display: none;"></div>
+      <div id="content-message-box"></div>
+
+      {# Page content blocks #}
+      {% block content_header %}{% endblock %}
+      {% block content %}{% endblock %}
+      {% block content_footer %}{% endblock %}
+      {% block sidebar_right %}{% endblock %}
+
+      {{ renderhook('displayAdminEndContent', {}) }}
+    </div>
+  {% endif %}
+</div>
+
+{{ renderSmarty('components/layout/non-responsive.tpl', {
+  'default_tab_link': default_tab_link,
+}) }}
+<div class="mobile-layer"></div>
+
+{% if display_footer %}
+  {{ renderSmarty('footer.tpl') }}
+{% endif %}
+
+{{ renderSmarty('error.tpl', {
+  'php_errors': php_errors|default([])
+}) }}
+
+{% if modals is defined %}
+  {{ modals }}
+{% endif %}
+
+{# Javascript blocks #}
+{% block javascripts %}{% endblock %}
+{% block extra_javascripts %}{% endblock %}
+{% block translate_javascripts %}{% endblock %}
+
 </body>
 </html>

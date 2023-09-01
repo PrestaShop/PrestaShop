@@ -54,6 +54,7 @@ class DefaultLayout
         private readonly UserProvider              $userProvider,
         private readonly TabRepository             $tabRepository,
         private readonly string                    $psVersion,
+        private readonly string                    $adminDir,
     )
     {
     }
@@ -65,7 +66,7 @@ class DefaultLayout
 
     public function getLangIsRtl(): bool
     {
-        return (bool) $this->context->getLanguage()->isRTL();
+        return (bool)$this->context->getLanguage()->isRTL();
     }
 
     public function getControllerName(): string
@@ -128,16 +129,21 @@ class DefaultLayout
 
     public function isShowNewOrders(): bool
     {
-       return (bool)$this->configuration->get('PS_SHOW_NEW_ORDERS');
+        return (bool) $this->configuration->get('PS_SHOW_NEW_ORDERS');
     }
 
     public function isShowNewCustomers(): bool
     {
-        return (bool)$this->configuration->get('PS_SHOW_NEW_CUSTOMERS');
+        return (bool) $this->configuration->get('PS_SHOW_NEW_CUSTOMERS');
     }
 
     public function isShowNewMessages(): bool
     {
-        return (bool)$this->configuration->get('PS_SHOW_NEW_MESSAGES');
+        return (bool) $this->configuration->get('PS_SHOW_NEW_MESSAGES');
+    }
+
+    public function isInstallDirExists(): bool
+    {
+        return file_exists($this->adminDir . '/../install');
     }
 }
