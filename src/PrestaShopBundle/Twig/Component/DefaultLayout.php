@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Shop;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -55,6 +56,7 @@ class DefaultLayout
         private readonly TabRepository             $tabRepository,
         private readonly string                    $psVersion,
         private readonly string                    $adminDir,
+        private readonly MenuBuilder $menuBuilder,
     )
     {
     }
@@ -145,5 +147,10 @@ class DefaultLayout
     public function isInstallDirExists(): bool
     {
         return file_exists($this->adminDir . '/../install');
+    }
+
+    public function getCurrentTabLevel(): int
+    {
+        return $this->menuBuilder->getCurrentTabLevel();
     }
 }

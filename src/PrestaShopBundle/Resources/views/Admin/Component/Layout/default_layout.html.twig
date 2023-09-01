@@ -153,7 +153,7 @@
 {% endif %}
 
 {# Page header toolbar #}
-{% if showContentHeader and not liteDisplay %}
+{% if showContentHeader %}
   {# TODO #}
   {#  {{ component('Toolbar') }}#}
 {% endif %}
@@ -171,24 +171,8 @@
     {#    {% endif %}#}
 
     <div
-      class="{% if display_header %}content-div{% endif %}{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
+      class="{% if display_header %}content-div{% endif %}{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if this.currentTabLevel == 3 %} with-tabs{% endif %}">
       {{ renderhook('displayAdminAfterHeader', {}) }}
-
-      {% if display_header %}
-        {{ renderSmarty('components/layout/error_messages.tpl', {
-          'errors': errors|default([]),
-          'disableDefaultErrorOutPut': disableDefaultErrorOutPut|default(false),
-        }) }}
-        {{ renderSmarty('components/layout/information_messages.tpl', {
-          'informations': informations|default([]),
-        }) }}
-        {{ renderSmarty('components/layout/confirmation_messages.tpl', {
-          'confirmations': confirmations|default([]),
-        }) }}
-        {{ renderSmarty('components/layout/warning_messages.tpl', {
-          'warnings': warnings|default([]),
-        }) }}
-      {% endif %}
 
       <div id="ajax_confirmation" class="alert alert-success" style="display: none;"></div>
       <div id="content-message-box"></div>
@@ -210,7 +194,7 @@
 <div class="mobile-layer"></div>
 
 {% if display_footer %}
-  {{ renderSmarty('footer.tpl') }}
+  {{ component('Footer') }}
 {% endif %}
 
 {{ renderSmarty('error.tpl', {
