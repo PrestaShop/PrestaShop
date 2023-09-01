@@ -32,27 +32,23 @@ use Link;
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/header.html.twig')]
 class Header
 {
-    public Link $link;
-    public ?string $viewport_scale;
     public string $meta_title;
-    public string $round_mode;
     public ?string $shop_context;
-    public string $token;
-    public string $currentIndex;
-    public string $default_language;
-
+    public bool $display_header_javascript;
     public array $css_files;
     public array $js_files;
     public array $js_inline;
     public ?string $displayBackOfficeHeader;
 
     public function __construct(
+        private readonly TabRepository $tabRepository,
         private readonly LegacyContext $context,
         private readonly Configuration $configuration,
         private readonly string $psVersion,
@@ -104,11 +100,6 @@ class Header
         return _PS_IMG_;
     }
 
-    public function getDisplayHeaderJavascript(): bool
-    {
-        return (bool) Tools::getValue('liteDisplaying');
-    }
-
     public function getFullLanguageCode(): string
     {
         return $this->context->getLanguage()->getLanguageCode();
@@ -117,5 +108,33 @@ class Header
     public function getFullCldrLanguageCode(): string
     {
         return $this->context->getContext()->getCurrentLocale()->getCode();
+    }
+
+    public function getRoundMode(): string
+    {
+        return $this->configuration->get('PS_PRICE_ROUND_MODE');
+    }
+
+    public function getToken(): string
+    {
+        $controllerName = $this->getControllerName();
+        $tabId = $this->tabRepository->getIdByClassName($controllerName);
+
+        return Tools::getAdminToken($controllerName . $tabId . (int) $this->context->getContext()->employee->id);
+    }
+
+    public function getDefaultLanguage(): string
+    {
+        return $this->configuration->get('PS_LANG_DEFAULT');
+    }
+
+    public function getLink(): ?Link
+    {
+        return $this->context->getContext()->link;
+    }
+
+    public function getCurrentIndex(): string
+    {
+        return $this->context->getContext()->controller::$currentIndex;
     }
 }

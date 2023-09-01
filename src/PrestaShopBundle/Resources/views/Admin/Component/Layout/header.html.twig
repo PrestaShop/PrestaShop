@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale={{ viewport_scale ? viewport_scale : '1' }}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="robots" content="NOFOLLOW, NOINDEX">
 
@@ -8,7 +8,7 @@
 
 <title>{% if meta_title %}{{ meta_title }} • {% endif %}{{ this.shopName }}</title>
 
-{% if this.displayHeaderJavascript %}
+{% if display_header_javascript %}
   <script type="text/javascript">
     var help_class_name = '{{ this.controllerName|e('js') }}';
     var iso_user = '{{ this.isoUser|e('js') }}';
@@ -17,7 +17,7 @@
     var full_cldr_language_code = '{{ this.fullCldrLanguageCode|e('js') }}';
     var country_iso_code = '{{ this.countryIsoCode|e('js') }}';
     var _PS_VERSION_ = '{{ this.psVersion|e('js') }}';
-    var roundMode = {{ round_mode|intCast }};
+    var roundMode = {{ this.roundMode|intCast }};
     var youEditFieldFor = '';
     {% if shop_context %}
       {% if shop_context == constant('\Shop::CONTEXT_ALL') %}
@@ -37,14 +37,14 @@
     var customer_name_msg = '{{ 'Customer name:'|trans({}, 'Admin.Navigation.Header') }} ';
     var new_msg = '{{ 'A new message was posted on your store.'|trans({}, 'Admin.Navigation.Header') }}';
     var see_msg = '{{ 'Read this message'|trans({}, 'Admin.Navigation.Header') }}';
-    var token = '{{ token|e('js') }}';
-    var currentIndex = '{{ currentIndex|e('js') }}';
+    var token = '{{ this.token|e('js') }}';
+    var currentIndex = '{{ this.currentIndex|e('js') }}';
     var employee_token = '{{ this.employeeToken|e('js') }}';
     var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
-    var default_language = '{{ default_language|intCast }}';
-    var admin_modules_link = '{{ link.getAdminLink("AdminModulesSf", true, {'route': "admin_module_manage"})|e('js')}}';
-    var admin_notification_get_link = '{{ link.getAdminLink("AdminCommon")|e('js') }}';
-    var admin_notification_push_link = adminNotificationPushLink = '{{ link.getAdminLink("AdminCommon", true, {'route': 'admin_common_notifications_ack'})|e('js') }}';
+    var default_language = '{{ this.defaultLanguage|intCast }}';
+    var admin_modules_link = '{{ this.link.getAdminLink("AdminModulesSf", true, {'route': "admin_module_manage"})|e('js')}}';
+    var admin_notification_get_link = '{{ this.link.getAdminLink("AdminCommon")|e('js') }}';
+    var admin_notification_push_link = adminNotificationPushLink = '{{ this.link.getAdminLink("AdminCommon", true, {'route': 'admin_common_notifications_ack'})|e('js') }}';
     var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
     var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
   </script>

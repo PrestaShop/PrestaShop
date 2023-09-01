@@ -23,14 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {{ component('Header', {
-  link: link,
-  viewport_scale: viewport_scale|default(null),
+  display_header_javascript: display_header_javascript|default(false),
   meta_title: meta_title,
-  round_mode: round_mode,
   shop_context: shop_context,
-  token: token,
-  currentIndex: currentIndex,
-  default_language: default_language,
   css_files: css_files,
   js_files: js_files|default([]),
   js_inline: js_inline|default([]),
