@@ -8,13 +8,13 @@
 
 <title>{% if meta_title %}{{ meta_title }} • {% endif %}{{ this.shopName }}</title>
 
-{% if display_header_javascript %}
+{% if this.displayHeaderJavascript %}
   <script type="text/javascript">
     var help_class_name = '{{ this.controllerName|e('js') }}';
     var iso_user = '{{ this.isoUser|e('js') }}';
     var lang_is_rtl = '{{ this.langIsRtl|intCast }}';
-    var full_language_code = '{{ full_language_code|e('js') }}';
-    var full_cldr_language_code = '{{ full_cldr_language_code|e('js') }}';
+    var full_language_code = '{{ this.fullLanguageCode|e('js') }}';
+    var full_cldr_language_code = '{{ this.fullCldrLanguageCode|e('js') }}';
     var country_iso_code = '{{ this.countryIsoCode|e('js') }}';
     var _PS_VERSION_ = '{{ this.psVersion|e('js') }}';
     var roundMode = {{ round_mode|intCast }};

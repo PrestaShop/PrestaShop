@@ -41,9 +41,6 @@ class Header
     public Link $link;
     public ?string $viewport_scale;
     public string $meta_title;
-    public bool $display_header_javascript;
-    public string $full_language_code;
-    public string $full_cldr_language_code;
     public string $round_mode;
     public ?string $shop_context;
     public string $token;
@@ -105,5 +102,20 @@ class Header
     public function getImgDir(): string
     {
         return _PS_IMG_;
+    }
+
+    public function getDisplayHeaderJavascript(): bool
+    {
+        return (bool) Tools::getValue('liteDisplaying');
+    }
+
+    public function getFullLanguageCode(): string
+    {
+        return $this->context->getLanguage()->getLanguageCode();
+    }
+
+    public function getFullCldrLanguageCode(): string
+    {
+        return $this->context->getContext()->getCurrentLocale()->getCode();
     }
 }
