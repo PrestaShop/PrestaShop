@@ -155,7 +155,7 @@ $(function() {
         <div class="col-lg-{if $searchPanels|@count <= 2}6{else}4{/if}">
             <div class="panel">
                 <h3>{$searchPanel.title}</h3>
-                <a href="{$searchPanel.link}" class="btn btn-default _blank">{$searchPanel.button_label}</a>
+                <a href="{$searchPanel.link}" class="btn btn-default{if !isset($searchPanel.same_page) || true !== $searchPanel.same_page} _blank{/if}">{$searchPanel.button_label}</a>
             </div>
         </div>
     {/foreach}
