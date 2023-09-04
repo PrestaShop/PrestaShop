@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\CodeQuality\Rector\ClassMethod\OptionalParametersAfterRequiredRector;
 use Rector\Config\RectorConfig;
@@ -93,6 +95,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->ruleWithConfiguration(AnnotationToAttributeRector::class, [
-        new AnnotationToAttribute(DemoRestricted::class), ]
-    );
+        new AnnotationToAttribute(DemoRestricted::class),
+        new AnnotationToAttribute(ModuleActivated::class),
+    ]);
 };

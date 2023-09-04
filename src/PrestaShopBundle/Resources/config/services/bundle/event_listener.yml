@@ -68,7 +68,6 @@ services:
       - "@router"
       - "@translator"
       - "@session"
-      - "@annotation_reader"
       - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
