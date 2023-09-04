@@ -121,27 +121,24 @@ class TabRepository extends EntityRepository
     /**
      * @param string $className
      *
-     * @return ?int
+     * @return int
      *
+     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getIdByClassName(string $className): ?int
+    public function getIdByClassName(string $className): int
     {
         if (!isset($this->cachedTabIds[$className])) {
-            try {
-                $result = $this->createQueryBuilder('t')
-                    ->select('t.id, t.className')
-                    ->where('t.className = :className')
-                    ->andWhere('t.id != 0')
-                    ->setParameter('className', $className)
-                    ->getQuery()
-                    ->getSingleResult(Query::HYDRATE_ARRAY)
-                ;
+            $result = $this->createQueryBuilder('t')
+                ->select('t.id, t.className')
+                ->where('t.className = :className')
+                ->andWhere('t.id != 0')
+                ->setParameter('className', $className)
+                ->getQuery()
+                ->getSingleResult(Query::HYDRATE_ARRAY)
+            ;
 
-                $this->cachedTabIds[$result['className']] = (int) $result['id'];
-            } catch (\Doctrine\ORM\NoResultException) {
-                return null;
-            }
+            $this->cachedTabIds[$result['className']] = (int) $result['id'];
         }
 
         return $this->cachedTabIds[$className];
