@@ -29,62 +29,40 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use Cookie;
-use Shop;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CookieContext
 {
-    private int $shopContext = Shop::CONTEXT_ALL;
-    private int $shopId;
-    private int $shopGroupId;
+    private ShopConstraint $shopConstraint;
 
     public function __construct(
         private readonly Cookie $cookie
     ) {
+        if (!$this->cookie->shopContext) {
+            $this->shopConstraint = ShopConstraint::allShops();
+        } else {
+            $splitShopContext = explode('-', $this->cookie->shopContext);
+            if (count($splitShopContext) == 2) {
+                $splitShopType = $splitShopContext[0];
+                $splitShopValue = (int) $splitShopContext[1];
+                if ($splitShopType == 'g') {
+                    $this->shopConstraint = ShopConstraint::shopGroup($splitShopValue);
+                } else {
+                    $this->shopConstraint = ShopConstraint::shop($splitShopValue);
+                }
+            } else {
+                $this->shopConstraint = ShopConstraint::allShops();
+            }
+        }
     }
 
-    public function getShopContext(): int
+    public function getShopConstraint(): ShopConstraint
     {
-        $this->extractShopContext();
-
-        return $this->shopContext;
-    }
-
-    public function getShopId(): int
-    {
-        $this->extractShopContext();
-
-        return $this->shopId;
-    }
-
-    public function getShopGroupId(): int
-    {
-        $this->extractShopContext();
-
-        return $this->shopGroupId;
+        return $this->shopConstraint;
     }
 
     public function getEmployeeId(): int
     {
         return $this->cookie->id_employee ? (int) $this->cookie->id_employee : 0;
-    }
-
-    private function extractShopContext(): void
-    {
-        if (!$this->cookie->shopContext) {
-            return;
-        }
-
-        $splitShopContext = explode('-', $this->cookie->shopContext);
-        if (count($splitShopContext) == 2) {
-            $splitShopType = $splitShopContext[0];
-            $splitShopValue = (int) $splitShopContext[1];
-            if ($splitShopType == 'g') {
-                $this->shopContext = Shop::CONTEXT_GROUP;
-                $this->shopGroupId = $splitShopValue;
-            } else {
-                $this->shopContext = Shop::CONTEXT_SHOP;
-                $this->shopId = $splitShopValue;
-            }
-        }
     }
 }

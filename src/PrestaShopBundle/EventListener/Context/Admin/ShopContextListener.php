@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Shop;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ShopContextListener
@@ -56,40 +55,29 @@ class ShopContextListener
             return;
         }
 
-        $shopContext = Shop::CONTEXT_ALL;
-        $shopId = null;
-        $shopGroupId = null;
-
-        if ($this->cookieContext->getShopContext() === Shop::CONTEXT_GROUP) {
-            if ($this->employeeContext->hasAuthorizationOnShopGroup($this->cookieContext->getShopGroupId())) {
-                $shopContext = Shop::CONTEXT_GROUP;
-                $shopGroupId = $this->cookieContext->getShopGroupId();
+        $shopConstraint = ShopConstraint::allShops();
+        if ($this->cookieContext->getShopConstraint()->getShopGroupId()) {
+            // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
+            if ($this->employeeContext->hasAuthorizationOnShopGroup($this->cookieContext->getShopConstraint()->getShopGroupId()->getValue())) {
+                $shopConstraint = $this->cookieContext->getShopConstraint();
             } else {
-                $shopContext = Shop::CONTEXT_SHOP;
-                $shopId = $this->employeeContext->getDefaultShopId();
+                $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
             }
-        } elseif ($this->cookieContext->getShopContext() === Shop::CONTEXT_SHOP) {
-            $shopContext = Shop::CONTEXT_SHOP;
-            if ($this->employeeContext->hasAuthorizationOnShop($this->cookieContext->getShopId())) {
-                $shopId = $this->cookieContext->getShopId();
+        } elseif ($this->cookieContext->getShopConstraint()->getShopId()) {
+            // Check if employee has authorization on selected shop if not fallback on single shop context with employee's default shop
+            if ($this->employeeContext->hasAuthorizationOnShop($this->cookieContext->getShopConstraint()->getShopId()->getValue())) {
+                $shopConstraint = $this->cookieContext->getShopConstraint();
             } else {
-                $shopId = $this->employeeContext->getDefaultShopId();
+                $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
             }
         }
-
-        // Set the shop context with appropriate value
-        if ($shopContext === Shop::CONTEXT_SHOP) {
-            $this->shopContextBuilder->setShopConstraint(ShopConstraint::shop($shopId));
-        } elseif ($shopContext === Shop::CONTEXT_GROUP) {
-            $this->shopContextBuilder->setShopConstraint(ShopConstraint::shopGroup($shopGroupId));
-        } else {
-            $this->shopContextBuilder->setShopConstraint(ShopConstraint::allShops());
-        }
+        $this->shopContextBuilder->setShopConstraint($shopConstraint);
 
         // In all cases a shop must be set for the context even if it's the default one
-        if (empty($shopId)) {
-            $shopId = (int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
+        if (!$shopConstraint->getShopId()) {
+            $this->shopContextBuilder->setShopId((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
+        } else {
+            $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
         }
-        $this->shopContextBuilder->setShopId($shopId);
     }
 }
