@@ -26,26 +26,32 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Context;
+namespace PrestaShop\PrestaShop\Core\Model;
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Model\ShopInterface;
-
-class ShopContext
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
+ */
+interface ShopInterface
 {
-    public function __construct(
-        private readonly ShopConstraint $shopConstraint,
-        private readonly ShopInterface $shop
-    ) {
-    }
+    public function getId(): int;
 
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
-    }
+    public function getName(): string;
 
-    public function getShop(): ShopInterface
-    {
-        return $this->shop;
-    }
+    public function getShopGroupId(): int;
+
+    public function getCategoryId(): int;
+
+    public function getThemeName(): string;
+
+    public function getColor(): string;
+
+    public function isActive(): bool;
+
+    public function getPhysicalUri(): string;
+
+    public function getVirtualUri(): string;
+
+    public function getDomain(): string;
+
+    public function getDomainSSL(): string;
 }

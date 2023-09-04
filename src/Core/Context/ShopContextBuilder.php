@@ -32,12 +32,11 @@ use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use Shop;
+use PrestaShop\PrestaShop\Core\Model\Shop;
 
 class ShopContextBuilder
 {
-    private ?int $shopContext = null;
-    private ?int $shopGroupId = null;
+    private ?ShopConstraint $shopConstraint = null;
     private ?int $shopId = null;
 
     public function __construct(
@@ -47,31 +46,37 @@ class ShopContextBuilder
 
     public function build(): ShopContext
     {
-        if (null === $this->shopContext) {
+        if (null === $this->shopConstraint) {
             throw new InvalidArgumentException(sprintf(
-                'Cannot build shop context as no shopContext has been define you need to call %s::setShopContext to define it before building the shop context',
+                'Cannot build shop context as no shopConstraint has been defined you need to call %s::setShopConstraint to define it before building the shop context',
                 self::class
             ));
         }
 
         if (null === $this->shopId) {
             throw new InvalidArgumentException(sprintf(
-                'Cannot build shop context as no shopId has been define you need to call %s::setShopId to define it before building the shop context',
+                'Cannot build shop context as no shopId has been defined you need to call %s::setShopId to define it before building the shop context',
                 self::class
             ));
         }
 
-        if ($this->shopContext === Shop::CONTEXT_SHOP) {
-            $shopConstraint = ShopConstraint::shop($this->shopId);
-        } elseif ($this->shopContext === Shop::CONTEXT_GROUP) {
-            $shopConstraint = ShopConstraint::shopGroup($this->shopGroupId);
-        } else {
-            $shopConstraint = ShopConstraint::allShops();
-        }
+        $shop = $this->shopRepository->get(new ShopId($this->shopId));
 
         return new ShopContext(
-            $shopConstraint,
-            $this->shopRepository->get(new ShopId($this->shopId))
+            $this->shopConstraint,
+            new Shop(
+                id: $shop->getId(),
+                name: $shop->getName(),
+                shopGroupId: $shop->getShopGroupId(),
+                categoryId: $shop->getCategoryId(),
+                themeName: $shop->getThemeName(),
+                color: $shop->getColor(),
+                physicalUri: $shop->getPhysicalUri(),
+                virtualUri: $shop->getVirtualUri(),
+                domain: $shop->getDomain(),
+                domainSSL: $shop->getDomainSSL(),
+                active: $shop->isActive()
+            )
         );
     }
 
@@ -82,25 +87,9 @@ class ShopContextBuilder
         return $this;
     }
 
-    public function setAllShopsContext(): self
+    public function setShopConstraint(ShopConstraint $shopConstraint): self
     {
-        $this->shopContext = Shop::CONTEXT_ALL;
-
-        return $this;
-    }
-
-    public function setShopContext(int $shopId): self
-    {
-        $this->shopId = $shopId;
-        $this->shopContext = Shop::CONTEXT_SHOP;
-
-        return $this;
-    }
-
-    public function setShopGroupContext(int $shopGroupId): self
-    {
-        $this->shopContext = Shop::CONTEXT_GROUP;
-        $this->shopGroupId = $shopGroupId;
+        $this->shopConstraint = $shopConstraint;
 
         return $this;
     }

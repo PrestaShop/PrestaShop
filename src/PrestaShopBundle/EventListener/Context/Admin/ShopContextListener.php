@@ -79,15 +79,15 @@ class ShopContextListener
 
         // Set the shop context with appropriate value
         if ($shopContext === Shop::CONTEXT_SHOP) {
-            $this->shopContextBuilder->setShopContext($shopId);
+            $this->shopContextBuilder->setShopConstraint(ShopConstraint::shop($shopId));
         } elseif ($shopContext === Shop::CONTEXT_GROUP) {
-            $this->shopContextBuilder->setShopGroupContext($shopGroupId);
+            $this->shopContextBuilder->setShopConstraint(ShopConstraint::shopGroup($shopGroupId));
         } else {
-            $this->shopContextBuilder->setAllShopsContext();
+            $this->shopContextBuilder->setShopConstraint(ShopConstraint::allShops());
         }
 
         // In all cases a shop must be set for the context even if it's the default one
-        if (!$shopId) {
+        if (empty($shopId)) {
             $shopId = (int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
         }
         $this->shopContextBuilder->setShopId($shopId);
