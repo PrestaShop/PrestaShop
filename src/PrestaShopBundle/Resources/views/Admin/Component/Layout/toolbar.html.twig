@@ -29,11 +29,11 @@
     {% block pageBreadcrumb %}
       <nav aria-label="Breadcrumb">
         <ol class="breadcrumb">
-          {% if breadcrumbs.container.name != '' %}
+          {% if breadcrumbs.container is defined and breadcrumbs.container.name != '' %}
             <li class="breadcrumb-item">{{ breadcrumbs.container.name|escape }}</li>
           {% endif %}
 
-          {% if breadcrumbs.tab.name != '' and breadcrumbs.container.name != breadcrumbs.tab.name and breadcrumbs.tab.href != '' %}
+          {% if  breadcrumbs.tab is defined and breadcrumbs.tab.name != '' and breadcrumbs.container.name != breadcrumbs.tab.name and breadcrumbs.tab.href != '' %}
             <li class="breadcrumb-item active">
               <a href="{{ breadcrumbs.tab.href|escape }}" aria-current="page">{{ breadcrumbs.tab.name|escape }}</a>
             </li>
