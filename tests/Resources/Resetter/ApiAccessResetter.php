@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,41 +27,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace Tests\Resources\Resetter;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\ApiAccess;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use Tests\Resources\DatabaseDump;
 
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+class ApiAccessResetter
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteByApplication(AuthorizedApplication $application): void
+    public static function resetApiAccess(): void
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
-
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
-    }
-
-    public function save(ApiAccess $apiAccess): int
-    {
-        $this->getEntityManager()->persist($apiAccess);
-        $this->getEntityManager()->flush();
-
-        return $apiAccess->getId();
+        DatabaseDump::restoreTables(['api_access']);
     }
 }

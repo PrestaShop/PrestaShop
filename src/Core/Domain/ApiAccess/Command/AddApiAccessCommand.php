@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,41 +27,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\ApiAccess;
-use PrestaShopBundle\Entity\AuthorizedApplication;
-
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+class AddApiAccessCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteByApplication(AuthorizedApplication $application): void
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
-
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
+    public function __construct(
+        private readonly string $clientName,
+        private readonly string $apiClientId,
+        private readonly bool $enabled,
+        private readonly string $description
+    ) {
     }
 
-    public function save(ApiAccess $apiAccess): int
+    public function getClientName(): ?string
     {
-        $this->getEntityManager()->persist($apiAccess);
-        $this->getEntityManager()->flush();
+        return $this->clientName;
+    }
 
-        return $apiAccess->getId();
+    public function getApiClientId(): ?string
+    {
+        return $this->apiClientId;
+    }
+
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
     }
 }
