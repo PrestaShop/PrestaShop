@@ -110,8 +110,8 @@ class CartPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on cart page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';

@@ -15,7 +15,7 @@ import ordersPage from '@pages/BO/orders';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -236,14 +236,14 @@ describe('BO - orders : Update order status', async () => {
           await homePage.goToMyAccountPage(page);
           await myAccountPage.goToHistoryAndDetailsPage(page);
 
-          const pageTitle = await foOrderHistoryPage.getPageTitle(page);
-          await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
+          const pageTitle = await orderHistoryPage.getPageTitle(page);
+          await expect(pageTitle, 'Fail to open order history page').to.contains(orderHistoryPage.pageTitle);
         });
 
         it('should check the last order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkLastOrderStatus${index}`, baseContext);
 
-          const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
+          const orderStatusFO = await orderHistoryPage.getOrderStatus(page, 1);
           await expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.name);
         });
 
@@ -251,14 +251,14 @@ describe('BO - orders : Update order status', async () => {
           it('should check if the last invoice is visible', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkLastInvoice${index}`, baseContext);
 
-            const isVisible = await foOrderHistoryPage.isInvoiceVisible(page, 1);
+            const isVisible = await orderHistoryPage.isInvoiceVisible(page, 1);
             await expect(isVisible, 'The invoice file is not existing!').to.be.true;
           });
 
           it('should check the order ID of the invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkOrderID${index}`, baseContext);
 
-            const orderID = await foOrderHistoryPage.getOrderIdFromInvoiceHref(page, 1);
+            const orderID = await orderHistoryPage.getOrderIdFromInvoiceHref(page, 1);
             await expect(orderID, 'The invoice file attached is not correct!').to.contains(`id_order=${orderId}`);
           });
         }
@@ -266,7 +266,7 @@ describe('BO - orders : Update order status', async () => {
         it('should close the shop page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `closeShop${index}`, baseContext);
 
-          page = await foOrderHistoryPage.closePage(browserContext, page, 0);
+          page = await orderHistoryPage.closePage(browserContext, page, 0);
 
           const pageTitle = await ordersPage.getPageTitle(page);
           await expect(pageTitle).to.contains(ordersPage.pageTitle);

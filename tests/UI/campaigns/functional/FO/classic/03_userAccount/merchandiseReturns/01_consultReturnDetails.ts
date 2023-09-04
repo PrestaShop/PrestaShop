@@ -20,7 +20,7 @@ import {loginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 
 // Import data

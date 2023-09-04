@@ -151,8 +151,8 @@ class HomePage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on home page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = global.INSTALL.SHOP_NAME;
     this.successAddToCartMessage = 'Product successfully added to your shopping cart';

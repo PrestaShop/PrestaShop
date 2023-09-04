@@ -13,7 +13,7 @@ import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
-import siteMapPage from '@pages/FO/siteMap';
+import {siteMapPage} from '@pages/FO/siteMap';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

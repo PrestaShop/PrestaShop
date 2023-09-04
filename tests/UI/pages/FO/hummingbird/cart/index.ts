@@ -11,9 +11,7 @@ class Cart extends CartPage {
    * @constructs
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
   }
 }
 

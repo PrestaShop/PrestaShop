@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import categoryPage from '@pages/FO/category';
 import {homePage as foHomePage} from '@pages/FO/home';
-import siteMapPage from '@pages/FO/siteMap';
+import {siteMapPage} from '@pages/FO/siteMap';
 
 // Import data
 import CategoryData from '@data/faker/category';

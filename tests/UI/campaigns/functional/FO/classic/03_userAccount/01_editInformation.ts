@@ -10,7 +10,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import accountIdentityPage from '@pages/FO/myAccount/identity';
+import {accountIdentityPage} from '@pages/FO/myAccount/identity';
 
 // Import data
 import CustomerData from '@data/faker/customer';

@@ -11,9 +11,7 @@ class ContactUs extends ContactUsPage {
    * @constructs
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
   }
 }
 

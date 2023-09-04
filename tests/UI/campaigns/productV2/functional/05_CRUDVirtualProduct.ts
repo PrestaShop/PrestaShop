@@ -20,7 +20,7 @@ import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
@@ -313,14 +313,14 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         await myAccountPage.goToHistoryAndDetailsPage(page);
 
-        const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-        await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+        const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
+        await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
       });
 
       it('should go to order details page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-        await foOrderHistoryPage.goToDetailsPage(page);
+        await orderHistoryPage.goToDetailsPage(page);
 
         const pageTitle: string = await orderDetailsPage.getPageTitle(page);
         await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);

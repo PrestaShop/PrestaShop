@@ -51,11 +51,11 @@ describe('FO - Login : Password reminder', async () => {
   customerNewPassword.email = customerData.email;
   customerNewPassword.password = newPassword;
 
-  // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
-
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest_2`);
+  setupSmtpConfigTest(`${baseContext}_preTest_1`);
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_2`);
 
   // Pre-condition : Create new customer on FO
   createAccountTest(customerData, `${baseContext}_preTest_3`);

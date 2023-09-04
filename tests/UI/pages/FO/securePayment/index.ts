@@ -5,18 +5,19 @@ import FOBasePage from '@pages/FO/FObasePage';
  * @class
  * @extends FOBasePage
  */
-class SecurePayment extends FOBasePage {
+class SecurePaymentPage extends FOBasePage {
   public readonly pageTitle: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on secure payment page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Secure payment';
   }
 }
 
-export default new SecurePayment();
+const securePaymentPage = new SecurePaymentPage();
+export {securePaymentPage, SecurePaymentPage};

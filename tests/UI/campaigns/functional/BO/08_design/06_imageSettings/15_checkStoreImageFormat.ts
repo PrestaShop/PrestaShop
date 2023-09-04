@@ -16,7 +16,7 @@ import storesPage from '@pages/BO/shopParameters/stores';
 import createStoresPage from '@pages/BO/shopParameters/stores/add';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
-import storePage from '@pages/FO/stores';
+import {storesPage as storePage} from '@pages/FO/stores';
 
 // Import data
 import StoreData from '@data/faker/store';

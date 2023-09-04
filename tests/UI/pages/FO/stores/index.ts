@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Stores extends FOBasePage {
+class StoresPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly storeBlock: (idStore: number) => string;
@@ -18,8 +18,8 @@ class Stores extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on stores page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Stores';
 
@@ -38,4 +38,5 @@ class Stores extends FOBasePage {
   }
 }
 
-export default new Stores();
+const storesPage = new StoresPage();
+export {storesPage, StoresPage};

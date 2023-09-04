@@ -12,7 +12,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import {myAccountPage} from '@pages/FO/myAccount';
 
 // Import data
@@ -115,14 +115,14 @@ describe('FO - Account - Order history : Consult order list', async () => {
       await foHomePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should check number of orders', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfOrders1', baseContext);
 
-      const numberOfOrders: number = await foOrderHistoryPage.getNumberOfOrders(page);
+      const numberOfOrders: number = await orderHistoryPage.getNumberOfOrders(page);
       await expect(numberOfOrders).to.equal(0);
     });
   });
@@ -134,23 +134,23 @@ describe('FO - Account - Order history : Consult order list', async () => {
     it('should reload the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'reloadPage', baseContext);
 
-      await foOrderHistoryPage.reloadPage(page);
+      await orderHistoryPage.reloadPage(page);
 
-      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should check the number of orders', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfOrders2', baseContext);
 
-      const numberOfOrders: number = await foOrderHistoryPage.getNumberOfOrders(page);
+      const numberOfOrders: number = await orderHistoryPage.getNumberOfOrders(page);
       await expect(numberOfOrders).to.equal(1);
     });
 
     it('should check the order information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformation', baseContext);
 
-      const result: OrderHistory = await foOrderHistoryPage.getOrderHistoryDetails(page);
+      const result: OrderHistory = await orderHistoryPage.getOrderHistoryDetails(page);
       await Promise.all([
         await expect(result.reference).not.null,
         await expect(result.date).to.equal(today),
@@ -164,7 +164,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
     it('should click on \'Back to you account\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToYourAccount', baseContext);
 
-      await foOrderHistoryPage.clickOnBackToYourAccountLink(page);
+      await orderHistoryPage.clickOnBackToYourAccountLink(page);
 
       const pageTitle: string = await myAccountPage.getPageTitle(page);
       await expect(pageTitle).to.equal(myAccountPage.pageTitle);
@@ -175,14 +175,14 @@ describe('FO - Account - Order history : Consult order list', async () => {
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should click on \'Home\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnHomeLink', baseContext);
 
-      await foOrderHistoryPage.clickOnHomeLink(page);
+      await orderHistoryPage.clickOnHomeLink(page);
 
       const pageTitle: string = await foHomePage.getPageTitle(page);
       await expect(pageTitle).to.equal(foHomePage.pageTitle);

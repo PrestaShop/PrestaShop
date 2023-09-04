@@ -13,7 +13,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {homePage} from '@pages/FO/home';
 import {myAccountPage} from '@pages/FO/myAccount';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';

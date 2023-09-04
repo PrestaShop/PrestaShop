@@ -14,7 +14,7 @@ import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 // Import FO pages
 import cmsPage from '@pages/FO/cms';
 import {homePage as foHomePage} from '@pages/FO/home';
-import siteMapPage from '@pages/FO/siteMap';
+import {siteMapPage} from '@pages/FO/siteMap';
 
 // Import data
 import CMSCategoryData from '@data/faker/CMScategory';
