@@ -37,14 +37,14 @@
     var customer_name_msg = '{{ 'Customer name:'|trans({}, 'Admin.Navigation.Header') }} ';
     var new_msg = '{{ 'A new message was posted on your store.'|trans({}, 'Admin.Navigation.Header') }}';
     var see_msg = '{{ 'Read this message'|trans({}, 'Admin.Navigation.Header') }}';
-    var token = '{{ this.token|e('js') }}';
+    var token = '{{ this.legacyToken|e('js') }}';
     var currentIndex = '{{ this.currentIndex|e('js') }}';
     var employee_token = '{{ this.employeeToken|e('js') }}';
     var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
     var default_language = '{{ this.defaultLanguage|intCast }}';
-    var admin_modules_link = '{{ this.link.getAdminLink("AdminModulesSf", true, {'route': "admin_module_manage"})|e('js')}}';
-    var admin_notification_get_link = '{{ this.link.getAdminLink("AdminCommon")|e('js') }}';
-    var admin_notification_push_link = adminNotificationPushLink = '{{ this.link.getAdminLink("AdminCommon", true, {'route': 'admin_common_notifications_ack'})|e('js') }}';
+    var admin_modules_link = '{{ legacy_path("AdminModulesSf", {'route': "admin_module_manage"})|e('js')}}';
+    var admin_notification_get_link = '{{ legacy_path("AdminCommon")|e('js') }}';
+    var admin_notification_push_link = adminNotificationPushLink = '{{ legacy_path("AdminCommon", {'route': 'admin_common_notifications_ack'})|e('js') }}';
     var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
     var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
   </script>

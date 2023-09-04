@@ -53,6 +53,10 @@ class PathExtension extends AbstractExtension
                 'path',
                 [$this, 'getPath']
             ),
+            new TwigFunction(
+                'legacy_path',
+                [$this, 'getLegacyPath']
+            ),
         ];
     }
 
@@ -78,5 +82,18 @@ class PathExtension extends AbstractExtension
         }
 
         return $url;
+    }
+
+    /**
+     * Get path for legacy link.
+     *
+     * @param string $controllerName
+     * @param array $parameters
+     *
+     * @return string
+     */
+    public function getLegacyPath(string $controllerName, array $parameters = []): string
+    {
+        return $this->context->getAdminLink($controllerName, extraParams: $parameters);
     }
 }

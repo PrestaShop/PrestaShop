@@ -215,7 +215,7 @@ class MenuBuilder
         return $legacyParameters['action'] ?? null;
     }
 
-    private function getLegacyControllerClassName(): ?string
+    public function getLegacyControllerClassName(): ?string
     {
         return $this->requestStack->getMainRequest()->attributes->get('_legacy_controller');
     }

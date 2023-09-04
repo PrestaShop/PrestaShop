@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
-use Link;
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
@@ -51,6 +51,7 @@ class Header
         private readonly TabRepository $tabRepository,
         private readonly LegacyContext $context,
         private readonly Configuration $configuration,
+        private readonly MenuBuilder $menuBuilder,
         private readonly string $psVersion,
     ) {
     }
@@ -92,12 +93,12 @@ class Header
 
     public function getControllerName(): string
     {
-        return htmlentities(Tools::getValue('controller'));
+        return htmlentities($this->menuBuilder->getLegacyControllerClassName());
     }
 
     public function getImgDir(): string
     {
-        return _PS_IMG_;
+        return $this->context->getRootUrl() . 'img/';
     }
 
     public function getFullLanguageCode(): string
@@ -110,14 +111,14 @@ class Header
         return $this->context->getContext()->getCurrentLocale()->getCode();
     }
 
-    public function getRoundMode(): string
+    public function getRoundMode(): int
     {
-        return $this->configuration->get('PS_PRICE_ROUND_MODE');
+        return (int) $this->configuration->get('PS_PRICE_ROUND_MODE');
     }
 
-    public function getToken(): string
+    public function getLegacyToken(): string
     {
-        $controllerName = $this->getControllerName();
+        $controllerName = $this->menuBuilder->getLegacyControllerClassName();
         $tabId = $this->tabRepository->getIdByClassName($controllerName);
 
         return Tools::getAdminToken($controllerName . $tabId . (int) $this->context->getContext()->employee->id);
@@ -126,11 +127,6 @@ class Header
     public function getDefaultLanguage(): string
     {
         return $this->configuration->get('PS_LANG_DEFAULT');
-    }
-
-    public function getLink(): ?Link
-    {
-        return $this->context->getContext()->link;
     }
 
     public function getCurrentIndex(): string
