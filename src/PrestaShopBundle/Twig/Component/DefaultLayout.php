@@ -43,8 +43,9 @@ use Tools;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/default_layout.html.twig')]
 class DefaultLayout
 {
-
     public bool $display_header;
+    public bool $showContentHeader;
+    public bool $display_footer;
 
     public function __construct(
         private readonly LegacyContext $context,

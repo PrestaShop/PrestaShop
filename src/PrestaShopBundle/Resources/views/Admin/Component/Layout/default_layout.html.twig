@@ -165,11 +165,6 @@
     </div>
   {% else %}
 
-    {# TODO: create compoment for this #}
-    {#    {% if modal_module_list is defined %}#}
-    {#      {{ modal_module_list }}#}
-    {#    {% endif %}#}
-
     <div
       class="{% if display_header %}content-div{% endif %}{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if this.currentTabLevel == 3 %} with-tabs{% endif %}">
       {{ renderhook('displayAdminAfterHeader', {}) }}
