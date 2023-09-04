@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use Employee;
+use Employee as LegacyEmployee;
+use PrestaShop\PrestaShop\Core\Model\Employee;
 
 class EmployeeContextBuilder
 {
@@ -36,9 +37,25 @@ class EmployeeContextBuilder
 
     public function build(): EmployeeContext
     {
-        return new EmployeeContext(
-            $this->employeeId ? new Employee($this->employeeId) : null
-        );
+        $employee = null;
+        if ($this->employeeId) {
+            $legacyEmployee = new LegacyEmployee($this->employeeId);
+            $employee = new Employee(
+                id: $legacyEmployee->getId(),
+                profileId: $legacyEmployee->getProfileId(),
+                languageId: $legacyEmployee->getLanguageId(),
+                firstName: $legacyEmployee->getFirstName(),
+                lastName: $legacyEmployee->getLastName(),
+                email: $legacyEmployee->getEmail(),
+                password: $legacyEmployee->getPassword(),
+                defaultTabId: $legacyEmployee->getDefaultTabId(),
+                defaultShopId: $legacyEmployee->getDefaultShopId(),
+                associatedShopIds: $legacyEmployee->getAssociatedShopIds(),
+                associatedShopGroupIds: $legacyEmployee->getAssociatedShopGroupIds()
+            );
+        }
+
+        return new EmployeeContext($employee);
     }
 
     public function setEmployeeId(?int $employeeId): self

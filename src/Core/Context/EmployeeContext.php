@@ -28,13 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use Employee;
+use PrestaShop\PrestaShop\Core\Model\EmployeeInterface;
 
 class EmployeeContext
 {
+    public const SUPER_ADMIN_PROFILE_ID = 1;
+
     public function __construct(
-        private readonly ?Employee $employee
+        private readonly ?EmployeeInterface $employee
     ) {
+    }
+
+    public function getEmployee(): ?EmployeeInterface
+    {
+        return $this->employee;
     }
 
     public function hasAuthorizationOnShopGroup(int $shopGroupId): bool
@@ -43,7 +50,7 @@ class EmployeeContext
             return false;
         }
 
-        return $this->employee->hasAuthOnShopGroup($shopGroupId);
+        return $this->isSuperAdmin() || in_array($shopGroupId, $this->employee->getAssociatedShopGroupIds());
     }
 
     public function hasAuthorizationOnShop(int $shopId): bool
@@ -52,7 +59,7 @@ class EmployeeContext
             return false;
         }
 
-        return $this->employee->hasAuthOnShop($shopId);
+        return $this->isSuperAdmin() || in_array($shopId, $this->employee->getAssociatedShopIds());
     }
 
     public function getDefaultShopId(): int
@@ -61,6 +68,11 @@ class EmployeeContext
             return 0;
         }
 
-        return $this->employee->getDefaultShopID();
+        return $this->employee->getDefaultShopId();
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->employee && $this->employee->getProfileId() === self::SUPER_ADMIN_PROFILE_ID;
     }
 }
