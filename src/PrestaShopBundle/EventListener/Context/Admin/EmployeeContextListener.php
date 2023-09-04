@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
-use PrestaShop\PrestaShop\Core\Context\CookieContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -36,7 +36,7 @@ class EmployeeContextListener
 {
     public function __construct(
         private readonly EmployeeContextBuilder $employeeContextBuilder,
-        private readonly CookieContext $cookieContext
+        private readonly LegacyContext $legacyContext
     ) {
     }
 
@@ -46,8 +46,8 @@ class EmployeeContextListener
             return;
         }
 
-        if ($this->cookieContext->getEmployeeId()) {
-            $this->employeeContextBuilder->setEmployeeId($this->cookieContext->getEmployeeId());
+        if (!empty($this->legacyContext->getContext()->cookie->id_employee)) {
+            $this->employeeContextBuilder->setEmployeeId((int) $this->legacyContext->getContext()->cookie->id_employee);
         }
     }
 }

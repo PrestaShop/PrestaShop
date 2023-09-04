@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
-use PrestaShop\PrestaShop\Core\Context\CookieContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -39,9 +39,9 @@ class ShopContextListener
 {
     public function __construct(
         private readonly ShopContextBuilder $shopContextBuilder,
-        private readonly CookieContext $cookieContext,
         private readonly EmployeeContext $employeeContext,
-        private readonly ShopConfigurationInterface $configuration
+        private readonly ShopConfigurationInterface $configuration,
+        private readonly LegacyContext $legacyContext
     ) {
     }
 
@@ -56,18 +56,19 @@ class ShopContextListener
         }
 
         $shopConstraint = ShopConstraint::allShops();
-        if ($this->cookieContext->getShopConstraint()->getShopGroupId()) {
+        $cookieShopConstraint = $this->getShopConstraintFromCookie();
+        if ($cookieShopConstraint && $cookieShopConstraint->getShopGroupId()) {
             // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
-            if ($this->employeeContext->hasAuthorizationOnShopGroup($this->cookieContext->getShopConstraint()->getShopGroupId()->getValue())) {
-                $shopConstraint = $this->cookieContext->getShopConstraint();
-            } else {
+            if ($this->employeeContext->hasAuthorizationOnShopGroup($cookieShopConstraint->getShopGroupId()->getValue())) {
+                $shopConstraint = $cookieShopConstraint;
+            } elseif (!empty($this->employeeContext->getDefaultShopId())) {
                 $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
             }
-        } elseif ($this->cookieContext->getShopConstraint()->getShopId()) {
+        } elseif ($cookieShopConstraint && $cookieShopConstraint->getShopId()) {
             // Check if employee has authorization on selected shop if not fallback on single shop context with employee's default shop
-            if ($this->employeeContext->hasAuthorizationOnShop($this->cookieContext->getShopConstraint()->getShopId()->getValue())) {
-                $shopConstraint = $this->cookieContext->getShopConstraint();
-            } else {
+            if ($this->employeeContext->hasAuthorizationOnShop($cookieShopConstraint->getShopId()->getValue())) {
+                $shopConstraint = $cookieShopConstraint;
+            } elseif (!empty($this->employeeContext->getDefaultShopId())) {
                 $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
             }
         }
@@ -79,5 +80,29 @@ class ShopContextListener
         } else {
             $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
         }
+    }
+
+    private function getShopConstraintFromCookie(): ?ShopConstraint
+    {
+        if (empty($this->legacyContext->getContext()->cookie->shopContext)) {
+            return null;
+        }
+
+        $splitShopContext = explode('-', $this->legacyContext->getContext()->cookie->shopContext);
+        if (count($splitShopContext) == 2) {
+            $splitShopType = $splitShopContext[0];
+            $splitShopValue = (int) $splitShopContext[1];
+            if (empty($splitShopValue)) {
+                return null;
+            }
+
+            if ($splitShopType == 'g') {
+                return ShopConstraint::shopGroup($splitShopValue);
+            } else {
+                return ShopConstraint::shop($splitShopValue);
+            }
+        }
+
+        return null;
     }
 }
