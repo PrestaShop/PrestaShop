@@ -16,7 +16,7 @@ https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/#pul
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
 | How to test?      | Indicate how to verify that this change works as expected. 
-| UI Tests          | Please run these tests (see https://github.com/PrestaShop/ga.tests.ui.pr/) and paste here the link to the run.
+| UI Tests          | Please run UI tests and paste here the link to the run. [Read this page to know how to use this tool.]([link](https://www.prestashop-project.org/maintainers-guide/summary-github-lifecycle/#testing-the-pull-request))
 | Fixed ticket?     | Fixes #{issue number here}, Fixes #{another issue number here}
 | Related PRs       | If theme, autoupgrade or other module change is needed to make this change work, provide a link to related PRs here.
 | Sponsor company   | Your company or customer's name goes here (if applicable).
