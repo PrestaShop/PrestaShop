@@ -126,7 +126,7 @@
     "@types/libsodium-wrappers": "^0.7.10",
     "@types/mocha": "^10.0.1",
     "@types/mochawesome": "^6.2.1",
-    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.48.0",
