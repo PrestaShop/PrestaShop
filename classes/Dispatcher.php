@@ -595,10 +595,10 @@ class DispatcherCore
 
         /*
          * Step 2 - Module routes
-         * 
+         *
          * Loads custom routes from modules for given shop. Beware that these routes are not multilanguage,
          * passed routes will be the same for each language of the shop.
-         * 
+         *
          * Module routes can overwrite those set in $this->default_routes, if their name matches.
          */
         $modules_routes = Hook::exec('moduleRoutes', ['id_shop' => $id_shop], null, true, false);
@@ -623,7 +623,7 @@ class DispatcherCore
 
         /*
          * Step 3 - Initialize default routes into $this->routes that will get used.
-         * 
+         *
          * This takes each default route we have until now and calls computeRoute upon each route.
          * This enriches the route by a final regex and strips not needed keywords. Then, we add it
          * to route list of each language.
@@ -678,7 +678,7 @@ class DispatcherCore
             /*
              * Step 5 - Custom routes set in ps_configurations. Those are configured product, category,
              * cms etc. rules that you can configure in SEO & URL section in the backoffice.
-             * 
+             *
              * Beware that these routes are not multilanguage, they will be the same for each language of the shop.
              * It probably would not be difficult to make them multilanguage, if route was stored in configuration
              * for each language.
@@ -776,7 +776,7 @@ class DispatcherCore
     }
 
     /**
-     * Adds a new route to the list of routes. If it already exists, it will override the first one. 
+     * Adds a new route to the list of routes. If it already exists, it will override the existing one.
      *
      * @param string $route_id Name of the route
      * @param string $rule Url rule
@@ -818,26 +818,24 @@ class DispatcherCore
     }
 
     /**
-     * Returns a list of processed routes.
+     * Returns a list of processed routes getting used.
      *
      * @return array List of routes
      */
-    public function getRoutes() {
+    public function getRoutes()
+    {
         return $this->routes;
     }
 
     /**
-     * Removes a route from a list of calculated routes.
+     * Removes a route from a list of processed routes.
      *
      * @param string $route_id Name of the route
      * @param int $id_lang
      * @param int $id_shop
      */
-    public function removeRoute(
-        $route_id,
-        $id_lang = null,
-        $id_shop = null
-    ) {
+    public function removeRoute($route_id, $id_lang = null, $id_shop = null)
+    {
         $context = Context::getContext();
 
         if (isset($context->language) && $id_lang === null) {
@@ -848,13 +846,9 @@ class DispatcherCore
             $id_shop = (int) $context->shop->id;
         }
 
-        if (!isset($this->routes[$id_shop][$id_lang][$route_id])) {
-            return false;
+        if (isset($this->routes[$id_shop][$id_lang][$route_id])) {
+            unset($this->routes[$id_shop][$id_lang][$route_id]);
         }
-
-        unset($this->routes[$id_shop][$id_lang][$route_id]);
-
-        return true;
     }
 
     /**
