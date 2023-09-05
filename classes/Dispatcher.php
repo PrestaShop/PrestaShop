@@ -701,7 +701,7 @@ class DispatcherCore
         /*
          * Step 6 - Allow modules to modify routes in any way or add their own multilanguage routes.
          *
-         * Use getRoutes, addRoute, deleteRoute methods for this purpose.
+         * Use getRoutes, addRoute, removeRoute methods for this purpose.
          */
         Hook::exec('actionAfterLoadRoutes', ['dispatcher' => $this]);
     }
