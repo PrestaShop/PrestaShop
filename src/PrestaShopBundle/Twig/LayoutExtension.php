@@ -76,13 +76,19 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
 
         try {
             $defaultCurrency = $this->context->getEmployeeCurrency() ?: $this->currencyDataProvider->getDefaultCurrency();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $defaultCurrency = null;
         }
         try {
             $rootUrl = $this->context->getRootUrl();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $rootUrl = null;
+        }
+
+        try {
+            $useSymfonyLayout = $this->featureFlagStateChecker->isEnabled("symfony_layout");
+        } catch (\Exception) {
+            $useSymfonyLayout = false;
         }
 
         return [
@@ -92,7 +98,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
             'root_url' => $rootUrl,
             'js_translatable' => [],
             'rtl_suffix' => $this->context->getContext()->language->is_rtl ? '_rtl' : '',
-            'use_symfony_layout' => $this->featureFlagStateChecker->isEnabled("symfony_layout"),
+            'use_symfony_layout' => $useSymfonyLayout,
         ];
     }
 
