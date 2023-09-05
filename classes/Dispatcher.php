@@ -576,13 +576,31 @@ class DispatcherCore
      */
     protected function loadRoutes($id_shop = null)
     {
+        // Initialize shop context if not provided
         $context = Context::getContext();
-
         if (isset($context->shop) && $id_shop === null) {
             $id_shop = (int) $context->shop->id;
         }
 
-        // Load custom routes from modules
+        // Initialize language list we will be building our routes in
+        $language_ids = Language::getIDs();
+        if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
+            $language_ids[] = (int) $context->language->id;
+        }
+
+        /*
+         * Step 1 - We have some default hardcoded routes initialized in $this->default_routes, these will
+         * be used as a base.
+         */
+
+        /*
+         * Step 2 - Module routes
+         * 
+         * Loads custom routes from modules for given shop. Beware that these routes are not multilanguage,
+         * passed routes will be the same for each language of the shop.
+         * 
+         * Module routes can overwrite those set in $this->default_routes, if their name matches.
+         */
         $modules_routes = Hook::exec('moduleRoutes', ['id_shop' => $id_shop], null, true, false);
         if (is_array($modules_routes) && count($modules_routes)) {
             foreach ($modules_routes as $module_route) {
@@ -603,13 +621,13 @@ class DispatcherCore
             }
         }
 
-        $language_ids = Language::getIDs();
-
-        if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
-            $language_ids[] = (int) $context->language->id;
-        }
-
-        // Set default routes
+        /*
+         * Step 3 - Initialize default routes into $this->routes that will get used.
+         * 
+         * This takes each default route we have until now and calls computeRoute upon each route.
+         * This enriches the route by a final regex and strips not needed keywords. Then, we add it
+         * to route list of each language.
+         */
         foreach ($this->default_routes as $id => $route) {
             $route = $this->computeRoute(
                 $route['rule'],
@@ -618,14 +636,15 @@ class DispatcherCore
                 isset($route['params']) ? $route['params'] : []
             );
             foreach ($language_ids as $id_lang) {
-                // the default routes are the same, whatever the language
                 $this->routes[$id_shop][$id_lang][$id] = $route;
             }
         }
 
-        // Load the custom routes prior the defaults to avoid infinite loops
         if ($this->use_routes) {
-            // Load routes from meta table
+            /*
+             * Step 4 - Load multilanguage routes from meta table. These are static routes for pages like /bestsellers that configurable
+             * in SEO & URL section in the backoffice and don't use any parameters or keywords.
+             */
             $sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
 					FROM `' . _DB_PREFIX_ . 'meta` m
 					LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int) $id_shop) . ')
@@ -646,7 +665,8 @@ class DispatcherCore
                 }
             }
 
-            // Set default empty route if no empty route (that's weird I know)
+            // Set default empty route if no empty route (that's weird I know).
+            // Should probably be set as default value in the constructor in 9.0.0.
             if (!$this->empty_route) {
                 $this->empty_route = [
                     'routeID' => 'index',
@@ -655,13 +675,16 @@ class DispatcherCore
                 ];
             }
 
-            // Load custom routes
+            /*
+             * Step 5 - Custom routes set in ps_configurations. Those are configured product, category,
+             * cms etc. rules that you can configure in SEO & URL section in the backoffice.
+             * 
+             * Beware that these routes are not multilanguage, they will be the same for each language of the shop.
+             * It probably would not be difficult to make them multilanguage, if route was stored in configuration
+             * for each language.
+             */
             foreach ($this->default_routes as $route_id => $route_data) {
                 if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
-                    if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
-                        $language_ids[] = (int) $context->language->id;
-                    }
-
                     $route = $this->computeRoute(
                         $custom_route,
                         $route_data['controller'],
@@ -669,12 +692,18 @@ class DispatcherCore
                         isset($route_data['params']) ? $route_data['params'] : []
                     );
                     foreach ($language_ids as $id_lang) {
-                        // those routes are the same, whatever the language
                         $this->routes[$id_shop][$id_lang][$route_id] = $route;
                     }
                 }
             }
         }
+
+        /*
+         * Step 6 - Allow modules to modify routes in any way or add their own multilanguage routes.
+         *
+         * Use getRoutes, addRoute, deleteRoute methods for this purpose.
+         */
+        Hook::exec('actionAfterLoadRoutes', ['dispatcher' => $this]);
     }
 
     /**
@@ -747,7 +776,9 @@ class DispatcherCore
     }
 
     /**
-     * @param string $route_id Name of the route (need to be uniq,a second route with same name will override the first)
+     * Adds a new route to the list of routes. If it already exists, it will override the first one. 
+     *
+     * @param string $route_id Name of the route
      * @param string $rule Url rule
      * @param string $controller Controller to call if request uri match the rule
      * @param int $id_lang
@@ -784,6 +815,46 @@ class DispatcherCore
         }
 
         $this->routes[$id_shop][$id_lang][$route_id] = $route;
+    }
+
+    /**
+     * Returns a list of processed routes.
+     *
+     * @return array List of routes
+     */
+    public function getRoutes() {
+        return $this->routes;
+    }
+
+    /**
+     * Removes a route from a list of calculated routes.
+     *
+     * @param string $route_id Name of the route
+     * @param int $id_lang
+     * @param int $id_shop
+     */
+    public function removeRoute(
+        $route_id,
+        $id_lang = null,
+        $id_shop = null
+    ) {
+        $context = Context::getContext();
+
+        if (isset($context->language) && $id_lang === null) {
+            $id_lang = (int) $context->language->id;
+        }
+
+        if (isset($context->shop) && $id_shop === null) {
+            $id_shop = (int) $context->shop->id;
+        }
+
+        if (!isset($this->routes[$id_shop][$id_lang][$route_id])) {
+            return false;
+        }
+
+        unset($this->routes[$id_shop][$id_lang][$route_id]);
+
+        return true;
     }
 
     /**
