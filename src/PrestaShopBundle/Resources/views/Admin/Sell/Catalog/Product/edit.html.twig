@@ -38,6 +38,8 @@
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
   {% set shopId = productForm.vars.shop_id %}
+  {# Passed via data attribute only so that the iframe modal can replicate it in its redirection url #}
+  {% set forceDefaultActive = productForm.vars.force_default_active %}
 
   <div class="header-toolbar d-print-none">
     {{ multistoreProductHeader(productId) }}
@@ -48,7 +50,8 @@
     'novalidate': 'novalidate',
     'data-product-id': productId,
     'data-shop-id': shopId,
-    'data-product-type': productType
+    'data-product-type': productType,
+    'data-force-default-active': forceDefaultActive
   }}) }}
 
   {# Header form child is rendered separately because it's not one of the tabs so it needs to be rendered before #}

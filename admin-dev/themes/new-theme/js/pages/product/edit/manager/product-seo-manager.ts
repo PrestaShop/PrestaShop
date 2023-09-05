@@ -90,18 +90,27 @@ export default class ProductSEOManager {
       },
     });
 
+    // On reset button click we regenerate the friendly url for currently selected locale
     const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
     resetLinkRewriteBtn.addEventListener('click', () => this.resetLinkRewrite());
 
-    // Disable or enable reset button depending on the name input value at init, on language change and on keyup inputs
+    // Disable or enable reset button depending on the name input value at init, on language change and on keyup inputs (on name and url inputs)
     this.linkRewriteStateRefresh();
     this.eventEmitter.on('languageSelected', () => this.linkRewriteStateRefresh());
+    this.initCallbackOnInputChange(ProductMap.productLocalizedNameInput, () => this.linkRewriteStateRefresh());
+    this.initCallbackOnInputChange(ProductMap.productLocalizedLinkRewriteInput, () => this.linkRewriteStateRefresh());
 
-    const linkRewriteInputs = document.querySelectorAll(`${ProductMap.productLocalizedLinkRewriteInput}`);
+    if (resetLinkRewriteBtn.dataset.automaticChange === '1') {
+      this.initCallbackOnInputChange(ProductMap.productLocalizedNameInput, () => this.resetAllLinkRewrites());
+    }
+  }
 
-    if (linkRewriteInputs) {
-      for (let i = 0; i < linkRewriteInputs.length; i += 1) {
-        linkRewriteInputs[i].addEventListener('keyup', () => this.linkRewriteStateRefresh());
+  private initCallbackOnInputChange(inputSelector: string, callback: EventListenerOrEventListenerObject): void {
+    const inputs = document.querySelectorAll(inputSelector);
+
+    if (inputs) {
+      for (let i = 0; i < inputs.length; i += 1) {
+        inputs[i].addEventListener('keyup', callback);
       }
     }
   }
@@ -138,8 +147,32 @@ export default class ProductSEOManager {
       return;
     }
 
+    this.updateUrlInput(linkRewriteInput, nameValue);
+    resetLinkRewriteBtn.disabled = true;
+  }
+
+  private updateUrlInput(linkRewriteInput: HTMLInputElement, nameValue: string): void {
+    // eslint-disable-next-line no-param-reassign
     linkRewriteInput.value = window.str2url(nameValue);
     linkRewriteInput.dispatchEvent(new Event('change', {bubbles: true}));
-    resetLinkRewriteBtn.disabled = true;
+  }
+
+  private resetAllLinkRewrites(): void {
+    const nameInputs = document.querySelectorAll<HTMLInputElement>(ProductMap.productLocalizedNameInput);
+    nameInputs.forEach((nameInput: HTMLInputElement) => {
+      nameInput.parentElement?.classList?.forEach((parentClass:string) => {
+        // Search for class mapping js-locale-en, js-locale-fr, ...
+        if (parentClass.match(/^js-locale-[a-zA-Z]{2}$/)) {
+          const linkRewriteSelector = `.${parentClass} ${ProductMap.productLocalizedLinkRewriteInput}`;
+          const linkRewriteInput = document.querySelector<HTMLInputElement>(linkRewriteSelector);
+
+          if (linkRewriteInput) {
+            this.updateUrlInput(linkRewriteInput, nameInput.value);
+          }
+        }
+      });
+    });
+
+    this.linkRewriteStateRefresh();
   }
 }

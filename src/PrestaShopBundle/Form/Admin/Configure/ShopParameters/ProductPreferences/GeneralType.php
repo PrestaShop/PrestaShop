@@ -135,7 +135,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'When active, friendly URL will be updated on every save.',
+                    'When enabled, friendly URL will be updated on every name change for offline products only.',
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,

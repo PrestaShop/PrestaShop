@@ -1734,6 +1734,7 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"
       - '@prestashop.adapter.legacy.context'
+      - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
     tags:
       - { name: form.type }
 
