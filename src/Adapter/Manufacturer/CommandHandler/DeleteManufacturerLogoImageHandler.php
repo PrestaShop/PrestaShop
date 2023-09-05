@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\DeleteManufacturerLogoImageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -63,12 +64,8 @@ class DeleteManufacturerLogoImageHandler extends AbstractManufacturerCommandHand
 
         $imageTypes = ImageType::getImagesTypes('manufacturers');
 
-        /** @var \PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
-        $imageFormatConfiguration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
-        $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
-
         foreach ($imageTypes as $imageType) {
-            foreach ($configuredImageFormats as $imageFormat) {
+            foreach (ImageFormatConfiguration::SUPPORTED_FORMATS as $imageFormat) {
                 $path = sprintf(
                     '%s%s-%s.' . $imageFormat,
                     $this->imageDir,

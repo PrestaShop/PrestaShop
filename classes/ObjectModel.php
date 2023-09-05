@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopBundle\Translation\TranslatorComponent;
 
 abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
@@ -1965,10 +1966,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return false;
             }
 
-            /** @var PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
-            $imageFormatConfiguration = ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
-            $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
-
             $types = ImageType::getImagesTypes();
             foreach ($types as $image_type) {
                 if (file_exists($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)
@@ -1976,7 +1973,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     return false;
                 }
 
-                foreach ($configuredImageFormats as $imageFormat) {
+                foreach (ImageFormatConfiguration::SUPPORTED_FORMATS as $imageFormat) {
                     $file = $this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $imageFormat;
                     if (file_exists($file)) {
                         unlink($file);
