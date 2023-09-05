@@ -44,7 +44,6 @@ class Toolbar
     public int $currentTabLevel = 0;
     public array $navigationTabs = [];
     public array $breadcrumbs;
-    public bool $useRegularH1Structure = true;
 
     public function __construct(
         private readonly HookDispatcherInterface $hookDispatcher,

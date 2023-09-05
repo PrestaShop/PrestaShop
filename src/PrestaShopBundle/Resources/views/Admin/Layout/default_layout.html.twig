@@ -26,9 +26,17 @@
   display_header: display_header,
   showContentHeader: showContentHeader,
   display_footer: display_footer,
+  lockedToAllShopContext: locked_to_all_shop_context,
+  metaTitle: metaTitle,
+  layoutTitle: layoutTitle,
+  toolbarBtn: toolbar_btn,
+  table: table,
+  helpLink: help_link,
+  enableSidebar: enableSidebar
 } %}
   {% block content_header %}{{ block(outerBlocks.content_header) }}{% endblock %}
   {% block content %}{{ block(outerBlocks.content) }}{% endblock %}
   {% block content_footer %}{{ block(outerBlocks.content_footer) }}{% endblock %}
   {% block sidebar_right %}{{ block(outerBlocks.sidebar_right) }}{% endblock %}
+  {% block pageTitle %}{{ block(outerBlocks.pageTitle) }}{% endblock %}
 {% endcomponent %}

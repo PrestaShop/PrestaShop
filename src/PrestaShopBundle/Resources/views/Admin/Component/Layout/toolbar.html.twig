@@ -45,7 +45,6 @@
     {% set persistent_help_btn = help_link is defined and help_link is not same as (false) and toolbarBtn is empty %}
     <div class="title-row {% if persistent_help_btn %}flex-nowrap flex-md-wrap{% endif %}">
       {% block pageTitle %}
-        {% if useRegularH1Structure %}
           <h1 class="title">
             {% if title is iterable and title is not empty %}
               {{ title|last|e }}
@@ -53,13 +52,7 @@
               {{ title|e }}
             {% endif %}
           </h1>
-        {% else %}
-          {% autoescape false %}
-            {{ title }}
-          {% endautoescape %}
-        {% endif %}
       {% endblock %}
-
       {% block toolbarBox %}
         <div class="toolbar-icons{% if persistent_help_btn %} toolbar-icons--persistent{% endif %}">
           <div class="wrapper">

@@ -154,8 +154,16 @@
 
 {# Page header toolbar #}
 {% if showContentHeader %}
-  {# TODO #}
-  {#  {{ component('Toolbar') }}#}
+  {% component Toolbar with {
+    lockedToAllShopContext: locked_to_all_shop_context,
+    title: layoutTitle,
+    toolbarBtn: toolbar_btn,
+    table: table,
+    helpLink: help_link,
+    enableSidebar: enableSidebar
+  } %}
+    {% block pageTitle %}{{ block(outerBlocks.pageTitle) ?: parent() }}{% endblock %}
+  {% endcomponent %}
 {% endif %}
 
 <div id="main-div">
