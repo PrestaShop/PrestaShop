@@ -27,8 +27,6 @@
 namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -38,7 +36,6 @@ use Twig\TwigFunction;
 class PathExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
         private readonly LegacyContext $context
     ) {
     }
@@ -50,38 +47,10 @@ class PathExtension extends AbstractExtension
     {
         return [
             new TwigFunction(
-                'path',
-                [$this, 'getPath']
-            ),
-            new TwigFunction(
                 'legacy_path',
                 [$this, 'getLegacyPath']
             ),
         ];
-    }
-
-    /**
-     * Get path for legacy or symfony link.
-     *
-     * @param string $routeName
-     * @param array $parameters
-     * @param bool $relative (only for symfony links)
-     *
-     * @return string
-     */
-    public function getPath(string $routeName, array $parameters = [], bool $relative = false): string
-    {
-        try {
-            $url = $this->urlGenerator->generate(
-                $routeName,
-                $parameters,
-                $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH
-            );
-        } catch (RouteNotFoundException $ex) {
-            $url = $this->context->getAdminLink(controller: $routeName, extraParams: $parameters);
-        }
-
-        return $url;
     }
 
     /**
