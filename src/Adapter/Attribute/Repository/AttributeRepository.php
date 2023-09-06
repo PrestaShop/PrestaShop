@@ -121,6 +121,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             )
             ->andWhere($qb->expr()->in('a.id_attribute_group', ':attributeGroupIds'))
             ->setParameter('attributeGroupIds', $attributeGroupIdValues, Connection::PARAM_INT_ARRAY)
+            ->addOrderBy('a.position', 'ASC')
         ;
 
         if (!empty($attributeIds)) {
