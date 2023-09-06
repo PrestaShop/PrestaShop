@@ -12,6 +12,8 @@ import type {Page} from 'playwright';
 class AddFeature extends BOBasePage {
   public readonly createPageTitle: string;
 
+  private readonly featureForm: string;
+
   private readonly nameInput: string;
 
   private readonly urlInput: string;
@@ -29,16 +31,15 @@ class AddFeature extends BOBasePage {
   constructor() {
     super();
 
-    this.createPageTitle = 'Features > Add New Feature •';
-
-    this.alertSuccessBlockParagraph = '.alert-success';
+    this.createPageTitle = `New feature • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
-    this.nameInput = '#name_1';
-    this.urlInput = 'input[name=\'url_name_1\']';
-    this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.indexableToggle = (toggle: string) => `#indexable_${toggle}`;
-    this.saveButton = '#feature_form_submit_btn';
+    this.featureForm = 'form[name="feature"]';
+    this.nameInput = `${this.featureForm} #feature_name_1`;
+    this.urlInput = `${this.featureForm} #feature_url_name_1`;
+    this.metaTitleInput = `${this.featureForm} #feature_meta_title_1`;
+    this.indexableToggle = (toggle: string) => `${this.featureForm} #feature_layered_indexable_${toggle}`;
+    this.saveButton = `${this.featureForm} #save-button`;
   }
 
   /**
@@ -56,7 +57,7 @@ class AddFeature extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, featureData.metaTitle);
 
     // Set indexable toggle
-    await this.setChecked(page, this.indexableToggle(featureData.indexable ? 'on' : 'off'));
+    await this.setChecked(page, this.indexableToggle(featureData.indexable ? '1' : '0'));
 
     // Save feature
     await this.clickAndWaitForURL(page, this.saveButton);

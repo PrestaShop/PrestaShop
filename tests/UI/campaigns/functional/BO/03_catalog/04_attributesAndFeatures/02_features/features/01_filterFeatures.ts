@@ -77,14 +77,14 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
       },
       {
         args: {
-          testIdentifier: 'filterName', filterBy: 'b!name', filterValue: Features.composition.name,
+          testIdentifier: 'filterName', filterBy: 'name', filterValue: Features.composition.name,
         },
       },
       {
         args: {
           testIdentifier: 'filterPosition',
-          filterBy: 'a!position',
-          filterValue: Features.composition.position - 1,
+          filterBy: 'position',
+          filterValue: Features.composition.position,
         },
       },
     ];
@@ -107,12 +107,7 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
           1,
           test.args.filterBy,
         );
-
-        if (typeof test.args.filterValue === 'number') {
-          await expect(textColumn).to.contains(test.args.filterValue + 1);
-        } else {
-          await expect(textColumn).to.contains(test.args.filterValue);
-        }
+        await expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {

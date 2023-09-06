@@ -121,7 +121,6 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_feature_values_index',
                         'route_param_name' => 'featureId',
                         'route_param_field' => 'id_feature',
-                        'clickable_row' => true,
                     ])
                      )
                     ->add((new LinkRowAction('edit'))

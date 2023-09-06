@@ -29,7 +29,16 @@
 
 {% block content %}
   {% block feature_values_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureValueGrid} %}
+    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureValueGrid} %}
+      {% block grid_panel_footer %}
+        <div class="card-footer">
+          <a href="{{ path('admin_features_index') }}" class="btn btn-outline-secondary">
+            <i class="material-icons rtl-flip">arrow_back</i>
+            {{ 'Back to list'|trans({}, 'Admin.Actions') }}
+          </a>
+        </div>
+      {% endblock %}
+    {% endembed %}
   {% endblock %}
 {% endblock %}
 

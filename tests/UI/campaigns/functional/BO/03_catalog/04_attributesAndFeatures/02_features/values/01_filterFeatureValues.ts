@@ -66,9 +66,9 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await testContext.addContextItem(this, 'testIdentifier', 'filterFeatures', baseContext);
 
     await featuresPage.resetFilter(page);
-    await featuresPage.filterTable(page, 'b!name', Features.composition.name);
+    await featuresPage.filterTable(page, 'name', Features.composition.name);
 
-    const textColumn = await featuresPage.getTextColumn(page, 1, 'b!name');
+    const textColumn = await featuresPage.getTextColumn(page, 1, 'name', 'id_feature');
     await expect(textColumn).to.contains(Features.composition.name);
   });
 
@@ -78,7 +78,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await featuresPage.viewFeature(page, 1);
 
     const pageTitle = await viewFeaturePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${Features.composition.name}`);
+    await expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
   });
 
   it('should reset all filters and get number of features in BO', async function () {

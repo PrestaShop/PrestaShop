@@ -33,7 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueComm
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureValueException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Component\CsvResponse;
@@ -56,14 +59,24 @@ class FeatureValueController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(Request $request, FeatureValueFilters $filters): Response
+    public function indexAction(int $featureId, Request $request, FeatureValueFilters $filters): Response
     {
         $featureValueGridFactory = $this->get(FeatureValueGridFactory::class);
+
+        try {
+            /** @var EditableFeature $editableFeature */
+            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing($featureId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_features_index');
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featureValueGrid' => $this->presentGrid($featureValueGridFactory->getGrid($filters)),
+            'layoutTitle' => $editableFeature->getName()[$this->getContextLangId()],
             'layoutHeaderToolbarBtn' => [
                 'add_feature_value' => [
                     'href' => $this->generateUrl('admin_feature_values_add', ['featureId' => $filters->getFeatureId()]),
@@ -77,15 +90,15 @@ class FeatureValueController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
-     * @param int $featureId
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(int $featureId, Request $request): Response
+    public function createAction(Request $request): Response
     {
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
+        $featureId = $request->query->getInt('featureId');
 
         try {
             $featureValueForm = $featureValueFormBuilder->getForm(['feature_id' => $featureId]);
@@ -101,9 +114,13 @@ class FeatureValueController extends FrameworkBundleAdminController
                     ]);
                 }
 
-                return $this->redirectToRoute('admin_feature_values_index', [
-                    'featureId' => $featureId,
-                ]);
+                if ($featureId) {
+                    return $this->redirectToRoute('admin_feature_values_index', [
+                        'featureId' => $featureId,
+                    ]);
+                }
+
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -251,6 +268,10 @@ class FeatureValueController extends FrameworkBundleAdminController
     private function getErrorMessages(): array
     {
         return [
+            FeatureNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
             FeatureValueNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'

@@ -80,6 +80,11 @@ class FeatureController extends FrameworkBundleAdminController
                     'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
+                'add_feature_value' => [
+                    'href' => $this->generateUrl('admin_feature_values_add'),
+                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
             ],
         ]);
     }
@@ -165,9 +170,7 @@ class FeatureController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_features_edit', [
-                    'featureId' => $featureId,
-                ]);
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

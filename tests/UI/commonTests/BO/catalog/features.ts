@@ -137,7 +137,7 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
     it(`should filter by feature name '${featureName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await featuresPage.filterTable(page, 'b!name', featureName);
+      await featuresPage.filterTable(page, 'name', featureName);
 
       const numberOfFeaturesAfterFilter = await featuresPage.getNumberOfElementInGrid(page);
       await expect(numberOfFeaturesAfterFilter).to.be.equal(19);

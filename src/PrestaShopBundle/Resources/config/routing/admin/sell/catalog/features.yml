@@ -1,4 +1,3 @@
-# @todo: feature flag can be removed once page is fully migrated
 admin_features_index:
   path: /
   methods: [ GET ]
@@ -6,7 +5,6 @@ admin_features_index:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::indexAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures
-    _legacy_feature_flag: feature
 
 admin_features_horizontal_index:
   path: /horizontal
@@ -32,7 +30,6 @@ admin_features_add:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::createAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures:addfeature
-    _legacy_feature_flag: feature
 
 admin_features_edit:
   path: /{featureId}/edit
@@ -41,7 +38,6 @@ admin_features_edit:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::editAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures:updatefeature
-    _legacy_feature_flag: feature
     _legacy_parameters:
       id_feature: featureId
   requirements:
@@ -51,7 +47,7 @@ admin_features_export:
   path: /export
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::exportAction'
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::exportAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminThemes:exportfeature
 
@@ -89,8 +85,9 @@ admin_feature_values_index:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::indexAction
     _legacy_controller: AdminFeatures
-    _legacy_link: AdminFeatures
-    _legacy_feature_flag: feature
+    _legacy_link: AdminFeatures:viewfeature
+    _legacy_parameters:
+      id_feature: featureId
   requirements:
     featureId: \d+
 
@@ -103,22 +100,18 @@ admin_feature_values_search:
     redirectRoute: admin_feature_values_index
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures
-    _legacy_feature_flag: feature
     redirectQueryParamsToKeep:
       - 'featureId'
   requirements:
     featureId: \d+
 
 admin_feature_values_add:
-  path: /{featureId}/values/new
+  path: /new-value
   methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::createAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures:addfeature_value
-    _legacy_feature_flag: feature
-    redirectQueryParamsToKeep:
-      - 'featureId'
 
 admin_feature_values_edit:
   path: /{featureId}/values/{featureValueId}/edit
@@ -127,7 +120,9 @@ admin_feature_values_edit:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::editAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures:updatefeature_value
-    _legacy_feature_flag: feature
+    _legacy_parameters:
+      id_feature: featureId
+      id_feature_value: featureValueId
     redirectQueryParamsToKeep:
       - 'featureId'
 
