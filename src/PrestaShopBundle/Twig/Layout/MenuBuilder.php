@@ -217,7 +217,14 @@ class MenuBuilder
 
     public function getLegacyControllerClassName(): ?string
     {
-        return $this->requestStack->getMainRequest()->attributes->get('_legacy_controller');
+        $request = $this->requestStack->getMainRequest();
+        if ($request->attributes->has('_legacy_controller')) {
+            return $request->attributes->get('_legacy_controller');
+        } elseif ($request->query->has('controller')) {
+            return $request->query->get('controller');
+        }
+
+        return null;
     }
 
     private function getLinkFromTab(Tab $tab): string

@@ -28,11 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
+use Doctrine\ORM\NoResultException;
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
+use Shop;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
@@ -53,6 +56,7 @@ class Header
         private readonly Configuration $configuration,
         private readonly MenuBuilder $menuBuilder,
         private readonly string $psVersion,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -93,12 +97,12 @@ class Header
 
     public function getControllerName(): string
     {
-        return htmlentities($this->menuBuilder->getLegacyControllerClassName());
+        return $this->menuBuilder->getLegacyControllerClassName();
     }
 
     public function getImgDir(): string
     {
-        return $this->context->getRootUrl() . 'img/';
+        return $this->context->getContext()->shop->getBaseURI() . 'img/';
     }
 
     public function getFullLanguageCode(): string
@@ -119,18 +123,45 @@ class Header
     public function getLegacyToken(): string
     {
         $controllerName = $this->menuBuilder->getLegacyControllerClassName();
-        $tabId = $this->tabRepository->getIdByClassName($controllerName);
 
-        return Tools::getAdminToken($controllerName . $tabId . (int) $this->context->getContext()->employee->id);
+        $tabId = '';
+        if (!empty($controllerName)) {
+            try {
+                $tabId = $this->tabRepository->getIdByClassName($controllerName);
+            } catch (NoResultException) {
+            }
+        }
+
+        $employeeId = '';
+        if ($this->context->getContext()->employee) {
+            $employeeId = (int) $this->context->getContext()->employee->id;
+        }
+
+        return Tools::getAdminToken($controllerName . $tabId . $employeeId);
     }
 
-    public function getDefaultLanguage(): string
+    public function getDefaultLanguage(): int
     {
-        return $this->configuration->get('PS_LANG_DEFAULT');
+        return (int) $this->configuration->get('PS_LANG_DEFAULT');
     }
 
     public function getCurrentIndex(): string
     {
-        return $this->context->getContext()->controller::$currentIndex;
+        $controllerName = $this->menuBuilder->getLegacyControllerClassName();
+
+        return 'index.php' . (!empty($controllerName) ? '?controller=' . $controllerName : '');
+    }
+
+    public function getEditForLabel(): string
+    {
+        if (Shop::getContext() === Shop::CONTEXT_SHOP) {
+            return $this->translator->trans('This field will be modified for this shop:', [], 'Admin.Notifications.Info')
+                . sprintf('<b>%s</b>', $this->getShopName());
+        } elseif (Shop::getContext() === Shop::CONTEXT_GROUP) {
+            return $this->translator->trans('This field will be modified for all shops in this shop group:', [], 'Admin.Notifications.Info')
+                . sprintf('<b>%s</b>', $this->getShopName());
+        }
+
+        return $this->translator->trans('This field will be modified for all your shops.', [], 'Admin.Notifications.Info');
     }
 }

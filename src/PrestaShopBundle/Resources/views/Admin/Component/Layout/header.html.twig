@@ -18,16 +18,7 @@
     var country_iso_code = '{{ this.countryIsoCode|e('js') }}';
     var _PS_VERSION_ = '{{ this.psVersion|e('js') }}';
     var roundMode = {{ this.roundMode|intCast }};
-    var youEditFieldFor = '';
-    {% if shop_context %}
-      {% if shop_context == constant('\Shop::CONTEXT_ALL') %}
-    youEditFieldFor = '{{ 'This field will be modified for all your shops.'|trans({}, 'Admin.Notifications.Info') }}';
-      {% elseif shop_context == constant('\Shop::CONTEXT_GROUP') %}
-    youEditFieldFor = '{{ 'This field will be modified for all shops in this shop group:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ this.shopName|e('js') }}</b>';
-      {% else %}
-    youEditFieldFor = '{{ 'This field will be modified for this shop:'|trans({}, 'Admin.Notifications.Info') }} <b>{{ this.shopName|e('js') }}</b>
-      {% endif %}
-    {% endif %}
+    var youEditFieldFor = '{{ this.editForLabel|e('js') }}';
     var new_order_msg = '{{ 'A new order has been placed on your store.'|trans({}, 'Admin.Navigation.Header') }}';
     var order_number_msg = '{{ 'Order number:'|trans({}, 'Admin.Navigation.Header') }} ';
     var total_msg = '{{ 'Total:'|trans({}, 'Admin.Global') }} ';
@@ -42,9 +33,9 @@
     var employee_token = '{{ this.employeeToken|e('js') }}';
     var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
     var default_language = '{{ this.defaultLanguage|intCast }}';
-    var admin_modules_link = '{{ legacy_path("AdminModulesSf", {'route': "admin_module_manage"})|e('js')}}';
-    var admin_notification_get_link = '{{ legacy_path("AdminCommon")|e('js') }}';
-    var admin_notification_push_link = adminNotificationPushLink = '{{ legacy_path("AdminCommon", {'route': 'admin_common_notifications_ack'})|e('js') }}';
+    var admin_modules_link = '{{ path('admin_module_manage')|e('js')}}';
+    var admin_notification_get_link = '{{ path('admin_common_notifications')|e('js') }}';
+    var admin_notification_push_link = adminNotificationPushLink = '{{ path('admin_common_notifications_ack')|e('js') }}';
     var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
     var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
   </script>
