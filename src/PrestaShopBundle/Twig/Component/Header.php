@@ -33,9 +33,9 @@ use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Translation\TranslatorInterface;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Shop;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
@@ -97,7 +97,7 @@ class Header
 
     public function getControllerName(): string
     {
-        return $this->menuBuilder->getLegacyControllerClassName();
+        return $this->menuBuilder->getLegacyControllerClassName() ?: '';
     }
 
     public function getImgDir(): string
