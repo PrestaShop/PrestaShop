@@ -39,16 +39,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
-#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/header.html.twig')]
-class Header
+#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/head.html.twig')]
+class Head
 {
-    public string $meta_title;
-    public ?string $shop_context;
-    public bool $display_header_javascript;
-    public array $css_files;
-    public array $js_files;
-    public array $js_inline;
-    public ?string $displayBackOfficeHeader;
+    private string $metaTitle;
 
     public function __construct(
         private readonly TabRepository $tabRepository,
@@ -58,6 +52,20 @@ class Header
         private readonly string $psVersion,
         private readonly TranslatorInterface $translator,
     ) {
+    }
+
+    public function mount(string $layoutTitle): void
+    {
+        if (empty($layoutTitle)) {
+            $breadcrumbs = $this->menuBuilder->getBreadcrumbLinks();
+            if (empty($breadcrumbs)) {
+                $this->metaTitle = '';
+            } else {
+                $this->metaTitle = $breadcrumbs['tab']->name;
+            }
+        } else {
+            $this->metaTitle = $layoutTitle;
+        }
     }
 
     public function getEmployeeToken(): string
@@ -163,5 +171,20 @@ class Header
         }
 
         return $this->translator->trans('This field will be modified for all your shops.', [], 'Admin.Notifications.Info');
+    }
+
+    public function getCssFiles(): array
+    {
+        return $this->context->getContext()->controller->css_files;
+    }
+
+    public function getJsFiles(): array
+    {
+        return $this->context->getContext()->controller->js_files;
+    }
+
+    public function getMetaTitle(): string
+    {
+        return $this->metaTitle;
     }
 }

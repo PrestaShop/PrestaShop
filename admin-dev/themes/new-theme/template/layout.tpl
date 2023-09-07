@@ -3,15 +3,7 @@
 <head>
   {render_template
       smarty_template="header.tpl"
-      twig_template="@PrestaShop/Admin/Layout/header.html.twig"
-      display_header_javascript=(isset($display_header_javascript)) ? $display_header_javascript : false
-      meta_title=$meta_title
-      shop_context=(isset($shop_context)) ? $shop_context : null
-      css_files=(isset($css_files)) ? $css_files : []
-      js_def=(isset($js_def) && is_array($js_def)) ? $js_def : []
-      js_files=(isset($js_files)) ? $js_files : []
-      js_inline=(isset($js_inline)) ? $js_inline : []
-      displayBackOfficeHeader=(isset($displayBackOfficeHeader)) ? $displayBackOfficeHeader : null
+      twig_template="@PrestaShop/Admin/Layout/head.html.twig"
   }
 </head>
 
