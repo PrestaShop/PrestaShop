@@ -4,6 +4,7 @@
   {render_template
       smarty_template="header.tpl"
       twig_template="@PrestaShop/Admin/Layout/head.html.twig"
+      meta_title=$meta_title
   }
 </head>
 
