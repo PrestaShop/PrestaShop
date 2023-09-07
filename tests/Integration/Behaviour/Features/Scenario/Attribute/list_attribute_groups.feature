@@ -61,3 +61,10 @@ Feature: Attribute Group
       | Yellow      | #F1C40F | 11       | yellow    |
       | Brown       | #964B00 | 12       | brown     |
       | Pink        | #FCCACD | 13       | pink      |
+    When I switch positions of attributes "s" and "xl"
+    Then the attribute group "size" should have the following attributes:
+      | name[en-US] | color | position | reference |
+      | XL          |       | 0        | xl        |
+      | M           |       | 1        | m         |
+      | L           |       | 2        | l         |
+      | S           |       | 3        | s         |
