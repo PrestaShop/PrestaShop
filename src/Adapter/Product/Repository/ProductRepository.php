@@ -889,26 +889,27 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->addGroupBy('p.id_product')
         ;
 
-        $dbSearchPhrase = sprintf('"%%%s%%"', pSQL($searchPhrase));
         $qb->where($qb->expr()->or(
-            $qb->expr()->like('pl.name', $dbSearchPhrase),
+            $qb->expr()->like('pl.name', ':dbSearchPhrase'),
 
             // Product references
-            $qb->expr()->like('p.isbn', $dbSearchPhrase),
-            $qb->expr()->like('p.upc', $dbSearchPhrase),
-            $qb->expr()->like('p.mpn', $dbSearchPhrase),
-            $qb->expr()->like('p.reference', $dbSearchPhrase),
-            $qb->expr()->like('p.ean13', $dbSearchPhrase),
-            $qb->expr()->like('p.supplier_reference', $dbSearchPhrase),
+            $qb->expr()->like('p.isbn', ':dbSearchPhrase'),
+            $qb->expr()->like('p.upc', ':dbSearchPhrase'),
+            $qb->expr()->like('p.mpn', ':dbSearchPhrase'),
+            $qb->expr()->like('p.reference', ':dbSearchPhrase'),
+            $qb->expr()->like('p.ean13', ':dbSearchPhrase'),
+            $qb->expr()->like('p.supplier_reference', ':dbSearchPhrase'),
 
             // Combination attributes
-            $qb->expr()->like('pa.isbn', $dbSearchPhrase),
-            $qb->expr()->like('pa.upc', $dbSearchPhrase),
-            $qb->expr()->like('pa.mpn', $dbSearchPhrase),
-            $qb->expr()->like('pa.reference', $dbSearchPhrase),
-            $qb->expr()->like('pa.ean13', $dbSearchPhrase),
-            $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
+            $qb->expr()->like('pa.isbn', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.upc', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.mpn', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.reference', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.ean13', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.supplier_reference', ':dbSearchPhrase')
         ));
+        $dbSearchPhrase = sprintf('%%%s%%', $searchPhrase);
+        $qb->setParameter(':dbSearchPhrase', $dbSearchPhrase);
 
         if (!empty($filters)) {
             foreach ($filters as $type => $filter) {
