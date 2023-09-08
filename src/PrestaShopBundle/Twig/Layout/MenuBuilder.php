@@ -50,12 +50,20 @@ class MenuBuilder
 
     public function getCurrentTab(): ?Tab
     {
-        $className = $this->getLegacyControllerClassName();
-        if (null === $className) {
-            return null;
+        $tab = null;
+        $routeName = $this->getRouteName();
+        if (!empty($routeName)) {
+            $tab = $this->tabRepository->findOneByRouteName($routeName);
         }
 
-        return $this->tabRepository->findOneByClassName($className);
+        if (!$tab) {
+            $className = $this->getLegacyControllerClassName();
+            if (!empty($className)) {
+                $tab = $this->tabRepository->findOneByClassName($className);
+            }
+        }
+
+        return $tab;
     }
 
     public function getAncestorsTab(int $currentTabId): array
@@ -215,9 +223,26 @@ class MenuBuilder
         return $legacyParameters['action'] ?? null;
     }
 
-    private function getLegacyControllerClassName(): ?string
+    public function getLegacyControllerClassName(): ?string
     {
-        return $this->requestStack->getMainRequest()->attributes->get('_legacy_controller');
+        $request = $this->requestStack->getMainRequest();
+        if ($request->attributes->has('_legacy_controller')) {
+            return $request->attributes->get('_legacy_controller');
+        } elseif ($request->query->has('controller')) {
+            return $request->query->get('controller');
+        }
+
+        return null;
+    }
+
+    private function getRouteName(): ?string
+    {
+        $request = $this->requestStack->getMainRequest();
+        if ($request->attributes->has('_route')) {
+            return $request->attributes->get('_route');
+        }
+
+        return null;
     }
 
     private function getLinkFromTab(Tab $tab): string

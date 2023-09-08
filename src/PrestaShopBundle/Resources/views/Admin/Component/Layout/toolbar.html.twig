@@ -27,19 +27,21 @@
   <div class="container-fluid">
 
     {% block pageBreadcrumb %}
-      <nav aria-label="Breadcrumb">
-        <ol class="breadcrumb">
-          {% if breadcrumbs.container.name != '' %}
-            <li class="breadcrumb-item">{{ breadcrumbs.container.name|escape }}</li>
-          {% endif %}
+      {% if breadcrumbs.container is defined or breadcrumbs.tab is defined %}
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            {% if breadcrumbs.container is defined and breadcrumbs.container.name != '' %}
+              <li class="breadcrumb-item">{{ breadcrumbs.container.name|escape }}</li>
+            {% endif %}
 
-          {% if breadcrumbs.tab.name != '' and breadcrumbs.container.name != breadcrumbs.tab.name and breadcrumbs.tab.href != '' %}
-            <li class="breadcrumb-item active">
-              <a href="{{ breadcrumbs.tab.href|escape }}" aria-current="page">{{ breadcrumbs.tab.name|escape }}</a>
-            </li>
-          {% endif %}
-        </ol>
-      </nav>
+            {% if breadcrumbs.container is defined and breadcrumbs.tab is defined and breadcrumbs.tab.name != '' and breadcrumbs.container.name != breadcrumbs.tab.name and breadcrumbs.tab.href != '' %}
+              <li class="breadcrumb-item active">
+                <a href="{{ breadcrumbs.tab.href|escape }}" aria-current="page">{{ breadcrumbs.tab.name|escape }}</a>
+              </li>
+            {% endif %}
+          </ol>
+        </nav>
+      {% endif %}
     {% endblock %}
 
     {% set persistent_help_btn = help_link is defined and help_link is not same as (false) and toolbarBtn is empty %}

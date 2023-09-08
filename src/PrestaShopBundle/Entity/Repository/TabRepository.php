@@ -65,6 +65,11 @@ class TabRepository extends EntityRepository
         return $this->findOneBy(['className' => $className]);
     }
 
+    public function findOneByRouteName(string $routeName): ?Tab
+    {
+        return $this->findOneBy(['routeName' => $routeName]);
+    }
+
     /**
      * @param string $className
      *

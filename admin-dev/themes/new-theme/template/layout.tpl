@@ -3,30 +3,8 @@
 <head>
   {render_template
       smarty_template="header.tpl"
-      twig_template="@PrestaShop/Admin/Layout/header.html.twig"
-      link=$link
-      viewport_scale=(isset($viewport_scale)) ? $viewport_scale : null
-      img_dir=$img_dir
+      twig_template="@PrestaShop/Admin/Layout/head.html.twig"
       meta_title=$meta_title
-      shop_name=$shop_name
-      display_header_javascript=(isset($display_header_javascript)) ? $display_header_javascript : false
-      controller_name=$controller_name
-      iso_user=$iso_user
-      lang_is_rtl=$lang_is_rtl
-      full_language_code=$full_language_code
-      full_cldr_language_code=$full_cldr_language_code
-      country_iso_code=$country_iso_code
-      ps_version=$smarty.const._PS_VERSION_
-      round_mode=$round_mode
-      shop_context=(isset($shop_context)) ? $shop_context : null
-      token=$token
-      currentIndex=$currentIndex
-      default_language=$default_language
-      css_files=(isset($css_files)) ? $css_files : []
-      js_def=(isset($js_def) && is_array($js_def)) ? $js_def : []
-      js_files=(isset($js_files)) ? $js_files : []
-      js_inline=(isset($js_inline)) ? $js_inline : []
-      displayBackOfficeHeader=(isset($displayBackOfficeHeader)) ? $displayBackOfficeHeader : null
   }
 </head>
 
