@@ -1475,7 +1475,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return string
      */
-    private function getProductPageTitle(array $meta = null)
+    public function getProductPageTitle(array $meta = null)
     {
         $title = $this->product->name;
         if (isset($meta['title'])) {
