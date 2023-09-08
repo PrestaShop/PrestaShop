@@ -76,7 +76,6 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                     $input = new ArrayInput([
                         'command' => 'cache:clear',
                         '--no-optional-warmers' => true,
-                        '--no-warmup' => true,
                         '--env' => $environment,
                     ]);
 

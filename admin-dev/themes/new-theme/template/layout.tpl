@@ -146,13 +146,10 @@
     {render_template
       smarty_template=$page_header_toolbar_template
       twig_template="@PrestaShop/Admin/Layout/toolbar.html.twig"
-      locked_to_all_shop_context=$locked_to_all_shop_context
       title=$title
       toolbar_btn=$toolbar_btn
-      table=$table
       help_link=$help_link
       enableSidebar=$enableSidebar
-      use_regular_h1_structure=$use_regular_h1_structure
     }
 {/if}
 

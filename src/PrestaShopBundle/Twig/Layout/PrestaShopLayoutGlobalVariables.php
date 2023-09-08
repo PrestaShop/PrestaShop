@@ -26,40 +26,59 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Twig\Component;
+namespace PrestaShopBundle\Twig\Layout;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
-use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Shop;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
-#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/default_layout.html.twig')]
-class DefaultLayout
+class PrestaShopLayoutGlobalVariables
 {
-    public bool $showContentHeader;
-    public array $toolbarBtn;
     private ?string $displayBackOfficeTop = null;
 
     public function __construct(
         private readonly LegacyContext $context,
         private readonly bool $debugMode,
         private readonly RequestStack $requestStack,
-        private readonly Configuration $configuration,
         private readonly CsrfTokenManagerInterface $tokenManager,
         private readonly UserProvider $userProvider,
-        private readonly TabRepository $tabRepository,
         private readonly string $psVersion,
-        private readonly MenuBuilder $menuBuilder,
+        private readonly Configuration $configuration,
         private readonly HookDispatcherInterface $hookDispatcher,
+        private readonly MenuBuilder $menuBuilder,
+        private readonly TabRepository $tabRepository,
+        private readonly LocaleRepository $localeRepository,
+        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ) {
+    }
+
+    /**
+     * Used to set the current locale in the context.
+     * TODO: Need to be removed when we rework on contexts.
+     */
+    public function setCurrentLocale(): void
+    {
+        $this->context->getContext()->currentLocale = $this->localeRepository->getLocale(
+            $this->context->getLanguage()->getLocale()
+        );
+    }
+
+    /**
+     * Enable New theme for smarty to avoid some problems with kpis for instance...
+     * TODO: Need to be refactored, we need to find a proper way to initialize this smarty template directory when we display a migrated page
+     */
+    public function enableSmartyNewTheme(): void
+    {
+        $this->context->getContext()->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/');
     }
 
     public function getIsoUser(): string
@@ -67,7 +86,12 @@ class DefaultLayout
         return $this->context->getLanguage()->getIsoCode();
     }
 
-    public function getLangIsRtl(): bool
+    public function isSymfonyLayoutEnabled(): bool
+    {
+        return $this->featureFlagStateChecker->isEnabled('symfony_layout');
+    }
+
+    public function isRtlLanguage(): bool
     {
         return (bool) $this->context->getLanguage()->isRTL();
     }
@@ -77,7 +101,12 @@ class DefaultLayout
         return htmlentities(Tools::getValue('controller'));
     }
 
-    public function isCollapseMenu(): bool
+    public function isMultiShop(): bool
+    {
+        return Shop::isFeatureActive();
+    }
+
+    public function isMenuCollapsed(): bool
     {
         $cookie = $this->context->getContext()->cookie;
 
@@ -86,26 +115,6 @@ class DefaultLayout
         }
 
         return false;
-    }
-
-    public function isMultiShop(): bool
-    {
-        return Shop::isFeatureActive();
-    }
-
-    public function isDebugMode(): bool
-    {
-        return $this->debugMode;
-    }
-
-    public function isMaintenanceMode(): bool
-    {
-        return !(bool) $this->configuration->get('PS_SHOP_ENABLE');
-    }
-
-    public function isMaintenanceAllowAdmins(): bool
-    {
-        return (bool) $this->configuration->get('PS_MAINTENANCE_ALLOW_ADMINS');
     }
 
     public function getJsRouterMetadata(): array
@@ -118,7 +127,17 @@ class DefaultLayout
         ];
     }
 
-    public function getPsVersion(): string
+    public function isDebugMode(): bool
+    {
+        return $this->debugMode;
+    }
+
+    public function installDirExists(): bool
+    {
+        return file_exists(_PS_ADMIN_DIR_ . '/../install');
+    }
+
+    public function getVersion(): string
     {
         return $this->psVersion;
     }
@@ -131,14 +150,14 @@ class DefaultLayout
         return $this->context->getLegacyAdminLink($tab->getClassName());
     }
 
-    public function isInstallDirExists(): bool
+    public function isMaintenanceEnabled(): bool
     {
-        return file_exists(_PS_ADMIN_DIR_ . '/../install');
+        return !(bool) $this->configuration->get('PS_SHOP_ENABLE');
     }
 
-    public function getCurrentTabLevel(): int
+    public function isFrontOfficeAccessibleForAdmins(): bool
     {
-        return $this->menuBuilder->getCurrentTabLevel();
+        return (bool) $this->configuration->get('PS_MAINTENANCE_ALLOW_ADMINS');
     }
 
     public function getDisplayBackOfficeTop(): ?string
@@ -162,5 +181,15 @@ class DefaultLayout
         }
 
         return $this->displayBackOfficeTop;
+    }
+
+    public function isDisplayedWithTabs(): bool
+    {
+        return $this->menuBuilder->getCurrentTabLevel() >= 3;
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->context->getContext()->shop->getBaseURL();
     }
 }

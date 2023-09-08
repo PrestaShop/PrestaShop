@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
@@ -48,7 +47,6 @@ class Toolbar
     public function __construct(
         private readonly HookDispatcherInterface $hookDispatcher,
         private readonly MenuBuilder $menuBuilder,
-        private readonly LegacyContext $context,
     ) {
     }
 
@@ -88,10 +86,5 @@ class Toolbar
     {
         $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
         $this->hookDispatcher->dispatchWithParameters('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$this->breadcrumbs]);
-    }
-
-    public function getTable(): string
-    {
-        return $this->context->getContext()->controller->table;
     }
 }
