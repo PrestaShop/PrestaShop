@@ -2137,18 +2137,24 @@ class FrontControllerCore extends Controller
     protected function sanitizeUrl(string $url): string
     {
         $params = [];
-        $url_details = parse_url($url);
 
+        // Extract all parts of the URL
+        $url_details = parse_url($url);
         if (!empty($url_details['query'])) {
             parse_str($url_details['query'], $query);
             $params = $this->sanitizeQueryOutput($query);
         }
 
-        $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
-        $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-        foreach ($_GET as $key => $value) {
+        // Build a list of parameters we won't be sanitizing
+        $excludedKeys = array_merge(
+            ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'],
+            $this->redirectionExtraExcludedKeys
+        );
+
+        // Go through each parameter we got from dispatcher and sanizize it
+        foreach ($params as $key => $value) {
             if (
-                in_array($key, $excluded_key)
+                in_array($key, $excludedKeys)
                 || !Validate::isUrl($key)
                 || !$this->validateInputAsUrl($value)
             ) {
@@ -2158,6 +2164,7 @@ class FrontControllerCore extends Controller
             $params[Tools::safeOutput($key)] = is_array($value) ? array_walk_recursive($value, 'Tools::safeOutput') : Tools::safeOutput($value);
         }
 
+        // Build back the query
         $str_params = http_build_query($params, '', '&');
         $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
 
