@@ -122,6 +122,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
                 $customer = new Customer((int) $order->id_customer);
                 $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
 
+                // Hook called only for the shop concerned
                 Hook::exec('actionAdminOrdersTrackingNumberUpdate', [
                     'order' => $order,
                     'customer' => $customer,

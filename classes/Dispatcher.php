@@ -600,6 +600,8 @@ class DispatcherCore
          * passed routes will be the same for each language of the shop.
          *
          * Module routes can overwrite those set in $this->default_routes, if their name matches.
+         * An array [module_name => module_output] will be returned
+         * Hook call is ignoring exceptions set in the backoffice
          */
         $modules_routes = Hook::exec('moduleRoutes', ['id_shop' => $id_shop], null, true, false);
         if (is_array($modules_routes) && count($modules_routes)) {

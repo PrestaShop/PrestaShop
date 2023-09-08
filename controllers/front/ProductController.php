@@ -420,6 +420,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $product_for_template = $this->getTemplateVarProduct();
 
+            // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
             $filteredProduct = Hook::exec(
                 'filterProductContent',
                 ['object' => $product_for_template],

@@ -104,6 +104,8 @@ class OrderSlipCreator
             }
 
             $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $orderRefundSummary->getProductRefunds());
+
+            // Hook called only for the shop concerned
             Hook::exec('actionOrderSlipAdd', [
                 'order' => $order,
                 'productList' => $orderRefundSummary->getProductRefunds(),

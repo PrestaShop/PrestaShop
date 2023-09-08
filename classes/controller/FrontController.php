@@ -517,6 +517,7 @@ class FrontControllerCore extends Controller
             'debug' => _PS_MODE_DEV_,
         ];
 
+        // An array [module_name => module_output] will be returned
         $modulesVariables = Hook::exec(
             'actionFrontControllerSetVariables',
             [

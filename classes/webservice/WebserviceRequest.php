@@ -353,6 +353,9 @@ class WebserviceRequestCore
             'product_customization_fields' => ['description' => 'Customization Field', 'class' => 'CustomizationField'],
             'customizations' => ['description' => 'Customization values', 'class' => 'Customization'],
         ];
+
+        // An array [module_name => module_output] will be returned
+        // Hook call is ignoring exceptions set in the backoffice
         $extra_resources = Hook::exec('addWebserviceResources', ['resources' => $resources], null, true, false);
         if (is_countable($extra_resources) && count($extra_resources)) {
             foreach ($extra_resources as $new_resources) {
