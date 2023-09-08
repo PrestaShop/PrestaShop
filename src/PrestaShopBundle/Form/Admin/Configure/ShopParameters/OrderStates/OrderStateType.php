@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateSettings;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
@@ -43,6 +44,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -127,9 +129,23 @@ class OrderStateType extends TranslatorAwareType
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'autocomplete' => 'off',
+                        'maxlength' => OrderStateSettings::NAME_MAX_LENGTH,
+                    ],
                     'constraints' => [
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
+                        ]),
+                        new Length([
+                            'max' => OrderStateSettings::NAME_MAX_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => OrderStateSettings::NAME_MAX_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],

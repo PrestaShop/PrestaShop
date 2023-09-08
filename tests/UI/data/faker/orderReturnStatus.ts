@@ -21,8 +21,10 @@ export default class OrderReturnStatusData {
     /** @type {number} ID of the status */
     this.id = orderReturnStatusToCreate.id || 0;
 
-    /** @type {string} Name of the status */
-    this.name = orderReturnStatusToCreate.name || `order_return_status_${faker.lorem.word()}`;
+    /** @type {string} Name of the status (Max 32 characters) */
+    this.name = (orderReturnStatusToCreate.name || `order_return_status_${faker.lorem.word({
+      length: {min: 1, max: 12},
+    })}`).substring(0, 32);
 
     /** @type {string} Hexadecimal value for the status  */
     this.color = orderReturnStatusToCreate.color || faker.internet.color();

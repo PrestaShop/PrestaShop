@@ -24,12 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+declare(strict_types=1);
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+namespace PrestaShop\PrestaShop\Core\Domain\OrderState;
 
-header('Location: ../../../../../../');
-exit;
+class OrderStateSettings
+{
+    /**
+     * Order state name max length as defined in the ObjectModel
+     */
+    public const NAME_MAX_LENGTH = 64;
+}

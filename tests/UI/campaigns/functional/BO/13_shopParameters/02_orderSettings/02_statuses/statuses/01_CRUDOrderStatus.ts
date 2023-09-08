@@ -193,7 +193,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       await statusesPage.goToEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderStatusPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleEdit);
+      await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleEdit(createOrderStatusData.name));
     });
 
     it('should update order status', async function () {

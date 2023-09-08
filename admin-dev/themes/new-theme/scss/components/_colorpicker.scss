@@ -6,4 +6,13 @@
   &::after {
     border: none;
   }
+
+  .form-control {
+    &,
+    &:focus-visible,
+    &:focus {
+      color: transparent;
+      text-shadow: none;
+    }
+  }
 }

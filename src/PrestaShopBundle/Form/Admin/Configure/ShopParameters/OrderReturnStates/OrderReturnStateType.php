@@ -29,12 +29,14 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\OrderReturnStateSettings;
 use PrestaShopBundle\Form\Admin\Type\ColorPickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Type is used to created form for order return state add/edit actions
@@ -64,7 +66,17 @@ class OrderReturnStateType extends TranslatorAwareType
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
+                        ]),
+                        new Length([
+                            'max' => OrderReturnStateSettings::NAME_MAX_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => OrderReturnStateSettings::NAME_MAX_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],

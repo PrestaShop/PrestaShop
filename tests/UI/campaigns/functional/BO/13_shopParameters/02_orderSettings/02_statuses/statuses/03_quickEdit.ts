@@ -122,17 +122,18 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
 
       const isActionPerformed = await statusesPage.setStatus(
         page,
+        tableName,
         1,
         orderStatus.args.columnName,
         orderStatus.args.enable,
       );
 
       if (isActionPerformed) {
-        const resultMessage = await statusesPage.getGrowlMessageContent(page);
+        const resultMessage = await statusesPage.getAlertSuccessBlockParagraphContent(page);
         await expect(resultMessage).to.contains(statusesPage.successfulUpdateStatusMessage);
       }
 
-      const currentStatus = await statusesPage.getStatus(page, 1, orderStatus.args.columnName);
+      const currentStatus = await statusesPage.getStatus(page, tableName, 1, orderStatus.args.columnName);
       await expect(currentStatus).to.be.equal(orderStatus.args.enable);
     });
   });
