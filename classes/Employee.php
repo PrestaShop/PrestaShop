@@ -824,4 +824,9 @@ class EmployeeCore extends ObjectModel implements EmployeeInterface
 
         return $this->associated_shops;
     }
+
+    public function getImageUrl(): string
+    {
+        return $this->getImage();
+    }
 }

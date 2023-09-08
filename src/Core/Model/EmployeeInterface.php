@@ -44,6 +44,8 @@ interface EmployeeInterface
 
     public function getPassword(): string;
 
+    public function getImageUrl(): string;
+
     public function getDefaultTabId(): int;
 
     public function getDefaultShopId(): int;

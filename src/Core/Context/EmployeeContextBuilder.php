@@ -48,6 +48,7 @@ class EmployeeContextBuilder
                 lastName: $legacyEmployee->getLastName(),
                 email: $legacyEmployee->getEmail(),
                 password: $legacyEmployee->getPassword(),
+                imageUrl: $legacyEmployee->getImageUrl(),
                 defaultTabId: $legacyEmployee->getDefaultTabId(),
                 defaultShopId: $legacyEmployee->getDefaultShopId(),
                 associatedShopIds: $legacyEmployee->getAssociatedShopIds(),

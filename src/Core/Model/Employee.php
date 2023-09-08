@@ -41,6 +41,7 @@ class Employee implements EmployeeInterface
         protected string $lastName,
         protected string $email,
         protected string $password,
+        protected string $imageUrl,
         protected int $defaultTabId,
         protected int $defaultShopId,
         protected array $associatedShopIds,
@@ -81,6 +82,11 @@ class Employee implements EmployeeInterface
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getImageUrl(): string
+    {
+        return $this->imageUrl;
     }
 
     public function getDefaultTabId(): int
