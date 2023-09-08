@@ -219,6 +219,7 @@ class AddressCore extends ObjectModel
         }
 
         // Update the cache
+        // This is probably not correct, because it should be true only if the address is NOT flagged as deleted
         static::$addressExists[$this->id] = true;
 
         if (Validate::isUnsignedId($this->id_customer)) {
@@ -242,28 +243,31 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
-        if (!$this->isUsed()) {
-            $this->deleteCartAddress();
-
-            // Update the cache
-            if (isset(static::$addressExists[$this->id])) {
-                static::$addressExists[$this->id] = false;
-            }
-
-            return parent::delete();
-        } else {
+        // If the address is used in at least one order, we will not delete it, but only mark it and hide it from backoffice
+        // However, even if this address is used, we should probably unlink it from all NON ORDERED carts
+        if ($this->isUsed()) {
             $this->deleted = true;
 
             return $this->update();
         }
+
+        // Remove this address from all carts
+        $this->deleteCartAddress();
+
+        // Update the static cache
+        if (isset(static::$addressExists[$this->id])) {
+            static::$addressExists[$this->id] = false;
+        }
+
+        return parent::delete();
     }
 
     /**
-     * removes the address from carts using it, to avoid errors on not existing address
+     * Removes the address from carts using it, to avoid errors on not existing address.
      */
     protected function deleteCartAddress()
     {
-        // keep pending carts, but unlink it from current address
+        // Remove references to this address from all carts
         $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
                     SET id_address_delivery = 0
                     WHERE id_address_delivery = ' . $this->id;
