@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
@@ -200,7 +201,7 @@ class CustomerCore extends ObjectModel
             'max_payment_days' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
-            'note' => ['type' => self::TYPE_HTML, 'size' => 65000, 'copy_post' => false],
+            'note' => ['type' => self::TYPE_HTML, 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE, 'copy_post' => false],
             'is_guest' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],

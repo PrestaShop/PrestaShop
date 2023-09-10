@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
+
 /**
  * Class MessageCore.
  */
@@ -59,7 +61,7 @@ class MessageCore extends ObjectModel
         'table' => 'message',
         'primary' => 'id_message',
         'fields' => [
-            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE],
             'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],

@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
 
 class OrderCore extends ObjectModel
 {
@@ -192,7 +193,7 @@ class OrderCore extends ObjectModel
             'module' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'total_discounts' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'total_discounts_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
+
 /**
  * Class ContactCore.
  */
@@ -73,6 +75,7 @@ class ContactCore extends ObjectModel
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isString',
+                'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE,
             ],
         ],
     ];

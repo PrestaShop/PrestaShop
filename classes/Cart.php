@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Cart\Calculator;
 use PrestaShop\PrestaShop\Core\Cart\CartRow;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
 
 class CartCore extends ObjectModel
 {
@@ -132,9 +133,9 @@ class CartCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'delivery_option' => ['type' => self::TYPE_STRING],
+            'delivery_option' => ['type' => self::TYPE_STRING, 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE],
             'secure_key' => ['type' => self::TYPE_STRING, 'size' => 32],
             'allow_seperated_package' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],

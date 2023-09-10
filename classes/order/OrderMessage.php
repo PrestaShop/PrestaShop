@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
+
 class OrderMessageCore extends ObjectModel
 {
     /** @var string|array<int, string> Name */
@@ -46,7 +49,7 @@ class OrderMessageCore extends ObjectModel
 
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
-            'message' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200],
+            'message' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE],
         ],
     ];
 

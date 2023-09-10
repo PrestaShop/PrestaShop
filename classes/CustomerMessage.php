@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
+
 /**
  * Class CustomerMessageCore.
  */
@@ -71,7 +73,7 @@ class CustomerMessageCore extends ObjectModel
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customer_thread' => ['type' => self::TYPE_INT],
             'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15],
-            'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => 16777216],
+            'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => DataLimits::LIMIT_MEDIUMTEXT_UTF8_4BYTE],
             'file_name' => ['type' => self::TYPE_STRING],
             'user_agent' => ['type' => self::TYPE_STRING],
             'private' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

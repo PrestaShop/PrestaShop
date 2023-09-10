@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
@@ -75,7 +76,7 @@ class HookCore extends ObjectModel
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 191],
             'title' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
-            'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
+            'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE],
             'position' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],

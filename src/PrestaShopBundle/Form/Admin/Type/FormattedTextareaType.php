@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormInterface;
@@ -41,10 +42,10 @@ class FormattedTextareaType extends TranslatorAwareType
     /**
      * Max size of UTF-8 content in MySQL text columns
      */
-    public const LIMIT_TINYTEXT_UTF8 = 84;
-    public const LIMIT_TEXT_UTF8 = 21844;
-    public const LIMIT_MEDIUMTEXT_UTF8 = 5592414;
-    public const LIMIT_LONGTEXT_UTF8 = 1431655764;
+    public const LIMIT_TINYTEXT_UTF8 = DataLimits::LIMIT_TINYTEXT_UTF8_4BYTE;
+    public const LIMIT_TEXT_UTF8 = DataLimits::LIMIT_TEXT_UTF8_4BYTE;
+    public const LIMIT_MEDIUMTEXT_UTF8 = DataLimits::LIMIT_MEDIUMTEXT_UTF8_4BYTE;
+    public const LIMIT_LONGTEXT_UTF8 = DataLimits::LIMIT_LONGTEXT_UTF8_4BYTE;
 
     /**
      * {@inheritdoc}
@@ -55,7 +56,7 @@ class FormattedTextareaType extends TranslatorAwareType
             ->setDefined(['message'])
             ->setDefaults([
                 'autoload' => true, // Start automatically TinyMCE
-                'limit' => self::LIMIT_TEXT_UTF8,
+                'limit' => DataLimits::LIMIT_TEXT_UTF8_4BYTE,
             ])
             ->setAllowedTypes('limit', 'int')
             ->setAllowedTypes('autoload', 'bool')

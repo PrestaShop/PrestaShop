@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Domain\Database\DataLimits;
+
 class OrderReturnCore extends ObjectModel
 {
     /** @var int */
@@ -55,7 +58,7 @@ class OrderReturnCore extends ObjectModel
         'fields' => [
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'question' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
+            'question' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => DataLimits::LIMIT_TEXT_UTF8_4BYTE],
             'state' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
