@@ -503,7 +503,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
         $langTables = [];
-
         foreach ($tables as $table) {
             foreach ($table as $t) {
                 $langTables[] = $t;
@@ -528,8 +527,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * duplicate translated rows from xxx_lang tables
-     * from the shop default language.
+     * Creates new entries in _lang tables using the data from default language.
+     * If data already exist in that language, they won't be overwritten.
      *
      * @param string $tableName
      * @param int $shopDefaultLangId
@@ -541,52 +540,66 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
-        preg_match('#^' . preg_quote(_DB_PREFIX_) . '(.+)_lang$#i', $tableName, $m);
-        $identifier = 'id_' . $m[1];
-
-        $fields = [];
-        // We will check if the table contains a column "id_shop"
-        // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
-        $shop_field_exists = $primary_key_exists = false;
+        // We load all columns from the table
         $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $tableName . '`');
+
+        // We check if the table contains a column "id_shop".
+        // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language.
+        $idShopColumnExists = false;
+        $idLangColumnExists = false;
+
+        // We extract the column names from the table
+        $columnNames = [];
         foreach ($columns as $column) {
-            $fields[] = '`' . $column['Field'] . '`';
+            // Build field to our list
+            $columnNames[] = $column['Field'];
+
+            // Save info that we will need to use id_shop
             if ($column['Field'] == 'id_shop') {
-                $shop_field_exists = true;
+                $idShopColumnExists = true;
             }
-            if ($column['Field'] == $identifier) {
-                $primary_key_exists = true;
+
+            // Check if the table actually has id_lang column, so we don't crash for some custom tables
+            if ($column['Field'] == 'id_lang') {
+                $idLangColumnExists = true;
             }
         }
-        $fields = implode(',', $fields);
 
-        if (!$primary_key_exists) {
+        // If the table does not contain id_lang, nothing to do here
+        if ($idLangColumnExists === false) {
             return true;
         }
 
-        $sql = 'INSERT IGNORE INTO `' . $tableName . '` (' . $fields . ') (SELECT ';
+        // Format insert fields, they are just normal column names without any prefix.
+        $insertFields = [];
+        foreach ($columnNames as $columnName) {
+            $insertFields[] = '`' . $columnName . '`';
+        }
 
-        // For each column, copy data from default language
-        reset($columns);
-        $selectQueries = [];
-        foreach ($columns as $column) {
-            if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
-                $selectQueries[] = '(
-							SELECT `' . bqSQL($column['Field']) . '`
-							FROM `' . bqSQL($tableName) . '` tl
-							WHERE tl.`id_lang` = ' . (int) $shopDefaultLangId . '
-							' . ($shop_field_exists ? ' AND tl.`id_shop` = ' . (int) $shopId : '') . '
-							AND tl.`' . bqSQL($identifier) . '` = `' . bqSQL(str_replace('_lang', '', $tableName)) . '`.`' . bqSQL($identifier) . '`
-						)';
+        /*
+         * Now let's format select fields. We will prefix every column with our table prefix, with one exception.
+         *
+         * For language field, we will use the unique language ID from lang table we cross join. Otherwise we would
+         * be inserting the ID of default language for every row.
+         */
+        $selectFields = [];
+        foreach ($columnNames as $columnName) {
+            if ($columnName == 'id_lang') {
+                $selectFields[] = 'l.`id_lang`';
             } else {
-                $selectQueries[] = '`' . bqSQL($column['Field']) . '`';
+                $selectFields[] = 'tl.`' . $columnName . '`';
             }
         }
-        $sql .= implode(',', $selectQueries);
-        $sql .= ' FROM `' . _DB_PREFIX_ . 'lang` CROSS JOIN `' . bqSQL(str_replace('_lang', '', $tableName)) . '` ';
 
-        // prevent insert with where initial data exists
-        $sql .= ' WHERE `' . bqSQL($identifier) . '` IN (SELECT `' . bqSQL($identifier) . '` FROM `' . bqSQL($tableName) . '`) )';
+        // Format the SQL query and run it
+        // Entries which already exist are ignored, only new ones are added.
+        $sql = '
+        INSERT IGNORE INTO `' . $tableName . '` (' . implode(', ', $insertFields) . ')
+        SELECT ' . implode(', ', $selectFields) . '
+        FROM `' . $tableName . '` tl
+        CROSS JOIN `' . _DB_PREFIX_ . 'lang` l
+        WHERE tl.id_lang = ' . (int) $shopDefaultLangId .
+        ($idShopColumnExists ? ' AND tl.`id_shop` = ' . (int) $shopId : '');
 
         return Db::getInstance()->execute($sql);
     }
@@ -601,16 +614,34 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 $this->iso_code = Language::getIsoById($this->id);
             }
 
-            // Database translations deletion
+            // Now let's delete all entries in _lang tables for given languages
             $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+
+            // A key we will be searching for, database returns it in this weird format
             $tableNameKey = 'Tables_in_' . _DB_NAME_;
 
             foreach ($result as $row) {
-                if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey]) && preg_match('/_lang$/', $row[$tableNameKey])) {
-                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
-                        return false;
+                // If we received empty table name for some reason or the language name does not end with _lang
+                if (empty($row[$tableNameKey]) || !preg_match('/_lang$/', $row[$tableNameKey])) {
+                    continue;
+                }
+
+                // We check if this table contains id_lang column
+                $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $row[$tableNameKey] . '`');
+                $idLangColumnExists = false;
+                foreach ($columns as $column) {
+                    if ($column['Field'] == 'id_lang') {
+                        $idLangColumnExists = true;
                     }
                 }
+
+                // If it doesn't, nothing to delete
+                if ($idLangColumnExists === false) {
+                    continue;
+                }
+
+                // Delete all entries for this language ID
+                Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id);
             }
 
             // Delete tags
