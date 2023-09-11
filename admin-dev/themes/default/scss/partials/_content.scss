@@ -383,3 +383,17 @@ body.display-modal {
     }
   }
 }
+
+div[data-role="search-panels"] {
+  .panel {
+    a[target="_blank"]::after {
+      position: relative;
+      top: 2px;
+      left: 10px;
+      font-family: "Material Icons", sans-serif;
+      color: #bbcdd2;
+      content: "\e89e";
+      opacity: 0.7;
+    }
+  }
+}

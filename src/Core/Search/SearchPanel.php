@@ -49,17 +49,23 @@ class SearchPanel implements SearchPanelInterface
      * @var array
      */
     protected $queryParams;
+    /**
+     * @var bool|null
+     */
+    private $isOnSamePage;
 
     public function __construct(
         string $title,
         string $buttonLabel,
         string $link,
-        array $queryParams
+        array $queryParams,
+        ?bool $isOnSamePage = false
     ) {
         $this->title = $title;
         $this->buttonLabel = $buttonLabel;
         $this->link = $link;
         $this->queryParams = $queryParams;
+        $this->isOnSamePage = $isOnSamePage;
     }
 
     public function getTitle(): string
@@ -75,5 +81,10 @@ class SearchPanel implements SearchPanelInterface
     public function getLink(): string
     {
         return sprintf('%s?%s', $this->link, http_build_query($this->queryParams));
+    }
+
+    public function isOnSamePage(): bool
+    {
+        return $this->isOnSamePage;
     }
 }

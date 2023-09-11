@@ -45,6 +45,8 @@ class CreateProduct extends BOBasePage {
 
   private readonly productActiveSwitchButton: (status: number) => string;
 
+  private readonly productActiveSwitchButtonToggleInput: string;
+
   private readonly productHeaderSummary: string;
 
   private readonly productHeaderTaxExcluded: string;
@@ -105,6 +107,8 @@ class CreateProduct extends BOBasePage {
     this.successfulDuplicateMessage = 'Successful duplication';
 
     // Header selectors
+    this.productActiveSwitchButton = '#product_header_active.ps-switch';
+    this.productActiveSwitchButtonToggleInput = `${this.productActiveSwitchButton} input`;
     this.productImageUrl = '#product_header_cover_thumbnail';
     this.productName = '#product_header_name';
     this.productNameInput = (locale: string) => `${this.productName} div.js-locale-${locale} input`;
@@ -256,6 +260,38 @@ class CreateProduct extends BOBasePage {
   }
 
   /**
+   * Set product status
+   * @param page {Page} Browser tab
+   * @param status {boolean} The product status
+   * @returns {Promise<void>}
+   */
+  async setProductStatus(page: Page, status: boolean): Promise<boolean> {
+    if (await this.getProductStatus(page) !== status) {
+      await this.clickAndWaitForLoadState(page, this.productActiveSwitchButton);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Get product status
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async getProductStatus(page: Page): Promise<boolean> {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.productActiveSwitchButtonToggleInput}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
+  }
+
+  /**
    * Set product
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set in new product page
@@ -285,16 +321,6 @@ class CreateProduct extends BOBasePage {
     await pricingTab.setProductPricing(page, productData);
 
     return this.saveProduct(page);
-  }
-
-  /**
-   * Set product status
-   * @param page {Page} Browser tab
-   * @param status {boolean} The product status
-   * @returns {Promise<void>}
-   */
-  async setProductStatus(page: Page, status: boolean): Promise<void> {
-    await this.setChecked(page, this.productActiveSwitchButton(status ? 1 : 0), true);
   }
 
   /**

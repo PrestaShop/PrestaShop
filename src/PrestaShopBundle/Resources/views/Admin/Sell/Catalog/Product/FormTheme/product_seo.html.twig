@@ -28,5 +28,12 @@
 
 {% block _product_seo_link_rewrite_widget %}
   {{ form_widget(form) }}
-  <button type="button" class="reset-link-rewrite btn btn-outline-secondary mt-1">{{ 'Reset URL'|trans({}, 'Admin.Catalog.Feature') }}</button>
+  {% set firstChildAttr = form.children|first.vars.attr %}
+  <button
+    type="button"
+    class="reset-link-rewrite btn btn-outline-secondary mt-1"
+    data-automatic-change="{{ firstChildAttr['data-automatic-update']|default(0) }}"
+  >
+    {{ 'Generate URL from name'|trans({}, 'Admin.Catalog.Feature') }}
+  </button>
 {% endblock %}
