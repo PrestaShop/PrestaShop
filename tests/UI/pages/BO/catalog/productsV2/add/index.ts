@@ -43,7 +43,7 @@ class CreateProduct extends BOBasePage {
 
   private readonly productTypePreviewLabel: string;
 
-  private readonly productActiveSwitchButton: (status: number) => string;
+  private readonly productActiveSwitchButton: string;
 
   private readonly productActiveSwitchButtonToggleInput: string;
 
@@ -119,7 +119,6 @@ class CreateProduct extends BOBasePage {
     this.productTypePreview = '.product-type-preview';
     this.productTypePreviewLabel = `${this.productTypePreview}-label`;
     this.productTypeLabel = '.product-type-preview-label';
-    this.productActiveSwitchButton = (status: number) => `#product_header_active_${status}`;
     this.productHeaderSummary = '.product-header-summary';
     this.productHeaderTaxExcluded = `${this.productHeaderSummary} div[data-role=price-tax-excluded]`;
     this.productHeaderTaxIncluded = `${this.productHeaderSummary} div[data-role=price-tax-included]`;
@@ -477,15 +476,6 @@ class CreateProduct extends BOBasePage {
    */
   async getProductName(page: Page, locale: string = 'en'): Promise<string> {
     return this.getAttributeContent(page, this.productNameInput(locale), 'value');
-  }
-
-  /**
-   * Get product status
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async getProductStatus(page: Page): Promise<boolean> {
-    return this.isChecked(page, this.productActiveSwitchButton(1));
   }
 }
 
