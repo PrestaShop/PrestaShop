@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use Employee as LegacyEmployee;
 use PrestaShop\PrestaShop\Core\Model\Employee;
 
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ */
 class EmployeeContextBuilder
 {
     private ?int $employeeId = null;

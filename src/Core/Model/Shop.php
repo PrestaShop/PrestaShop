@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Model;
 
 /**
  * Basic DTO class that implements ShopInterface
+ *
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
  */
 class Shop implements ShopInterface
 {

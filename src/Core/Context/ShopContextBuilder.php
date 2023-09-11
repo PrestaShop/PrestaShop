@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Model\Shop;
 
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ */
 class ShopContextBuilder
 {
     private ?ShopConstraint $shopConstraint = null;

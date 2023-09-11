@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ */
 class ShopContextListener
 {
     public function __construct(
@@ -82,6 +85,14 @@ class ShopContextListener
         }
     }
 
+    /**
+     * Get shop context from the legacy cookie, the value of Cookie::shopContext looks like this:
+     *  s-1 -> Single shop with shop ID 1
+     *  g-2 -> Shop group with shop group ID 2
+     *  empty/other values: All Shops
+     *
+     * @return ShopConstraint|null
+     */
     private function getShopConstraintFromCookie(): ?ShopConstraint
     {
         if (empty($this->legacyContext->getContext()->cookie->shopContext)) {

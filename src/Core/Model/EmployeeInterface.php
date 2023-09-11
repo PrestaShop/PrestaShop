@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Model;
 
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
+ */
 interface EmployeeInterface
 {
     public function getId(): int;

@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Model\ShopInterface;
 
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ */
 class ShopContext
 {
     public function __construct(

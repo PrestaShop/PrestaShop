@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ */
 class EmployeeContextListener
 {
     public function __construct(
