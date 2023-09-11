@@ -626,7 +626,7 @@
       <trans-unit id="6e61f7cd17315db8599a202172a096d5">
         <source>You've selected a state for a country that does not contain states.</source>
         <target>You've selected a state for a country that does not contain states.</target>
-        <note>Line: 362</note>
+        <note>Line: 366</note>
       </trans-unit>
     </body>
   </file>
@@ -682,11 +682,6 @@
         <source>The SameSite=None is only available in secure mode.</source>
         <target>The SameSite=None is only available in secure mode.</target>
         <note>Line: 80</note>
-      </trans-unit>
-      <trans-unit id="6234474f7c68eb4436d392ed9645136b">
-        <source>The SameSite=None attribute is only available in secure mode.</source>
-        <target>The SameSite=None attribute is only available in secure mode.</target>
-        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
@@ -782,131 +777,127 @@
       <trans-unit id="a06111807d1bd6e8dd420e7ee5d0b0f8">
         <source>Enable the PDO Mysql extension on your server.</source>
         <target>Enable the PDO Mysql extension on your server.</target>
-        <note>Line: 104</note>
+        <note>Line: 105</note>
       </trans-unit>
       <trans-unit id="60575cad0e1f106447cb0dfa37c01daf">
         <source>Enable the XML extension on your server.</source>
         <target>Enable the XML extension on your server.</target>
-        <note>Line: 105</note>
+        <note>Line: 106</note>
       </trans-unit>
       <trans-unit id="cc4c22b3f8726001cf1c1663cd4845c2">
         <source>Enable the ZIP extension on your server.</source>
         <target>Enable the ZIP extension on your server.</target>
-        <note>Line: 106</note>
+        <note>Line: 107</note>
       </trans-unit>
       <trans-unit id="4fc7f05f412a1684ce4996e51ffff7fe">
         <source>Enable the MySQL support on your server.</source>
         <target>Enable the MySQL support on your server.</target>
-        <note>Line: 107</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="fbc80a46761028390cb9f217affc1ad4">
         <source>Set write permissions for the "config" folder.</source>
         <target>Set write permissions for the "config" folder.</target>
-        <note>Line: 108</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="d667dd7ea28dcabe347120a1ea277658">
         <source>Set write permissions for the "cache" folder.</source>
         <target>Set write permissions for the "cache" folder.</target>
-        <note>Line: 109</note>
+        <note>Line: 110</note>
       </trans-unit>
       <trans-unit id="9c05ffb08aed8df408a9338efa0de1ce">
         <source>Set write permissions for the "sitemap.xml" file.</source>
         <target>Set write permissions for the "sitemap.xml" file.</target>
-        <note>Line: 110</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="515ba9f393d74cfb3a8551b171652f4d">
         <source>Set write permissions for the "img" folder and subfolders.</source>
         <target>Set write permissions for the "img" folder and subfolders.</target>
-        <note>Line: 111</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="5c482561c321c3f8b1ed436afdfab4aa">
         <source>Set write permissions for the "log" folder and subfolders.</source>
         <target>Set write permissions for the "log" folder and subfolders.</target>
-        <note>Line: 112</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="fea054b13666afb1d5d776afb925d288">
         <source>Set write permissions for the "mails" folder and subfolders.</source>
         <target>Set write permissions for the "mails" folder and subfolders.</target>
-        <note>Line: 113</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="5a44bd60b36b50f3dafd07404ebce84d">
         <source>Set write permissions for the "modules" folder and subfolders.</source>
         <target>Set write permissions for the "modules" folder and subfolders.</target>
-        <note>Line: 114</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="e1bb8996c82be1d540c7cc0d409bcd2f">
         <source>Set write permissions for the "themes/%s/cache/" folder and subfolders, recursively.</source>
         <target>Set write permissions for the "themes/%s/cache/" folder and subfolders, recursively.</target>
-        <note>Line: 115</note>
+        <note>Line: 116</note>
       </trans-unit>
       <trans-unit id="9c56996f2d8597e1f4ff15556128ee7d">
         <source>Set write permissions for the "themes/%s/lang/" folder and subfolders, recursively.</source>
         <target>Set write permissions for the "themes/%s/lang/" folder and subfolders, recursively.</target>
-        <note>Line: 116</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="cf707d7f4da3b1134a8c9470fae8720c">
         <source>Set write permissions for the "themes/%s/pdf/lang/" folder and subfolders, recursively.</source>
         <target>Set write permissions for the "themes/%s/pdf/lang/" folder and subfolders, recursively.</target>
-        <note>Line: 117</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="c0bda45f4bd14c8138cc5107c813167f">
         <source>Set write permissions for the "app/config/" folder and subfolders, recursively.</source>
         <target>Set write permissions for the "app/config/" folder and subfolders, recursively.</target>
-        <note>Line: 118</note>
+        <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="c64f03a0316f495425715feacdddb42a">
         <source>Set write permissions for the "app/Resources/translations/" folder and subfolders, recursively.</source>
         <target>Set write permissions for the "app/Resources/translations/" folder and subfolders, recursively.</target>
-        <note>Line: 119</note>
+        <note>Line: 120</note>
       </trans-unit>
       <trans-unit id="fed1803fba6b27ae43103e333a5600eb">
         <source>Set write permissions for the "translations" folder and subfolders.</source>
         <target>Set write permissions for the "translations" folder and subfolders.</target>
-        <note>Line: 120</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="94f3a2dc6474b8b097c257fa1da2c9e1">
         <source>Set write permissions for the "upload" folder and subfolders.</source>
         <target>Set write permissions for the "upload" folder and subfolders.</target>
-        <note>Line: 121</note>
+        <note>Line: 122</note>
       </trans-unit>
       <trans-unit id="dbbb85913376aec586b97adc72268a5c">
         <source>Set write permissions for the "download" folder and subfolders.</source>
         <target>Set write permissions for the "download" folder and subfolders.</target>
-        <note>Line: 122</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="4993d8516d8737159bcd735ca8075e6e">
         <source>Allow the PHP fopen() function on your server.</source>
         <target>Allow the PHP fopen() function on your server.</target>
-        <note>Line: 123</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="4a344651fb10eb9e339838fab7bb97ae">
         <source>Enable GZIP compression on your server.</source>
         <target>Enable GZIP compression on your server.</target>
-        <note>Line: 124</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="0996c7cf8e7f49f54d15b68262a6b68d">
         <source>Some PrestaShop files are missing from your server.</source>
         <target>Some PrestaShop files are missing from your server.</target>
-        <note>Line: 125</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="e567554b1238bc9e85e38b01e6b198e9">
         <source>You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.6. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.6 now!</source>
         <target>You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.6. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.6 now!</target>
-        <note>Line: 126</note>
+        <note>Line: 127</note>
       </trans-unit>
       <trans-unit id="0b9193ca4af6867c1f50a07097254b62">
         <source>Enable the Apache mod_rewrite module</source>
         <target>Enable the Apache mod_rewrite module</target>
-        <note>Line: 127</note>
+        <note>Line: 128</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Smarty/SmartyCacheConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="667685497be44ab0fc2d4334a512405b">
-        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
-        <note>Line: 81</note>
+      <trans-unit id="8406b91fd5a290de3a1e1516db6e79b8">
+        <source>Unable to generate private keys using openssl_pkey_new. Check your OpenSSL configuration, especially the path to openssl.cafile.</source>
+        <target>Unable to generate private keys using openssl_pkey_new. Check your OpenSSL configuration, especially the path to openssl.cafile.</target>
+        <note>Line: 104</note>
       </trans-unit>
     </body>
   </file>
@@ -934,6 +925,24 @@
         <source>The extension of your file should be .csv.</source>
         <target>The extension of your file should be .csv.</target>
         <note>Line: 134</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/SqlManager/Configuration/SqlRequestConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="667685497be44ab0fc2d4334a512405b">
+        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
+        <note>Line: 102</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6234474f7c68eb4436d392ed9645136b">
+        <source>The SameSite=None attribute is only available in secure mode.</source>
+        <target>The SameSite=None attribute is only available in secure mode.</target>
+        <note>Line: 252</note>
       </trans-unit>
     </body>
   </file>

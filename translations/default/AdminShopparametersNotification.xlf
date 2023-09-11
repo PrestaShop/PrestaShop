@@ -141,17 +141,17 @@
       <trans-unit id="86de674d7405670db52e79ec1665b0b1">
         <source>An address located in a country containing states must have a state selected.</source>
         <target>An address located in a country containing states must have a state selected.</target>
-        <note>Line: 367</note>
+        <note>Line: 371</note>
       </trans-unit>
       <trans-unit id="60e8343766afd5e69c5797ea7380ce8e">
         <source>Latitude and longitude are required.</source>
         <target>Latitude and longitude are required.</target>
-        <note>Line: 374</note>
+        <note>Line: 378</note>
       </trans-unit>
       <trans-unit id="1ae9a82096a0077dde65dec6b1344792">
         <source>The specified state is not located in this country.</source>
         <target>The specified state is not located in this country.</target>
-        <note>Line: 573</note>
+        <note>Line: 599</note>
       </trans-unit>
     </body>
   </file>

@@ -250,17 +250,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
         <source>An account already exists for this email address:</source>
         <target>An account already exists for this email address:</target>
-        <note>Line: 529</note>
+        <note>Line: 931</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="8562db06e3931e51ac8c456b56088b02">
         <source>This customer does not exist.</source>
         <target>This customer does not exist.</target>
@@ -514,12 +510,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/carts.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/groups.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1c28cbdd010068123432a5885ebfdb65">
         <source>No cart is available</source>
         <target>No cart is available</target>
-        <note>Line: 73</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -631,6 +627,11 @@
         <target>Are you sure you want to create a new invoice?</target>
         <note>Line: 67</note>
       </trans-unit>
+      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
+        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
+        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
+        <note>Line: 71</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/documents.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -644,11 +645,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
-        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
-        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
-        <note>Line: 54</note>
-      </trans-unit>
       <trans-unit id="99def74fcec1306526eaf054ccd2a5f7">
         <source>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</source>
         <target>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</target>

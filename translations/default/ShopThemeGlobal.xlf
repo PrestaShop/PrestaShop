@@ -211,15 +211,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
-        <source>The page you are looking for was not found.</source>
-        <target>The page you are looking for was not found.</target>
-        <note>Line: 1457</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/SitemapController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c82004d1ded071651efc9f2138342c50">
@@ -278,12 +269,53 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/front/listing/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
+        <source>The page you are looking for was not found.</source>
+        <target>The page you are looking for was not found.</target>
+        <note>Line: 274</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/front/listing/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="84be54bb4bd1b755a27d86388700d097">
         <source>Brands</source>
         <target>Brands</target>
         <note>Line: 224</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/pages/products-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f9d01a14011f05fffe48559583fc609">
+        <source>Sort by:</source>
+        <target>Sort by:</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
+        <source>Home</source>
+        <target>Home</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/post-comment-modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3d2e617335f08df83599665eef8a418">
+        <source>Close</source>
+        <target>Close</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
+        <source>Store information</source>
+        <target>Store information</target>
+        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>
@@ -296,27 +328,45 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_facetedsearch/views/templates/front/catalog/active-filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2143f8cb66482342b35208bdc3fd949c">
+        <source>Active filters</source>
+        <target>Active filters</target>
+        <note>Line: 21</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7a1c5301da6b1ce9e4345bd501397045">
+        <source>(no filter)</source>
+        <target>(no filter)</target>
+        <note>Line: 126</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Presenter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
         <source>(tax incl.)</source>
         <target>(tax incl.)</target>
-        <note>Line: 436</note>
+        <note>Line: 437</note>
       </trans-unit>
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>Line: 437</note>
+        <note>Line: 438</note>
       </trans-unit>
       <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
         <source>(tax included)</source>
         <target>(tax included)</target>
-        <note>Line: 439</note>
+        <note>Line: 440</note>
       </trans-unit>
       <trans-unit id="e9e7ca277da652bde67ef5faafb755dc">
         <source>(tax excluded)</source>
         <target>(tax excluded)</target>
-        <note>Line: 440</note>
+        <note>Line: 441</note>
       </trans-unit>
     </body>
   </file>
@@ -332,29 +382,24 @@
         <target>Tax excluded</target>
         <note>Line: 422</note>
       </trans-unit>
+      <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
+        <source>New</source>
+        <target>New</target>
+        <note>Line: 493</note>
+      </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_contactinfo/nav.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
         <target>Contact us</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
-        <source>Call us: [1]%phone%[/1]</source>
-        <target>Call us: [1]%phone%[/1]</target>
-        <note>Line: 32</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
-        <source>Store information</source>
-        <target>Store information</target>
-        <note>Line: 27</note>
-      </trans-unit>
       <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
         <source>Email us:</source>
         <target>Email us:</target>
@@ -374,6 +419,11 @@
   </file>
   <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
+        <source>Call us: [1]%phone%[/1]</source>
+        <target>Call us: [1]%phone%[/1]</target>
+        <note>Line: 45</note>
+      </trans-unit>
       <trans-unit id="da6eb684bd77243a780629a180c9d19b">
         <source>Fax: [1]%fax%[/1]</source>
         <target>Fax: [1]%fax%[/1]</target>
@@ -444,11 +494,6 @@
   </file>
   <file original="themes/classic/modules/ps_shoppingcart/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d3d2e617335f08df83599665eef8a418">
-        <source>Close</source>
-        <target>Close</target>
-        <note>Line: 29</note>
-      </trans-unit>
       <trans-unit id="d0f369aab921195580d8319855bbb69f">
         <source>%label%:</source>
         <target>%label%:</target>
@@ -456,44 +501,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2143f8cb66482342b35208bdc3fd949c">
-        <source>Active filters</source>
-        <target>Active filters</target>
-        <note>Line: 27</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/catalog/_partials/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7a1c5301da6b1ce9e4345bd501397045">
-        <source>(no filter)</source>
-        <target>(no filter)</target>
-        <note>Line: 139</note>
+      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
+        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
+        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
+        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6f9d01a14011f05fffe48559583fc609">
-        <source>Sort by:</source>
-        <target>Sort by:</target>
-        <note>Line: 26</note>
-      </trans-unit>
       <trans-unit id="98438bb96e6464272cadcd6a9c5774b7">
         <source>Sort by selection</source>
         <target>Sort by selection</target>
         <note>Line: 32</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
-        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
-        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
-        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>
@@ -531,15 +553,6 @@
         <source>About and Contact</source>
         <target>About and Contact</target>
         <note>Line: 56</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/_partials/my-account-links.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
-        <source>Home</source>
-        <target>Home</target>
-        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>

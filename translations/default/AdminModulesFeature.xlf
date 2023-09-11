@@ -148,22 +148,22 @@ Comment: Set the modules categories</note>
       <trans-unit id="8b1a3613ac33a07ab788b2656755110c">
         <source>Enable Mobile</source>
         <target>Enable Mobile</target>
-        <note>Line: 78</note>
+        <note>Line: 84</note>
       </trans-unit>
       <trans-unit id="038bd38b5172a9ba90468070bdc4d4f3">
         <source>Disable Mobile</source>
         <target>Disable Mobile</target>
-        <note>Line: 79</note>
+        <note>Line: 85</note>
       </trans-unit>
       <trans-unit id="e699cbe9208f8353248889781f83d636">
         <source>Module manager</source>
         <target>Module manager</target>
-        <note>Line: 89</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
-        <note>Line: 80</note>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>
@@ -191,20 +191,6 @@ Comment: Set the modules categories</note>
         <source>Discover</source>
         <target>Discover</target>
         <note>Line: 38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="031f3657c3601889e98df488db139b75">
-        <source>Service by %author%</source>
-        <target>Service by %author%</target>
-        <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -236,6 +222,15 @@ Comment: Set the modules categories</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_manage_installed.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="031f3657c3601889e98df488db139b75">
+        <source>Service by %author%</source>
+        <target>Service by %author%</target>
+        <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="042be00d927cff11fd00361b3dda1817">
@@ -243,10 +238,6 @@ Comment: Set the modules categories</note>
         <target>Recently used</target>
         <note>Line: 45</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories_catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="62f5d708d6ad1fa1ddd9429a65cccbea">
         <source>All categories</source>
         <target>All categories</target>
@@ -370,6 +361,11 @@ Comment: Set the modules categories</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 212</note>
+      </trans-unit>
       <trans-unit id="bc3b3665bd89d8eb6e3c7b0789fa98c5">
         <source>v%version% by %author%</source>
         <target>v%version% by %author%</target>

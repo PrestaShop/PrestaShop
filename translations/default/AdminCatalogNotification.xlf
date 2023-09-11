@@ -14,12 +14,12 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>Line: 7172</note>
+        <note>Line: 7211</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>Line: 7193</note>
+        <note>Line: 7232</note>
       </trans-unit>
     </body>
   </file>
@@ -209,12 +209,12 @@
       <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
-        <note>Line: 2815</note>
+        <note>Line: 2825</note>
       </trans-unit>
       <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
         <source>Error while creating additional image</source>
         <target>Error while creating additional image</target>
-        <note>Line: 2844</note>
+        <note>Line: 2854</note>
       </trans-unit>
       <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
         <source>Invalid quantity</source>
@@ -369,62 +369,62 @@
       <trans-unit id="0c58058923630a64ce3f415a07cbb00d">
         <source>An error occurred while adding tags.</source>
         <target>An error occurred while adding tags.</target>
-        <note>Line: 2375</note>
+        <note>Line: 2385</note>
       </trans-unit>
       <trans-unit id="32caa1cdf0ea26b2e1267d45a57beacf">
         <source>This %1$s field is required at least in %2$s</source>
         <target>This %1$s field is required at least in %2$s</target>
-        <note>Line: 2061</note>
+        <note>Line: 2071</note>
       </trans-unit>
       <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
         <source>The %1$s field is too long (%2$d chars max).</source>
         <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Line: 2129</note>
+        <note>Line: 2139</note>
       </trans-unit>
       <trans-unit id="95c0b24839f6e4ffe0e395d8d26ce4ee">
         <source>This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).</source>
         <target>This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).</target>
-        <note>Line: 2110</note>
+        <note>Line: 2120</note>
       </trans-unit>
       <trans-unit id="5e2457ed64286c209f67a9333ed52a17">
         <source>An error occurred while attempting to delete previous tags.</source>
         <target>An error occurred while attempting to delete previous tags.</target>
-        <note>Line: 2365</note>
+        <note>Line: 2375</note>
       </trans-unit>
       <trans-unit id="4177a725868ed37e7de5c8c65f4a8b0e">
         <source>The selected currency is not valid</source>
         <target>The selected currency is not valid</target>
-        <note>Line: 2556</note>
+        <note>Line: 2566</note>
       </trans-unit>
       <trans-unit id="48b51a11285fae0b1f416165ae8fd489">
         <source>An error occurred while copying image, the file does not exist anymore.</source>
         <target>An error occurred while copying image, the file does not exist anymore.</target>
-        <note>Line: 2857</note>
+        <note>Line: 2867</note>
       </trans-unit>
       <trans-unit id="9f26cf683839613815feebc0b1e1c6b9">
         <source>An error occurred while copying image, the file width is 0px.</source>
         <target>An error occurred while copying image, the file width is 0px.</target>
-        <note>Line: 2862</note>
+        <note>Line: 2872</note>
       </trans-unit>
       <trans-unit id="de880a806b9948f168a2e70fff130160">
         <source>An error occurred while copying image, check your memory limit.</source>
         <target>An error occurred while copying image, check your memory limit.</target>
-        <note>Line: 2867</note>
+        <note>Line: 2877</note>
       </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
         <target>An error occurred while copying the image.</target>
-        <note>Line: 2872</note>
+        <note>Line: 2882</note>
       </trans-unit>
       <trans-unit id="c88e73613e3f68ead933cd57e2828323">
         <source>You can't add product packs into a pack</source>
         <target>You can't add product packs into a pack</target>
-        <note>Line: 3182</note>
+        <note>Line: 3192</note>
       </trans-unit>
       <trans-unit id="5de4038e3ea0841bf6179f99103fcccd">
         <source>An error occurred while attempting to add products to the pack.</source>
         <target>An error occurred while attempting to add products to the pack.</target>
-        <note>Line: 3184</note>
+        <note>Line: 3194</note>
       </trans-unit>
       <trans-unit id="9f0a59f1609218c049435abd2351bd84">
         <source>An error occurred while updating the specific price.</source>
@@ -615,6 +615,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3af7787bf8822cfd0cbeab09c9176a54">
+        <source>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</source>
+        <target>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</target>
+        <note>Line: 480</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f4158fa3500ce1523a52bee74971f5f2">
@@ -661,11 +670,6 @@
         <source>Product successfully deactivated.</source>
         <target>Product successfully deactivated.</target>
         <note>Line: 1157</note>
-      </trans-unit>
-      <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
-        <source>To put this product online, please enter a name.</source>
-        <target>To put this product online, please enter a name.</target>
-        <note>Line: 1357</note>
       </trans-unit>
       <trans-unit id="17f8ed44513d0c7833b2b8fa1c170981">
         <source>The product you are trying to access doesn't exist.</source>
@@ -729,6 +733,11 @@
         <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
         <note>Line: 826</note>
       </trans-unit>
+      <trans-unit id="60df675f17670057ec657783db03d35e">
+        <source>Unable to resize one or more of your pictures.</source>
+        <target>Unable to resize one or more of your pictures.</target>
+        <note>Line: 717</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -742,25 +751,25 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
+        <source>To put this product online, please enter a name.</source>
+        <target>To put this product online, please enter a name.</target>
+        <note>Line: 1437</note>
+      </trans-unit>
       <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
         <source>Error for product %product_id%: %error_message%</source>
         <target>Error for product %product_id%: %error_message%</target>
-        <note>Line: 1383</note>
+        <note>Line: 1392</note>
       </trans-unit>
       <trans-unit id="ee5c982526f2e7b8e72b282dc590aafd">
         <source>When redirecting towards a product you must select a target product.</source>
         <target>When redirecting towards a product you must select a target product.</target>
-        <note>Line: 1424</note>
+        <note>Line: 1433</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="60df675f17670057ec657783db03d35e">
-        <source>Unable to resize one or more of your pictures.</source>
-        <target>Unable to resize one or more of your pictures.</target>
-        <note>Line: 539</note>
-      </trans-unit>
       <trans-unit id="3aff310e32cb7bb2d1affd97920c9f4b">
         <source><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
@@ -1189,12 +1198,12 @@ Comment: "It" refers to the option "Force update of friendly URL"</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_4_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
         <source>There is no attachment yet.</source>
         <target>There is no attachment yet.</target>
-        <note>Line: 613</note>
+        <note>Line: 419</note>
       </trans-unit>
     </body>
   </file>

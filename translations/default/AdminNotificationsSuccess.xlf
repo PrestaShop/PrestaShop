@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
-        <source>Update successful</source>
-        <target>Update successful</target>
-        <note>Line: 228</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d4eab6753f9f3d4b57580427264beaa6">
         <source>Successful update</source>
         <target>Successful update</target>
         <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
+        <source>Update successful</source>
+        <target>Update successful</target>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -101,12 +101,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="79f062391903591d68e514a400e136cf">
         <source>The status has been updated successfully.</source>
         <target>The status has been updated successfully.</target>
-        <note>Line: 85</note>
+        <note>Line: 766</note>
       </trans-unit>
     </body>
   </file>
@@ -119,12 +119,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_checkpayment/ps_checkpayment.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
         <source>Settings updated</source>
         <target>Settings updated</target>
-        <note>Line: 116</note>
+        <note>Line: 224</note>
       </trans-unit>
     </body>
   </file>
@@ -133,7 +133,7 @@
       <trans-unit id="20015706a8cbd457cbb6ea3e7d5dc9b3">
         <source>Configuration updated</source>
         <target>Configuration updated</target>
-        <note>Line: 442</note>
+        <note>Line: 436</note>
       </trans-unit>
     </body>
   </file>
@@ -211,12 +211,12 @@
       <trans-unit id="63cca4f457cad586dc9495a2e671b745">
         <source>Successful duplication</source>
         <target>Successful duplication</target>
-        <note>Line: 1176</note>
+        <note>Line: 1185</note>
       </trans-unit>
       <trans-unit id="b33f41d62d6358d2af05d739ac193889">
         <source>Your store context has been automatically modified.</source>
         <target>Your store context has been automatically modified.</target>
-        <note>Line: 430</note>
+        <note>Line: 435</note>
       </trans-unit>
     </body>
   </file>
