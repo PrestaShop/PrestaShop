@@ -1652,17 +1652,5 @@
       {% endfor %}
     </div>
   {% endif %}
-  {% if form.parent.vars.data.disabled_menu_thumbnail_upload is defined and form.parent.vars.data.disabled_menu_thumbnail_upload and warning_message is not null %}
-    <div class="d-none">
-      {{ block('file_widget') }}
-    </div>
-
-    <div class="alert alert-warning" role="alert">
-      <p class="alert-text">
-        {{ warning_message }}
-      </p>
-    </div>
-  {% else %}
-    {{ block('file_widget') }}
-  {% endif %}
+  {{ block('file_widget') }}
 {% endblock image_with_preview_widget %}

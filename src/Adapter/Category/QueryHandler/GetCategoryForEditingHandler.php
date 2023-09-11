@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use Shop;
 
@@ -108,7 +107,6 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             (bool) $category->is_root_category,
             $this->getCoverImage($query->getCategoryId()),
             $this->getThumbnailImage($query->getCategoryId()),
-            $this->getMenuThumbnailImages($query->getCategoryId()),
             $subcategories->fetchAll(PDO::FETCH_COLUMN),
             $category->additional_description
         );
@@ -204,37 +202,5 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         }
 
         return null;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return array
-     */
-    private function getMenuThumbnailImages(CategoryId $categoryId)
-    {
-        $menuThumbnails = [];
-
-        foreach (MenuThumbnailId::ALLOWED_ID_VALUES as $id) {
-            $thumbnailPath = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $id . '_thumb.jpg';
-
-            if (file_exists($thumbnailPath)) {
-                $imageTag = ImageManager::thumbnail(
-                    $thumbnailPath,
-                    'category_' . $categoryId->getValue() . '-' . $id . '_thumb.jpg',
-                    100,
-                    'jpg',
-                    true,
-                    true
-                );
-
-                $menuThumbnails[$id] = [
-                    'path' => $this->imageTagSourceParser->parse($imageTag),
-                    'id' => $id,
-                ];
-            }
-        }
-
-        return $menuThumbnails;
     }
 }

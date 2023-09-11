@@ -106,17 +106,11 @@ class EditCategoryCommand
     private $thumbnailImage;
 
     /**
-     * @var array
-     */
-    private $menuThumbnailImages;
-
-    /**
      * @param int $categoryId
      */
     public function __construct($categoryId)
     {
         $this->categoryId = new CategoryId($categoryId);
-        $this->menuThumbnailImages = [];
     }
 
     /**
@@ -405,21 +399,5 @@ class EditCategoryCommand
     public function setThumbnailImage(?UploadedFile $thumbnailImage): void
     {
         $this->thumbnailImage = $thumbnailImage;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMenuThumbnailImages(): array
-    {
-        return $this->menuThumbnailImages;
-    }
-
-    /**
-     * @param array $menuThumbnailImages
-     */
-    public function setMenuThumbnailImages(array $menuThumbnailImages): void
-    {
-        $this->menuThumbnailImages = $menuThumbnailImages;
     }
 }

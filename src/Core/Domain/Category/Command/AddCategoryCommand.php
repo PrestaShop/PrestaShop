@@ -100,11 +100,6 @@ class AddCategoryCommand
     private $thumbnailImage;
 
     /**
-     * @var array
-     */
-    private $menuThumbnailImages;
-
-    /**
      * @param string[] $localizedNames
      * @param string[] $localizedLinkRewrites
      * @param bool $isActive
@@ -119,7 +114,6 @@ class AddCategoryCommand
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
             ->setIsActive($isActive)
             ->setParentCategoryId($parentCategoryId);
-        $this->menuThumbnailImages = [];
     }
 
     /**
@@ -396,21 +390,5 @@ class AddCategoryCommand
     public function setThumbnailImage(?UploadedFile $thumbnailImage): void
     {
         $this->thumbnailImage = $thumbnailImage;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMenuThumbnailImages(): array
-    {
-        return $this->menuThumbnailImages;
-    }
-
-    /**
-     * @param array $menuThumbnailImages
-     */
-    public function setMenuThumbnailImages(array $menuThumbnailImages): void
-    {
-        $this->menuThumbnailImages = $menuThumbnailImages;
     }
 }

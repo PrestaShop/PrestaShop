@@ -7,9 +7,9 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
       - ' > '
 
-  PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider:
-    autowire: true
-    public: false
+  prestashop.core.category.name_builder.category_display_name_builder:
+    alias: PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder
+    deprecated: ~
 
   PrestaShop\PrestaShop\Core\Category\Provider\CategoryImageFinder:
     autowire: true

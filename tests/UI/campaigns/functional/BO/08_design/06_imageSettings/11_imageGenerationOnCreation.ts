@@ -47,7 +47,6 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
   const categoryData: CategoryData = new CategoryData({
     coverImage: 'cover.jpg',
     thumbnailImage: 'thumb.jpg',
-    metaImage: 'thumb.jpg',
   });
 
   // Pre-condition: Enable Multiple image formats
@@ -63,7 +62,6 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
       productData.thumbImage,
       categoryData.coverImage,
       categoryData.thumbnailImage,
-      categoryData.metaImage,
     ].map(async (image: string|null) => {
       if (image) {
         await files.generateImage(image);
@@ -79,7 +77,6 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
       productData.thumbImage,
       categoryData.coverImage,
       categoryData.thumbnailImage,
-      categoryData.metaImage,
     ].map(async (image: string|null) => {
       if (image) {
         await files.deleteFile(image);
@@ -321,10 +318,6 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
         );
         await expect(fileWebpExists, `File ${idCategory}-${imageTypeName}.webp doesn't exist!`).to.be.true;
       }));
-
-      // Menu Thumbnail
-      const menuThumbnailsExists = await files.doesFileExist(`${files.getRootPath()}/img/c/${idCategory}-0-thumb.jpg`);
-      await expect(menuThumbnailsExists, `File ${idCategory}-0-thumb.jpg doesn't exist!`).to.be.true;
     });
   });
 
