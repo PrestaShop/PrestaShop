@@ -26,30 +26,21 @@
   {% if this.isMultistoreUsed and app.request is not null %}
     <div
       id="header-multishop"
-      class="header-multishop{% if this.isAllShopContext %} header-multishop-allshops{% elseif this.currentContextColor is empty %} header-multishop-default{% endif %}{% if this.isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
-      {% if this.isShopContext %}data-shop-id="{{ this.currentShopContextId }}"{% elseif this.isGroupContext %}data-group-id="{{ this.currentShopContextId }}"{% else %}data-all-shops="1"{% endif %}
-      {% if this.colorConfigLink %}data-header-color-notification="{{ "Customize your multistore header, [1]pick a color[/1] for this store context."|trans({'[1]': '<a href="' ~ this.colorConfigLink ~ '">', '[/1]': '</a>'}, 'Admin.Navigation.Header') }}"{% endif %}
+      class="header-multishop{% if this.isAllShopContext %} header-multishop-allshops{% elseif this.contextColor is empty %} header-multishop-default{% endif %}{% if this.isTitleDark %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
+      {% if this.contextShopId %}data-shop-id="{{ this.contextShopId }}"{% elseif this.contextShopGroupId %}data-group-id="{{ this.contextShopGroupId }}"{% else %}data-all-shops="1"{% endif %}
+      {% if this.colorConfigLink is not empty %}data-header-color-notification="{{ "Customize your multistore header, [1]pick a color[/1] for this store context."|trans({'[1]': '<a href="' ~ this.colorConfigLink ~ '">', '[/1]': '</a>'}, 'Admin.Navigation.Header') }}"{% endif %}
       data-checkbox-notification="{{ "To apply specific settings to a store or a group of stores, select the parameter to modify, make your changes and save."|trans({}, 'Admin.Navigation.Header') ~ ' '}}"
     >
-      <div class="header-multishop-top-bar"{% if this.currentContextColor is not empty %} style="background-color: {{this.currentContextColor}};"{% endif %}>
+      <div class="header-multishop-top-bar"{% if this.contextColor is not empty %} style="background-color: {{this.contextColor}};"{% endif %}>
         <div class="header-multishop-center js-header-multishop-open-modal">
-
-          {#
-          This setting avoid to duplicate @PrestaShop/Admin/Multistore/shop_icon.html.twig and
-          @PrestaShop/Admin/Multistore/multi_shops_icon.html.twig and then replace isTitleDark by this.isTitleDark
-          Todo: remove this line when the two templates above are not used anymore except in twig component and replace
-          isTitleDark by this.isTitleDark in these templates
-          #}
-          {% set isTitleDark = this.isTitleDark %}
-
-          {% if this.isShopContext %}
-            {% include '@PrestaShop/Admin/Multistore/shop_icon.html.twig' %}
+          {% if this.contextShopId %}
+            {% include '@PrestaShop/Admin/Multistore/shop_icon.html.twig' with { isTitleDark: this.isTitleDark } %}
           {% else %}
-            {% include '@PrestaShop/Admin/Multistore/multi_shops_icon.html.twig' %}
+            {% include '@PrestaShop/Admin/Multistore/multi_shops_icon.html.twig' with { isTitleDark: this.isTitleDark } %}
           {% endif %}
 
           <h2 class="header-multishop-title">
-            {% if this.isGroupContext %}{{ "Group"|trans({}, 'Admin.Global') ~ ' '}} {% endif %}{{ this.currentContextName }}
+            {% if this.contextShopGroupId %}{{ "Group"|trans({}, 'Admin.Global') ~ ' '}} {% endif %}{{ this.contextName }}
           </h2>
 
           <button class="header-multishop-button">
@@ -58,10 +49,10 @@
         </div>
       </div>
 
-      {% if this.isShopContext %}
+      {% if this.contextShopId %}
         <div class="header-multishop-right">
           {% block multishop_header_right %}
-            <a class="header-multishop-view-action" href="{{ this.link.getBaseLink(this.currentShopContextId) }}" target="_blank" rel="nofollow">{{ "View my store"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
+            <a class="header-multishop-view-action" href="{{ this.link.getBaseLink(this.contextShopId) }}" target="_blank" rel="nofollow">{{ "View my store"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
           {% endblock %}
         </div>
       {% endif %}
@@ -70,7 +61,7 @@
         <div class="multishop-modal-dialog js-multishop-modal-dialog" role="document">
           <div class="multishop-modal-body">
             {% block search_shops %}
-              {% if lockedToAllShopContext == false %}
+              {% if this.isLockedToAllShopContext == false %}
                 <div class="multishop-modal-search-container">
                   <i class="material-icons">search</i>
                   <input type="text" class="form-control multishop-modal-search js-multishop-modal-search" placeholder="{{ 'Search store name'|trans({}, 'Admin.Navigation.Header') }}" data-no-results="{{ "No results found for"|trans({}, 'Admin.Global') }}" data-searching="{{ "Searching for"|trans({}, 'Admin.Global') }}">
@@ -94,7 +85,7 @@
               {% for group in this.groupList %}
                 <li class="multishop-modal-group-item multishop-modal-item{% if loop.first %} first-group-item{% endif %}">
                   {% block shop_group_item %}
-                    <span class="multishop-modal-color-container{% if this.isGroupContext and this.currentShopContextId == group.id %} multishop-modal-color-check{% endif %}">
+                    <span class="multishop-modal-color-container{% if this.contextShopGroupId and this.contextShopGroupId == group.id %} multishop-modal-color-check{% endif %}">
                     <i class="material-icons">check</i>
                     <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
                   </span>
@@ -106,7 +97,7 @@
                   <li class="multishop-modal-shop-item multishop-modal-item">
                     {% block shop_item %}
                       <div class="multishop-modal-item-left">
-                      <span class="multishop-modal-color-container{% if this.isShopContext and this.currentShopContextId == shop.id %} multishop-modal-color-check{% endif %}">
+                      <span class="multishop-modal-color-container{% if this.contextShopId and this.contextShopId == shop.id %} multishop-modal-color-check{% endif %}">
                         <i class="material-icons">check</i>
                         <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
                       </span>

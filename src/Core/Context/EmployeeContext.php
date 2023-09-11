@@ -26,45 +26,56 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Twig\Component;
+namespace PrestaShop\PrestaShop\Core\Context;
 
-use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
-use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Model\EmployeeInterface;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/employee_dropdown.html.twig')]
-class EmployeeDropdown
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ */
+class EmployeeContext
 {
-    public ?ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu = null;
+    public const SUPER_ADMIN_PROFILE_ID = 1;
 
     public function __construct(
-        private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly EmployeeContext $employeeContext
+        private readonly ?EmployeeInterface $employee
     ) {
     }
 
     public function getEmployee(): ?EmployeeInterface
     {
-        return $this->employeeContext->getEmployee();
+        return $this->employee;
     }
 
-    public function getDisplayBackOfficeEmployeeMenu()
+    public function hasAuthorizationOnShopGroup(int $shopGroupId): bool
     {
-        if ($this->displayBackOfficeEmployeeMenu === null) {
-            $menuLinksCollections = new ActionsBarButtonsCollection();
-
-            $this->hookDispatcher->dispatchWithParameters(
-                'displayBackOfficeEmployeeMenu',
-                [
-                    'links' => $menuLinksCollections,
-                ]
-            );
-
-            $this->displayBackOfficeEmployeeMenu = $menuLinksCollections;
+        if (!$this->employee) {
+            return false;
         }
 
-        return $this->displayBackOfficeEmployeeMenu;
+        return $this->isSuperAdmin() || in_array($shopGroupId, $this->employee->getAssociatedShopGroupIds());
+    }
+
+    public function hasAuthorizationOnShop(int $shopId): bool
+    {
+        if (!$this->employee) {
+            return false;
+        }
+
+        return $this->isSuperAdmin() || in_array($shopId, $this->employee->getAssociatedShopIds());
+    }
+
+    public function getDefaultShopId(): int
+    {
+        if (!$this->employee) {
+            return 0;
+        }
+
+        return $this->employee->getDefaultShopId();
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->employee && $this->employee->getProfileId() === self::SUPER_ADMIN_PROFILE_ID;
     }
 }

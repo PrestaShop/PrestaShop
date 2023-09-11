@@ -31,10 +31,10 @@
       <div class="employee-wrapper-avatar">
         <div class="employee-top">
           <span class="employee-avatar">
-            <img class="avatar rounded-circle" src="{{ this.employee.getImage }}" alt="{{ this.employee.firstname }}" />
+            <img class="avatar rounded-circle" src="{{ this.employee.imageUrl }}" alt="{{ this.employee.firstName }}" />
           </span>
           <span class="employee_profile">
-            {{ 'Welcome back %name%'|trans({'%name%': this.employee.firstname}, 'Admin.Navigation.Header') }}
+            {{ 'Welcome back %name%'|trans({'%name%': this.employee.firstName}, 'Admin.Navigation.Header') }}
           </span>
         </div>
 

@@ -32,7 +32,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
@@ -44,22 +44,18 @@ class MultistoreHeader
 {
     public bool $lockedToAllShopContext = false;
     private bool $isMultistoreUsed;
-    private bool $isAllShopContext;
-    private bool $isTitleDark;
-    private bool $isShopContext;
-    private bool $isGroupContext;
-    private ShopGroup|Shop $currentContext;
-    private string|false $colorConfigLink;
+    private string $contextColor = '';
+    private string $contextName = '';
     private array $groupList = [];
     private Link $link;
 
     public function __construct(
         private readonly MultistoreFeature $multistoreFeature, //todo removed internal using ?
         private readonly ColorBrightnessCalculator $colorBrightnessCalculator,
-        private readonly Context $multiStoreContext,
         private readonly EntityManagerInterface $entityManager,
         private readonly LegacyContext $legacyContext,
         private readonly TranslatorInterface $translator,
+        private readonly ShopContext $shopContext
     ) {
     }
 
@@ -71,22 +67,16 @@ class MultistoreHeader
             return;
         }
 
-        $isAllShopContext = $this->multiStoreContext->isAllShopContext();
-        $isShopContext = $this->multiStoreContext->isShopContext();
-        $colorConfigLink = false;
-
-        if ($isShopContext) {
-            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->multiStoreContext->getContextShopID()]);
-            $colorConfigLink = $this->legacyContext->getAdminLink('AdminShop', extraParams: ['shop_id' => $currentContext->getId(), 'updateshop' => true]);
-        } elseif (!$isAllShopContext) {
-            $shopGroupLegacy = $this->multiStoreContext->getContextShopGroup();
-            $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneBy(['id' => $shopGroupLegacy->id]);
-            $colorConfigLink = $this->legacyContext->getAdminLink('AdminShopGroup', extraParams: ['id_shop_group' => $currentContext->getId(), 'updateshop_group' => true]);
+        if ($this->shopContext->getShopConstraint()->getShopId()) {
+            $shop = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->shopContext->getShopConstraint()->getShopId()->getValue()]);
+            $this->contextColor = $shop->getColor();
+            $this->contextName = $shop->getName();
+        } elseif ($this->shopContext->getShopConstraint()->getShopGroupId()) {
+            $shopGroup = $this->entityManager->getRepository(ShopGroup::class)->findOneBy(['id' => $this->shopContext->getShopConstraint()->getShopGroupId()->getValue()]);
+            $this->contextColor = $shopGroup->getColor();
+            $this->contextName = $shopGroup->getName();
         } else {
-            // use ShopGroup object as the container for "all shops" context so that it can be used transparently in twig
-            $currentContext = new ShopGroup();
-            $currentContext->setName($this->translator->trans('All stores', domain: 'Admin.Global'));
-            $currentContext->setColor('');
+            $this->contextName = $this->translator->trans('All stores', domain: 'Admin.Global');
         }
 
         if (!$this->lockedToAllShopContext) {
@@ -95,14 +85,8 @@ class MultistoreHeader
                 static fn (ShopGroup $shopGroup) => !$shopGroup->getShops()->isEmpty()
             );
         }
-        $this->currentContext = $currentContext;
-        $this->isShopContext = $isShopContext;
         $this->link = $this->legacyContext->getContext()->link;
-        $this->isTitleDark = empty($currentContext->getColor()) ? true : $this->colorBrightnessCalculator->isBright($currentContext->getColor());
-        $this->isAllShopContext = $isAllShopContext;
-        $this->isGroupContext = $this->multiStoreContext->isGroupShopContext();
         $this->lockedToAllShopContext = false;
-        $this->colorConfigLink = !$isAllShopContext && empty($currentContext->getColor()) ? $colorConfigLink : false;
     }
 
     public function isLockedToAllShopContext(): bool
@@ -117,42 +101,43 @@ class MultistoreHeader
 
     public function isAllShopContext(): bool
     {
-        return $this->isAllShopContext;
+        return $this->shopContext->getShopConstraint()->forAllShops();
     }
 
-    public function getCurrentShopContextId(): int
+    public function getContextShopId(): ?int
     {
-        return $this->currentContext->getId();
+        return $this->shopContext->getShopConstraint()->getShopId()?->getValue();
     }
 
-    public function getCurrentContextName(): string
+    public function getContextShopGroupId(): ?int
     {
-        return $this->currentContext->getName();
+        return $this->shopContext->getShopConstraint()->getShopGroupId()?->getValue();
     }
 
-    public function getCurrentContextColor(): string
+    public function getContextName(): string
     {
-        return $this->currentContext->getColor();
+        return $this->contextName;
+    }
+
+    public function getContextColor(): string
+    {
+        return $this->contextColor;
     }
 
     public function isTitleDark(): bool
     {
-        return $this->isTitleDark;
+        return empty($this->contextColor) || $this->colorBrightnessCalculator->isBright($this->contextColor);
     }
 
-    public function isShopContext(): bool
+    public function getColorConfigLink(): string
     {
-        return $this->isShopContext;
-    }
+        if ($this->shopContext->getShopConstraint()->getShopId()) {
+            $this->legacyContext->getAdminLink('AdminShop', extraParams: ['shop_id' => $this->shopContext->getShopConstraint()->getShopId()->getValue(), 'updateshop' => true]);
+        } elseif ($this->shopContext->getShopConstraint()->getShopGroupId()) {
+            return $this->legacyContext->getAdminLink('AdminShopGroup', extraParams: ['id_shop_group' => $this->shopContext->getShopConstraint()->getShopGroupId()->getValue(), 'updateshop_group' => true]);
+        }
 
-    public function isGroupContext(): bool
-    {
-        return $this->isGroupContext;
-    }
-
-    public function getColorConfigLink(): string|false
-    {
-        return $this->colorConfigLink;
+        return '';
     }
 
     public function getLink(): Link

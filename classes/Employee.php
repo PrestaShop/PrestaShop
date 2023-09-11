@@ -27,12 +27,13 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
+use PrestaShop\PrestaShop\Core\Model\EmployeeInterface;
 use PrestaShopBundle\Security\Admin\SessionRenewer;
 
 /**
  * Class EmployeeCore.
  */
-class EmployeeCore extends ObjectModel
+class EmployeeCore extends ObjectModel implements EmployeeInterface
 {
     /** @var int|null Employee ID */
     public $id;
@@ -561,7 +562,7 @@ class EmployeeCore extends ObjectModel
      *
      * @since 1.5.0
      */
-    public function getDefaultShopID()
+    public function getDefaultShopID(): int
     {
         if ($this->isSuperAdmin() || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops)) {
             return (int) Configuration::get('PS_SHOP_DEFAULT');
@@ -760,5 +761,72 @@ class EmployeeCore extends ObjectModel
         }
 
         return null;
+    }
+
+    /*
+     * Interface functions
+     */
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
+    public function getProfileId(): int
+    {
+        return (int) $this->id_profile;
+    }
+
+    public function getLanguageId(): int
+    {
+        return (int) $this->id_lang;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstname;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastname;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->passwd;
+    }
+
+    public function getDefaultTabId(): int
+    {
+        return (int) $this->default_tab;
+    }
+
+    public function getAssociatedShopIds(): array
+    {
+        return $this->associated_shops;
+    }
+
+    public function getAssociatedShopGroupIds(): array
+    {
+        $associatedShopGroupIds = [];
+        foreach ($this->associated_shops as $shopId) {
+            /** @var int $groupFromShop */
+            $groupFromShop = Shop::getGroupFromShop($shopId, true);
+            if (!empty($groupFromShop) && !in_array($groupFromShop, $associatedShopGroupIds)) {
+                $associatedShopGroupIds[] = (int) $groupFromShop;
+            }
+        }
+
+        return $this->associated_shops;
+    }
+
+    public function getImageUrl(): string
+    {
+        return $this->getImage();
     }
 }
