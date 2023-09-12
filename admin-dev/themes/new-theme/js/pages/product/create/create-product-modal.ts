@@ -73,7 +73,13 @@ export default class CreateProductModal {
           }
 
           if (dataAttributes.productId) {
-            const editUrl = this.router.generate('admin_products_edit', {productId: dataAttributes.productId});
+            // The parameter forceDefaultActive must be passed down in the redirect URL or it will be ignored, it was passed via data attributes
+            // for this purpose only
+            const editUrl = this.router.generate('admin_products_edit', {
+              productId: dataAttributes.productId,
+              forceDefaultActive: dataAttributes.forceDefaultActive ? 1 : 0,
+            });
+
             // Keep showing loading until the page is refreshed
             iframeModal.showLoading();
             window.location.href = editUrl;

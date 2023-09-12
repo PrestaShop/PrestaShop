@@ -43,7 +43,9 @@ class CreateProduct extends BOBasePage {
 
   private readonly productTypePreviewLabel: string;
 
-  private readonly productActiveSwitchButton: (status: number) => string;
+  private readonly productActiveSwitchButton: string;
+
+  private readonly productActiveSwitchButtonToggleInput: string;
 
   private readonly productHeaderSummary: string;
 
@@ -105,6 +107,8 @@ class CreateProduct extends BOBasePage {
     this.successfulDuplicateMessage = 'Successful duplication';
 
     // Header selectors
+    this.productActiveSwitchButton = '#product_header_active.ps-switch';
+    this.productActiveSwitchButtonToggleInput = `${this.productActiveSwitchButton} input`;
     this.productImageUrl = '#product_header_cover_thumbnail';
     this.productName = '#product_header_name';
     this.productNameInput = (locale: string) => `${this.productName} div.js-locale-${locale} input`;
@@ -115,7 +119,6 @@ class CreateProduct extends BOBasePage {
     this.productTypePreview = '.product-type-preview';
     this.productTypePreviewLabel = `${this.productTypePreview}-label`;
     this.productTypeLabel = '.product-type-preview-label';
-    this.productActiveSwitchButton = (status: number) => `#product_header_active_${status}`;
     this.productHeaderSummary = '.product-header-summary';
     this.productHeaderTaxExcluded = `${this.productHeaderSummary} div[data-role=price-tax-excluded]`;
     this.productHeaderTaxIncluded = `${this.productHeaderSummary} div[data-role=price-tax-included]`;
@@ -256,6 +259,38 @@ class CreateProduct extends BOBasePage {
   }
 
   /**
+   * Set product status
+   * @param page {Page} Browser tab
+   * @param status {boolean} The product status
+   * @returns {Promise<void>}
+   */
+  async setProductStatus(page: Page, status: boolean): Promise<boolean> {
+    if (await this.getProductStatus(page) !== status) {
+      await this.clickAndWaitForLoadState(page, this.productActiveSwitchButton);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Get product status
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async getProductStatus(page: Page): Promise<boolean> {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.productActiveSwitchButtonToggleInput}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
+  }
+
+  /**
    * Set product
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set in new product page
@@ -285,16 +320,6 @@ class CreateProduct extends BOBasePage {
     await pricingTab.setProductPricing(page, productData);
 
     return this.saveProduct(page);
-  }
-
-  /**
-   * Set product status
-   * @param page {Page} Browser tab
-   * @param status {boolean} The product status
-   * @returns {Promise<void>}
-   */
-  async setProductStatus(page: Page, status: boolean): Promise<void> {
-    await this.setChecked(page, this.productActiveSwitchButton(status ? 1 : 0), true);
   }
 
   /**
@@ -451,15 +476,6 @@ class CreateProduct extends BOBasePage {
    */
   async getProductName(page: Page, locale: string = 'en'): Promise<string> {
     return this.getAttributeContent(page, this.productNameInput(locale), 'value');
-  }
-
-  /**
-   * Get product status
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async getProductStatus(page: Page): Promise<boolean> {
-    return this.isChecked(page, this.productActiveSwitchButton(1));
   }
 }
 

@@ -19,6 +19,7 @@ https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/pull
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
 | How to test?      | Indicate how to verify that this change works as expected.
+| UI Tests          | Please run UI tests and paste here the link to the run. [Read this page to know why and how to use this tool.](https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/ui-tests/).
 | Fixed issue or discussion?     | Fixes #{issue number here}, Fixes #{another issue number here}, Fixes https://github.com/PrestaShop/PrestaShop/discussions/ {discussion number here}
 | Related PRs       | If theme, autoupgrade or other module change is needed to make this change work, provide a link to related PRs here.
 | Sponsor company   | Your company or customer's name goes here (if applicable).
