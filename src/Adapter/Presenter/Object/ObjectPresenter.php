@@ -70,6 +70,7 @@ class ObjectPresenter implements PresenterInterface
     private function filterHtmlContent($type, &$presentedObject, $htmlFields)
     {
         if (!empty($htmlFields) && is_array($htmlFields)) {
+            // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
             $filteredHtml = Hook::exec(
                 'filterHtmlContent',
                 [

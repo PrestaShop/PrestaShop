@@ -287,6 +287,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private function getModulesFromHook()
     {
         if ($this->modulesFromHook === null) {
+            // An array [module_name => module_output] will be returned
             $modulesFromHook = $this->hookManager->exec('actionListModules', [], null, true);
             $modulesFromHook = array_values($modulesFromHook ?? []);
 

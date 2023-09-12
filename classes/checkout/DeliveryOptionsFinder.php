@@ -125,6 +125,7 @@ class DeliveryOptionsFinderCore
                             $carrier['extraContent'] = '';
                             if ($carrier['is_module']) {
                                 if ($moduleId = Module::getModuleIdByName($carrier['external_module_name'])) {
+                                    // Hook called only for the module concerned
                                     $carrier['extraContent'] = Hook::exec('displayCarrierExtraContent', ['carrier' => $carrier], $moduleId);
                                 }
                             }

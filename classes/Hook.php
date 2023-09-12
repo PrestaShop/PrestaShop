@@ -783,11 +783,11 @@ class HookCore extends ObjectModel
      * @param string $hook_name Hook Name
      * @param array $hook_args Parameters for the functions
      * @param string|int|null $id_module Execute hook for this module only
-     * @param bool $array_return If specified, module output will be set by name in an array
-     * @param bool $check_exceptions Check permission exceptions
-     * @param bool $use_push Force change to be refreshed on Dashboard widgets
+     * @param bool $array_return If specified, the result will be provided in an array [module_name => module_output]
+     * @param bool $check_exceptions Check if this function should respect hook controller exceptions configured in backoffice
+     * @param bool $use_push Force change to be refreshed on Dashboard widgets (unused)
      * @param int|null $id_shop If specified, hook will be execute the shop with this ID
-     * @param bool $chain If specified, hook will chain the return of hook module
+     * @param bool $chain If specified, each module on this hook will receive the result of the previous one
      *
      * @throws PrestaShopException
      *
@@ -807,10 +807,12 @@ class HookCore extends ObjectModel
             Tools::displayParameterAsDeprecated('use_push');
         }
 
+        // If we are in the installation phase OR the hook is disabled, it won't be executed
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
             return $array_return ? [] : null;
         }
 
+        // Get hook registry to collect debug information
         $hookRegistry = self::getHookRegistry();
         $isRegistryEnabled = null !== $hookRegistry;
 
@@ -824,6 +826,7 @@ class HookCore extends ObjectModel
             $array_return = false;
         }
 
+        // Check if we should execute non native modules
         static $disable_non_native_modules = null;
         if ($disable_non_native_modules === null) {
             $disable_non_native_modules = (bool) Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
@@ -834,8 +837,8 @@ class HookCore extends ObjectModel
             throw new PrestaShopException('Invalid id_module or hook_name');
         }
 
-        // If no modules associated to hook_name or recompatible hook name, we stop the function
-
+        // We retrieve a list of modules to be executed for the given hook.
+        // If no modules associated to hook_name or recompatible hook name, we stop the function.
         if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
@@ -856,6 +859,7 @@ class HookCore extends ObjectModel
         // Store list of executed hooks on this page
         Hook::$executed_hooks[$id_hook] = $hook_name;
 
+        // Enrich our arguments with some extra data we send along with it
         $context = Context::getContext();
         if (!isset($hook_args['cookie']) || !$hook_args['cookie']) {
             $hook_args['cookie'] = $context->cookie;
@@ -868,6 +872,8 @@ class HookCore extends ObjectModel
         $altern = 0;
         $output = ($array_return) ? [] : '';
 
+        // If non native modules are disabled, we must get the list of native ones
+        // that came bundled with the store.
         if ($disable_non_native_modules && !isset(Hook::$native_module)) {
             Hook::$native_module = Module::getNativeModuleList();
         }
@@ -885,22 +891,26 @@ class HookCore extends ObjectModel
         }
 
         foreach ($module_list as $key => $hookRegistration) {
-            // Check errors
+            // If the caller provided a specific module ID for which ONLY this hook
+            // should be executed, we check if it matches.
             if ($id_module && $id_module != $hookRegistration['id_module']) {
                 continue;
             }
 
+            // If non native modules are disabled and this module is not a native one.
             if ((bool) $disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($hookRegistration['module'], Hook::$native_module)) {
                 continue;
             }
 
             $registeredHookId = $hookRegistration['id_hook'];
             if ($registeredHookId === $id_hook) {
-                // the module is registered to the canonical hook name
+                // The module is registered to the canonical (proper) hook name
                 $registeredHookName = $hook_name;
             } else {
-                // the module is registered to an alias
+                // The module is registered to an alias
                 $registeredHookName = static::getNameById($hookRegistration['id_hook']);
+
+                // We throw an error - aliases are deprecated.
                 trigger_error(
                     sprintf(
                         'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
@@ -912,8 +922,10 @@ class HookCore extends ObjectModel
                 );
             }
 
-            // Check permissions
+            // Check conditions to execute the module
             if ($check_exceptions) {
+                // First, we check controller exceptions configured in backoffice when setting up the hook
+                // The merchant can exclude certain hooks from certain controllers
                 $exceptions = Module::getExceptionsStatic($hookRegistration['id_module'], $hookRegistration['id_hook']);
 
                 $controller_obj = Context::getContext()->controller;
@@ -925,27 +937,32 @@ class HookCore extends ObjectModel
                         : $controller_obj->php_self;
                 }
 
-                //check if current controller is a module controller
+                // Check if current controller is a module controller and prefix it's name if needed
+                // to standardized format
                 if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module)) {
                     $controller = 'module-' . $controller_obj->module->name . '-' . $controller;
                 }
 
+                // If our controller is on the list of exceptions, nothing to do here
                 if (in_array($controller, $exceptions)) {
                     continue;
                 }
 
-                //Backward compatibility of controller names
+                // Backward compatibility of controller names
                 $matching_name = [
                     'authentication' => 'auth',
                 ];
                 if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions)) {
                     continue;
                 }
+
+                // If we are in the backoffice, we check if the current employee has view rights for this module
                 if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($hookRegistration['id_module'], 'view', $context->employee)) {
                     continue;
                 }
             }
 
+            // We check if this module is valid
             if (!($moduleInstance = Module::getInstanceByName($hookRegistration['module']))) {
                 continue;
             }
@@ -965,13 +982,12 @@ class HookCore extends ObjectModel
 
                 if ($array_return) {
                     $output[$moduleInstance->name] = $display;
+                } elseif (true === $chain) {
+                    $output = $display;
                 } else {
-                    if (true === $chain) {
-                        $output = $display;
-                    } else {
-                        $output .= $display;
-                    }
+                    $output .= $display;
                 }
+
                 if ($isRegistryEnabled) {
                     $hookRegistry->hookedByCallback($moduleInstance, $hook_args);
                 }
@@ -985,12 +1001,10 @@ class HookCore extends ObjectModel
 
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
+                    } elseif (true === $chain) {
+                        $output = $display;
                     } else {
-                        if (true === $chain) {
-                            $output = $display;
-                        } else {
-                            $output .= $display;
-                        }
+                        $output .= $display;
                     }
                 }
 

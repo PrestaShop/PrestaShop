@@ -147,15 +147,16 @@ class ManufacturerControllerCore extends ProductListingFrontController
     {
         $manufacturerVar = $this->objectPresenter->present($this->manufacturer);
 
+        // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
         $filteredManufacturer = Hook::exec(
             'filterManufacturerContent',
             ['filtered_content' => $manufacturerVar['description']],
-            $id_module = null,
-            $array_return = false,
-            $check_exceptions = true,
-            $use_push = false,
-            $id_shop = null,
-            $chain = true
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
         );
         if (!empty($filteredManufacturer)) {
             $manufacturerVar['description'] = $filteredManufacturer;
@@ -175,15 +176,16 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
         if (!empty($manufacturersVar)) {
             foreach ($manufacturersVar as $k => $manufacturer) {
+                // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
                 $filteredManufacturer = Hook::exec(
                     'filterManufacturerContent',
                     ['filtered_content' => $manufacturer['text']],
-                    $id_module = null,
-                    $array_return = false,
-                    $check_exceptions = true,
-                    $use_push = false,
-                    $id_shop = null,
-                    $chain = true
+                    null,
+                    false,
+                    true,
+                    false,
+                    null,
+                    true
                 );
                 if (!empty($filteredManufacturer)) {
                     $manufacturersVar[$k]['text'] = $filteredManufacturer;
