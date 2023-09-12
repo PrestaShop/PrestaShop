@@ -2151,7 +2151,7 @@ class FrontControllerCore extends Controller
             $this->redirectionExtraExcludedKeys
         );
 
-        // Go through each parameter we got from dispatcher and sanizize it
+        // Go through each parameter we got from dispatcher and sanitize it
         foreach ($params as $key => $value) {
             if (
                 in_array($key, $excludedKeys)
