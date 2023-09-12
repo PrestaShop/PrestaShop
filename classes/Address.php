@@ -251,9 +251,7 @@ class AddressCore extends ObjectModel
 
             return parent::delete();
         } else {
-            $this->deleted = true;
-
-            return $this->update();
+            return $this->softDelete();
         }
     }
 
