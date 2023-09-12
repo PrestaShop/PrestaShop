@@ -4504,5 +4504,10 @@
       <title>Modify back office breadcrumb</title>
       <description>This hook allows modifying back office breadcrumb</description>
     </hook>
+    <hook id="actionLanguageLinkParameters">
+      <name>actionLanguageLinkParameters</name>
+      <title>Add parameters to language link</title>
+      <description>Allows modules to provide proper parameters for links in other languages.</description>
+    </hook>
   </entities>
 </entity_hook>
