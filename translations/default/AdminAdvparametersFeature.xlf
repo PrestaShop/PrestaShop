@@ -805,7 +805,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="224154fa6f3601b7de4690ba6a9ad8b4">
         <source>Multistore tree</source>
         <target>Multistore tree</target>
-        <note>Line: 368</note>
+        <note>Line: 382</note>
       </trans-unit>
       <trans-unit id="4a4d1260782270739eeeef6d58db0f73">
         <source>Shop URL ID</source>
@@ -825,7 +825,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="bfc70beddce99a8ab159563d4e03f7af">
         <source>URL options</source>
         <target>URL options</target>
-        <note>Line: 150</note>
+        <note>Line: 164</note>
       </trans-unit>
       <trans-unit id="438ddd6a05ebb1af2b3e5dc794489f57">
         <source>Is it the main URL for this shop?</source>
@@ -840,27 +840,27 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="eae639a70006feff484a39363c977e24">
         <source>Domain</source>
         <target>Domain</target>
-        <note>Line: 232</note>
+        <note>Line: 246</note>
       </trans-unit>
       <trans-unit id="f9f0dece476d9f76e4130347b6e31b94">
         <source>SSL Domain</source>
         <target>SSL Domain</target>
-        <note>Line: 238</note>
+        <note>Line: 252</note>
       </trans-unit>
       <trans-unit id="4f04a71599485ace316aa8ed38348875">
         <source>Physical URL</source>
         <target>Physical URL</target>
-        <note>Line: 244</note>
+        <note>Line: 258</note>
       </trans-unit>
       <trans-unit id="bbc1203755645168294af35f880d61e5">
         <source>Virtual URL</source>
         <target>Virtual URL</target>
-        <note>Line: 251</note>
+        <note>Line: 265</note>
       </trans-unit>
       <trans-unit id="1dcec4396291e2fbdc02c03526fe2b88">
         <source>Final URL</source>
         <target>Final URL</target>
-        <note>Line: 259</note>
+        <note>Line: 273</note>
       </trans-unit>
       <trans-unit id="d63c1ea9ab7850a74940ff760f25034b">
         <source>Edit this shop</source>
@@ -870,7 +870,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="157d64669ca816a7153ac30d2e16690a">
         <source>Add a new URL</source>
         <target>Add a new URL</target>
-        <note>Line: 338</note>
+        <note>Line: 352</note>
       </trans-unit>
       <trans-unit id="6212233110ba622de7ad95ea86730a13">
         <source>Store URL ID</source>
@@ -885,17 +885,17 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="055898388116edd4234398bd11f142a9">
         <source>Is it the main URL for this store?</source>
         <target>Is it the main URL for this store?</target>
-        <note>Line: 173</note>
+        <note>Line: 187</note>
       </trans-unit>
       <trans-unit id="2244fb2cc638a8f0d0b9630d51c14779">
         <source>Store URL</source>
         <target>Store URL</target>
-        <note>Line: 226</note>
+        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="f22be75de278f6df8ec0fe9cf7a84b5f">
         <source>Edit this store</source>
         <target>Edit this store</target>
-        <note>Line: 313</note>
+        <note>Line: 327</note>
       </trans-unit>
     </body>
   </file>
@@ -955,7 +955,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="15cfc4f0fa73c3f13280e47c5621a615">
         <source>%key% (missing description)</source>
         <target>%key% (missing description)</target>
-        <note>Line: 142</note>
+        <note>Line: 143</note>
       </trans-unit>
     </body>
   </file>
@@ -1012,6 +1012,15 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/AttachmentGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
+        <source>Refresh list</source>
+        <target>Refresh list</target>
+        <note>Line: 232</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/BackupDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
@@ -1038,15 +1047,15 @@ Comment: voluntary do affectation here</note>
         <target>Sent</target>
         <note>Line: 139</note>
       </trans-unit>
+      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
+        <source>Erase all</source>
+        <target>Erase all</target>
+        <note>Line: 231</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/LogGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
-        <source>Erase all</source>
-        <target>Erase all</target>
-        <note>Line: 248</note>
-      </trans-unit>
       <trans-unit id="ecb833e2dc5d6c03d4d0cddf1b15e85a">
         <source>Severity (1-4)</source>
         <target>Severity (1-4)</target>
@@ -1069,7 +1078,7 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/Security/Session/EmployeeGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="236d0eb7130ba05580fa0cb21f6b968d">
         <source>Last update</source>
@@ -1079,23 +1088,27 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="8c01c65cd2c7619b8bb617b441cd05c4">
         <source>The user will be signed out from this session.</source>
         <target>The user will be signed out from this session.</target>
-        <note>Line: 164</note>
+        <note>Line: 165</note>
       </trans-unit>
       <trans-unit id="b49d9bafc2f2394cdd875fb0b96bb974">
         <source>Delete session?</source>
         <target>Delete session?</target>
-        <note>Line: 170</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="12e882347d5f51cf292ca08e2e606eb2">
         <source>Users will be signed out from all selected sessions.</source>
         <target>Users will be signed out from all selected sessions.</target>
-        <note>Line: 293</note>
+        <note>Line: 295</note>
       </trans-unit>
       <trans-unit id="b0778bfd9332089cdb4468bd9f04e031">
         <source>Delete selected sessions?</source>
         <target>Delete selected sessions?</target>
-        <note>Line: 299</note>
+        <note>Line: 301</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/EmployeeGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="4d372ba3330d919603c6279404505f7c">
         <source>Employee ID</source>
         <target>Employee ID</target>
@@ -1103,12 +1116,17 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/TaxGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/WebserviceKeyDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
-        <source>Refresh list</source>
-        <target>Refresh list</target>
-        <note>Line: 203</note>
+      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
+        <source>Key</source>
+        <target>Key</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
+        <source>Key description</source>
+        <target>Key description</target>
+        <note>Line: 93</note>
       </trans-unit>
     </body>
   </file>
@@ -1118,6 +1136,15 @@ Comment: voluntary do affectation here</note>
         <source>ID / Name of shop</source>
         <target>ID / Name of shop</target>
         <note>Line: 74</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
+        <source>Product reference</source>
+        <target>Product reference</target>
+        <note>Line: 58</note>
       </trans-unit>
     </body>
   </file>
@@ -1155,11 +1182,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Api/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
-        <source>Product reference</source>
-        <target>Product reference</target>
-        <note>Line: 177</note>
-      </trans-unit>
       <trans-unit id="ae5977a08e8a3d45283789d99c67c3c3">
         <source>Combination reference</source>
         <target>Combination reference</target>
@@ -1702,16 +1724,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
-        <source>Key</source>
-        <target>Key</target>
-        <note>Line: 90</note>
-      </trans-unit>
-      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
-        <source>Key description</source>
-        <target>Key description</target>
-        <note>Line: 131</note>
-      </trans-unit>
       <trans-unit id="20eebdc752ee86d49f5d090759b237aa">
         <source>Webservice account key.</source>
         <target>Webservice account key.</target>
@@ -1833,11 +1845,6 @@ Comment: voluntary do affectation here</note>
         <target>A test email has been sent to the email address you provided.</target>
         <note>Line: 40</note>
       </trans-unit>
-      <trans-unit id="16186ead9220c2a4646402c69109cfa0">
-        <source>Send a test email</source>
-        <target>Send a test email</target>
-        <note>Line: 49</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1895,8 +1902,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="4078e029d86559a033707b1f7af7f04d">
         <source>New features</source>
         <target>New features</target>
-        <note>Line: 37
-Comment: Recommended modules will be attached to here.</note>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="59c5b60130df8c2d91ce4e20f5a622bf">
         <source>Experimental features</source>
@@ -2654,6 +2660,15 @@ Comment: Recommended modules will be attached to here.</note>
         <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
         <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
         <note>Line: 62</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/list_mail_theme_layouts.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="16186ead9220c2a4646402c69109cfa0">
+        <source>Send a test email</source>
+        <target>Send a test email</target>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>

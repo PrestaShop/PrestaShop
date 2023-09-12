@@ -16,6 +16,10 @@
         <target>%s at least, or you will have to edit the translation files manually.</target>
         <note>Line: 47</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
         <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
         <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
@@ -46,10 +50,6 @@
         <target>Please ask your hosting provider to increase this limit to</target>
         <note>Line: 45</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
         <source>%s at least, or you will have to edit the translation files.</source>
         <target>%s at least, or you will have to edit the translation files.</target>
@@ -88,13 +88,13 @@ Comment: @todo Throw exception</note>
       <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
         <source>Language pack unavailable.</source>
         <target>Language pack unavailable.</target>
-        <note>Line: 1282
+        <note>Line: 1290
 Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
         <source>An error occurred while creating the language: %s</source>
         <target>An error occurred while creating the language: %s</target>
-        <note>Line: 1399</note>
+        <note>Line: 1407</note>
       </trans-unit>
     </body>
   </file>
@@ -216,7 +216,7 @@ Comment: @todo Throw exception</note>
       <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
         <source>Cannot add configuration %1$s for %2$s language</source>
         <target>Cannot add configuration %1$s for %2$s language</target>
-        <note>Line: 1580</note>
+        <note>Line: 1581</note>
       </trans-unit>
       <trans-unit id="c9468b4bd45a165049277af6756db10e">
         <source>Localization pack imported successfully.</source>
@@ -254,7 +254,7 @@ Comment: @todo Throw exception</note>
       <trans-unit id="6f3455d187a23443796efdcbe044096b">
         <source>No tax</source>
         <target>No tax</target>
-        <note>Line: 169</note>
+        <note>Line: 167</note>
       </trans-unit>
     </body>
   </file>
@@ -355,92 +355,92 @@ Comment: @todo Throw exception</note>
       <trans-unit id="78973deca6d26ce225f6f66c6c30dd54">
         <source>Invalid theme "%theme%"</source>
         <target>Invalid theme "%theme%"</target>
-        <note>Line: 1811</note>
+        <note>Line: 1819</note>
       </trans-unit>
       <trans-unit id="7d65d1400b9d08c5c638682170ff4d7c">
         <source>Invalid iso code "%iso_code%"</source>
         <target>Invalid iso code "%iso_code%"</target>
-        <note>Line: 1421</note>
+        <note>Line: 1429</note>
       </trans-unit>
       <trans-unit id="b399fb01ee4e0a8ec1681fb9bcb31ce0">
         <source>This %type_content% file extension is not accepted.</source>
         <target>This %type_content% file extension is not accepted.</target>
-        <note>Line: 1654</note>
+        <note>Line: 1662</note>
       </trans-unit>
       <trans-unit id="1e5ec3cd42b5bac1b06b99f67cba41dd">
         <source>Invalid module name "%module%"</source>
         <target>Invalid module name "%module%"</target>
-        <note>Line: 1663</note>
+        <note>Line: 1671</note>
       </trans-unit>
       <trans-unit id="c68e9fe9015c5779289f32e2bdef0a7b">
         <source>Invalid mail name "%mail%"</source>
         <target>Invalid mail name "%mail%"</target>
-        <note>Line: 1667</note>
+        <note>Line: 1675</note>
       </trans-unit>
       <trans-unit id="40f5c232e433d178a4f912b3092d7df1">
         <source>Directory "%folder%" cannot be created</source>
         <target>Directory "%folder%" cannot be created</target>
-        <note>Line: 1684</note>
+        <note>Line: 1692</note>
       </trans-unit>
       <trans-unit id="ccdf1aa6f4cb029f9846e53006115905">
         <source>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</source>
         <target>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</target>
-        <note>Line: 1690</note>
+        <note>Line: 1698</note>
       </trans-unit>
       <trans-unit id="f1c030f2fd8f1b382a4bffd04af59c2d">
         <source>Your HTML email templates cannot contain JavaScript code.</source>
         <target>Your HTML email templates cannot contain JavaScript code.</target>
-        <note>Line: 1696</note>
+        <note>Line: 1704</note>
       </trans-unit>
       <trans-unit id="5dc4babbd10d00e89d8e46a12942d394">
         <source>Empty string found, please edit: "%file%"</source>
         <target>Empty string found, please edit: "%file%"</target>
-        <note>Line: 1842</note>
+        <note>Line: 1850</note>
       </trans-unit>
       <trans-unit id="f2aca97fb94315864fd2fa52f3100f1e">
         <source>There is an error in template, an empty string has been found. Please edit: "%file%"</source>
         <target>There is an error in template, an empty string has been found. Please edit: "%file%"</target>
-        <note>Line: 2114</note>
+        <note>Line: 2122</note>
       </trans-unit>
       <trans-unit id="616d8e7e6c0dc755a7e932c4db698317">
         <source>The module directory must be writable.</source>
         <target>The module directory must be writable.</target>
-        <note>Line: 2177</note>
+        <note>Line: 2185</note>
       </trans-unit>
       <trans-unit id="1078d7e980a5a2fe78762cafd8480f0a">
         <source>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</source>
         <target>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</target>
-        <note>Line: 2436</note>
+        <note>Line: 2444</note>
       </trans-unit>
       <trans-unit id="7cf50c9ffecf05f3befc1134eba0ef45">
         <source>missing translation(s)</source>
         <target>missing translation(s)</target>
-        <note>Line: 2498</note>
+        <note>Line: 2506</note>
       </trans-unit>
       <trans-unit id="fda679a1f72b8a9676b6926a81c5e139">
         <source>No Subject was found for %mail_name% in the database.</source>
         <target>No Subject was found for %mail_name% in the database.</target>
-        <note>Line: 2537</note>
+        <note>Line: 2545</note>
       </trans-unit>
       <trans-unit id="a662aa2e6538df75742383c7db8f3bd5">
         <source>There was a problem getting the mail files.</source>
         <target>There was a problem getting the mail files.</target>
-        <note>Line: 2574</note>
+        <note>Line: 2582</note>
       </trans-unit>
       <trans-unit id="3eefb74a46023e6c9152c92803750f2b">
         <source>English language files must exist in %folder% folder</source>
         <target>English language files must exist in %folder% folder</target>
-        <note>Line: 2575</note>
+        <note>Line: 2583</note>
       </trans-unit>
       <trans-unit id="c4c005678d26a593268006bc4a44c179">
         <source>Cannot write language file for email subjects. Path is: %folder%</source>
         <target>Cannot write language file for email subjects. Path is: %folder%</target>
-        <note>Line: 2973</note>
+        <note>Line: 2981</note>
       </trans-unit>
       <trans-unit id="05b17ff64944116b14a3ec88f2080a5e">
         <source>Cannot write into the "%file%"</source>
         <target>Cannot write into the "%file%"</target>
-        <note>Line: 3175</note>
+        <note>Line: 3183</note>
       </trans-unit>
       <trans-unit id="4d7541fb66c9fc832a20a6f48b4d5613">
         <source>Cannot create the folder "%folder%". Please check your directory writing permissions.</source>
@@ -636,21 +636,21 @@ Comment: @todo Throw exception</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationByIpAddressFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
         <source>The geolocation database is unavailable.</source>
         <target>The geolocation database is unavailable.</target>
-        <note>Line: 77</note>
+        <note>Line: 107</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationOptionsFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="493ce56d58c4880dc32df56f12585a23">
         <source>Country selection is invalid.</source>
         <target>Country selection is invalid.</target>
-        <note>Line: 115</note>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>

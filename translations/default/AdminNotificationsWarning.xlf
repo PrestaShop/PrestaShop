@@ -60,16 +60,16 @@
       <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
-        <note>Line: 123</note>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Preferences/PreferencesConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/MerchandiseReturn/Configuration/MerchandiseReturnOptionsConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>Line: 77</note>
+        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>
@@ -112,14 +112,10 @@
         <target>Delete selected item from all stores?</target>
         <note>Line: 138</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
         <source>Delete item</source>
         <target>Delete item</target>
-        <note>Line: 228</note>
+        <note>Line: 137</note>
       </trans-unit>
     </body>
   </file>

@@ -114,11 +114,6 @@
         <target>No result</target>
         <note>Line: 28</note>
       </trans-unit>
-      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
-        <source>Read more</source>
-        <target>Read more</target>
-        <note>Line: 29</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -252,11 +247,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/favorites.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
-        <source>Modules list</source>
-        <target>Modules list</target>
-        <note>Line: 28</note>
-      </trans-unit>
       <trans-unit id="7e4a9cd054588a95b0394d92a2030e72">
         <source>Normal view</source>
         <target>Normal view</target>
@@ -370,10 +360,20 @@
         <target>Preferences saved</target>
         <note>Line: 38</note>
       </trans-unit>
+      <trans-unit id="df3f079de6961496f0460dcfdbf9bca3">
+        <source>by</source>
+        <target>by</target>
+        <note>Line: 37</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Read more</target>
+        <note>Line: 73</note>
+      </trans-unit>
       <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
         <source>Uninstall</source>
         <target>Uninstall</target>
@@ -388,11 +388,6 @@
         <source>Mark as Favorite</source>
         <target>Mark as Favorite</target>
         <note>Line: 159</note>
-      </trans-unit>
-      <trans-unit id="df3f079de6961496f0460dcfdbf9bca3">
-        <source>by</source>
-        <target>by</target>
-        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="ba6b1bc4d8bfe5e6e835afa72f102a02">
         <source>You bought this module on PrestaShop Addons. Thank You.</source>
@@ -477,10 +472,10 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
-        <source>Add a new module</source>
-        <target>Add a new module</target>
-        <note>Line: 31</note>
+      <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
+        <source>Modules list</source>
+        <target>Modules list</target>
+        <note>Line: 81</note>
       </trans-unit>
       <trans-unit id="6dc2462f2851bdac265c852f023b6d3f">
         <source>The module must either be a Zip file (.zip) or a tarball file (.tar, .tar.gz, .tgz).</source>
@@ -526,6 +521,11 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/page_header_toolbar-legacy.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
+        <source>Add a new module</source>
+        <target>Add a new module</target>
+        <note>Line: 70</note>
+      </trans-unit>
       <trans-unit id="28080c3603fb7e10f228381b181cae2c">
         <source>List of modules</source>
         <target>List of modules</target>
@@ -548,37 +548,37 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/quickview.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/modules/readmore-body.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3424c86a3f3fdfcff4d8f310912ee82b">
         <source>(%s votes)</source>
         <target>(%s votes)</target>
-        <note>Line: 52</note>
+        <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="268cb3857932e260b03bf1334220f3bc">
         <source>(%s vote)</source>
         <target>(%s vote)</target>
-        <note>Line: 52</note>
+        <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
-        <note>Line: 64</note>
+        <note>Line: 52</note>
       </trans-unit>
       <trans-unit id="7a66d21cf5a4354933980f6d79ec78a4">
         <source>Merchant benefits</source>
         <target>Merchant benefits</target>
-        <note>Line: 68</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="8530d0ebaf22889c1b42061824f3769b">
         <source>Install module</source>
         <target>Install module</target>
-        <note>Line: 99</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="a6642661dcfc0e354c61f4e8b8b9ec5a">
         <source>View on PrestaShop Addons</source>
         <target>View on PrestaShop Addons</target>
-        <note>Line: 101</note>
+        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>
@@ -720,7 +720,7 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
@@ -732,19 +732,19 @@
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 40</note>
       </trans-unit>
-      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
-        <source>%d</source>
-        <target>%d</target>
-        <note>Line: 52</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
         <target>You must use this syntax in your translations. Here are several examples:</target>
         <note>Line: 86</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
+        <source>%d</source>
+        <target>%d</target>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -1010,6 +1010,11 @@
         <target>Dec</target>
         <note>Line: 115</note>
       </trans-unit>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>Line: 87</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/helpers/dataviz/graph.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1052,11 +1057,6 @@
         <source>Group:</source>
         <target>Group:</target>
         <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
-        <source>All stores</source>
-        <target>All stores</target>
-        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -1153,11 +1153,6 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
-        <source>From</source>
-        <target>From</target>
-        <note>Line: 358</note>
-      </trans-unit>
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
         <target>Please fill at least one field to perform a search in this list.</target>
@@ -1250,10 +1245,10 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
-        <source>%s group</source>
-        <target>%s group</target>
-        <note>Line: 42</note>
+      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
+        <source>All stores</source>
+        <target>All stores</target>
+        <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="804ccd6219996d12eda865d1c0707423">
         <source>All shops</source>
@@ -1427,6 +1422,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
+        <source>%s group</source>
+        <target>%s group</target>
+        <note>Line: 38</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
@@ -1452,77 +1456,77 @@
       <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
         <source>%s: %s</source>
         <target>%s: %s</target>
-        <note>Line: 766</note>
+        <note>Line: 767</note>
       </trans-unit>
       <trans-unit id="921d54865f8169b84c90d4335c256494">
         <source>filter by %s</source>
         <target>filter by %s</target>
-        <note>Line: 773</note>
+        <note>Line: 774</note>
       </trans-unit>
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>Line: 4060</note>
+        <note>Line: 4065</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>Line: 1216</note>
+        <note>Line: 1217</note>
       </trans-unit>
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>Line: 1325</note>
+        <note>Line: 1326</note>
       </trans-unit>
       <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
         <source>Do you really want to uninstall this module?</source>
         <target>Do you really want to uninstall this module?</target>
-        <note>Line: 4371</note>
+        <note>Line: 4376</note>
       </trans-unit>
       <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
         <source>Disable this module</source>
         <target>Disable this module</target>
-        <note>Line: 4373</note>
+        <note>Line: 4378</note>
       </trans-unit>
       <trans-unit id="668c99c1164d5348f99c0878770b53a8">
         <source>Enable this module for all shops</source>
         <target>Enable this module for all shops</target>
-        <note>Line: 4374</note>
+        <note>Line: 4379</note>
       </trans-unit>
       <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
         <source>Disable on mobiles</source>
         <target>Disable on mobiles</target>
-        <note>Line: 4377</note>
+        <note>Line: 4382</note>
       </trans-unit>
       <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
         <source>Disable on tablets</source>
         <target>Disable on tablets</target>
-        <note>Line: 4378</note>
+        <note>Line: 4383</note>
       </trans-unit>
       <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
         <source>Disable on computers</source>
         <target>Disable on computers</target>
-        <note>Line: 4379</note>
+        <note>Line: 4384</note>
       </trans-unit>
       <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
         <source>Display on mobiles</source>
         <target>Display on mobiles</target>
-        <note>Line: 4380</note>
+        <note>Line: 4385</note>
       </trans-unit>
       <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
         <source>Display on tablets</source>
         <target>Display on tablets</target>
-        <note>Line: 4381</note>
+        <note>Line: 4386</note>
       </trans-unit>
       <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
         <source>Display on computers</source>
         <target>Display on computers</target>
-        <note>Line: 4382</note>
+        <note>Line: 4387</note>
       </trans-unit>
       <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
         <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
         <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
-        <note>Line: 4389</note>
+        <note>Line: 4394</note>
       </trans-unit>
     </body>
   </file>

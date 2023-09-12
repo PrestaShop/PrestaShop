@@ -67,20 +67,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f05b91496296629228c94a6b4b0a335f">
-        <source>Expressions to translate:</source>
-        <target>Expressions to translate:</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="57aca76c1e8e4e4063437a931c74a0ee">
-        <source>Total missing expressions:</source>
-        <target>Total missing expressions:</target>
-        <note>Line: 52</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ea21841da70e6405af19fabc4ff8bdd9">
@@ -106,6 +92,16 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="f05b91496296629228c94a6b4b0a335f">
+        <source>Expressions to translate:</source>
+        <target>Expressions to translate:</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="57aca76c1e8e4e4063437a931c74a0ee">
+        <source>Total missing expressions:</source>
+        <target>Total missing expressions:</target>
+        <note>Line: 57</note>
+      </trans-unit>
       <trans-unit id="2303c057afcbe798a5d9811d36e88050">
         <source>Modify translations</source>
         <target>Modify translations</target>
@@ -180,11 +176,6 @@
         <target>Display tax label (e.g. "Tax incl.")</target>
         <note>Line: 345</note>
       </trans-unit>
-      <trans-unit id="ad68f9bafd9bf2dcf3865dac55662fd5">
-        <source>ISO code</source>
-        <target>ISO code</target>
-        <note>Line: 206</note>
-      </trans-unit>
       <trans-unit id="d8ec51bf63378409b1d40cc45c80f926">
         <source>Call prefix</source>
         <target>Call prefix</target>
@@ -209,6 +200,11 @@
   </file>
   <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ad68f9bafd9bf2dcf3865dac55662fd5">
+        <source>ISO code</source>
+        <target>ISO code</target>
+        <note>Line: 159</note>
+      </trans-unit>
       <trans-unit id="71777469a202cba33a8985f7d5bf1d97">
         <source>Add new state</source>
         <target>Add new state</target>
@@ -260,72 +256,72 @@
       <trans-unit id="445518ee6de9f01f5203fa05e5b83236">
         <source>Themes translations</source>
         <target>Themes translations</target>
-        <note>Line: 1343</note>
+        <note>Line: 1351</note>
       </trans-unit>
       <trans-unit id="6e4fd86b4ea240672daa3c2fe1118fe0">
         <source>Expand all fieldsets</source>
         <target>Expand all fieldsets</target>
-        <note>Line: 1764</note>
+        <note>Line: 1772</note>
       </trans-unit>
       <trans-unit id="e1686cbdbfefdc838c58469866922b6c">
         <source>Close all fieldsets</source>
         <target>Close all fieldsets</target>
-        <note>Line: 1767</note>
+        <note>Line: 1775</note>
       </trans-unit>
       <trans-unit id="80ab38b942fb2da88ca496f8bbe237f7">
         <source>Email subject</source>
         <target>Email subject</target>
-        <note>Line: 2519</note>
+        <note>Line: 2527</note>
       </trans-unit>
       <trans-unit id="673a349a39148b988e9aabf651d31a96">
         <source>View HTML version</source>
         <target>View HTML version</target>
-        <note>Line: 2542</note>
+        <note>Line: 2550</note>
       </trans-unit>
       <trans-unit id="b040fe53badd6b3784735f3d102df0bd">
         <source>Edit HTML version</source>
         <target>Edit HTML version</target>
-        <note>Line: 2543</note>
+        <note>Line: 2551</note>
       </trans-unit>
       <trans-unit id="5f986174fa9cf6c0ddd927e11b68254a">
         <source>View/Edit TXT version</source>
         <target>View/Edit TXT version</target>
-        <note>Line: 2544</note>
+        <note>Line: 2552</note>
       </trans-unit>
       <trans-unit id="8ed78ce61d50323c845e812aaccf247a">
         <source>Enabled Languages</source>
         <target>Enabled Languages</target>
-        <note>Line: 1445</note>
+        <note>Line: 1453</note>
       </trans-unit>
       <trans-unit id="c1aaec25c6e16ac8f28fdc652f1986ec">
         <source>Main Country</source>
         <target>Main Country</target>
-        <note>Line: 1457</note>
+        <note>Line: 1465</note>
       </trans-unit>
       <trans-unit id="2ffdb9f581f55fb1ae293ec48b151aad">
         <source>Front office Translations</source>
         <target>Front office Translations</target>
-        <note>Line: 1470</note>
+        <note>Line: 1478</note>
       </trans-unit>
       <trans-unit id="fabfbbc841761a5621aea32aff4aa151">
         <source>Back office translations</source>
         <target>Back office translations</target>
-        <note>Line: 1335</note>
+        <note>Line: 1343</note>
       </trans-unit>
       <trans-unit id="3d966df0f234e9180aac80223c2a7e85">
         <source>Installed modules translations</source>
         <target>Installed modules translations</target>
-        <note>Line: 1351</note>
+        <note>Line: 1359</note>
       </trans-unit>
       <trans-unit id="6df6a1378a5ddcdef978aadf494cef5d">
         <source>Email translations</source>
         <target>Email translations</target>
-        <note>Line: 1359</note>
+        <note>Line: 1367</note>
       </trans-unit>
       <trans-unit id="5d1eb86e15320f5677c9502df9c97dd3">
         <source>Other translations</source>
         <target>Other translations</target>
-        <note>Line: 1367</note>
+        <note>Line: 1375</note>
       </trans-unit>
     </body>
   </file>
@@ -385,6 +381,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/CurrencyGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="02c86eb2792f3262c21d030a87e19793">
+        <source>Symbol</source>
+        <target>Symbol</target>
+        <note>Line: 203</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/CustomerThreadGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
@@ -394,12 +399,41 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/LanguageGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e59a41e120686e63cbb743f003bea4e6">
+        <source>Language code</source>
+        <target>Language code</target>
+        <note>Line: 121</note>
+      </trans-unit>
+      <trans-unit id="534fd46732986cba0efeda8701592427">
+        <source>Date format</source>
+        <target>Date format</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="c11566e30920ed4786e534e5332d5b87">
+        <source>Date format (full)</source>
+        <target>Date format (full)</target>
+        <note>Line: 135</note>
+      </trans-unit>
+      <trans-unit id="c5836008c1649301e29351a55db8f65c">
+        <source>Flag</source>
+        <target>Flag</target>
+        <note>Line: 97</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/TaxGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7087cbed62cddb06bd7506c46269f0b5">
         <source>Search rate</source>
         <target>Search rate</target>
         <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="dcb66ff6e4a2517ade22183779939c9d">
+        <source>Rate</source>
+        <target>Rate</target>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -426,13 +460,17 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/MailTheme/GenerateMailsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5aca31cb4d1fbb543b716cbaaf35c65f">
+        <source>Core (no theme selected)</source>
+        <target>Core (no theme selected)</target>
+        <note>Line: 77</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Currencies/CurrencyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="02c86eb2792f3262c21d030a87e19793">
-        <source>Symbol</source>
-        <target>Symbol</target>
-        <note>Line: 148</note>
-      </trans-unit>
       <trans-unit id="586e27d3575f00e51ad43b66eb34e49f">
         <source>Currency name</source>
         <target>Currency name</target>
@@ -500,26 +538,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Language/LanguageType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e59a41e120686e63cbb743f003bea4e6">
-        <source>Language code</source>
-        <target>Language code</target>
-        <note>Line: 106</note>
-      </trans-unit>
-      <trans-unit id="534fd46732986cba0efeda8701592427">
-        <source>Date format</source>
-        <target>Date format</target>
-        <note>Line: 118</note>
-      </trans-unit>
-      <trans-unit id="c11566e30920ed4786e534e5332d5b87">
-        <source>Date format (full)</source>
-        <target>Date format (full)</target>
-        <note>Line: 134</note>
-      </trans-unit>
-      <trans-unit id="c5836008c1649301e29351a55db8f65c">
-        <source>Flag</source>
-        <target>Flag</target>
-        <note>Line: 150</note>
-      </trans-unit>
       <trans-unit id="a0978fb69022447c12c0db348ad4f00c">
         <source>"No-picture" image</source>
         <target>"No-picture" image</target>
@@ -657,15 +675,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dcb66ff6e4a2517ade22183779939c9d">
-        <source>Rate</source>
-        <target>Rate</target>
-        <note>Line: 101</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/AddUpdateLanguageType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d92acc5a17d29f3f8b7ac58f22fe7df8">
@@ -714,21 +723,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ExportThemeLanguageType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="84a63a234d9b35094275bfb41ad46b47">
         <source>Select your theme</source>
         <target>Select your theme</target>
-        <note>Line: 75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5aca31cb4d1fbb543b716cbaaf35c65f">
-        <source>Core (no theme selected)</source>
-        <target>Core (no theme selected)</target>
-        <note>Line: 90</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="021257190c6e64120915e008a94a06f8">
         <source>Type of translation</source>
@@ -756,12 +756,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/translate_mails_body_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/generate_mails_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c96f531c0eda2dece593a2f8df3a58a8">
         <source>Select your language</source>
         <target>Select your language</target>
-        <note>Line: 39</note>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -857,7 +857,8 @@
       <trans-unit id="076b68505282c6c0654708db343d6673">
         <source>Add new currency</source>
         <target>Add new currency</target>
-        <note>Line: 31</note>
+        <note>Line: 31
+Comment: Stable feature flags form</note>
       </trans-unit>
     </body>
   </file>
@@ -1010,21 +1011,20 @@ Comment: nb_translations can be 0 or 1</note>
         <target>Search translations</target>
         <note>Line: 58</note>
       </trans-unit>
-      <trans-unit id="c949bd6d096b356fc06f55ec5205e3b6">
-        <source>%d missing</source>
-        <target>%d missing</target>
-        <note><![CDATA[Line: 45
-Comment: Missing is plural, always > 1]]></note>
-      </trans-unit>
-      <trans-unit id="3a8b99657fcabfc65f45cd1be2b34de9">
-        <source>%nb_translations% expressions</source>
-        <target>%nb_translations% expressions</target>
-        <note>Line: 47</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c949bd6d096b356fc06f55ec5205e3b6">
+        <source>%d missing</source>
+        <target>%d missing</target>
+        <note>Line: 360</note>
+      </trans-unit>
+      <trans-unit id="3a8b99657fcabfc65f45cd1be2b34de9">
+        <source>%nb_translations% expressions</source>
+        <target>%nb_translations% expressions</target>
+        <note>Line: 429</note>
+      </trans-unit>
       <trans-unit id="740b879fdd48f184f798b8018134f630">
         <source>Show messages</source>
         <target>Show messages</target>

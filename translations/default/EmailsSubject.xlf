@@ -14,12 +14,12 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 705</note>
+        <note>Line: 707</note>
       </trans-unit>
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>Line: 1224</note>
+        <note>Line: 1226</note>
       </trans-unit>
     </body>
   </file>
@@ -55,7 +55,7 @@
       <trans-unit id="3cf100d3725155b75779945680651f3d">
         <source>The virtual product that you bought is available for download</source>
         <target>The virtual product that you bought is available for download</target>
-        <note>Line: 179</note>
+        <note>Line: 181</note>
       </trans-unit>
     </body>
   </file>
@@ -82,6 +82,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminLoginController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
+        <source>Your new password</source>
+        <target>Your new password</target>
+        <note>Line: 459</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f2328a3f139e31d53016f94ea9477124">
@@ -102,11 +111,6 @@
   </file>
   <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
-        <source>Your new password</source>
-        <target>Your new password</target>
-        <note>Line: 203</note>
-      </trans-unit>
       <trans-unit id="61afad00abe3639b3ead655a1e8696d9">
         <source>Password query confirmation</source>
         <target>Password query confirmation</target>
@@ -138,7 +142,7 @@
       <trans-unit id="923524e0ff0364df2987d3b8269f03d1">
         <source>Product available</source>
         <target>Product available</target>
-        <note>Line: 212</note>
+        <note>Line: 206</note>
       </trans-unit>
     </body>
   </file>
@@ -147,27 +151,27 @@
       <trans-unit id="da252605cef71a041c0dadaeeb2aa0f4">
         <source>New order : #%d - %s</source>
         <target>New order : #%d - %s</target>
-        <note>Line: 597</note>
+        <note>Line: 591</note>
       </trans-unit>
       <trans-unit id="644f9c907ef5a8315916bd1e2f61f783">
         <source>Product out of stock</source>
         <target>Product out of stock</target>
-        <note>Line: 702</note>
+        <note>Line: 696</note>
       </trans-unit>
       <trans-unit id="2eed868f1c9e7e2cd302334fd7885e35">
         <source>Stock coverage</source>
         <target>Stock coverage</target>
-        <note>Line: 841</note>
+        <note>Line: 835</note>
       </trans-unit>
       <trans-unit id="2e784bf96d0f1ce249b6f60ec195179d">
         <source>New return from order #%d - %s</source>
         <target>New return from order #%d - %s</target>
-        <note>Line: 1018</note>
+        <note>Line: 1012</note>
       </trans-unit>
       <trans-unit id="9fcf30e719f10629a4a7f951cfbbf2d0">
         <source>Your order has been changed</source>
         <target>Your order has been changed</target>
-        <note>Line: 1071</note>
+        <note>Line: 1065</note>
       </trans-unit>
     </body>
   </file>
@@ -204,7 +208,7 @@
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
         <source>New credit slip regarding your order</source>
         <target>New credit slip regarding your order</target>
-        <note>Line: 131</note>
+        <note>Line: 133</note>
       </trans-unit>
     </body>
   </file>

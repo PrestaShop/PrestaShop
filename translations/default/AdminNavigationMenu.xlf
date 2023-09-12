@@ -582,26 +582,30 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45cb5d14ff1775023a6e4f7cac6ac596">
+        <source>Customer Sessions</source>
+        <target>Customer Sessions</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/EmployeeGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="41a7cb98f3eb181d020a922fdb7cf9a6">
+        <source>Employee Sessions</source>
+        <target>Employee Sessions</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AuthorizationServer/ApplicationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9456409336f81ac68e55e23d73471a11">
         <source>Authorization Server Management</source>
         <target>Authorization Server Management</target>
         <note>Line: 58</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SecurityController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="45cb5d14ff1775023a6e4f7cac6ac596">
-        <source>Customer Sessions</source>
-        <target>Customer Sessions</target>
-        <note>Line: 215</note>
-      </trans-unit>
-      <trans-unit id="41a7cb98f3eb181d020a922fdb7cf9a6">
-        <source>Employee Sessions</source>
-        <target>Employee Sessions</target>
-        <note>Line: 185</note>
       </trans-unit>
     </body>
   </file>
@@ -650,20 +654,20 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
-        <source><![CDATA[Attributes & Features]]></source>
-        <target><![CDATA[Attributes & Features]]></target>
-        <note>Line: 38</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Address/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
         <target>Addresses</target>
+        <note>Line: 34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/empty_state.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
+        <source><![CDATA[Attributes & Features]]></source>
+        <target><![CDATA[Attributes & Features]]></target>
         <note>Line: 34</note>
       </trans-unit>
     </body>
