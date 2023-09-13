@@ -59,6 +59,9 @@
   <configuration id="PS_DISPLAY_QTIES" name="PS_DISPLAY_QTIES">
     <value>1</value>
   </configuration>
+  <configuration id="PS_DISPLAY_AMOUNT_IN_CART" name="PS_DISPLAY_AMOUNT_IN_CART">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_SHIPPING_HANDLING" name="PS_SHIPPING_HANDLING">
     <value>2</value>
   </configuration>

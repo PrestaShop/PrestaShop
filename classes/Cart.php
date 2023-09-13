@@ -1393,6 +1393,8 @@ class CartCore extends ObjectModel
             pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
             AND ' . $packStockTypesDefaultSupported . ' = 1
         ))';
+
+        // Construct the final SQL that will join the results of these two queries
         $parentSql = 'SELECT
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity
@@ -4726,5 +4728,40 @@ class CartCore extends ObjectModel
         return $taxCalculationMethod == PS_TAX_EXC ?
             $summary['total_price_without_tax'] :
             $summary['total_price'];
+    }
+
+    /**
+     * Returns quantities in cart of given product ID, not taking combinations or customizations into consideration.
+     *
+     * @param int $idProduct Product ID
+     *
+     * @return array quantity index     : number of product in cart without counting those of pack in cart
+     *               deep_quantity index: number of product in cart counting those of pack in cart
+     */
+    public function getProductQuantityInAllVariants($idProduct)
+    {
+        // We will build 2 separate queries and merge their results together
+        // First query selects the standalone quantity of the product
+        $firstUnionSql = 'SELECT
+          SUM(cp.`quantity`) as standalone_quantity,
+          0 as pack_quantity
+          FROM `' . _DB_PREFIX_ . 'cart_product` cp
+          WHERE cp.`id_cart` = ' . (int) $this->id . ' AND cp.`id_product` = ' . (int) $idProduct;
+
+        // Second query selects quantity of this products in packs
+        $secondUnionSql = 'SELECT
+          0 as standalone_quantity,
+          SUM(cp.`quantity` * p.`quantity`) as pack_quantity
+          FROM `' . _DB_PREFIX_ . 'cart_product` cp
+          INNER JOIN `' . _DB_PREFIX_ . 'pack` p ON cp.`id_product` = p.`id_product_pack`
+          WHERE cp.`id_cart` = ' . (int) $this->id . ' AND p.`id_product_item` = ' . (int) $idProduct;
+
+        // Construct the final SQL that will join the results of these two queries
+        $parentSql = 'SELECT
+            COALESCE(SUM(pack_quantity), 0) as pack_quantity,
+            COALESCE(SUM(standalone_quantity), 0) as standalone_quantity
+          FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
+
+        return Db::getInstance()->getRow($parentSql);
     }
 }
