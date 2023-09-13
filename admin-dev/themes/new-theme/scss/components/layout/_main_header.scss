@@ -746,6 +746,11 @@ $header-text-color: #4e6167 !default;
     a {
       &.dropdown-item {
         margin: 10px 0;
+
+        &:hover {
+          color: #fff;
+          background-color: #25b9d7;
+        }
       }
 
       &.admin-link {
