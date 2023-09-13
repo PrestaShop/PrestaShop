@@ -123,17 +123,25 @@ class DescriptionTab extends BOBasePage {
    * @param useAsCoverImage {boolean|undefined} Use as cover image
    * @param captionEn {string|undefined} Caption in English
    * @param captionFr {string|undefined} Caption in French
+   * @param selectAll {boolean|undefined} Select all
+   * @param toSave {boolean} True if we need to save
    * @returns {Promise<string|null>}
    */
   async setProductImageInformation(
     page: Page,
     numImage: number,
-    useAsCoverImage: boolean|undefined,
-    captionEn: string|undefined,
-    captionFr: string|undefined,
-  ): Promise<string|null> {
+    useAsCoverImage: boolean | undefined,
+    captionEn: string | undefined,
+    captionFr: string | undefined,
+    selectAll: boolean | undefined = undefined,
+    toSave: boolean = true,
+  ): Promise<string | null> {
     // Select the image
     await page.locator(this.productImage).nth(numImage - 1).click();
+
+    if (selectAll) {
+      await page.locator('#product-images-container div.dropzone-window p.dropzone-window-select').click();
+    }
 
     if (useAsCoverImage) {
       await this.setCheckedWithIcon(page, this.productImageDropZoneCover, useAsCoverImage);
@@ -153,7 +161,37 @@ class DescriptionTab extends BOBasePage {
       await this.setValue(page, this.productImageDropZoneCaption, captionFr);
     }
 
+    if (toSave) {
+      await page.locator(this.productImageDropZoneBtnSubmit).click();
+
+      return this.getGrowlMessageContent(page);
+    }
+    await page.locator('#product-images-container div.dropzone-window div.dropzone-window-header-right i[data-original-title="Close window"]').click();
+  }
+
+  async clickOnMagnifyingGlass(page: Page): Promise<boolean> {
+    await page.locator('#product-images-container div.dropzone-window-header.row div.dropzone-window-header-right i[data-original-title="Zoom on selection"]').click();
+
+    return this.elementVisible(page, '#product-images-container div.pswp--open.pswp--visible', 1000);
+  }
+
+  async closeImageZoom(page: Page): Promise<boolean> {
+    await page.locator('#product-images-container button.pswp__button--close').click();
+
+    return this.elementNotVisible(page, '#product-images-container div.pswp--open.pswp--visible', 1000);
+  }
+
+  async replaceImageSelection(page: Page, image: string): Promise<string> {
+    await this.uploadOnFileChooser(page, '#product-images-container div.dropzone-window-header.row div.dropzone-window-header-right i[data-original-title="Replace selection"]', [image]);
     await page.locator(this.productImageDropZoneBtnSubmit).click();
+
+    return this.getGrowlMessageContent(page);
+  }
+
+  async deleteImage(page: Page): Promise<string> {
+    await this.closeGrowlMessage(page);
+    await page.locator('#product-images-container div.dropzone-window-header.row div.dropzone-window-header-right i[data-original-title="Delete selection"]').click();
+    await page.locator('#product-images-container footer button.btn.btn-primary').click();
 
     return this.getGrowlMessageContent(page);
   }
@@ -224,6 +262,20 @@ class DescriptionTab extends BOBasePage {
       default:
         throw new Error(`Input ${inputName} was not found`);
     }
+  }
+
+  async addNewCategory(page: Page, categoryData): Promise<string> {
+    await page.locator('#product_description_categories_add_categories_btn').click();
+    await this.waitForVisibleSelector(page, '#categories-modal');
+    await page.locator('#category_tree_selector_category_tree > li > ul > li:nth-child(1) > div > div > div').click();
+    await page.locator('#category_tree_selector_category_tree > li > ul > li:nth-child(1).category-tree-element.more div.category-tree-inputs').click();
+    await page.locator('#category_tree_selector_category_tree > li > ul > li.category-tree-element.less > ul > li:nth-child(1)').click();
+
+    await page.locator('#category_tree_selector_apply_btn').click();
+  }
+
+  async getSelectedCategories(page: Page): Promise<string> {
+    return this.getTextContent(page, '#product_description_categories_product_categories');
   }
 }
 
