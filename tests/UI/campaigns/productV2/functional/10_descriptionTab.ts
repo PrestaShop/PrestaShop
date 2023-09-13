@@ -172,10 +172,66 @@ describe('BO - Catalog - Products : Description tab', async () => {
     it('should add category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCategory', baseContext);
 
-      await descriptionTab.addNewCategory(page, '');
+      await descriptionTab.addNewCategory(page, ['Clothes', 'Men']);
+
+      const createProductMessage = await createProductsPage.saveProduct(page);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
 
       const selectedCategories = await descriptionTab.getSelectedCategories(page);
       expect(selectedCategories).to.eq('Home x Clothes x Men x');
+    });
+
+    it('should check that we can delete the 2 categories', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDeleteIcon', baseContext);
+
+      let isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 0);
+      await expect(isDeleteIconVisible).to.be.false;
+
+      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 1);
+      await expect(isDeleteIconVisible).to.be.true;
+
+      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 2);
+      await expect(isDeleteIconVisible).to.be.true;
+    });
+
+    it('should choose default category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCategory', baseContext);
+
+      await descriptionTab.chooseDefaultCategory(page, 2);
+
+      const createProductMessage = await createProductsPage.saveProduct(page);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+    });
+
+    it('should check that we can delete the first and the last category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDeleteIcon2', baseContext);
+
+      let isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 0);
+      await expect(isDeleteIconVisible).to.be.true;
+
+      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 1);
+      await expect(isDeleteIconVisible).to.be.false;
+
+      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 2);
+      await expect(isDeleteIconVisible).to.be.true;
+    });
+
+    it('should choose brand', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseBrand', baseContext);
+
+      await descriptionTab.chooseBrand(page, 2);
+
+      const createProductMessage = await createProductsPage.saveProduct(page);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+    });
+
+    it('should add related product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addRelatedProduct', baseContext);
+
+      await descriptionTab.addRelatedProduct(page, 't-shirt');
+
+      const createProductMessage = await createProductsPage.saveProduct(page);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
 });
