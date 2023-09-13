@@ -95,7 +95,7 @@ class AdminSearchControllerCoreTest extends TestCase
                             'title' => 'Search docs.prestashop-project.org',
                             'button_label' => 'Go to the documentation',
                             'link' => 'https://docs.prestashop-project.org/welcome/?q=orders',
-                            'is_external_link' => false,
+                            'is_external_link' => true,
                         ],
                     ],
                 ],
