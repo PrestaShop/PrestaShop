@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class SearchResults extends FOBasePage {
+class SearchResultsPage extends FOBasePage {
   public readonly pageTitle: string;
 
   private readonly productListTopDiv: string;
@@ -22,7 +22,7 @@ class SearchResults extends FOBasePage {
 
   private readonly productQuickViewLink: (number: number) => string;
 
-  private readonly productPrice: string;
+  protected productPrice: string;
 
   private readonly productNoMatches: string;
 
@@ -147,9 +147,10 @@ class SearchResults extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getProductPrice(page: Page): Promise<string> {
+  async getProductPrice(page: Page): Promise<string> {
     return this.getTextContent(page, this.productPrice);
   }
 }
 
-export default new SearchResults();
+const searchResultsPage = new SearchResultsPage();
+export {searchResultsPage, SearchResultsPage};

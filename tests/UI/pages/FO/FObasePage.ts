@@ -125,11 +125,15 @@ export default class FOBasePage extends CommonPage {
 
   protected readonly userMenuDropdown: string;
 
+  protected readonly currencySelector: string;
+
   protected readonly languageSelector: string;
 
   private readonly cartProductsCountHummingbird: string;
 
   protected readonly navbarLink: string;
+
+  protected readonly hSearchInput: string;
 
   protected theme: string;
 
@@ -216,9 +220,11 @@ export default class FOBasePage extends CommonPage {
 
     // Hummingbird
     this.userMenuDropdown = '#userMenuButton';
+    this.currencySelector = '#currency-selector';
     this.languageSelector = '#language-selector';
     this.cartProductsCountHummingbird = '#_desktop_cart .header-block__action-btn span.header-block__badge';
     this.navbarLink = '.navbar-brand';
+    this.hSearchInput = '#search_widget .js-search-input';
 
     this.theme = 'classic';
   }
@@ -417,9 +423,23 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async changeCurrency(page: Page, isoCode: string = 'EUR', symbol: string = '€'): Promise<void> {
+    const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
+
+    if (this.theme === 'hummingbird') {
+      const langOptions = await page.$$(`${this.currencySelector} option`);
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [keyOption, langOption] of Object.entries(langOptions)) {
+        if ((await langOption.textContent()) === currency) {
+          await page.selectOption(this.currencySelector, {index: parseInt(keyOption, 10)});
+          return;
+        }
+      }
+
+      return;
+    }
     // If isoCode and symbol are the same, only isoCode id displayed in FO
     const currentUrl: string = page.url();
-    const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
 
     await Promise.all([
       this.selectByVisibleText(page, this.currencySelect, currency, true),
@@ -453,6 +473,11 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<string>}
    */
   async getDefaultCurrency(page: Page): Promise<string> {
+    if (this.theme === 'hummingbird') {
+      return page
+        .locator(this.currencySelector)
+        .evaluate((el: HTMLSelectElement): string => el.options[el.options.selectedIndex].textContent ?? '');
+    }
     return this.getTextContent(page, this.defaultCurrencySpan);
   }
 
@@ -571,7 +596,7 @@ export default class FOBasePage extends CommonPage {
   async searchProduct(page: Page, productName: string): Promise<void > {
     const currentUrl: string = page.url();
 
-    await this.setValue(page, this.searchInput, productName);
+    await this.setValue(page, this.theme === 'hummingbird' ? this.hSearchInput : this.searchInput, productName);
     await page.keyboard.press('Enter');
     await page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'});
   }
