@@ -59,7 +59,7 @@ class SearchPanel implements SearchPanelInterface
         string $buttonLabel,
         string $link,
         array $queryParams,
-        ?bool $isExternalLink = false
+        ?bool $isExternalLink = true
     ) {
         $this->title = $title;
         $this->buttonLabel = $buttonLabel;
