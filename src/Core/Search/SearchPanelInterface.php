@@ -34,5 +34,5 @@ interface SearchPanelInterface
 
     public function getLink(): string;
 
-    public function isOnSamePage(): bool;
+    public function isExternalLink(): bool;
 }
