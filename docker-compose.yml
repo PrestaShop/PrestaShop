@@ -63,6 +63,5 @@ services:
       - "8002:443"
     depends_on:
       - mysql
-      - keycloak
     volumes:
       - ./:/var/www/html:delegated
