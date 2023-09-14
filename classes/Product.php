@@ -8262,4 +8262,20 @@ class ProductCore extends ObjectModel
             $this->id_shop_default = $firstAssociatedShop;
         }
     }
+
+    /**
+     * Check if a product is active.
+     *
+     * @param int $id_product The ID of the product to check.
+     * @return bool Returns true if the product is active, false otherwise.
+     */
+    public static function isActive(int $id_product): bool
+    {
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT product_shop.`active`
+            FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            WHERE p.`id_product` = ' . $id_product
+        );
+    }
 }
