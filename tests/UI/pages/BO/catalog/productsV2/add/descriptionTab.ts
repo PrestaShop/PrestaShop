@@ -267,7 +267,7 @@ class DescriptionTab extends BOBasePage {
    * @param image {string} Browser tab
    * @returns {Promise<string>}
    */
-  async replaceImageSelection(page: Page, image: string): Promise<string> {
+  async replaceImageSelection(page: Page, image: string): Promise<string | null> {
     await this.uploadOnFileChooser(page, this.productImageDropZoneReplaceImageSelection, [image]);
     await page.locator(this.productImageDropZoneBtnSubmit).click();
 
@@ -279,7 +279,7 @@ class DescriptionTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteImage(page: Page): Promise<string> {
+  async deleteImage(page: Page): Promise<string | null> {
     await this.closeGrowlMessage(page);
     await page.locator(this.productImageDropZoneDeleteImageSelection).click();
     await page.locator(this.applyDeleteImageButton).click();
@@ -359,9 +359,9 @@ class DescriptionTab extends BOBasePage {
    * Add new category
    * @param page {Page} Browser tab
    * @param categories {string[]} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async addNewCategory(page: Page, categories: string[]): Promise<string> {
+  async addNewCategory(page: Page, categories: string[]): Promise<void> {
     await page.locator(this.addCategoryButton).click();
     await this.waitForVisibleSelector(page, this.addCategoryInput);
     for (let i: number = 0; i < categories.length; i++) {
