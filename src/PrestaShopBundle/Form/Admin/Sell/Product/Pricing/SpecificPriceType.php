@@ -159,6 +159,7 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
                 'columns_number' => 2,
+                'date_format' => 'YYYY-MM-DD HH:mm:ss',
             ])
             ->add('impact', SpecificPriceImpactType::class)
         ;
