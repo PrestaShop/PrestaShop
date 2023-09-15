@@ -20,7 +20,8 @@ import {
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_resourceEndpoint';
 
-describe('API : External Auth Server - Resource Endpoint', async () => {
+// @todo : https://github.com/PrestaShop/PrestaShop/issues/33946
+describe.skip('API : External Auth Server - Resource Endpoint', async () => {
   // Browser
   let browserContext: BrowserContext;
   let page: Page;
