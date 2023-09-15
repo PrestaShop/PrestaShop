@@ -410,6 +410,15 @@ $search-border-color: #bbcdd2;
           }
 
           a {
+            &[target="_blank"]::after {
+              position: relative;
+              top: 2px;
+              font-family: "Material Icons", sans-serif;
+              color: #bbcdd2;
+              content: "\e89e";
+              opacity: 0.7;
+            }
+
             .material-icons {
               padding: 0;
               margin-right: 5px;

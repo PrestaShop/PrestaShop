@@ -528,7 +528,7 @@ class AdminSearchControllerCore extends AdminController
                 'title' => $searchPanel->getTitle(),
                 'button_label' => $searchPanel->getButtonLabel(),
                 'link' => $searchPanel->getLink(),
-                'same_page' => $searchPanel->isOnSamePage(),
+                'is_external_link' => $searchPanel->isExternalLink(),
             ];
         }
     }
