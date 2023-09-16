@@ -334,6 +334,7 @@ class CartControllerCore extends FrontController
             'id_address_delivery' => (int) $this->id_address_delivery,
         ];
 
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec('actionObjectProductInCartDeleteBefore', $data, null, true);
 
         if ($this->context->cart->deleteProduct(

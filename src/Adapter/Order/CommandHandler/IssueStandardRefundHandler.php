@@ -158,6 +158,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
             // For standard refund the order is necessarily NOT delivered yet, so reinjection is automatic
             $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
+            // Hook called only for the shop concerned
             Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'cancel_quantity' => $productRefund['quantity'], 'action' => CancellationActionType::STANDARD_REFUND], null, false, true, false, $order->id_shop);
         }
 

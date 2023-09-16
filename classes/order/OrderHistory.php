@@ -101,10 +101,12 @@ class OrderHistoryCore extends ObjectModel
 
         // executes hook
         if (in_array($new_os->id, [Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT')])) {
+            // Hook called only for the shop concerned
             Hook::exec('actionPaymentConfirmation', ['id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
         }
 
         // executes hook
+        // Hook called only for the shop concerned
         Hook::exec('actionOrderStatusUpdate', [
             'newOrderStatus' => $new_os,
             'oldOrderStatus' => $old_os,
@@ -333,6 +335,7 @@ class OrderHistoryCore extends ObjectModel
         }
 
         // executes hook
+        // Hook called only for the shop concerned
         Hook::exec('actionOrderStatusPostUpdate', [
             'newOrderStatus' => $new_os,
             'oldOrderStatus' => $old_os,
@@ -487,6 +490,7 @@ class OrderHistoryCore extends ObjectModel
         $order->current_state = $this->id_order_state;
         $order->update();
 
+        // Hook called only for the shop concerned
         Hook::exec('actionOrderHistoryAddAfter', ['order_history' => $this], null, false, true, false, $order->id_shop);
 
         return true;

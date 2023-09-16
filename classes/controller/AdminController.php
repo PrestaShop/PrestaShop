@@ -685,6 +685,7 @@ class AdminControllerCore extends Controller
                 break;
         }
 
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$breadcrumbs2], null, true);
 
         $this->context->smarty->assign([
@@ -2003,6 +2004,8 @@ class AdminControllerCore extends Controller
 
         // Fetch Employee Menu
         $menuLinksCollections = new ActionsBarButtonsCollection();
+
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec(
             'displayBackOfficeEmployeeMenu',
             [
@@ -2027,6 +2030,8 @@ class AdminControllerCore extends Controller
         }
 
         $tabs = $this->getTabs();
+
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec('actionAdminMenuTabsModifier', ['tabs' => &$tabs], null, true);
 
         $currentTabLevel = 0;

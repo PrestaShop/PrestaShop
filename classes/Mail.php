@@ -160,6 +160,7 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
+        // An array [module_name => module_output] will be returned
         $hookBeforeEmailResult = Hook::exec(
             'actionEmailSendBefore',
             [
@@ -452,6 +453,8 @@ class MailCore extends ObjectModel
 
             $templateHtml = '';
             $templateTxt = '';
+
+            // An array [module_name => module_output] will be returned (no effect)
             Hook::exec(
                 'actionEmailAddBeforeContent',
                 [
@@ -471,6 +474,8 @@ class MailCore extends ObjectModel
                     'utf-8'
                 )
             );
+
+            // An array [module_name => module_output] will be returned (no effect)
             Hook::exec(
                 'actionEmailAddAfterContent',
                 [
@@ -569,6 +574,8 @@ class MailCore extends ObjectModel
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = [];
+
+            // An array [module_name => module_output] will be returned (no effect)
             Hook::exec(
                 'actionGetExtraMailTemplateVars',
                 [

@@ -746,6 +746,20 @@ $header-text-color: #4e6167 !default;
     a {
       &.dropdown-item {
         margin: 10px 0;
+
+        &[target="_blank"]::after {
+          position: relative;
+          top: 2px;
+          font-family: "Material Icons", sans-serif;
+          color: #bbcdd2;
+          content: "\e89e";
+          opacity: 0.7;
+        }
+
+        &:hover {
+          color: #fff;
+          background-color: #25b9d7;
+        }
       }
 
       &.admin-link {

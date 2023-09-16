@@ -267,6 +267,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     private function getProductSearchProviderFromModules($query)
     {
+        // An array [module_name => module_output] will be returned
         $providers = Hook::exec(
             'productSearchProvider',
             ['query' => $query],

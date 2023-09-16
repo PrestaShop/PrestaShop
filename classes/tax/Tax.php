@@ -81,9 +81,7 @@ class TaxCore extends ObjectModel
      */
     public function historize()
     {
-        $this->deleted = true;
-
-        return parent::update();
+        return $this->softDelete();
     }
 
     public function update($null_values = false)

@@ -61,6 +61,8 @@ class ConditionsToApproveFinderCore
     private function getConditionsToApprove()
     {
         $allConditions = [];
+
+        // An array [module_name => module_output] will be returned
         $hookedConditions = Hook::exec('termsAndConditions', [], null, true);
         if (!is_array($hookedConditions)) {
             $hookedConditions = [];

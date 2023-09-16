@@ -246,9 +246,7 @@ class AddressCore extends ObjectModel
         // If the address is used in at least one order, we will not delete it, but only mark it and hide it from backoffice
         // However, even if this address is used, we should probably unlink it from all NON ORDERED carts
         if ($this->isUsed()) {
-            $this->deleted = true;
-
-            return $this->update();
+            return $this->softDelete();
         }
 
         // Remove this address from all carts
