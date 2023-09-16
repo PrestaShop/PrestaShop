@@ -282,6 +282,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * Calls all modules (mainly API clients) registered on actionListModules and allows them to provide latest versions
+     * and download URLs of their modules. These modules could be native or 3rd party sources.
+     *
      * @return array
      */
     private function getModulesFromHook()
@@ -300,6 +303,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * This method adds all non-installed modules available from the API to the list,
+     * so user can install them with a single click.
+     *
      * @param ModuleCollection $modules
      *
      * @return ModuleCollection
@@ -331,6 +337,11 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * This method checks a list of modules provided by hooks and if it finds the module provided in that list,
+     * it will add a download url and update the version available.
+     *
+     * With one exception. If the locally available version is higher, we don't enrich the data.
+     *
      * @param Module $module
      *
      * @return Module
@@ -344,7 +355,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         foreach ($modulesFromHook as $moduleFromHook) {
-            if ($module->get('name') === $moduleFromHook['name']) {
+            if ($module->get('name') === $moduleFromHook['name'] && version_compare($moduleFromHook['version_available'], $module->get('version_available'), '>')) {
                 $module->getAttributes()->add($moduleFromHook);
             }
         }

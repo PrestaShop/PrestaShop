@@ -201,7 +201,11 @@ class ModuleManager implements ModuleManagerInterface
 
         $this->hookManager->disableHooksForModule($this->moduleDataProvider->getModuleIdByName($name));
 
-        $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name, 'source' => $source]);
+        // @todo not sure how to solve this
+        // If a module upgrade is available from distribution api, it has the URL in $source (https://api.prestashop-project.org/assets....)
+        // If not, it has a null as $source
+        // Given this call can be for all modules, I think the API module should handle not putting it's nose into things without it's url.
+        // $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name, 'source' => $source]);
 
         $module = $this->moduleRepository->getModule($name);
         $upgraded = $this->upgradeMigration($name) && $module->onUpgrade($module->get('version'));
