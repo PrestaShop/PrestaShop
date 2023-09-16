@@ -341,7 +341,7 @@ class SpecificPriceCore extends ObjectModel
     {
         $first_date = date('Y-m-d 00:00:00');
         $last_date = date('Y-m-d 23:59:59');
-        $now = date('Y-m-d H:i:00');
+        $now = date('Y-m-d H:i:s');
         if ($beginning === null) {
             $beginning = $now;
         }
