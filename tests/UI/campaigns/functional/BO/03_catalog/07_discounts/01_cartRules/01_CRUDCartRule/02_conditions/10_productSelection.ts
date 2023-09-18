@@ -17,7 +17,7 @@ import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
 import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import Customers from '@data/demo/customers';

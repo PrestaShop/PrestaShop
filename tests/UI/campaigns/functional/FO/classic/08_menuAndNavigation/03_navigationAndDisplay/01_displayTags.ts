@@ -12,7 +12,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import {homePage} from '@pages/FO/home';
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 import productPage from '@pages/FO/product';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';

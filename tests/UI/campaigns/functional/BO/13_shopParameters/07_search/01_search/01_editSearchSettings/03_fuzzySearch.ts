@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import searchPage from '@pages/BO/shopParameters/search';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
