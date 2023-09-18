@@ -224,6 +224,10 @@ jobs:
         working-directory: ${{ inputs.TESTS_DIR }}
         run: npm ci
 
+      - name: Install browsers
+        working-directory: ${{ inputs.TESTS_DIR }}
+        run: npx playwright install --with-deps
+
       # Run tests (if error, we continue for uploading report)
       - name: Run tests
         continue-on-error: true
@@ -290,6 +294,10 @@ jobs:
       - name: Install dependencies
         working-directory: ${{ inputs.TESTS_DIR }}
         run: npm ci
+
+      - name: Install browsers
+        working-directory: ${{ inputs.TESTS_DIR }}
+        run: npx playwright install --with-deps
 
       - name: Combine reports
         working-directory: ${{ inputs.TESTS_DIR }}

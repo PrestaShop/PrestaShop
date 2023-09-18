@@ -40,8 +40,16 @@ jobs:
         run: mv .env.ci .env
         working-directory: ./tests/UI
 
+      - name: Install dependencies
+        working-directory: ./tests/UI
+        run: npm ci
+
+      - name: Install browsers
+        working-directory: ./tests/UI
+        run: npx playwright install --with-deps
+
       - name: Run tests
-        run: npm ci && npm run test:sanity:fast-fail
+        run: npm run test:sanity:fast-fail
         working-directory: ./tests/UI
         env:
           ENABLE_SSL: true
