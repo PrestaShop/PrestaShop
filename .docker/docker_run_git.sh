@@ -150,8 +150,8 @@ echo "**   Login with:"
 echo "**     username: ${ADMIN_MAIL}"
 echo "**     password: ${ADMIN_PASSWD}"
 if [ $PS_USE_DOCKER_MAILDEV -eq 1 ]; then
-echo "**"
-echo "** To view sent emails point your browser to http://localhost:8002/"
+    echo "**"
+    echo "** To view sent emails point your browser to http://localhost:8002/"
 fi
 echo "**"
 echo "***\n"
