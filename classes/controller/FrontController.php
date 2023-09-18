@@ -452,7 +452,7 @@ class FrontControllerCore extends Controller
             }
         }
 
-        /* 
+        /*
          * If the previous logic didn't resolve into any valid cart we can use, we will create a new empty one.
          *
          * It does not have any ID yet. It's just an empty cart object, but modules can use it and ask for it's data
