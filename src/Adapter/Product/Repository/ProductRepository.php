@@ -908,7 +908,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             $qb->expr()->like('pa.supplier_reference', ':dbSearchPhrase')
         ));
         $dbSearchPhrase = sprintf('%%%s%%', $searchPhrase);
-        $qb->setParameter(':dbSearchPhrase', $dbSearchPhrase);
+        $qb->setParameter('dbSearchPhrase', $dbSearchPhrase);
 
         if (!empty($filters)) {
             foreach ($filters as $type => $filter) {
