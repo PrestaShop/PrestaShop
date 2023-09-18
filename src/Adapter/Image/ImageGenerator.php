@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 use Configuration;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
@@ -44,7 +43,11 @@ use PrestaShopException;
 class ImageGenerator
 {
     /**
+     * @deprecated since 8.1.2, it was originally introduced in 8.1.0, but ended up no longer needed - will be removed in 9.0
+     *
      * @var FeatureFlagRepository
+     *
+     * @phpstan-ignore-next-line
      */
     private $featureFlagRepository;
 
@@ -105,15 +108,10 @@ class ImageGenerator
 
         /*
          * Let's resolve which formats we will use for image generation.
-         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
          *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
-        if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
-        } else {
-            $configuredImageFormats = ['jpg'];
-        }
+        $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         // Should we generate high DPI images?
         $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');

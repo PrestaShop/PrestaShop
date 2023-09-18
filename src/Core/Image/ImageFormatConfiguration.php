@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Image;
 
+use FeatureFlag;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageFormatConfigurationException;
 
 class ImageFormatConfiguration implements ImageFormatConfigurationInterface
@@ -38,6 +40,10 @@ class ImageFormatConfiguration implements ImageFormatConfigurationInterface
     public const IMAGE_FORMAT_CONFIGURATION_KEY = 'PS_IMAGE_FORMAT';
 
     public const SUPPORTED_FORMATS = ['jpg', 'png', 'webp', 'avif'];
+
+    public const DEFAULT_IMAGE_FORMAT = 'jpg';
+
+    private $formatsToGenerate = [];
 
     /**
      * @var ConfigurationInterface
@@ -51,7 +57,30 @@ class ImageFormatConfiguration implements ImageFormatConfigurationInterface
 
     public function getGenerationFormats(): array
     {
-        return explode(self::SEPARATOR, $this->configuration->get(self::IMAGE_FORMAT_CONFIGURATION_KEY));
+        // Return formats from cache
+        if (!empty($this->formatsToGenerate)) {
+            return $this->formatsToGenerate;
+        }
+
+        // We will start with the base format, that will be generated no matter what
+        $this->formatsToGenerate = [self::DEFAULT_IMAGE_FORMAT];
+
+        // If multiple image formats feature is not enabled, we return only the fallback format
+        if (!FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+            return $this->formatsToGenerate;
+        }
+
+        // If it is enabled, we check for configured formats.
+        $configuration = $this->configuration->get(self::IMAGE_FORMAT_CONFIGURATION_KEY);
+        if (!empty($configuration)) {
+            foreach (explode(self::SEPARATOR, $configuration) as $format) {
+                if (in_array($format, self::SUPPORTED_FORMATS) && !in_array($format, $this->formatsToGenerate)) {
+                    $this->formatsToGenerate[] = $format;
+                }
+            }
+        }
+
+        return $this->formatsToGenerate;
     }
 
     public function addGenerationFormat(string $format): void

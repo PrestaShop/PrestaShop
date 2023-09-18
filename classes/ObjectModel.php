@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopBundle\Translation\TranslatorComponent;
 
 abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
@@ -1965,11 +1966,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return false;
             }
 
-            /** @var PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
-            $imageFormatConfiguration = ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
-            $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
-
+            // Get image formats we will be deleting. It would probably be easier to use ImageFormatConfiguration::SUPPORTED_FORMATS,
+            // but we want to avoid any behavior change in minor/patch version.
+            $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
             $types = ImageType::getImagesTypes();
+
             foreach ($types as $image_type) {
                 if (file_exists($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)
                 && !unlink($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)) {
