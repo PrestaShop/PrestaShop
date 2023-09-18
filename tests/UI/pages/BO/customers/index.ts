@@ -242,8 +242,8 @@ class Customers extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterCustomersByRegistration(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.customerFilterColumnInput('date_add_from'), dateFrom);
-    await page.type(this.customerFilterColumnInput('date_add_to'), dateTo);
+    await page.locator(this.customerFilterColumnInput('date_add_from')).fill(dateFrom);
+    await page.locator(this.customerFilterColumnInput('date_add_to')).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }

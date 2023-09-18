@@ -254,7 +254,7 @@ class AddProduct extends BOBasePage {
     await page.keyboard.press('Backspace');
 
     // Fill the text
-    await page.keyboard.type(value);
+    await page.locator(`${selector} .mce-edit-area`).pressSequentially(value);
   }
 
   /**
@@ -413,7 +413,7 @@ class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async addAttribute(page: Page, attribute: string): Promise<void> {
-    await page.type(this.selectAttributeInput, attribute);
+    await page.locator(this.selectAttributeInput).fill(attribute);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }
@@ -436,7 +436,7 @@ class AddProduct extends BOBasePage {
     }
 
     // Edit quantity
-    await page.type(this.productCombinationBulkQuantityInput, quantity.toString());
+    await page.locator(this.productCombinationBulkQuantityInput).fill(quantity.toString());
     await this.scrollTo(page, this.applyOnCombinationsButton);
     await page.click(this.applyOnCombinationsButton);
 
@@ -700,7 +700,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async addProductToPack(page: Page, product: string, quantity: number): Promise<void> {
-    await page.type(this.packItemsInput, product);
+    await page.locator(this.packItemsInput).fill(product);
     await this.waitForSelectorAndClick(page, this.packsearchResult);
     await this.setValue(page, this.packQuantityInput, quantity);
     await page.click(this.addProductToPackButton);

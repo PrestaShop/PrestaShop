@@ -302,7 +302,7 @@ class DescriptionTab extends BOBasePage {
     await page.keyboard.press('Backspace');
 
     // Fill the text
-    await page.keyboard.type(value);
+    await page.locator(`${selector} .mce-edit-area`).pressSequentially(value);
   }
 
   /**
@@ -365,7 +365,7 @@ class DescriptionTab extends BOBasePage {
     await page.locator(this.addCategoryButton).click();
     await this.waitForVisibleSelector(page, this.addCategoryInput);
     for (let i: number = 0; i < categories.length; i++) {
-      await page.type(this.addCategoryInput, categories[i]);
+      await page.locator(this.addCategoryInput).pressSequentially(categories[i]);
       await page.keyboard.press('ArrowDown');
       await page.keyboard.press('Enter');
       await page.waitForTimeout(1000);
@@ -427,7 +427,7 @@ class DescriptionTab extends BOBasePage {
    * @returns {Promise<void>}
    */
   async addRelatedProduct(page: Page, productName: string): Promise<void> {
-    await page.type(this.relatedProductSelectButton, productName);
+    await page.locator(this.relatedProductSelectButton).fill(productName);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }

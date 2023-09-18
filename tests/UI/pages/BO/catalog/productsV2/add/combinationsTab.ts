@@ -321,7 +321,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<void>}
    */
   async selectAttribute(page: Page, combination: string): Promise<void> {
-    await page.type(this.searchAttributesButton, combination);
+    await page.locator(this.searchAttributesButton).fill(combination);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }

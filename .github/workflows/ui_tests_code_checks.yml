@@ -42,6 +42,9 @@ jobs:
       - name: Install dependencies in UI tests directory
         run: npm ci
 
+      - name: Install browsers
+        run: npx playwright install --with-deps
+
       - name: Check eslint errors
         run: npm run lint
 

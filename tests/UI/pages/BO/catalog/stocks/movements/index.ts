@@ -110,7 +110,7 @@ class Movements extends BOBasePage {
    * @returns {Promise<void>}
    */
   async simpleFilter(page: Page, value: string): Promise<void> {
-    await page.type(this.searchInput, value);
+    await page.locator(this.searchInput).fill(value);
     await Promise.all([
       page.click(this.searchButton),
       this.waitForVisibleSelector(page, this.productListLoading),

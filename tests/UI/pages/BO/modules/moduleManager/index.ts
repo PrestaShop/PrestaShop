@@ -230,7 +230,7 @@ class ModuleManager extends BOBasePage {
    */
   async searchModule(page: Page, module: ModuleData): Promise<boolean> {
     await this.reloadPage(page);
-    await page.type(this.searchModuleTagInput, module.tag);
+    await page.locator(this.searchModuleTagInput).fill(module.tag);
     await page.click(this.searchModuleButton);
 
     return this.isModuleVisible(page, module);

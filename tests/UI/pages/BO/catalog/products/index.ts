@@ -237,8 +237,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterIDProducts(page: Page, idMin: number, idMax: number): Promise<void> {
-    await page.type(this.productFilterIDMinInput, idMin.toString());
-    await page.type(this.productFilterIDMaxInput, idMax.toString());
+    await page.locator(this.productFilterIDMinInput).fill(idMin.toString());
+    await page.locator(this.productFilterIDMaxInput).fill(idMax.toString());
     await page.click(this.filterSearchButton);
     await this.elementVisible(page, this.filterResetButton, 2000);
   }
@@ -291,8 +291,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterPriceProducts(page: Page, priceMin: number, priceMax: number): Promise<void> {
-    await page.type(this.productFilterPriceMinInput, priceMin.toString());
-    await page.type(this.productFilterPriceMaxInput, priceMax.toString());
+    await page.locator(this.productFilterPriceMinInput).fill(priceMin.toString());
+    await page.locator(this.productFilterPriceMaxInput).fill(priceMax.toString());
     await page.click(this.filterSearchButton);
     await this.elementVisible(page, this.filterResetButton, 2000);
   }
@@ -321,8 +321,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterQuantityProducts(page: Page, quantityMin: number, quantityMax: number): Promise<void> {
-    await page.type(this.productFilterQuantityMinInput, quantityMin.toString());
-    await page.type(this.productFilterQuantityMaxInput, quantityMax.toString());
+    await page.locator(this.productFilterQuantityMinInput).fill(quantityMin.toString());
+    await page.locator(this.productFilterQuantityMaxInput).fill(quantityMax.toString());
     await page.click(this.filterSearchButton);
     await this.elementVisible(page, this.filterResetButton, 2000);
   }
@@ -365,7 +365,7 @@ class Products extends BOBasePage {
     switch (filterType) {
       case 'input':
         if (typeof value === 'string') {
-          await page.type(this.productFilterInput(filterBy), value);
+          await page.locator(this.productFilterInput(filterBy)).fill(value);
         } else {
           switch (filterBy) {
             case 'id_product':

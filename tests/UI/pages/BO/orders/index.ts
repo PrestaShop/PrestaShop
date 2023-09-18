@@ -255,8 +255,8 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterOrdersByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.filterColumn('date_add_from'), dateFrom);
-    await page.type(this.filterColumn('date_add_to'), dateTo);
+    await page.locator(this.filterColumn('date_add_from')).fill(dateFrom);
+    await page.locator(this.filterColumn('date_add_to')).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
