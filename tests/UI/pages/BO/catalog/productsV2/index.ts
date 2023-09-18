@@ -304,8 +304,8 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
-    await expect(createProductFrame).to.be.not.null;
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
     return this.getTextContent(createProductFrame!, this.productTypeDescription);
   }
@@ -329,8 +329,8 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
-    await expect(createProductFrame).to.be.not.null;
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
     await this.waitForSelectorAndClick(createProductFrame!, this.productType(productType));
   }
@@ -341,8 +341,8 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnAddNewProduct(page: Page): Promise<void> {
-    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
-    await expect(createProductFrame).to.be.not.null;
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
     await this.waitForSelectorAndClick(createProductFrame!, this.addNewProductButton);
   }

@@ -57,4 +57,13 @@ export default {
 
     return age;
   },
+
+  /**
+   * Make a string's first character uppercase
+   * @param value {string}
+   * @returns {string}
+   */
+  capitalize(value: string): string {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  },
 };

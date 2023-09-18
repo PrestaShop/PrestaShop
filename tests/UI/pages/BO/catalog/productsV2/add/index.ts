@@ -211,7 +211,9 @@ class CreateProduct extends BOBasePage {
       priceTaxExc: await this.getTextContent(page, this.productHeaderTaxExcluded),
       priceTaxIncl: await this.getTextContent(page, this.productHeaderTaxIncluded),
       quantity: await this.getTextContent(page, this.productHeaderQuantity, false),
-      reference: await this.getTextContent(page, this.productHeaderReference('reference'), false),
+      reference: (await page.locator(this.productHeaderReference('reference')).count())
+        ? await this.getTextContent(page, this.productHeaderReference('reference'), false)
+        : '',
       mpn: (await page.locator(this.productHeaderReference('mpn')).count())
         ? await this.getTextContent(page, this.productHeaderReference('mpn'), false)
         : '',

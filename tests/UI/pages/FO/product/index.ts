@@ -77,6 +77,8 @@ class Product extends FOBasePage {
 
   private readonly regularPrice: string;
 
+  private readonly packProductsPrice: string;
+
   private readonly productPrice: string;
 
   private readonly taxShippingDeliveryBlock: string;
@@ -181,6 +183,7 @@ class Product extends FOBasePage {
     this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
     this.discountPercentageSpan = `${this.productPricesBlock} .discount.discount-percentage`;
     this.regularPrice = `${this.productPricesBlock} .regular-price`;
+    this.packProductsPrice = `${this.productPricesBlock} .product-pack-price span`;
     this.productPrice = `${this.productPricesBlock} .current-price span`;
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
@@ -246,7 +249,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isProductTagVisible(page: Page): Promise<boolean> {
+  async isProductTagVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productFlag);
   }
 
@@ -260,7 +263,9 @@ class Product extends FOBasePage {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),
       summary: await this.getTextContent(page, this.shortDescription, false),
-      description: await this.getTextContent(page, this.productDescription),
+      description: (await page.locator(`${this.productDescription}:visible`).count())
+        ? await this.getTextContent(page, this.productDescription)
+        : '',
     };
   }
 
@@ -274,11 +279,14 @@ class Product extends FOBasePage {
     image: string | null, quantity: number,
     price: string, name: string
   }> {
+    // Add +1 due to span before the article
+    const productIdentifier: number = productInList + 1;
+
     return {
-      image: await this.getAttributeContent(page, this.productInPackImage(productInList), 'src'),
-      name: await this.getTextContent(page, this.productInPackName(productInList)),
-      price: await this.getTextContent(page, this.productInPackPrice(productInList)),
-      quantity: await this.getNumberFromText(page, this.productInPackQuantity(productInList)),
+      image: await this.getAttributeContent(page, this.productInPackImage(productIdentifier), 'src'),
+      name: await this.getTextContent(page, this.productInPackName(productIdentifier)),
+      price: await this.getTextContent(page, this.productInPackPrice(productIdentifier)),
+      quantity: await this.getNumberFromText(page, this.productInPackQuantity(productIdentifier)),
     };
   }
 
@@ -287,8 +295,17 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getRegularPrice(page: Page): Promise<number> {
+  async getRegularPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.regularPrice);
+  }
+
+  /**
+   * Get the price of products in pack
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getPackProductsPrice(page: Page): Promise<number> {
+    return this.getPriceFromText(page, this.packProductsPrice);
   }
 
   /**
@@ -297,7 +314,7 @@ class Product extends FOBasePage {
    * @param ulSelector {string} Selector to locate the element
    * @returns {Promise<Array<string>>}
    */
-  getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string | null>> {
+  async getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string | null>> {
     return page.$$eval(`${ulSelector} li .attribute-name`, (all) => all.map((el) => el.textContent));
   }
 
@@ -381,7 +398,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountAmount(page: Page): Promise<string> {
+  async getDiscountAmount(page: Page): Promise<string> {
     return this.getTextContent(page, this.discountAmountSpan);
   }
 
@@ -390,7 +407,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountPercentage(page: Page): Promise<string> {
+  async getDiscountPercentage(page: Page): Promise<string> {
     return this.getTextContent(page, this.discountPercentageSpan);
   }
 
@@ -399,7 +416,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {promise<string>}
    */
-  getProductAvailabilityLabel(page: Page): Promise<string> {
+  async getProductAvailabilityLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.productAvailability, false);
   }
 
@@ -408,7 +425,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getDeliveryInformationText(page: Page): Promise<string> {
+  async getDeliveryInformationText(page: Page): Promise<string> {
     return this.getTextContent(page, this.deliveryInformationSpan);
   }
 

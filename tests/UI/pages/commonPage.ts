@@ -346,7 +346,7 @@ export default class CommonPage {
   async getNumberFromText(page: Page | Frame, selector: string, timeout: number = 0): Promise<number> {
     await page.waitForTimeout(timeout);
     const text = await this.getTextContent(page, selector, false);
-    const number = (/\d+/g.exec(text) ?? '').toString();
+    const number = (/-?\d+/g.exec(text) ?? '').toString();
 
     return parseInt(number, 10);
   }
