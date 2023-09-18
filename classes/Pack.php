@@ -156,7 +156,7 @@ class PackCore extends Product
                         $pricePerItem,
                         Context::getContext()->getComputingPrecision()
                     ) * $item->pack_quantity;
-    
+
                     break;
             }
         }
