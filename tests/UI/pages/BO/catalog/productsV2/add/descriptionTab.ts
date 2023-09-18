@@ -23,6 +23,8 @@ class DescriptionTab extends BOBasePage {
 
   private readonly productImage: string;
 
+  private readonly productImageContainer: string;
+
   private readonly productImageDropZoneWindow: string;
 
   private readonly productImageDropZoneCover: string;
@@ -37,6 +39,22 @@ class DescriptionTab extends BOBasePage {
 
   private readonly productImageDropZoneBtnSubmit: string;
 
+  private readonly productImageDropZoneSelectAllLink: string;
+
+  private readonly productImageDropZoneCloseButton: string;
+
+  private readonly productImageDropZoneZoomIcon: string;
+
+  private readonly productImageDropZoneZoomImage: string;
+
+  private readonly productImageDropZoneCloseZoom: string;
+
+  private readonly productImageDropZoneReplaceImageSelection: string;
+
+  private readonly productImageDropZoneDeleteImageSelection: string;
+
+  private readonly applyDeleteImageButton: string;
+
   private readonly productSummary: string;
 
   private readonly productSummaryTabLocale: (locale: string) => string;
@@ -47,7 +65,27 @@ class DescriptionTab extends BOBasePage {
 
   private readonly productDefaultCategory: string;
 
+  private readonly addCategoryButton: string;
+
+  private readonly addCategoryInput: string;
+
+  private readonly applyCategoryButton: string;
+
+  private readonly categoriesList: string;
+
+  private readonly defaultCategorySelectButton: string;
+
+  private readonly defaultCategoryList: (categoryRow: number) => string;
+
+  private readonly deleteCategoryIcon: (categoryRow: number) => string;
+
   private readonly productManufacturer: string;
+
+  private readonly productManufacturerSelectButton: string;
+
+  private readonly relatedProductSelectButton: string;
+
+  private readonly productManufacturerList: (brandRow: number) => string;
 
   /**
    * @constructs
@@ -61,11 +99,13 @@ class DescriptionTab extends BOBasePage {
 
     // Selectors in description tab
     this.descriptionTabLink = '#product_description-tab-nav';
+    // Image selectors
     this.productImageDropZoneDiv = '#product-images-dropzone';
     this.imagePreviewBlock = `${this.productImageDropZoneDiv} div.dz-preview.openfilemanager`;
     this.imagePreviewCover = `${this.productImageDropZoneDiv} div.dz-preview.is-cover`;
     this.productImage = `${this.productImageDropZoneDiv} div.dz-preview.dz-image-preview.dz-complete`;
-    this.productImageDropZoneWindow = '#product-images-container .dropzone-window';
+    this.productImageContainer = '#product-images-container';
+    this.productImageDropZoneWindow = `${this.productImageContainer} .dropzone-window`;
     this.productImageDropZoneCover = `${this.productImageDropZoneWindow} #is-cover-checkbox`;
     this.productImageDropZoneBtnLang = `${this.productImageDropZoneWindow} #product_dropzone_lang`;
     this.productImageDropZoneDropdown = `${this.productImageDropZoneWindow} .locale-dropdown-menu.show`;
@@ -73,12 +113,41 @@ class DescriptionTab extends BOBasePage {
       + `[data-locale="${locale}"]`;
     this.productImageDropZoneCaption = `${this.productImageDropZoneWindow} #caption-textarea`;
     this.productImageDropZoneBtnSubmit = `${this.productImageDropZoneWindow} button.save-image-settings`;
+    this.productImageDropZoneSelectAllLink = `${this.productImageDropZoneWindow} p.dropzone-window-select`;
+    this.productImageDropZoneCloseButton = `${this.productImageDropZoneWindow} div.dropzone-window-header-right`
+      + ' i[data-original-title="Close window"]';
+    this.productImageDropZoneZoomIcon = `${this.productImageDropZoneWindow} div.dropzone-window-header-right`
+      + ' i[data-original-title="Zoom on selection"]';
+    this.productImageDropZoneZoomImage = `${this.productImageContainer} div.pswp--open.pswp--visible`;
+    this.productImageDropZoneCloseZoom = `${this.productImageContainer} button.pswp__button--close`;
+    this.productImageDropZoneReplaceImageSelection = `${this.productImageContainer} div.dropzone-window-header-right`
+      + ' i[data-original-title="Replace selection"]';
+    this.productImageDropZoneDeleteImageSelection = `${this.productImageContainer} div.dropzone-window-header-right`
+      + ' i[data-original-title="Delete selection"]';
+    this.applyDeleteImageButton = `${this.productImageContainer} footer button.btn-primary`;
+    // Description & summary selectors
     this.productSummary = '#product_description_description_short';
     this.productSummaryTabLocale = (locale: string) => `${this.productSummary} a[data-locale="${locale}"]`;
     this.productDescription = '#product_description_description';
     this.productDescriptionTabLocale = (locale: string) => `${this.productDescription} a[data-locale="${locale}"]`;
+    // Categories selectors
     this.productDefaultCategory = '#product_description_categories_default_category_id';
+    this.addCategoryButton = '#product_description_categories_add_categories_btn';
+    this.addCategoryInput = '#ps-select-product-category';
+    this.applyCategoryButton = '#category_tree_selector_apply_btn';
+    this.categoriesList = '#product_description_categories_product_categories';
+    this.defaultCategorySelectButton = '#select2-product_description_categories_default_category_id-container';
+    this.defaultCategoryList = (categoryRow: number) => '#select2-product_description_categories_default_category_id-results'
+      + ` li:nth-child(${categoryRow})`;
+    this.deleteCategoryIcon = (categoryRow: number) => `#product_description_categories_product_categories_${categoryRow}_name`
+      + ' + a.pstaggerClosingCross:not(.d-none)';
+    // Brand selectors
     this.productManufacturer = '#product_description_manufacturer';
+    this.productManufacturerSelectButton = '#select2-product_description_manufacturer-container';
+    this.productManufacturerList = (BrandRow: number) => '#select2-product_description_manufacturer-results'
+      + ` li:nth-child(${BrandRow})`;
+    // Related product selectors
+    this.relatedProductSelectButton = '#product_description_related_products_search_input';
   }
 
   /*
@@ -123,17 +192,25 @@ class DescriptionTab extends BOBasePage {
    * @param useAsCoverImage {boolean|undefined} Use as cover image
    * @param captionEn {string|undefined} Caption in English
    * @param captionFr {string|undefined} Caption in French
+   * @param selectAll {boolean|undefined} Select all
+   * @param toSave {boolean} True if we need to save
    * @returns {Promise<string|null>}
    */
   async setProductImageInformation(
     page: Page,
     numImage: number,
-    useAsCoverImage: boolean|undefined,
-    captionEn: string|undefined,
-    captionFr: string|undefined,
-  ): Promise<string|null> {
+    useAsCoverImage: boolean | undefined,
+    captionEn: string | undefined,
+    captionFr: string | undefined,
+    selectAll: boolean | undefined = undefined,
+    toSave: boolean = true,
+  ): Promise<string | null> {
     // Select the image
     await page.locator(this.productImage).nth(numImage - 1).click();
+
+    if (selectAll) {
+      await page.locator(this.productImageDropZoneSelectAllLink).click();
+    }
 
     if (useAsCoverImage) {
       await this.setCheckedWithIcon(page, this.productImageDropZoneCover, useAsCoverImage);
@@ -153,7 +230,59 @@ class DescriptionTab extends BOBasePage {
       await this.setValue(page, this.productImageDropZoneCaption, captionFr);
     }
 
+    if (toSave) {
+      await page.locator(this.productImageDropZoneBtnSubmit).click();
+
+      return this.getGrowlMessageContent(page);
+    }
+    await page.locator(this.productImageDropZoneCloseButton).click();
+    return null;
+  }
+
+  /**
+   * Click on magnifying glass
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnMagnifyingGlass(page: Page): Promise<boolean> {
+    await page.locator(this.productImageDropZoneZoomIcon).click();
+
+    return this.elementVisible(page, this.productImageDropZoneZoomImage, 1000);
+  }
+
+  /**
+   * Close image zoom
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeImageZoom(page: Page): Promise<boolean> {
+    await page.locator(this.productImageDropZoneCloseZoom).click();
+
+    return this.elementNotVisible(page, this.productImageDropZoneZoomImage, 1000);
+  }
+
+  /**
+   * Replace image selection
+   * @param page {Page} Browser tab
+   * @param image {string} Browser tab
+   * @returns {Promise<string>}
+   */
+  async replaceImageSelection(page: Page, image: string): Promise<string | null> {
+    await this.uploadOnFileChooser(page, this.productImageDropZoneReplaceImageSelection, [image]);
     await page.locator(this.productImageDropZoneBtnSubmit).click();
+
+    return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * delete image
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async deleteImage(page: Page): Promise<string | null> {
+    await this.closeGrowlMessage(page);
+    await page.locator(this.productImageDropZoneDeleteImageSelection).click();
+    await page.locator(this.applyDeleteImageButton).click();
 
     return this.getGrowlMessageContent(page);
   }
@@ -224,6 +353,83 @@ class DescriptionTab extends BOBasePage {
       default:
         throw new Error(`Input ${inputName} was not found`);
     }
+  }
+
+  /**
+   * Add new category
+   * @param page {Page} Browser tab
+   * @param categories {string[]} Browser tab
+   * @returns {Promise<void>}
+   */
+  async addNewCategory(page: Page, categories: string[]): Promise<void> {
+    await page.locator(this.addCategoryButton).click();
+    await this.waitForVisibleSelector(page, this.addCategoryInput);
+    for (let i: number = 0; i < categories.length; i++) {
+      await page.type(this.addCategoryInput, categories[i]);
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('Enter');
+      await page.waitForTimeout(1000);
+    }
+
+    await this.waitForSelectorAndClick(page, this.applyCategoryButton);
+  }
+
+  /**
+   * Get selected categories
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getSelectedCategories(page: Page): Promise<string> {
+    return this.getTextContent(page, this.categoriesList);
+  }
+
+  /**
+   * Get selected categories
+   * @param page {Page} Browser tab
+   * @param categoryRow {number} Category row
+   * @returns {Promise<void>}
+   */
+  async chooseDefaultCategory(page: Page, categoryRow: number): Promise<void> {
+    await page.locator(this.defaultCategorySelectButton).click();
+    await page.locator(this.defaultCategoryList(categoryRow)).click();
+  }
+
+  /**
+   * Is delete category icon visible
+   * @param page {Page} Browser tab
+   * @param categoryRow {number} Category row
+   * @returns {Promise<number>}
+   */
+  async isDeleteCategoryIconVisible(page: Page, categoryRow: number): Promise<boolean> {
+    const isDeleteIconVisible = await page.evaluate(
+      (selector: string) => document.querySelector(selector),
+      this.deleteCategoryIcon(categoryRow),
+    );
+
+    return isDeleteIconVisible !== null;
+  }
+
+  /**
+   * Is delete category icon visible
+   * @param page {Page} Browser tab
+   * @param brandRow {number} Brand row
+   * @returns {Promise<void>}
+   */
+  async chooseBrand(page: Page, brandRow: number): Promise<void> {
+    await page.locator(this.productManufacturerSelectButton).click();
+    await page.locator(this.productManufacturerList(brandRow)).click();
+  }
+
+  /**
+   * Add related product
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name
+   * @returns {Promise<void>}
+   */
+  async addRelatedProduct(page: Page, productName: string): Promise<void> {
+    await page.type(this.relatedProductSelectButton, productName);
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
   }
 }
 

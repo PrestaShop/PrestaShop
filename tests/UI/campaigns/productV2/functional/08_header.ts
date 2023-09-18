@@ -165,7 +165,7 @@ describe('BO - Catalog - Products : Header', async () => {
 
     await productsPage.goToProductPage(page, 1);
 
-    const pageTitle: string = await createProductsPage.getPageTitle(page);
+    const pageTitle = await createProductsPage.getPageTitle(page);
     expect(pageTitle).to.contains(createProductsPage.pageTitle);
 
     productHeaderSummaryInitial = await createProductsPage.getProductHeaderSummary(page);
