@@ -165,15 +165,16 @@ class SupplierControllerCore extends ProductListingFrontController
             $this->context->language
         );
 
+        // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
         $filteredSupplier = Hook::exec(
             'filterSupplierContent',
             ['object' => $supplierVar],
-            $id_module = null,
-            $array_return = false,
-            $check_exceptions = true,
-            $use_push = false,
-            $id_shop = null,
-            $chain = true
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
         );
         if (!empty($filteredSupplier['object'])) {
             $supplierVar = $filteredSupplier['object'];
@@ -193,15 +194,16 @@ class SupplierControllerCore extends ProductListingFrontController
 
         if (!empty($suppliersVar)) {
             foreach ($suppliersVar as $k => $supplier) {
+                // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
                 $filteredSupplier = Hook::exec(
                     'filterSupplierContent',
                     ['object' => $supplier],
-                    $id_module = null,
-                    $array_return = false,
-                    $check_exceptions = true,
-                    $use_push = false,
-                    $id_shop = null,
-                    $chain = true
+                    null,
+                    false,
+                    true,
+                    false,
+                    null,
+                    true
                 );
                 if (!empty($filteredSupplier['object'])) {
                     $suppliersVar[$k] = $filteredSupplier['object'];

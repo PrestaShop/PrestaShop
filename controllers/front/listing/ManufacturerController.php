@@ -167,6 +167,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             $this->context->language
         );
 
+        // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
         $filteredManufacturer = Hook::exec(
             'filterManufacturerContent',
             ['object' => $manufacturerVar],
@@ -195,6 +196,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
         if (!empty($manufacturersVar)) {
             foreach ($manufacturersVar as $k => $manufacturer) {
+                // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
                 $filteredManufacturer = Hook::exec(
                     'filterManufacturerContent',
                     ['object' => $manufacturer],

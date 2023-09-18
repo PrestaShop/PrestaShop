@@ -238,6 +238,7 @@ class OrderConfirmationControllerCore extends FrontController
             return false;
         }
 
+        // Hook called only for the module concerned
         return Hook::exec('displayPaymentReturn', ['order' => $order], $this->id_module);
     }
 

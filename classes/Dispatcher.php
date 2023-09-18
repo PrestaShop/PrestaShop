@@ -600,6 +600,8 @@ class DispatcherCore
          * passed routes will be the same for each language of the shop.
          *
          * Module routes can overwrite those set in $this->default_routes, if their name matches.
+         * An array [module_name => module_output] will be returned
+         * Hook call is ignoring exceptions set in the backoffice
          */
         $modules_routes = Hook::exec('moduleRoutes', ['id_shop' => $id_shop], null, true, false);
         if (is_array($modules_routes) && count($modules_routes)) {
@@ -1023,14 +1025,22 @@ class DispatcherCore
                 }
             }
 
+            // Add controller to parameters if not present
             if (!empty($route['controller'])) {
                 $query_params['controller'] = $route['controller'];
             }
-            $query = http_build_query(array_merge($add_params, $query_params), '', '&');
+
+            // Build final parameters, add language if needed
+            $urlParams = array_merge($add_params, $query_params);
+
+            // If multilanguage is activated, we add proper language ID, overwriting
+            // the previous one if it was provided
             if ($this->multilang_activated) {
-                $query .= (!empty($query) ? '&' : '') . 'id_lang=' . (int) $id_lang;
+                $urlParams['id_lang'] = (int) $id_lang;
             }
-            $url = 'index.php?' . $query;
+
+            // Build the final URL
+            $url = 'index.php?' . http_build_query($urlParams, '', '&');
         }
 
         return $url . $anchor;

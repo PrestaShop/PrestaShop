@@ -93,9 +93,7 @@ class TaxRulesGroupCore extends ObjectModel
      */
     public function historize(TaxRulesGroup $tax_rules_group)
     {
-        $this->deleted = true;
-
-        return parent::update() &&
+        return $this->softDelete() &&
         Db::getInstance()->execute('
 		INSERT INTO ' . _DB_PREFIX_ . 'tax_rule
 		(id_tax_rules_group, id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description)

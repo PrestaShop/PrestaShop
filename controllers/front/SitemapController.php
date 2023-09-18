@@ -60,13 +60,7 @@ class SitemapControllerCore extends FrontController
          */
         Hook::exec(
             'actionModifyFrontendSitemap',
-            ['urls' => &$sitemapUrls],
-            null,
-            false,
-            true,
-            false,
-            null,
-            true
+            ['urls' => &$sitemapUrls]
         );
 
         /*
