@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
 class CartControllerCore extends FrontController
@@ -134,8 +133,7 @@ class CartControllerCore extends FrontController
         $productQuantity = $updatedProduct['quantity'] ?? 0;
 
         if (!$this->errors) {
-            $cartPresenter = new CartPresenter();
-            $presentedCart = $cartPresenter->present($this->context->cart);
+            $presentedCart = $this->cart_presenter->present($this->context->cart);
 
             // filter product output
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
@@ -555,8 +553,7 @@ class CartControllerCore extends FrontController
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
-        $presenter = new CartPresenter();
-        $presented_cart = $presenter->present($this->context->cart);
+        $presented_cart = $this->cart_presenter->present($this->context->cart);
 
         if (count($presented_cart['products']) == 0) {
             $page['body_classes']['cart-empty'] = true;
