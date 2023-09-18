@@ -39,16 +39,6 @@ describe('BO - Catalog - Products : Combination tab', async () => {
     taxRule: 'No tax',
     quantity: 50,
     minimumQuantity: 1,
-    attributes: [
-      {
-        name: 'size',
-        values: ['S', 'M', 'L', 'XL'],
-      },
-      {
-        name: 'color',
-        values: ['Gray', 'Taupe', 'Beige', 'White', 'Red', 'Black', 'Orange', 'Green', 'Yellow', 'Brown'],
-      },
-    ],
     status: true,
   });
 
