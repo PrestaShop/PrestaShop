@@ -112,7 +112,7 @@
     "fast-xml-parser": "^4.2.7",
     "jpeg-js": "^0.4.4",
     "js-image-generator": "^1.0.4",
-    "libsodium-wrappers": "^0.7.11",
+    "libsodium-wrappers": "^0.7.13",
     "maildev": "^2.1.0",
     "mocha": "^10.2.0",
     "mochawesome": "^7.1.3",
