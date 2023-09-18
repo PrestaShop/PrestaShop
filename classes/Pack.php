@@ -135,8 +135,30 @@ class PackCore extends Product
         $price_display_method = !self::$_taxCalculationMethod;
         $items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
         foreach ($items as $item) {
-            /* @var Product $item */
-            $sum += $item->getPrice($price_display_method, ($item->id_pack_product_attribute ? $item->id_pack_product_attribute : null)) * $item->pack_quantity;
+            $pricePerItem = $item->getPrice($price_display_method, ($item->id_pack_product_attribute ? $item->id_pack_product_attribute : null));
+
+            // Different calculation depending on rounding type
+            switch (Configuration::get('PS_ROUND_TYPE')) {
+                case Order::ROUND_TOTAL:
+                    $sum += $pricePerItem * $item->pack_quantity;
+
+                    break;
+                case Order::ROUND_LINE:
+                    $sum += Tools::ps_round(
+                        $pricePerItem * $item->pack_quantity,
+                        Context::getContext()->getComputingPrecision()
+                    );
+
+                    break;
+                case Order::ROUND_ITEM:
+                default:
+                    $sum += Tools::ps_round(
+                        $pricePerItem,
+                        Context::getContext()->getComputingPrecision()
+                    ) * $item->pack_quantity;
+    
+                    break;
+            }
         }
 
         return $sum;
