@@ -24,30 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
 
 /**
- * When attribute group Id contains invalid values
+ * Describes attribute group for editing handler.
  */
-class AttributeGroupConstraintException extends AttributeGroupException
+interface GetAttributeGroupForEditingHandlerInterface
 {
     /**
-     * Used when attribute group id is invalid
+     * @param GetAttributeGroupForEditing $query
+     *
+     * @return EditableAttributeGroup
      */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when attribute group does not have name.
-     */
-    public const EMPTY_NAME = 20;
-
-    /**
-     * Code is used when attribute group does not have public name.
-     */
-    public const EMPTY_PUBLIC_NAME = 30;
-
-    /**
-     * Used when attribute group name is invalid.
-     */
-    public const INVALID_NAME = 40;
+    public function handle(GetAttributeGroupForEditing $query): EditableAttributeGroup;
 }

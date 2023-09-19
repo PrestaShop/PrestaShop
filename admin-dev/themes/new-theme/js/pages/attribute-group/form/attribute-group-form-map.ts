@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,30 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
-
 /**
- * When attribute group Id contains invalid values
+ * Defines all selectors that are used in customers address add/edit form.
  */
-class AttributeGroupConstraintException extends AttributeGroupException
-{
-    /**
-     * Used when attribute group id is invalid
-     */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when attribute group does not have name.
-     */
-    public const EMPTY_NAME = 20;
-
-    /**
-     * Code is used when attribute group does not have public name.
-     */
-    public const EMPTY_PUBLIC_NAME = 30;
-
-    /**
-     * Used when attribute group name is invalid.
-     */
-    public const INVALID_NAME = 40;
-}
+export default {
+  attributeGroupShopAssociationInput: '#attribute_group_shop_association',
+};

@@ -28,47 +28,58 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\InvalidAttributeGroupTypeException;
 
 /**
- * Defines Attribute group ID with its constraints.
+ * Defines Attribute group type with its constraints.
  */
-class AttributeGroupId
+class AttributeGroupType
 {
+    public const ATTRIBUTE_GROUP_TYPE_SELECT = 'select';
+    public const ATTRIBUTE_GROUP_TYPE_RADIO = 'radio';
+    public const ATTRIBUTE_GROUP_TYPE_COLOR = 'color';
+
     /**
-     * @var int
+     * @var string
      */
-    private $attributeGroupId;
+    private $type;
 
     /**
-     * @param int $attributeGroupId
-     */
-    public function __construct(int $attributeGroupId)
-    {
-        $this->assertIntegerIsGreaterThanZero($attributeGroupId);
-
-        $this->attributeGroupId = $attributeGroupId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->attributeGroupId;
-    }
-
-    /**
-     * @param int $attributeGroupId
+     * @param string $type
      *
-     * @throws AttributeGroupConstraintException
+     * @throws InvalidAttributeGroupTypeException
      */
-    private function assertIntegerIsGreaterThanZero(int $attributeGroupId): void
+    public function __construct(string $type)
     {
-        if (0 >= $attributeGroupId) {
-            throw new AttributeGroupConstraintException(
-                sprintf('Invalid attributeGroup id %s supplied. Attribute group ID must be a positive integer.', $attributeGroupId),
-                AttributeGroupConstraintException::INVALID_ID
+        $this->assertTypeExists($type);
+
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return void
+     *
+     * @throws InvalidAttributeGroupTypeException
+     */
+    private function assertTypeExists(string $type): void
+    {
+        $types = [static::ATTRIBUTE_GROUP_TYPE_COLOR, static::ATTRIBUTE_GROUP_TYPE_SELECT, static::ATTRIBUTE_GROUP_TYPE_RADIO];
+        if (!in_array($type, $types)) {
+            throw new InvalidAttributeGroupTypeException(
+                sprintf(
+                    'Invalid attributeGroup type %s supplied.',
+                    $type
+                )
             );
         }
     }

@@ -26,50 +26,26 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate;
 
+use AttributeGroup;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Defines Attribute group ID with its constraints.
+ * Validates Attribute Group properties using legacy object model
  */
-class AttributeGroupId
+class AttributeGroupValidator extends AbstractObjectModelValidator
 {
     /**
-     * @var int
-     */
-    private $attributeGroupId;
-
-    /**
-     * @param int $attributeGroupId
-     */
-    public function __construct(int $attributeGroupId)
-    {
-        $this->assertIntegerIsGreaterThanZero($attributeGroupId);
-
-        $this->attributeGroupId = $attributeGroupId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->attributeGroupId;
-    }
-
-    /**
-     * @param int $attributeGroupId
+     * @param AttributeGroup $attributeGroup
      *
-     * @throws AttributeGroupConstraintException
+     * @throws CoreException
      */
-    private function assertIntegerIsGreaterThanZero(int $attributeGroupId): void
+    public function validate(AttributeGroup $attributeGroup): void
     {
-        if (0 >= $attributeGroupId) {
-            throw new AttributeGroupConstraintException(
-                sprintf('Invalid attributeGroup id %s supplied. Attribute group ID must be a positive integer.', $attributeGroupId),
-                AttributeGroupConstraintException::INVALID_ID
-            );
-        }
+        $this->validateObjectModelLocalizedProperty($attributeGroup, 'name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME);
+        $this->validateObjectModelLocalizedProperty($attributeGroup, 'public_name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME);
     }
 }

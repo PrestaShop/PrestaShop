@@ -124,6 +124,12 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureValueFormDataHandler'
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeGroupFormDataHandler'
+
   prestashop.core.form.identifiable_object.handler.order_message_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]

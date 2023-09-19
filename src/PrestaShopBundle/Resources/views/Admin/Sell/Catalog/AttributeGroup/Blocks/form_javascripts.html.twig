@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,32 +21,8 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
-
-/**
- * When attribute group Id contains invalid values
- */
-class AttributeGroupConstraintException extends AttributeGroupException
-{
-    /**
-     * Used when attribute group id is invalid
-     */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when attribute group does not have name.
-     */
-    public const EMPTY_NAME = 20;
-
-    /**
-     * Code is used when attribute group does not have public name.
-     */
-    public const EMPTY_PUBLIC_NAME = 30;
-
-    /**
-     * Used when attribute group name is invalid.
-     */
-    public const INVALID_NAME = 40;
-}
+{% block feature_javascript_block %}
+  <script src="{{ asset('themes/new-theme/public/attribute_group_form.bundle.js') }}"></script>
+{% endblock %}

@@ -432,6 +432,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType: ~
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType: ~
+
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
       $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'

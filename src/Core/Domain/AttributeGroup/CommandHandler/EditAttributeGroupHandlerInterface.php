@@ -24,30 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
 
 /**
- * When attribute group Id contains invalid values
+ * Describes a service that handles attribute group edit command.
  */
-class AttributeGroupConstraintException extends AttributeGroupException
+interface EditAttributeGroupHandlerInterface
 {
     /**
-     * Used when attribute group id is invalid
+     * @param EditAttributeGroupCommand $command
      */
-    public const INVALID_ID = 10;
-
-    /**
-     * Code is used when attribute group does not have name.
-     */
-    public const EMPTY_NAME = 20;
-
-    /**
-     * Code is used when attribute group does not have public name.
-     */
-    public const EMPTY_PUBLIC_NAME = 30;
-
-    /**
-     * Used when attribute group name is invalid.
-     */
-    public const INVALID_NAME = 40;
+    public function handle(EditAttributeGroupCommand $command): void;
 }
