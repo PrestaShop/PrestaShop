@@ -540,6 +540,12 @@ class CartControllerCore extends FrontController
 
         CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
+
+        // Finally check that all other products are also available
+        $areProductsAvailable = $this->areProductsAvailable();
+        if (true !== $areProductsAvailable) {
+            $this->{$ErrorKey}[] = $areProductsAvailable;
+        }
     }
 
     /**
