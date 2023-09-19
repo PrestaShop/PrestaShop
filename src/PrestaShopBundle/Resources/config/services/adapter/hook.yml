@@ -17,3 +17,9 @@ services:
 
   prestashop.adapter.hook.manager:
     alias: PrestaShop\PrestaShop\Adapter\HookManager
+
+  prestashop.attributes.ressource.metadata.collection.factory:
+    class: PrestaShopBundle\ApiPlatform\Decorator\AttributesResourceMetadataCollectionFactoryDecorator
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    arguments:
+      $innerFactory: '@prestashop.attributes.ressource.metadata.collection.factory.inner'

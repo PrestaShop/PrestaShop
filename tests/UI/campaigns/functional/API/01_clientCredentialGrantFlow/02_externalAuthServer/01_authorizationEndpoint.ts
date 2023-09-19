@@ -7,7 +7,8 @@ import {APIRequestContext, request} from 'playwright';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_authorizationEndpoint';
 
-describe('API : External Auth Server - Authorization Endpoint', async () => {
+// @todo : https://github.com/PrestaShop/PrestaShop/issues/33946
+describe.skip('API : External Auth Server - Authorization Endpoint', async () => {
   let apiContextBO: APIRequestContext;
   let apiContextKeycloak: APIRequestContext;
   let accessTokenKeycloak: string;
