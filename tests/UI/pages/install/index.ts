@@ -291,7 +291,7 @@ class Install extends CommonPage {
 
     // Choosing country
     await page.click(this.countryChosenSelect);
-    await page.locator(this.countryChosenSearchInput).fill(global.INSTALL.COUNTRY);
+    await page.locator(this.countryChosenSearchInput).pressSequentially(global.INSTALL.COUNTRY);
     await page.keyboard.press('Enter');
     await page.click(this.enableSslRadio(global.INSTALL.ENABLE_SSL ? 1 : 0));
 

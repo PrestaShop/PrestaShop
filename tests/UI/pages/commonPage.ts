@@ -231,7 +231,7 @@ export default class CommonPage {
     await this.clearInput(page, selector);
 
     if (value !== null) {
-      await page.locator(selector).fill(value.toString());
+      await page.locator(selector).pressSequentially(value.toString());
     }
   }
 
