@@ -21,13 +21,13 @@ export default class ProductData {
 
   public nameFR: string;
 
-  public defaultImage: string|null;
+  public defaultImage: string | null;
 
-  public coverImage: string|null;
+  public coverImage: string | null;
 
-  public thumbImage: string|null;
+  public thumbImage: string | null;
 
-  public thumbImageFR: string|null;
+  public thumbImageFR: string | null;
 
   public category: string;
 
@@ -86,6 +86,10 @@ export default class ProductData {
   public fileName: string;
 
   public allowedDownload: number;
+
+  public expirationDate: string | null;
+
+  public numberOfDays: number | null;
 
   public weight: number;
 
@@ -242,6 +246,12 @@ export default class ProductData {
 
     /** @type {number} Number of allowed downloads */
     this.allowedDownload = productToCreate.allowedDownload || faker.number.int({min: 1, max: 20});
+
+    /** @type {string} Expiration date */
+    this.expirationDate = productToCreate.expirationDate || null;
+
+    /** @type {number} Number of days limit */
+    this.numberOfDays = productToCreate.numberOfDays || null;
 
     /** @type {number} Weight of the package */
     this.weight = productToCreate.weight || faker.number.int({min: 1, max: 20});

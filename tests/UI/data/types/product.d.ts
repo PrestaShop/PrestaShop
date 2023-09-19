@@ -45,6 +45,8 @@ type ProductCreator = {
   downloadFile?: boolean
   fileName?: string
   allowedDownload?: number
+  expirationDate?: string | null
+  numberOfDays?: number | null
   weight?: number
   combinations?: ProductCombination[]
 };
