@@ -437,8 +437,11 @@ class CartControllerCore extends FrontController
                 $this->id_product_attribute
             );
             $this->errors[] = $this->trans(
-                'The available purchase order quantity for this product is %quantity%.',
-                ['%quantity%' => $availableProductQuantity],
+                '%product% is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted, the available purchase order quantity for this product is %quantity%.',
+                [
+                    '%product%' => $product->name,
+                    '%quantity%' => $availableProductQuantity,
+                ],
                 'Shop.Notifications.Error'
             );
 
@@ -525,8 +528,11 @@ class CartControllerCore extends FrontController
                     $this->id_product_attribute
                 );
                 $this->{$ErrorKey}[] = $this->trans(
-                    'The available purchase order quantity for this product is %quantity%.',
-                    ['%quantity%' => $availableProductQuantity],
+                    '%product% is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted, the available purchase order quantity for this product is %quantity%.',
+                    [
+                        '%product%' => $product->name,
+                        '%quantity%' => $availableProductQuantity,
+                    ],
                     'Shop.Notifications.Error'
                 );
             }
@@ -640,8 +646,11 @@ class CartControllerCore extends FrontController
 
         if ($product['active']) {
             return $this->trans(
-                '%product% is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
-                ['%product%' => $product['name']],
+                '%product% is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted, the available purchase order quantity for this product is %quantity%.',
+                [
+                    '%product%' => $product['name'],
+                    '%quantity%' => $product['quantity_available'],
+                ],
                 'Shop.Notifications.Error'
             );
         }
