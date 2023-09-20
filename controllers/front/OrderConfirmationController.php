@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use ZxcvbnPhp\Zxcvbn;
@@ -218,7 +217,7 @@ class OrderConfirmationControllerCore extends FrontController
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($this->order),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($this->order),
             'order' => (new OrderPresenter())->present($this->order),
-            'order_customer' => (new ObjectPresenter())->present($this->customer),
+            'order_customer' => $this->objectPresenter->present($this->customer),
             'registered_customer_exists' => Customer::customerExists($this->customer->email, false, true),
         ]);
         $this->setTemplate('checkout/order-confirmation');
