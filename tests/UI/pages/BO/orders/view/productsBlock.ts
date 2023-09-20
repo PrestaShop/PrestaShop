@@ -302,7 +302,7 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.dialogListener(page);
 
     await this.waitForSelectorAndClick(page, this.editProductButton(row));
-    await this.setValue(page, this.editProductPriceInput, price);
+    await this.setValue(page, `${this.editProductPriceInput}:visible`, price);
 
     await Promise.all([
       page.click(this.UpdateProductButton),
@@ -329,7 +329,7 @@ class ProductsBlock extends ViewOrderBasePage {
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductPriceInput),
     ]);
-    await this.setValue(page, this.editProductPriceInput, price);
+    await this.setValue(page, `${this.editProductPriceInput}:visible`, price);
 
     await Promise.all([
       page.click(this.UpdateProductButton),
