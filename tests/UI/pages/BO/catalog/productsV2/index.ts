@@ -304,8 +304,8 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
-    await expect(createProductFrame).to.be.not.null;
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
     return this.getTextContent(createProductFrame!, this.productTypeDescription);
   }
@@ -329,8 +329,8 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
-    await expect(createProductFrame).to.be.not.null;
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
     await this.waitForSelectorAndClick(createProductFrame!, this.productType(productType));
   }
@@ -341,8 +341,8 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnAddNewProduct(page: Page): Promise<void> {
-    const createProductFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
-    await expect(createProductFrame).to.be.not.null;
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
     await this.waitForSelectorAndClick(createProductFrame!, this.addNewProductButton);
   }
@@ -551,8 +551,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterProductsByID(page: Page, idMin: number, idMax: number): Promise<void> {
-    await page.type(this.productFilterIDMinInput, idMin.toString());
-    await page.type(this.productFilterIDMaxInput, idMax.toString());
+    await page.locator(this.productFilterIDMinInput).fill(idMin.toString());
+    await page.locator(this.productFilterIDMaxInput).fill(idMax.toString());
   }
 
   /**
@@ -563,8 +563,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterProductsByQuantity(page: Page, quantityMin: number, quantityMax: number): Promise<void> {
-    await page.type(this.productFilterQuantityMinInput, quantityMin.toString());
-    await page.type(this.productFilterQuantityMaxInput, quantityMax.toString());
+    await page.locator(this.productFilterQuantityMinInput).fill(quantityMin.toString());
+    await page.locator(this.productFilterQuantityMaxInput).fill(quantityMax.toString());
   }
 
   /**
@@ -575,8 +575,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterProductsByPrice(page: Page, priceMin: number, priceMax: number): Promise<void> {
-    await page.type(this.productFilterPriceMinInput, priceMin.toString());
-    await page.type(this.productFilterPriceMaxInput, priceMax.toString());
+    await page.locator(this.productFilterPriceMinInput).fill(priceMin.toString());
+    await page.locator(this.productFilterPriceMaxInput).fill(priceMax.toString());
   }
 
   /**
@@ -594,13 +594,13 @@ class Products extends BOBasePage {
         if (typeof value === 'string') {
           switch (filterBy) {
             case 'product_name':
-              await page.type(this.productFilterNameInput, value);
+              await page.locator(this.productFilterNameInput).fill(value);
               break;
             case 'reference':
-              await page.type(this.productFilterReferenceInput, value);
+              await page.locator(this.productFilterReferenceInput).fill(value);
               break;
             case 'category':
-              await page.type(this.productFilterCategoryInput, value);
+              await page.locator(this.productFilterCategoryInput).fill(value);
               break;
             case 'position':
               await this.setValue(page, this.productFilterPositionInput, value);

@@ -59,9 +59,13 @@ class DescriptionTab extends BOBasePage {
 
   private readonly productSummaryTabLocale: (locale: string) => string;
 
+  private readonly productSummaryTabContent: (locale: string) => string;
+
   private readonly productDescription: string;
 
   private readonly productDescriptionTabLocale: (locale: string) => string;
+
+  private readonly productDescriptionTabContent: (locale: string) => string;
 
   private readonly productDefaultCategory: string;
 
@@ -128,8 +132,10 @@ class DescriptionTab extends BOBasePage {
     // Description & summary selectors
     this.productSummary = '#product_description_description_short';
     this.productSummaryTabLocale = (locale: string) => `${this.productSummary} a[data-locale="${locale}"]`;
+    this.productSummaryTabContent = (locale: string) => `${this.productSummary} div.panel[data-locale="${locale}"]`;
     this.productDescription = '#product_description_description';
     this.productDescriptionTabLocale = (locale: string) => `${this.productDescription} a[data-locale="${locale}"]`;
+    this.productDescriptionTabContent = (locale: string) => `${this.productDescription} div.panel[data-locale="${locale}"]`;
     // Categories selectors
     this.productDefaultCategory = '#product_description_categories_default_category_id';
     this.addCategoryButton = '#product_description_categories_add_categories_btn';
@@ -318,11 +324,11 @@ class DescriptionTab extends BOBasePage {
 
     await page.locator(this.productSummaryTabLocale('en')).click();
     await this.elementVisible(page, `${this.productSummaryTabLocale('en')}.active`);
-    await this.setValueOnTinymceInput(page, this.productSummary, productData.summary);
+    await this.setValueOnTinymceInput(page, this.productSummaryTabContent('en'), productData.summary);
 
     await page.locator(this.productDescriptionTabLocale('en')).click();
     await this.elementVisible(page, `${this.productDescriptionTabLocale('en')}.active`);
-    await this.setValueOnTinymceInput(page, this.productDescription, productData.description);
+    await this.setValueOnTinymceInput(page, this.productDescriptionTabContent('en'), productData.description);
   }
 
   /**
@@ -365,7 +371,7 @@ class DescriptionTab extends BOBasePage {
     await page.locator(this.addCategoryButton).click();
     await this.waitForVisibleSelector(page, this.addCategoryInput);
     for (let i: number = 0; i < categories.length; i++) {
-      await page.type(this.addCategoryInput, categories[i]);
+      await page.locator(this.addCategoryInput).pressSequentially(categories[i]);
       await page.keyboard.press('ArrowDown');
       await page.keyboard.press('Enter');
       await page.waitForTimeout(1000);
@@ -427,7 +433,7 @@ class DescriptionTab extends BOBasePage {
    * @returns {Promise<void>}
    */
   async addRelatedProduct(page: Page, productName: string): Promise<void> {
-    await page.type(this.relatedProductSelectButton, productName);
+    await page.locator(this.relatedProductSelectButton).fill(productName);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }

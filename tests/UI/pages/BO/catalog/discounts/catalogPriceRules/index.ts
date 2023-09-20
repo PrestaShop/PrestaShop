@@ -240,8 +240,8 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterByDate(page: Page, filterBy: string, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.filterDateFromColumn(filterBy), dateFrom);
-    await page.type(this.filterDateToColumn(filterBy), dateTo);
+    await page.locator(this.filterDateFromColumn(filterBy)).fill(dateFrom);
+    await page.locator(this.filterDateToColumn(filterBy)).fill(dateTo);
     // click on search
     await page.click(this.filterSearchButton);
     await this.elementVisible(page, this.filterResetButton);

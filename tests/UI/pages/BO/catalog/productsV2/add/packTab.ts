@@ -128,7 +128,7 @@ class PackTab extends BOBasePage {
    */
   async searchProduct(page: Page, productName: string): Promise<string> {
     await this.waitForSelectorAndClick(page, this.packTabLink);
-    await page.type(this.searchProductInput, productName);
+    await page.locator(this.searchProductInput).fill(productName);
     await this.waitForVisibleSelector(page, this.searchResult);
     await page.waitForTimeout(1000);
 

@@ -175,8 +175,8 @@ class AddProduct extends BOBasePage {
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
-    this.productShortDescriptionIframe = '#form_step1_description_short';
-    this.productDescriptionIframe = '#form_step1_description';
+    this.productShortDescriptionIframe = '#form_step1_description_short div.translation-field[data-locale="en"]';
+    this.productDescriptionIframe = '#form_step1_description div.translation-field[data-locale="en"]';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
     this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
@@ -413,7 +413,7 @@ class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async addAttribute(page: Page, attribute: string): Promise<void> {
-    await page.type(this.selectAttributeInput, attribute);
+    await page.locator(this.selectAttributeInput).fill(attribute);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }
@@ -436,7 +436,7 @@ class AddProduct extends BOBasePage {
     }
 
     // Edit quantity
-    await page.type(this.productCombinationBulkQuantityInput, quantity.toString());
+    await page.locator(this.productCombinationBulkQuantityInput).fill(quantity.toString());
     await this.scrollTo(page, this.applyOnCombinationsButton);
     await page.click(this.applyOnCombinationsButton);
 
@@ -700,7 +700,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async addProductToPack(page: Page, product: string, quantity: number): Promise<void> {
-    await page.type(this.packItemsInput, product);
+    await page.locator(this.packItemsInput).fill(product);
     await this.waitForSelectorAndClick(page, this.packsearchResult);
     await this.setValue(page, this.packQuantityInput, quantity);
     await page.click(this.addProductToPackButton);

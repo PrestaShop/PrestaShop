@@ -102,7 +102,7 @@ class AddSeoUrl extends BOBasePage {
    */
   async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
     for (let i = 0; i < keywords.length; i++) {
-      await page.type(this.metaKeywordsInput(idLang), keywords[i]);
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keywords[i]);
       await page.keyboard.press('Enter');
     }
   }
