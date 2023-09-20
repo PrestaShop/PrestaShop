@@ -126,7 +126,8 @@ class Cart extends FOBasePage {
     this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
     this.minimumAmountErrorMessage = 'The minimum amount to benefit from this promo code is';
-    this.errorNotificationForProductQuantity = 'The available purchase order quantity for this product is 300.';
+    this.errorNotificationForProductQuantity = 'You can only buy 300 "Hummingbird printed t-shirt".'
+      + ' Please adjust the quantity in your cart to continue.';
 
     // Selectors for cart page
     // Shopping cart block selectors
