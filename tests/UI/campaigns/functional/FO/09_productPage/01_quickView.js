@@ -309,7 +309,7 @@ describe('Product quick view', async () => {
       await expect(isHomePage).to.be.true;
     });
 
-    it('should select color \'Ẁhite\' and be on product page', async function () {
+    it('should select color \'White\' and be on product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
 
       await homePage.selectProductColor(page, 1, 'White');

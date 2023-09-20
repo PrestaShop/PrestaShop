@@ -165,12 +165,12 @@ class Home extends FOBasePage {
    * Add product to cart with Quick view
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products
-   * @param quantity_wanted {string} Quantity to order
+   * @param quantity_wanted {number} Quantity to order
    * @return {Promise<void>}
    */
   async addProductToCartByQuickView(page, id, quantity_wanted = 1) {
     await this.quickViewProduct(page, id);
-    await this.setValue(page, this.quickViewQuantityWantedInput, quantity_wanted.toString());
+    await this.setValue(page, this.quickViewQuantityWantedInput, quantity_wanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
@@ -186,6 +186,7 @@ class Home extends FOBasePage {
   async changeCombinationAndAddToCart(page, combination) {
     await this.selectByVisibleText(page, this.quickViewProductSize, combination.size);
     await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${combination.color}']`);
+    await page.waitForTimeout(1000);
     await this.setValue(page, this.quickViewQuantityWantedInput, combination.quantity);
     await this.waitForSelectorAndClick(page, this.addToCartButton);
   }
