@@ -216,10 +216,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         }
 
         $len = \strlen(MessageCatalogue::INTL_DOMAIN_SUFFIX);
-        if ($this->hasIntlFormatter
-            && ($catalogue->defines($id, $domain.MessageCatalogue::INTL_DOMAIN_SUFFIX)
-            || (\strlen($domain) > $len && 0 === substr_compare($domain, MessageCatalogue::INTL_DOMAIN_SUFFIX, -$len, $len)))
-        ) {
+        if ($this->hasIntlFormatter) {
             return $this->formatter->formatIntl($catalogue->get($id, $domain), $locale, $parameters);
         }
 
