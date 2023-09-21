@@ -1200,6 +1200,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         );
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
 
+        // See Symfony\Component\Translation\Translator::trans for context
         // Option 1 - we will call it without ICU suffix and just format everything in INTL
         dump($this->product->quantity . ' ' . $this->trans(
             '{items, plural, =0 {Items} =1 {Item} other {Items}}',

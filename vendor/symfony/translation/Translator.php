@@ -206,11 +206,11 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
 
         // Option 2 - Check if ICU is in the domain, write down this info.
         // Replace ICU part in the domain to keep using our old catalogs without the suffix.
-        $useIntl = false;
+        /*$useIntl = false;
         if (strpos($domain, MessageCatalogue::INTL_DOMAIN_SUFFIX)) {
             $useIntl = true;
             $domain = str_replace(MessageCatalogue::INTL_DOMAIN_SUFFIX, '', $domain);
-        }
+        }*/
 
         $catalogue = $this->getCatalogue($locale);
         $locale = $catalogue->getLocale();
