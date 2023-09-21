@@ -44,6 +44,8 @@ class PackTab extends BOBasePage {
 
   private readonly alertDangerProductInPack: (productInList: number) => string;
 
+  private readonly editQuantityBase: string;
+
   private readonly editQuantityInput: string;
 
   private readonly minimalQuantityInput: string;
@@ -108,6 +110,7 @@ class PackTab extends BOBasePage {
       + 'delta_quantity + span';
 
     // Edit quantity selectors
+    this.editQuantityBase = 'input#product_stock_quantities_delta_quantity_quantity';
     this.editQuantityInput = '#product_stock_quantities_delta_quantity_delta';
     this.minimalQuantityInput = '#product_stock_quantities_minimal_quantity';
     this.packStockTypeRadioButton = (buttonRow: number) => `#product_stock_pack_stock_type_${buttonRow} +i`;
@@ -245,7 +248,7 @@ class PackTab extends BOBasePage {
   async getStockMovement(page: Page, movementRow: number): Promise<ProductStockMovement> {
     return {
       dateTime: await this.getTextContent(page, this.dateTimeRowInTable(movementRow - 1)),
-      employee: await this.getTextContent(page, this.employeeRowInTable(movementRow - 1)),
+      employee: await this.getTextContent(page, this.employeeRowInTable(movementRow - 1), false),
       quantity: await this.getNumberFromText(page, this.quantityRowInTable(movementRow - 1)),
     };
   }
@@ -301,10 +304,27 @@ class PackTab extends BOBasePage {
    * @param packData {ProductPackOptions} Data to edit pack of products
    */
   async editPackOfProducts(page: Page, packData: ProductPackOptions): Promise<void> {
-    await this.setValue(page, this.editQuantityInput, packData.quantity);
+    await this.editQuantity(page, packData.quantity);
     await this.setValue(page, this.minimalQuantityInput, packData.minimalQuantity);
+    await this.editPackStockType(page, packData.packQuantitiesOption);
+  }
 
-    switch (packData.packQuantitiesOption) {
+  /**
+   * Edit quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Quantity
+   */
+  async editQuantity(page: Page, quantity: number): Promise<void> {
+    await this.setValue(page, this.editQuantityInput, quantity);
+  }
+
+  /**
+   * Edit quantity
+   * @param page {Page} Browser tab
+   * @param packStockType {string} Quantity
+   */
+  async editPackStockType(page: Page, packStockType: string): Promise<void> {
+    switch (packStockType) {
       case 'Decrement pack only':
         await page.click(this.packStockTypeRadioButton(0));
         break;
@@ -322,8 +342,17 @@ class PackTab extends BOBasePage {
         break;
 
       default:
-        throw new Error(`Radio button for ${packData.packQuantitiesOption} was not found`);
+        throw new Error(`Radio button for ${packStockType} was not found`);
     }
+  }
+
+  /**
+   * Get the value of the stock
+   * @param page {Page} Browser tab
+   * @return <Promise<number>>
+   */
+  async getStockValue(page: Page): Promise<number> {
+    return parseInt(await page.locator(this.editQuantityBase).getAttribute('value') ?? '', 10);
   }
 }
 

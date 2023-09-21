@@ -401,7 +401,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductInPack${index}`, baseContext);
 
-        const result = await foProductPage.getProductInPackList(page, index + 2);
+        const result = await foProductPage.getProductInPackList(page, index + 1);
         await Promise.all([
           await expect(result.image).to.contains(test.args.product.coverImage),
           await expect(result.name).to.equal(test.args.product.name),
@@ -470,7 +470,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkEditProductInPack${index}`, baseContext);
 
-        const result = await foProductPage.getProductInPackList(page, index + 2);
+        const result = await foProductPage.getProductInPackList(page, index + 1);
         await Promise.all([
           await expect(result.image).to.contains(test.args.product.coverImage),
           await expect(result.name).to.equal(test.args.product.name),
