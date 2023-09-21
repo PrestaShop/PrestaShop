@@ -10,7 +10,7 @@
         },
         {
             "name": "PrestaShop Community",
-            "homepage": "https://contributors.prestashop.com/"
+            "homepage": "https://contributors.prestashop-project.org/"
         }
     ],
     "require": {
