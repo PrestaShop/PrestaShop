@@ -245,7 +245,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').eq(true);
       });
 
       it('should pay the order', async function () {
@@ -296,7 +296,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         page = await ordersPage.viewMyShop(page);
 
         const isHomePage = await homePage.isHomePage(page);
-        expect(isHomePage, 'Home page is not displayed').to.be.true;
+        expect(isHomePage, 'Home page is not displayed').eq(true);
       });
 
       it('should go to my account page', async function () {
