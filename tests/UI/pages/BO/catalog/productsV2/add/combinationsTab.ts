@@ -33,6 +33,8 @@ class CombinationsTab extends BOBasePage {
 
   private readonly combinationsTabLink: string;
 
+  private readonly learnMoreButton: string;
+
   private readonly attributesAndFeaturesHyperLink: string;
 
   private readonly generateFirstCombinationsButton: string;
@@ -40,6 +42,8 @@ class CombinationsTab extends BOBasePage {
   private readonly generateCombinationButton: string;
 
   private readonly generateCombinationsModal: string;
+
+  private readonly cancelButton: string;
 
   private readonly searchAttributesButton: string;
 
@@ -68,6 +72,8 @@ class CombinationsTab extends BOBasePage {
   private readonly bulkEditModalMinimalQuantityInput: string;
 
   private readonly bulkEditModalStockLocationSwitchButton: (toEnable: number) => string;
+
+  private readonly selectAllAttributeCheckboxButton: (row: number) => string;
 
   private readonly bulkEditModalStockLocationInput: string;
 
@@ -133,6 +139,8 @@ class CombinationsTab extends BOBasePage {
 
   private readonly editCombinationModal: string;
 
+  private readonly editCombinationNameValue: string;
+
   private readonly editCombinationModalQuantityInput: string;
 
   private readonly editCombinationModalMinimalQuantityInput: string;
@@ -157,6 +165,10 @@ class CombinationsTab extends BOBasePage {
 
   private readonly modalConfirmDeleteCombination: string;
 
+  private readonly previousCombinationButton: string;
+
+  private readonly nextCombinationButton: string;
+
   private readonly modalDeleteCombinationCancelButton: string;
 
   private readonly modalDeleteCombinationDeleteButton: string;
@@ -177,6 +189,18 @@ class CombinationsTab extends BOBasePage {
 
   private readonly paginationPreviousLink: string;
 
+  private readonly denyOrderRadioButton: string;
+
+  private readonly allowOrderRadioButton: string;
+
+  private readonly useDefaultBehaviourRadioButton: string;
+
+  private readonly editDefaultBehaviourLink: string;
+
+  private readonly labelWhenInStock: string;
+
+  private readonly labelWhenOutOfStock: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on combinations tab
@@ -191,6 +215,7 @@ class CombinationsTab extends BOBasePage {
 
     // Selectors in combinations tab
     this.combinationsTabLink = '#product_combinations-tab-nav';
+    this.learnMoreButton = '#combinations-empty-state a[href*=\'documentation\']';
     this.attributesAndFeaturesHyperLink = '#combinations-empty-state p.mx-auto.showcase-list-card__message a.alert-link';
     this.generateFirstCombinationsButton = '#combinations-empty-state button.generate-combinations-button';
     this.generateCombinationButton = '#combination-list-actions button.generate-combinations-button';
@@ -199,6 +224,7 @@ class CombinationsTab extends BOBasePage {
     this.generateCombinationsButtonOnModal = `${this.generateCombinationsModal} footer button.btn.btn-primary`;
     this.generateCombinationsCloseButton = `${this.generateCombinationsModal} button.close`;
     this.saveCombinationEditButton = '#save-combinations-edition';
+    this.cancelButton = `${this.generateCombinationsModal} button.btn-outline-secondary`;
 
     // Bulk actions selectors
     this.bulkActionsButton = '#combination-bulk-actions-btn';
@@ -259,11 +285,14 @@ class CombinationsTab extends BOBasePage {
     this.combinationListSelectAllDropDownMenu = '#bulk-all-selection-dropdown .dropdown-menu.show';
     this.combinationListBulkSelectAll = '#bulk-all-selection-dropdown label[for="bulk-select-all"]';
     this.combinationListBulkSelectAllInPage = '#bulk-select-all-in-page + i';
+    this.selectAllAttributeCheckboxButton = (row: number) => '#attributes-list-selector div.attributes-content'
+      + ` div:nth-child(${row}) div.attribute-group-header div`;
 
     // Edit combination modal
     this.editCombinationIframe = '.combination-iframe';
     this.editCombinationEditModal = '#combination-edit-modal';
     this.editCombinationModal = '#combination-edit-modal div.combination-modal div.modal.show';
+    this.editCombinationNameValue = '#combination_form_header div.combination-name-row span.text-preview-value';
     this.editCombinationModalQuantityInput = '#combination_form_stock_quantities_delta_quantity_delta';
     this.editCombinationModalMinimalQuantityInput = '#combination_form_stock_quantities_minimal_quantity';
     this.editCombinationModalImpactOnPriceTExcInput = '#combination_form_price_impact_price_tax_excluded';
@@ -278,6 +307,8 @@ class CombinationsTab extends BOBasePage {
       + `${row - 1}_employee_name + span`;
     this.combinationStockMovements = (row: number) => `#combination_form_stock_quantities_stock_movements_${row - 1}`
       + '_delta_quantity + span';
+    this.previousCombinationButton = `${this.editCombinationModal} button.btn-previous-combination`;
+    this.nextCombinationButton = `${this.editCombinationModal} button.btn-next-combination`;
 
     // Delete combination modal
     this.modalConfirmDeleteCombination = '#modal-confirm-delete-combination';
@@ -296,6 +327,14 @@ class CombinationsTab extends BOBasePage {
     this.paginationLimitSelect = '#paginator-limit';
     this.paginationNextLink = `${this.paginationBlock} .page-link.next:not(.disabled)`;
     this.paginationPreviousLink = `${this.paginationBlock} .page-link.previous:not(.disabled)`;
+
+    // When out of stock selectors
+    this.denyOrderRadioButton = '#product_combinations_availability_out_of_stock_type_0 +i';
+    this.allowOrderRadioButton = '#product_combinations_availability_out_of_stock_type_1 +i';
+    this.useDefaultBehaviourRadioButton = '#product_combinations_availability_out_of_stock_type_2 +i';
+    this.editDefaultBehaviourLink = '#product_combinations_availability a[href*=configuration_fieldset_stock]';
+    this.labelWhenInStock = '#product_combinations_availability_available_now_label_1';
+    this.labelWhenOutOfStock = '#product_combinations_availability_available_later_label_1';
   }
 
   /*
@@ -312,6 +351,43 @@ class CombinationsTab extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
 
     return this.openLinkWithTargetBlank(page, this.attributesAndFeaturesHyperLink, 'body');
+  }
+
+  /**
+   * Click on learn more button
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async clickOnLearnMoreButton(page: Page): Promise<Page> {
+    await this.waitForSelectorAndClick(page, this.combinationsTabLink);
+
+    return this.openLinkWithTargetBlank(page, this.learnMoreButton, 'body');
+  }
+
+  /**
+   * Click on generate combination button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnGenerateCombinationButton(page: Page): Promise<boolean> {
+    if (await this.elementVisible(page, this.generateCombinationButton, 2000)) {
+      await this.waitForSelectorAndClick(page, this.generateCombinationButton);
+    } else {
+      await this.waitForSelectorAndClick(page, this.generateFirstCombinationsButton);
+    }
+
+    return this.elementVisible(page, this.generateCombinationsModal, 1000);
+  }
+
+  /**
+   * Click on cancel button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnCancelButton(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.cancelButton);
+
+    return this.elementNotVisible(page, this.generateCombinationsModal, 1000);
   }
 
   /**
@@ -348,6 +424,29 @@ class CombinationsTab extends BOBasePage {
       }
     }
     /* eslint-enable */
+
+    return this.getTextContent(page, this.generateCombinationsButtonOnModal);
+  }
+
+  /**
+   * Select all values
+   * @param page {Page} Browser tab
+   * @param attribute {string}
+   * @returns {Promise<string>}
+   */
+  async selectAllValues(page: Page, attribute: string): Promise<string> {
+    switch (attribute) {
+      case 'size':
+        await page.locator(this.selectAllAttributeCheckboxButton(1)).click();
+        break;
+
+      case 'color':
+        await page.locator(this.selectAllAttributeCheckboxButton(2)).click();
+        break;
+
+      default:
+        throw new Error('Attribute is not existing');
+    }
 
     return this.getTextContent(page, this.generateCombinationsButtonOnModal);
   }
@@ -413,6 +512,36 @@ class CombinationsTab extends BOBasePage {
   }
 
   /**
+   * Click on next combination button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnNextCombinationButton(page: Page): Promise<void> {
+    await page.locator(this.nextCombinationButton).click();
+  }
+
+  /**
+   * Click on previous combination button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnPreviousCombinationButton(page: Page): Promise<void> {
+    await page.locator(this.previousCombinationButton).click();
+  }
+
+  /**
+   * Get combination name from modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCombinationNameFromModal(page: Page): Promise<string> {
+    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    expect(combinationFrame).not.eq(null);
+
+    return this.getTextContent(combinationFrame!, this.editCombinationNameValue);
+  }
+
+  /**
    * Click on delete icon then (delete/cancel)
    * @param page {Page} Browser tab
    * @param action {string} Delete/cancel
@@ -443,7 +572,7 @@ class CombinationsTab extends BOBasePage {
     await page.waitForTimeout(2000);
     await this.waitForVisibleSelector(page, this.editCombinationIframe);
 
-    const combinationFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
     await expect(combinationFrame).to.be.not.null;
 
     await this.setValue(combinationFrame!, this.editCombinationModalQuantityInput, combinationData.quantity);
@@ -473,7 +602,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<ProductStockMovement>}
    */
   async getRecentStockMovements(page: Page, row: number = 1): Promise<ProductStockMovement> {
-    const combinationFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
     await expect(combinationFrame).to.be.not.null;
 
     return {
@@ -489,7 +618,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeEditCombinationModal(page: Page): Promise<boolean> {
-    const combinationFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
     await expect(combinationFrame).to.be.not.null;
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
@@ -523,7 +652,7 @@ class CombinationsTab extends BOBasePage {
 
   /**
    * Get text column
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param column {string} Column name to get text content
    * @param row {number} Row on table
    * @returns {Promise<string>}
@@ -635,13 +764,13 @@ class CombinationsTab extends BOBasePage {
     if (!footerText) {
       return 0;
     }
-    const regexMatch: RegExpMatchArray|null = footerText.match(/out of ([0-9]+)/);
+    const regexMatch: RegExpMatchArray | null = footerText.match(/out of ([0-9]+)/);
 
     if (regexMatch === null) {
       return 0;
     }
 
-    const regexResult: RegExpExecArray|null = /\d+/g.exec(regexMatch.toString());
+    const regexResult: RegExpExecArray | null = /\d+/g.exec(regexMatch.toString());
 
     if (regexResult === null) {
       return 0;
@@ -722,7 +851,7 @@ class CombinationsTab extends BOBasePage {
    * @param editStockData {ProductCombinationBulkStock} Data to set on bulk edit stock form
    * @returns {Promise<void>}
    */
-  async bulkEditStock(page: Frame|Page, editStockData: ProductCombinationBulkStock): Promise<void> {
+  async bulkEditStock(page: Frame | Page, editStockData: ProductCombinationBulkStock): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalStocksButton);
     await this.setChecked(
       page,
@@ -756,7 +885,7 @@ class CombinationsTab extends BOBasePage {
    * @param editRetailPriceData {ProductCombinationBulkRetailPrice} Data to set on bulk edit retail price form
    * @returns {Promise<void>}
    */
-  async bulkEditRetailPrice(page: Frame|Page, editRetailPriceData: ProductCombinationBulkRetailPrice): Promise<void> {
+  async bulkEditRetailPrice(page: Frame | Page, editRetailPriceData: ProductCombinationBulkRetailPrice): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalRetailPriceButton);
     await this.setChecked(page, this.bulkEditModalCostPriceSwitchButton(editRetailPriceData.costPriceToEnable ? 1 : 0),
     );
@@ -819,6 +948,57 @@ class CombinationsTab extends BOBasePage {
 
     // Return text in modal
     return result;
+  }
+
+  // Methods for when out of stock
+  /**
+   * Set option when out of stock
+   * @param page {Page} Browser tab
+   * @param option {string} Option to check
+   * @returns {Promise<void>}
+   */
+  async setOptionWhenOutOfStock(page: Page, option: string): Promise<void> {
+    switch (option) {
+      case 'Deny orders':
+        await this.setChecked(page, this.denyOrderRadioButton);
+        break;
+      case 'Allow orders':
+        await this.setChecked(page, this.allowOrderRadioButton);
+        break;
+      case 'Use default behavior':
+        await this.setChecked(page, this.useDefaultBehaviourRadioButton);
+        break;
+      default:
+        throw new Error(`Option ${option} was not found`);
+    }
+  }
+
+  /**
+   * Click on edit default behaviour link
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async clickOnEditDefaultBehaviourLink(page: Page): Promise<Page> {
+    return this.openLinkWithTargetBlank(page, this.editDefaultBehaviourLink);
+  }
+
+  /**
+   * Set label when in stock
+   * @param page {Page} Browser tab
+   * @param label {string} Label to set when in stock in the input
+   * @returns {Promise<void>}
+   */
+  async setLabelWhenInStock(page: Page, label: string): Promise<void> {
+    await this.setValue(page, this.labelWhenInStock, label);
+  }
+
+  /**
+   * Set label when out of stock
+   * @param page {Page} Browser tab
+   * @param label {string} Label to set when out of stock in the input
+   */
+  async setLabelWhenOutOfStock(page: Page, label: string): Promise<void> {
+    await this.setValue(page, this.labelWhenOutOfStock, label);
   }
 }
 
