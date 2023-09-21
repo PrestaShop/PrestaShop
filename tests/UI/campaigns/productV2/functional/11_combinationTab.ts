@@ -95,7 +95,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).eq(true);
     });
 
     it('should select the product with combination and check the description', async function () {
@@ -158,14 +158,14 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnGenerateCombinationButton', baseContext);
 
       const isModalVisible = await combinationsTab.clickOnGenerateCombinationButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).eq(true);
     });
 
     it('should click on cancel button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnCancelButton', baseContext);
 
       const isModalNotVisible = await combinationsTab.clickOnCancelButton(page);
-      await expect(isModalNotVisible).to.be.true;
+      expect(isModalNotVisible).eq(true);
     });
 
     it('should create combination by checking size and color checkboxes', async function () {
@@ -184,7 +184,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
 
       const successMessage = await combinationsTab.generateCombinations(page);
-      await expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(56));
+      expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(56));
     });
   });
 
@@ -195,7 +195,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await combinationsTab.clickOnEditIcon(page, 1);
 
       const successMessage = await combinationsTab.editCombinationFromModal(page, firstCombinationData);
-      await expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
+      expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/33965
@@ -205,7 +205,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await combinationsTab.clickOnNextCombinationButton(page);
 
       const combinationName = await combinationsTab.getCombinationNameFromModal(page);
-      await expect(combinationName).to.equal('Size - S, Color - Taupe');
+      expect(combinationName).to.equal('Size - S, Color - Taupe');
     });
 
     it.skip('should click on previous combination button', async function () {
@@ -221,7 +221,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
       const isModalVisible = await combinationsTab.closeEditCombinationModal(page);
-      await expect(isModalVisible).to.be.false;
+      expect(isModalVisible).eq(false);
     });
   });
 
@@ -249,7 +249,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         await foProductPage.changeLanguage(page, 'en');
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(newProductData.name);
+        expect(pageTitle).to.contains(newProductData.name);
       });
 
       it('should select combination and check the add to cart button', async function () {
@@ -267,7 +267,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         await foProductPage.selectAttributes(page, 1, firstCombination);
 
         const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
-        await expect(isVisible).to.eq(test.args.isAddToCartButtonVisible);
+        expect(isVisible).to.eq(test.args.isAddToCartButtonVisible);
       });
 
       it('should go back to BO', async function () {
@@ -277,7 +277,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         page = await foProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
     });
 
@@ -287,7 +287,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       page = await combinationsTab.clickOnEditDefaultBehaviourLink(page);
 
       const pageTitle = await productSettings.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettings.pageTitle);
+      expect(pageTitle).to.contains(productSettings.pageTitle);
     });
 
     it('should close the page', async function () {
@@ -317,7 +317,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(newProductData.name);
+      expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should select combination', async function () {
@@ -335,14 +335,14 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await foProductPage.selectAttributes(page, 1, firstCombination);
 
       const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).eq(false);
     });
 
     it('should check the product availability label', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCombination4', baseContext);
 
       const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
-      await expect(availabilityLabel).to.contains('Product available');
+      expect(availabilityLabel).to.contains('Product available');
     });
 
     it('should close the page', async function () {
@@ -374,7 +374,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(newProductData.name);
+      expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should select combination', async function () {
@@ -392,17 +392,17 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       await foProductPage.selectAttributes(page, 1, firstCombination);
 
       const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
-      await expect(isVisible).to.be.true;
+      expect(isVisible).eq(true);
     });
 
     it('should check the label of out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCombination6', baseContext);
 
       const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
-      await expect(availabilityLabel).to.contains('Out of stock');
+      expect(availabilityLabel).to.contains('Out of stock');
 
       const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
-      await expect(isVisible).to.be.true;
+      expect(isVisible).eq(true);
     });
 
     it('should close the page', async function () {
@@ -415,12 +415,12 @@ describe('BO - Catalog - Products : Combination tab', async () => {
     });
   });
 
-  describe('Delete product', async () => {
+  describe('Post-Test: Delete product', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const createProductMessage = await createProductsPage.deleteProduct(page);
-      await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 });

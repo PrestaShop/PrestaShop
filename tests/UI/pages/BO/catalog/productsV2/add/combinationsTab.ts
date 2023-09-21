@@ -536,7 +536,7 @@ class CombinationsTab extends BOBasePage {
    */
   async getCombinationNameFromModal(page: Page): Promise<string> {
     const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
-    await expect(combinationFrame).to.be.not.null;
+    expect(combinationFrame).not.eq(null);
 
     return this.getTextContent(combinationFrame!, this.editCombinationNameValue);
   }
