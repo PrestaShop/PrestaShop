@@ -18,7 +18,7 @@ import foOrderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -202,26 +202,26 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await foHomePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
+      const pageTitle = await orderHistoryPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open order history page').to.contains(orderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessageBlock1', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page, 1);
+      await orderHistoryPage.goToDetailsPage(page, 1);
 
-      const isBoxMessagesVisible = await foOrderHistoryPage.isBoxMessagesSectionVisible(page);
+      const isBoxMessagesVisible = await orderHistoryPage.isBoxMessagesSectionVisible(page);
       await expect(isBoxMessagesVisible, 'Box messages is not visible!').to.be.true;
 
-      const isMessageRowVisible = await foOrderHistoryPage.isMessageRowVisible(page);
+      const isMessageRowVisible = await orderHistoryPage.isMessageRowVisible(page);
       await expect(isMessageRowVisible, 'Message is not visible!').to.be.true;
     });
 
     it('should check the message text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessageBlock2', baseContext);
 
-      const message = await foOrderHistoryPage.getMessageRow(page);
+      const message = await orderHistoryPage.getMessageRow(page);
       await expect(message)
         .to.contain(today)
         .and.to.contain(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`)
@@ -324,17 +324,17 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await foHomePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
+      const pageTitle = await orderHistoryPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open order history page').to.contains(orderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check that new message is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessageBlock3', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page, 1);
+      await orderHistoryPage.goToDetailsPage(page, 1);
 
       // New message is on the first row
-      const message = await foOrderHistoryPage.getMessageRow(page, 1);
+      const message = await orderHistoryPage.getMessageRow(page, 1);
       await expect(message, 'Second message is not visible!').to.not.contain(secondMessageData.message);
     });
   });
@@ -344,15 +344,15 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     it('should send message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage2', baseContext);
 
-      const alertMessage = await foOrderHistoryPage.sendMessage(page, messageToSendData);
-      expect(alertMessage, 'Success message is not displayed!').to.equal(foOrderHistoryPage.messageSuccessSent);
+      const alertMessage = await orderHistoryPage.sendMessage(page, messageToSendData);
+      expect(alertMessage, 'Success message is not displayed!').to.equal(orderHistoryPage.messageSuccessSent);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
       // Close page and init page objects
-      page = await foOrderHistoryPage.closePage(browserContext, page, 0);
+      page = await orderHistoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
       await expect(pageTitle, 'Fail to go back to BO!').to.contains(orderPageMessagesBlock.pageTitle);

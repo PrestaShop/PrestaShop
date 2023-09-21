@@ -12,7 +12,7 @@ import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -108,14 +108,14 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should go to order details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page);
+      await orderHistoryPage.goToDetailsPage(page);
 
       const pageTitle = await orderDetailsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
@@ -172,14 +172,14 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should go to order details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToFoToOrderDetails', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page);
+      await orderHistoryPage.goToDetailsPage(page);
 
       const pageTitle = await orderDetailsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);

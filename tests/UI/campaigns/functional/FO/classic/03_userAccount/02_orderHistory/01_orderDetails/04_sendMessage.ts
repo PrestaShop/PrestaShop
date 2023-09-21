@@ -18,7 +18,7 @@ import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
 import orderDetails from '@pages/FO/myAccount/orderDetails';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
 // Import data
@@ -202,14 +202,14 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foHomePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('Go to order details ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page);
+      await orderHistoryPage.goToDetailsPage(page);
 
       const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
       await expect(successMessageText).to.equal(orderDetails.successMessageText);

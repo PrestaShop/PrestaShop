@@ -34,8 +34,8 @@ class PasswordReminderPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on password reminder page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Forgot your password';
     this.errorMessage = 'You can regenerate your password only every 360 minute(s)';

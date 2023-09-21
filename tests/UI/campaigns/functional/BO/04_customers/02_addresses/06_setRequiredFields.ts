@@ -13,8 +13,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foAddressesPage from '@pages/FO/myAccount/addresses';
-import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
+import {addressesPage as foAddressesPage} from '@pages/FO/myAccount/addresses';
+import {addAddressPage} from '@pages/FO/myAccount/addAddress';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -115,23 +115,23 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
 
       await foAddressesPage.openNewAddressForm(page);
 
-      const pageHeaderTitle = await foAddAddressesPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(foAddAddressesPage.creationFormTitle);
+      const pageHeaderTitle = await addAddressPage.getHeaderTitle(page);
+      await expect(pageHeaderTitle).to.equal(addAddressPage.creationFormTitle);
     });
 
     it('should check if \'Vat number\' is required', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkOptionalLabel${index}`, baseContext);
 
-      const result = await foAddAddressesPage.isVatNumberRequired(page);
+      const result = await addAddressPage.isVatNumberRequired(page);
       await expect(result).to.equal(test.args.exist);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `signOutFO${index}`, baseContext);
 
-      await foAddAddressesPage.logout(page);
+      await addAddressPage.logout(page);
 
-      const isCustomerConnected = await foAddAddressesPage.isCustomerConnected(page);
+      const isCustomerConnected = await addAddressPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
 
@@ -139,7 +139,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await foAddAddressesPage.closePage(browserContext, page, 0);
+      page = await addAddressPage.closePage(browserContext, page, 0);
 
       const pageTitle = await addressesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addressesPage.pageTitle);

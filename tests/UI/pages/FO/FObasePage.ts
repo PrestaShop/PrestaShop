@@ -133,6 +133,8 @@ export default class FOBasePage extends CommonPage {
 
   protected readonly navbarLink: string;
 
+  private readonly hCopyrightLink: string;
+
   protected readonly hSearchInput: string;
 
   protected theme: string;
@@ -141,8 +143,10 @@ export default class FOBasePage extends CommonPage {
    * @constructs
    * Setting up texts and selectors to use on all FO pages
    */
-  constructor() {
+  constructor(theme: string = 'classic') {
     super();
+
+    this.theme = theme;
 
     // Selectors for home page
     // Header links
@@ -224,9 +228,8 @@ export default class FOBasePage extends CommonPage {
     this.languageSelector = '#language-selector';
     this.cartProductsCountHummingbird = '#_desktop_cart .header-block__action-btn span.header-block__badge';
     this.navbarLink = '.navbar-brand';
+    this.hCopyrightLink = '#footer div.footer__main p.copyright a[href*="www.prestashop-project.org"]';
     this.hSearchInput = '#search_widget .js-search-input';
-
-    this.theme = 'classic';
   }
 
   // Header methods
@@ -749,7 +752,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<string>}
    */
   async getCopyright(page: Page): Promise<string> {
-    return this.getTextContent(page, this.copyrightLink);
+    return this.getTextContent(page, this.theme === 'hummingbird' ? this.hCopyrightLink : this.copyrightLink);
   }
 
   /**

@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class AccountIdentity extends FOBasePage {
+class AccountIdentityPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly successfulUpdateMessage: string;
@@ -54,8 +54,8 @@ class AccountIdentity extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on identity page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Identity';
     this.successfulUpdateMessage = 'Information successfully updated.';
@@ -164,4 +164,5 @@ class AccountIdentity extends FOBasePage {
   }
 }
 
-export default new AccountIdentity();
+const accountIdentityPage = new AccountIdentityPage();
+export {accountIdentityPage, AccountIdentityPage};

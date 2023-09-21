@@ -44,8 +44,8 @@ class ContactUsPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on contact us page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Contact us';
     this.validationMessage = 'Your message has been successfully sent to our team.';

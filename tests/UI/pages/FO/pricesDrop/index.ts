@@ -5,18 +5,19 @@ import FOBasePage from '@pages/FO/FObasePage';
  * @class
  * @extends FOBasePage
  */
-class PricesDrop extends FOBasePage {
+class PricesDropPage extends FOBasePage {
   public readonly pageTitle: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on prices drop page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Prices drop';
   }
 }
 
-export default new PricesDrop();
+const pricesDropPage = new PricesDropPage();
+export {pricesDropPage, PricesDropPage};

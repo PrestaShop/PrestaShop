@@ -12,9 +12,7 @@ class SearchResults extends SearchResultsPage {
    * Setting up texts and selectors to use on my account page
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
 
     this.productPrice = '#js-product-list div.card span.product-miniature__price';
   }

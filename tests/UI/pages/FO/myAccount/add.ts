@@ -46,8 +46,8 @@ class CreateAccountPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on create account page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Login';
     this.formTitle = 'Create an account';

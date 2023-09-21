@@ -15,7 +15,7 @@ import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foAccountIdentityPage from '@pages/FO/myAccount/identity';
+import {accountIdentityPage} from '@pages/FO/myAccount/identity';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -98,15 +98,15 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await foHomePage.goToMyAccountPage(page);
       await myAccountPage.goToInformationPage(page);
 
-      const pageTitle = await foAccountIdentityPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foAccountIdentityPage.pageTitle);
+      const pageTitle = await accountIdentityPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
     });
 
     it('should unsubscribe from newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'unsubscribeFromNewsLetter', baseContext);
 
-      const unsubscribeAlertText = await foAccountIdentityPage.unsubscribeNewsletter(page, Customers.johnDoe.password);
-      await expect(unsubscribeAlertText).to.contains(foAccountIdentityPage.successfulUpdateMessage);
+      const unsubscribeAlertText = await accountIdentityPage.unsubscribeNewsletter(page, Customers.johnDoe.password);
+      await expect(unsubscribeAlertText).to.contains(accountIdentityPage.successfulUpdateMessage);
     });
   });
 

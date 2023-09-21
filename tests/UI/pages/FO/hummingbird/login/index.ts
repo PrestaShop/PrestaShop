@@ -12,9 +12,7 @@ class Login extends LoginPage {
    * Setting up texts and selectors to use on login page
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
 
     this.displayRegisterFormLink = 'div a[data-link-action=\'display-register-form\']';
     this.passwordReminderLink = '.login__forgot-password a';

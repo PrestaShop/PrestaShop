@@ -10,27 +10,27 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import pages
 // Import BO pages
 // Import FO pages
-import aboutUsPage from '@pages/FO/aboutUs';
-import bestSalesPage from '@pages/FO/bestSales';
+import {aboutUsPage} from '@pages/FO/aboutUs';
+import {bestSalesPage} from '@pages/FO/bestSales';
 import {contactUsPage} from '@pages/FO/contactUs';
-import deliveryPage from '@pages/FO/delivery';
+import {deliveryPage} from '@pages/FO/delivery';
 import {homePage} from '@pages/FO/home';
-import legalNoticePage from '@pages/FO/legalNotice';
+import {legalNoticePage} from '@pages/FO/legalNotice';
 import {loginPage} from '@pages/FO/login';
 import {createAccountPage} from '@pages/FO/myAccount/add';
-import addAddressPage from '@pages/FO/myAccount/addAddress';
-import addressesPage from '@pages/FO/myAccount/addresses';
-import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
-import personalInfoPage from '@pages/FO/myAccount/identity';
-import myWishlistPage from '@pages/FO/myAccount/myWishlists';
-import ordersPage from '@pages/FO/myAccount/orderHistory';
-import guestOrderTrackingPage from '@pages/FO/orderTracking/guestOrderTracking';
-import newProductsPage from '@pages/FO/newProducts';
-import pricesDropPage from '@pages/FO/pricesDrop';
-import securePaymentPage from '@pages/FO/securePayment';
-import siteMapPage from '@pages/FO/siteMap';
-import storesPage from '@pages/FO/stores';
-import termsAndConditionsOfUsePage from '@pages/FO/termsAndConditionsOfUse';
+import {addAddressPage} from '@pages/FO/myAccount/addAddress';
+import {addressesPage} from '@pages/FO/myAccount/addresses';
+import {creditSlipPage} from '@pages/FO/myAccount/creditSlips';
+import {accountIdentityPage} from '@pages/FO/myAccount/identity';
+import {myWishlistsPage} from '@pages/FO/myAccount/myWishlists';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import {guestOrderTrackingPage} from '@pages/FO/orderTracking/guestOrderTracking';
+import {newProductsPage} from '@pages/FO/newProducts';
+import {pricesDropPage} from '@pages/FO/pricesDrop';
+import {securePaymentPage} from '@pages/FO/securePayment';
+import {siteMapPage} from '@pages/FO/siteMap';
+import {storesPage} from '@pages/FO/stores';
+import {termsAndConditionsOfUsePage} from '@pages/FO/termsAndConditionsOfUse';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -165,11 +165,11 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     });
 
     [
-      {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
+      {linkSelector: 'Information', pageTitle: accountIdentityPage.pageTitle},
       {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
-      {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
-      {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
-      {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
+      {linkSelector: 'Orders', pageTitle: orderHistoryPage.pageTitle},
+      {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
+      {linkSelector: 'Wishlist', pageTitle: myWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -179,7 +179,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Wishlist') {
-          pageTitle = await myWishlistPage.getPageTitle(page);
+          pageTitle = await myWishlistsPage.getPageTitle(page);
         } else {
           pageTitle = await homePage.getPageTitle(page);
         }
@@ -203,11 +203,11 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     });
 
     [
-      {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
+      {linkSelector: 'Information', pageTitle: accountIdentityPage.pageTitle},
       {linkSelector: 'Add first address', pageTitle: addAddressPage.pageTitle},
-      {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
-      {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
-      {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
+      {linkSelector: 'Orders', pageTitle: orderHistoryPage.pageTitle},
+      {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
+      {linkSelector: 'Wishlist', pageTitle: myWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -217,7 +217,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Wishlist') {
-          pageTitle = await myWishlistPage.getPageTitle(page);
+          pageTitle = await myWishlistsPage.getPageTitle(page);
         } else {
           pageTitle = await homePage.getPageTitle(page);
         }

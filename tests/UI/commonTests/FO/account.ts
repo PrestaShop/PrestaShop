@@ -7,8 +7,8 @@ import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/myAccount/add';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foAddressesPage from '@pages/FO/myAccount/addresses';
-import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
+import {addressesPage} from '@pages/FO/myAccount/addresses';
+import {addAddressPage} from '@pages/FO/myAccount/addAddress';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -133,34 +133,34 @@ function createAddressTest(
     });
 
     it('should go to \'Addresses\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToaddressesPage', baseContext);
 
       await myAccountPage.goToAddressesPage(page);
 
-      const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.include(foAddressesPage.addressPageTitle);
+      const pageHeaderTitle = await addressesPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.include(addressesPage.addressPageTitle);
     });
 
     it('should go to create address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewAddressPage', baseContext);
 
-      await foAddressesPage.openNewAddressForm(page);
+      await addressesPage.openNewAddressForm(page);
 
-      const pageHeaderTitle = await foAddAddressesPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(foAddAddressesPage.creationFormTitle);
+      const pageHeaderTitle = await addAddressPage.getHeaderTitle(page);
+      await expect(pageHeaderTitle).to.equal(addAddressPage.creationFormTitle);
     });
 
     it('should create address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
-      const textResult = await foAddAddressesPage.setAddress(page, addressData);
-      await expect(textResult).to.equal(foAddressesPage.addAddressSuccessfulMessage);
+      const textResult = await addAddressPage.setAddress(page, addressData);
+      await expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await foAddAddressesPage.goToHomePage(page);
+      await addAddressPage.goToHomePage(page);
       await homePage.logout(page);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);

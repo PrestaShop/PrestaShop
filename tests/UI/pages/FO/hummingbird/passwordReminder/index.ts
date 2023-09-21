@@ -12,9 +12,7 @@ class PasswordReminder extends PasswordReminderPage {
    * Setting up texts and selectors to use on my account page
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
 
     this.emailAddressText = 'section.renew-password > div.mb-3:nth-child(1)';
     this.sendResetLinkSuccessAlert = '#content .alert-success';

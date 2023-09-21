@@ -14,8 +14,8 @@ import countriesPage from '@pages/BO/international/locations/countries';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import addressesPage from '@pages/FO/myAccount/addresses';
-import newAddressesPage from '@pages/FO/myAccount/addAddress';
+import {addressesPage} from '@pages/FO/myAccount/addresses';
+import {addAddressPage} from '@pages/FO/myAccount/addAddress';
 
 // Import data
 import Countries from '@data/demo/countries';
@@ -156,7 +156,7 @@ describe('BO - International - Countries : Restrict country selections in front 
 
       await addressesPage.openNewAddressForm(page);
 
-      const countryExist = await newAddressesPage.countryExist(page, Countries.afghanistan.name);
+      const countryExist = await addAddressPage.countryExist(page, Countries.afghanistan.name);
       await expect(countryExist).to.equal(status.args.isCountryVisible);
     });
 

@@ -11,7 +11,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -156,14 +156,14 @@ describe('FO - Account - Order details : Download invoice', async () => {
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should go to order details page of the first order in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page);
+      await orderHistoryPage.goToDetailsPage(page);
 
       const pageTitle: string = await orderDetailsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
@@ -195,14 +195,14 @@ describe('FO - Account - Order details : Download invoice', async () => {
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should go to order details page of the second order in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails2', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page, 2);
+      await orderHistoryPage.goToDetailsPage(page, 2);
 
       const pageTitle: string = await orderDetailsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
