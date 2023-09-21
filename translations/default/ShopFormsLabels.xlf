@@ -5,77 +5,77 @@
       <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
         <source>Alias</source>
         <target>Alias</target>
-        <note>Line: 205</note>
+        <note>Line: 206</note>
       </trans-unit>
       <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
         <source>Address</source>
         <target>Address</target>
-        <note>Line: 211</note>
+        <note>Line: 212</note>
       </trans-unit>
       <trans-unit id="86376e3b5c80d090dbc625b4d241431b">
         <source>Address Complement</source>
         <target>Address Complement</target>
-        <note>Line: 213</note>
+        <note>Line: 214</note>
       </trans-unit>
       <trans-unit id="e4eb5dadb6ee84c5c55a8edf53f6e554">
         <source>Zip/Postal Code</source>
         <target>Zip/Postal Code</target>
-        <note>Line: 215</note>
+        <note>Line: 216</note>
       </trans-unit>
       <trans-unit id="57d056ed0984166336b7879c2af3657f">
         <source>City</source>
         <target>City</target>
-        <note>Line: 217</note>
+        <note>Line: 218</note>
       </trans-unit>
       <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
         <source>Country</source>
         <target>Country</target>
-        <note>Line: 219</note>
+        <note>Line: 220</note>
       </trans-unit>
       <trans-unit id="46a2a41cc6e552044816a2d04634545d">
         <source>State</source>
         <target>State</target>
-        <note>Line: 221</note>
+        <note>Line: 222</note>
       </trans-unit>
       <trans-unit id="bcc254b55c4a1babdf1dcb82c207506b">
         <source>Phone</source>
         <target>Phone</target>
-        <note>Line: 223</note>
+        <note>Line: 224</note>
       </trans-unit>
       <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
         <source>Mobile phone</source>
         <target>Mobile phone</target>
-        <note>Line: 225</note>
+        <note>Line: 226</note>
       </trans-unit>
       <trans-unit id="7cb32e708d6b961d476baced73d362bb">
         <source>VAT number</source>
         <target>VAT number</target>
-        <note>Line: 229</note>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
         <source>Other</source>
         <target>Other</target>
-        <note>Line: 233</note>
+        <note>Line: 234</note>
       </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
         <target>First name</target>
-        <note>Line: 207</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
         <source>Last name</source>
         <target>Last name</target>
-        <note>Line: 209</note>
+        <note>Line: 210</note>
       </trans-unit>
       <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
         <source>Company</source>
         <target>Company</target>
-        <note>Line: 227</note>
+        <note>Line: 228</note>
       </trans-unit>
       <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
         <source>Identification number</source>
         <target>Identification number</target>
-        <note>Line: 231</note>
+        <note>Line: 232</note>
       </trans-unit>
     </body>
   </file>
@@ -91,29 +91,20 @@
         <target>Birthdate</target>
         <note>Line: 207</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerLoginFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
         <source>Email</source>
         <target>Email</target>
-        <note>Line: 49</note>
+        <note>Line: 167</note>
       </trans-unit>
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
         <target>Password</target>
-        <note>Line: 60</note>
+        <note>Line: 180</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
-        <source>Email address</source>
-        <target>Email address</target>
-        <note>Line: 58</note>
-      </trans-unit>
       <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
         <source>Subject</source>
         <target>Subject</target>
@@ -208,6 +199,15 @@
         <source>Email:</source>
         <target>Email:</target>
         <note>Line: 61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>

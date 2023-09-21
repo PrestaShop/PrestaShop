@@ -182,42 +182,42 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="c688fbbc9468ea3473172ca924290860">
         <source>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</source>
         <target>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</target>
-        <note>Line: 138</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="05f8f0fab3ff5d86e0de9db902da7045">
         <source>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</source>
         <target>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</target>
-        <note>Line: 142</note>
+        <note>Line: 156</note>
       </trans-unit>
       <trans-unit id="f6e7829277b67d5a8805d6728a810362">
         <source>URL rewriting must be activated on your server to use this feature.</source>
         <target>URL rewriting must be activated on your server to use this feature.</target>
-        <note>Line: 143</note>
+        <note>Line: 157</note>
       </trans-unit>
       <trans-unit id="a2e8a639b5fd3e34ab4def1e7aac3383">
         <source>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</source>
         <target>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</target>
-        <note>Line: 188</note>
+        <note>Line: 202</note>
       </trans-unit>
       <trans-unit id="819e18d335155ef4a9cdfe926ac8a3de">
         <source>Since the selected shop has no main URL, you have to set this URL as the Main URL.</source>
         <target>Since the selected shop has no main URL, you have to set this URL as the Main URL.</target>
-        <note>Line: 190</note>
+        <note>Line: 204</note>
       </trans-unit>
       <trans-unit id="fe42e7cf02611b9719a6db6513de19eb">
         <source>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</source>
         <target>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</target>
-        <note>Line: 194</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="7e7b350e5cee624789b1e263ec59db26">
         <source>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</source>
         <target>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</target>
-        <note>Line: 246</note>
+        <note>Line: 260</note>
       </trans-unit>
       <trans-unit id="29f3eb1bea3049b52600a18ad4d0b96c">
         <source>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</source>
         <target>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</target>
-        <note>Line: 255</note>
+        <note>Line: 269</note>
       </trans-unit>
     </body>
   </file>
@@ -449,11 +449,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
-        <source>Password should be at least %num% characters long.</source>
-        <target>Password should be at least %num% characters long.</target>
-        <note>Line: 173</note>
-      </trans-unit>
       <trans-unit id="a951bd27ed3722e63e13ff4c73a3749a">
         <source>Allow or deny this employee's access to the Admin panel.</source>
         <target>Allow or deny this employee's access to the Admin panel.</target>
@@ -562,6 +557,15 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
         <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
         <note>Line: 133</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
+        <source>Password should be at least %num% characters long.</source>
+        <target>Password should be at least %num% characters long.</target>
+        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>
@@ -754,8 +758,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="09fac4ee316f450e3defd79540c2d9fe">
         <source>You can also export the query results as a CSV file by clicking on the "%export_label%" button</source>
         <target>You can also export the query results as a CSV file by clicking on the "%export_label%" button</target>
-        <note>Line: 37
-Comment: Recommended modules will be attached to here.</note>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -810,22 +813,22 @@ Comment: Recommended modules will be attached to here.</note>
       <trans-unit id="4bbb8f967da6d1a610596d7257179c2b">
         <source>Invalid</source>
         <target>Invalid</target>
-        <note>Line: 1596</note>
+        <note>Line: 1604</note>
       </trans-unit>
       <trans-unit id="26b63f278101527e06a5547719568bb5">
         <source>Okay</source>
         <target>Okay</target>
-        <note>Line: 1597</note>
+        <note>Line: 1605</note>
       </trans-unit>
       <trans-unit id="0c6ad70beb3a7e76c3fc7adab7c46acc">
         <source>Good</source>
         <target>Good</target>
-        <note>Line: 1598</note>
+        <note>Line: 1606</note>
       </trans-unit>
       <trans-unit id="b8dc7c80939667637db7ac31ece215b9">
         <source>Fabulous</source>
         <target>Fabulous</target>
-        <note>Line: 1599</note>
+        <note>Line: 1607</note>
       </trans-unit>
     </body>
   </file>

@@ -5,7 +5,7 @@
       <trans-unit id="c8baafa963dab58836b08b5acdedc07a">
         <source>You cannot place a new order from your country (%s).</source>
         <target>You cannot place a new order from your country (%s).</target>
-        <note>Line: 906</note>
+        <note>Line: 909</note>
       </trans-unit>
     </body>
   </file>

@@ -45,14 +45,10 @@
         <target>Customer password is too weak</target>
         <note>Line: 103</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/OrderConfirmationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="4e46ead161638465b5f8cc4351e559a3">
         <source>Enter a password to transform your guest account into a customer account.</source>
         <target>Enter a password to transform your guest account into a customer account.</target>
-        <note>Line: 132</note>
+        <note>Line: 91</note>
       </trans-unit>
     </body>
   </file>
