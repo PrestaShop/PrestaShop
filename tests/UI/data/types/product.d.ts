@@ -22,10 +22,10 @@ type ProductCreator = {
   summary?: string
   description?: string
   reference?: string
-  MPN?: string | null
-  UPC?: string | null
-  EAN13?: string | null
-  ISBN?: string | null
+  mpn?: string | null
+  upc?: string | null
+  ean13?: string | null
+  isbn?: string | null
   features?: ProductFeatures[]
   files?: ProductFiles[]
   displayCondition?: boolean

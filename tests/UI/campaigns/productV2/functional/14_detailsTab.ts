@@ -34,17 +34,17 @@ describe('BO - Catalog - Products : Details tab', async () => {
     quantity: 100,
     minimumQuantity: 1,
     status: true,
-    MPN: 'lorem ipsum',
-    UPC: 'lorem ipsum',
-    EAN13: 'lorem ipsum',
-    ISBN: 'lorem ipsum',
+    mpn: 'lorem ipsum',
+    upc: 'lorem ipsum',
+    ean13: 'lorem ipsum',
+    isbn: 'lorem ipsum',
   });
   // Data to edit standard product
   const editProductData: ProductData = new ProductData({
-    MPN: 'HSC0424PP',
-    UPC: '987654321098',
-    EAN13: '9782409038600',
-    ISBN: '978-2-409-03860-0',
+    mpn: 'HSC0424PP',
+    upc: '987654321098',
+    ean13: '9782409038600',
+    isbn: '978-2-409-03860-0',
     features: [
       {
         featureName: 'Composition',
@@ -153,30 +153,30 @@ describe('BO - Catalog - Products : Details tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'setWrongData', baseContext);
 
       await detailsTab.setProductDetails(page, newProductData);
-      await detailsTab.setMPN(page, newProductData.MPN!);
-      await detailsTab.setUPC(page, newProductData.UPC!);
+      await detailsTab.setMPN(page, newProductData.mpn!);
+      await detailsTab.setUPC(page, newProductData.upc!);
 
       let errorMessage = await detailsTab.getErrorMessageInReferencesForm(page, 3);
-      expect(errorMessage).to.eq(`"${newProductData.UPC}" is invalid`);
+      expect(errorMessage).to.eq(`"${newProductData.upc}" is invalid`);
 
-      await detailsTab.setEAN13(page, newProductData.EAN13!);
+      await detailsTab.setEAN13(page, newProductData.ean13!);
 
       errorMessage = await detailsTab.getErrorMessageInReferencesForm(page, 4);
-      expect(errorMessage).to.eq(`"${newProductData.EAN13}" is invalid`);
+      expect(errorMessage).to.eq(`"${newProductData.ean13}" is invalid`);
 
-      await detailsTab.setISBN(page, newProductData.ISBN!);
+      await detailsTab.setISBN(page, newProductData.isbn!);
 
       errorMessage = await detailsTab.getErrorMessageInReferencesForm(page, 5);
-      expect(errorMessage).to.eq(`"${newProductData.ISBN}" is invalid`);
+      expect(errorMessage).to.eq(`"${newProductData.isbn}" is invalid`);
     });
 
     it('should set References form with a good data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setGoodDara', baseContext);
 
-      await detailsTab.setMPN(page, editProductData.MPN!);
-      await detailsTab.setUPC(page, editProductData.UPC!);
-      await detailsTab.setEAN13(page, editProductData.EAN13!);
-      await detailsTab.setISBN(page, editProductData.ISBN!);
+      await detailsTab.setMPN(page, editProductData.mpn!);
+      await detailsTab.setUPC(page, editProductData.upc!);
+      await detailsTab.setEAN13(page, editProductData.ean13!);
+      await detailsTab.setISBN(page, editProductData.isbn!);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);

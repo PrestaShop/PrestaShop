@@ -289,7 +289,7 @@ class DetailsTab extends BOBasePage {
       await this.waitForVisibleSelector(page, this.createFileFrame);
 
       const newFileFrame: Frame | null = await page.frame({name: 'modal-create-product-attachment-iframe'});
-      await expect(newFileFrame).to.be.not.null;
+      expect(newFileFrame).to.not.eq(null);
 
       await this.setValue(newFileFrame!, this.fileNameInput, productData.files[i].fileName);
       await this.setValue(newFileFrame!, this.fileDescriptionInput, productData.files[i].description);
@@ -367,7 +367,9 @@ class DetailsTab extends BOBasePage {
   async getValue(page: Page, inputName: string): Promise<string> {
     switch (inputName) {
       case 'condition':
-        return page.$eval(this.productConditionSelect, (node: HTMLSelectElement) => node.value);
+        return page
+          .locator(this.productConditionSelect)
+          .evaluate((el: HTMLSelectElement) => el.value);
       case 'mpn':
         return this.getAttributeContent(page, this.productMPNInput, 'value');
       case 'reference':

@@ -44,13 +44,13 @@ export default class ProductData {
 
   public reference: string;
 
-  public MPN: string | null;
+  public mpn: string | null;
 
-  public UPC: string | null;
+  public upc: string | null;
 
-  public EAN13: string | null;
+  public ean13: string | null;
 
-  public ISBN: string | null;
+  public isbn: string | null;
 
   public features: ProductFeatures[];
 
@@ -156,17 +156,17 @@ export default class ProductData {
     /** @type {string} Reference of the product */
     this.reference = productToCreate.reference || faker.string.alphanumeric(7);
 
-    /** @type {string|null} MPN of the product */
-    this.MPN = productToCreate.MPN || null;
+    /** @type {string|null} mpn of the product */
+    this.mpn = productToCreate.mpn || null;
 
-    /** @type {string|null} UPC of the product */
-    this.UPC = productToCreate.UPC || null;
+    /** @type {string|null} upc of the product */
+    this.upc = productToCreate.upc || null;
 
-    /** @type {string|null} EAN13 of the product */
-    this.EAN13 = productToCreate.EAN13 || null;
+    /** @type {string|null} ean13 of the product */
+    this.ean13 = productToCreate.ean13 || null;
 
-    /** @type {string|null} ISBN of the product */
-    this.ISBN = productToCreate.ISBN || null;
+    /** @type {string|null} isbn of the product */
+    this.isbn = productToCreate.isbn || null;
 
     /** @type {number} Quantity available of the product */
     this.quantity = productToCreate.quantity === undefined
