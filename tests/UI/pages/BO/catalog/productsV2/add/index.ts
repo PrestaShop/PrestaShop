@@ -63,7 +63,7 @@ class CreateProduct extends BOBasePage {
 
   private readonly previewProductButton: string;
 
-  private readonly saveProductButton: string;
+  public readonly saveProductButton: string;
 
   private readonly deleteProductButton: string;
 
