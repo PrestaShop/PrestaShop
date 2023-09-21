@@ -7,25 +7,27 @@ import date from '@utils/date';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
+// Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
+import virtualProductTab from '@pages/BO/catalog/productsV2/add/virtualProductTab';
+import productSettings from '@pages/BO/shopParameters/productSettings';
+
+// Import FO pages
 import foProductPage from '@pages/FO/product';
 import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
 import {myAccountPage} from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import virtualProductTab from '@pages/BO/catalog/productsV2/add/virtualProductTab';
-import productSettings from '@pages/BO/shopParameters/productSettings';
 
 // Import data
 import ProductData from '@data/faker/product';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -90,7 +92,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).eq(true);
     });
 
     it('should choose \'Virtual product\' and go to new product page', async function () {
@@ -151,7 +153,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
     });
 
     it('should pay the order', async function () {
@@ -196,7 +198,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await orderDetailsPage.clickOnDownloadLink(page);
 
       const doesFileExist = await files.doesFileExist(newProductData.fileName, 5000);
-      await expect(doesFileExist, 'File is not downloaded!').to.be.true;
+      expect(doesFileExist, 'File is not downloaded!').to.be.true;
     });
 
     it('should close the FO page', async function () {
@@ -261,7 +263,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
         page = await foProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
     });
 
@@ -309,7 +311,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductAvailableLabel', baseContext);
 
       const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
-      await expect(availabilityLabel).to.contains('Product available');
+      expect(availabilityLabel).to.contains('Product available');
     });
 
     it('should close the page', async function () {
@@ -352,7 +354,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await expect(availabilityLabel).to.contains('Out of stock');
 
       const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
-      await expect(isVisible).to.be.true;
+      expect(isVisible).eq(true);
     });
 
     it('should close the page', async function () {
@@ -366,7 +368,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
   });
 
   // 4 - Delete product
-  describe('Delete product', async () => {
+  describe('POST-TEST: Delete product', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
