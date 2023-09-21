@@ -1198,15 +1198,23 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             && $this->product->available_for_order
             && !Configuration::isCatalogMode()
         );
-
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
 
-        // It seems that the call works even without the ICU suffix and ICU logic is activated
+        // Option 1 - we will call it without ICU suffix and just format everything in INTL
         dump($this->product->quantity . ' ' . $this->trans(
             '{items, plural, =0 {Items} =1 {Item} other {Items}}',
             ['items' => $this->product->quantity],
             'Shop.Theme.Catalog'
         ));
+
+        // Option 2 - we will use the intl suffix as symfony does to detect what we want to format with INTL
+        /*
+        dump($this->product->quantity . ' ' . $this->trans(
+            '{items, plural, =0 {Items} =1 {Item} other {Items}}',
+            ['items' => $this->product->quantity],
+            'Shop.Theme.Catalog+intl-icu'
+        ));
+        */
 
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 

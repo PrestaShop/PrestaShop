@@ -204,6 +204,14 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
             $domain = 'messages';
         }
 
+        // Option 2 - Check if ICU is in the domain, write down this info.
+        // Replace ICU part in the domain to keep using our old catalogs without the suffix.
+        $useIntl = false;
+        if (strpos($domain, MessageCatalogue::INTL_DOMAIN_SUFFIX)) {
+            $useIntl = true;
+            $domain = str_replace(MessageCatalogue::INTL_DOMAIN_SUFFIX, '', $domain);
+        }
+
         $catalogue = $this->getCatalogue($locale);
         $locale = $catalogue->getLocale();
         while (!$catalogue->defines($id, $domain)) {
@@ -215,8 +223,21 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
             }
         }
 
-        $len = \strlen(MessageCatalogue::INTL_DOMAIN_SUFFIX);
+        // Option 1 - just format everything in ICU
         if ($this->hasIntlFormatter) {
+            return $this->formatter->formatIntl($catalogue->get($id, $domain), $locale, $parameters);
+        }
+
+        // Option 2 - just format everything in ICU
+        /* if ($this->hasIntlFormatter && $useIntl) {
+            return $this->formatter->formatIntl($catalogue->get($id, $domain), $locale, $parameters);
+        }*/
+
+        $len = \strlen(MessageCatalogue::INTL_DOMAIN_SUFFIX);
+        if ($this->hasIntlFormatter
+            && ($catalogue->defines($id, $domain.MessageCatalogue::INTL_DOMAIN_SUFFIX)
+            || (\strlen($domain) > $len && 0 === substr_compare($domain, MessageCatalogue::INTL_DOMAIN_SUFFIX, -$len, $len)))
+        ) {
             return $this->formatter->formatIntl($catalogue->get($id, $domain), $locale, $parameters);
         }
 
