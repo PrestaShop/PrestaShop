@@ -73,18 +73,26 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="013afdec32d184dc61040022a45409ca">
+        <source>Click on the title of a section to open its fieldsets.</source>
+        <target>Click on the title of a section to open its fieldsets.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
         <target>You must use this syntax in your translations. Here are several examples:</target>
-        <note>Line: 71</note>
+        <note>Line: 70</note>
       </trans-unit>
-      <trans-unit id="013afdec32d184dc61040022a45409ca">
-        <source>Click on the title of a section to open its fieldsets.</source>
-        <target>Click on the title of a section to open its fieldsets.</target>
-        <note>Line: 52</note>
-      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="b3f4e400fe40a25d1c2b0c59e63668cf">
         <source>Here you can modify translations for all installed module.</source>
         <target>Here you can modify translations for all installed module.</target>

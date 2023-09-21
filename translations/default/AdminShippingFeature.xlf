@@ -106,12 +106,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 218</note>
+        <note>Line: 26</note>
       </trans-unit>
     </body>
   </file>
@@ -305,17 +305,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/PreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
         <source>Handling charges</source>
         <target>Handling charges</target>
-        <note>Line: 106</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
         <source>Free shipping starts at</source>
         <target>Free shipping starts at</target>
-        <note>Line: 114</note>
+        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>

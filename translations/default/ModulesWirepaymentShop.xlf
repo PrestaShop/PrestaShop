@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_wirepayment/controllers/front/payment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="763538d192c0e4a3a341c1c7d0db9240">
+        <source>%1$s (tax incl.)</source>
+        <target>%1$s (tax incl.)</target>
+        <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_wirepayment/controllers/front/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
         <source>This payment method is not available.</source>
         <target>This payment method is not available.</target>
         <note>Line: 47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_wirepayment/ps_wirepayment.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="763538d192c0e4a3a341c1c7d0db9240">
-        <source>%1$s (tax incl.)</source>
-        <target>%1$s (tax incl.)</target>
-        <note>Line: 392</note>
       </trans-unit>
     </body>
   </file>
