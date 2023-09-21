@@ -479,12 +479,12 @@ export default class CommonPage {
 
   /**
    * Upload file in input type=file selector
-   * @param page {Page} Browser tab
+   * @param page {Page | Frame} Browser tab
    * @param selector {string} String to locate the file input
    * @param filePath {string} Path of the file to add
    * @return {Promise<void>}
    */
-  async uploadFile(page: Page, selector: string, filePath: string): Promise<void> {
+  async uploadFile(page: Page | Frame, selector: string, filePath: string): Promise<void> {
     const input = await page.$(selector);
 
     if (input) {

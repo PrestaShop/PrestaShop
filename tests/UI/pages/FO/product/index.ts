@@ -45,6 +45,8 @@ class Product extends FOBasePage {
 
   private readonly productDetail: string;
 
+  private readonly productFeaturesList: string;
+
   private readonly continueShoppingButton: string;
 
   private readonly productAvailabilityIcon: string;
@@ -165,6 +167,7 @@ class Product extends FOBasePage {
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
     this.productQuantitySpan = '#product-details div.product-quantities label';
     this.productDetail = 'div.product-information a[href=\'#product-details\']';
+    this.productFeaturesList = '#product-details section.product-features';
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
@@ -563,6 +566,48 @@ class Product extends FOBasePage {
   async isQuantityDisplayed(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.productDetail);
     return this.elementVisible(page, this.productQuantitySpan, 1000);
+  }
+
+  /**
+   * Get product features list
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductFeaturesList(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.productDetail);
+
+    return this.getTextContent(page, this.productFeaturesList);
+  }
+
+  /**
+   * Is features block visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isFeaturesBlockVisible(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.productDetail);
+
+    return this.elementVisible(page, this.productFeaturesList);
+  }
+
+  /**
+   * Get product condition
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductCondition(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.productDetail);
+
+    return this.getTextContent(page, '#product-details div.product-condition');
+  }
+
+  /**
+   * Is customization block visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isCustomizationBlockVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, 'div.product-container div.product-information section.product-customization', 1000);
   }
 
   /**
