@@ -22,6 +22,15 @@ type ProductCreator = {
   summary?: string
   description?: string
   reference?: string
+  MPN?: string | null
+  UPC?: string | null
+  EAN13?: string | null
+  ISBN?: string | null
+  features?: ProductFeatures[]
+  files?: ProductFiles[]
+  displayCondition?: boolean
+  condition?: string
+  customizations?: ProductCustomizations[]
   quantity?: number
   tax?: number
   price?: number
@@ -53,6 +62,18 @@ type ProductCombination = {
   name: string
   price: number
 };
+
+type ProductFeatures = {
+  featureName: string,
+  preDefinedValue?: string,
+  customizedValue?: string,
+}
+
+type ProductFiles = {
+  fileName: string,
+  description: string,
+  file: string,
+}
 
 type ProductCombinationOptions = {
   reference: string
@@ -91,6 +112,12 @@ type ProductCombinationBulkStock = {
 };
 
 type ProductCustomization = {
+  label: string
+  type: string
+  required: boolean
+};
+
+type ProductCustomizations = {
   label: string
   type: string
   required: boolean
@@ -204,4 +231,7 @@ export {
   ProductReviewCreator,
   ProductSpecificPrice,
   ProductStockMovement,
+  ProductFeatures,
+  ProductFiles,
+  ProductCustomizations,
 };

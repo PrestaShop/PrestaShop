@@ -4,6 +4,9 @@ import {
   ProductCustomization,
   ProductPackItem,
   ProductSpecificPrice,
+  ProductFeatures,
+  ProductFiles,
+  ProductCustomizations,
 } from '@data/types/product';
 
 import {faker} from '@faker-js/faker';
@@ -21,13 +24,13 @@ export default class ProductData {
 
   public nameFR: string;
 
-  public defaultImage: string|null;
+  public defaultImage: string | null;
 
-  public coverImage: string|null;
+  public coverImage: string | null;
 
-  public thumbImage: string|null;
+  public thumbImage: string | null;
 
-  public thumbImageFR: string|null;
+  public thumbImageFR: string | null;
 
   public category: string;
 
@@ -40,6 +43,22 @@ export default class ProductData {
   public description: string;
 
   public reference: string;
+
+  public MPN: string | null;
+
+  public UPC: string | null;
+
+  public EAN13: string | null;
+
+  public ISBN: string | null;
+
+  public features: ProductFeatures[];
+
+  public files: ProductFiles[];
+
+  public displayCondition: boolean;
+
+  public condition: string;
 
   public quantity: number;
 
@@ -80,6 +99,8 @@ export default class ProductData {
   public behaviourOutOfStock: string;
 
   public customization: ProductCustomization;
+
+  public customizations: ProductCustomizations[];
 
   public downloadFile: boolean;
 
@@ -135,6 +156,18 @@ export default class ProductData {
     /** @type {string} Reference of the product */
     this.reference = productToCreate.reference || faker.string.alphanumeric(7);
 
+    /** @type {string|null} MPN of the product */
+    this.MPN = productToCreate.MPN || null;
+
+    /** @type {string|null} UPC of the product */
+    this.UPC = productToCreate.UPC || null;
+
+    /** @type {string|null} EAN13 of the product */
+    this.EAN13 = productToCreate.EAN13 || null;
+
+    /** @type {string|null} ISBN of the product */
+    this.ISBN = productToCreate.ISBN || null;
+
     /** @type {number} Quantity available of the product */
     this.quantity = productToCreate.quantity === undefined
       ? faker.number.int({min: 1, max: 9})
@@ -176,6 +209,29 @@ export default class ProductData {
         values: ['S', 'M'],
       },
     ];
+
+    /** @type {ProductFeatures[]} Features of the product */
+    this.features = productToCreate.features || [
+      {
+        featureName: 'Composition',
+        preDefinedValue: 'Cotton',
+      },
+    ];
+
+    /** @type {ProductFiles[]} Files attached to the product in details tab*/
+    this.files = productToCreate.files || [
+      {
+        fileName: 'test',
+        description: 'test',
+        file: 'test.txt',
+      },
+    ];
+
+    /** @type {boolean} Boolean to choose if we need to display condition or not */
+    this.displayCondition = productToCreate.displayCondition || false;
+
+    /** @type {string} Condition to choose */
+    this.condition = productToCreate.condition || 'Use';
 
     /** @type {ProductPackItem[]} Pack of products to add to the product */
     this.pack = productToCreate.pack || [
@@ -233,6 +289,14 @@ export default class ProductData {
       type: 'Text',
       required: true,
     };
+
+    /** @type {ProductCustomization} Customized value of the product */
+    this.customizations = productToCreate.customizations || [
+      {
+        label: 'Type your text here',
+        type: 'Text',
+        required: true,
+      }];
 
     /** @type {boolean} True to download file */
     this.downloadFile = productToCreate.downloadFile || false;
