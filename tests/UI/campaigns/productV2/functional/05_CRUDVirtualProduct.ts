@@ -122,15 +122,15 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await productsPage.closeSfToolBar(page);
 
-      const pageTitle: string = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).eq(true);
     });
 
     it('should choose \'Virtual product\'', async function () {
@@ -138,24 +138,24 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await productsPage.selectProductType(page, newProductData.type);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should check the virtual product description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVirtualProductDescription', baseContext);
 
-      const productTypeDescription: string = await productsPage.getProductDescription(page);
-      await expect(productTypeDescription).to.contains(productsPage.virtualProductDescription);
+      const productTypeDescription = await productsPage.getProductDescription(page);
+      expect(productTypeDescription).to.contains(productsPage.virtualProductDescription);
     });
 
     it('should go to new product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewfoProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewFoProductPage', baseContext);
 
       await productsPage.clickOnAddNewProduct(page);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should create virtual product', async function () {
@@ -163,8 +163,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await createProductsPage.closeSfToolBar(page);
 
-      const createProductMessage: string = await createProductsPage.setProduct(page, newProductData);
-      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await createProductsPage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
 
@@ -173,7 +173,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductHeaderDetails', baseContext);
 
-      const taxValue: number = await basicHelper.percentage(newProductData.price, newProductData.tax);
+      const taxValue = await basicHelper.percentage(newProductData.price, newProductData.tax);
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
@@ -188,8 +188,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should check that the save button is changed to \'Save and publish\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
-      const saveButtonName: string = await createProductsPage.getSaveButtonName(page);
-      await expect(saveButtonName).to.equal(createProductsPage.saveAndPublishButtonName);
+      const saveButtonName = await createProductsPage.getSaveButtonName(page);
+      expect(saveButtonName).to.equal(createProductsPage.saveAndPublishButtonName);
     });
 
     it('should preview product', async function () {
@@ -200,21 +200,21 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(newProductData.name);
+      const pageTitle = await foProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const taxValue: number = await basicHelper.percentage(newProductData.price, newProductData.tax);
+      const taxValue = await basicHelper.percentage(newProductData.price, newProductData.tax);
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([
-        await expect(result.name).to.equal(newProductData.name),
-        await expect(result.price.toFixed(2)).to.equal((newProductData.price + taxValue).toFixed(2)),
-        await expect(result.summary).to.equal(newProductData.summary),
-        await expect(result.description).to.equal(newProductData.description),
+        expect(result.name).to.equal(newProductData.name),
+        expect(result.price.toFixed(2)).to.equal((newProductData.price + taxValue).toFixed(2)),
+        expect(result.summary).to.equal(newProductData.summary),
+        expect(result.description).to.equal(newProductData.description),
       ]);
     });
 
@@ -225,8 +225,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page, 1);
 
-        const notificationsNumber: number = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(1);
+        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should proceed to checkout and sign in', async function () {
@@ -245,7 +245,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
       it('should pay the order', async function () {
@@ -255,8 +255,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go back to BO', async function () {
@@ -266,7 +266,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         page = await foProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {
@@ -278,15 +278,15 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
           dashboardPage.ordersLink,
         );
 
-        const pageTitle: string = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should update order status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const textResult: string = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
-        await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
+        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
@@ -295,8 +295,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         // Click on view my shop
         page = await ordersPage.viewMyShop(page);
 
-        const isHomePage: boolean = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+        const isHomePage = await homePage.isHomePage(page);
+        expect(isHomePage, 'Home page is not displayed').to.be.true;
       });
 
       it('should go to my account page', async function () {
@@ -305,7 +305,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await homePage.goToMyAccountPage(page);
 
         const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        expect(pageTitle).to.equal(myAccountPage.pageTitle);
       });
 
       it('should go to order history page', async function () {
@@ -314,7 +314,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await myAccountPage.goToHistoryAndDetailsPage(page);
 
         const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
-        await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
+        expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
       });
 
       it('should go to order details page', async function () {
@@ -322,8 +322,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         await orderHistoryPage.goToDetailsPage(page);
 
-        const pageTitle: string = await orderDetailsPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+        const pageTitle = await orderDetailsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
       });
 
       it('should download the file', async function () {
@@ -331,8 +331,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         await orderDetailsPage.clickOnDownloadLink(page);
 
-        const doesFileExist: boolean = await files.doesFileExist(newProductData.fileName, 5000);
-        await expect(doesFileExist, 'File is not downloaded!').to.be.true;
+        const doesFileExist = await files.doesFileExist(newProductData.fileName, 5000);
+        expect(doesFileExist, 'File is not downloaded!').eq(true);
       });
 
       it('should check if the mail is in mailbox', async function () {
@@ -359,8 +359,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle: string = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await ordersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
@@ -374,8 +374,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await productsPage.closeSfToolBar(page);
 
-      const pageTitle: string = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to the first product page', async function () {
@@ -383,21 +383,21 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await productsPage.goToProductPage(page);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should edit the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editCreatedProduct', baseContext);
 
-      const createProductMessage: string = await createProductsPage.setProduct(page, editProductData);
-      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await createProductsPage.setProduct(page, editProductData);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductHeaderDetails', baseContext);
 
-      const taxValue: number = await basicHelper.percentage(editProductData.price, editProductData.tax);
+      const taxValue = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
@@ -420,20 +420,20 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(editProductData.name);
+      const pageTitle = await foProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(editProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      const taxValue: number = await basicHelper.percentage(editProductData.price, editProductData.tax);
+      const taxValue = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([
-        await expect(result.name).to.equal(editProductData.name),
-        await expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
-        await expect(result.description).to.equal(editProductData.description),
+        expect(result.name).to.equal(editProductData.name),
+        expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
+        expect(result.description).to.equal(editProductData.description),
       ]);
     });
 
@@ -443,8 +443,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
 
@@ -453,8 +453,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const createProductMessage: string = await createProductsPage.deleteProduct(page);
-      await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      const createProductMessage = await createProductsPage.deleteProduct(page);
+      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 

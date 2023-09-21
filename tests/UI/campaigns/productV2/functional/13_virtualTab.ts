@@ -21,7 +21,7 @@ import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
 import {myAccountPage} from '@pages/FO/myAccount';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
@@ -153,7 +153,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').eq(true);
     });
 
     it('should pay the order', async function () {
@@ -179,14 +179,14 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should go to order details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page);
+      await orderHistoryPage.goToDetailsPage(page);
 
       const pageTitle = await orderDetailsPage.getPageTitle(page);
       expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
@@ -198,7 +198,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       await orderDetailsPage.clickOnDownloadLink(page);
 
       const doesFileExist = await files.doesFileExist(newProductData.fileName, 5000);
-      expect(doesFileExist, 'File is not downloaded!').to.be.true;
+      expect(doesFileExist, 'File is not downloaded!').eq(true);
     });
 
     it('should close the FO page', async function () {
