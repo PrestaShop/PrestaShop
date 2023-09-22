@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Category;
-use Configuration;
 use Image;
 use ImageManager;
 use ImageType;

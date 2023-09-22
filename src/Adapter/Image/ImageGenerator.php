@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
