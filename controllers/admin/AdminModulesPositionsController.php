@@ -558,12 +558,14 @@ class AdminModulesPositionsControllerCore extends AdminController
      */
     public function ajaxProcessGetPossibleHookingListForModule()
     {
-        $module_id = (int) Tools::getValue('module_id');
-        if ($module_id == 0) {
-            die('{"hasError" : true, "errors" : ["Wrong module ID."]}');
-        }
+        if ($this->access('view')) {
+            $module_id = (int) Tools::getValue('module_id');
+            if ($module_id == 0) {
+                die('{"hasError" : true, "errors" : ["Wrong module ID."]}');
+            }
 
-        $module_instance = Module::getInstanceById($module_id);
-        die(json_encode($module_instance->getPossibleHooksList()));
+            $module_instance = Module::getInstanceById($module_id);
+            die(json_encode($module_instance->getPossibleHooksList()));
+        }
     }
 }
