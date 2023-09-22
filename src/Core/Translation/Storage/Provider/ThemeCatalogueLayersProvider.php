@@ -247,6 +247,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
     {
         $moduleCatalogue = new MessageCatalogue($locale);
         $modules = $this->getModulesFromTranslations($locale);
+        $modules = array_unique($modules);
 
         foreach ($modules as $module) {
             $moduleProvider = $this->moduleCatalogueProviderFactory->getModuleCatalogueProvider(
