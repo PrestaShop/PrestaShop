@@ -226,6 +226,7 @@ jobs:
 
       - name: Install browsers
         working-directory: ${{ inputs.TESTS_DIR }}
+        if: env.GH_BRANCH != '1.7.8.x'
         run: npx playwright install --with-deps
 
       # Run tests (if error, we continue for uploading report)
@@ -297,6 +298,7 @@ jobs:
 
       - name: Install browsers
         working-directory: ${{ inputs.TESTS_DIR }}
+        if: env.GH_BRANCH != '1.7.8.x'
         run: npx playwright install --with-deps
 
       - name: Combine reports
