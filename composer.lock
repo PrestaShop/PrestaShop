@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60fdd414e98620e1f4a41b8cf8ff8198",
+    "content-hash": "60acf169894ee319fe6a50e661a284fa",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5454,23 +5454,23 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v5.0.3",
+            "version": "v6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "2a1e4bebec1d834b00728117e5e2655c7cf535a9"
+                "reference": "03955f7315f97f9d99fd1bd1675b24f0a97e1938"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/2a1e4bebec1d834b00728117e5e2655c7cf535a9",
-                "reference": "2a1e4bebec1d834b00728117e5e2655c7cf535a9",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/03955f7315f97f9d99fd1bd1675b24f0a97e1938",
+                "reference": "03955f7315f97f9d99fd1bd1675b24f0a97e1938",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=7.1.3"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -5495,9 +5495,9 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.3"
+                "source": "https://github.com/PrestaShop/productcomments/tree/v6.0.2"
             },
-            "time": "2023-03-06T15:11:12+00:00"
+            "time": "2023-08-30T08:14:56+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -6212,16 +6212,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.13.1",
+            "version": "v3.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "02ccda6023bcaa6a6e2c5851b9c22be13a983db9"
+                "reference": "8e6ed8e88d670ffadf0fa79993f8d255862be191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/02ccda6023bcaa6a6e2c5851b9c22be13a983db9",
-                "reference": "02ccda6023bcaa6a6e2c5851b9c22be13a983db9",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/8e6ed8e88d670ffadf0fa79993f8d255862be191",
+                "reference": "8e6ed8e88d670ffadf0fa79993f8d255862be191",
                 "shasum": ""
             },
             "require": {
@@ -6257,9 +6257,9 @@
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.13.1"
+                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.13.2"
             },
-            "time": "2023-08-09T15:47:34+00:00"
+            "time": "2023-09-18T14:40:21+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -18112,5 +18112,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
