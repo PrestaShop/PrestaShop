@@ -35,7 +35,7 @@ export default {
         values: ['White', 'Black'],
       },
     ],
-    weight: 0.300,
+    packageDimensionWeight: 0.300,
     status: true,
   }),
   demo_3: new ProductData({
