@@ -148,10 +148,11 @@ echo "** To view storefront point your browser to http://localhost:8001/"
 echo "** To view backoffice point your browser to http://localhost:8001/admin-dev"
 echo "**   Login with:"
 echo "**     username: ${ADMIN_MAIL}"
-echo "**     password: ${ADMIN_PASSWD}"
+echo "**     password: Correct Horse Battery Staple"
+echo "**               (if you didn't define your own in ADMIN_PASSWORD environment variable)"
 if [ $PS_USE_DOCKER_MAILDEV -eq 1 ]; then
     echo "**"
-    echo "** To view sent emails point your browser to http://localhost:8002/"
+    echo "** To view sent emails point your browser to http://localhost:1080/"
 fi
 echo "**"
 echo "***\n"
