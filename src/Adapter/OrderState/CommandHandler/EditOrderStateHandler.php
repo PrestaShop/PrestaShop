@@ -28,18 +28,34 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler;
 
 use OrderState;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\EditOrderStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\MissingOrderStateRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateFileUploaderInterface;
 
 /**
  * Handles commands which edits given order state with provided data.
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditOrderStateHandler extends AbstractOrderStateHandler implements EditOrderStateHandlerInterface
 {
+    /**
+     * @var OrderStateFileUploaderInterface
+     */
+    protected $fileUploader;
+
+    /**
+     * @param OrderStateFileUploaderInterface $fileUploader
+     */
+    public function __construct(OrderStateFileUploaderInterface $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -60,6 +76,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (false === $orderState->update()) {
             throw new OrderStateException('Failed to update order state');
+        }
+
+        if ($command->getFilePathName()) {
+            $this->fileUploader->upload($command->getFilePathName(), $orderStateId->getValue(), $command->getFileSize());
         }
     }
 
@@ -107,6 +127,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (null !== $command->isSendEmailEnabled()) {
             $orderState->send_email = $command->isSendEmailEnabled();
+
+            if ($orderState->send_email && null !== $command->getTemplate()) {
+                $orderState->template = $command->getTemplate();
+            }
         }
 
         if (null !== $command->isPdfInvoice()) {
@@ -127,10 +151,6 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (null !== $command->isDelivery()) {
             $orderState->delivery = $command->isDelivery();
-        }
-
-        if (null !== $command->getTemplate()) {
-            $orderState->template = $command->getTemplate();
         }
     }
 }

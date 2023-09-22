@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 /**
  * Handles creation of country and address format
  */
+#[AsCommandHandler]
 class AddCountryHandler implements AddCountryHandlerInterface
 {
     /**

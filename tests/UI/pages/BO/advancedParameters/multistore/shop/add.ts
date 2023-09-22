@@ -53,13 +53,15 @@ class AddShop extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setShop(page: Page, shopData: ShopData): Promise<string> {
+    const currentUrl: string = page.url();
+
     await this.setValue(page, this.nameInput, shopData.name);
     await this.selectByVisibleText(page, this.shopGroupSelect, shopData.shopGroup);
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
     await Promise.all([
       page.$eval(this.saveButton, (el: HTMLElement) => el.click()),
-      page.waitForNavigation({waitUntil: 'networkidle', timeout: 30000}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle', timeout: 30000}),
     ]);
 
     return this.getTextContent(page, this.alertSuccessBlock);

@@ -26,15 +26,6 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{% set layoutHeaderToolbarBtn = {
-  add: {
-    href: path('admin_suppliers_create'),
-    desc: 'Add new supplier'|trans({}, 'Admin.Catalog.Feature'),
-    icon: 'add_circle_outline',
-  }
-}
-%}
-
 {% block content %}
   {% block supplier_grid %}
     {{ ps.infotip(settingsTipMessage, true) }}

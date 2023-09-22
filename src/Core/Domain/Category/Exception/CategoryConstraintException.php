@@ -57,11 +57,6 @@ class CategoryConstraintException extends CategoryException
     public const INVALID_PARENT_ID = 6;
 
     /**
-     * Code is used when too many menu thumbnails is being set for category.
-     */
-    public const TOO_MANY_MENU_THUMBNAILS = 8;
-
-    /**
      * Code is used when invalid id is supplied.
      */
     public const INVALID_ID = 10;

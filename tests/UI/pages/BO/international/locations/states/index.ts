@@ -203,7 +203,7 @@ class States extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewStatePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewStateLink);
+    await this.clickAndWaitForURL(page, this.addNewStateLink);
   }
 
   /* Filter Methods */
@@ -214,7 +214,7 @@ class States extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -275,7 +275,7 @@ class States extends BOBasePage {
         throw new Error(`Filter ${filterBy} was not found`);
     }
 
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /* Column methods */
@@ -364,7 +364,7 @@ class States extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditStatePage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.columnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.columnActionsEditLink(row));
   }
 
   /**
@@ -387,7 +387,7 @@ class States extends BOBasePage {
       page.click(this.columnActionsDeleteLink(row)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -443,7 +443,7 @@ class States extends BOBasePage {
       page.click(this.deleteSelectionButton),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -464,7 +464,7 @@ class States extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status
-    await this.clickAndWaitForNavigation(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
+    await this.clickAndWaitForURL(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -516,7 +516,7 @@ class States extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -551,7 +551,7 @@ class States extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -562,7 +562,7 @@ class States extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

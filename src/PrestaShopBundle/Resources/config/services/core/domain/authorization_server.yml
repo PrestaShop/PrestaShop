@@ -4,22 +4,27 @@ services:
     autowire: true
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface: '@PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository'
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface: '@PrestaShopBundle\Entity\Repository\ApiAccessRepository'
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\AddApplicationHandler:
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\EditApplicationHandler:
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler\GetApplicationForEditingHandler:
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing'
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\DeleteApplicationHandler:
+    autoconfigure: true
 
   PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory: ~
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationFactoryInterface: '@PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory'
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler\GetApplicationForViewingHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ApiAccessFiltersBuilder:
+    class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ApiAccessFiltersBuilder'
+    tags: [ 'core.typed_filters_builder' ]

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkDeleteEmployeeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeExc
 /**
  * Class BulkDeleteEmployeeHandler.
  */
+#[AsCommandHandler]
 final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements BulkDeleteEmployeeHandlerInterface
 {
     /**
@@ -47,7 +49,6 @@ final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements
             $this->assertEmployeeWasFoundById($employeeId, $employee);
             $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
             $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
-            $this->assertEmployeeDoesNotManageWarehouse($employee);
 
             if (!$employee->delete()) {
                 throw new CannotDeleteEmployeeException($employeeId, sprintf('Cannot delete employee with id "%s".', $employeeId->getValue()));

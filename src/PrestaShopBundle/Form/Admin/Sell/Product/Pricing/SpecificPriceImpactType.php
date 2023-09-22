@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\SpecificPriceFixedPriceTransformer;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -70,7 +71,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $builder
             ->add('reduction', PriceReductionType::class, [
                 'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'label_subtitle' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
+                'alert_message' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'constraints' => [
                     new Reduction([
@@ -95,7 +96,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Set specific price', 'Admin.Catalog.Feature'),
                 'label_subtitle' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'row_attr' => [
                     'class' => 'js-fixed-price-row',
                 ],

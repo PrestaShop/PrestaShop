@@ -197,12 +197,12 @@ abstract class ApiController
     /**
      * Checks if access is granted.
      *
-     * @param array $accessLevel
+     * @param mixed $accessLevel
      * @param string $controller name of the controller
      *
      * @return bool
      */
-    protected function isGranted(array $accessLevel, $controller)
+    protected function isGranted($accessLevel, $controller)
     {
         return $this->container->get('security.authorization_checker')->isGranted(
             $accessLevel,

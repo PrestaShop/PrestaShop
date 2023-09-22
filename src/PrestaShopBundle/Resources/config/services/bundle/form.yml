@@ -38,3 +38,11 @@ services:
 
   form.type.common_type:
     abstract: true
+
+  PrestaShopBundle\Form\Admin\Type\CustomMoneyType:
+    alias: 'PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension'
+    deprecated: ~
+
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener:
+    tags:
+      - { name: core.legacy.hook.subscriber }

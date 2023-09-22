@@ -1187,7 +1187,7 @@ class LinkCore
     }
 
     /**
-     * Create link after language change, for the change language block.
+     * Retrieves a link for the current page in different language.
      *
      * @param int $idLang Language ID
      * @param Context|null $context the context if needed
@@ -1230,6 +1230,11 @@ class LinkCore
         } elseif (isset($params['fc']) && $params['fc'] == 'module') {
             $module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
             if (!empty($module)) {
+                // Let modules provide correct $params to build the URL if they need to (rewrites in correct language).
+                Hook::exec(
+                    'actionLanguageLinkParameters',
+                    ['linkParams' => &$params, 'linkIdLang' => (int) $idLang]
+                );
                 unset($params['fc'], $params['module']);
 
                 return $this->getModuleLink($module, $controller, $params, null, (int) $idLang);

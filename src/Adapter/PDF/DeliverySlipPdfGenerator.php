@@ -61,7 +61,7 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
     public function generatePDF(array $orderId)
     {
         if (count($orderId) !== 1) {
-            throw new CoreException(sprintf('"%s" supports generating delivery slip for single order only.', get_class($this)));
+            throw new CoreException(sprintf('"%s" supports generating delivery slip for single order only.', self::class));
         }
 
         $orderId = reset($orderId);

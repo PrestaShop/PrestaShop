@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
@@ -45,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Shop;
 use Smarty;
@@ -152,7 +152,6 @@ class AdminControllerTest extends TestCase
     {
         return [
             ['AdminCarriersController'],
-            ['AdminStatusesController'],
             ['AdminLoginController'],
             ['AdminQuickAccessesController'],
             ['AdminCustomerThreadsController'],
@@ -161,8 +160,6 @@ class AdminControllerTest extends TestCase
             ['AdminSuppliersController'],
             ['AdminAttributesGroupsController'],
             ['AdminNotFoundController'],
-            ['AdminFeaturesController'],
-            ['AdminGendersController'],
             ['AdminTagsController'],
             ['AdminShopController'],
             ['AdminCartRulesController'],
@@ -248,6 +245,7 @@ class AdminControllerTest extends TestCase
     {
         $language = $this->getMockBuilder(Language::class)->getMock();
         $language->iso_code = 'en';
+        $language->locale = 'en';
 
         return $language;
     }
@@ -271,7 +269,7 @@ class AdminControllerTest extends TestCase
 
     private function getMockContainerBuilder(): ContainerBuilder
     {
-        $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->getMock();
+        $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->disableOriginalConstructor()->getMock();
         $mockContainerBuilder->method('get')
             ->willReturnCallback(function (string $param) {
                 if ($param === Controller::SERVICE_LOCALE_REPOSITORY) {
@@ -292,8 +290,8 @@ class AdminControllerTest extends TestCase
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
                 }
-                if ($param === 'prestashop.core.admin.feature_flag.repository' || $param === FeatureFlagRepository::class) {
-                    return $this->getMockedFeatureFlagRepository();
+                if ($param === FeatureFlagStateCheckerInterface::class) {
+                    return $this->getMockedFeatureFlagStateCheckerInterface();
                 }
             });
 
@@ -374,15 +372,15 @@ class AdminControllerTest extends TestCase
         return $mockAvifExtensionChecker;
     }
 
-    private function getMockedFeatureFlagRepository(): FeatureFlagRepository
+    private function getMockedFeatureFlagStateCheckerInterface(): FeatureFlagStateCheckerInterface
     {
-        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+        $mockFeatureFlagStateChecker = $this->getMockBuilder(FeatureFlagStateCheckerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
+        $mockFeatureFlagStateChecker->method('isEnabled')->willReturn(false);
 
-        return $mockFeatureFlagRepository;
+        return $mockFeatureFlagStateChecker;
     }
 
     private function getMockNumberSpecification(): NumberSpecification

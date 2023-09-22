@@ -44,6 +44,7 @@ module.exports = {
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
+    attribute_group_form: './js/pages/attribute-group/form',
     authorization_server: './js/pages/authorization-server',
     backup: './js/pages/backup',
     carrier: './js/pages/carrier',
@@ -77,6 +78,8 @@ module.exports = {
     employee_form: './js/pages/employee/form',
     error: './js/pages/error',
     feature: './js/pages/feature',
+    feature_value: './js/pages/feature/feature-value',
+    feature_value_form: './js/pages/feature/feature-value/form',
     feature_flag: './js/pages/feature-flag/index',
     feature_form: './js/pages/feature/form',
     form_popover_error: './js/components/form/form-popover-error',
@@ -422,6 +425,11 @@ module.exports = {
       templateContent: '{{{preloadLinks}}}',
       inject: false,
     }),
+    new HtmlWebpackPlugin({
+      filename: 'preload.html.twig',
+      templateContent: '{{{preloadLinks}}}',
+      inject: false,
+    }),
     new webpack.DefinePlugin({
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false,
@@ -432,6 +440,13 @@ module.exports = {
       filter: /preload/,
       // eslint-disable-next-line
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{$admin_dir}')),
+    }),
+    new FontPreloadPlugin({
+      index: 'preload.html.twig',
+      extensions: ['woff2'],
+      filter: /preload/,
+      // eslint-disable-next-line
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{{ admin_dir }}')),
     }),
     new CssoWebpackPlugin({
       forceMediaMerge: true,

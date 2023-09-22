@@ -5,12 +5,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import productsPage from '@pages/BO/catalog/products';
@@ -35,7 +36,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
   const productData: ProductData = new ProductData({name: productName, type: 'Standard product'});
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -64,7 +65,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should create a product that the name contains accented characters', async function () {
@@ -73,7 +74,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
       await productsPage.goToAddProductPage(page);
 
       const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
 
     const tests = [
@@ -92,14 +93,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         );
 
         const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+        expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
       });
 
       it(`should ${test.args.action} accented URL`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AccentedUrl`, baseContext);
 
         const result = await seoAndUrlsPage.enableDisableAccentedURL(page, test.args.enable);
-        await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+        expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -112,7 +113,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         );
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
@@ -121,7 +122,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         await productsPage.resetFilterCategory(page);
 
         const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProducts).to.be.above(0);
+        expect(numberOfProducts).to.be.above(0);
       });
 
       it('should filter by the created product name', async function () {
@@ -130,7 +131,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         await productsPage.filterProducts(page, 'name', productName);
 
         const textColumn = await productsPage.getProductNameFromList(page, 1);
-        await expect(textColumn).to.contains(productName);
+        expect(textColumn).to.contains(productName);
       });
 
       it('should go to the created product page and reset the friendly url', async function () {
@@ -139,7 +140,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         await productsPage.goToProductPage(page, 1);
 
         const pageTitle = await addProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addProductPage.pageTitle);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
 
         await addProductPage.resetURL(page);
       });
@@ -151,7 +152,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         page = await addProductPage.previewProduct(page);
 
         const url = await foHomePage.getCurrentURL(page);
-        await expect(url).to.contains(test.args.productNameInURL.toLowerCase());
+        expect(url).to.contains(test.args.productNameInURL.toLowerCase());
       });
 
       it('should go back to BO', async function () {
@@ -161,7 +162,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         page = await foHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await addProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addProductPage.pageTitle);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
       });
     });
 
@@ -169,14 +170,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const testResult = await addProductPage.deleteProduct(page);
-      await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
   });
 

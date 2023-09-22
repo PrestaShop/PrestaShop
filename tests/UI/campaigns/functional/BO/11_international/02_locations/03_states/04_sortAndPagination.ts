@@ -51,7 +51,7 @@ describe('BO - International - States : Sort and pagination', async () => {
     );
 
     const pageTitle = await zonesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(zonesPage.pageTitle);
+    expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
   it('should go to \'States\' page', async function () {
@@ -60,7 +60,7 @@ describe('BO - International - States : Sort and pagination', async () => {
     await zonesPage.goToSubTabStates(page);
 
     const pageTitle = await statesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(statesPage.pageTitle);
+    expect(pageTitle).to.contains(statesPage.pageTitle);
   });
 
   // 1 - Pagination next and previous
@@ -96,7 +96,7 @@ describe('BO - International - States : Sort and pagination', async () => {
 
   // 2 : Sort states table
   describe('Sort states table', async () => {
-    it('should reset all filters', async function () {
+    it(`should filter by country '${Countries.canada.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBeforeSort', baseContext);
 
       await statesPage.filterStates(page, 'select', 'id_country', Countries.canada.name);
@@ -173,17 +173,17 @@ describe('BO - International - States : Sort and pagination', async () => {
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -193,7 +193,7 @@ describe('BO - International - States : Sort and pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterSort', baseContext);
 
       const numberOfStates = await statesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfStates).to.be.above(0);
+      expect(numberOfStates).to.be.above(0);
     });
 
     it('should change the item number to 50 per page', async function () {

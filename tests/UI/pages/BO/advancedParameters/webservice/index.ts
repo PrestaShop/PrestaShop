@@ -74,6 +74,12 @@ class WebService extends BOBasePage {
 
   private readonly paginationPreviousLink: string;
 
+  private readonly configurationForm: string;
+
+  private readonly enableWebserviceToggleInput: (status: number) => string;
+
+  private readonly configurationFormSubmit: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on webservice page
@@ -83,6 +89,7 @@ class WebService extends BOBasePage {
 
     this.pageTitle = 'Webservice •';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
     // Header links
@@ -134,6 +141,11 @@ class WebService extends BOBasePage {
     this.paginationLabel = `${this.webserviceGridPanel} .col-form-label`;
     this.paginationNextLink = `${this.webserviceGridPanel} [data-role=next-page-link]`;
     this.paginationPreviousLink = `${this.webserviceGridPanel} [data-role='previous-page-link']`;
+
+    // Form selectors
+    this.configurationForm = '#configuration_form';
+    this.enableWebserviceToggleInput = (status: number) => `${this.configurationForm} #form_enable_webservice_${status}`;
+    this.configurationFormSubmit = `${this.configurationForm} div.card-footer button`;
   }
 
   /*
@@ -146,7 +158,7 @@ class WebService extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewWebserviceKeyPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewWebserviceLink);
+    await this.clickAndWaitForURL(page, this.addNewWebserviceLink);
   }
 
   /**
@@ -165,7 +177,8 @@ class WebService extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page: Page): Promise<number> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
     return this.getNumberOfElementInGrid(page);
   }
@@ -188,7 +201,7 @@ class WebService extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditWebservicePage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.webserviceListTableEditLink(row));
+    await this.clickAndWaitForURL(page, this.webserviceListTableEditLink(row));
   }
 
   /**
@@ -205,13 +218,13 @@ class WebService extends BOBasePage {
         await this.setValue(page, this.webserviceFilterInput(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.webserviceFilterInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.webserviceFilterInput(filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -241,7 +254,8 @@ class WebService extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.webserviceListTableStatusColumn(row));
+      await page.click(this.webserviceListTableStatusColumn(row));
+
       return true;
     }
 
@@ -279,7 +293,8 @@ class WebService extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteWebService(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await page.click(this.confirmDeleteButton);
+    await this.elementNotVisible(page, this.confirmDeleteModal, 2000);
   }
 
   /**
@@ -287,7 +302,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getValidationMessage(page: Page): Promise<string> {
+  async getValidationMessage(page: Page): Promise<string> {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -339,7 +354,8 @@ class WebService extends BOBasePage {
     ]);
 
     // Click on enable/Disable and wait for modal
-    await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await this.elementNotVisible(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton, 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -375,7 +391,7 @@ class WebService extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -388,7 +404,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
+  async getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -399,9 +415,11 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page);
@@ -413,7 +431,7 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -424,9 +442,23 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /* Form methods */
+  /**
+   * Set the webservice status
+   * @param page {Page} Browser tab
+   * @param status {boolean} Status of the Webservice
+   * @returns {Promise<string>}
+   */
+  async setWebserviceStatus(page: Page, status: boolean): Promise<string> {
+    await this.setChecked(page, this.enableWebserviceToggleInput(status ? 1 : 0));
+    await this.clickAndWaitForLoadState(page, this.configurationFormSubmit);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

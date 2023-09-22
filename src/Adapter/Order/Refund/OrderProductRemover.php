@@ -61,6 +61,7 @@ class OrderProductRemover
     ): CartProductsComparator {
         $cart = new Cart($order->id_cart);
 
+        $this->removeSpecificProductCartRules($order, $orderDetail);
         // Important to remove order cart rule before the product is removed, so that cart rule can detect if it's applied on it
         $this->deleteOrderCartRule($order, $orderDetail, $cart);
 
@@ -229,6 +230,37 @@ class OrderProductRemover
         if (!empty($existingSpecificPriceId)) {
             $specificPrice = new SpecificPrice($existingSpecificPriceId);
             $specificPrice->delete();
+        }
+    }
+
+    /**
+     * This method removes cart rules which was applied to specific product when that product is being deleted.
+     *
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     *
+     * @return void
+     */
+    private function removeSpecificProductCartRules(
+        Order $order,
+        OrderDetail $orderDetail
+    ): void {
+        foreach ($order->getCartRules() as $orderCartRule) {
+            $cartRuleId = (int) $orderCartRule['id_cart_rule'];
+            $cartRule = new CartRule($cartRuleId);
+
+            if ($cartRuleId === (int) $cartRule->id && (int) $cartRule->reduction_product !== (int) $orderDetail->product_id) {
+                continue;
+            }
+
+            $orderCartRuleId = (int) $orderCartRule['id_order_cart_rule'];
+            $orderCartRuleObj = new OrderCartRule($orderCartRuleId);
+            if ((int) $orderCartRuleObj->id !== $orderCartRuleId) {
+                continue;
+            }
+
+            $orderCartRuleObj->deleted = true;
+            $orderCartRuleObj->save();
         }
     }
 }

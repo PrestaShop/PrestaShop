@@ -27,7 +27,7 @@ export default class TaxData {
     this.id = taxToCreate.id || 0;
 
     /** @type {string} Tax of the rate */
-    this.rate = taxToCreate.rate || faker.datatype.number({min: 1, max: 40}).toString();
+    this.rate = taxToCreate.rate || faker.number.int({min: 1, max: 40}).toString();
 
     /** @type {string} Name of the tax */
     this.name = taxToCreate.name || `TVA test ${this.rate}%`;

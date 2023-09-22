@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
@@ -37,10 +38,11 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplic
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
 /**
- * Handles command which adds new manufacturer using legacy object model
+ * Handles command which adds new application
  *
  * @experimental
  */
+#[AsCommandHandler]
 class AddApplicationHandler implements AddApplicationHandlerInterface
 {
     /**

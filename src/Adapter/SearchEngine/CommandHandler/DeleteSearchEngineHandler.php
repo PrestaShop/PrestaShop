@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\SearchEngine\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\SearchEngine\AbstractSearchEngineHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Command\DeleteSearchEngineCommand;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\CommandHandler\DeleteSearchEngineHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\DeleteSearchEngineException;
@@ -38,6 +39,7 @@ use PrestaShopException;
 /**
  * Handles command that deletes Search Engine.
  */
+#[AsCommandHandler]
 final class DeleteSearchEngineHandler extends AbstractSearchEngineHandler implements DeleteSearchEngineHandlerInterface
 {
     /**

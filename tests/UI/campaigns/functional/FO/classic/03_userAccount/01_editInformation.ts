@@ -9,8 +9,8 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
-import accountIdentityPage from '@pages/FO/myAccount/identity';
+import {myAccountPage} from '@pages/FO/myAccount';
+import {accountIdentityPage} from '@pages/FO/myAccount/identity';
 
 // Import data
 import CustomerData from '@data/faker/customer';
@@ -81,7 +81,7 @@ describe('FO - Account : Edit information', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -90,7 +90,7 @@ describe('FO - Account : Edit information', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(loginPage.pageTitle);
+      expect(pageTitle).to.equal(loginPage.pageTitle);
     });
 
     it('should login', async function () {
@@ -99,7 +99,7 @@ describe('FO - Account : Edit information', async () => {
       await loginPage.customerLogin(page, createCustomerData);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
     });
 
     it('should go to my account page', async function () {
@@ -108,7 +108,7 @@ describe('FO - Account : Edit information', async () => {
       await homePage.goToMyAccountPage(page);
 
       const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go account information page', async function () {
@@ -117,7 +117,7 @@ describe('FO - Account : Edit information', async () => {
       await myAccountPage.goToInformationPage(page);
 
       const pageTitle = await accountIdentityPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
+      expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
     });
 
     it('case 1 - should edit the account information ** re-enter the same password and leave new password empty',
@@ -125,14 +125,14 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount1', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData1);
-        await expect(textResult).to.be.equal(accountIdentityPage.successfulUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.successfulUpdateMessage);
       });
 
     it('should check that the account is still connected after update', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'connectedUpdatedAccount', baseContext);
 
       const isCustomerConnected = await accountIdentityPage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
+      expect(isCustomerConnected).to.eq(true);
     });
 
     it('case 2 - should edit the account information ** enter a wrong password and leave new password empty',
@@ -140,18 +140,18 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount2', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, 'wrongPass', editCustomerData1);
-        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
     it('should check the error alerts \'Invalid email/password combination\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts2', baseContext);
 
       let textResult = await accountIdentityPage.getInvalidEmailAlert(page);
-      await expect(textResult, 'Invalid email/password alert is not visible!').to
+      expect(textResult, 'Invalid email/password alert is not visible!').to
         .equal(accountIdentityPage.invalidEmailAlertMessage);
 
       textResult = await accountIdentityPage.getInvalidPasswordAlert(page);
-      await expect(textResult, 'Invalid email/password alert is not visible!').to
+      expect(textResult, 'Invalid email/password alert is not visible!').to
         .equal(accountIdentityPage.invalidEmailAlertMessage);
     });
 
@@ -160,14 +160,14 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount3', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData2);
-        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
     it('should check the minimum score alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts3', baseContext);
 
       const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Minimum score alert is not visible!').to
+      expect(textResult, 'Minimum score alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
@@ -176,18 +176,18 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount4', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData3);
-        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
     it('should check the error alerts on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts4', baseContext);
 
       let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Invalid number of characters words alert is not visible!').to
+      expect(textResult, 'Invalid number of characters words alert is not visible!').to
         .contains(accountIdentityPage.invalidNumberOfCharacters);
 
       textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Minimum score alert is not visible!').to
+      expect(textResult, 'Minimum score alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
@@ -196,14 +196,14 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount5', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData4);
-        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
     it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts5', baseContext);
 
       const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Minimum score alert is not visible!').to
+      expect(textResult, 'Minimum score alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
@@ -212,14 +212,14 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount6', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData5);
-        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
     it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts6', baseContext);
 
       const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Minimum score password alert is not visible!').to
+      expect(textResult, 'Minimum score password alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
@@ -227,14 +227,14 @@ describe('FO - Account : Edit information', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'editAccount7', baseContext);
 
       const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData6);
-      await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
     });
 
     it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts7', baseContext);
 
       const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Minimum score alert is not visible!').to
+      expect(textResult, 'Minimum score alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
@@ -243,14 +243,14 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount8', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData7);
-        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
     it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts8', baseContext);
 
       const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Minimum score alert is not visible!').to
+      expect(textResult, 'Minimum score alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
@@ -259,14 +259,14 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount9', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData8);
-        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
     it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts9', baseContext);
 
       const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Minimum score alert is not visible!').to
+      expect(textResult, 'Minimum score alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
@@ -275,7 +275,7 @@ describe('FO - Account : Edit information', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount10', baseContext);
 
         const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData9);
-        await expect(textResult).to.be.equal(accountIdentityPage.successfulUpdateMessage);
+        expect(textResult).to.be.equal(accountIdentityPage.successfulUpdateMessage);
       });
   });
 

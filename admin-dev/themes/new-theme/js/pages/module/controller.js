@@ -155,7 +155,7 @@ class AdminModuleController {
     body.on('click', this.bulkActionCheckboxListSelector, () => {
       const selector = $(self.bulkActionDropDownSelector);
 
-      if ($(this.checkedBulkActionListSelector).length > 0) {
+      if ($(self.checkedBulkActionListSelector).length > 0) {
         selector.closest('.module-top-menu-item').removeClass('disabled');
       } else {
         selector.closest('.module-top-menu-item').addClass('disabled');
@@ -163,7 +163,7 @@ class AdminModuleController {
     });
 
     body.on('click', self.bulkItemSelector, function initializeBodyChange() {
-      if ($(this.checkedBulkActionListSelector).length === 0) {
+      if ($(self.checkedBulkActionListSelector).length === 0) {
         $.growl.warning({
           message: window.translate_javascripts['Bulk Action - One module minimum'],
         });
@@ -172,10 +172,7 @@ class AdminModuleController {
 
       self.lastBulkAction = $(this).data('ref');
       const modulesListString = self.buildBulkActionModuleList();
-      const actionString = $(this)
-        .find(':checked')
-        .text()
-        .toLowerCase();
+      const actionString = $(this).data('display-name').toLowerCase();
       $(self.bulkConfirmModalListSelector).html(modulesListString);
       $(self.bulkConfirmModalActionNameSelector).text(actionString);
 
@@ -200,6 +197,7 @@ class AdminModuleController {
     this.eventEmitter.on('Module Enabled', (context) => this.onModuleDisabled(context));
     this.eventEmitter.on('Module Disabled', (context) => this.onModuleDisabled(context));
     this.eventEmitter.on('Module Uninstalled', (context) => this.installHandler(context));
+    this.eventEmitter.on('Module Delete', (context) => this.onModuleDelete(context));
     this.eventEmitter.on('Module Installed', (context) => this.installHandler(context));
   }
 
@@ -208,11 +206,17 @@ class AdminModuleController {
     this.updateModuleVisibility();
   }
 
+  /**
+   * Updates the modulesList object
+   *
+   * @param event a DOM element that contains module data such as id, name, version...
+   */
   updateModuleStatus(event) {
     this.modulesList = this.modulesList.map((module) => {
       const moduleElement = $(event);
 
-      if (moduleElement.data('tech-name') === module.techName) {
+      if ((moduleElement.data('tech-name') === module.techName)
+      && (moduleElement.data('version') !== undefined)) {
         const newModule = {
           domObject: moduleElement,
           id: moduleElement.data('id'),
@@ -247,6 +251,77 @@ class AdminModuleController {
     $('.modules-list').each(() => {
       self.updateModuleVisibility();
     });
+  }
+
+  onModuleDelete(event) {
+    this.modulesList = this.modulesList.filter((value) => value.techName !== $(event).data('tech-name'));
+    this.installHandler(event);
+  }
+
+  initPlaceholderMechanism() {
+    const self = this;
+
+    if ($(self.placeholderGlobalSelector).length) {
+      self.ajaxLoadPage();
+    }
+
+    // Retry loading mechanism
+    $('body').on('click', self.placeholderFailureRetryBtnSelector, () => {
+      $(self.placeholderFailureGlobalSelector).fadeOut();
+      $(self.placeholderGlobalSelector).fadeIn();
+      self.ajaxLoadPage();
+    });
+  }
+
+  ajaxLoadPage() {
+    const self = this;
+
+    $.ajax({
+      method: 'GET',
+      url: window.moduleURLs.catalogRefresh,
+    })
+      .done((response) => {
+        if (response.status === true) {
+          if (typeof response.domElements === 'undefined') response.domElements = null;
+          if (typeof response.msg === 'undefined') response.msg = null;
+
+          const stylesheet = document.styleSheets[0];
+          const stylesheetRule = '{display: none}';
+          const moduleGlobalSelector = '.modules-list';
+          const moduleSortingSelector = '.module-sorting-menu';
+          const requiredSelectorCombination = `${moduleGlobalSelector},${moduleSortingSelector}`;
+
+          if (stylesheet.insertRule) {
+            stylesheet.insertRule(requiredSelectorCombination + stylesheetRule, stylesheet.cssRules.length);
+          } else if (stylesheet.addRule) {
+            stylesheet.addRule(requiredSelectorCombination, stylesheetRule, -1);
+          }
+
+          $(self.placeholderGlobalSelector).fadeOut(800, () => {
+            $.each(response.domElements, (index, element) => {
+              $(element.selector).append(element.content);
+            });
+            $(moduleGlobalSelector)
+              .fadeIn(800)
+              .css('display', 'flex');
+            $(moduleSortingSelector).fadeIn(800);
+            $('[data-toggle="popover"]').popover();
+            self.initCurrentDisplay();
+            self.fetchModulesList();
+          });
+        } else {
+          $(self.placeholderGlobalSelector).fadeOut(800, () => {
+            $(self.placeholderFailureMsgSelector).text(response.msg);
+            $(self.placeholderFailureGlobalSelector).fadeIn(800);
+          });
+        }
+      })
+      .fail((response) => {
+        $(self.placeholderGlobalSelector).fadeOut(800, () => {
+          $(self.placeholderFailureMsgSelector).text(response.statusText);
+          $(self.placeholderFailureGlobalSelector).fadeIn(800);
+        });
+      });
   }
 
   fetchModulesList() {
@@ -673,8 +748,6 @@ class AdminModuleController {
       'bulk-uninstall': 'uninstall',
       'bulk-disable': 'disable',
       'bulk-enable': 'enable',
-      'bulk-disable-mobile': 'disableMobile',
-      'bulk-enable-mobile': 'enableMobile',
       'bulk-reset': 'reset',
       'bulk-delete': 'delete',
     };

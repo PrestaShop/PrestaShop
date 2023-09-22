@@ -35,6 +35,7 @@ use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -44,6 +45,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler implements UpdateOrderShippingDetailsHandlerInterface
 {
     /**
@@ -122,6 +124,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
                 $customer = new Customer((int) $order->id_customer);
                 $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
 
+                // Hook called only for the shop concerned
                 Hook::exec('actionAdminOrdersTrackingNumberUpdate', [
                     'order' => $order,
                     'customer' => $customer,

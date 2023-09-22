@@ -100,7 +100,7 @@ class Login extends BOBasePage {
   async clickOnLoginButton(page: Page, waitForNavigation: boolean): Promise<void> {
     // Wait for navigation if the login is successful
     if (waitForNavigation) {
-      await this.clickAndWaitForNavigation(page, this.submitLoginButton);
+      await this.clickAndWaitForURL(page, this.submitLoginButton);
     } else {
       await page.click(this.submitLoginButton);
     }

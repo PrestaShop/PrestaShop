@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler\GetManufacturerForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 /**
  * Handles query which gets manufacturer for editing
  */
+#[AsQueryHandler]
 final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler implements GetManufacturerForEditingHandlerInterface
 {
     /**

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use Configuration;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
@@ -165,15 +164,6 @@ abstract class AbstractImageUploader
             $imageDir . $id . '-' . stripslashes($imageType['name']) . $ext,
             (int) $width,
             (int) $height
-        )) {
-            return false;
-        }
-
-        if ((bool) Configuration::get('PS_HIGHT_DPI') && !ImageManager::resize(
-            $imageDir . $id . '.jpg',
-            $imageDir . $id . '-' . stripslashes($imageType['name']) . '2x' . $ext,
-            (int) $width * 2,
-            (int) $height * 2
         )) {
             return false;
         }

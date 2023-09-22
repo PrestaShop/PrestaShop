@@ -54,7 +54,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
     await zonesPage.closeSfToolBar(page);
 
     const pageTitle = await zonesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(zonesPage.pageTitle);
+    expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
   it('should go to \'States\' page', async function () {
@@ -63,7 +63,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
     await zonesPage.goToSubTabStates(page);
 
     const pageTitle = await statesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(statesPage.pageTitle);
+    expect(pageTitle).to.contains(statesPage.pageTitle);
   });
 
   it('should reset all filters and get number of states in BO', async function () {
@@ -72,7 +72,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
     await statesPage.resetAndGetNumberOfLines(page);
 
     numberOfStates = await statesPage.getNumberOfElement(page);
-    await expect(numberOfStates).to.be.above(0);
+    expect(numberOfStates).to.be.above(0);
   });
 
   describe('Create 2 states in BO', async () => {
@@ -83,17 +83,17 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
         await statesPage.goToAddNewStatePage(page);
 
         const pageTitle = await addStatePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addStatePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addStatePage.pageTitleCreate);
       });
 
       it('should create state and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createState${index + 1}`, baseContext);
 
         const textResult = await addStatePage.createEditState(page, stateToCreate);
-        await expect(textResult).to.contains(statesPage.successfulCreationMessage);
+        expect(textResult).to.contains(statesPage.successfulCreationMessage);
 
         const numberOfStatesAfterCreation = await statesPage.getNumberOfElement(page);
-        await expect(numberOfStatesAfterCreation).to.be.equal(numberOfStates + index + 1);
+        expect(numberOfStatesAfterCreation).to.be.equal(numberOfStates + index + 1);
       });
     });
   });
@@ -110,7 +110,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
       );
 
       const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfStatesAfterFilter).to.be.at.most(numberOfStates);
+      expect(numberOfStatesAfterFilter).to.be.at.most(numberOfStates);
 
       for (let i = 1; i <= numberOfStatesAfterFilter; i++) {
         const textColumn = await statesPage.getTextColumn(
@@ -118,7 +118,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -135,7 +135,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
 
         for (let row = 1; row <= numberOfStatesBulkActions; row++) {
           const rowStatus = await statesPage.getStateStatus(page, row);
-          await expect(rowStatus).to.equal(test.wantedStatus);
+          expect(rowStatus).to.equal(test.wantedStatus);
         }
       });
     });
@@ -144,14 +144,14 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStates', baseContext);
 
       const deleteTextResult = await statesPage.bulkDeleteStates(page);
-      await expect(deleteTextResult).to.be.contains(statesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(statesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkActions', baseContext);
 
       const numberOfStatesAfterReset = await statesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfStatesAfterReset).to.be.equal(numberOfStates);
+      expect(numberOfStatesAfterReset).to.be.equal(numberOfStates);
     });
   });
 });

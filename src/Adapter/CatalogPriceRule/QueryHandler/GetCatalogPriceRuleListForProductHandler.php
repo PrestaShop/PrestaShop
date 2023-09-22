@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\QueryHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\Repository\CatalogPriceRuleRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleListForProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleForListing;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 /**
  * Handles @see GetCatalogPriceRuleListForProduct
  */
+#[AsQueryHandler]
 class GetCatalogPriceRuleListForProductHandler implements GetCatalogPriceRuleListForProductHandlerInterface
 {
     /**

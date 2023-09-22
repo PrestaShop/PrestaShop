@@ -12,7 +12,7 @@ security:
     # Empty provider until a real provider is developed
     oauth2:
       memory:
-        users:
+        users: [ ]
 
   firewalls:
     # disables authentication for assets and the profiler, adapt it according to your needs

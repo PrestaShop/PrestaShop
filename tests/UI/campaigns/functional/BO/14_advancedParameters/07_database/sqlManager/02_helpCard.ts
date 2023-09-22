@@ -44,23 +44,23 @@ describe('BO - Advanced Parameters - Database : Help card in SQL Manager page', 
     await sqlManagerPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await sqlManagerPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await sqlManagerPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await sqlManagerPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
   });
 });

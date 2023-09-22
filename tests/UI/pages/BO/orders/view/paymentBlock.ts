@@ -1,5 +1,7 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
+import type {OrderPayment} from '@data/types/order';
+
 import type {Page} from 'playwright';
 
 /**
@@ -90,15 +92,15 @@ class PaymentBlock extends ViewOrderBasePage {
   /**
    * Add payment
    * @param page {Page} Browser tab
-   * @param paymentData {object} Data to set on payment line
+   * @param paymentData {OrderPayment} Data to set on payment line
    * @param invoice {string} Invoice number to select
    * @returns {Promise<string>}
    */
-  async addPayment(page: Page, paymentData, invoice: string = ''): Promise<string> {
+  async addPayment(page: Page, paymentData: OrderPayment, invoice: string = ''): Promise<string> {
     await this.setValue(page, this.paymentDateInput, paymentData.date);
     await this.setValue(page, this.paymentMethodInput, paymentData.paymentMethod);
-    await this.setValue(page, this.transactionIDInput, paymentData.transactionID);
-    await this.setValue(page, this.paymentAmountInput, paymentData.amount);
+    await this.setValue(page, this.transactionIDInput, paymentData.transactionID.toString());
+    await this.setValue(page, this.paymentAmountInput, paymentData.amount.toString());
     if (paymentData.currency !== '€') {
       await this.selectByVisibleText(page, this.paymentCurrencySelect, paymentData.currency);
     }
@@ -107,7 +109,7 @@ class PaymentBlock extends ViewOrderBasePage {
       await this.selectByVisibleText(page, this.paymentInvoiceSelect, invoice);
     }
 
-    await this.clickAndWaitForNavigation(page, this.paymentAddButton);
+    await page.click(this.paymentAddButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

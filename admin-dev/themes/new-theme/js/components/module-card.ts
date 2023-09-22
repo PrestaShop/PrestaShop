@@ -44,10 +44,6 @@ export default class ModuleCard {
 
   moduleActionMenuDisableLinkSelector: string;
 
-  moduleActionMenuEnableMobileLinkSelector: string;
-
-  moduleActionMenuDisableMobileLinkSelector: string;
-
   moduleActionMenuResetLinkSelector: string;
 
   moduleActionMenuUpdateLinkSelector: string;
@@ -77,8 +73,6 @@ export default class ModuleCard {
     this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
     this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
     this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
-    this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enableMobile';
-    this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disableMobile';
     this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
     this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
     this.moduleActionMenuDeleteLinkSelector = 'button.module_action_menu_delete';
@@ -168,30 +162,6 @@ export default class ModuleCard {
           self.dispatchPreEvent('disable', this)
           && self.confirmAction('disable', this)
           && self.requestToController('disable', $(this))
-        );
-      },
-    );
-
-    $(document).on(
-      'click',
-      this.moduleActionMenuEnableMobileLinkSelector,
-      function () {
-        return (
-          self.dispatchPreEvent('enableMobile', this)
-          && self.confirmAction('enableMobile', this)
-          && self.requestToController('enableMobile', $(this))
-        );
-      },
-    );
-
-    $(document).on(
-      'click',
-      this.moduleActionMenuDisableMobileLinkSelector,
-      function () {
-        return (
-          self.dispatchPreEvent('disableMobile', this)
-          && self.confirmAction('disableMobile', this)
-          && self.requestToController('disableMobile', $(this))
         );
       },
     );
@@ -354,7 +324,7 @@ export default class ModuleCard {
   ): boolean {
     if (this.pendingRequest) {
       $.growl.warning({
-        message: window.translate_javascripts['An action is already in progress please wait for it to finish.'],
+        message: window.translate_javascripts['An action is already in progress. Please wait for it to finish.'],
       });
       return false;
     }
@@ -418,12 +388,19 @@ export default class ModuleCard {
         const alteredSelector = this.moduleItemListSelector.replace('.', '');
         let mainElement = null;
 
-        if (action === 'uninstall') {
+        if (action === 'delete' && !result[moduleTechName].has_download_url) {
+          mainElement = jqElementObj.closest(`.${alteredSelector}`);
+          this.eventEmitter.emit('Module Delete', mainElement);
+        } else if (action === 'uninstall') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.attr('data-installed', '0');
           mainElement.attr('data-active', '0');
 
-          this.eventEmitter.emit('Module Uninstalled', mainElement);
+          if ((forceDeletion === 'true' || forceDeletion === true) && !result[moduleTechName].has_download_url) {
+            this.eventEmitter.emit('Module Delete', mainElement);
+          } else {
+            this.eventEmitter.emit('Module Uninstalled', mainElement);
+          }
         } else if (action === 'disable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.addClass(`${alteredSelector}-isNotActive`);
@@ -447,7 +424,7 @@ export default class ModuleCard {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
 
           this.eventEmitter.emit('Module Upgraded', mainElement);
-        };
+        }
 
         // Since we replace the DOM content
         // we need to update the jquery object reference to target the new content,

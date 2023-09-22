@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Combination;
+use Context;
 use DateTime;
 use Language;
 use Link;
@@ -365,17 +367,36 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns all product features, not grouped yet for performance reasons.
+     *
      * @arrayAccess
      *
-     * @return array|null
+     * @return array
+     */
+    public function getFeatures()
+    {
+        /*
+         * If features were not loaded yet, we will ask for them if needed - usually on product page.
+         * However, if really hunting performance and you know you will need features in listing for bunch of products,
+         * fetch them with one query (in more performant way) and pass them here when constructing this object.
+         */
+        if (!isset($this->product['features'])) {
+            $this->product['features'] = Product::getFrontFeaturesStatic((int) $this->language->id, $this->product['id_product']);
+        }
+
+        return $this->product['features'];
+    }
+
+    /**
+     * Returns all product feature values nicely grouped by feature name.
+     *
+     * @arrayAccess
+     *
+     * @return array
      */
     public function getGroupedFeatures()
     {
-        if ($this->product['features']) {
-            return $this->buildGroupedFeatures($this->product['features']);
-        }
-
-        return null;
+        return $this->buildGroupedFeatures($this->getFeatures());
     }
 
     /**
@@ -490,7 +511,7 @@ class ProductLazyArray extends AbstractLazyArray
         if ($this->product['new']) {
             $flags['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
+                'label' => $this->translator->trans('New', [], 'Shop.Theme.Global'),
             ];
         }
 
@@ -764,20 +785,18 @@ class ProductLazyArray extends AbstractLazyArray
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
             // TODO: add percent sign according to locale preferences
-            $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
-            $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
+            $this->product['discount_percentage'] = Context::getContext()->getCurrentLocale()->formatNumber($presNegativeReduction) . '%';
+            $this->product['discount_percentage_absolute'] = Context::getContext()->getCurrentLocale()->formatNumber($presAbsoluteReduction) . '%';
             if ($settings->include_taxes) {
                 $regular_price = $product['price_without_reduction'];
-                $this->product['discount_amount'] = $this->priceFormatter->format(
-                    $product['reduction']
-                );
             } else {
                 $regular_price = $product['price_without_reduction_without_tax'];
-                $this->product['discount_amount'] = $this->priceFormatter->format(
-                    $product['reduction_without_tax']
-                );
             }
-            $this->product['discount_amount_to_display'] = '-' . $this->product['discount_amount'];
+            // We must calculate the real amount of discount.
+            // see @https://github.com/PrestaShop/PrestaShop/issues/32924
+            $product['reduction'] = $regular_price - $price;
+            $this->product['discount_amount'] = $this->priceFormatter->format($product['reduction']);
+            $this->product['discount_amount_to_display'] = '-' . $this->priceFormatter->format($product['reduction']);
         }
 
         $this->product['price_amount'] = $price;
@@ -1029,6 +1048,26 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns extra price associated with current combination, if provided
+     *
+     * @arrayAccess
+     *
+     * @return float
+     */
+    public function getAttributePrice()
+    {
+        if (!isset($this->product['attribute_price'])) {
+            if (!empty($this->product['id_product_attribute'])) {
+                $this->product['attribute_price'] = (float) Combination::getPrice($this->product['id_product_attribute']);
+            } else {
+                $this->product['attribute_price'] = 0;
+            }
+        }
+
+        return (float) $this->product['attribute_price'];
+    }
+
+    /**
      * @param string $key
      *
      * @return string
@@ -1058,7 +1097,6 @@ class ProductLazyArray extends AbstractLazyArray
             'active',
             'add_to_cart_url',
             'additional_shipping_cost',
-            'advanced_stock_management',
             'allow_oosp',
             'attachments',
             'attribute_price',

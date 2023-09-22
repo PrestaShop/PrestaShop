@@ -36,10 +36,10 @@ export default class ImageTypeData {
     this.name = imageTypeToCreate.name || faker.lorem.word();
 
     /** @type {number} Image width */
-    this.width = imageTypeToCreate.width || faker.datatype.number({min: 100, max: 200});
+    this.width = imageTypeToCreate.width || faker.number.int({min: 100, max: 200});
 
     /** @type {number} Image height */
-    this.height = imageTypeToCreate.height || faker.datatype.number({min: 100, max: 200});
+    this.height = imageTypeToCreate.height || faker.number.int({min: 100, max: 200});
 
     /** @type {boolean} To activate type for products */
     this.productsStatus = imageTypeToCreate.productsStatus === undefined

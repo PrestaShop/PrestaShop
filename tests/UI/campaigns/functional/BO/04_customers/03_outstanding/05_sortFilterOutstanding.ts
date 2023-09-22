@@ -77,7 +77,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
     });
-    customersData.forEach((customerData: CustomerData, index: number = 1) => {
+    customersData.forEach((customerData: CustomerData, index: number) => {
       const addressData: AddressData = new AddressData({
         email: customerData.email,
         country: 'France',
@@ -108,28 +108,32 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         it('should go to Orders > Orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
-            page,
-            dashboardPage.ordersParentLink,
-            dashboardPage.ordersLink,
-          );
+          if (index === 0) {
+            await dashboardPage.goToSubMenu(
+              page,
+              dashboardPage.ordersParentLink,
+              dashboardPage.ordersLink,
+            );
+          } else {
+            await ordersPage.reloadPage(page);
+          }
 
           const pageTitle = await ordersPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(ordersPage.pageTitle);
+          expect(pageTitle).to.contains(ordersPage.pageTitle);
         });
 
         it('should update order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus_${index}`, baseContext);
 
           const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
-          await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+          expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
         });
 
         it('should check that the status is updated successfully', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO_${index}`, baseContext);
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-          await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+          expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
         });
       });
     });
@@ -147,7 +151,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       );
 
       const pageTitle = await outstandingPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      expect(pageTitle).to.contains(outstandingPage.pageTitle);
     });
     it('should reset filter and get the outstanding number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOutstanding', baseContext);
@@ -155,7 +159,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       await outstandingPage.resetFilter(page);
 
       numberOutstanding = await outstandingPage.getNumberOutstanding(page);
-      await expect(numberOutstanding).to.be.above(0);
+      expect(numberOutstanding).to.be.above(0);
     });
   });
 
@@ -202,7 +206,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           filterType: 'input',
           testIdentifier: 'filterOutstandingAllowance1',
           filterBy: 'outstanding_allow_amount',
-          filterValue: createCustomerData1.allowedOutstandingAmount,
+          filterValue: createCustomerData1.allowedOutstandingAmount.toString(),
         },
       },
     ];
@@ -213,7 +217,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         await outstandingPage.filterTable(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
 
         const numberOutstandingAfterFilter = await outstandingPage.getNumberOutstanding(page);
-        await expect(numberOutstandingAfterFilter).to.be.at.most(numberOutstanding);
+        expect(numberOutstandingAfterFilter).to.be.at.most(numberOutstanding);
       });
 
       it('should reset all filters and get the number of outstanding', async function () {
@@ -222,7 +226,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         await outstandingPage.resetFilter(page);
 
         const numberOutstandingAfterReset = await outstandingPage.getNumberOutstanding(page);
-        await expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
+        expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
       });
     });
 
@@ -234,11 +238,11 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
 
       // Check number of element
       const numberOfOutstandingAfterFilter = await outstandingPage.getNumberOutstanding(page);
-      await expect(numberOfOutstandingAfterFilter).to.be.at.most(numberOutstanding);
+      expect(numberOfOutstandingAfterFilter).to.be.at.most(numberOutstanding);
 
       for (let i = 1; i <= numberOfOutstandingAfterFilter; i++) {
         const textColumn = await outstandingPage.getTextColumn(page, 'date_add', i);
-        await expect(textColumn).to.contains(dateToCheck);
+        expect(textColumn).to.contains(dateToCheck);
       }
     });
 
@@ -248,7 +252,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       await outstandingPage.resetFilter(page);
 
       const numberOutstandingAfterReset = await outstandingPage.getNumberOutstanding(page);
-      await expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
+      expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
     });
   });
 
@@ -263,7 +267,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       await outstandingPage.filterTable(page, 'input', 'outstanding_allow_amount', '€');
 
       const numberOutstandingAfterFilter = await outstandingPage.getNumberOutstanding(page);
-      await expect(numberOutstandingAfterFilter).to.be.at.most(numberOutstanding);
+      expect(numberOutstandingAfterFilter).to.be.at.most(numberOutstanding);
     });
     const sortByOutstandingAllowance = [
       {
@@ -300,17 +304,17 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -321,7 +325,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       await outstandingPage.resetFilter(page);
 
       const numberOutstandingAfterReset = await outstandingPage.getNumberOutstanding(page);
-      await expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
+      expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
     });
 
     const sortTests = [
@@ -367,17 +371,17 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

@@ -249,10 +249,6 @@
     <access id="access_1_263" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSHIPPING_READ"/>
     <access id="access_1_264" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSHIPPING_UPDATE"/>
     <access id="access_1_265" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSHIPPING_DELETE"/>
-    <access id="access_1_266" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_CREATE"/>
-    <access id="access_1_267" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_READ"/>
-    <access id="access_1_268" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_UPDATE"/>
-    <access id="access_1_269" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_DELETE"/>
     <access id="access_1_270" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSTORES_CREATE"/>
     <access id="access_1_271" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSTORES_READ"/>
     <access id="access_1_272" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSTORES_UPDATE"/>
@@ -337,10 +333,6 @@
     <access id="access_1_355" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATUSES_READ"/>
     <access id="access_1_356" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATUSES_UPDATE"/>
     <access id="access_1_357" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATUSES_DELETE"/>
-    <access id="access_1_358" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCK_CREATE"/>
-    <access id="access_1_359" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCK_READ"/>
-    <access id="access_1_360" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCK_UPDATE"/>
-    <access id="access_1_361" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCK_DELETE"/>
     <access id="access_1_373" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_CREATE"/>
     <access id="access_1_374" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_READ"/>
     <access id="access_1_375" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_UPDATE"/>
@@ -377,10 +369,6 @@
     <access id="access_1_418" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRANSLATIONS_READ"/>
     <access id="access_1_419" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRANSLATIONS_UPDATE"/>
     <access id="access_1_420" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRANSLATIONS_DELETE"/>
-    <access id="access_1_421" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_CREATE"/>
-    <access id="access_1_422" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_READ"/>
-    <access id="access_1_423" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_UPDATE"/>
-    <access id="access_1_424" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWAREHOUSES_DELETE"/>
     <access id="access_1_425" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWEBSERVICE_CREATE"/>
     <access id="access_1_426" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWEBSERVICE_READ"/>
     <access id="access_1_427" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINWEBSERVICE_UPDATE"/>

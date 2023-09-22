@@ -46,8 +46,6 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
       - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
-      - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
 
   prestashop.core.form.identifiable_object.data_handler.root_category_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler'
@@ -55,8 +53,6 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
       - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
-      - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
 
   prestashop.core.form.identifiable_object.data_handler.contact_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ContactFormDataHandler'
@@ -115,7 +111,14 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.supplier_image_uploader'
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeGroupFormDataHandler:
+    autowire: true
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureValueFormDataHandler:
     autowire: true
     public: false
 
@@ -261,6 +264,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApplicationFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'
+    autowire: true
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxRulesGroupFormDataHandler:
     arguments:

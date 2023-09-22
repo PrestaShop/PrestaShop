@@ -63,14 +63,14 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
         await featureFlagPage.closeSfToolBar(page);
 
         const pageTitle = await featureFlagPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+        expect(pageTitle).to.contains(featureFlagPage.pageTitle);
       });
 
       it('should enable New product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'enableNewProductPage', baseContext);
 
         const successMessage = await featureFlagPage.setFeatureFlag(page, featureFlagPage.featureFlagProductPageV2, true);
-        await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+        expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -84,14 +84,14 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
         await productsPageV2.closeSfToolBar(page);
 
         const pageTitle = await productsPageV2.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPageV2.pageTitle);
+        expect(pageTitle).to.contains(productsPageV2.pageTitle);
       });
 
       it('should click on \'New product\' button and check new product modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
         const isModalVisible = await productsPageV2.clickOnNewProductButton(page);
-        await expect(isModalVisible).to.be.true;
+        expect(isModalVisible).to.eq(true);
       });
 
       it('should choose \'Standard product\'', async function () {
@@ -101,7 +101,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
         await productsPageV2.clickOnAddNewProduct(page);
 
         const pageTitle = await createProductsPageV2.getPageTitle(page);
-        await expect(pageTitle).to.contains(createProductsPageV2.pageTitle);
+        expect(pageTitle).to.contains(createProductsPageV2.pageTitle);
       });
     });
   }
@@ -119,14 +119,14 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
         await featureFlagPage.closeSfToolBar(page);
 
         const pageTitle = await featureFlagPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+        expect(pageTitle).to.contains(featureFlagPage.pageTitle);
       });
 
       it('should disable New product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'disableNewProductPage', baseContext);
 
         const successMessage = await featureFlagPage.setFeatureFlag(page, featureFlagPage.featureFlagProductPageV2, false);
-        await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+        expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -140,7 +140,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
         await productsPageV1.closeSfToolBar(page);
 
         const pageTitle = await productsPageV1.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPageV1.pageTitle);
+        expect(pageTitle).to.contains(productsPageV1.pageTitle);
       });
 
       it('should go to Add product page', async function () {
@@ -149,7 +149,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
         await productsPageV1.goToAddProductPage(page);
 
         const createProductTitle = await addProductPage.getPageTitle(page);
-        await expect(createProductTitle).to.contains(addProductPage.pageTitle);
+        expect(createProductTitle).to.contains(addProductPage.pageTitle);
       });
     });
   }

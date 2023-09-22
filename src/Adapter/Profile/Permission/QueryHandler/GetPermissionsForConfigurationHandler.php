@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
 
 use Module;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
@@ -44,6 +45,7 @@ use Tab;
  *
  * @internal
  */
+#[AsQueryHandler]
 class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
 {
     /**

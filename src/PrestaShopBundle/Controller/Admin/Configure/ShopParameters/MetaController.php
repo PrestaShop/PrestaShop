@@ -83,12 +83,12 @@ class MetaController extends FrameworkBundleAdminController
      * Used for applying filtering actions.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.meta');
@@ -136,7 +136,7 @@ class MetaController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
             'meta_form' => $metaForm->createView(),
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -191,12 +191,12 @@ class MetaController extends FrameworkBundleAdminController
      * Removes single element from meta list.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param int $metaId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function deleteAction($metaId)
     {
         $metaEraser = $this->get('prestashop.adapter.meta.meta_eraser');
@@ -218,15 +218,15 @@ class MetaController extends FrameworkBundleAdminController
      * Removes multiple records from meta list.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function deleteBulkAction(Request $request)
     {
-        $metaToDelete = $request->request->get('meta_bulk');
+        $metaToDelete = $request->request->all('meta_bulk');
 
         $metaEraser = $this->get('prestashop.adapter.meta.meta_eraser');
         $errors = $metaEraser->erase($metaToDelete);
@@ -236,7 +236,7 @@ class MetaController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         }
 
@@ -245,13 +245,13 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
      * @param Request $request
      *
      * @return Response|RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function processSetUpUrlsFormAction(MetaFilters $filters, Request $request)
     {
         $formProcessResult = $this->processForm(
@@ -278,13 +278,13 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
      * @param Request $request
      *
      * @return Response|RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function processShopUrlsFormAction(MetaFilters $filters, Request $request)
     {
         $formProcessResult = $this->processForm(
@@ -311,13 +311,13 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
      * @param Request $request
      *
      * @return Response|RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function processUrlSchemaFormAction(MetaFilters $filters, Request $request)
     {
         $formProcessResult = $this->processForm(
@@ -339,13 +339,13 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
      * @param Request $request
      *
      * @return Response|RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function processSeoOptionsFormAction(MetaFilters $filters, Request $request)
     {
         $formProcessResult = $this->processForm(
@@ -376,10 +376,10 @@ class MetaController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
      * )
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function generateRobotsFileAction()
     {
         $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
@@ -627,7 +627,7 @@ class MetaController extends FrameworkBundleAdminController
             ],
         ];
 
-        $exceptionClass = get_class($exception);
+        $exceptionClass = $exception::class;
         $exceptionCode = $exception->getCode();
         if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
             return $exceptionDictionary[$exceptionClass][$exceptionCode];
@@ -647,12 +647,12 @@ class MetaController extends FrameworkBundleAdminController
     {
         $exceptionDictionary = [
             MetaNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
         ];
 
-        $exceptionClass = get_class($exception);
+        $exceptionClass = $exception::class;
         if (isset($exceptionDictionary[$exceptionClass])) {
             return $exceptionDictionary[$exceptionClass];
         }

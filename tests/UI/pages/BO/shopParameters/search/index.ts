@@ -12,7 +12,7 @@ class Search extends BOBasePage {
 
   public readonly successfulUpdateStatusMessage: string;
 
-  private readonly settingsUpdateMessage: string;
+  public readonly settingsUpdateMessage: string;
 
   private readonly addNewAliasLink: string;
 
@@ -167,7 +167,7 @@ class Search extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewAliasPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewAliasLink);
+    await this.clickAndWaitForURL(page, this.addNewAliasLink);
   }
 
   /**
@@ -176,7 +176,7 @@ class Search extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToTagsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tagsTabLink);
+    await this.clickAndWaitForURL(page, this.tagsTabLink);
   }
 
   /* Filter methods */
@@ -196,7 +196,7 @@ class Search extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -220,15 +220,17 @@ class Search extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
@@ -246,7 +248,7 @@ class Search extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditAliasPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditLink(row));
   }
 
   /**
@@ -298,7 +300,7 @@ class Search extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockContent(page);
@@ -333,7 +335,7 @@ class Search extends BOBasePage {
     await page.click(this.bulkActionMenuButton);
 
     // Click on delete
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     return this.getAlertSuccessBlockContent(page);
   }
@@ -352,7 +354,7 @@ class Search extends BOBasePage {
     await page.click(this.bulkActionMenuButton);
 
     // Click on enable/Disable and wait for modal
-    await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableButton : this.bulkDisableButton);
+    await this.clickAndWaitForURL(page, enable ? this.bulkEnableButton : this.bulkDisableButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -363,7 +365,7 @@ class Search extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getStatus(page: Page, row: number): Promise<boolean> {
+  async getStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, this.tableColumnStatusEnabledIcon(row), 500);
   }
 
@@ -396,7 +398,9 @@ class Search extends BOBasePage {
    */
   async setFuzzySearch(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
+    await this.elementNotVisible(page, this.fuzzySearchLabel(!toEnable ? 'on' : 'off'), 2000);
+
     return this.getAlertSuccessBlockContent(page);
   }
 }

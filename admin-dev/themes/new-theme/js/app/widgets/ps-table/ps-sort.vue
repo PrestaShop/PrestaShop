@@ -25,7 +25,7 @@
 <template>
   <div
     class="ps-sortable-column"
-    data-sort-col-name="id_product"
+    :data-sort-col-name="this.order"
     :data-sort-is-current="isCurrent"
     :data-sort-direction="sortDirection"
     @click="sortToggle"

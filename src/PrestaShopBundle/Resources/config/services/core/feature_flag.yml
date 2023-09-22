@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface:
+    alias: PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager
+    public: true
+
+  PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager: ~
+  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\EnvLayer: ~
+  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DbLayer: ~
+  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DotEnvLayer:
+    arguments:
+      $rootDir: !php/const _PS_ROOT_DIR_
+  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\QueryLayer: ~

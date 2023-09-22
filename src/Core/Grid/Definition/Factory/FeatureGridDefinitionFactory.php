@@ -101,12 +101,6 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'field' => 'values_count',
             ])
             )
-            // @todo: position action is not implemented yet
-            //        Uncomment Position column and delete position DataColumn when its done.
-            ->add((new DataColumn('position'))
-            ->setName($this->trans('Position', [], 'Admin.Global'))
-            ->setOptions(['field' => 'position'])
-            )
             ->add((new PositionColumn('position'))
             ->setName($this->trans('Position', [], 'Admin.Global'))
             ->setOptions([
@@ -120,17 +114,15 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    // @todo: view action is not implemented yet
-                    // ->add((new LinkRowAction('view'))
-                    // ->setName($this->trans('View', [], 'Admin.Actions'))
-                    // ->setIcon('zoom_in')
-                    // ->setOptions([
-                    // 'route' => 'admin_features_view',
-                    // 'route_param_name' => 'featureId',
-                    // 'route_param_field' => 'id_feature',
-                    // 'clickable_row' => true,
-                    // ])
-                    // )
+                    ->add((new LinkRowAction('view'))
+                    ->setName($this->trans('View', [], 'Admin.Actions'))
+                    ->setIcon('zoom_in')
+                    ->setOptions([
+                        'route' => 'admin_feature_values_index',
+                        'route_param_name' => 'featureId',
+                        'route_param_field' => 'id_feature',
+                    ])
+                     )
                     ->add((new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')

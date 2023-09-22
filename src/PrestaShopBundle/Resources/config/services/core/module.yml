@@ -11,24 +11,24 @@ services:
       - '@prestashop.adapter.module.payment_module_provider'
 
   PrestaShop\PrestaShop\Core\Module\ModuleRepository:
-    public: false
+    lazy: true
     arguments:
       - '@prestashop.adapter.data_provider.module'
       - '@prestashop.adapter.admin.data_provider.module'
       - '@doctrine.cache.provider'
       - '@PrestaShop\PrestaShop\Adapter\HookManager'
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
   prestashop.core.admin.module.repository.eventsubscriber:
     class: PrestaShop\PrestaShop\Core\Module\EventSubscriber
     arguments:
-      - '@prestashop.core.admin.module.repository'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
       - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
     tags:
       - { name: kernel.event_subscriber }
 
   PrestaShop\PrestaShop\Core\Module\ModuleManager:
-    public: false
     autowire: true
     arguments:
       $moduleDataProvider: '@prestashop.adapter.data_provider.module'
@@ -37,7 +37,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler:
     autowire: true
-    public: false
     arguments:
       $modulePath: '%modules_dir%'
     tags: [ core.module.source_handler ]
@@ -53,22 +52,8 @@ services:
     arguments:
       - !tagged core.module.source_handler
 
-  prestashop.core.admin.module.repository:
-    alias: PrestaShop\PrestaShop\Core\Module\ModuleRepository
-    public: true
-    deprecated: ~
-
+  # Deprecated in 8.1.0
   prestashop.module.factory.sourcehandler:
     alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
-    public: true
-    deprecated: ~
-
-  prestashop.module.sourcehandler.zip:
-    alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler
-    public: true
-    deprecated: ~
-
-  prestashop.module.manager:
-    alias: PrestaShop\PrestaShop\Core\Module\ModuleManager
     public: true
     deprecated: ~

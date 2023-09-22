@@ -152,13 +152,14 @@ class CartPresenter implements PresenterInterface
             }
         }
 
+        $rawProduct['price'] = Tools::ps_round($rawProduct['price'], Context::getContext()->getComputingPrecision());
+        $rawProduct['price_wt'] = Tools::ps_round($rawProduct['price_wt'], Context::getContext()->getComputingPrecision());
+
         if ($this->includeTaxes()) {
-            $rawProduct['price_amount'] = $rawProduct['price_wt'];
-            $rawProduct['price'] = $this->priceFormatter->format($rawProduct['price_wt']);
+            $rawProduct['price_amount'] = $rawProduct['price'] = $rawProduct['price_wt'];
             $rawProduct['unit_price'] = $rawProduct['unit_price_tax_included'];
         } else {
-            $rawProduct['price_amount'] = $rawProduct['price'];
-            $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->priceFormatter->format($rawProduct['price']);
+            $rawProduct['price_amount'] = $rawProduct['price_tax_exc'] = $rawProduct['price'];
             $rawProduct['unit_price'] = $rawProduct['unit_price_tax_excluded'];
         }
 
@@ -308,22 +309,19 @@ class CartPresenter implements PresenterInterface
 
     /**
      * @param Cart $cart
-     * @param bool $shouldSeparateGifts
-     *
-     * @return array
      *
      * @throws \Exception
      */
-    public function present($cart, $shouldSeparateGifts = false)
+    public function present($cart, bool $shouldSeparateGifts = false): array
     {
-        $cache_id = 'presentedCart_' . (int) $shouldSeparateGifts;
+        $cache_id = 'presentedCart_' . (int) $shouldSeparateGifts . $cart->id;
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
+
         if (!is_a($cart, 'Cart')) {
             throw new \Exception('CartPresenter can only present instance of Cart');
         }
-
         if ($shouldSeparateGifts) {
             $rawProducts = $cart->getProductsWithSeparatedGifts();
         } else {
@@ -680,7 +678,7 @@ class CartPresenter implements PresenterInterface
         }
 
         foreach ($matches['attribute'] as $attribute) {
-            list($key, $value) = explode(':', $attribute);
+            [$key, $value] = explode(':', $attribute);
             $attributesArray[trim($key)] = ltrim($value);
         }
 

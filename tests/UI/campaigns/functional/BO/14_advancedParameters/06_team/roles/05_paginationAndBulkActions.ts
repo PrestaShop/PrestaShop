@@ -51,7 +51,7 @@ describe('BO - Advanced Parameters - Team : Pagination and delete roles by bulk 
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should go to \'Roles\' page', async function () {
@@ -60,14 +60,14 @@ describe('BO - Advanced Parameters - Team : Pagination and delete roles by bulk 
     await employeesPage.goToRolesPage(page);
 
     const pageTitle = await rolesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(rolesPage.pageTitle);
+    expect(pageTitle).to.contains(rolesPage.pageTitle);
   });
 
   it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfRoles = await rolesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfRoles).to.be.above(0);
+    expect(numberOfRoles).to.be.above(0);
   });
 
   // 1 : Create 11 roles
@@ -80,21 +80,21 @@ describe('BO - Advanced Parameters - Team : Pagination and delete roles by bulk 
         await rolesPage.goToAddNewRolePage(page);
 
         const pageTitle = await addProfilePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addProfilePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addProfilePage.pageTitleCreate);
       });
 
       it(`should create profile n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateRole${index}`, baseContext);
 
         const textResult = await addProfilePage.createEditRole(page, createRoleData);
-        await expect(textResult).to.equal(rolesPage.successfulCreationMessage);
+        expect(textResult).to.equal(rolesPage.successfulCreationMessage);
       });
 
       it('should check roles number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProfilesNumber${index}`, baseContext);
 
         const numberOfRolesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles + 1 + index);
+        expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles + 1 + index);
       });
     });
   });
@@ -138,21 +138,21 @@ describe('BO - Advanced Parameters - Team : Pagination and delete roles by bulk 
       await rolesPage.filterRoles(page, 'input', 'name', createRoleData.name);
 
       const textName = await rolesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(createRoleData.name);
+      expect(textName).to.contains(createRoleData.name);
     });
 
     it('should delete roles with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteProfile', baseContext);
 
       const deleteTextResult = await rolesPage.deleteBulkActions(page);
-      await expect(rolesPage.successfulDeleteMessage).to.be.contains(deleteTextResult);
+      expect(rolesPage.successfulDeleteMessage).to.be.contains(deleteTextResult);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfRolesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles);
+      expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles);
     });
   });
 });

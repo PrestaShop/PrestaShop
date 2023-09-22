@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\EditSqlRequestHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotEditSqlRequestException;
@@ -39,6 +40,7 @@ use RequestSql;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditSqlRequestHandler extends AbstractSqlRequestHandler implements EditSqlRequestHandlerInterface
 {
     /**

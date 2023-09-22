@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class AccountIdentity extends FOBasePage {
+class AccountIdentityPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly successfulUpdateMessage: string;
@@ -54,8 +54,8 @@ class AccountIdentity extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on identity page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Identity';
     this.successfulUpdateMessage = 'Information successfully updated.';
@@ -93,7 +93,7 @@ class AccountIdentity extends FOBasePage {
    * @returns {Promise<string>}
    */
   async editAccount(page: Page, oldPassword: string, customer: any): Promise<string> {
-    await page.$eval(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2), (el) => el.click());
+    await page.$eval(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2), (el: HTMLElement) => el.click());
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
     await this.setValue(page, this.newEmailInput, customer.email);
@@ -111,7 +111,7 @@ class AccountIdentity extends FOBasePage {
       await this.setChecked(page, this.psgdprCheckbox);
     }
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
 
     return this.getTextContent(page, this.notificationsBlock);
   }
@@ -158,10 +158,11 @@ class AccountIdentity extends FOBasePage {
     }
     await page.click(this.newsletterCheckbox);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 
-export default new AccountIdentity();
+const accountIdentityPage = new AccountIdentityPage();
+export {accountIdentityPage, AccountIdentityPage};

@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Log\NullLogger;
 use Shop;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
@@ -51,7 +51,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     use ContextMockerTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -69,11 +69,6 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     {
         parent::setUp();
         self::mockContext();
-
-        // Symfony
-        self::bootKernel();
-        global $kernel;
-        $kernel = self::$kernel;
 
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
@@ -305,8 +300,12 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             'admin_order_messages_create' => ['Add new', 'admin_order_messages_create'],
             'admin_order_messages_index' => ['Order messages', 'admin_order_messages_index'],
             'admin_order_preferences' => ['Order Preferences', 'admin_order_preferences'],
+            'admin_order_return_states_create' => ['Add new', 'admin_order_states'],
+            'admin_order_states' => ['Order States', 'admin_order_states'],
+            'admin_order_states_create' => ['Add new', 'admin_order_states'],
             'admin_orders_create' => ['Add new', 'admin_orders_create'],
             'admin_orders_index' => ['Orders', 'admin_orders_index'],
+            'admin_outstanding_index' => ['Outstanding', 'admin_outstanding_index'],
             'admin_payment_methods' => ['Payment Methods', 'admin_payment_methods'],
             'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
             'admin_performance' => ['Performance', 'admin_performance'],

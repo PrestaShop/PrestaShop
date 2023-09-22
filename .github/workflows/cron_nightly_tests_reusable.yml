@@ -52,29 +52,77 @@ jobs:
           - 'cldr'
           - 'sanity'
           - 'sanity:productV2'
-          - 'regression'
           - 'functional:BO:login'
           - 'functional:BO:dashboard'
-          - 'functional:BO:orders'
-          - 'functional:BO:catalog'
-          - 'functional:productV2'
-          - 'functional:BO:customer'
+          - 'functional:BO:orders:01:0-1'
+          - 'functional:BO:orders:01-create-orders'
+          - 'functional:BO:orders:01-view-and-edit-order'
+          - 'functional:BO:orders:02'
+          - 'functional:BO:orders:03-05'
+          - 'functional:BO:catalog:01-02'
+          - 'functional:BO:catalog:03-04'
+          - 'functional:BO:catalog:05-06'
+          - 'functional:BO:catalog:07-08'
+          - 'functional:BO:customer:01'
+          - 'functional:BO:customer:02-03'
           - 'functional:BO:customer-service'
           - 'functional:BO:modules'
           - 'functional:BO:design'
           - 'functional:BO:shipping'
           - 'functional:BO:payment'
-          - 'functional:BO:international'
-          - 'functional:BO:shop-parameters'
-          - 'functional:BO:advanced-parameters'
+          - 'functional:BO:international:01'
+          - 'functional:BO:international:02'
+          - 'functional:BO:international:03-04'
+          - 'functional:BO:shop-parameters:01-02'
+          - 'functional:BO:shop-parameters:03-04'
+          - 'functional:BO:shop-parameters:05-07'
+          - 'functional:BO:advanced-parameters:01-06'
+          - 'functional:BO:advanced-parameters:07-10'
+          - 'functional:BO:advanced-parameters:11-12'
           - 'functional:BO:header'
-          - 'functional:FO'
-          - 'functional:FO:classic'
-          - 'functional:FO:hummingbird'
+          - 'functional:FO:01-03'
+          - 'functional:FO:04-07'
+          - 'functional:FO:08-12'
+          - 'functional:FO:classic:01-03'
+          - 'functional:FO:classic:04-07'
+          - 'functional:FO:classic:08-12'
+          - 'functional:FO:hummingbird:01-03'
+          - 'functional:productV2'
           - 'functional:API'
+          - 'functional:WS'
+          - 'modules'
+          - 'regression'
         exclude:
+          ## 1.7.8.x
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'cldr'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:BO:dashboard'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:API'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:01-03'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:04-07'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:08-12'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:hummingbird:01-03'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:WS'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'modules'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'sanity:productV2'
+          ## 8.0.x
           - BRANCH: 8.0.x
             CAMPAIGN: 'cldr'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:BO:dashboard'
           - BRANCH: 8.0.x
@@ -82,13 +130,35 @@ jobs:
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:API'
           - BRANCH: 8.0.x
-            CAMPAIGN: 'functional:FO:classic'
+            CAMPAIGN: 'functional:FO:classic:01-03'
           - BRANCH: 8.0.x
-            CAMPAIGN: 'functional:FO:hummingbird'
+            CAMPAIGN: 'functional:FO:classic:04-07'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:08-12'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:hummingbird:01-03'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:WS'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules'
+          ## 8.1.x
           - BRANCH: 8.1.x
-            CAMPAIGN: 'functional:FO'
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:08-12'
+          ## develop
           - BRANCH: develop
-            CAMPAIGN: 'functional:FO'
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:08-12'
+          - BRANCH: develop
+            CAMPAIGN: 'sanity:productV2'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
@@ -97,14 +167,14 @@ jobs:
       PS_LANGUAGE: 'en'
       PS_INSTALL_AUTO: 1
       PS_DEV_MODE: 0
-      PS_ENABLE_SSL: ${{ matrix.BRANCH == '8.0.x' && '0' || '1' }}
-      PS_DOMAIN: ${{ github.event.inputs.base_branch == '8.0.x' && 'localhost:8001' || 'localhost:8002' }}
+      PS_ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && '0' || '1' }}
+      PS_DOMAIN: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'localhost:8001' || 'localhost:8002' }}
       DB_SERVER: 'mysql'
       DB_NAME: 'prestashop'
       DB_PREFIX: 'tst_'
       DB_USER: 'root'
       DB_PASSWD: 'prestashop'
-      ADMIN_PASSWD: 'Correct Horse Battery Staple'
+      ADMIN_PASSWD: ${{ (matrix.BRANCH == '1.7.8.x') && 'prestashop_demo' || 'Correct Horse Battery Staple' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -139,7 +209,7 @@ jobs:
       - name: Build and run shop with docker
         timeout-minutes: 15
         env:
-          URL_FO: ${{ env.GH_BRANCH == '8.0.x' && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) \
           docker-compose -f docker-compose.yml up -d --build
@@ -154,13 +224,18 @@ jobs:
         working-directory: ${{ inputs.TESTS_DIR }}
         run: npm ci
 
+      - name: Install browsers
+        working-directory: ${{ inputs.TESTS_DIR }}
+        if: env.GH_BRANCH != '1.7.8.x'
+        run: npx playwright install --with-deps
+
       # Run tests (if error, we continue for uploading report)
       - name: Run tests
         continue-on-error: true
         working-directory: ${{ inputs.TESTS_DIR }}
         env:
-          URL_FO: ${{ env.GH_BRANCH == '8.0.x' && 'http://localhost:8001/' || 'https://localhost:8002/' }}
-          ENABLE_SSL: true
+          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+          ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && false || true }}
           SMTP_SERVER: '172.17.0.1'
         run: npm run ${{ env.TEST_CAMPAIGN }}
 
@@ -220,6 +295,11 @@ jobs:
       - name: Install dependencies
         working-directory: ${{ inputs.TESTS_DIR }}
         run: npm ci
+
+      - name: Install browsers
+        working-directory: ${{ inputs.TESTS_DIR }}
+        if: env.GH_BRANCH != '1.7.8.x'
+        run: npx playwright install --with-deps
 
       - name: Combine reports
         working-directory: ${{ inputs.TESTS_DIR }}

@@ -1,5 +1,5 @@
-import {config} from 'dotenv';
 import path from 'path';
+import {config} from 'dotenv';
 
 config();
 
@@ -63,4 +63,12 @@ global.maildevConfig = {
   smtpPort: parseInt(process.env.SMTP_PORT ?? '1025', 10),
   smtpServer: process.env.SMTP_SERVER || 'localhost',
   silent: true,
+};
+
+global.keycloakConfig = {
+  keycloakExternalUrl: process.env.KEYCLOAK_URL_EXTERNAL || 'http://127.0.0.1:8003',
+  keycloakInternalUrl: process.env.KEYCLOAK_URL_INTERNAL || 'http://keycloak:8080',
+  keycloakAdminUser: process.env.KEYCLOAK_ADMIN_USER || 'admin',
+  keycloakAdminPass: process.env.KEYCLOAK_ADMIN_PASS || 'admin',
+  keycloakClientId: process.env.KEYCLOAK_CLIENT_ID || 'KEYCLOAK_CLIENT_ID',
 };

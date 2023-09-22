@@ -2146,10 +2146,30 @@
       <title>Order Return Presenter</title>
       <description>This hook is called before an order return is presented</description>
     </hook>
+    <hook id="actionPresentSupplier">
+      <name>actionPresentSupplier</name>
+      <title>Supplier Presenter</title>
+      <description>This hook is called before a supplier is presented</description>
+    </hook>
+    <hook id="actionPresentManufacturer">
+      <name>actionPresentManufacturer</name>
+      <title>Manufacturer Presenter</title>
+      <description>This hook is called before a manufacturer is presented</description>
+    </hook>
     <hook id="actionPresentProduct">
       <name>actionPresentProduct</name>
       <title>Product Presenter</title>
       <description>This hook is called before a product is presented</description>
+    </hook>
+    <hook id="actionPresentStore">
+      <name>actionPresentStore</name>
+      <title>Store Presenter</title>
+      <description>This hook is called before a store is presented</description>
+    </hook>
+    <hook id="actionPresentCategory">
+      <name>actionPresentCategory</name>
+      <title>Category Presenter</title>
+      <description>This hook is called before a category is presented</description>
     </hook>
     <hook id="actionAdminAdminPreferencesControllerPostProcessBefore">
       <name>actionAdminAdminPreferencesControllerPostProcessBefore</name>
@@ -3609,16 +3629,6 @@
       <title>Before a module is disabled</title>
       <description>This hook is called just before a module is disabled</description>
     </hook>
-    <hook id="actionBeforeEnableMobileModule">
-      <name>actionBeforeEnableMobileModule</name>
-      <title>Before a module is enabled for mobile</title>
-      <description>This hook is called just before a module is enabled for mobile</description>
-    </hook>
-    <hook id="actionBeforeDisableMobileModule">
-      <name>actionBeforeDisableMobileModule</name>
-      <title>Before a module is disabled for mobile</title>
-      <description>This hook is called just before a module is disabled for mobile</description>
-    </hook>
     <hook id="actionBeforeResetModule">
       <name>actionBeforeResetModule</name>
       <title>Before a module is reset</title>
@@ -4508,6 +4518,16 @@
       <name>actionAdminMenuTabsModifier</name>
       <title>Modify back office menu</title>
       <description>This hook allows modifying back office menu tabs</description>
+    </hook>
+    <hook id="actionAdminBreadcrumbModifier">
+      <name>actionAdminBreadcrumbModifier</name>
+      <title>Modify back office breadcrumb</title>
+      <description>This hook allows modifying back office breadcrumb</description>
+    </hook>
+    <hook id="actionLanguageLinkParameters">
+      <name>actionLanguageLinkParameters</name>
+      <title>Add parameters to language link</title>
+      <description>Allows modules to provide proper parameters for links in other languages.</description>
     </hook>
   </entities>
 </entity_hook>

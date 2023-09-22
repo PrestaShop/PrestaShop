@@ -119,6 +119,9 @@ abstract class ModuleCore implements ModuleInterface
     /** @var int need_instance */
     public $need_instance = 1;
 
+    /** @var int */
+    public $is_configurable = 0;
+
     /** @var string Admin tab corresponding to the module */
     public $tab = null;
 
@@ -128,6 +131,11 @@ abstract class ModuleCore implements ModuleInterface
     /** @var string Fill it if the module is installed but not yet set up */
     public $warning;
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Attribute will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
+     * @var int enable_device */
     public $enable_device = 7;
 
     /** @var array to store the limited country */
@@ -141,6 +149,24 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var bool */
     public $show_quick_view = false;
+
+    /** @var bool */
+    public $onclick_option = false;
+
+    /** @var string|null */
+    public $addons_buy_url = null;
+
+    /** @var string|null */
+    public $url = null;
+
+    /** @var string|null */
+    public $image = null;
+
+    /** @var string|null */
+    public $price = null;
+
+    /** @var string|null Can be addonsPartner|addonsNative */
+    public $type = null;
 
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = [];
@@ -511,22 +537,25 @@ abstract class ModuleCore implements ModuleInterface
     {
         // Store information if a module has been upgraded (memory optimization)
         if ($upgrade_detail['available_upgrade']) {
+            $translator = Context::getContext()->getTranslator();
             if ($upgrade_detail['success']) {
-                $this->_confirmations[] = Context::getContext()->getTranslator()->trans('Current version: %s', [$this->version], 'Admin.Modules.Notification');
-                $this->_confirmations[] = Context::getContext()->getTranslator()->trans('%d file upgrade applied', [$upgrade_detail['number_upgraded']], 'Admin.Modules.Notification');
-            } else {
-                if (!$upgrade_detail['number_upgraded']) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('No upgrade has been applied', [], 'Admin.Modules.Notification');
-                } else {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Upgraded from: %s to %s', [$upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']], 'Admin.Modules.Notification');
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('%d upgrade left', [$upgrade_detail['number_upgrade_left']], 'Admin.Modules.Notification');
-                }
+                $this->_confirmations[] = $translator->trans('Current version: %s', [$this->version], 'Admin.Modules.Notification');
+                $this->_confirmations[] = $translator->trans('%d file update applied', [$upgrade_detail['number_upgraded']], 'Admin.Modules.Notification');
 
-                if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate']) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Module %s cannot be upgraded this time: please refresh this page to update it.', [$this->name], 'Admin.Modules.Notification');
-                } else {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('To prevent any problem, this module has been turned off', [], 'Admin.Modules.Notification');
-                }
+                return;
+            }
+
+            if (!$upgrade_detail['number_upgraded']) {
+                $this->_errors[] = $translator->trans('No update has been applied', [], 'Admin.Modules.Notification');
+            } else {
+                $this->_errors[] = $translator->trans('Updated from: %s to %s', [$upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']], 'Admin.Modules.Notification');
+                $this->_errors[] = $translator->trans('%d update left', [$upgrade_detail['number_upgrade_left']], 'Admin.Modules.Notification');
+            }
+
+            if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate']) {
+                $this->_errors[] = $translator->trans('Module %s cannot be updated this time: please refresh this page to update it.', [$this->name], 'Admin.Modules.Notification');
+            } else {
+                $this->_errors[] = $translator->trans('To prevent any problem, this module has been turned off', [], 'Admin.Modules.Notification');
             }
         }
     }
@@ -730,7 +759,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Delete module from datable.
+     * Uninstalls the module from database.
      *
      * @return bool result
      */
@@ -738,14 +767,14 @@ abstract class ModuleCore implements ModuleInterface
     {
         Hook::exec('actionModuleUninstallBefore', ['object' => $this]);
 
-        // Check module installation id validation
+        // Check if module instance is valid
         if (!Validate::isUnsignedId($this->id)) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('The module is not installed.', [], 'Admin.Modules.Notification');
 
             return false;
         }
 
-        // Uninstall overrides
+        // Uninstall all overrides this module may have used
         if (!$this->uninstallOverrides()) {
             return false;
         }
@@ -754,10 +783,13 @@ abstract class ModuleCore implements ModuleInterface
         $sql = 'SELECT DISTINCT(`id_hook`) FROM `' . _DB_PREFIX_ . 'hook_module` WHERE `id_module` = ' . (int) $this->id;
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
+            // Unhook this module from each of the hooks
             $this->unregisterHook((int) $row['id_hook']);
+            // Remove all hook conditions that may have been configured - don't confuse it with error exception. :-)
             $this->unregisterExceptions((int) $row['id_hook']);
         }
 
+        // Remove all configured meta data (titles, URLs etc.) for this module's front controllers
         foreach ($this->controllers as $controller) {
             $page_name = 'module-' . $this->name . '-' . $controller;
             $meta = Db::getInstance()->getValue('SELECT id_meta FROM `' . _DB_PREFIX_ . 'meta` WHERE page="' . pSQL($page_name) . '"');
@@ -889,26 +921,35 @@ abstract class ModuleCore implements ModuleInterface
         return true;
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public function enableDevice($device)
     {
-        Db::getInstance()->execute(
-            '
-            UPDATE ' . _DB_PREFIX_ . 'module_shop
-            SET enable_device = enable_device + ' . (int) $device . '
-            WHERE (enable_device &~ ' . (int) $device . ' OR enable_device = 0) AND id_module=' . (int) $this->id .
-            Shop::addSqlRestriction()
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
         );
 
         return true;
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public function disableDevice($device)
     {
-        Db::getInstance()->execute(
-            'UPDATE ' . _DB_PREFIX_ . 'module_shop
-            SET enable_device = enable_device - ' . (int) $device . '
-            WHERE enable_device & ' . (int) $device . ' AND id_module=' . (int) $this->id .
-            Shop::addSqlRestriction()
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
         );
 
         return true;
@@ -983,8 +1024,9 @@ abstract class ModuleCore implements ModuleInterface
             $result &= $this->uninstallOverrides();
         }
 
-        // Disable module for all shops
-        $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id);
+        // Disable module for all shops or contextual shops
+        $whereIdShop = $force_all ? '' : ' AND `id_shop` IN(' . implode(', ', Shop::getContextListShopID()) . ')';
+        $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id . $whereIdShop);
 
         // if module has no more shop associations, set module.active = 0
         if (!$this->hasShopAssociations()) {
@@ -1311,7 +1353,7 @@ abstract class ModuleCore implements ModuleInterface
 
         $modules_installed = [];
         $result = Db::getInstance()->executeS('
-        SELECT m.name, m.version, mp.interest, module_shop.enable_device
+        SELECT m.name, m.version, mp.interest
         FROM `' . _DB_PREFIX_ . 'module` m
         ' . Shop::addSqlAssociation('module', 'm', false) . '
         LEFT JOIN `' . _DB_PREFIX_ . 'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = ' . (int) $id_employee . ')');
@@ -1516,7 +1558,6 @@ abstract class ModuleCore implements ModuleInterface
                 $module->installed = true;
                 $module->database_version = $modules_installed[$module->name]['version'];
                 $module->interest = $modules_installed[$module->name]['interest'];
-                $module->enable_device = $modules_installed[$module->name]['enable_device'];
             } else {
                 $module->installed = false;
                 $module->database_version = 0;
@@ -2071,20 +2112,6 @@ abstract class ModuleCore implements ModuleInterface
         return Cache::retrieve('Module::isEnabled' . $module_name);
     }
 
-    public static function isEnabledForMobileDevices($module_name)
-    {
-        if (!Cache::isStored('Module::isEnabledForMobileDevices' . $module_name)) {
-            $id_module = Module::getModuleIdByName($module_name);
-            $enable_device = (int) Db::getInstance()->getValue('SELECT `enable_device` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id);
-            $is_enabled_mobile = $enable_device === 7;
-            Cache::store('Module::isEnabledForMobileDevices' . $module_name, (bool) $is_enabled_mobile);
-
-            return (bool) $is_enabled_mobile;
-        }
-
-        return Cache::retrieve('Module::isEnabledForMobileDevices' . $module_name);
-    }
-
     /**
      * Check if module is registered on hook
      *
@@ -2394,7 +2421,7 @@ abstract class ModuleCore implements ModuleInterface
     <author><![CDATA[' . str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->author)) . ']]></author>'
         . $author_uri . '
     <tab><![CDATA[' . Tools::htmlentitiesUTF8($this->tab) . ']]></tab>' . (!empty($this->confirmUninstall) ? "\n\t" . '<confirmUninstall><![CDATA[' . $this->confirmUninstall . ']]></confirmUninstall>' : '') . '
-    <is_configurable>' . (isset($this->is_configurable) ? (int) $this->is_configurable : 0) . '</is_configurable>
+    <is_configurable>' . (int) $this->is_configurable . '</is_configurable>
     <need_instance>' . (int) $this->need_instance . '</need_instance>' . (!empty($this->limited_countries) ? "\n\t" . '<limited_countries>' . (count($this->limited_countries) == 1 ? $this->limited_countries[0] : '') . '</limited_countries>' : '') . '
 </module>';
         if (is_writable(_PS_MODULE_DIR_ . $this->name . '/')) {
@@ -2435,7 +2462,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getModulesAccessesByIdProfile($idProfile)
     {
-        if (empty(static::$cache_modules_roles)) {
+        if (empty(static::$cache_lgc_access)) {
             self::warmupRolesCache();
         }
 

@@ -54,14 +54,14 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
     await imageSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await imageSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
   });
 
   it('should reset all filters and get number of image types in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfImageTypes = await imageSettingsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfImageTypes).to.be.above(0);
+    expect(numberOfImageTypes).to.be.above(0);
   });
 
   // 1 : Create 15 new image types
@@ -76,17 +76,17 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
         await imageSettingsPage.goToNewImageTypePage(page);
 
         const pageTitle = await addImageTypePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
       });
 
       it(`should create image type n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createImageType${index}`, baseContext);
 
         const textResult = await addImageTypePage.createEditImageType(page, createImageTypeData);
-        await expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
+        expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
 
         const numberOfImageTypesAfterCreation = await imageSettingsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfImageTypesAfterCreation).to.be.equal(numberOfImageTypes + 1 + index);
+        expect(numberOfImageTypesAfterCreation).to.be.equal(numberOfImageTypes + 1 + index);
       });
     });
   });
@@ -184,17 +184,17 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -212,7 +212,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
 
       for (let i = 1; i <= numberOfImageTypesAfterFilter; i++) {
         const textColumn = await imageSettingsPage.getTextColumn(page, i, 'name');
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -220,14 +220,14 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteImageTypes', baseContext);
 
       const deleteTextResult = await imageSettingsPage.bulkDeleteImageTypes(page);
-      await expect(deleteTextResult).to.be.contains(imageSettingsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(imageSettingsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfImageTypesAfterReset = await imageSettingsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfImageTypesAfterReset).to.be.equal(numberOfImageTypes);
+      expect(numberOfImageTypesAfterReset).to.be.equal(numberOfImageTypes);
     });
   });
 });

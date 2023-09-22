@@ -28,99 +28,63 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
+
 class CartRuleRestrictionsForEditing
 {
     /**
-     * @var bool
+     * @param int[] $restrictedCartRuleIds
+     * @param RestrictionRuleGroup[] $productRestrictionRuleGroups
+     * @param int[] $restrictedCarrierIds
+     * @param int[] $restrictedCountryIds
+     * @param int[] $restrictedGroupIds
      */
-    private $countryRestriction;
-
-    /**
-     * @var bool
-     */
-    private $carrierRestriction;
-
-    /**
-     * @var bool
-     */
-    private $groupRestriction;
-
-    /**
-     * @var bool
-     */
-    private $cartRuleRestriction;
-
-    /**
-     * @var bool
-     */
-    private $productRestriction;
-
-    /**
-     * @var bool
-     */
-    private $shopRestriction;
-
     public function __construct(
-        bool $countryRestriction,
-        bool $carrierRestriction,
-        bool $groupRestriction,
-        bool $cartRuleRestriction,
-        bool $productRestriction,
-        bool $shopRestriction
+        private readonly array $restrictedCartRuleIds,
+        private readonly array $productRestrictionRuleGroups,
+        private readonly array $restrictedCarrierIds,
+        private readonly array $restrictedCountryIds,
+        private readonly array $restrictedGroupIds
     ) {
-        $this->countryRestriction = $countryRestriction;
-        $this->carrierRestriction = $carrierRestriction;
-        $this->groupRestriction = $groupRestriction;
-        $this->cartRuleRestriction = $cartRuleRestriction;
-        $this->productRestriction = $productRestriction;
-        $this->shopRestriction = $shopRestriction;
     }
 
     /**
-     * @return bool
+     * @return int[]
      */
-    public function isCountryRestriction(): bool
+    public function getRestrictedCartRuleIds(): array
     {
-        return $this->countryRestriction;
+        return $this->restrictedCartRuleIds;
     }
 
     /**
-     * @return bool
+     * @return RestrictionRuleGroup[]
      */
-    public function isCarrierRestriction(): bool
+    public function getProductRestrictionRuleGroups(): array
     {
-        return $this->carrierRestriction;
+        return $this->productRestrictionRuleGroups;
     }
 
     /**
-     * @return bool
+     * @return int[]
      */
-    public function isGroupRestriction(): bool
+    public function getRestrictedCarrierIds(): array
     {
-        return $this->groupRestriction;
+        return $this->restrictedCarrierIds;
     }
 
     /**
-     * @return bool
+     * @return int[]
      */
-    public function isCartRuleRestriction(): bool
+    public function getRestrictedCountryIds(): array
     {
-        return $this->cartRuleRestriction;
+        return $this->restrictedCountryIds;
     }
 
     /**
-     * @return bool
+     * @return int[]
      */
-    public function isProductRestriction(): bool
+    public function getRestrictedGroupIds(): array
     {
-        return $this->productRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShopRestriction(): bool
-    {
-        return $this->shopRestriction;
+        return $this->restrictedGroupIds;
     }
 }

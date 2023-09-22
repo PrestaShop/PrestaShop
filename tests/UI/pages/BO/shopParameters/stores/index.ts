@@ -231,7 +231,7 @@ class Stores extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToNewStorePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newStoreLink);
+    await this.clickAndWaitForURL(page, this.newStoreLink);
   }
 
   /* Filter methods */
@@ -252,7 +252,7 @@ class Stores extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -276,15 +276,17 @@ class Stores extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
@@ -375,7 +377,7 @@ class Stores extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getStoreStatus(page: Page, row: number): Promise<boolean> {
+  async getStoreStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, `${this.tableColumnStatus(row)}.action-enabled`, 1000);
   }
 
@@ -390,7 +392,7 @@ class Stores extends BOBasePage {
     const actualStatus = await this.getStoreStatus(page, row);
 
     if (actualStatus !== wantedStatus) {
-      await this.clickAndWaitForNavigation(page, this.tableColumnStatus(row));
+      await page.click(this.tableColumnStatus(row));
     }
   }
 
@@ -401,7 +403,7 @@ class Stores extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditStorePage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditLink(row));
   }
 
   /**
@@ -419,7 +421,7 @@ class Stores extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -463,7 +465,7 @@ class Stores extends BOBasePage {
       ),
     ]);
 
-    await this.clickAndWaitForNavigation(
+    await this.clickAndWaitForURL(
       page,
       statusWanted ? this.enableSelectionLink : this.disableSelectionLink,
     );
@@ -487,7 +489,7 @@ class Stores extends BOBasePage {
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -538,7 +540,7 @@ class Stores extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   /* Form functions */
@@ -568,7 +570,7 @@ class Stores extends BOBasePage {
     await this.setValue(page, this.faxInput, storeContactData.fax);
 
     // Save contact details
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await page.click(this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -580,7 +582,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
+  async getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -592,7 +594,7 @@ class Stores extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -603,7 +605,7 @@ class Stores extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -614,7 +616,7 @@ class Stores extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

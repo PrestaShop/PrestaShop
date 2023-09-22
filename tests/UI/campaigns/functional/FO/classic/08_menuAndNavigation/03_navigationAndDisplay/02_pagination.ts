@@ -49,7 +49,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
@@ -59,7 +59,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await homePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check the number of products on the page', async function () {
@@ -73,7 +73,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.contain('1 2 Next');
+      expect(pagesList).to.contain('1 2 Next');
     });
 
     it('should click on next', async function () {
@@ -82,14 +82,14 @@ describe('FO - Navigation and display : Pagination', async () => {
       await categoryPageFO.goToNextPage(page);
 
       const numberOfItems = await categoryPageFO.getShowingItems(page);
-      await expect(numberOfItems).to.eq('Showing 13-19 of 19 item(s)');
+      expect(numberOfItems).to.eq('Showing 13-19 of 19 item(s)');
     });
 
     it('should check the pagination in the bottom of the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel1', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.contain('Previous 1 2');
+      expect(pagesList).to.contain('Previous 1 2');
     });
 
     it('should click on previous', async function () {
@@ -98,7 +98,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await categoryPageFO.goToPreviousPage(page);
 
       const numberOfItems = await categoryPageFO.getShowingItems(page);
-      await expect(numberOfItems).to.eq('Showing 1-12 of 19 item(s)');
+      expect(numberOfItems).to.eq('Showing 1-12 of 19 item(s)');
     });
   });
 
@@ -117,14 +117,14 @@ describe('FO - Navigation and display : Pagination', async () => {
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it('should change the number of products per page to 6', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays0', baseContext);
 
       const result = await productSettingsPage.setProductsDisplayedPerPage(page, 6);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -136,7 +136,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
@@ -146,7 +146,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await homePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check the number of products on the page', async function () {
@@ -160,7 +160,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel2', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.contain('1 2 3 4 Next');
+      expect(pagesList).to.contain('1 2 3 4 Next');
     });
 
     it('should click on next', async function () {
@@ -169,14 +169,14 @@ describe('FO - Navigation and display : Pagination', async () => {
       await categoryPageFO.goToNextPage(page);
 
       const numberOfItems = await categoryPageFO.getShowingItems(page);
-      await expect(numberOfItems).to.eq('Showing 7-12 of 19 item(s)');
+      expect(numberOfItems).to.eq('Showing 7-12 of 19 item(s)');
     });
 
     it('should check the pagination in the bottom of the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel3', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.contain('Previous 1 2 3 4 Next');
+      expect(pagesList).to.contain('Previous 1 2 3 4 Next');
     });
 
     it('should click on previous', async function () {
@@ -185,7 +185,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await categoryPageFO.goToPreviousPage(page);
 
       const numberOfItems = await categoryPageFO.getShowingItems(page);
-      await expect(numberOfItems).to.eq('Showing 1-6 of 19 item(s)');
+      expect(numberOfItems).to.eq('Showing 1-6 of 19 item(s)');
     });
   });
 
@@ -196,14 +196,14 @@ describe('FO - Navigation and display : Pagination', async () => {
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it('should change the number of products per page to 20', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays1', baseContext);
 
       const result = await productSettingsPage.setProductsDisplayedPerPage(page, 20);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -215,7 +215,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
@@ -225,7 +225,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await homePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check the number of products on the page', async function () {
@@ -239,7 +239,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel4', baseContext);
 
       const isVisible = await categoryPageFO.isPagesListVisible(page);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
     });
   });
 
@@ -251,14 +251,14 @@ describe('FO - Navigation and display : Pagination', async () => {
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it('should change the number of products per page to 12', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays2', baseContext);
 
       const result = await productSettingsPage.setProductsDisplayedPerPage(page, 12);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
 });

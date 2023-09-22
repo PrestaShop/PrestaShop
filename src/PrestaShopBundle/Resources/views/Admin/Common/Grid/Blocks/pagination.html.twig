@@ -31,7 +31,7 @@
       {% set route_params = route_params|merge({ (param_name) : (param_value) }) %}
     {% endfor %}
 
-    {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
+    {{ render(controller('PrestaShopBundle\\Controller\\Admin\\CommonController:paginationAction', {
       'limit': grid.pagination.limit,
       'offset': grid.pagination.offset,
       'total': grid.data.records_total,

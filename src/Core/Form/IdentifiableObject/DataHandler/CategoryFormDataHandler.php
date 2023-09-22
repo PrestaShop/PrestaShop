@@ -102,10 +102,6 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setAssociatedGroupIds($data['group_association']);
         $command->setCoverImage($data['cover_image']);
         $command->setThumbnailImage($data['thumbnail_image']);
-
-        if (isset($data['menu_thumbnail_images'])) {
-            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
-        }
         if (isset($data['shop_association'])) {
             $command->setAssociatedShopIds($data['shop_association']);
         }
@@ -139,10 +135,6 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
 
         $command->setCoverImage($data['cover_image']);
         $command->setThumbnailImage($data['thumbnail_image']);
-
-        if (isset($data['menu_thumbnail_images'])) {
-            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
-        }
         if (isset($data['shop_association'])) {
             $command->setAssociatedShopIds($data['shop_association']);
         }

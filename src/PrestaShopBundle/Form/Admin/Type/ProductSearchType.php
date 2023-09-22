@@ -76,6 +76,8 @@ class ProductSearchType extends TranslatorAwareType
             ])
             ->setAllowedTypes('include_combinations', 'bool')
             ->setDefaults([
+                // error_bubbling => false allows constraint validators to set property path for error to be shown under this input, else it is not working
+                'error_bubbling' => false,
                 'required' => false,
                 'label' => false,
                 'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
@@ -96,7 +98,7 @@ class ProductSearchType extends TranslatorAwareType
                             'filters' => $options['filters'],
                         ]);
                     } else {
-                        return $router->generate('admin_products_v2_search_associations', [
+                        return $router->generate('admin_products_search_products_for_association', [
                             'languageCode' => $languageIsoCode,
                             'query' => '__QUERY__',
                         ]);

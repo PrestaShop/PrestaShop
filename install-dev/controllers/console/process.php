@@ -262,7 +262,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         return $this->model_install->configureShop([
             'shop_name' => $this->datas->shop_name,
-            'shop_activity' => $this->datas->shop_activity,
             'shop_country' => $this->datas->shop_country,
             'shop_timezone' => $this->datas->timezone,
             'use_smtp' => false,
@@ -305,7 +304,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         }
 
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
-        $result = $this->model_install->installFixtures(null, ['shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country]);
+        $result = $this->model_install->installFixtures(null, ['shop_country' => $this->datas->shop_country]);
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
 
         return $result;
@@ -364,7 +363,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
 
         global $kernel;
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     }
 

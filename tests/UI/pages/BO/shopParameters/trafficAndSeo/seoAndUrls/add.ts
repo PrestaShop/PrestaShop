@@ -102,7 +102,7 @@ class AddSeoUrl extends BOBasePage {
    */
   async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
     for (let i = 0; i < keywords.length; i++) {
-      await page.type(this.metaKeywordsInput(idLang), keywords[i]);
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keywords[i]);
       await page.keyboard.press('Enter');
     }
   }
@@ -131,7 +131,7 @@ class AddSeoUrl extends BOBasePage {
     await this.setValue(page, this.friendlyUrlInput(2), seoPageData.frFriendlyUrl);
 
     // Save seo page
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

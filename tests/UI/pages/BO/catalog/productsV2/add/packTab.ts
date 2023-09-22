@@ -1,7 +1,10 @@
-import type {Page} from 'playwright';
-
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
+
+import type {ProductPackInformation, ProductPackItem} from '@data/types/product';
+
+import type {Page} from 'playwright';
+import {ProductPackOptions, ProductStockMovement} from '@data/types/product';
 
 /**
  * Pack tab on new product V2 page, contains functions that can be used on the page
@@ -40,6 +43,8 @@ class PackTab extends BOBasePage {
   private readonly productInListQuantity: (productInList: number) => string;
 
   private readonly alertDangerProductInPack: (productInList: number) => string;
+
+  private readonly editQuantityBase: string;
 
   private readonly editQuantityInput: string;
 
@@ -105,6 +110,7 @@ class PackTab extends BOBasePage {
       + 'delta_quantity + span';
 
     // Edit quantity selectors
+    this.editQuantityBase = 'input#product_stock_quantities_delta_quantity_quantity';
     this.editQuantityInput = '#product_stock_quantities_delta_quantity_delta';
     this.minimalQuantityInput = '#product_stock_quantities_minimal_quantity';
     this.packStockTypeRadioButton = (buttonRow: number) => `#product_stock_pack_stock_type_${buttonRow} +i`;
@@ -125,7 +131,7 @@ class PackTab extends BOBasePage {
    */
   async searchProduct(page: Page, productName: string): Promise<string> {
     await this.waitForSelectorAndClick(page, this.packTabLink);
-    await page.type(this.searchProductInput, productName);
+    await page.locator(this.searchProductInput).fill(productName);
     await this.waitForVisibleSelector(page, this.searchResult);
     await page.waitForTimeout(1000);
 
@@ -171,13 +177,13 @@ class PackTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param productInList {number} The row of product in pack
    */
-  async getProductInPackInformation(page: Page, productInList: number): Promise<object> {
+  async getProductInPackInformation(page: Page, productInList: number): Promise<ProductPackInformation> {
     await this.waitForVisibleSelector(page, this.listOfProducts);
     return {
       image: await this.getAttributeContent(page, this.productInListImage(productInList), 'src'),
       name: await this.getAttributeContent(page, this.productInListName(productInList), 'value'),
       reference: await this.getTextContent(page, this.productInListReference(productInList)),
-      quantity: await this.getAttributeContent(page, this.productInListQuantity(productInList), 'value'),
+      quantity: parseInt(await this.getAttributeContent(page, this.productInListQuantity(productInList), 'value'), 10),
     };
   }
 
@@ -186,9 +192,9 @@ class PackTab extends BOBasePage {
    * Set product in pack quantity
    * @param page {Page} Browser tab
    * @param productInList {number} The row of product in pack
-   * @param quantity {number} The product quantity to set
+   * @param quantity {number|string} The product quantity to set
    */
-  async setProductQuantity(page: Page, productInList: number, quantity: number): Promise<void> {
+  async setProductQuantity(page: Page, productInList: number, quantity: number|string): Promise<void> {
     await this.setValue(page, this.quantityInput(productInList), quantity);
   }
 
@@ -198,7 +204,7 @@ class PackTab extends BOBasePage {
    * @param productInList {number} The row of product in pack
    */
   async saveAndGetProductInPackErrorMessage(page: Page, productInList: number): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveProductButton);
+    await page.click(this.saveProductButton);
 
     return this.getTextContent(page, this.alertDangerProductInPack(productInList));
   }
@@ -223,15 +229,14 @@ class PackTab extends BOBasePage {
   /**
    * Add combination
    * @param page {Page} Browser tab
-   * @param packData {object} Data of the pack
+   * @param packData {ProductPackItem[]} Data of the pack
    * @returns {Promise<void>}
    */
-  async setPackOfProducts(page: Page, packData: object): Promise<void> {
+  async setPackOfProducts(page: Page, packData: ProductPackItem[]): Promise<void> {
     await this.waitForSelectorAndClick(page, this.packTabLink);
-    const keys: string[] = Object.keys(packData);
 
-    for (let i = 0; i < keys.length; i += 1) {
-      await this.addProductToPack(page, packData[keys[i]].reference, packData[keys[i]].quantity);
+    for (let i = 0; i < packData.length; i += 1) {
+      await this.addProductToPack(page, packData[i].reference, packData[i].quantity);
     }
   }
 
@@ -240,10 +245,10 @@ class PackTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param movementRow {number} Movement row in table stock movements
    */
-  async getStockMovement(page: Page, movementRow: number): Promise<object> {
+  async getStockMovement(page: Page, movementRow: number): Promise<ProductStockMovement> {
     return {
       dateTime: await this.getTextContent(page, this.dateTimeRowInTable(movementRow - 1)),
-      employee: await this.getTextContent(page, this.employeeRowInTable(movementRow - 1)),
+      employee: await this.getTextContent(page, this.employeeRowInTable(movementRow - 1), false),
       quantity: await this.getNumberFromText(page, this.quantityRowInTable(movementRow - 1)),
     };
   }
@@ -296,13 +301,30 @@ class PackTab extends BOBasePage {
   /**
    * Edit pack of products
    * @param page {Page} Browser tab
-   * @param packData {object} Data to edit pack of products
+   * @param packData {ProductPackOptions} Data to edit pack of products
    */
-  async editPackOfProducts(page: Page, packData: object): Promise<void> {
-    await this.setValue(page, this.editQuantityInput, packData.quantity);
+  async editPackOfProducts(page: Page, packData: ProductPackOptions): Promise<void> {
+    await this.editQuantity(page, packData.quantity);
     await this.setValue(page, this.minimalQuantityInput, packData.minimalQuantity);
+    await this.editPackStockType(page, packData.packQuantitiesOption);
+  }
 
-    switch (packData.packQuantitiesOption) {
+  /**
+   * Edit quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Quantity
+   */
+  async editQuantity(page: Page, quantity: number): Promise<void> {
+    await this.setValue(page, this.editQuantityInput, quantity);
+  }
+
+  /**
+   * Edit quantity
+   * @param page {Page} Browser tab
+   * @param packStockType {string} Quantity
+   */
+  async editPackStockType(page: Page, packStockType: string): Promise<void> {
+    switch (packStockType) {
       case 'Decrement pack only':
         await page.click(this.packStockTypeRadioButton(0));
         break;
@@ -320,8 +342,17 @@ class PackTab extends BOBasePage {
         break;
 
       default:
-        throw new Error(`Radio button for ${packData.packQuantitiesOption} was not found`);
+        throw new Error(`Radio button for ${packStockType} was not found`);
     }
+  }
+
+  /**
+   * Get the value of the stock
+   * @param page {Page} Browser tab
+   * @return <Promise<number>>
+   */
+  async getStockValue(page: Page): Promise<number> {
+    return parseInt(await page.locator(this.editQuantityBase).getAttribute('value') ?? '', 10);
   }
 }
 

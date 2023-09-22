@@ -232,19 +232,20 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * Execute the hook displayPaymentReturn.
      */
-    public function displayPaymentReturn($order)
+    public function displayPaymentReturn(Order $order)
     {
         if (!Validate::isUnsignedId($this->id_module)) {
             return false;
         }
 
+        // Hook called only for the module concerned
         return Hook::exec('displayPaymentReturn', ['order' => $order], $this->id_module);
     }
 
     /**
      * Execute the hook displayOrderConfirmation.
      */
-    public function displayOrderConfirmation($order)
+    public function displayOrderConfirmation(Order $order)
     {
         return Hook::exec('displayOrderConfirmation', ['order' => $order]);
     }

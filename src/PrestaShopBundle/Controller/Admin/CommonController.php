@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -126,7 +127,7 @@ class CommonController extends FrameworkBundleAdminController
         // urls from route
         $callerParameters = $request->attributes->get('caller_parameters', []);
         foreach ($callerParameters as $k => $v) {
-            if (strpos($k, '_') === 0) {
+            if (str_starts_with($k, '_')) {
                 unset($callerParameters[$k]);
             }
         }
@@ -248,7 +249,7 @@ class CommonController extends FrameworkBundleAdminController
     public function resetSearchAction($controller = '', $action = '', $filterId = '')
     {
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
-        $employeeId = $this->getUser()->getId();
+        $employeeId = $this->getUser() instanceof Employee ? $this->getUser()->getId() : 0;
         $shopId = $this->getContext()->shop->id;
 
         // for compatibility when $controller and $action are used

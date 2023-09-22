@@ -33,23 +33,19 @@ class CmsControllerCore extends FrontController
     public $assignCase;
 
     /**
-     * @deprecated Since 8.1, it will become protected in next major version. Use getCms() method instead.
-     *
      * @var CMS|null
      */
-    public $cms;
+    protected $cms;
 
     /**
-     * @deprecated Since 8.1, it will become protected in next major version. Use getCmsCategory() method instead.
-     *
      * @var CMSCategory|null
      */
-    public $cms_category;
+    protected $cms_category;
 
     /** @var bool */
     public $ssl = false;
 
-    public function canonicalRedirection($canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = '')
     {
         if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite, $this->ssl))) {
             parent::canonicalRedirection($canonicalURL);
@@ -106,15 +102,16 @@ class CmsControllerCore extends FrontController
         if ($this->assignCase == self::CMS_CASE_PAGE) {
             $cmsVar = $this->objectPresenter->present($this->cms);
 
+            // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
             $filteredCmsContent = Hook::exec(
                 'filterCmsContent',
                 ['object' => $cmsVar],
-                $id_module = null,
-                $array_return = false,
-                $check_exceptions = true,
-                $use_push = false,
-                $id_shop = null,
-                $chain = true
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
             );
             if (!empty($filteredCmsContent['object'])) {
                 $cmsVar = $filteredCmsContent['object'];
@@ -135,15 +132,16 @@ class CmsControllerCore extends FrontController
         } elseif ($this->assignCase == self::CMS_CASE_CATEGORY) {
             $cmsCategoryVar = $this->getTemplateVarCategoryCms();
 
+            // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
             $filteredCmsCategoryContent = Hook::exec(
                 'filterCmsCategoryContent',
                 ['object' => $cmsCategoryVar],
-                $id_module = null,
-                $array_return = false,
-                $check_exceptions = true,
-                $use_push = false,
-                $id_shop = null,
-                $chain = true
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
             );
             if (!empty($filteredCmsCategoryContent['object'])) {
                 $cmsCategoryVar = $filteredCmsCategoryContent['object'];
@@ -199,6 +197,12 @@ class CmsControllerCore extends FrontController
         return $breadcrumb;
     }
 
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();

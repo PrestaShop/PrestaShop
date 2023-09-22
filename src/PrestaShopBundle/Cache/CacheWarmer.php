@@ -49,6 +49,8 @@ class CacheWarmer implements CacheWarmerInterface
         ];
 
         $this->fileSystem->mkdir($legacyDirs);
+
+        return [];
     }
 
     public function isOptional()

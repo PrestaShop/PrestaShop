@@ -28,8 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Feature;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -60,7 +60,7 @@ class ProductFeature extends CommonAbstractType
         $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
         $this->featureDataProvider = $featureDataProvider;
-        $this->features = $this->formatDataChoicesList(
+        $this->features = FormHelper::formatDataChoicesList(
             $this->featureDataProvider->getFeatures($this->locales[0]['id_lang']),
             'id_feature'
         );
@@ -77,10 +77,9 @@ class ProductFeature extends CommonAbstractType
             'label' => $this->translator->trans('Feature', [], 'Admin.Catalog.Feature'),
             'choices' => $this->features,
             'required' => false,
+            'autocomplete' => true,
             'attr' => [
                 'data-action' => $this->router->generate('admin_feature_get_feature_values', ['idFeature' => 1]),
-                'data-toggle' => 'select2',
-                'data-minimumResultsForSearch' => '7',
                 'class' => 'feature-selector',
             ],
             'placeholder' => $this->translator->trans('Choose a feature', [], 'Admin.Catalog.Feature'),
@@ -88,10 +87,7 @@ class ProductFeature extends CommonAbstractType
             ->add('value', FormType\ChoiceType::class, [
                 'label' => $this->translator->trans('Pre-defined value', [], 'Admin.Catalog.Feature'),
                 'required' => false,
-                'attr' => [
-                    'class' => 'feature-value-selector',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
                 'placeholder' => $this->translator->trans('Choose a value', [], 'Admin.Catalog.Feature'),
                 'disabled' => true,
             ])
@@ -112,7 +108,7 @@ class ProductFeature extends CommonAbstractType
                 return;
             }
 
-            $choices = $this->formatDataChoicesList(
+            $choices = FormHelper::formatDataChoicesList(
                 $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
@@ -129,7 +125,7 @@ class ProductFeature extends CommonAbstractType
                 return;
             }
 
-            $choices = $this->formatDataChoicesList(
+            $choices = FormHelper::formatDataChoicesList(
                 $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
@@ -148,10 +144,9 @@ class ProductFeature extends CommonAbstractType
         $form->add('value', FormType\ChoiceType::class, [
             'label' => $this->translator->trans('Pre-defined value', [], 'Admin.Catalog.Feature'),
             'required' => false,
+            'autocomplete' => true,
             'attr' => [
                 'class' => 'feature-value-selector',
-                'data-minimumResultsForSearch' => '7',
-                'data-toggle' => 'select2',
             ],
             'choices' => $choices,
             'placeholder' => $this->translator->trans('Choose a value', [], 'Admin.Catalog.Feature'),

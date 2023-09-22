@@ -268,12 +268,12 @@ class CurrencyController extends FrameworkBundleAdminController
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param int $currencyId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function deleteAction($currencyId)
     {
         try {
@@ -295,10 +295,10 @@ class CurrencyController extends FrameworkBundleAdminController
      * @param string $currencyIsoCode
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return JsonResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function getReferenceDataAction($currencyIsoCode)
     {
         try {
@@ -346,10 +346,10 @@ class CurrencyController extends FrameworkBundleAdminController
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function toggleStatusAction($currencyId)
     {
         try {
@@ -376,10 +376,10 @@ class CurrencyController extends FrameworkBundleAdminController
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function refreshExchangeRatesAction()
     {
         try {
@@ -485,13 +485,13 @@ class CurrencyController extends FrameworkBundleAdminController
      * Toggles currencies status in bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param Request $request
      * @param string $status
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function bulkToggleStatusAction(Request $request, $status)
     {
         $currenciesIds = $this->getBulkCurrenciesFromRequest($request);
@@ -518,12 +518,12 @@ class CurrencyController extends FrameworkBundleAdminController
      * Deletes currencies in bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function bulkDeleteAction(Request $request)
     {
         $currenciesIds = $this->getBulkCurrenciesFromRequest($request);
@@ -533,7 +533,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (CurrencyException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -615,7 +615,7 @@ class CurrencyController extends FrameworkBundleAdminController
                 ),
             ],
             CurrencyNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotToggleCurrencyException::class => $this->trans(
@@ -669,11 +669,7 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     private function getBulkCurrenciesFromRequest(Request $request)
     {
-        $currenciesIds = $request->request->get('currency_currency_bulk');
-
-        if (!is_array($currenciesIds)) {
-            return [];
-        }
+        $currenciesIds = $request->request->all('currency_currency_bulk');
 
         foreach ($currenciesIds as $i => $currencyId) {
             $currenciesIds[$i] = (int) $currencyId;

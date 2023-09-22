@@ -39,7 +39,7 @@ describe('FO - Login : Login in FO', async () => {
     await homePage.goTo(page, global.FO.URL);
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should go to login page', async function () {
@@ -48,7 +48,7 @@ describe('FO - Login : Login in FO', async () => {
     await homePage.goToLoginPage(page);
 
     const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
+    expect(pageTitle).to.equal(loginPage.pageTitle);
   });
 
   it('should enter an invalid credentials', async function () {
@@ -57,7 +57,7 @@ describe('FO - Login : Login in FO', async () => {
     await loginPage.customerLogin(page, firstCredentialsData, false);
 
     const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    expect(loginError).to.contains(loginPage.loginErrorText);
   });
 
   it('should enter an invalid email', async function () {
@@ -66,7 +66,7 @@ describe('FO - Login : Login in FO', async () => {
     await loginPage.customerLogin(page, secondCredentialsData, false);
 
     const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    expect(loginError).to.contains(loginPage.loginErrorText);
   });
 
   it('should enter an invalid password', async function () {
@@ -75,21 +75,21 @@ describe('FO - Login : Login in FO', async () => {
     await loginPage.customerLogin(page, thirdCredentialsData, false);
 
     const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    expect(loginError).to.contains(loginPage.loginErrorText);
   });
 
   it('should check password type', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordType', baseContext);
 
     const inputType = await loginPage.getPasswordType(page);
-    await expect(inputType).to.equal('password');
+    expect(inputType).to.equal('password');
   });
 
   it('should click on show button and check the password', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnShowButton', baseContext);
 
     const inputType = await loginPage.showPassword(page);
-    await expect(inputType).to.equal('text');
+    expect(inputType).to.equal('text');
   });
 
   it('should enter a valid credentials', async function () {
@@ -98,9 +98,9 @@ describe('FO - Login : Login in FO', async () => {
     await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 });

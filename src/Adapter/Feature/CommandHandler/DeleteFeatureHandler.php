@@ -28,9 +28,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\DeleteFeatureHandlerInterface;
 
+#[AsCommandHandler]
 class DeleteFeatureHandler implements DeleteFeatureHandlerInterface
 {
     /**

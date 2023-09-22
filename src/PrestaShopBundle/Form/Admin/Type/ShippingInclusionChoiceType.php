@@ -28,10 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShippingInclusionChoiceProvider;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ShippingInclusionChoiceType extends ChoiceType
+class ShippingInclusionChoiceType extends AbstractType
 {
     /**
      * @var ShippingInclusionChoiceProvider
@@ -41,8 +42,12 @@ class ShippingInclusionChoiceType extends ChoiceType
     public function __construct(
         ShippingInclusionChoiceProvider $shippingInclusionChoiceProvider
     ) {
-        parent::__construct();
         $this->shippingInclusionChoiceProvider = $shippingInclusionChoiceProvider;
+    }
+
+    public function getParent(): string
+    {
+        return ChoiceType::class;
     }
 
     /**
@@ -50,8 +55,6 @@ class ShippingInclusionChoiceType extends ChoiceType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
             'label' => false,
             'choices' => $this->shippingInclusionChoiceProvider->getChoices(),

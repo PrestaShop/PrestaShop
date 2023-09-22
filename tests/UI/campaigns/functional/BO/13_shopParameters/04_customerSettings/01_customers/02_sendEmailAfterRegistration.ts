@@ -81,7 +81,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
 
     it(`should ${test.args.action} send an email after registration`, async function () {
@@ -92,7 +92,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         CustomerSettingsOptions.OPTION_EMAIL_REGISTRATION,
         test.args.enable,
       );
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
     it('should create a customer account from FO', async function () {
@@ -108,7 +108,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       await foCreateAccountPage.createAccount(page, test.args.customer);
 
       const connected = await foCreateAccountPage.isCustomerConnected(page);
-      await expect(connected, 'Customer is not created in FO').to.be.true;
+      expect(connected, 'Customer is not created in FO').to.eq(true);
 
       await foCreateAccountPage.logout(page);
     });
@@ -119,7 +119,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
 
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
@@ -132,7 +132,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       );
 
       const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
     it('should check if there is a welcome email for the new customer', async function () {
@@ -141,7 +141,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       await emailPage.filterEmailLogs(page, 'input', 'recipient', test.args.customer.email);
 
       const numberOfEmailAfterFilter = await emailPage.getNumberOfElementInGrid(page);
-      await expect(numberOfEmailAfterFilter).to.be.equal(test.args.nbrAfterFilter);
+      expect(numberOfEmailAfterFilter).to.be.equal(test.args.nbrAfterFilter);
     });
   });
 
@@ -156,14 +156,14 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       );
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomers).to.be.above(0);
+      expect(numberOfCustomers).to.be.above(0);
     });
 
     [
@@ -183,17 +183,17 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         );
 
         const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-        await expect(textEmail).to.contains(test.args.customerToDelete.email);
+        expect(textEmail).to.contains(test.args.customerToDelete.email);
       });
 
       it('should delete customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCustomer${index + 1}`, baseContext);
 
         const textResult = await customersPage.deleteCustomer(page, 1);
-        await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
+        expect(textResult).to.equal(customersPage.successfulDeleteMessage);
 
         const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - (index + 1));
+        expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - (index + 1));
       });
     });
   });

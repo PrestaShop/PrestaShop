@@ -216,12 +216,12 @@ class LanguageController extends FrameworkBundleAdminController
      * Deletes language
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param int $languageId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function deleteAction($languageId)
     {
         try {
@@ -239,12 +239,12 @@ class LanguageController extends FrameworkBundleAdminController
      * Deletes languages in bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function bulkDeleteAction(Request $request)
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);
@@ -254,7 +254,7 @@ class LanguageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -267,12 +267,12 @@ class LanguageController extends FrameworkBundleAdminController
      * Toggles language status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param int $languageId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function toggleStatusAction($languageId)
     {
         try {
@@ -299,13 +299,13 @@ class LanguageController extends FrameworkBundleAdminController
      * Toggles languages status in bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param Request $request
      * @param string $status
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function bulkToggleStatusAction(Request $request, $status)
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);
@@ -339,7 +339,7 @@ class LanguageController extends FrameworkBundleAdminController
 
         return [
             LanguageNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotDisableDefaultLanguageException::class => $this->trans(
@@ -430,11 +430,7 @@ class LanguageController extends FrameworkBundleAdminController
      */
     private function getBulkLanguagesFromRequest(Request $request)
     {
-        $languageIds = $request->request->get('language_language_bulk');
-
-        if (!is_array($languageIds)) {
-            return [];
-        }
+        $languageIds = $request->request->all('language_language_bulk');
 
         foreach ($languageIds as $i => $languageId) {
             $languageIds[$i] = (int) $languageId;

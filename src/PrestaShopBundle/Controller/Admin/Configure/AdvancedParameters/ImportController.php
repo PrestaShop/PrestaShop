@@ -165,12 +165,12 @@ class ImportController extends FrameworkBundleAdminController
      * Delete import file.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
-     * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_import')]
     public function deleteAction(Request $request)
     {
         $filename = $request->query->get('filename', $request->query->get('csvfilename'));
@@ -189,12 +189,12 @@ class ImportController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.", redirectRoute="admin_import"
      * )
-     * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_import')]
     public function downloadAction(Request $request)
     {
         if ($filename = $request->query->get('filename')) {
@@ -266,12 +266,12 @@ class ImportController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_import"
      * )
-     * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_import')]
     public function processImportAction(Request $request)
     {
         $errors = [];

@@ -72,14 +72,14 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it('should reset all filters and get number of customers in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomers).to.be.above(0);
+      expect(numberOfCustomers).to.be.above(0);
     });
   });
 
@@ -174,25 +174,25 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.isDate) {
           const expectedResult: string[] = await basicHelper.sortArrayDate(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

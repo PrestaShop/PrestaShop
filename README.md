@@ -5,8 +5,7 @@ About PrestaShop
 [![Integration tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/integration.yml)
 [![UI tests](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity.yml/badge.svg)](https://github.com/PrestaShop/PrestaShop/actions/workflows/sanity.yml)
 [![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop-project.org%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop-project.org/)
-
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.2-8892BF.svg?style=flat-square)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.1-8892BF.svg?style=flat-square)](https://php.net/)
 [![GitHub release](https://img.shields.io/github/v/release/prestashop/prestashop)](https://github.com/PrestaShop/PrestaShop)
 [![Slack chat](https://img.shields.io/badge/Chat-on%20Slack-red)](https://www.prestashop-project.org/slack/)
 [![GitHub forks](https://img.shields.io/github/forks/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/network)
@@ -33,7 +32,7 @@ The first stable version of PrestaShop 8.0, was released on October 26th, 2022. 
 Server configuration
 --------
 
-To install the latest PrestaShop 8.0, you need a web server running PHP 7.2+ and any flavor of MySQL 5.6+ (MySQL, MariaDB, Percona Server, etc.).
+To install the latest PrestaShop 9.0, you need a web server running PHP 8.1+ and any flavor of MySQL 5.6+ (MySQL, MariaDB, Percona Server, etc.).
 
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
 We recommend the Apache or Nginx web servers (check out our [example Nginx configuration file][example-nginx]).
@@ -81,6 +80,12 @@ docker compose down -v
 docker compose build --no-cache
 docker-compose up --build --force-recreate
 ```
+**Note:** To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
+
+```
+cp docker-compose.override.yml.dist docker-compose.override.yml
+docker-compose up
+```
 
 Documentation
 --------
@@ -125,7 +130,7 @@ Responsible (and private) disclosure is a standard practice when someone encount
 
 The PrestaShop team tries to be very proactive when preventing security problems. Even so, critical issues might surface without notice.
 
-This is why we have set up a [Bug Bounty Program](https://yeswehack.com/programs/prestashop) where anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
+This is why we have set up a [Bug Bounty Program][bug-bounty] where anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
 
 Understanding a security issue means knowing how the attacker got in and hacked the site. If you have those details, then please do contact us privately about it (and please do not publish those details before we answer). If you do not know how the attacker got in, please [ask for help][support].
 
@@ -170,3 +175,4 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [reporting-issues]: https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/
 [modules-devdocs]: https://devdocs.prestashop-project.org/8/modules/
 [themes-devdocs]: https://devdocs.prestashop-project.org/8/themes/
+[bug-bounty]: https://www.prestashop-project.org/security/bug-bounty/

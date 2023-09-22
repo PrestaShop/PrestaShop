@@ -15,7 +15,7 @@ import loginPage from '@pages/BO/login';
 
 // Import data
 import EmployeeData from '@data/faker/employee';
-import type MailDevEmail from '@data/types/maildev';
+import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';
@@ -88,14 +88,14 @@ describe('BO - Login : Password reminder', async () => {
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      expect(pageTitle).to.contains(employeesPage.pageTitle);
     });
 
     it('should reset all filters and get number of employees', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
       numberOfEmployees = await employeesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmployees).to.be.above(0);
+      expect(numberOfEmployees).to.be.above(0);
     });
 
     it('should go to add new employee page', async function () {
@@ -104,14 +104,14 @@ describe('BO - Login : Password reminder', async () => {
       await employeesPage.goToAddNewEmployeePage(page);
 
       const pageTitle = await addEmployeePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+      expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
     });
 
     it('should create employee and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
 
       const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
-      await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
+      expect(textResult).to.equal(employeesPage.successfulCreationMessage);
     });
 
     it('should logout from BO', async function () {
@@ -126,7 +126,7 @@ describe('BO - Login : Password reminder', async () => {
       await loginPage.goTo(page, global.BO.URL);
 
       const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(loginPage.pageTitle);
+      expect(pageTitle).to.contains(loginPage.pageTitle);
     });
 
     it('should send reset password mail', async function () {
@@ -135,13 +135,13 @@ describe('BO - Login : Password reminder', async () => {
       await loginPage.sendResetPasswordLink(page, createEmployeeData.email);
 
       const successTextContent = await loginPage.getResetPasswordSuccessMessage(page);
-      await expect(successTextContent).to.contains(loginPage.resetPasswordSuccessText);
+      expect(successTextContent).to.contains(loginPage.resetPasswordSuccessText);
     });
 
     it('should check if reset password mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfResetPasswordMailIsInMailbox', baseContext);
 
-      await expect(newMail.subject).to.contains(resetPasswordMailSubject);
+      expect(newMail.subject).to.contains(resetPasswordMailSubject);
     });
   });
 
@@ -160,7 +160,7 @@ describe('BO - Login : Password reminder', async () => {
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      expect(pageTitle).to.contains(employeesPage.pageTitle);
     });
 
     it('should filter list of employees by email', async function () {
@@ -174,21 +174,21 @@ describe('BO - Login : Password reminder', async () => {
       );
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-      await expect(textEmail).to.contains(createEmployeeData.email);
+      expect(textEmail).to.contains(createEmployeeData.email);
     });
 
     it('should delete employee', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
       const textResult = await employeesPage.deleteEmployee(page, 1);
-      await expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
+      expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of employees', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+      expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
   });
 

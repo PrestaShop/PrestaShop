@@ -29,11 +29,13 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 
+#[AsQueryHandler]
 class GetCustomerGroupForEditingHandler implements GetCustomerGroupForEditingHandlerInterface
 {
     /**

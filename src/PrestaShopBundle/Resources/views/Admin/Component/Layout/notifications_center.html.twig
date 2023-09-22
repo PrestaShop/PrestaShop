@@ -1,0 +1,150 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<div id="notif" class="notification-center dropdown dropdown-clickable">
+  <button class="btn notification js-notification dropdown-toggle" data-toggle="dropdown">
+    <i class="material-icons">notifications_none</i>
+    <span id="notifications-total" class="count hide">0</span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-right js-notifs_dropdown">
+    <div class="notifications">
+      <ul class="nav nav-tabs" role="tablist">
+        {% set active = "active" %}
+        {% if this.showNewOrders %}
+        <li class="nav-item">
+          <a
+            class="nav-link {{ active }}"
+            id="orders-tab"
+            data-toggle="tab"
+            data-type="order"
+            href="#orders-notifications"
+            role="tab"
+          >
+            {{ 'Orders[1][/1]'|trans({'[1]': '', '[/1]': ''}, 'Admin.Navigation.Notification')|raw }}
+            <span id="_nb_new_orders_"></span>
+          </a>
+        </li>
+        {% set active = "" %}
+        {% endif %}
+        {% if this.showNewCustomers %}
+        <li class="nav-item">
+          <a
+            class="nav-link {{ active }}"
+            id="customers-tab"
+            data-toggle="tab"
+            data-type="customer"
+            href="#customers-notifications"
+            role="tab"
+          >
+            {{ 'Customers[1][/1]'|trans({'[1]': '', '[/1]': ''}, 'Admin.Navigation.Notification') }}
+            <span id="_nb_new_customers_"></span>
+          </a>
+        </li>
+        {% set active = "" %}
+        {% endif %}
+        {% if this.showNewMessages %}
+        <li class="nav-item">
+          <a
+            class="nav-link {{ active }}"
+            id="messages-tab"
+            data-toggle="tab"
+            data-type="customer_message"
+            href="#messages-notifications"
+            role="tab"
+          >
+            {{ 'Messages[1][/1]'|trans({'[1]': '', '[/1]': ''}, 'Admin.Navigation.Notification') }}
+            <span id="_nb_new_messages_"></span>
+          </a>
+        </li>
+        {% set active = "" %}
+        {% endif %}
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        {% set active = "active" %}
+        {% if this.showNewOrders %}
+        <div class="tab-pane {{ active }} empty" id="orders-notifications" role="tabpanel">
+          <p class="no-notification">
+            {{ 'No new order for now :('|trans({}, 'Admin.Navigation.Notification') }}<br>
+            {{ this.noOrderTip|raw }}
+          </p>
+          <div class="notification-elements"></div>
+        </div>
+        {% set active = "" %}
+        {% endif %}
+        {% if this.showNewCustomers %}
+        <div class="tab-pane {{ active }} empty" id="customers-notifications" role="tabpanel">
+          <p class="no-notification">
+            {{ 'No new customer for now :('|trans({}, 'Admin.Navigation.Notification') }}<br>
+            {{ this.noCustomerTip }}
+          </p>
+          <div class="notification-elements"></div>
+        </div>
+        {% set active = "" %}
+        {% endif %}
+        {% if this.showNewMessages %}
+        <div class="tab-pane {{ active }} empty" id="messages-notifications" role="tabpanel">
+          <p class="no-notification">
+            {{ 'No new message for now.'|trans({}, 'Admin.Navigation.Notification') }}<br>
+            {{ this.noCustomerMessageTip }}
+          </p>
+          <div class="notification-elements"></div>
+        </div>
+        {% set active = "" %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if this.showNewOrders %}
+<script type="text/html" id="order-notification-template">
+  <a class="notif" href='order_url'>
+    #_id_order_ -
+    {{ 'from'|trans({}, 'Admin.Navigation.Notification') }} <strong>_customer_name_</strong> (_iso_code_)_carrier_
+    <strong class="float-sm-right">_total_paid_</strong>
+  </a>
+</script>
+{% endif %}
+
+{% if this.showNewCustomers %}
+<script type="text/html" id="customer-notification-template">
+  <a class="notif" href='customer_url'>
+    #_id_customer_ - <strong>_customer_name_</strong>_company_ - {{ 'registered'|trans({}, 'Admin.Navigation.Notification') }} <strong>_date_add_</strong>
+  </a>
+</script>
+{% endif %}
+
+{% if this.showNewMessages %}
+<script type="text/html" id="message-notification-template">
+  <a class="notif" href='message_url'>
+    <span class="message-notification-status _status_">
+      <i class="material-icons">fiber_manual_record</i> _status_
+    </span>
+    - <strong>_customer_name_</strong> (_company_) - <i class="material-icons">access_time</i> _date_add_
+  </a>
+</script>
+{% endif %}
+

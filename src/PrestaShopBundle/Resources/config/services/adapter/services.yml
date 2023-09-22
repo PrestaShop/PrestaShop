@@ -44,7 +44,7 @@ services:
 
   prestashop.adapter.php_parameters:
     class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
-    arguments: [ '%kernel.root_dir%/config/parameters.php' ]
+    arguments: [ '%kernel.project_dir%/app/config/parameters.php' ]
 
   prestashop.adapter.legacy.kpi_configuration:
     class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
@@ -54,12 +54,6 @@ services:
 
   prestashop.adapter.legacy.hook:
     class: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
-
-  # SSL middleware
-  prestashop.adapter.middleware.ssl:
-    class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   # Legacy Hooks registrator
   prestashop.adapter.legacy.hook.subscriber:
@@ -81,8 +75,13 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\PriceFormatter
 
   # Other adapters
+  PrestaShop\PrestaShop\Adapter\Shop\Context:
+    public: false
+
   prestashop.adapter.shop.context:
-    class: PrestaShop\PrestaShop\Adapter\Shop\Context
+    alias: PrestaShop\PrestaShop\Adapter\Shop\Context
+    public: true
+    deprecated: ~
 
   PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface: '@prestashop.adapter.shop.context'
   PrestaShop\PrestaShop\Core\Shop\ShopContextInterface: '@prestashop.adapter.shop.context'
@@ -90,10 +89,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\ImageManager:
     arguments: [ '@PrestaShop\PrestaShop\Adapter\LegacyContext' ]
-
-  prestashop.adapter.image_manager:
-    alias: PrestaShop\PrestaShop\Adapter\ImageManager
-    deprecated: ~
 
   prestashop.core.module.updater:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
@@ -106,7 +101,6 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - "@prestashop.adapter.data_provider.product"
       - "@prestashop.adapter.data_provider.supplier"
-      - "@prestashop.adapter.data_provider.warehouse"
       - "@prestashop.adapter.data_provider.feature"
       - "@prestashop.adapter.data_provider.pack"
       - "@prestashop.adapter.shop.context"
@@ -121,7 +115,7 @@ services:
     arguments:
       - '@prestashop.service.translation'
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().link'
-      - '@prestashop.core.admin.module.repository'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
 
   prestashop.adapter.shop.shop_url:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'

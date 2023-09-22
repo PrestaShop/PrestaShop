@@ -2,8 +2,7 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.grid.definition.factory.abstract_grid_definition:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory:
     abstract: true
     arguments:
       - '@prestashop.core.hook.dispatcher'
@@ -12,41 +11,41 @@ services:
 
   prestashop.core.grid.definition.factory.logs:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
 
   prestashop.core.grid.definition.factory.email_logs:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.language_by_id'
 
   prestashop.core.grid.definition.factory.request_sql:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.backup:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BackupDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.webservice_key:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.meta:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.category:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
@@ -54,89 +53,87 @@ services:
 
   prestashop.core.grid.definition.factory.employee:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.contacts:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.customer:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
-      - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
       - '@=service("prestashop.adapter.feature.group_feature").isActive()'
-      - '@=service("prestashop.adapter.form.choice_provider.group_by_id_choice_provider").getChoices()'
     public: true
 
   prestashop.core.grid.definition.factory.customer.discount:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerDiscountGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.customer.address:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerAddressGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("request_stack").getCurrentRequest()'
     public: true
 
   prestashop.core.grid.definition.factory.customer.cart:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerCartGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
   prestashop.core.grid.definition.factory.customer.order:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerOrderGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
   prestashop.core.grid.definition.factory.customer.bought_product:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerBoughtProductGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
   prestashop.core.grid.definition.factory.customer.viewed_product:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerViewedProductGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
   prestashop.core.grid.definition.factory.language:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.currency:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.supplier:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.profile:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfileGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.cms_page_category:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@request_stack'
       - '@prestashop.adapter.shop.context'
@@ -145,22 +142,22 @@ services:
 
   prestashop.core.grid.definition.factory.tax:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.manufacturer:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.manufacturer_address:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.cms_page:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.query_bus'
       - '@request_stack'
@@ -170,44 +167,44 @@ services:
 
   prestashop.core.grid.definition.factory.monitoring.empty_category:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
     public: true
 
   prestashop.core.grid.definition.factory.monitoring.no_qty_product_with_combination:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.monitoring.no_qty_product_without_combination:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithoutCombinationGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.monitoring.disabled_product:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.monitoring.product_without_image:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.monitoring.product_without_description:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.monitoring.product_without_price:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.order:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.form.choice_provider.order_countries'
@@ -221,14 +218,14 @@ services:
 
   prestashop.core.grid.definition.factory.cart_rule:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
 
   prestashop.core.grid.definition.factory.catalog_price_rule:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@request_stack'
       - '@prestashop.adapter.shop.context'
@@ -237,17 +234,17 @@ services:
 
   prestashop.core.grid.definition.factory.order_message:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.attachment:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.attribute:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider'
@@ -255,48 +252,48 @@ services:
 
   prestashop.core.grid.definition.factory.attribute_group:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.merchandise_return:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.tax_rules_group:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRulesGroupGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.address:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.credit_slip:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
     public: true
 
   prestashop.core.grid.definition.factory.order_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.grid.action.row.accessibility_checker.delete_order_states'
     public: true
 
   prestashop.core.grid.definition.factory.order_return_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.grid.action.row.accessibility_checker.delete_order_return_states'
     public: true
 
   prestashop.core.grid.definition.factory.outstanding:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
@@ -305,27 +302,27 @@ services:
 
   prestashop.core.grid.definition.factory.carrier:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.zone:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.country:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.search_engines:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SearchEngineGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   prestashop.core.grid.definition.factory.product:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
@@ -342,28 +339,28 @@ services:
 
   prestashop.core.grid.definition.factory.product_light:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductLightGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.adapter.legacy.configuration'
     public: true
 
   prestashop.core.grid.definition.factory.security.session.employee:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
   prestashop.core.grid.definition.factory.security.session.customer:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
   prestashop.core.grid.definition.factory.state:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StateGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - "@=service('router').generate('admin_common_reset_search', {'controller': 'state', 'action': 'index'})"
       - "@=service('router').generate('admin_states_index')"
@@ -371,14 +368,14 @@ services:
 
   prestashop.core.grid.definition.factory.title:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TitleGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.form.choice_provider.gender_choice_provider'
     public: true
 
   prestashop.core.grid.definition.factory.customer_thread:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerThreadGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.form.choice_provider.contact_type_choice_provider'
       - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
@@ -387,32 +384,53 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: false
     autowire: true
 
   prestashop.core.grid.definition.factory.customer_groups:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGroupsGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRuleGridDefinitionFactory:
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: false
     autowire: true
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory:
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: false
     autowire: true
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory:
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     autowire: true
     # must remain public to be accessed by CommonController:searchGridAction
     public: true
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory:
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+
+  # deprecated services
+  # Alias for this abstract definition causes tests in vendor fail for some reason, so we stick to full definition instead
+  prestashop.core.grid.definition.factory.abstract_grid_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+    abstract: true
+    arguments:
+      - '@prestashop.core.hook.dispatcher'
+    calls:
+      - [ setTranslator, [ '@translator' ] ]
+    deprecated: ~

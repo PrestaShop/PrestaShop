@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 /**
  * Provides data for feature forms.
  */
-final class FeatureFormDataProvider implements FormDataProviderInterface
+class FeatureFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface

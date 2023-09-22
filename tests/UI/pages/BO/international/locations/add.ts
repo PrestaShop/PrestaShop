@@ -50,7 +50,7 @@ class AddZone extends BOBasePage {
     await this.setChecked(page, this.statusToggle(zoneData.status ? 1 : 0));
 
     // Save zone
-    await this.clickAndWaitForNavigation(page, this.saveZoneButton);
+    await this.clickAndWaitForURL(page, this.saveZoneButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

@@ -120,7 +120,7 @@ class CustomerController extends AbstractAdminController
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
-            'layoutHeaderToolbarBtn' => $this->getCustomerToolbarButtons(),
+            'layoutHeaderToolbarBtn' => $this->getCustomerIndexToolbarButtons(),
             'enableSidebar' => true,
         ]);
     }
@@ -285,7 +285,6 @@ class CustomerController extends AbstractAdminController
      * View customer information.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_customers_index")
-     * @DemoRestricted(redirectRoute="admin_customers_index")
      *
      * @param int $customerId
      * @param Request $request
@@ -298,6 +297,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function viewAction(
         $customerId,
         Request $request,
@@ -378,6 +378,7 @@ class CustomerController extends AbstractAdminController
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
+            'layoutHeaderToolbarBtn' => $this->getCustomerViewToolbarButtons($customerId),
             'layoutTitle' => $this->trans(
                 'Customer %name%',
                 'Admin.Navigation.Menu',
@@ -724,7 +725,7 @@ class CustomerController extends AbstractAdminController
 
                 $this->addFlash(
                     'success',
-                    $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
                 );
             } catch (CustomerException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -791,7 +792,7 @@ class CustomerController extends AbstractAdminController
     {
         $customerIds = array_map(function ($customerId) {
             return (int) $customerId;
-        }, $request->request->get('customer_customers_bulk', []));
+        }, $request->request->all('customer_customers_bulk'));
 
         try {
             $command = new BulkEnableCustomerCommand($customerIds);
@@ -824,7 +825,7 @@ class CustomerController extends AbstractAdminController
         try {
             $customerIds = array_map(function ($customerId) {
                 return (int) $customerId;
-            }, $request->request->get('customer_customers_bulk', []));
+            }, $request->request->all('customer_customers_bulk'));
 
             $command = new BulkDisableCustomerCommand($customerIds);
 
@@ -1089,7 +1090,7 @@ class CustomerController extends AbstractAdminController
     /**
      * @return array
      */
-    private function getCustomerToolbarButtons(): array
+    private function getCustomerIndexToolbarButtons(): array
     {
         $toolbarButtons = [];
 
@@ -1104,11 +1105,29 @@ class CustomerController extends AbstractAdminController
 
         if (!$isSingleShopContext) {
             $toolbarButtons['add']['help'] = $this->trans(
-                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'You can use this feature in a single-store context only. Switch contexts to enable it.',
                 'Admin.Orderscustomers.Feature'
             );
             $toolbarButtons['add']['href'] = '#';
         }
+
+        return $toolbarButtons;
+    }
+
+    /**
+     * @param int $customerId
+     *
+     * @return array
+     */
+    private function getCustomerViewToolbarButtons(int $customerId): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['edit'] = [
+            'href' => $this->generateUrl('admin_customers_edit', ['customerId' => $customerId]),
+            'desc' => $this->trans('Edit customer', 'Admin.Orderscustomers.Feature'),
+            'icon' => 'mode_edit',
+        ];
 
         return $toolbarButtons;
     }

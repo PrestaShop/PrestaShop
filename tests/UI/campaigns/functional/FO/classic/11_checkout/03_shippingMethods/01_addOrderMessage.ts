@@ -3,14 +3,14 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import myAccountPage from '@pages/FO/myAccount';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {myAccountPage} from '@pages/FO/myAccount';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
@@ -63,7 +63,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await homePage.changeLanguage(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should go to login page', async function () {
@@ -72,7 +72,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await homePage.goToLoginPage(page);
 
     const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
+    expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
   });
 
   it('should sign in with customer credentials', async function () {
@@ -81,7 +81,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
   it('should add product to cart', async function () {
@@ -95,7 +95,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await productPage.addProductToTheCart(page);
 
     const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-    await expect(notificationsNumber).to.be.equal(1);
+    expect(notificationsNumber).to.be.equal(1);
   });
 
   it('should go to delivery step', async function () {
@@ -106,7 +106,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
 
     // Address step - Go to delivery step
     const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-    await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
   });
 
   it(`should select '${Carriers.myCarrier.name}' and add a message`, async function () {
@@ -117,7 +117,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
       Carriers.myCarrier.id,
       message,
     );
-    await expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.be.true;
+    expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.eq(true);
   });
 
   it('should click on edit \'Shipping methods\' step and check the order message', async function () {
@@ -126,7 +126,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await checkoutPage.clickOnEditShippingMethodStep(page);
 
     const orderMessage = await checkoutPage.getOrderMessage(page);
-    await expect(orderMessage).to.equal(message);
+    expect(orderMessage).to.equal(message);
   });
 
   it(`should choose the other carrier '${Carriers.default.name}' and edit the order message`, async function () {
@@ -135,7 +135,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await checkoutPage.chooseShippingMethodWithoutValidation(page, Carriers.default.id, editMessage);
 
     const isPaymentStep = await checkoutPage.goToPaymentStep(page);
-    await expect(isPaymentStep).to.be.true;
+    expect(isPaymentStep).to.eq(true);
   });
 
   it('should choose a payment method and validate the order', async function () {
@@ -145,7 +145,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
 
     // Check the confirmation message
     const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
   });
 
   it('should go to order history and details page', async function () {
@@ -155,7 +155,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await myAccountPage.goToHistoryAndDetailsPage(page);
 
     const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
-    await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
+    expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
   });
 
   it('Go to order details abd check the messages box', async function () {
@@ -164,6 +164,6 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await orderHistoryPage.goToDetailsPage(page);
 
     const orderMessage = await orderDetailsPage.getBoxMessages(page);
-    await expect(orderMessage).to.contain(editMessage);
+    expect(orderMessage).to.contain(editMessage);
   });
 });

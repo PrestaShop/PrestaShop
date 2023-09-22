@@ -94,7 +94,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         await invoicesPage.closeSfToolBar(page);
 
         const pageTitle = await invoicesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+        expect(pageTitle).to.contains(invoicesPage.pageTitle);
       });
 
       it(`should ${test.args.action} invoices`, async function () {
@@ -103,7 +103,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         await invoicesPage.enableInvoices(page, test.args.status);
 
         const textMessage = await invoicesPage.saveInvoiceOptions(page);
-        await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+        expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {
@@ -116,7 +116,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
@@ -125,14 +125,14 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         await ordersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it(`should change the order status to '${test.args.orderStatus}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateStatus${index}`, baseContext);
 
         const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.orderStatus);
-        await expect(result).to.equal(test.args.orderStatus);
+        expect(result).to.equal(test.args.orderStatus);
       });
 
       it(`should check that there is ${test.args.isInvoiceCreated}`, async function () {
@@ -141,9 +141,9 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         const documentName = await orderPageTabListBlock.getDocumentType(page);
 
         if (test.args.status) {
-          await expect(documentName).to.be.equal('Invoice');
+          expect(documentName).to.be.equal('Invoice');
         } else {
-          await expect(documentName).to.be.not.equal('Invoice');
+          expect(documentName).to.be.not.equal('Invoice');
         }
       });
     });

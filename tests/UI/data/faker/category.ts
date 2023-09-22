@@ -1,6 +1,6 @@
 import Groups from '@data/demo/groups';
 import type GroupData from '@data/faker/group';
-import type CategoryCreator from '@data/types/category';
+import type {CategoryCreator} from '@data/types/category';
 
 import {faker} from '@faker-js/faker';
 
@@ -28,8 +28,6 @@ export default class CategoryData {
   public readonly coverImage: string|null;
 
   public readonly thumbnailImage: string|null;
-
-  public readonly metaImage: string|null;
 
   /**
    * Constructor for class CategoryData
@@ -66,8 +64,5 @@ export default class CategoryData {
 
     /** @type {string|null} Category thumbnail of the category */
     this.thumbnailImage = categoryToCreate.thumbnailImage || null;
-
-    /** @type {string|null} Menu thumbnail of the category */
-    this.metaImage = categoryToCreate.metaImage || null;
   }
 }

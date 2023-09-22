@@ -52,19 +52,21 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
 
   tests.forEach((test, index: number) => {
     describe(`Update number of product displayed to ${test.args.numberOfProductsPerPage}`, async () => {
-      it('should go to \'Shop parameters > Product Settings\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
+      if (index === 0) {
+        it('should go to \'Shop parameters > Product Settings\' page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.productSettingsLink,
-        );
-        await productSettingsPage.closeSfToolBar(page);
+          await dashboardPage.goToSubMenu(
+            page,
+            dashboardPage.shopParametersParentLink,
+            dashboardPage.productSettingsLink,
+          );
+          await productSettingsPage.closeSfToolBar(page);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-      });
+          const pageTitle = await productSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        });
+      }
 
       it(
         `should set number of products displayed per page to '${test.args.numberOfProductsPerPage}'`,
@@ -75,7 +77,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
             page,
             test.args.numberOfProductsPerPage,
           );
-          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
         },
       );
 
@@ -85,7 +87,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         page = await productSettingsPage.viewMyShop(page);
 
         const isHomePage = await homePageFO.isHomePage(page);
-        await expect(isHomePage, 'Home page was not opened').to.be.true;
+        expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should go to all products page', async function () {
@@ -95,7 +97,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         await homePageFO.goToAllProductsPage(page);
 
         const isCategoryPage = await categoryPageFO.isCategoryPage(page);
-        await expect(isCategoryPage, 'Home category page was not opened');
+        expect(isCategoryPage, 'Home category page was not opened');
       });
 
       it(`should check that number of products is equal to '${test.args.numberOfProductsPerPage}'`, async function () {
@@ -103,7 +105,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
 
         const numberOfProducts = await categoryPageFO.getNumberOfProductsDisplayed(page);
 
-        await expect(
+        expect(
           numberOfProducts,
           'Number of product displayed is incorrect',
         ).to.equal(test.args.numberOfProductsPerPage);
@@ -115,7 +117,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         page = await homePageFO.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     });
   });

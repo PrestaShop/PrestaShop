@@ -14,7 +14,7 @@ class GDPRPersonalData extends FOBasePage {
 
   private readonly exportDataToPDFButton: string;
 
-  private readonly contactUsLink: string;
+  private readonly contactUsHyperLink: string;
 
   private readonly exportDataToCSVButton: string;
 
@@ -30,7 +30,7 @@ class GDPRPersonalData extends FOBasePage {
     // Selectors
     this.headerTitle = '#content-wrapper h1';
     this.exportDataToPDFButton = '#exportDataToPdf';
-    this.contactUsLink = '#content section.page_content a[href*=\'contact-us\']';
+    this.contactUsHyperLink = '#content section.page_content a[href*=\'contact-us\']';
     this.exportDataToCSVButton = '#exportDataToCsv';
   }
 
@@ -62,7 +62,7 @@ class GDPRPersonalData extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToContactUsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.contactUsLink);
+    await this.clickAndWaitForURL(page, this.contactUsHyperLink);
   }
 
   /**

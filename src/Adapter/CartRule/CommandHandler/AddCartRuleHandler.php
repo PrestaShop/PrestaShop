@@ -27,19 +27,20 @@
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
-use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
+use DateTimeImmutable;
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopException;
 
 /**
  * Handles adding new cart rule using legacy logic.
  */
+#[AsCommandHandler]
 class AddCartRuleHandler implements AddCartRuleHandlerInterface
 {
     /**
@@ -47,10 +48,21 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
      */
     private $cartRuleRepository;
 
+    /**
+     * @var CartRuleActionFiller
+     */
+    private $cartRuleActionFiller;
+
+    /**
+     * @param CartRuleRepository $cartRuleRepository
+     * @param CartRuleActionFiller $cartRuleActionFiller
+     */
     public function __construct(
-        CartRuleRepository $cartRuleRepository
+        CartRuleRepository $cartRuleRepository,
+        CartRuleActionFiller $cartRuleActionFiller
     ) {
         $this->cartRuleRepository = $cartRuleRepository;
+        $this->cartRuleActionFiller = $cartRuleActionFiller;
     }
 
     /**
@@ -58,7 +70,6 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
      */
     public function handle(AddCartRuleCommand $command): CartRuleId
     {
-        //@todo: restrictions are missing. We should consider dedicated command for restrictions
         $cartRule = $this->cartRuleRepository->add($this->buildCartRuleFromCommandData($command));
 
         return new CartRuleId((int) $cartRule->id);
@@ -79,12 +90,12 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->description = $command->getDescription();
         $cartRule->code = $command->getCode();
         $cartRule->highlight = $command->isHighlightInCart();
-        $cartRule->partial_use = $command->isAllowPartialUse();
+        $cartRule->partial_use = $command->allowPartialUse();
         $cartRule->priority = $command->getPriority();
         $cartRule->active = $command->isActive();
 
         $this->fillCartRuleConditionsFromCommandData($cartRule, $command);
-        $this->fillCartRuleActionsFromCommandData($cartRule, $command);
+        $this->cartRuleActionFiller->fillUpdatableProperties($cartRule, $command->getCartRuleAction());
 
         return $cartRule;
     }
@@ -99,8 +110,15 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
     {
         $cartRule->id_customer = null !== $command->getCustomerId() ? $command->getCustomerId()->getValue() : null;
 
-        $cartRule->date_from = $command->getValidFrom()->format('Y-m-d H:i:s');
-        $cartRule->date_to = $command->getValidTo()->format('Y-m-d H:i:s');
+        if (null === $command->getValidFrom() || null === $command->getValidTo()) {
+            $now = new DateTimeImmutable();
+
+            $cartRule->date_from = $now->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $cartRule->date_to = $now->modify('+1 month')->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        } else {
+            $cartRule->date_from = $command->getValidFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $cartRule->date_to = $command->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        }
 
         $minimumAmount = $command->getMinimumAmount();
         if ($minimumAmount) {
@@ -112,109 +130,5 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
 
         $cartRule->quantity = $command->getTotalQuantity();
         $cartRule->quantity_per_user = $command->getQuantityPerUser();
-    }
-
-    /**
-     * Fills cart rule with actions data from command.
-     *
-     * @param CartRule $cartRule
-     * @param AddCartRuleCommand $command
-     */
-    private function fillCartRuleActionsFromCommandData(CartRule $cartRule, AddCartRuleCommand $command): void
-    {
-        $cartRuleAction = $command->getCartRuleAction();
-        $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
-
-        $giftProduct = $cartRuleAction->getGiftProduct();
-        if ($giftProduct) {
-            $cartRule->gift_product = $giftProduct->getProductId()->getValue();
-            $cartRule->gift_product_attribute = $giftProduct->getCombinationId() ? $giftProduct->getCombinationId()->getValue() : null;
-        }
-
-        $amountDiscount = $cartRuleAction->getAmountDiscount();
-        if ($amountDiscount) {
-            $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
-            $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
-            $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
-            $cartRule->reduction_percent = null;
-            $cartRule->reduction_exclude_special = false;
-        }
-
-        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
-        if ($percentageDiscount) {
-            $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
-            $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
-            $cartRule->reduction_amount = null;
-            $cartRule->reduction_currency = 0;
-            $cartRule->reduction_tax = false;
-        }
-
-        $discountApplicationType = $command->getDiscountApplicationType();
-
-        if (null !== $discountApplicationType) {
-            $this->fillDiscountApplicationType(
-                $cartRule,
-                $command,
-                $cartRuleAction,
-                $discountApplicationType
-            );
-        }
-    }
-
-    /**
-     * @param CartRule $cartRule
-     * @param AddCartRuleCommand $command
-     * @param CartRuleActionInterface $cartRuleAction
-     * @param DiscountApplicationType $discountApplicationType
-     *
-     * @throws CartRuleConstraintException
-     */
-    private function fillDiscountApplicationType(
-        CartRule $cartRule,
-        AddCartRuleCommand $command,
-        CartRuleActionInterface $cartRuleAction,
-        DiscountApplicationType $discountApplicationType
-    ): void {
-        $hasAmountDiscount = null !== $cartRuleAction->getAmountDiscount();
-        $hasPercentageDiscount = null !== $cartRuleAction->getPercentageDiscount();
-
-        switch ($discountApplicationType->getValue()) {
-            case DiscountApplicationType::SELECTED_PRODUCTS:
-                if (!$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to selected products, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                $cartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
-
-                break;
-            case DiscountApplicationType::CHEAPEST_PRODUCT:
-                if (!$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to cheapest product, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                $cartRule->reduction_product = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
-
-                break;
-            case DiscountApplicationType::SPECIFIC_PRODUCT:
-                if (!$hasPercentageDiscount && !$hasAmountDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to a specific product, ' . 'must have percentage or amount application type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                if (null === $command->getDiscountProductId()) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to a specific product, must have a product specified.', CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT);
-                }
-
-                $cartRule->reduction_product = $command->getDiscountProductId()->getValue();
-
-                break;
-            case DiscountApplicationType::ORDER_WITHOUT_SHIPPING:
-                if (!$hasAmountDiscount && !$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to whole order without shipping, ' . 'must have percentage or amount application type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                $cartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
-
-                break;
-        }
     }
 }

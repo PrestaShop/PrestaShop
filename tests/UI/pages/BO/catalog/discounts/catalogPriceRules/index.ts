@@ -153,7 +153,7 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewCatalogPriceRulePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewCatalogPriceRuleButton);
+    await this.clickAndWaitForURL(page, this.addNewCatalogPriceRuleButton);
   }
 
   /**
@@ -163,7 +163,7 @@ class CatalogPriceRules extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -199,7 +199,7 @@ class CatalogPriceRules extends BOBasePage {
     if (await this.elementVisible(page, this.filterColumn('a!name'))) {
       await this.filterPriceRules(page, 'select', 'a!name', ruleName);
     }
-    await this.clickAndWaitForNavigation(page, this.editRowLink(1));
+    await this.clickAndWaitForURL(page, this.editRowLink(1));
   }
 
   /**
@@ -211,15 +211,17 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterPriceRules(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value),
         ]);
         break;
@@ -238,10 +240,11 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterByDate(page: Page, filterBy: string, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.filterDateFromColumn(filterBy), dateFrom);
-    await page.type(this.filterDateToColumn(filterBy), dateTo);
+    await page.locator(this.filterDateFromColumn(filterBy)).fill(dateFrom);
+    await page.locator(this.filterDateToColumn(filterBy)).fill(dateTo);
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await page.click(this.filterSearchButton);
+    await this.elementVisible(page, this.filterResetButton);
   }
 
   /**
@@ -259,7 +262,7 @@ class CatalogPriceRules extends BOBasePage {
       page.click(this.deleteRowLink(1)),
       this.waitForVisibleSelector(page, this.confirmDeleteButton),
     ]);
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
 
     return this.getAlertSuccessBlockContent(page);
   }
@@ -350,7 +353,7 @@ class CatalogPriceRules extends BOBasePage {
 
     // Perform delete
     await page.click(this.bulkActionMenuButton);
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
@@ -431,7 +434,7 @@ class CatalogPriceRules extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   /* Pagination methods */
@@ -452,7 +455,7 @@ class CatalogPriceRules extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -463,7 +466,7 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -474,7 +477,7 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

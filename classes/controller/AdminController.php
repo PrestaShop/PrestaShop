@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -146,6 +147,9 @@ class AdminControllerCore extends Controller
 
     /** @var array */
     public $fields_value = [];
+
+    /** @var int|null */
+    public $max_image_size = null;
 
     /** @var bool Define if the header of the list contains filter and sorting links or not */
     protected $list_simple_header;
@@ -500,7 +504,7 @@ class AdminControllerCore extends Controller
 
         $this->_conf = [
             1 => $this->trans('Successful deletion', [], 'Admin.Notifications.Success'),
-            2 => $this->trans('The selection has been successfully deleted', [], 'Admin.Notifications.Success'),
+            2 => $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success'),
             3 => $this->trans('Successful creation', [], 'Admin.Notifications.Success'),
             4 => $this->trans('Successful update', [], 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
@@ -680,6 +684,9 @@ class AdminControllerCore extends Controller
 
                 break;
         }
+
+        // An array [module_name => module_output] will be returned (no effect)
+        Hook::exec('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$breadcrumbs2], null, true);
 
         $this->context->smarty->assign([
             'breadcrumbs2' => $breadcrumbs2,
@@ -989,13 +996,13 @@ class AdminControllerCore extends Controller
                 $action = Tools::getValue('action');
                 // no need to use displayConf() here
                 if (!empty($action) && method_exists($this, 'ajaxProcess' . Tools::toCamelCase($action))) {
-                    Hook::exec('actionAdmin' . ucfirst($this->action) . 'Before', ['controller' => $this]);
-                    Hook::exec('action' . get_class($this) . ucfirst($this->action) . 'Before', ['controller' => $this]);
+                    Hook::exec('actionAdmin' . ucfirst($action) . 'Before', ['controller' => $this]);
+                    Hook::exec('action' . get_class($this) . ucfirst($action) . 'Before', ['controller' => $this]);
 
                     $return = $this->{'ajaxProcess' . Tools::toCamelCase($action)}();
 
-                    Hook::exec('actionAdmin' . ucfirst($this->action) . 'After', ['controller' => $this, 'return' => $return]);
-                    Hook::exec('action' . get_class($this) . ucfirst($this->action) . 'After', ['controller' => $this, 'return' => $return]);
+                    Hook::exec('actionAdmin' . ucfirst($action) . 'After', ['controller' => $this, 'return' => $return]);
+                    Hook::exec('action' . get_class($this) . ucfirst($action) . 'After', ['controller' => $this, 'return' => $return]);
 
                     return $return;
                 } elseif (!empty($action) && $this->controller_name == 'AdminModules' && Tools::getIsset('configure')) {
@@ -1771,7 +1778,7 @@ class AdminControllerCore extends Controller
                 return $this->object;
             }
             // throw exception
-            $this->errors[] = $this->trans('The object cannot be loaded (or found)', [], 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error');
 
             return false;
         } elseif ($opt) {
@@ -1925,6 +1932,7 @@ class AdminControllerCore extends Controller
             if (!is_array($this->$type)) {
                 $this->$type = (array) $this->$type;
             }
+
             $this->context->smarty->assign($type, $this->json ? json_encode(array_unique($this->$type)) : array_unique($this->$type));
         }
 
@@ -1932,6 +1940,7 @@ class AdminControllerCore extends Controller
             $this->context->smarty->assign(
                 [
                     'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
+                    'page_header_toolbar_template' => $page_header_toolbar,
                 ]
             );
         }
@@ -1995,6 +2004,8 @@ class AdminControllerCore extends Controller
 
         // Fetch Employee Menu
         $menuLinksCollections = new ActionsBarButtonsCollection();
+
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec(
             'displayBackOfficeEmployeeMenu',
             [
@@ -2019,6 +2030,8 @@ class AdminControllerCore extends Controller
         }
 
         $tabs = $this->getTabs();
+
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec('actionAdminMenuTabsModifier', ['tabs' => &$tabs], null, true);
 
         $currentTabLevel = 0;
@@ -2096,6 +2109,7 @@ class AdminControllerCore extends Controller
                 $this->trans(
                     'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
                         [
+                            '_raw' => true,
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
                             '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
@@ -2128,7 +2142,7 @@ class AdminControllerCore extends Controller
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || !$tab['enabled']
-                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminStock'
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
 
@@ -2571,53 +2585,45 @@ class AdminControllerCore extends Controller
         $helper->show_toolbar = $this->show_toolbar;
         $helper->toolbar_scroll = $this->toolbar_scroll;
         $helper->override_folder = $this->tpl_folder;
-        $helper->actions = $this->actions;
-        $helper->simple_header = $this->list_simple_header;
-        $helper->bulk_actions = $this->bulk_actions;
         $helper->currentIndex = self::$currentIndex;
-        if ($helper->className === null) {
-            $helper->className = $this->className;
-        }
         $helper->table = $this->table;
         if ($helper->name_controller === null) {
             $helper->name_controller = Tools::getValue('controller');
         }
-        $helper->orderBy = $this->_orderBy;
-        $helper->orderWay = $this->_orderWay;
-        $helper->listTotal = $this->_listTotal;
-        if ($helper->shopLink === null) {
-            $helper->shopLink = $this->shopLink;
-        }
-        $helper->shopLinkType = $this->shopLinkType;
         $helper->identifier = $this->identifier;
         $helper->token = $this->token;
-        // @phpstan-ignore-next-line
-        $helper->languages = $this->_languages;
-        $helper->specificConfirmDelete = $this->specificConfirmDelete;
-        $helper->imageType = $this->imageType;
-        $helper->no_link = $this->list_no_link;
-        $helper->colorOnBackground = $this->colorOnBackground;
-        $helper->ajax_params = isset($this->ajax_params) ? $this->ajax_params : null;
-        // @phpstan-ignore-next-line
-        $helper->default_form_language = $this->default_form_language;
         if ($helper->allow_employee_form_lang === null) {
             $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
         }
-        if ($helper->multiple_fieldsets === null) {
-            $helper->multiple_fieldsets = $this->multiple_fieldsets;
-        }
-        $helper->row_hover = $this->row_hover;
-        $helper->position_identifier = $this->position_identifier;
         if ($helper->position_group_identifier === null) {
             $helper->position_group_identifier = $this->position_group_identifier;
         }
-        // @phpstan-ignore-next-line
         $helper->controller_name = $this->controller_name;
-        $helper->list_id = $this->list_id ?? $this->table;
         $helper->bootstrap = $this->bootstrap;
 
-        // For each action, try to add the corresponding skip elements list
-        $helper->list_skip_actions = $this->list_skip_actions;
+        if ($helper instanceof HelperFormCore) {
+            $helper->languages = $this->_languages;
+            $helper->default_form_language = $this->default_form_language;
+        }
+        if ($helper instanceof HelperListCore) {
+            // For each action, try to add the corresponding skip elements list
+            $helper->list_skip_actions = $this->list_skip_actions;
+            $helper->orderBy = $this->_orderBy;
+            $helper->orderWay = $this->_orderWay;
+            $helper->position_identifier = $this->position_identifier;
+            $helper->row_hover = $this->row_hover;
+            $helper->ajax_params = $this->ajax_params ?? null;
+            $helper->no_link = $this->list_no_link;
+            $helper->colorOnBackground = $this->colorOnBackground;
+            $helper->specificConfirmDelete = $this->specificConfirmDelete;
+            $helper->imageType = $this->imageType;
+            $helper->list_id = $this->list_id ?? $this->table;
+            $helper->shopLinkType = $this->shopLinkType;
+            $helper->listTotal = $this->_listTotal;
+            $helper->simple_header = $this->list_simple_header;
+            $helper->bulk_actions = $this->bulk_actions;
+            $helper->actions = $this->actions;
+        }
 
         $this->helper = $helper;
     }
@@ -2855,12 +2861,7 @@ class AdminControllerCore extends Controller
         // Change shop context ?
         if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false) {
             $this->context->cookie->shopContext = Tools::getValue('setShopContext');
-            $url = parse_url($_SERVER['REQUEST_URI']);
-            $query = (isset($url['query'])) ? $url['query'] : '';
-            parse_str($query, $parse_query);
-            unset($parse_query['setShopContext'], $parse_query['conf']);
-            $http_build_query = http_build_query($parse_query, '', '&');
-            $this->redirect_after = $url['path'] . ($http_build_query ? '?' . $http_build_query : '');
+            $this->redirect_after = UrlCleaner::cleanUrl($_SERVER['REQUEST_URI'], ['setShopContext', 'conf']);
         } elseif (!Shop::isFeatureActive()) {
             $this->context->cookie->shopContext = 's-' . (int) Configuration::get('PS_SHOP_DEFAULT');
         } elseif (Shop::getTotalShops(false, null) < 2 && $this->context->employee->isLoggedBack()) {
@@ -3907,7 +3908,7 @@ class AdminControllerCore extends Controller
             }
 
             // Check image validity
-            $max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
+            $max_size = $this->max_image_size ?: 0;
             if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size))) {
                 $this->errors[] = $error;
             }
@@ -4202,32 +4203,6 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @deprecated Since 1.7.7 Use Tools::isFileFresh instead
-     *
-     * @param string $file
-     * @param int $timeout
-     *
-     * @return bool
-     */
-    public function isFresh($file, $timeout = 604800)
-    {
-        return Tools::isFileFresh($file, $timeout);
-    }
-
-    /**
-     * @deprecated Since 1.7.7 Use Tools::refreshFile instead
-     *
-     * @param string $file_to_refresh
-     * @param string $external_file
-     *
-     * @return bool
-     */
-    public function refresh($file_to_refresh, $external_file)
-    {
-        return Tools::refreshFile($file_to_refresh, $external_file);
-    }
-
-    /**
      * Add an entry to the meta title.
      *
      * @param string $entry new entry
@@ -4275,7 +4250,7 @@ class AdminControllerCore extends Controller
     /**
      * @return ContainerInterface
      */
-    protected function buildContainer()
+    protected function buildContainer(): ContainerInterface
     {
         return SymfonyContainer::getInstance();
     }

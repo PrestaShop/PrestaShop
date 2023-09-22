@@ -25,17 +25,22 @@
       <trans-unit id="26986c3388870d4148b1b5375368a83d">
         <source>Products to display</source>
         <target>Products to display</target>
-        <note>Line: 145</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="3ea7689283770958661c27c37275b89c">
         <source>Define the number of products to be displayed in this block.</source>
         <target>Define the number of products to be displayed in this block.</target>
-        <note>Line: 148</note>
+        <note>Line: 149</note>
       </trans-unit>
       <trans-unit id="eb1cef1202fdc4d7954899fbf9f1734b">
         <source>Number of days for which the product is considered 'new'</source>
         <target>Number of days for which the product is considered 'new'</target>
-        <note>Line: 152</note>
+        <note>Line: 153</note>
+      </trans-unit>
+      <trans-unit id="96844da26fe7558a6fc20f340c16927c">
+        <source>Highlight your store's newest products, display a block on the homepage and let the visitors know about your latest news.</source>
+        <target>Highlight your store's newest products, display a block on the homepage and let the visitors know about your latest news.</target>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>

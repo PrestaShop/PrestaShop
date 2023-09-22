@@ -62,15 +62,14 @@ class OrderReturnCore extends ObjectModel
         ],
     ];
 
-    public function addReturnDetail($order_detail_list, $product_qty_list, $customization_ids = null, $customization_qty_input = null)
+    /**
+     * @param int[] $order_detail_list
+     * @param int[] $product_qty_list
+     *
+     * @return void
+     */
+    public function addReturnDetail($order_detail_list, $product_qty_list)
     {
-        if ($customization_ids !== null || $customization_qty_input !== null) {
-            @trigger_error(
-                'Passing customization infos is deprecated since version 9.0.0. The customization is already included in the order details.',
-                E_USER_DEPRECATED
-            );
-        }
-
         /* Classic product return */
         if ($order_detail_list) {
             foreach ($order_detail_list as $key => $order_detail) {
@@ -83,15 +82,14 @@ class OrderReturnCore extends ObjectModel
         }
     }
 
-    public function checkEnoughProduct($order_detail_list, $product_qty_list, $customization_ids = null, $customization_qty_input = null)
+    /**
+     * @param int[] $order_detail_list
+     * @param int[] $product_qty_list
+     *
+     * @return bool|void
+     */
+    public function checkEnoughProduct($order_detail_list, $product_qty_list)
     {
-        if ($customization_ids !== null || $customization_qty_input !== null) {
-            @trigger_error(
-                'Passing customization infos is deprecated since version 9.0.0. The customization is already included in the order details.',
-                E_USER_DEPRECATED
-            );
-        }
-
         $order = new Order((int) $this->id_order);
         if (!Validate::isLoadedObject($order)) {
             die(Tools::displayError());
@@ -209,7 +207,7 @@ class OrderReturnCore extends ObjectModel
             $return['product_attribute_id'] = (int) $products[(int) $return['id_order_detail']]['product_attribute_id'];
             $return['name'] = $products[(int) $return['id_order_detail']]['product_name'];
             $return['reference'] = $products[(int) $return['id_order_detail']]['product_reference'];
-            $return['id_address_delivery'] = $products[(int) $return['id_order_detail']]['id_address_delivery'];
+            $return['id_address_delivery'] = (int) $order->id_address_delivery;
         }
 
         return $returns;

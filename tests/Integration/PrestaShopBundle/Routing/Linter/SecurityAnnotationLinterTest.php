@@ -68,9 +68,4 @@ class SecurityAnnotationLinterTest extends KernelTestCase
 
         $this->securityAnnotationLinter->lint('route_name', $route);
     }
-
-    protected function tearDown(): void
-    {
-        self::$kernel->shutdown();
-    }
 }

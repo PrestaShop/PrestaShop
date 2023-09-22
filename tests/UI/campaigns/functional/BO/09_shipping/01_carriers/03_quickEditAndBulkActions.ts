@@ -53,14 +53,14 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(carriersPage.pageTitle);
+    expect(pageTitle).to.contains(carriersPage.pageTitle);
   });
 
   it('should reset all filters and get number of carriers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCarriers).to.be.above(0);
+    expect(numberOfCarriers).to.be.above(0);
   });
 
   // 1 - Create 2 carriers
@@ -76,17 +76,17 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
 
         await carriersPage.goToAddNewCarrierPage(page);
         const pageTitle = await addCarrierPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
       });
 
       it(`should create carrier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCarrier${index}`, baseContext);
 
         const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
-        await expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+        expect(textResult).to.contains(carriersPage.successfulCreationMessage);
 
         const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
+        expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
       });
 
       after(() => files.deleteFile(`todelete${index}.jpg`));
@@ -113,7 +113,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -128,11 +128,11 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
 
         if (isActionPerformed) {
           const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-          await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 
         const carrierStatus = await carriersPage.getStatus(page, 1);
-        await expect(carrierStatus).to.be.equal(test.args.enabledValue);
+        expect(carrierStatus).to.be.equal(test.args.enabledValue);
       });
     });
 
@@ -140,7 +140,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
 
       const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers + 2);
+      expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers + 2);
     });
   });
 
@@ -164,7 +164,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -176,7 +176,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ByBulkActions`, baseContext);
 
         const deleteTextResult = await carriersPage.bulkSetStatus(page, test.args.action);
-        await expect(deleteTextResult).to.be.contains(carriersPage.successfulUpdateStatusMessage);
+        expect(deleteTextResult).to.be.contains(carriersPage.successfulUpdateStatusMessage);
       });
     });
   });
@@ -201,7 +201,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -209,14 +209,14 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
 
       const deleteTextResult = await carriersPage.bulkDeleteCarriers(page);
-      await expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
+      expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
     });
   });
 });

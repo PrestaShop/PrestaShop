@@ -20,10 +20,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
     deprecated: ~
 
-  prestashop.adapter.data_provider.warehouse:
-    class: PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider
-    deprecated: ~
-
   prestashop.adapter.data_provider.category:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
     arguments: [ "@=service('prestashop.adapter.legacy.context')" ]
@@ -82,11 +78,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
     deprecated: ~
 
-  prestashop.adapter.data_provider.tab:
-    alias: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
-    deprecated: ~
-    public: true
-
   PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider:
     class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
     public: false
@@ -107,11 +98,18 @@ services:
     calls:
       - [ "setEmployeeId", [ "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0" ] ]
 
-  prestashop.categories_provider:
-    class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+  PrestaShop\PrestaShop\Adapter\Category\CategoriesProviderBuilder:
     arguments:
-      - "%prestashop.addons.categories%"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.theme_name?service('prestashop.core.addon.theme.repository').getInstanceByName(service('prestashop.adapter.legacy.context').getContext().shop.theme_name).getModulesToEnable():[]"
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.addon.theme.repository'
+      - !php/const _PS_CACHE_DIR_
+      - !php/const _PS_ROOT_DIR_
+      - '/app/config/addons/categories.yml'
+
+  prestashop.categories_provider:
+    lazy: true
+    class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+    factory: [ '@PrestaShop\PrestaShop\Adapter\Category\CategoriesProviderBuilder', 'build' ]
 
   prestashop.adapter.data_provider.default_route:
     class: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider

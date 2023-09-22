@@ -46,21 +46,21 @@ function bulkDeleteProductsTest(tableID: string, baseContext: string = `commonTe
       );
 
       const pageTitle = await monitoringPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+      expect(pageTitle).to.contains(monitoringPage.pageTitle);
     });
 
     it('should bulk delete elements on table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteElements', baseContext);
 
       const textResult = await monitoringPage.bulkDeleteElementsInTable(page, tableID);
-      await expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
+      expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
     });
 
     it('should check number of elements on table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'reset', baseContext);
 
       const numberOfElementsAfterDelete = await monitoringPage.resetAndGetNumberOfLines(page, tableID);
-      await expect(numberOfElementsAfterDelete).to.be.equal(0);
+      expect(numberOfElementsAfterDelete).to.be.equal(0);
     });
   });
 }

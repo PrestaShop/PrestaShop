@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\Authori
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 
 /**
  * Manages the "Configure > Advanced Parameters > Authorization Server > Api Access" page.
@@ -38,6 +39,9 @@ use PrestaShopBundle\Exception\NotImplementedException;
  */
 class ApiAccessController extends FrameworkBundleAdminController
 {
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     */
     public function createAction(): void
     {
         // TODO: Implement createAction() method in create PR.

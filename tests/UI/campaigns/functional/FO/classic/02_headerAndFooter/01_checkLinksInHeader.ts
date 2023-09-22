@@ -3,11 +3,11 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import cartPage from '@pages/FO/cart';
-import contactUsPage from '@pages/FO/contactUs';
+import {cartPage} from '@pages/FO/cart';
+import {contactUsPage} from '@pages/FO/contactUs';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -47,7 +47,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should check \'Contact us\' header link', async function () {
@@ -57,7 +57,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await homePage.clickOnHeaderLink(page, 'Contact us');
 
     const pageTitle = await contactUsPage.getPageTitle(page);
-    await expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
+    expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
   });
 
   it('should check \'sign in\' link', async function () {
@@ -67,7 +67,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await homePage.clickOnHeaderLink(page, 'Sign in');
 
     const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
+    expect(pageTitle).to.equal(loginPage.pageTitle);
   });
 
   it('should sign in by default customer', async function () {
@@ -77,7 +77,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
   });
 
   it('should check my account link', async function () {
@@ -86,7 +86,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await loginPage.goToMyAccountPage(page);
 
     const pageTitle = await myAccountPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+    expect(pageTitle).to.equal(myAccountPage.pageTitle);
   });
 
   it('should add a product to cart by quick view', async function () {
@@ -98,7 +98,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
     // Close block cart modal
     const isQuickViewModalClosed = await homePage.closeBlockCartModal(page);
-    await expect(isQuickViewModalClosed).to.be.true;
+    expect(isQuickViewModalClosed).to.eq(true);
   });
 
   it('should check \'Cart\' link', async function () {
@@ -108,7 +108,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await homePage.clickOnHeaderLink(page, 'Cart');
 
     const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(cartPage.pageTitle);
+    expect(pageTitle).to.equal(cartPage.pageTitle);
   });
 
   it('should go to home page and check the notification number', async function () {
@@ -117,7 +117,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await loginPage.goToHomePage(page);
 
     const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-    await expect(notificationsNumber, 'Notification number is not equal to 3!').to.be.equal(3);
+    expect(notificationsNumber, 'Notification number is not equal to 3!').to.be.equal(3);
   });
 
   it('should check \'Sign out\' link', async function () {
@@ -127,22 +127,22 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await homePage.logout(page);
 
     const isCustomerConnected = await homePage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+    expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
   });
 
   it('should check that the cart is empty', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationNumber2', baseContext);
 
     const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-    await expect(notificationsNumber, 'The cart is not empty!').to.be.equal(0);
+    expect(notificationsNumber, 'The cart is not empty!').to.be.equal(0);
   });
 
   it('should check \'Logo\' link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-    await homePage.clickOnHeaderLink(page, 'Logo');
+    await homePage.clickOnHeaderLink(page, 'Logo', false);
 
     const pageTitle = await homePage.getPageTitle(page);
-    await expect(pageTitle).to.equal(homePage.pageTitle);
+    expect(pageTitle).to.equal(homePage.pageTitle);
   });
 });

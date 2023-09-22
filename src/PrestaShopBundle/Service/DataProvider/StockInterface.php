@@ -39,6 +39,8 @@ interface StockInterface
      * Returns True if Stocks are managed by a module (or by legacy ASM).
      *
      * @return bool True if Stocks are managed by a module (or by legacy ASM)
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public function isAsmGloballyActivated();
 }

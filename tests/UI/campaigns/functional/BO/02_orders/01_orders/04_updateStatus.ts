@@ -14,8 +14,8 @@ import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {myAccountPage} from '@pages/FO/myAccount';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -45,7 +45,7 @@ Scenario:
 describe('BO - orders : Update order status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
   let orderId: number;
 
   const orderByCustomerData: OrderData = new OrderData({
@@ -87,7 +87,7 @@ describe('BO - orders : Update order status', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset filter and get the last order ID', async function () {
@@ -97,7 +97,7 @@ describe('BO - orders : Update order status', async () => {
 
       const result: string = await ordersPage.getTextColumn(page, 'id_order', 1);
       orderId = parseInt(result, 10);
-      await expect(orderId).to.be.at.least(1);
+      expect(orderId).to.be.at.least(1);
     });
   });
 
@@ -112,14 +112,14 @@ describe('BO - orders : Update order status', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
           const textResult = await ordersPage.setOrderStatus(page, 1, test.args.orderStatus);
-          await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+          expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
         });
 
         it('should check that the status is updated successfully', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO${index}`, baseContext);
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-          await expect(orderStatus, 'Order status was not updated').to.equal(test.args.orderStatus.name);
+          expect(orderStatus, 'Order status was not updated').to.equal(test.args.orderStatus.name);
         });
 
         if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
@@ -129,7 +129,7 @@ describe('BO - orders : Update order status', async () => {
             filePath = await ordersPage.downloadInvoice(page, 1);
 
             const doesFileExist = await files.doesFileExist(filePath, 5000);
-            await expect(doesFileExist, 'The file is not existing!').to.be.true;
+            expect(doesFileExist, 'The file is not existing!').to.eq(true);
           });
 
           it('should check invoice pdf file', async function () {
@@ -140,23 +140,23 @@ describe('BO - orders : Update order status', async () => {
 
             // Check Reference in pdf
             const referenceExist = await files.isTextInPDF(filePath, orderInformation.reference);
-            await expect(referenceExist, `Reference '${orderInformation.reference}' does not exist in invoice`)
-              .to.be.true;
+            expect(referenceExist, `Reference '${orderInformation.reference}' does not exist in invoice`)
+              .to.eq(true);
 
             // Check country name in delivery Address in pdf
             const deliveryExist = await files.isTextInPDF(filePath, orderInformation.delivery);
-            await expect(deliveryExist, `Country name '${orderInformation.delivery}' does not exist in invoice`)
-              .to.be.true;
+            expect(deliveryExist, `Country name '${orderInformation.delivery}' does not exist in invoice`)
+              .to.eq(true);
 
             // Check customer name in pdf
             const customerExist = await files.isTextInPDF(filePath, orderInformation.customer.slice(3));
-            await expect(customerExist, `Customer name '${orderInformation.customer}' does not exist in invoice`)
-              .to.be.true;
+            expect(customerExist, `Customer name '${orderInformation.customer}' does not exist in invoice`)
+              .to.eq(true);
 
             // Check total paid in pdf
             const totalPaidExist = await files.isTextInPDF(filePath, orderInformation.totalPaid);
-            await expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in invoice`)
-              .to.be.true;
+            expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in invoice`)
+              .to.eq(true);
           });
         }
 
@@ -167,7 +167,7 @@ describe('BO - orders : Update order status', async () => {
             filePath = await ordersPage.downloadDeliverySlip(page, 1);
 
             const doesFileExist = await files.doesFileExist(filePath, 5000);
-            await expect(doesFileExist).to.be.true;
+            expect(doesFileExist).to.eq(true);
           });
 
           it('should check delivery slip pdf file', async function () {
@@ -179,23 +179,23 @@ describe('BO - orders : Update order status', async () => {
             // Check Reference in pdf
             const referenceExist = await files.isTextInPDF(filePath, orderInformation.reference);
 
-            await expect(referenceExist, `Reference '${orderInformation.reference}' does not exist in delivery slip`)
-              .to.be.true;
+            expect(referenceExist, `Reference '${orderInformation.reference}' does not exist in delivery slip`)
+              .to.eq(true);
 
             // Check country name in delivery Address in pdf
             const deliveryExist = await files.isTextInPDF(filePath, orderInformation.delivery);
-            await expect(deliveryExist, `Country name '${orderInformation.delivery}' does not exist in delivery slip`)
-              .to.be.true;
+            expect(deliveryExist, `Country name '${orderInformation.delivery}' does not exist in delivery slip`)
+              .to.eq(true);
 
             // Check customer name in pdf
             const customerExist = await files.isTextInPDF(filePath, orderInformation.customer.slice(3));
-            await expect(customerExist, `Country name '${orderInformation.customer}' does not exist in delivery slip`)
-              .to.be.true;
+            expect(customerExist, `Country name '${orderInformation.customer}' does not exist in delivery slip`)
+              .to.eq(true);
 
             // Check total paid in pdf
             const totalPaidExist = await files.isTextInPDF(filePath, orderInformation.totalPaid);
-            await expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in delivery slip`)
-              .to.be.true;
+            expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in delivery slip`)
+              .to.eq(true);
           });
         }
       });
@@ -208,7 +208,7 @@ describe('BO - orders : Update order status', async () => {
           await homePage.changeLanguage(page, 'en');
 
           const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         if (index === 0) {
@@ -218,7 +218,7 @@ describe('BO - orders : Update order status', async () => {
             await homePage.goToLoginPage(page);
 
             const pageTitle = await foLoginPage.getPageTitle(page);
-            await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+            expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
           });
 
           it('should sign in with default customer', async function () {
@@ -227,49 +227,49 @@ describe('BO - orders : Update order status', async () => {
             await foLoginPage.customerLogin(page, Customers.johnDoe);
 
             const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-            await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+            expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
           });
         }
         it('should go to orders history page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderHistoryPage${index}`, baseContext);
 
           await homePage.goToMyAccountPage(page);
-          await foMyAccountPage.goToHistoryAndDetailsPage(page);
+          await myAccountPage.goToHistoryAndDetailsPage(page);
 
-          const pageTitle = await foOrderHistoryPage.getPageTitle(page);
-          await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
+          const pageTitle = await orderHistoryPage.getPageTitle(page);
+          expect(pageTitle, 'Fail to open order history page').to.contains(orderHistoryPage.pageTitle);
         });
 
         it('should check the last order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkLastOrderStatus${index}`, baseContext);
 
-          const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
-          await expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.name);
+          const orderStatusFO = await orderHistoryPage.getOrderStatus(page, 1);
+          expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.name);
         });
 
         if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
           it('should check if the last invoice is visible', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkLastInvoice${index}`, baseContext);
 
-            const isVisible = await foOrderHistoryPage.isInvoiceVisible(page, 1);
-            await expect(isVisible, 'The invoice file is not existing!').to.be.true;
+            const isVisible = await orderHistoryPage.isInvoiceVisible(page, 1);
+            expect(isVisible, 'The invoice file is not existing!').to.eq(true);
           });
 
           it('should check the order ID of the invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkOrderID${index}`, baseContext);
 
-            const orderID = await foOrderHistoryPage.getOrderIdFromInvoiceHref(page, 1);
-            await expect(orderID, 'The invoice file attached is not correct!').to.contains(`id_order=${orderId}`);
+            const orderID = await orderHistoryPage.getOrderIdFromInvoiceHref(page, 1);
+            expect(orderID, 'The invoice file attached is not correct!').to.contains(`id_order=${orderId}`);
           });
         }
 
         it('should close the shop page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `closeShop${index}`, baseContext);
 
-          page = await foOrderHistoryPage.closePage(browserContext, page, 0);
+          page = await orderHistoryPage.closePage(browserContext, page, 0);
 
           const pageTitle = await ordersPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(ordersPage.pageTitle);
+          expect(pageTitle).to.contains(ordersPage.pageTitle);
         });
       });
     });

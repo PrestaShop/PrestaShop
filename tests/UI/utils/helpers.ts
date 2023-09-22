@@ -1,5 +1,5 @@
 import playwright, {
-  BrowserContext, Browser, BrowserType, Page,
+  BrowserContext, Browser, BrowserType, Page, APIRequestContext, request,
 } from 'playwright';
 
 require('./globals');
@@ -44,6 +44,19 @@ export default {
       }
       throw new Error(e);
     }
+  },
+
+  /**
+   * Create a API context
+   * @param url {string}
+   * @return {Promise<APIRequestContext>}
+   */
+  async createAPIContext(url: string): Promise<APIRequestContext> {
+    return request.newContext({
+      baseURL: url,
+      // @todo : Remove it when Playwright will accept self signed certificates
+      ignoreHTTPSErrors: true,
+    });
   },
 
   /**

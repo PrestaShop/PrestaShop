@@ -30,6 +30,7 @@ use Currency;
 use Customer;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\RemoveProductFromCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -40,6 +41,7 @@ use Shop;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class RemoveProductFromCartHandler extends AbstractCartHandler implements RemoveProductFromCartHandlerInterface
 {
     /**

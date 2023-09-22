@@ -106,9 +106,9 @@ class ViewCustomer extends BOBasePage {
   /**
    * Get attached href
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  getAttachedFileHref(page: Page): Promise<string | null> {
+  getAttachedFileHref(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.attachmentLink, 'href');
   }
 

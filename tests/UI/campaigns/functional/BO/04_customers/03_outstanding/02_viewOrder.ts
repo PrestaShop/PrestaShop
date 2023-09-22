@@ -40,11 +40,9 @@ describe('BO - Customers - Outstanding : View order', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   // Variable used for the last order ID created
-  let orderId: string;
+  let orderId: number;
   // Variable used for the last order reference created
   let orderReference: string;
-  // Variable for the last outstanding ID created
-  let outstandingId: string;
 
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
@@ -90,7 +88,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset filter and get the last orderID and reference', async function () {
@@ -102,24 +100,24 @@ describe('BO - Customers - Outstanding : View order', async () => {
         await ordersPage.getTextColumn(page, 'id_order', 1),
         10,
       );
-      await expect(orderId).to.be.at.least(1);
+      expect(orderId).to.be.at.least(1);
 
       orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
-      await expect(orderReference).to.not.equal('');
+      expect(orderReference).to.not.equal('');
     });
 
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
-      await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
     it('should check that the status is updated successfully', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+      expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
     });
   });
 
@@ -136,7 +134,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
       await outstandingPage.closeSfToolBar(page);
 
       const pageTitle = await outstandingPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      expect(pageTitle).to.contains(outstandingPage.pageTitle);
     });
 
     it('should reset filter and get the last outstanding ID', async function () {
@@ -144,8 +142,11 @@ describe('BO - Customers - Outstanding : View order', async () => {
 
       await outstandingPage.resetFilter(page);
 
-      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1);
-      await expect(outstandingId).to.be.at.least(1);
+      const outstandingId = parseInt(
+        await outstandingPage.getTextColumn(page, 'id_invoice', 1),
+        10,
+      );
+      expect(outstandingId).to.be.at.least(1);
     });
 
     it('should view the Order and check the orderID and the reference', async function () {

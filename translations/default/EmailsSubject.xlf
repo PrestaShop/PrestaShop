@@ -5,7 +5,7 @@
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>Line: 1225</note>
+        <note>Line: 1285</note>
       </trans-unit>
     </body>
   </file>
@@ -14,12 +14,12 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 704</note>
+        <note>Line: 705</note>
       </trans-unit>
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>Line: 1223</note>
+        <note>Line: 1224</note>
       </trans-unit>
     </body>
   </file>
@@ -37,7 +37,7 @@
       <trans-unit id="9a843f20677a52ca79af903123147af0">
         <source>Welcome!</source>
         <target>Welcome!</target>
-        <note>Line: 219</note>
+        <note>Line: 265</note>
       </trans-unit>
     </body>
   </file>
@@ -46,7 +46,7 @@
       <trans-unit id="87405e011a2c4166bb685336827fbe81">
         <source>Package in transit</source>
         <target>Package in transit</target>
-        <note>Line: 150</note>
+        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -59,12 +59,26 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
+        <source>Fwd: Customer message</source>
+        <target>Fwd: Customer message</target>
+        <note>Line: 408</note>
+      </trans-unit>
+      <trans-unit id="26fabd8660373b86b9288dd72fd40e13">
+        <source>An answer to your message is available #ct%thread_id% #tc%thread_token%</source>
+        <target>An answer to your message is available #ct%thread_id% #tc%thread_token%</target>
+        <note>Line: 479</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a218495ad30949e8ea1f64a261e37463">
         <source>Import complete</source>
         <target>Import complete</target>
-        <note>Line: 4891</note>
+        <note>Line: 4799</note>
       </trans-unit>
     </body>
   </file>
@@ -105,17 +119,17 @@
       <trans-unit id="9e03c4150db1c72add84ba520ee589aa">
         <source>Message from contact form</source>
         <target>Message from contact form</target>
-        <note>Line: 625</note>
+        <note>Line: 610</note>
       </trans-unit>
       <trans-unit id="55c19f9aec68a1a320cbeba663f1e4c0">
         <source>Your message has been correctly sent #ct%thread_id% #tc%thread_token%</source>
         <target>Your message has been correctly sent #ct%thread_id% #tc%thread_token%</target>
-        <note>Line: 654</note>
+        <note>Line: 639</note>
       </trans-unit>
       <trans-unit id="d40cb87db94e750405e7b20a8a043d81">
         <source>Your message has been correctly sent</source>
         <target>Your message has been correctly sent</target>
-        <note>Line: 660</note>
+        <note>Line: 645</note>
       </trans-unit>
     </body>
   </file>
@@ -124,7 +138,7 @@
       <trans-unit id="923524e0ff0364df2987d3b8269f03d1">
         <source>Product available</source>
         <target>Product available</target>
-        <note>Line: 210</note>
+        <note>Line: 212</note>
       </trans-unit>
     </body>
   </file>
@@ -133,27 +147,27 @@
       <trans-unit id="da252605cef71a041c0dadaeeb2aa0f4">
         <source>New order : #%d - %s</source>
         <target>New order : #%d - %s</target>
-        <note>Line: 532</note>
+        <note>Line: 597</note>
       </trans-unit>
       <trans-unit id="644f9c907ef5a8315916bd1e2f61f783">
         <source>Product out of stock</source>
         <target>Product out of stock</target>
-        <note>Line: 632</note>
+        <note>Line: 702</note>
       </trans-unit>
       <trans-unit id="2eed868f1c9e7e2cd302334fd7885e35">
         <source>Stock coverage</source>
         <target>Stock coverage</target>
-        <note>Line: 771</note>
+        <note>Line: 841</note>
       </trans-unit>
       <trans-unit id="2e784bf96d0f1ce249b6f60ec195179d">
         <source>New return from order #%d - %s</source>
         <target>New return from order #%d - %s</target>
-        <note>Line: 943</note>
+        <note>Line: 1018</note>
       </trans-unit>
       <trans-unit id="9fcf30e719f10629a4a7f951cfbbf2d0">
         <source>Your order has been changed</source>
         <target>Your order has been changed</target>
-        <note>Line: 996</note>
+        <note>Line: 1071</note>
       </trans-unit>
     </body>
   </file>
@@ -185,33 +199,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
-        <source>New message regarding your order</source>
-        <target>New message regarding your order</target>
-        <note>Line: 246</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
-        <source>Fwd: Customer message</source>
-        <target>Fwd: Customer message</target>
-        <note>Line: 174</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="26fabd8660373b86b9288dd72fd40e13">
-        <source>An answer to your message is available #ct%thread_id% #tc%thread_token%</source>
-        <target>An answer to your message is available #ct%thread_id% #tc%thread_token%</target>
-        <note>Line: 154</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/Adapter/Order/Refund/OrderSlipCreator.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
@@ -227,6 +214,15 @@
         <source>New voucher for your order #%s</source>
         <target>New voucher for your order #%s</target>
         <note>Line: 150</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
+        <source>New message regarding your order</source>
+        <target>New message regarding your order</target>
+        <note>Line: 246</note>
       </trans-unit>
     </body>
   </file>

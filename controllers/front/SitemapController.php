@@ -60,13 +60,7 @@ class SitemapControllerCore extends FrontController
          */
         Hook::exec(
             'actionModifyFrontendSitemap',
-            ['urls' => &$sitemapUrls],
-            null,
-            false,
-            true,
-            false,
-            null,
-            true
+            ['urls' => &$sitemapUrls]
         );
 
         /*
@@ -107,11 +101,14 @@ class SitemapControllerCore extends FrontController
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
         $links = $this->getCmsTree($cms);
 
-        $links[] = [
-            'id' => 'stores-page',
-            'label' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('stores'),
-        ];
+        // We hide stores page, if there is no page configured
+        if (Store::atLeastOneStoreExists()) {
+            $links[] = [
+                'id' => 'stores-page',
+                'label' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
+                'url' => $this->context->link->getPageLink('stores'),
+            ];
+        }
 
         $links[] = [
             'id' => 'contact-page',

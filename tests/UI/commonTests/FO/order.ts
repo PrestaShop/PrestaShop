@@ -3,11 +3,11 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/checkout';
 
@@ -46,7 +46,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -55,7 +55,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with customer credentials', async function () {
@@ -64,7 +64,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
       await foLoginPage.customerLogin(page, orderData.customer);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -78,7 +78,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
+      expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
     it('should go to delivery step', async function () {
@@ -89,7 +89,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to payment step', async function () {
@@ -97,7 +97,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should choose payment method and confirm the order', async function () {
@@ -108,7 +108,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 }
@@ -141,7 +141,7 @@ function createOrderSpecificProductTest(
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -150,7 +150,7 @@ function createOrderSpecificProductTest(
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -159,7 +159,7 @@ function createOrderSpecificProductTest(
       await foLoginPage.customerLogin(page, orderData.customer);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it(`should search for the product ${orderData.products[0].product.name}`, async function () {
@@ -168,7 +168,7 @@ function createOrderSpecificProductTest(
       await homePage.searchProduct(page, orderData.products[0].product.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
     });
 
     it('should add product to cart', async function () {
@@ -179,7 +179,7 @@ function createOrderSpecificProductTest(
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
+      expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
     it('should go to delivery step', async function () {
@@ -190,7 +190,7 @@ function createOrderSpecificProductTest(
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to payment step', async function () {
@@ -198,7 +198,7 @@ function createOrderSpecificProductTest(
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should choose payment method and confirm the order', async function () {
@@ -209,7 +209,7 @@ function createOrderSpecificProductTest(
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 }
@@ -239,7 +239,7 @@ function createOrderByGuestTest(orderData: OrderData, baseContext: string = 'com
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -255,21 +255,21 @@ function createOrderByGuestTest(orderData: OrderData, baseContext: string = 'com
 
       // Go to checkout page
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill guest personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
       const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, orderData.customer);
-      await expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.be.true;
+      expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
       const isStepAddressComplete = await checkoutPage.setAddress(page, orderData.deliveryAddress);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should validate the order', async function () {
@@ -277,14 +277,14 @@ function createOrderByGuestTest(orderData: OrderData, baseContext: string = 'com
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 }

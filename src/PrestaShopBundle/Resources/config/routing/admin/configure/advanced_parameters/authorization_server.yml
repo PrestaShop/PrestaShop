@@ -11,6 +11,7 @@ admin_authorized_applications_view:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::viewAction
+    _legacy_controller: AdminAuthorizationServer
     categoryId: null
   requirements:
     applicationId: \d+
@@ -20,12 +21,14 @@ admin_authorized_applications_create:
   methods: [ GET, POST, PATCH ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::createAction
+    _legacy_controller: AdminAuthorizationServer
 
 admin_authorized_applications_edit:
   path: /applications/{applicationId}/edit
   methods: [ GET, POST, PATCH ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::editAction
+    _legacy_controller: AdminAuthorizationServer
   requirements:
     applicationId: \d+
 
@@ -34,10 +37,32 @@ admin_authorized_applications_delete:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::deleteAction
-
+    _legacy_controller: AdminAuthorizationServer
 
 admin_api_accesses_create:
   path: /applications/api-accesses/create
   methods: [ GET, POST, PATCH ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::createAction
+    _legacy_controller: AdminAuthorizationServer
+
+admin_api_accesses_edit:
+  path: /applications/api-accesses/{apiAccessId}/edit
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::editAction
+    _legacy_controller: ApiAccessController
+
+admin_api_accesses_delete:
+  path: /applications/api-accesses/{apiAccessId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::deleteAction
+    _legacy_controller: ApiAccessController
+
+admin_api_accesses_toggle_active:
+  path: /applications/api-accesses/{apiAccessId}/toggle-active
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::toggleActiveAction
+    _legacy_controller: ApiAccessController

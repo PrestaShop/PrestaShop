@@ -338,7 +338,6 @@ $(() => {
       .removeClass('collapse')
       .addClass('submenu');
     $('.shop-list-title').remove();
-    $('.js-non-responsive').hide();
     $('.mobile-layer')
       .addClass('d-none')
       .removeClass('expanded');

@@ -40,7 +40,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfOrders: number = 0;
-  let sortedTable: number[] = [];
+  let sortedTable: string[] = [];
   let numberOfOrdersAfterFilter: number;
 
   const orderByCustomerData: OrderData = new OrderData({
@@ -86,14 +86,14 @@ describe('BO - Orders : Pagination of orders table', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters and get number of orders', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
       numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it('should change the items number to 10 per page', async function () {
@@ -131,20 +131,22 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sortOrdersDesc', baseContext);
 
       const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
 
       await ordersPage.sortTable(page, 'total_paid_tax_incl', 'desc');
 
       sortedTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTable);
-      await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
     });
 
     it('should check that the orders table is sorted by total desc', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'CheckSortDesc', baseContext);
 
       const allOrdersTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
-      await expect(allOrdersTable).to.deep.equal(sortedTable);
+      expect(allOrdersTable).to.deep.equal(sortedTable);
     });
 
     it('should change the items number to 10 per page', async function () {
@@ -159,7 +161,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstPageSortDesc', baseContext);
 
       const firstTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
-      await expect(firstTable).to.deep.equal(sortedTable.slice(0, 10));
+      expect(firstTable).to.deep.equal(sortedTable.slice(0, 10));
     });
 
     it('should click on next', async function () {
@@ -176,7 +178,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
       const secondTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
       const numberOfOrdersInPage = await ordersPage.getNumberOfOrdersInPage(page);
 
-      await expect(secondTable).to.deep.equal(sortedTable.slice(10, 10 + numberOfOrdersInPage));
+      expect(secondTable).to.deep.equal(sortedTable.slice(10, 10 + numberOfOrdersInPage));
     });
 
     it('should change the items number to 50 per page', async function () {
@@ -190,13 +192,15 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackDefaultSort', baseContext);
 
       const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, 'id_order');
+      const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
 
       await ordersPage.sortTable(page, 'id_order', 'desc');
 
       sortedTable = await ordersPage.getAllRowsColumnContent(page, 'id_order');
+      const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTable);
-      await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
     });
 
     it('should filter by customer \'J.DOE\'', async function () {
@@ -205,17 +209,15 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await ordersPage.filterOrders(page, 'input', 'customer', 'J. DOE');
 
       numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
+      expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
     });
 
     it('should check that the orders table is filtered by customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'CheckFilterByCustomer', baseContext);
 
-      sortedTable = await ordersPage.getAllRowsColumnContent(page, 'customer');
-
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
         const textColumn = await ordersPage.getTextColumn(page, 'customer', row);
-        await expect(textColumn).to.equal('J. DOE');
+        expect(textColumn).to.equal('J. DOE');
       }
     });
 
@@ -232,7 +234,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
 
       for (let row = 1; row <= 10; row++) {
         const textColumn = await ordersPage.getTextColumn(page, 'customer', row);
-        await expect(textColumn).to.equal('J. DOE');
+        expect(textColumn).to.equal('J. DOE');
       }
     });
 
@@ -251,7 +253,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
 
       for (let row = 1; row <= numberOfOrdersInPage; row++) {
         const textColumn = await ordersPage.getTextColumn(page, 'customer', row);
-        await expect(textColumn).to.equal('J. DOE');
+        expect(textColumn).to.equal('J. DOE');
       }
     });
 
@@ -259,7 +261,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
+      expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });
 });

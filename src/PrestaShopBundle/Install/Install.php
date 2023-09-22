@@ -728,7 +728,7 @@ class Install extends AbstractInstall
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
-            self::$_cache_localization_pack_content[$country] = $localization_file_content;
+            self::$_cache_localization_pack_content[$country] = $localization_file_content[0];
         }
 
         return self::$_cache_localization_pack_content[$country] ?? false;
@@ -751,7 +751,6 @@ class Install extends AbstractInstall
 
         $default_data = [
             'shop_name' => 'My Shop',
-            'shop_activity' => '',
             'shop_country' => 'us',
             'shop_timezone' => 'US/Eastern', // TODO : this timezone is deprecated
             'use_smtp' => false,
@@ -778,7 +777,6 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
         Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', $this->language->getLanguageIso());
         Configuration::updateGlobalValue('PS_SHOP_NAME', $data['shop_name']);
-        Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', $data['shop_activity']);
         Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT', $id_country);
         Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', $data['shop_country']);
         Configuration::updateGlobalValue('PS_TIMEZONE', $data['shop_timezone']);
@@ -835,7 +833,7 @@ class Install extends AbstractInstall
 
         // Set logo configuration
         if (file_exists(_PS_IMG_DIR_ . 'logo.png')) {
-            list($width, $height) = getimagesize(_PS_IMG_DIR_ . 'logo.png');
+            [$width, $height] = getimagesize(_PS_IMG_DIR_ . 'logo.png');
             Configuration::updateGlobalValue('SHOP_LOGO_WIDTH', round($width));
             Configuration::updateGlobalValue('SHOP_LOGO_HEIGHT', round($height));
         }

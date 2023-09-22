@@ -32,6 +32,13 @@ class AuthControllerCore extends FrontController
     /** @var bool */
     public $auth = false;
 
+    /**
+     * Check if the controller is available for the current user/visitor.
+     *
+     * @see Controller::checkAccess()
+     *
+     * @return bool
+     */
     public function checkAccess()
     {
         if ($this->context->customer->isLogged() && !$this->ajax) {
@@ -42,6 +49,11 @@ class AuthControllerCore extends FrontController
         return parent::checkAccess();
     }
 
+    /**
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
+     */
     public function initContent()
     {
         if (Tools::isSubmit('create_account')) {

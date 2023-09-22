@@ -14,11 +14,27 @@ import type {Page} from 'playwright';
 class PricingTab extends BOBasePage {
   private readonly pricingTabLink: string;
 
-  private readonly retailPriceInput: string;
+  private readonly retailPriceInputTaxExcl: string;
+
+  private readonly retailPriceInputTaxIncl: string;
+
+  private readonly taxRuleID: string;
+
+  private readonly taxRuleSelect: string;
 
   private readonly taxRuleSpan: string;
 
   private readonly taxRuleList: string;
+
+  private readonly wholesalePriceInput: string;
+
+  private readonly unitPriceInput: string;
+
+  private readonly unityInput: string;
+
+  private readonly onSaleCheckbox: string;
+
+  private readonly ecotaxInput: string;
 
   /**
    * @constructs
@@ -29,9 +45,17 @@ class PricingTab extends BOBasePage {
 
     // Selectors in pricing tab
     this.pricingTabLink = '#product_pricing-tab-nav';
-    this.retailPriceInput = '#product_pricing_retail_price_price_tax_excluded';
-    this.taxRuleSpan = '#select2-product_pricing_retail_price_tax_rules_group_id-container';
-    this.taxRuleList = 'ul#select2-product_pricing_retail_price_tax_rules_group_id-results';
+    this.retailPriceInputTaxExcl = '#product_pricing_retail_price_price_tax_excluded';
+    this.retailPriceInputTaxIncl = '#product_pricing_retail_price_price_tax_included';
+    this.taxRuleID = 'product_pricing_retail_price_tax_rules_group_id';
+    this.taxRuleSelect = `#${this.taxRuleID}`;
+    this.taxRuleSpan = `#select2-${this.taxRuleID}-container`;
+    this.taxRuleList = `ul#select2-${this.taxRuleID}-results`;
+    this.wholesalePriceInput = '#product_pricing_wholesale_price';
+    this.unitPriceInput = '#product_pricing_unit_price_price_tax_excluded';
+    this.unityInput = '#product_pricing_unit_price_unity';
+    this.onSaleCheckbox = '#product_pricing_on_sale';
+    this.ecotaxInput = '#product_pricing_retail_price_ecotax_tax_excluded';
   }
 
   /*
@@ -46,13 +70,54 @@ class PricingTab extends BOBasePage {
    */
   async setProductPricing(page: Page, productData: ProductData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.pricingTabLink);
-    await this.setValue(page, this.retailPriceInput, productData.price);
+    await this.setRetailPrice(page, true, productData.price);
     // Select tax rule by ID
     await Promise.all([
       this.waitForSelectorAndClick(page, this.taxRuleSpan),
       this.waitForVisibleSelector(page, this.taxRuleList),
     ]);
     await page.locator(`li:has-text('${productData.taxRule}')`).click();
+  }
+
+  /**
+   * Set retail price
+   * @param page {Page} Browser tab
+   * @param isTaxExcluded {boolean} is Tax Excluded
+   * @param price {number} Retail price
+   * @returns {Promise<void>}
+   */
+  async setRetailPrice(page: Page, isTaxExcluded: boolean, price: number): Promise<void> {
+    await this.setValue(
+      page,
+      isTaxExcluded ? this.retailPriceInputTaxExcl : this.retailPriceInputTaxIncl,
+      price,
+    );
+  }
+
+  /**
+   * Returns the value of a form element
+   * @param page {Page}
+   * @param inputName {string}
+   */
+  async getValue(page: Page, inputName: string): Promise<string> {
+    switch (inputName) {
+      case 'ecotax':
+        return this.getAttributeContent(page, this.ecotaxInput, 'value');
+      case 'id_tax_rules_group':
+        return page.$eval(this.taxRuleSelect, (node: HTMLSelectElement) => node.value);
+      case 'on_sale':
+        return (await this.isChecked(page, this.onSaleCheckbox)) ? '1' : '0';
+      case 'price':
+        return this.getAttributeContent(page, this.retailPriceInputTaxExcl, 'value');
+      case 'unit_price':
+        return this.getAttributeContent(page, this.unitPriceInput, 'value');
+      case 'unity':
+        return this.getAttributeContent(page, this.unityInput, 'value');
+      case 'wholesale_price':
+        return this.getAttributeContent(page, this.wholesalePriceInput, 'value');
+      default:
+        throw new Error(`Input ${inputName} was not found`);
+    }
   }
 }
 

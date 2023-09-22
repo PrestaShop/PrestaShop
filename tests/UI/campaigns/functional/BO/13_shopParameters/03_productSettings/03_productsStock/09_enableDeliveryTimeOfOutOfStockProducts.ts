@@ -5,12 +5,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
@@ -18,7 +19,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import foProductPage from '@pages/FO/product';
 import {homePage as foHomePage} from '@pages/FO/home';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -35,7 +36,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
   const productData: ProductData = new ProductData({type: 'Standard product', quantity: 0});
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -64,7 +65,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to create product page and create a product', async function () {
@@ -73,7 +74,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       await productsPage.goToAddProductPage(page);
 
       const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
   });
 
@@ -88,7 +89,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     const tests = [
@@ -106,7 +107,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
             page,
             test.args.deliveryTimeText,
           );
-          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
@@ -117,7 +118,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
           await foHomePage.changeLanguage(page, 'en');
 
           const isFoHomePage = await foHomePage.isHomePage(page);
-          await expect(isFoHomePage, 'Fail to open FO home page').to.be.true;
+          expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should check delivery time block visibility', async function () {
@@ -127,7 +128,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
           await searchResultsPage.goToProductPage(page, 1);
 
           const isDeliveryTimeBlockVisible = await foProductPage.isDeliveryInformationVisible(page);
-          await expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
+          expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
         });
 
         if (test.args.enable) {
@@ -135,7 +136,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
             await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockText${index}`, baseContext);
 
             const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
-            await expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
+            expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
           });
         }
 
@@ -145,7 +146,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
           page = await foProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
       });
     });
@@ -162,14 +163,14 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       );
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const deleteTextResult = await productsPage.deleteProduct(page, productData);
-      await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
     });
 
     it('should reset all filters', async function () {
@@ -178,7 +179,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       await productsPage.resetFilterCategory(page);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
   });
 

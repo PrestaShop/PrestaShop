@@ -46,7 +46,7 @@ describe('BO - Advanced Parameters - E-mail : Enable/Disable log emails', async 
     );
 
     const pageTitle = await emailPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(emailPage.pageTitle);
+    expect(pageTitle).to.contains(emailPage.pageTitle);
   });
 
   const tests = [
@@ -59,14 +59,14 @@ describe('BO - Advanced Parameters - E-mail : Enable/Disable log emails', async 
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}LogEmails`, baseContext);
 
       const result = await emailPage.setLogEmails(page, test.args.exist);
-      await expect(result).to.contains(emailPage.successfulUpdateMessage);
+      expect(result).to.contains(emailPage.successfulUpdateMessage);
     });
 
     it('should check the existence of E-mail table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkEmailTable${index}`, baseContext);
 
       const isVisible = await emailPage.isLogEmailsTableVisible(page);
-      await expect(isVisible).to.equal(test.args.exist);
+      expect(isVisible).to.equal(test.args.exist);
     });
   });
 });

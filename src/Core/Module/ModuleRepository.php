@@ -74,23 +74,30 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var Module[] */
     private $modulesFromHook;
 
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
         CacheProvider $cacheProvider,
         HookManager $hookManager,
-        string $modulePath
+        string $modulePath,
+        int $contextLangId
     ) {
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
         $this->cacheProvider = $cacheProvider;
         $this->hookManager = $hookManager;
         $this->modulePath = $modulePath;
+        $this->contextLangId = $contextLangId;
     }
 
     public function getList(): ModuleCollection
     {
-        $modules = [];
+        $modules = new ModuleCollection();
         $modulesDirsList = (new Finder())->directories()
             ->in($this->modulePath)
             ->depth('== 0')
@@ -103,10 +110,10 @@ class ModuleRepository implements ModuleRepositoryInterface
                 continue;
             }
 
-            $modules[] = $this->getModule($moduleName);
+            $modules->add($this->getModule($moduleName));
         }
 
-        return ModuleCollection::createFrom($this->addModulesFromHook($modules));
+        return $this->addModulesFromHook($modules);
     }
 
     public function getInstalledModules(): ModuleCollection
@@ -171,7 +178,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getModulePath(string $moduleName): ?string
     {
         $path = $this->modulePath . '/' . $moduleName;
-        $filePath = $this->modulePath . '/' . $moduleName . '/' . $moduleName . '.php';
+        $filePath = $path . '/' . $moduleName . '.php';
 
         if (!is_file($filePath)) {
             return null;
@@ -227,7 +234,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $shop = $shopId ? [$shopId] : Shop::getContextListShopID();
 
-        return $moduleName . implode('-', $shop);
+        return $moduleName . implode('-', $shop) . $this->contextLangId;
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
@@ -280,6 +287,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private function getModulesFromHook()
     {
         if ($this->modulesFromHook === null) {
+            // An array [module_name => module_output] will be returned
             $modulesFromHook = $this->hookManager->exec('actionListModules', [], null, true);
             $modulesFromHook = array_values($modulesFromHook ?? []);
 
@@ -292,13 +300,19 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * @param Module[] $modules
+     * @param ModuleCollection $modules
      *
-     * @return Module[]
+     * @return ModuleCollection
      */
-    protected function addModulesFromHook(array $modules): array
+    protected function addModulesFromHook(ModuleCollection $modules): ModuleCollection
     {
-        $externalModules = $this->getModulesFromHook();
+        try {
+            $externalModules = $this->getModulesFromHook();
+        } catch (\Throwable $e) {
+            $modules->addError($e);
+
+            return $modules;
+        }
 
         foreach ($externalModules as $externalModule) {
             $merged = false;
@@ -309,7 +323,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
             }
             if (!$merged) {
-                $modules[] = new Module($externalModule);
+                $modules->add(new Module($externalModule));
             }
         }
 
@@ -323,7 +337,12 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
     {
-        $modulesFromHook = $this->getModulesFromHook();
+        try {
+            $modulesFromHook = $this->getModulesFromHook();
+        } catch (\Throwable $e) {
+            return $module;
+        }
+
         foreach ($modulesFromHook as $moduleFromHook) {
             if ($module->get('name') === $moduleFromHook['name']) {
                 $module->getAttributes()->add($moduleFromHook);

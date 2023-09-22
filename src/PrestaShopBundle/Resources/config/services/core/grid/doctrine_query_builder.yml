@@ -132,7 +132,7 @@ services:
       - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
     public: true
 
-  prestashop.core.grid.quer_.builder.language:
+  prestashop.core.grid.query.builder.language:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\LanguageQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
@@ -486,7 +486,13 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Core\Grid\Query\AuthorizedApplicationQueryBuilder:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\AuthorizedApplicationQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    autowire: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+  PrestaShop\PrestaShop\Core\Grid\Query\ApiAccessQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: false
     autowire: true
@@ -512,7 +518,7 @@ services:
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
-    public: false
+    public: true
 
   PrestaShop\PrestaShop\Core\Grid\Query\FeatureQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
@@ -521,6 +527,13 @@ services:
     arguments:
       $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
       $contextLangId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+
+  PrestaShop\PrestaShop\Core\Grid\Query\FeatureValueQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    autowire: true
+    public: false
+    arguments:
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
 
   PrestaShop\PrestaShop\Core\Grid\Query\StoreQueryBuilder:
     autowire: true

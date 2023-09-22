@@ -60,6 +60,8 @@ export default class CarrierData {
 
   public readonly price: number;
 
+  public readonly priceText: string;
+
   public readonly priceTTC: number;
 
   /**
@@ -83,7 +85,7 @@ export default class CarrierData {
     this.delay = carrierToCreate.delay || '';
 
     /** @type {number} Shipping delay, 0 for longest and 9 for shortest */
-    this.speedGrade = carrierToCreate.speedGrade || faker.datatype.number({min: 1, max: 9});
+    this.speedGrade = carrierToCreate.speedGrade || faker.number.int({min: 1, max: 9});
 
     /** @type {string} Url of carrier tracking */
     this.trakingURL = carrierToCreate.trakingURL || 'https://example.com/track.php?num=20';
@@ -104,34 +106,37 @@ export default class CarrierData {
     this.outOfRangeBehavior = carrierToCreate.outOfRangeBehavior || faker.helpers.arrayElement(outOfRangeBehavior);
 
     /** @type {number} Superior range for the carrier */
-    this.rangeSup = carrierToCreate.rangeSup || faker.datatype.number({min: 1, max: 100});
+    this.rangeSup = carrierToCreate.rangeSup || faker.number.int({min: 1, max: 100});
 
     /** @type {boolean} True to apply it to all zones */
     this.allZones = carrierToCreate.allZones === undefined ? true : carrierToCreate.allZones;
 
     /** @type {number} Value to set when all zones is checked */
-    this.allZonesValue = carrierToCreate.allZonesValue || faker.datatype.number({min: 1, max: 100});
+    this.allZonesValue = carrierToCreate.allZonesValue || faker.number.int({min: 1, max: 100});
 
     /** @type {number} ID of the zone on carrier form */
     this.zoneID = carrierToCreate.zoneID || faker.helpers.arrayElement(zonesID);
 
     /** @type {number} Max width that the carrier can handle */
-    this.maxWidth = carrierToCreate.maxWidth || faker.datatype.number({min: 1, max: 100});
+    this.maxWidth = carrierToCreate.maxWidth || faker.number.int({min: 1, max: 100});
 
     /** @type {number} Max height that the carrier can handle */
-    this.maxHeight = carrierToCreate.maxHeight || faker.datatype.number({min: 1, max: 100});
+    this.maxHeight = carrierToCreate.maxHeight || faker.number.int({min: 1, max: 100});
 
     /** @type {number} Max depth that the carrier can handle */
-    this.maxDepth = carrierToCreate.maxDepth || faker.datatype.number({min: 1, max: 100});
+    this.maxDepth = carrierToCreate.maxDepth || faker.number.int({min: 1, max: 100});
 
     /** @type {number} Max weight that the carrier can handle */
-    this.maxWeight = carrierToCreate.maxWeight || faker.datatype.number({min: 1, max: 100});
+    this.maxWeight = carrierToCreate.maxWeight || faker.number.int({min: 1, max: 100});
 
     /** @type {boolean} Status of the carrier */
     this.enable = carrierToCreate.enable === undefined ? true : carrierToCreate.enable;
 
     /** @type {number} Price HT */
     this.price = carrierToCreate.price || 0;
+
+    /** @type {string} */
+    this.priceText = carrierToCreate.priceText || this.price.toString();
 
     /** @type {number} Price TTC */
     this.priceTTC = carrierToCreate.priceTTC || 0;

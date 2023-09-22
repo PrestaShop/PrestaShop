@@ -53,14 +53,14 @@ describe('BO - Orders : Filter the Orders table', async () => {
     );
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should reset all filters and get number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
     numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrders).to.be.above(0);
+    expect(numberOfOrders).to.be.above(0);
   });
 
   [
@@ -148,11 +148,11 @@ describe('BO - Orders : Filter the Orders table', async () => {
       );
 
       const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
+      expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
         const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, row);
-        await expect(textColumn).to.equal(test.args.filterValue);
+        expect(textColumn).to.equal(test.args.filterValue);
       }
     });
 
@@ -160,7 +160,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
 
       const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
+      expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });
 
@@ -172,11 +172,11 @@ describe('BO - Orders : Filter the Orders table', async () => {
 
     // Check number of element
     const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
-    await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
+    expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
 
     for (let i = 1; i <= numberOfOrdersAfterFilter; i++) {
       const textColumn = await ordersPage.getTextColumn(page, 'date_add', i);
-      await expect(textColumn).to.contains(dateToCheck);
+      expect(textColumn).to.contains(dateToCheck);
     }
   });
 
@@ -184,6 +184,6 @@ describe('BO - Orders : Filter the Orders table', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
     const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
+    expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
   });
 });

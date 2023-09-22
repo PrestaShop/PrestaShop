@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\BulkToggleCurrenciesStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkToggleCurrenciesException;
@@ -40,6 +41,7 @@ use PrestaShopException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class BulkToggleCurrenciesStatusHandler extends AbstractCurrencyHandler implements BulkToggleCurrenciesStatusHandlerInterface
 {
     /**

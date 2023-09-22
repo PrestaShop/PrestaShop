@@ -14,7 +14,7 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
-import foCartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import foCheckoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
@@ -74,7 +74,7 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to fourth product page', async function () {
@@ -83,40 +83,40 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       await foHomePage.goToProductPage(page, 4);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_5.name);
+      expect(pageTitle).to.contains(Products.demo_5.name);
     });
 
     it('should add product to cart and go to cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page, foProductPage);
+      await foProductPage.addProductToTheCart(page, 1);
 
-      const pageTitle = await foCartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foCartPage.pageTitle);
+      const pageTitle = await cartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
       // Proceed to checkout the shopping cart
-      await foCartPage.clickOnProceedToCheckout(page);
+      await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await foCheckoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill customer information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerInformation', baseContext);
 
       const isStepCompleted = await foCheckoutPage.setGuestPersonalInformation(page, guestData);
-      await expect(isStepCompleted).to.be.true;
+      expect(isStepCompleted).to.eq(true);
     });
 
     it('should fill different delivery and invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerAddresses', baseContext);
 
       const isStepCompleted = await foCheckoutPage.setAddress(page, deliveryAddress, invoiceAddress);
-      await expect(isStepCompleted).to.be.true;
+      expect(isStepCompleted).to.eq(true);
     });
 
     it('should complete the order', async function () {
@@ -124,14 +124,14 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
       await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -151,14 +151,14 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${guestData.lastName}'`, async function () {
@@ -168,7 +168,7 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       await ordersPage.filterOrders(page, 'input', 'customer', guestData.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(guestData.lastName);
+      expect(textColumn).to.contains(guestData.lastName);
     });
 
     it('should view the order', async function () {
@@ -177,7 +177,7 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
 
     it('should check that invoice and delivery addresses are different', async function () {
@@ -186,7 +186,7 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       const finalDeliveryAddress = await orderPageCustomerBlock.getShippingAddress(page);
       const finalInvoiceAddress = await orderPageCustomerBlock.getInvoiceAddress(page);
 
-      await expect(
+      expect(
         finalDeliveryAddress.replace('Shipping', ''),
         'Invoice and delivery addresses shouldn\'t be the same',
       )

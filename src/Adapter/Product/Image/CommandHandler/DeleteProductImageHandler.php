@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\DeleteProductImageHandlerInterface;
 
 /**
  * Handles @see DeleteProductImageCommand
  */
+#[AsCommandHandler]
 class DeleteProductImageHandler implements DeleteProductImageHandlerInterface
 {
     /**

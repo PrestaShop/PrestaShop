@@ -59,6 +59,13 @@ class FeatureFlag
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=64, options={"default": FeatureFlagSettings::TYPE_DEFAULT})
+     */
+    private $type;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="state", type="boolean", options={"default":0, "unsigned":true})
@@ -109,6 +116,7 @@ class FeatureFlag
             throw new InvalidArgumentException('Feature flag name cannot be empty');
         }
         $this->name = $name;
+        $this->type = FeatureFlagSettings::TYPE_DEFAULT;
         $this->state = false;
         $this->descriptionWording = '';
         $this->descriptionDomain = '';
@@ -257,6 +265,36 @@ class FeatureFlag
     public function setStability(string $stability): self
     {
         $this->stability = $stability;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * Retrieve order of feature flags type
+     *
+     * @return array
+     */
+    public function getOrderedTypes(): array
+    {
+        return explode(',', $this->type);
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return self
+     */
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

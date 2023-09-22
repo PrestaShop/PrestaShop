@@ -414,7 +414,7 @@
         {% for translationsFields in form %}
           <li class="nav-item">
             <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
-              {{ translationsFields.vars.label|capitalize }}
+              {{ translationsFields.vars.label|upper }}
             </a>
           </li>
         {% endfor %}
@@ -463,7 +463,7 @@
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
         >
-          {{ form.vars.default_locale.iso_code }}
+          {{ form.vars.default_locale.iso_code|upper }}
         </button>
 
         <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
@@ -501,7 +501,7 @@
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
         >
-          {{ form.vars.default_locale.iso_code }}
+          {{ form.vars.default_locale.iso_code|upper }}
         </button>
 
         <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
@@ -732,11 +732,7 @@
         <div class="popover-error-list">
           <ul>
             {%- for error in errors -%}
-              <li class="text-danger"> {{
-                error.messagePluralization is null
-                ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-                }}
+              <li class="text-danger"> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
               </li>
             {% endfor %}
           </ul>
@@ -756,7 +752,7 @@
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|transchoice(errors|length, {}, 'Admin.Global') }}</u>
+          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|trans({'%count%': errors|length}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
@@ -774,11 +770,7 @@
       <div class="d-inline-block">
         {% for error in errors %}
           <div class="text-danger">
-            <p> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
+            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
             </p>
           </div>
         {%- endfor -%}
@@ -795,11 +787,7 @@
       </button>
       <div class="alert-text">
         {% for error in errors %}
-            <p> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
+            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
             </p>
         {%- endfor -%}
       </div>
@@ -907,7 +895,7 @@
         {% for translationsFields in form %}
           <li class="nav-item">
             <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if default_locale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
-              {{ translationsFields.vars.label|capitalize }}
+              {{ translationsFields.vars.label|upper }}
             </a>
           </li>
         {% endfor %}
@@ -949,7 +937,7 @@
                   aria-expanded="false"
                   id="{{ form.vars.id }}_dropdown"
           >
-            {{ form.vars.default_locale.iso_code }}
+            {{ form.vars.default_locale.iso_code|upper }}
           </button>
           <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
             {% for locale in locales %}
@@ -1265,11 +1253,19 @@
 
     {% if alert_title is defined %}
       <div class="alert-more collapse" id="expandable_{{form.vars.id}}" style="">
-        {% for message in alert_message %}
-          <p>
-            {{ message|raw }}
-          </p>
-        {% endfor %}
+        {% if alert_message|length > 1 %}
+          <ul class="p-0">
+            {% for message in alert_message %}
+              <li>{{ message|raw }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          {% for message in alert_message %}
+            <p>
+              {{ message|raw }}
+            </p>
+          {% endfor %}
+        {% endif %}
       </div>
       <div class="read-more-container">
          <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{form.vars.id}}" aria-expanded="true" aria-controls="collapseDanger">
@@ -1458,8 +1454,8 @@
         {% if child.vars.label_tab is defined %}
           {{ form_label(child, child.vars.label_tab) }}
         {% endif %}
-        {{ form_widget(child) }}
         {{ form_errors(child) }}
+        {{ form_widget(child) }}
       </div>
       {% set firstRenderedChild = false %}
       {% endif %}
@@ -1656,17 +1652,5 @@
       {% endfor %}
     </div>
   {% endif %}
-  {% if form.parent.vars.data.disabled_menu_thumbnail_upload is defined and form.parent.vars.data.disabled_menu_thumbnail_upload and warning_message is not null %}
-    <div class="d-none">
-      {{ block('file_widget') }}
-    </div>
-
-    <div class="alert alert-warning" role="alert">
-      <p class="alert-text">
-        {{ warning_message }}
-      </p>
-    </div>
-  {% else %}
-    {{ block('file_widget') }}
-  {% endif %}
+  {{ block('file_widget') }}
 {% endblock image_with_preview_widget %}

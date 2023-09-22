@@ -18,6 +18,7 @@ import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+import OrderShippingData from '@data/faker/orderShipping';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,12 +39,12 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   let page: Page;
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
-  const shippingDetailsData = {
+  const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
     carrier: Carriers.myCarrier.name,
     carrierID: Carriers.myCarrier.id,
-    shippingCost: '€8.40',
-  };
+  });
+  const shippingDetailsCost: string = '€8.40';
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
@@ -86,14 +87,14 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
@@ -102,7 +103,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -111,7 +112,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
   });
 
@@ -121,14 +122,14 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
       const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
-      await expect(isTabOpened).to.be.true;
+      expect(isTabOpened).to.eq(true);
     });
 
     it('should check that the carriers number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
 
       const carriersNumber = await orderPageTabListBlock.getCarriersNumber(page);
-      await expect(carriersNumber).to.be.equal(1);
+      expect(carriersNumber).to.be.equal(1);
     });
 
     it('should check the carrier details', async function () {
@@ -148,14 +149,14 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
       const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
-      await expect(isModalVisible, 'Edit shipping modal is not visible!').to.be.true;
+      expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
     });
 
     it('should update the carrier and add a tracking number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateTrackingNumber', baseContext);
 
       const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
-      await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
     });
 
     it('should check the updated carrier details', async function () {
@@ -168,7 +169,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
         expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
-        expect(result.shippingCost).to.equal(shippingDetailsData.shippingCost),
+        expect(result.shippingCost).to.equal(shippingDetailsCost),
         expect(result.trackingNumber).to.equal(shippingDetailsData.trackingNumber),
       ]);
     });

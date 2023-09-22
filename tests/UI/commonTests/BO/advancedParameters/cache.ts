@@ -46,14 +46,14 @@ function deleteCacheTest(baseContext: string = 'commonTests-deleteCache'): void 
       await performancePage.closeSfToolBar(page);
 
       const pageTitle = await performancePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(performancePage.pageTitle);
+      expect(pageTitle).to.contains(performancePage.pageTitle);
     });
 
     it('should clear cache', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearCache', baseContext);
 
       const successMessage = await performancePage.clearCache(page);
-      await expect(successMessage).to.equal(performancePage.clearCacheSuccessMessage);
+      expect(successMessage).to.equal(performancePage.clearCacheSuccessMessage);
     });
   });
 }

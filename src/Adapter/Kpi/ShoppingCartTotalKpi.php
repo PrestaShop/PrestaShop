@@ -68,7 +68,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $helper->id = 'box-kpi-cart';
         $helper->icon = 'shopping_cart';
         $helper->color = 'color1';
-        $helper->title = $translator->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
+        $helper->title = $translator->trans('Total cart', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = $this->locale->formatPrice(
             $cart->getCartTotalPrice(),

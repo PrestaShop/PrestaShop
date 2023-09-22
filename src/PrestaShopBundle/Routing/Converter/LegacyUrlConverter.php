@@ -214,8 +214,8 @@ final class LegacyUrlConverter
                     // e.g.
                     //  create=1 is an action
                     //  id_product=1 is NOT an action
-                    if (false === strpos($parameter, 'id_')
-                        && false === strpos($parameter, '_id')) {
+                    if (!str_contains($parameter, 'id_')
+                        && !str_contains($parameter, '_id')) {
                         $legacyAction = $parameter;
 
                         break;

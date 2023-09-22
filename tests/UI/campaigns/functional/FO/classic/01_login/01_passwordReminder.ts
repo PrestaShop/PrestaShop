@@ -11,12 +11,12 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
-import passwordReminderPage from '@pages/FO/passwordReminder';
+import {myAccountPage} from '@pages/FO/myAccount';
+import {passwordReminderPage} from '@pages/FO/passwordReminder';
 
 // Import data
 import CustomerData from '@data/faker/customer';
-import MailDevEmail from '@data/types/maildev';
+import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';
@@ -81,7 +81,7 @@ describe('FO - Login : Password reminder', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -90,7 +90,7 @@ describe('FO - Login : Password reminder', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(loginPage.pageTitle);
+      expect(pageTitle).to.equal(loginPage.pageTitle);
     });
 
     it('should click on \'Forgot your password?\' link', async function () {
@@ -99,7 +99,7 @@ describe('FO - Login : Password reminder', async () => {
       await loginPage.goToPasswordReminderPage(page);
 
       const pageTitle = await passwordReminderPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
     });
 
     it('should set the email address and send reset link', async function () {
@@ -108,13 +108,13 @@ describe('FO - Login : Password reminder', async () => {
       await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
 
       const successAlertContent = await passwordReminderPage.checkResetLinkSuccess(page);
-      await expect(successAlertContent).to.contains(customerData.email);
+      expect(successAlertContent).to.contains(customerData.email);
     });
 
     it('should check if reset password mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResetPasswordMail', baseContext);
 
-      await expect(newMail.subject).to.contains(resetPasswordMailSubject);
+      expect(newMail.subject).to.contains(resetPasswordMailSubject);
     });
 
     it('should open reset password link', async function () {
@@ -123,14 +123,14 @@ describe('FO - Login : Password reminder', async () => {
       await passwordReminderPage.openForgotPasswordPage(page, newMail.text);
 
       const pageTitle = await passwordReminderPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
     });
 
     it('should check the email address to reset password', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailAddress', baseContext);
 
       const emailAddress = await passwordReminderPage.getEmailAddressToReset(page);
-      await expect(emailAddress).to.contains(customerData.email);
+      expect(emailAddress).to.contains(customerData.email);
     });
 
     it('should change the password and check the validation message', async function () {
@@ -139,7 +139,7 @@ describe('FO - Login : Password reminder', async () => {
       await passwordReminderPage.setNewPassword(page, newPassword);
 
       const successMessage = await myAccountPage.getSuccessMessageAlert(page);
-      await expect(successMessage).to.equal(`${myAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
+      expect(successMessage).to.equal(`${myAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
     });
 
     it('should logout from FO', async function () {
@@ -147,16 +147,16 @@ describe('FO - Login : Password reminder', async () => {
 
       await myAccountPage.logout(page);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
     it('should try to login with old password and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFOWithOldPassword', baseContext);
 
-      await loginPage.customerLogin(page, customerData);
+      await loginPage.customerLogin(page, customerData, false);
 
       const loginError = await loginPage.getLoginError(page);
-      await expect(loginError).to.contains(loginPage.loginErrorText);
+      expect(loginError).to.contains(loginPage.loginErrorText);
     });
 
     it('should sign in with new password', async function () {
@@ -165,7 +165,7 @@ describe('FO - Login : Password reminder', async () => {
       await loginPage.customerLogin(page, customerNewPassword);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should logout from FO', async function () {
@@ -174,7 +174,7 @@ describe('FO - Login : Password reminder', async () => {
       await myAccountPage.logout(page);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
     it('should click on \'Forgot your password?\' link', async function () {
@@ -183,7 +183,7 @@ describe('FO - Login : Password reminder', async () => {
       await loginPage.goToPasswordReminderPage(page);
 
       const pageTitle = await passwordReminderPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
     });
 
     it('should set the customer email and check the error alert', async function () {
@@ -192,7 +192,7 @@ describe('FO - Login : Password reminder', async () => {
       await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
 
       const regeneratePasswordAlert = await passwordReminderPage.getErrorMessage(page);
-      await expect(regeneratePasswordAlert).to.contains(passwordReminderPage.errorMessage);
+      expect(regeneratePasswordAlert).to.contains(passwordReminderPage.errorMessage);
     });
   });
 

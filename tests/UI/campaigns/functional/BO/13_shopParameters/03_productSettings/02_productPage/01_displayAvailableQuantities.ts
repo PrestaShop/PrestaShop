@@ -54,7 +54,7 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
     await productSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -71,7 +71,7 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
       );
 
       const result = await productSettingsPage.setDisplayAvailableQuantitiesStatus(page, test.args.enable);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop and go to first product page', async function () {
@@ -80,7 +80,7 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
       page = await productSettingsPage.viewMyShop(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page was not opened').to.be.true;
+      expect(isHomePage, 'Home page was not opened').to.eq(true);
 
       await homePage.goToProductPage(page, 1);
     });
@@ -89,7 +89,7 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
       await testContext.addContextItem(this, 'testIdentifier', `checkQuantity${index}`, baseContext);
 
       const quantityIsVisible = await productPage.isQuantityDisplayed(page);
-      await expect(quantityIsVisible).to.be.equal(test.args.enable);
+      expect(quantityIsVisible).to.be.equal(test.args.enable);
     });
 
     it('should close the page and go back to BO', async function () {
@@ -98,7 +98,7 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
       page = await productPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

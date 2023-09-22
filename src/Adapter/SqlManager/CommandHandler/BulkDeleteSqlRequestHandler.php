@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\BulkDeleteSqlRequestHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
@@ -36,6 +37,7 @@ use RequestSql;
 /**
  * Class BulkDeleteSqlRequestHandler handles bulk delete of SqlRequest command.
  */
+#[AsCommandHandler]
 final class BulkDeleteSqlRequestHandler implements BulkDeleteSqlRequestHandlerInterface
 {
     /**

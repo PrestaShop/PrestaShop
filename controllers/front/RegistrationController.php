@@ -32,6 +32,13 @@ class RegistrationControllerCore extends FrontController
     /** @var bool */
     public $auth = false;
 
+    /**
+     * Check if the controller is available for the current user/visitor.
+     *
+     * @see Controller::checkAccess()
+     *
+     * @return bool
+     */
     public function checkAccess()
     {
         // If the customer is already logged and he got here by 'accident', we will redirect him away
@@ -43,6 +50,11 @@ class RegistrationControllerCore extends FrontController
         return parent::checkAccess();
     }
 
+    /**
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
+     */
     public function initContent()
     {
         $register_form = $this

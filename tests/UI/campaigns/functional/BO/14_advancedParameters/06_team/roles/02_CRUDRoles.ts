@@ -17,7 +17,7 @@ import RoleData from '@data/faker/role';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_team_roles_CRUDRole';
+const baseContext: string = 'functional_BO_advancedParameters_team_roles_CRUDRoles';
 
 // Create, Read, Update and Delete role in BO
 describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role in BO', async () => {
@@ -54,7 +54,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should go to \'Roles\' page', async function () {
@@ -63,14 +63,14 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
     await employeesPage.goToRolesPage(page);
 
     const pageTitle = await rolesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(rolesPage.pageTitle);
+    expect(pageTitle).to.contains(rolesPage.pageTitle);
   });
 
   it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfRoles = await rolesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfRoles).to.be.above(0);
+    expect(numberOfRoles).to.be.above(0);
   });
 
   // 1 : Create role
@@ -81,17 +81,17 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
       await rolesPage.goToAddNewRolePage(page);
 
       const pageTitle = await addRolePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addRolePage.pageTitleCreate);
+      expect(pageTitle).to.contains(addRolePage.pageTitleCreate);
     });
 
     it('should create role and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createRole', baseContext);
 
       const textResult = await addRolePage.createEditRole(page, createRoleData);
-      await expect(textResult).to.equal(rolesPage.successfulCreationMessage);
+      expect(textResult).to.equal(rolesPage.successfulCreationMessage);
 
       const numberOfRolesAfterCreation = await rolesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfRolesAfterCreation).to.be.equal(numberOfRoles + 1);
+      expect(numberOfRolesAfterCreation).to.be.equal(numberOfRoles + 1);
     });
   });
 
@@ -103,7 +103,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
       await rolesPage.filterRoles(page, 'input', 'name', createRoleData.name);
 
       const textName = await rolesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(createRoleData.name);
+      expect(textName).to.contains(createRoleData.name);
     });
 
     it('should go to edit role page', async function () {
@@ -112,14 +112,14 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
       await rolesPage.goToEditRolePage(page, 1);
 
       const pageTitle = await addRolePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addRolePage.pageTitleEdit(createRoleData.name));
+      expect(pageTitle).to.contains(addRolePage.pageTitleEdit(createRoleData.name));
     });
 
     it('should update the role', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateRole', baseContext);
 
       const textResult = await addRolePage.createEditRole(page, editRoleData);
-      await expect(textResult).to.equal(addRolePage.successfulUpdateMessage);
+      expect(textResult).to.equal(addRolePage.successfulUpdateMessage);
     });
   });
 
@@ -131,21 +131,21 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
       await rolesPage.filterRoles(page, 'input', 'name', editRoleData.name);
 
       const textName = await rolesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(editRoleData.name);
+      expect(textName).to.contains(editRoleData.name);
     });
 
     it('should delete role', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteRole', baseContext);
 
       const textResult = await rolesPage.deleteRole(page, 1);
-      await expect(rolesPage.successfulDeleteMessage).to.contains(textResult);
+      expect(rolesPage.successfulDeleteMessage).to.contains(textResult);
     });
 
     it('should reset filter and check the number of roles', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfRolesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles);
+      expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles);
     });
   });
 });

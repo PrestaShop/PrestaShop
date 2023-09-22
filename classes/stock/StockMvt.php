@@ -25,7 +25,8 @@
  */
 
 /**
- * @since 1.5.0 It now defines stock movements when the advanced stock management system is available
+ * @since 1.5.0 Defines stock movements
+ * @deprecated since 9.0 and will be removed in 10.0, this object model is no longer needed
  */
 class StockMvtCore extends ObjectModel
 {

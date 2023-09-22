@@ -63,7 +63,7 @@ class AdminShopUrlControllerCore extends AdminController
 
         $this->fields_list = [
             'id_shop_url' => [
-                'title' => $this->trans('Shop URL ID', [], 'Admin.Advparameters.Feature'),
+                'title' => $this->trans('Store URL ID', [], 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ],
@@ -106,7 +106,8 @@ class AdminShopUrlControllerCore extends AdminController
 
     public function renderList()
     {
-        $this->addRowActionSkipList('delete', [1]);
+        // We will hide "delete" action for all URLs that are set as main ones for the store
+        $this->addRowActionSkipList('delete', $this->getUnremovableUrls());
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -120,6 +121,19 @@ class AdminShopUrlControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         return parent::renderList();
+    }
+
+    /**
+     * Returns a list of URLs that are selected as main ones for some store.
+     *
+     * @return array of URLs that are selected as main
+     */
+    protected function getUnremovableUrls()
+    {
+        return array_column(
+            Db::getInstance()->executeS('SELECT id_shop_url FROM ' . _DB_PREFIX_ . 'shop_url WHERE main = 1'),
+            'id_shop_url'
+        );
     }
 
     /**
@@ -170,7 +184,7 @@ class AdminShopUrlControllerCore extends AdminController
                         ],
                         [
                             'type' => 'switch',
-                            'label' => $this->trans('Is it the main URL for this shop?', [], 'Admin.Advparameters.Feature'),
+                            'label' => $this->trans('Is it the main URL for this store?', [], 'Admin.Advparameters.Feature'),
                             'name' => 'main',
                             'is_bool' => true,
                             'class' => 't',
@@ -223,7 +237,7 @@ class AdminShopUrlControllerCore extends AdminController
             [
                 'form' => [
                     'legend' => [
-                        'title' => $this->trans('Shop URL', [], 'Admin.Advparameters.Feature'),
+                        'title' => $this->trans('Store URL', [], 'Admin.Advparameters.Feature'),
                         'icon' => 'icon-shopping-cart',
                     ],
                     'input' => [
@@ -310,7 +324,7 @@ class AdminShopUrlControllerCore extends AdminController
             }
 
             $this->page_header_toolbar_btn['edit'] = [
-                'desc' => $this->trans('Edit this shop', [], 'Admin.Advparameters.Feature'),
+                'desc' => $this->trans('Edit this store', [], 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop') . '&updateshop&shop_id=' . (int) $this->id_shop,
             ];
 
@@ -341,6 +355,11 @@ class AdminShopUrlControllerCore extends AdminController
         }
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         parent::initContent();

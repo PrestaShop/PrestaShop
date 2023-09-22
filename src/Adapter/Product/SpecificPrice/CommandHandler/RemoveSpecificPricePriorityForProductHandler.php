@@ -28,9 +28,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\RemoveSpecificPricePriorityForProductHandlerInterface;
 
+#[AsCommandHandler]
 class RemoveSpecificPricePriorityForProductHandler implements RemoveSpecificPricePriorityForProductHandlerInterface
 {
     /**

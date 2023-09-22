@@ -12,71 +12,51 @@ services:
 
   prestashop.adapter.cms_page_category.command_handler.delete_cms_page_category_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\DeleteCmsPageCategoryHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand
+    autoconfigure: true
 
   prestashop.adapter.cms_page_category.command_handler.toggle_cms_page_category_status_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\ToggleCmsPageCategoryStatusHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand
+    autoconfigure: true
 
   prestashop.adapter.cms_page_category.command_handler.bulk_delete_cms_page_category_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\BulkDeleteCmsPageCategoryHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand
+    autoconfigure: true
 
   prestashop.adapter.cms_page.command_handler.bulk_enable_cms_page_category_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\BulkEnableCmsPageCategoryHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand
+    autoconfigure: true
 
   prestashop.adapter.cms_page.command_handler.bulk_disable_cms_page_category_handler:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\BulkDisableCmsPageCategoryHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand
+    autoconfigure: true
 
   prestashop.adapter.cms_page.command_handler.add_cms_page_category_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\AddCmsPageCategoryHandler'
     parent: 'prestashop.adapter.cms_page_category.command_handler.abstract_cms_page_category_handler'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\AddCmsPageCategoryCommand
+    autoconfigure: true
     public: true
 
   prestashop.adapter.cms_page.command_handler.edit_cms_page_category_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\EditCmsPageCategoryHandler'
     parent: 'prestashop.adapter.cms_page_category.command_handler.abstract_cms_page_category_handler'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand
+    autoconfigure: true
     public: true
 
   # Query handlers
 
   prestashop.adapter.cms_page.query_handler.get_cms_page_categories_for_breadcrumbs:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbHandler
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb
 
   prestashop.adapter.cms_page.query_handler.get_cms_page_categories_for_redirection:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageParentCategoryIdForRedirectionHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection
+    autoconfigure: true
 
   prestashop.adapter.cms_page.query_handler.get_cms_page_category_for_editing:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoryForEditingHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing
+    autoconfigure: true
 
   prestashop.adapter.cms_page.categories_provider:
     class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CategoriesProvider'
@@ -86,9 +66,7 @@ services:
 
   prestashop.adapter.cms_page.query_handler.get_cms_page_category_name_for_listing:
     class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoryNameForListingHandler
+    autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@request_stack'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing

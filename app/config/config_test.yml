@@ -22,9 +22,6 @@ web_profiler:
   toolbar: '%use_debug_toolbar%'
   intercept_redirects: true
 
-swiftmailer:
-  disable_delivery: true
-
 # Doctrine Configuration
 doctrine:
   dbal:

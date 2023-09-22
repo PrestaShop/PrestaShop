@@ -182,6 +182,14 @@ class SqlQueryValidator
             ];
         }
 
+        if (isset($legacyError['function'])) {
+            return [
+                'key' => 'The "%function%" function is not allowed.',
+                'parameters' => ['%function%' => $legacyError['function']],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
         return [
             'key' => 'Undefined "%s" error',
             'parameters' => [

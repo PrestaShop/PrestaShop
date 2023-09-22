@@ -158,7 +158,7 @@ class AddSupplier extends BOBasePage {
     await this.setChecked(page, this.statusToggleInput(supplierData.enabled ? 1 : 0));
 
     // Save Supplier
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -188,7 +188,7 @@ class AddSupplier extends BOBasePage {
   async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
     /* eslint-disable no-restricted-syntax */
     for (const keyword of keywords) {
-      await page.type(this.metaKeywordsInput(idLang), keyword);
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keyword);
       await page.keyboard.press('Enter');
     }
     /* eslint-enable no-restricted-syntax */

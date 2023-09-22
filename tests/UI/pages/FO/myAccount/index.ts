@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class MyAccount extends FOBasePage {
+class MyAccountPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly resetPasswordSuccessMessage: string;
@@ -28,7 +28,7 @@ class MyAccount extends FOBasePage {
 
   private readonly successMessageAlert: string;
 
-  private readonly logoutFooterLink: string;
+  protected logoutFooterLink: string;
 
   private readonly psgdprLink: string;
 
@@ -36,8 +36,8 @@ class MyAccount extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on my account page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'My account';
     this.resetPasswordSuccessMessage = 'Your password has been successfully reset and a confirmation has been sent to'
@@ -74,7 +74,7 @@ class MyAccount extends FOBasePage {
    * @return {Promise<void>}
    */
   async goToInformationPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.accountInformationLink);
+    await this.clickAndWaitForURL(page, this.accountInformationLink);
   }
 
   /**
@@ -83,7 +83,7 @@ class MyAccount extends FOBasePage {
    * @return {Promise<void>}
    */
   async goToCreditSlipsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.orderSlipsLink);
+    await this.clickAndWaitForURL(page, this.orderSlipsLink);
   }
 
   /**
@@ -92,7 +92,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToHistoryAndDetailsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.accountHistoryLink);
+    await this.clickAndWaitForURL(page, this.accountHistoryLink);
   }
 
   /**
@@ -111,9 +111,9 @@ class MyAccount extends FOBasePage {
    */
   async goToAddressesPage(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.accountFirstAddressLink, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
+      await this.clickAndWaitForURL(page, this.accountFirstAddressLink);
     } else {
-      await this.clickAndWaitForNavigation(page, this.accountAddressesLink);
+      await this.clickAndWaitForURL(page, this.accountAddressesLink);
     }
   }
 
@@ -123,7 +123,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToVouchersPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.accountVouchersLink);
+    await this.clickAndWaitForURL(page, this.accountVouchersLink);
   }
 
   /**
@@ -132,7 +132,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToMerchandiseReturnsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.merchandiseReturnsLink);
+    await this.clickAndWaitForURL(page, this.merchandiseReturnsLink);
   }
 
   /**
@@ -141,7 +141,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async logout(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.logoutFooterLink);
+    await this.clickAndWaitForURL(page, this.logoutFooterLink);
   }
 
   /**
@@ -150,8 +150,9 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToMyGDPRPersonalDataPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.psgdprLink);
+    await this.clickAndWaitForURL(page, this.psgdprLink);
   }
 }
 
-export default new MyAccount();
+const myAccountPage = new MyAccountPage();
+export {myAccountPage, MyAccountPage};

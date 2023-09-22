@@ -28,10 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TaxInclusionChoiceType extends ChoiceType
+class TaxInclusionChoiceType extends AbstractType
 {
     /**
      * @var TaxInclusionChoiceProvider
@@ -41,8 +42,12 @@ class TaxInclusionChoiceType extends ChoiceType
     public function __construct(
         TaxInclusionChoiceProvider $shippingInclusionChoiceProvider
     ) {
-        parent::__construct();
         $this->taxInclusionChoiceProvider = $shippingInclusionChoiceProvider;
+    }
+
+    public function getParent(): string
+    {
+        return ChoiceType::class;
     }
 
     /**
@@ -50,8 +55,6 @@ class TaxInclusionChoiceType extends ChoiceType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
             'label' => false,
             'choices' => $this->taxInclusionChoiceProvider->getChoices(),

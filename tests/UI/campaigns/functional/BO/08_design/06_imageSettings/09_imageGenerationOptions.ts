@@ -14,7 +14,7 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_design_imageSettings_imageGenerationOption';
+const baseContext: string = 'functional_BO_design_imageSettings_imageGenerationOptions';
 
 /*
   Enable Feature flag of image
@@ -52,7 +52,7 @@ describe('BO - Design - Image Settings : Image Generation options', async () => 
       await imageSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await imageSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
     });
 
     it('should check image generation options', async function () {
@@ -60,17 +60,17 @@ describe('BO - Design - Image Settings : Image Generation options', async () => 
 
       // JPEG/PNG should be checked
       const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
-      await expect(jpegChecked).to.be.true;
+      expect(jpegChecked).to.eq(true);
 
       // JPEG/PNG should be greyed
       // You can't uncheck the JPEG/PNG format
       const jpegDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
-      await expect(jpegDisabled).to.be.true;
+      expect(jpegDisabled).to.eq(true);
 
       // >= PHP 8.1 : The checkbox of AVIF should be enabled
       // <  PHP 8.1 : The checkbox of AVIF should be disabled
       const avifDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'avif');
-      await expect(avifDisabled).to.be.true;
+      expect(avifDisabled).to.eq(true);
     });
   });
 

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use Configuration;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
@@ -77,7 +76,6 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
     private function generateDifferentSizeImages($manufacturerId)
     {
         $resized = true;
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         try {
             /* Generate images with different size */
@@ -86,20 +84,23 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
             ) {
                 $imageTypes = ImageType::getImagesTypes('manufacturers');
 
-                foreach ($imageTypes as $imageType) {
-                    $resized &= ImageManager::resize(
-                        _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
-                        _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.jpg',
-                        (int) $imageType['width'],
-                        (int) $imageType['height']
-                    );
+                /** @var \PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
+                $imageFormatConfiguration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
+                $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
 
-                    if ($generateHighDpiImages) {
+                foreach ($imageTypes as $imageType) {
+                    foreach ($configuredImageFormats as $imageFormat) {
+                        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                        // For webp and avif extensions, we want it to follow our command and ignore the original format.
+                        $forceFormat = ($imageFormat !== 'jpg');
+
                         $resized &= ImageManager::resize(
                             _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
-                            _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '2x.jpg',
-                            (int) $imageType['width'] * 2,
-                            (int) $imageType['height'] * 2
+                            _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
+                            (int) $imageType['width'],
+                            (int) $imageType['height'],
+                            $imageFormat,
+                            $forceFormat
                         );
                     }
                 }

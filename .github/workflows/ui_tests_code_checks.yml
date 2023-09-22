@@ -42,8 +42,36 @@ jobs:
       - name: Install dependencies in UI tests directory
         run: npm ci
 
+      - name: Install browsers
+        run: npx playwright install --with-deps
+
       - name: Check eslint errors
         run: npm run lint
+
+  tscheck:
+    runs-on: ubuntu-latest
+    name: TypeScript Check
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright/
+          key: ${{ runner.os }}-browsers
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies in UI tests directory
+        run: npm install
+
+      - name: Check TypeScript errors
+        run: npm run check:typescript
 
   Steps-identifiers:
     runs-on: ubuntu-latest
@@ -66,6 +94,9 @@ jobs:
 
       - name: Install dependencies in UI tests directory
         run: npm ci
+
+      - name: Install browsers
+        run: npx playwright install --with-deps
 
       - name: Generate mocha reports with failed steps
         run: GENERATE_FAILED_STEPS=true npm run test:all

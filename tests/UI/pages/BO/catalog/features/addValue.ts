@@ -33,18 +33,16 @@ class AddValue extends BOBasePage {
   constructor() {
     super();
 
-    this.createPageTitle = 'Features > Add New Feature •';
-    this.editPageTitle = 'Features > Edit New Feature •';
-
-    this.alertSuccessBlockParagraph = '.alert-success';
+    this.createPageTitle = `New Feature Value • ${global.INSTALL.SHOP_NAME}`;
+    this.editPageTitle = `Feature value • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
-    this.featureSelect = '#id_feature';
-    this.valueInput = '#value_1';
+    this.featureSelect = '#feature_value_feature_id';
+    this.valueInput = '#feature_value_value_1';
     this.urlInput = 'input[name=\'url_name_1\']';
     this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.saveButton = '#feature_value_form_submit_btn';
-    this.saveAndStayButton = 'button[name=\'submitAddfeature_valueAndStay\']';
+    this.saveButton = '#save-button';
+    this.saveAndStayButton = 'button[name=\'save-and-add-new\']';
   }
 
   /**
@@ -57,20 +55,21 @@ class AddValue extends BOBasePage {
   // eslint-disable-next-line consistent-return
   async addEditValue(page: Page, valueData: FeatureValueData, saveAndStay: boolean = false): Promise<string | void> {
     // Set group and value
-    await this.selectByVisibleText(page, this.featureSelect, valueData.featureName);
+    if (!(await this.isDisabled(page, this.featureSelect))) {
+      await this.selectByVisibleText(page, this.featureSelect, valueData.featureName);
+    }
     await this.setValue(page, this.valueInput, valueData.value);
 
     // Set Url and meta title
-    await this.setValue(page, this.urlInput, valueData.url);
-    await this.setValue(page, this.metaTitleInput, valueData.metaTitle);
+    //await this.setValue(page, this.urlInput, valueData.url);
+    //await this.setValue(page, this.metaTitleInput, valueData.metaTitle);
 
     // Save value
     if (saveAndStay) {
-      await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
-      // Return successful message
-      return this.getAlertSuccessBlockContent(page);
+      await page.click(this.saveAndStayButton);
+    } else {
+      await this.clickAndWaitForURL(page, this.saveButton);
     }
-    await this.clickAndWaitForNavigation(page, this.saveButton);
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
   }

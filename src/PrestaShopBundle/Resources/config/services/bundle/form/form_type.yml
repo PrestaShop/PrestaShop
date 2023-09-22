@@ -36,22 +36,42 @@ services:
       $isSingleShopContext: '@=service("prestashop.adapter.shop.context").isShopContext()'
       $categoryDataProvider: '@prestashop.adapter.data_provider.category'
       $ecoTaxGroupId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
-      $defaultCurrencySymbol: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
       $router: '@router'
       $isCombinationsUsed: '@=service("prestashop.adapter.combination_feature").isUsed()'
       $availableLocales: "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
-      $translator: '@translator'
+      $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
+
+  PrestaShopBundle\Form\Admin\Sell\CartRule\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
+  PrestaShopBundle\Form\Admin\Sell\Product\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Product/*"
+  PrestaShopBundle\Form\Admin\Category\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Category/*"
+  PrestaShopBundle\Form\Admin\Type\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Type/*"
+  PrestaShopBundle\Form\Admin\AdvancedParameters\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/AdvancedParameters/*"
+  PrestaShopBundle\Form\Admin\Catalog\Category\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Catalog/Category/*"
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/*"
+  PrestaShopBundle\Form\Admin\Improve\International\Localization\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/International/Localization/*"
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/*"
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
-      - '@prestashop.bundle.form.data_transformer.arabic_to_latin_digit'
+      - '@PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'
 
-  PrestaShopBundle\Form\Admin\Type\NavigationTabType:
   PrestaShopBundle\Form\Admin\Type\EmailType:
     arguments:
       - '@prestashop.bundle.form.data_transformer.idn_converter'
 
+  PrestaShopBundle\Form\Admin\Type\GeoCoordinatesType:
+
+  PrestaShopBundle\Form\Admin\Type\LocaleChoiceType:
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
   PrestaShopBundle\Form\Admin\Category\SimpleCategory:
     deprecated: ~
@@ -109,7 +129,6 @@ services:
     deprecated: ~
   PrestaShopBundle\Form\Admin\Product\ProductShipping:
     arguments:
-      $warehouseDataProvider: "@prestashop.adapter.data_provider.warehouse"
       $carrierDataProvider: "@prestashop.adapter.data_provider.carrier"
     deprecated: ~
   PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice:
@@ -128,13 +147,10 @@ services:
     deprecated: ~
   PrestaShopBundle\Form\Admin\Product\ProductVirtual:
     deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination:
-    deprecated: ~
   PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType:
     arguments:
       - "@prestashop.adapter.data_provider.product"
       - "@prestashop.adapter.data_provider.category"
-  PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType:
   PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType:
     arguments:
       - "@prestashop.adapter.data_provider.customer"
@@ -155,24 +171,9 @@ services:
       $invoiceModelChoiceProvider: '@prestashop.core.form.choice_provider.invoice_model_by_name'
       $nextInvoiceNumber: '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
 
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType:
-    arguments:
-      $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
-
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType:
     arguments:
       $currentIp: '@=service("request_stack").getCurrentRequest().getClientIp()'
-
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType:
 
   PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType:
   PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType:
@@ -180,12 +181,6 @@ services:
       $carriers: '@=service("prestashop.adapter.data_provider.carrier").getActiveCarriersChoices()'
       $orderByChoices: '@=service("prestashop.adapter.data_provider.carrier").getOrderByChoices()'
       $orderWayChoices: '@=service("prestashop.adapter.data_provider.carrier").getOrderWayChoices()'
-
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType:
     arguments:
@@ -205,8 +200,6 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType:
     arguments:
       $languageChoices: '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
-      $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
-      $currencyChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
       $timezoneChoices: '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType:
@@ -227,7 +220,6 @@ services:
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       $carrierChoices: '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
-      $currencyChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
       $countryDataProvider: '@prestashop.adapter.data_provider.country'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType:
@@ -235,9 +227,6 @@ services:
       $mailMethodChoiceProvider: '@prestashop.core.form.choice_provider.mail_method'
       $contactsChoiceProvider: '@prestashop.core.form.choice_provider.contact_by_id'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\DkimConfigurationType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType:
   PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType:
     arguments:
       $translationTypeChoices: '@=service("prestashop.core.form.choice_provider.translation_type").getChoices()'
@@ -274,24 +263,14 @@ services:
     arguments:
       $defaultRouteProvider: '@prestashop.adapter.data_provider.default_route'
 
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SEOOptionsType:
-
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType:
     arguments:
       $defaultPageChoices: '@=service("prestashop.core.form.choice_provider.default_meta_page_name").getChoices()'
       $modulePageChoices: '@=service("prestashop.core.form.choice_provider.module_meta_page_name").getChoices()'
 
-  PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType:
-  PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType:
-  PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType:
-
   PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType:
     arguments:
       $categoryDeleteModelChoices: '@=service("prestashop.core.form.choice_provider.category_delete_mode").getChoices()'
-
-  PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType:
-  PrestaShopBundle\Form\Admin\Type\DeltaQuantityType:
-  PrestaShopBundle\Form\Admin\Type\SubmittableDeltaQuantityType:
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType:
     arguments:
@@ -310,8 +289,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\CountryChoiceType:
     arguments:
-      - '@prestashop.core.form.choice_provider.country_by_id'
-      - '@prestashop.core.form.choice_provider.country_by_id'
+      $countriesChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutsCustomizationType:
     arguments:
@@ -333,10 +311,6 @@ services:
       $shopRepository: '@prestashop.core.admin.shop.repository'
       $shopGroups: "@=service('prestashop.core.admin.shop_group.repository').findActive()"
 
-  PrestaShopBundle\Form\Admin\Type\SearchAndResetType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupOptionsType:
-
   PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType:
     arguments:
       $customerRequiredFieldsChoices: '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
@@ -344,12 +318,9 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType:
   PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType:
     arguments:
-      $genderChoices: '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
-      $groupChoices: '@=service("prestashop.adapter.form.choice_provider.group_by_id_choice_provider").getChoices()'
       $riskChoices: '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
       $isB2bFeatureEnabled: '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       $isPartnerOffersEnabled: '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
-      $formCloner: '@form.form_cloner'
 
   PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType:
     arguments:
@@ -374,8 +345,6 @@ services:
       $taxAddressTypeChoiceProvider: '@=service("prestashop.core.form.choice_provider.tax_address_type_choice_provider")'
       $taxRuleGroupChoiceProvider: '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType:
-
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType:
     arguments:
       $singleDefaultLanguageArrayToFilledArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
@@ -394,7 +363,6 @@ services:
       $profilesChoices: '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       $superAdminProfileId: !php/const _PS_ADMIN_PROFILE_
 
-  PrestaShopBundle\Form\Admin\Type\ChangePasswordType:
   PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType:
     arguments:
       $allCmsCategories: '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
@@ -417,9 +385,6 @@ services:
     arguments:
       $mailThemes: '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
 
-  PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType:
-  PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType:
-
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType:
     arguments:
       $orderStatusChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
@@ -430,16 +395,15 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType:
     arguments:
-      $currencyByIdChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
-      $countryByIdChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       $groupByIdChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       $shopByIdChoices: '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
-      $currencyByIdChoicesAttributes: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoicesAttributes()'
 
   PrestaShopBundle\Form\Admin\Type\PriceReductionType:
     arguments:
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
 
+  PrestaShopBundle\Form\Admin\Sell\Customer\GroupType:
+  PrestaShopBundle\Form\Admin\Sell\Customer\GenderType:
   PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType:
@@ -466,13 +430,13 @@ services:
       $orderInvoiceChoiceProvider: '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
       $installedPaymentModulesChoiceProvider: '@prestashop.adapter.form.choice_provider.installed_payment_modules'
 
-  PrestaShopBundle\Form\Admin\Type\AmountCurrencyType:
-
-  PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType:
+  PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType: ~
+  PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType: ~
 
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
-      $currencyChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
+      $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType:
   PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType:
@@ -518,17 +482,10 @@ services:
       $orderStatesChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
       $paymentModulesChoiceProvider: '@prestashop.adapter.form.choice_provider.installed_payment_modules'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType:
-  PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType:
-  PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
-  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductItemType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
       $formChoiceProvider: '@prestashop.core.form.choice_provider.product_type_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\HeaderType:
   PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType:
     arguments:
       $shortDescriptionMaxLength: '@=service("prestashop.adapter.legacy.configuration").get("PS_PRODUCT_SHORT_DESC_LIMIT")'
@@ -537,43 +494,28 @@ services:
     arguments:
       $manufacturerChoiceProvider: '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType:
     arguments:
       $defaultCategoryChoiceProvider: '@prestashop.adapter.form.choice_provider.product_default_category_choice_provider'
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTagsCollectionType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\ProductCategoryType:
   PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType:
     arguments:
       $productConditionChoiceProvider: '@prestashop.core.form.choice_provider.product_condition_choice_provider'
       $isFeatureEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Details\FeaturesType:
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
     arguments:
-      $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
       $featureValueListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Details\CustomizationsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectorType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType:
     arguments:
       $packStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType:
     arguments:
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
       $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:
@@ -585,20 +527,10 @@ services:
       $carrierChoiceProvider: '@prestashop.core.form.choice_provider.carrier_by_reference_id'
       $additionalDeliveryTimeNoteTypesProvider: '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DimensionsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DeliveryTimeNotesType:
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\RetailPriceType:
     arguments:
       $contextLocale: '@prestashop.core.localization.locale.context_locale'
       $taxRuleGroupChoicesProvider: '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\UnitPriceType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriceSummaryType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricesType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\CatalogPriceRulesType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType:
     arguments:
@@ -607,16 +539,12 @@ services:
       $specificPriceCombinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
       $combinationNameBuilder: '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceImpactType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ProductSpecificPricePriorityType:
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType:
     arguments:
       $priorityChoiceProvider: '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType:
     arguments:
-      $currencyByIdChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
-      $countryByIdChoiceProvider: '@prestashop.core.form.choice_provider.country_by_id'
       $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
       $shopByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
 
@@ -625,16 +553,12 @@ services:
       $friendlyUrlEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
       $forceFriendlyUrl: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"
 
-  PrestaShopBundle\Form\Admin\Sell\Product\SEO\SerpType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\PackedProductType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\RedirectOptionType:
     arguments:
       $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
       $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType:
     arguments:
       $productVisibilityChoiceProvider: '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
@@ -647,87 +571,51 @@ services:
     arguments:
       $supplierNameByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierType:
     arguments:
-      $currencyByIdChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
       $defaultCurrencyIsoCode: "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
 
   PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType:
     arguments:
       $moduleDataProvider: '@prestashop.adapter.data_provider.module'
-      $moduleRepository: '@prestashop.core.admin.module.repository'
+      $moduleRepository: '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
 
   PrestaShopBundle\Form\Admin\Sell\Product\FooterType:
     arguments:
       $productUrlProvider: '@prestashop.adapter.shop.url.product_provider'
       $productPreviewUrlProvider: '@prestashop.adapter.shop.url.product_preview_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer:
-
   # Combination form types
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationManagerType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationAvailabilityType:
     arguments:
       $outOfStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationFormType:
     arguments:
       $combinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationHeaderType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType:
     arguments:
-      $taxComputer: '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
       $contextLocale: '@prestashop.core.localization.locale.context_locale'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationImagesChoiceType:
     arguments:
       $imagesChoiceProvider: '@prestashop.core.form.choice_provider.product_images_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationStockType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\LowStockThresholdType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType:
     arguments:
       $productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationReferencesType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationImagesType:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType:
     arguments:
       $themeCatalog: "@prestashop.core.mail_template.theme_catalog"
 
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates\OrderReturnStateType:
-  PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType:
-  PrestaShopBundle\Form\Admin\Type\UnavailableType:
-  PrestaShopBundle\Form\Admin\Type\SubmittableInputType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\SearchEngines\SearchEngineType:
-
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType:
     arguments:
-      $currencyChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType:
-
-  PrestaShopBundle\Form\Admin\Type\EntitySearchInputType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\AttachedFileType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\PasswordPolicyType:
   PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType:
 
   PrestaShopBundle\Form\Admin\Type\ZoneChoiceType:
@@ -743,9 +631,6 @@ services:
       $countriesChoiceProvider: '@prestashop.core.form.choice_provider.configurable_country_by_id'
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
-  PrestaShopBundle\Form\Admin\Type\DisablingSwitchType:
-  PrestaShopBundle\Form\Admin\Type\FormattedTextareaType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener:
     arguments:
       $featureValuesChoiceProvider: '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
@@ -757,12 +642,6 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener:
     arguments:
       - '@prestashop.adapter.legacy.hook'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener:
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener:
-  PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener:
-  PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener:
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener:
 
   PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider:
     arguments:
@@ -776,50 +655,60 @@ services:
       $resourceChoices: '@=service("prestashop.adapter.form.choice_provider.resources_choice_provider").getChoices()'
       $permissionChoices: '@=service("prestashop.core.form.choice_provider.permissions_choice_provider").getChoices()'
 
-  PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
+  PrestaShopBundle\Form\Admin\Type\FeatureChoiceType:
+    arguments:
+      $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
 
-  PrestaShopBundle\Form\Admin\Sell\CartRule\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
-
-  PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
-  PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType:
-  PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType:
-  PrestaShopBundle\Form\Admin\Type\ShippingInclusionChoiceType:
-  PrestaShopBundle\Form\Admin\Type\ProductSearchType:
-
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\TitleType:
-
-  # Deprecated
+  # Deprecated in 9.0.0
   form.type.sell.product.event_listener.categories_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
     public: true
     deprecated: ~
+  # Deprecated in 9.0.0
   form.type.sell.product.event_listener.feature_value_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
     public: true
     deprecated: ~
+  # Deprecated in 9.0.0
   form.event_listener.add_disabling_switch_listener:
     alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
     public: true
     deprecated: ~
+  # Deprecated in 9.0.0
   form.type.sell.product.event_listener.product_type_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
     public: true
     deprecated: ~
+  # Deprecated in 9.0.0
   form.event_listener.price_reduction:
     alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
     public: true
     deprecated: ~
+  # Deprecated in 9.0.0
   form.type.sell.product.toolbar_buttons_provider:
     alias: 'PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface'
     public: true
     deprecated: ~
+  # Deprecated in 9.0.0
   form.type.sell.product.event_listener.redirect_option_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
     public: true
     deprecated: ~
+  # Deprecated in 9.0.0
   form.type.sell.product.event_listener.combination_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
     public: true
     deprecated: ~
+
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType:
+    autowire: true
+    autoconfigure: true
+    public: false
+    arguments:
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"

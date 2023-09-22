@@ -215,11 +215,7 @@ class AddressController extends FrameworkBundleAdminController
      */
     private function getBulkAddressesFromRequest(Request $request): array
     {
-        $addressIds = $request->request->get('address_addresses_bulk');
-
-        if (!is_array($addressIds)) {
-            return [];
-        }
+        $addressIds = $request->request->all('address_addresses_bulk');
 
         foreach ($addressIds as $i => $addressId) {
             $addressIds[$i] = (int) $addressId;
@@ -620,7 +616,7 @@ class AddressController extends FrameworkBundleAdminController
                 $e instanceof BulkDeleteAddressException ? implode(', ', $e->getAddressIds()) : ''
             ),
             AddressNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotSetRequiredFieldsForAddressException::class => $this->trans(
@@ -677,15 +673,15 @@ class AddressController extends FrameworkBundleAdminController
                 ),
             ],
             CustomerNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CountryNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CustomerByEmailNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
         ];

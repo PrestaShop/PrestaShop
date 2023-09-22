@@ -20,7 +20,7 @@ export default class CountryData {
 
   public readonly isoCode: string;
 
-  public readonly callPrefix: number;
+  public readonly callPrefix: string;
 
   public readonly currency: string;
 
@@ -47,13 +47,13 @@ export default class CountryData {
     this.id = countryToCreate.id || 0;
 
     /** @type {string} Name of the country */
-    this.name = countryToCreate.name || `test${faker.address.country()}`;
+    this.name = countryToCreate.name || `test${faker.location.country()}`;
 
     /** @type {string} Country iso code */
-    this.isoCode = countryToCreate.isoCode || faker.address.countryCode();
+    this.isoCode = countryToCreate.isoCode || faker.location.countryCode();
 
-    /** @type {number} Country call Prefix */
-    this.callPrefix = countryToCreate.callPrefix || 0;
+    /** @type {string} Country call Prefix */
+    this.callPrefix = countryToCreate.callPrefix || '0';
 
     /** @type {string} Currency used in the country */
     this.currency = countryToCreate.currency || faker.helpers.arrayElement(currencies);

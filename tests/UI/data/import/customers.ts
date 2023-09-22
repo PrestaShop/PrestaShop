@@ -11,19 +11,19 @@ const records: ImportCustomer[] = [];
 
 function createRecord(): ImportCustomer[] {
   for (let i: number = 0; i < 10; i++) {
-    const lastName = faker.name.lastName();
+    const lastName = faker.person.lastName();
     records.push({
       id: i + 3,
-      active: faker.datatype.number({min: 0, max: 1}),
-      title: faker.datatype.number({min: 1, max: 2}),
+      active: faker.number.int({min: 0, max: 1}),
+      title: faker.number.int({min: 1, max: 2}),
       email: `test.${lastName}@prestashop.com`,
       password: faker.internet.password(),
-      birthdate: faker.date.between('1950-01-01', '2000-12-31').toISOString().slice(0, 10),
+      birthdate: faker.date.between({from: '1950-01-01', to: '2000-12-31'}).toISOString().slice(0, 10),
       lastName,
-      firstName: faker.name.firstName(),
-      newsletter: faker.datatype.number({min: 0, max: 1}),
-      optIn: faker.datatype.number({min: 0, max: 1}),
-      registrationDate: faker.date.past(2).toISOString().slice(0, 10),
+      firstName: faker.person.firstName(),
+      newsletter: faker.number.int({min: 0, max: 1}),
+      optIn: faker.number.int({min: 0, max: 1}),
+      registrationDate: faker.date.past({years: 2}).toISOString().slice(0, 10),
       groups: faker.helpers.arrayElement(groups),
       defaultGroup: faker.helpers.arrayElement(groups),
     });

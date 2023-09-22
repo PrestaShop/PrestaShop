@@ -1,7 +1,7 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
 
-import {Page} from 'playwright';
+import {Frame, Page} from 'playwright';
 
 /**
  * BO parent page, contains functions that can be used on all BO page
@@ -123,7 +123,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly modulesParentLink: string;
 
-  private readonly moduleCatalogueLink: string;
+  public readonly moduleCatalogueLink: string;
 
   public readonly moduleManagerLink: string;
 
@@ -135,7 +135,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly pagesLink: string;
 
-  private readonly positionsLink: string;
+  public readonly positionsLink: string;
 
   public readonly imageSettingsLink: string;
 
@@ -183,9 +183,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly informationLink: string;
 
-  private readonly performanceLink: string;
+  public readonly performanceLink: string;
 
-  private readonly administrationLink: string;
+  public readonly administrationLink: string;
 
   public readonly emailLink: string;
 
@@ -199,13 +199,15 @@ export default class BOBasePage extends CommonPage {
 
   public readonly logsLink: string;
 
+  public readonly authorizationServerLink: string;
+
   public readonly featureFlagLink: string;
 
   private readonly securityLink: string;
 
   public readonly multistoreLink: string;
 
-  private readonly menuTabLink: string;
+  public readonly menuTabLink: string;
 
   public readonly menuTree: { parent: string; children: string[] }[];
 
@@ -223,7 +225,7 @@ export default class BOBasePage extends CommonPage {
 
   protected alertBlockCloseButton: string;
 
-  protected readonly alertSuccessBlock: string;
+  protected alertSuccessBlock: string;
 
   private readonly alertDangerBlock: string;
 
@@ -253,6 +255,8 @@ export default class BOBasePage extends CommonPage {
 
   private readonly invalidTokenCancelLink: string;
 
+  public readonly debugModeToolbar: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on all BO pages
@@ -264,7 +268,7 @@ export default class BOBasePage extends CommonPage {
     this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateMessage = 'Successful update';
     this.successfulDeleteMessage = 'Successful deletion';
-    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted';
+    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
     // Access denied message
     this.accessDeniedMessage = 'Access denied';
@@ -303,6 +307,8 @@ export default class BOBasePage extends CommonPage {
     this.navbarCollapsed = (isCollapsed) => `body${isCollapsed
       ? '.page-sidebar-closed'
       : ':not(.page-sidebar-closed)'}`;
+
+    this.debugModeToolbar = 'div[id*=sfToolbarMainContent]';
 
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';
@@ -434,6 +440,8 @@ export default class BOBasePage extends CommonPage {
     this.webserviceLink = '#subtab-AdminWebservice';
     // Logs
     this.logsLink = '#subtab-AdminLogs';
+    // Authorization Server
+    this.authorizationServerLink = '#subtab-AdminAuthorizationServer';
     // New & Experimental Features
     this.featureFlagLink = '#subtab-AdminFeatureFlag';
     // Security
@@ -563,7 +571,7 @@ export default class BOBasePage extends CommonPage {
 
     // Symfony Toolbar
     this.sfToolbarMainContentDiv = "div[id*='sfToolbarMainContent']";
-    this.sfCloseToolbarLink = "a[id*='sfToolbarHideButton']";
+    this.sfCloseToolbarLink = "button[id*='sfToolbarHideButton']";
 
     // Sidebar
     this.rightSidebar = '#right-sidebar';
@@ -582,7 +590,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    */
   async goToDashboardPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.dashboardLink);
+    await this.clickAndWaitForURL(page, this.dashboardLink);
   }
 
   /**
@@ -593,7 +601,7 @@ export default class BOBasePage extends CommonPage {
    */
   async quickAccessToPage(page: Page, linkId: number): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
+    await this.clickAndWaitForURL(page, this.quickAccessLink(linkId));
     await this.waitForPageTitleToLoad(page);
   }
 
@@ -641,7 +649,7 @@ export default class BOBasePage extends CommonPage {
    */
   async goToManageQuickAccessPage(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.clickAndWaitForNavigation(page, this.manageYourQuickAccessLink);
+    await this.clickAndWaitForURL(page, this.manageYourQuickAccessLink);
   }
 
   /**
@@ -654,7 +662,7 @@ export default class BOBasePage extends CommonPage {
   async goToSubMenu(page: Page, parentSelector: string, linkSelector: string): Promise<void> {
     await this.clickSubMenu(page, parentSelector);
     await this.scrollTo(page, linkSelector);
-    await this.clickAndWaitForNavigation(page, linkSelector);
+    await this.clickAndWaitForURL(page, linkSelector);
     if (await this.isSidebarCollapsed(page)) {
       await this.waitForHiddenSelector(page, `${linkSelector}.link-active`);
     } else {
@@ -806,7 +814,7 @@ export default class BOBasePage extends CommonPage {
    * @param row {number} row in notification tab
    */
   async clickOnNotification(page: Page, tabName: string, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.notificationRowInTab(tabName, row));
+    await this.clickAndWaitForURL(page, this.notificationRowInTab(tabName, row));
   }
 
   /**
@@ -825,7 +833,7 @@ export default class BOBasePage extends CommonPage {
     } else {
       await this.waitForVisibleSelector(page, this.userProfileYourProfileLinkNonMigratedPages);
     }
-    await this.clickAndWaitForNavigation(page, this.userProfileYourProfileLink);
+    await this.clickAndWaitForURL(page, this.userProfileYourProfileLink);
   }
 
   /**
@@ -855,7 +863,7 @@ export default class BOBasePage extends CommonPage {
       await page.click(this.userProfileIconNonMigratedPages);
     }
     await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
-    await this.clickAndWaitForNavigation(page, this.userProfileLogoutLink);
+    await this.clickAndWaitForURL(page, this.userProfileLogoutLink);
   }
 
   /**
@@ -891,10 +899,10 @@ export default class BOBasePage extends CommonPage {
 
   /**
    * Close symfony Toolbar
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @return {Promise<void>}
    */
-  async closeSfToolBar(page: Page): Promise<void> {
+  async closeSfToolBar(page: Frame|Page): Promise<void> {
     if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await page.click(this.sfCloseToolbarLink);
     }
@@ -923,9 +931,9 @@ export default class BOBasePage extends CommonPage {
   /**
    * Get help document URL
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getHelpDocumentURL(page: Page): Promise<string | null> {
+  async getHelpDocumentURL(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.helpDocumentURL, 'data');
   }
 
@@ -935,7 +943,7 @@ export default class BOBasePage extends CommonPage {
    * @param timeout {number} Timeout to wait for the selector
    * @return {Promise<string|null>}
    */
-  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
+  async getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
     return page.textContent(this.growlMessageBlock, {timeout});
   }
 
@@ -961,11 +969,23 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Close alert block
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async closeAlertBlock(page: Page): Promise<void> {
+    if (await this.elementVisible(page, this.alertBlockCloseButton, 1000)) {
+      await this.waitForSelectorAndClick(page, this.alertBlockCloseButton);
+    }
+  }
+
+  /**
    * Get error message from alert danger block
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertDangerBlockParagraphContent(page: Page): Promise<string> {
+  async getAlertDangerBlockParagraphContent(page: Page): Promise<string> {
+    await this.elementVisible(page, this.alertDangerBlockParagraph, 2000);
     return this.getTextContent(page, this.alertDangerBlockParagraph);
   }
 
@@ -975,24 +995,27 @@ export default class BOBasePage extends CommonPage {
    * @return {Promise<string>}
    */
   async getAlertBlockContent(page: Page): Promise<string> {
+    await this.elementVisible(page, this.alertTextBlock, 2000);
     return this.getTextContent(page, this.alertTextBlock);
   }
 
   /**
    * Get text content of alert success block
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockContent(page: Page): Promise<string> {
+  async getAlertSuccessBlockContent(page: Frame|Page): Promise<string> {
+    await this.elementVisible(page, this.alertSuccessBlock, 2000);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Get text content of alert success block paragraph
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockParagraphContent(page: Page): Promise<string> {
+  async getAlertSuccessBlockParagraphContent(page: Frame|Page): Promise<string> {
+    await this.elementVisible(page, this.alertSuccessBlockParagraph, 2000);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -1001,12 +1024,13 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertInfoBlockParagraphContent(page: Page): Promise<string> {
+  async getAlertInfoBlockParagraphContent(page: Page): Promise<string> {
+    await this.elementVisible(page, this.alertInfoBlockParagraph, 2000);
     return this.getTextContent(page, this.alertInfoBlockParagraph);
   }
 
   /**
-   * Navigate to Bo page without token
+   * Navigate to BO page without token
    * @param page {Page} Browser tab
    * @param url {string} Url to BO page
    * @param continueToPage {boolean} True to continue false to cancel and return to dashboard page
@@ -1015,7 +1039,7 @@ export default class BOBasePage extends CommonPage {
   async navigateToPageWithInvalidToken(page: Page, url: string, continueToPage: boolean = true): Promise<void> {
     await this.goTo(page, url);
     if (await this.elementVisible(page, this.invalidTokenContinueLink, 10000)) {
-      await this.clickAndWaitForNavigation(
+      await this.clickAndWaitForURL(
         page,
         continueToPage ? this.invalidTokenContinueLink : this.invalidTokenCancelLink,
       );
@@ -1031,7 +1055,7 @@ export default class BOBasePage extends CommonPage {
   async search(page: Page, query: string): Promise<void> {
     await this.setValue(page, this.navbarSearchInput, query);
     await page.keyboard.press('Enter');
-    await page.waitForNavigation({waitUntil: 'networkidle'});
+    await page.waitForSelector(this.navbarSearchInput);
   }
 
   /**

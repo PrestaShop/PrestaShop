@@ -18,7 +18,7 @@ const baseContext: string = 'functional_BO_advancedParameters_import_downloadSam
 describe('BO - Advanced Parameters - Import : Download sample csv files', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {
@@ -45,7 +45,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
     await importPage.closeSfToolBar(page);
 
     const pageTitle = await importPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(importPage.pageTitle);
+    expect(pageTitle).to.contains(importPage.pageTitle);
   });
 
   const sampleFiles = [
@@ -63,7 +63,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
           type: 'products_import',
           textToCheck: 'Product ID;Active (0/1);Name *;Categories (x,y,z...);Price tax excluded;Tax rules ID;'
             + 'Wholesale price;On sale (0/1);Discount amount;Discount percent;Discount from (yyyy-mm-dd);'
-            + 'Discount to (yyyy-mm-dd);Reference #;Supplier reference #;Supplier;Manufacturer;EAN13;UPC;Ecotax;'
+            + 'Discount to (yyyy-mm-dd);Reference #;Supplier reference #;Supplier;Manufacturer;EAN13;UPC;MPN;Ecotax;'
             + 'Width;Height;Depth;Weight;Delivery time of in-stock products;'
             + 'Delivery time of out-of-stock products with allowed',
         },
@@ -136,14 +136,14 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
         filePath = await importPage.downloadSampleFile(page, sampleFile.args.type);
 
         const doesFileExist = await files.doesFileExist(filePath);
-        await expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
+        expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.eq(true);
       });
 
       it(`should check ${sampleFile.args.type} sample text file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}checkTextFile`, baseContext);
 
         const textExist = await files.isTextInFile(filePath, sampleFile.args.textToCheck);
-        await expect(textExist, `Text was not found in ${sampleFile.args.type} sample file`).to.be.true;
+        expect(textExist, `Text was not found in ${sampleFile.args.type} sample file`).to.eq(true);
       });
     });
   });

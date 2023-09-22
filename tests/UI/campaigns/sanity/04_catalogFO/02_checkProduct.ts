@@ -2,6 +2,14 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {
+  setFeatureFlag,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
+
+// Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
@@ -11,10 +19,6 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {
-  disableNewProductPageTest,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_catalogFO_checkProduct';
 
@@ -27,7 +31,7 @@ describe('FO - Catalog : Check the Product page', async () => {
   let page: Page;
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -47,7 +51,7 @@ describe('FO - Catalog : Check the Product page', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to the first product page', async function () {
@@ -56,7 +60,7 @@ describe('FO - Catalog : Check the Product page', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should check the product page', async function () {

@@ -1,8 +1,7 @@
-import 'module-alias/register';
 import helper from '@utils/helpers';
 import files from '@utils/files';
 
-let screenshotNumber = 1;
+let screenshotNumber: number = 1;
 
 /**
  * @module MochaHelper

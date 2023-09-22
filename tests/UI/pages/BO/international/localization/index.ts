@@ -81,7 +81,12 @@ class Localization extends LocalizationBasePage {
    * @param downloadPackData {boolean} True if we need to download pack data
    * @return {Promise<string>}
    */
-  async importLocalizationPack(page: Page, country: string, contentToImport, downloadPackData: boolean = true): Promise<string> {
+  async importLocalizationPack(
+    page: Page,
+    country: string,
+    contentToImport: ImportContent,
+    downloadPackData: boolean = true,
+  ): Promise<string> {
     // Choose which country to import
     await this.selectByVisibleText(page, this.importlocalizationPackSelect, country);
 
@@ -101,7 +106,7 @@ class Localization extends LocalizationBasePage {
     await this.setChecked(page, this.downloadPackDataToggleInput(downloadPackData ? 1 : 0));
 
     // Import the pack
-    await this.clickAndWaitForNavigation(page, this.importButton);
+    await page.click(this.importButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -116,7 +121,7 @@ class Localization extends LocalizationBasePage {
   async setDefaultLanguage(page: Page, language: string, languageFromBrowser: boolean = true): Promise<string> {
     await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
     await this.setChecked(page, this.languageFromBrowserToggleInput(languageFromBrowser ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
+    await page.click(this.saveConfigurationFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -143,7 +148,7 @@ class Localization extends LocalizationBasePage {
    */
   async setDefaultCountry(page: Page, country: string): Promise<string> {
     await this.selectByVisibleText(page, this.defaultCountrySelect, country);
-    await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
+    await page.click(this.saveConfigurationFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

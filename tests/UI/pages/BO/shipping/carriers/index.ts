@@ -183,7 +183,7 @@ class Carriers extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewCarrierPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewCarrierLink);
+    await this.clickAndWaitForURL(page, this.addNewCarrierLink);
   }
 
   /* Filter methods */
@@ -204,7 +204,7 @@ class Carriers extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
@@ -228,15 +228,17 @@ class Carriers extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
@@ -255,7 +257,7 @@ class Carriers extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditCarrierPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditLink(row));
   }
 
   /**
@@ -263,9 +265,9 @@ class Carriers extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row index in the table
    * @param columnName {string} Column name in the table
-   * @return {Promise<string|null>}
+   * @return {Promise<string>}
    */
-  async getTextColumn(page: Page, row: number, columnName: string): Promise<string | null> {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (columnName) {
@@ -318,7 +320,7 @@ class Carriers extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockContent(page);
@@ -329,11 +331,11 @@ class Carriers extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name in the table
-   * @return {Promise<(string|null)[]>}
+   * @return {Promise<string[]>}
    */
-  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string | null)[]> {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable: (string | null)[] = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
@@ -371,7 +373,7 @@ class Carriers extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   /* Pagination methods */
@@ -402,7 +404,7 @@ class Carriers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
 
@@ -412,7 +414,7 @@ class Carriers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
 
@@ -443,7 +445,7 @@ class Carriers extends BOBasePage {
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
@@ -474,9 +476,9 @@ class Carriers extends BOBasePage {
     ]);
 
     if (action === 'Enable') {
-      await this.clickAndWaitForNavigation(page, this.bulkEnableLink);
+      await this.clickAndWaitForURL(page, this.bulkEnableLink);
     } else {
-      await this.clickAndWaitForNavigation(page, this.bulkDisableLink);
+      await this.clickAndWaitForURL(page, this.bulkDisableLink);
     }
 
     // Return successful message
@@ -504,7 +506,7 @@ class Carriers extends BOBasePage {
     await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
 
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.tableColumnActive(row));
+      await page.click(this.tableColumnActive(row));
       return true;
     }
 

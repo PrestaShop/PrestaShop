@@ -59,7 +59,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
@@ -68,7 +68,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     numberOfSQLQueries = await sqlManagerPage.resetAndGetNumberOfLines(page);
 
     if (numberOfSQLQueries !== 0) {
-      await expect(numberOfSQLQueries).to.be.above(0);
+      expect(numberOfSQLQueries).to.be.above(0);
     }
   });
 
@@ -84,17 +84,17 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
         await sqlManagerPage.goToNewSQLQueryPage(page);
 
         const pageTitle = await addSqlQueryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+        expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
       });
 
       it(`should create SQL query n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderStatus${index}`, baseContext);
 
         const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
-        await expect(textResult).to.contains(sqlManagerPage.successfulCreationMessage);
+        expect(textResult).to.contains(sqlManagerPage.successfulCreationMessage);
 
         const numberOfLinesAfterCreation = await sqlManagerPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterCreation).to.be.equal(numberOfSQLQueries + index + 1);
+        expect(numberOfLinesAfterCreation).to.be.equal(numberOfSQLQueries + index + 1);
       });
     });
   });
@@ -166,11 +166,11 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
         await sqlManagerPage.filterSQLQuery(page, test.args.filterBy, test.args.filterValue);
 
         const numberOfLinesAfterFilter = await sqlManagerPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfSQLQueries + 11);
+        expect(numberOfLinesAfterFilter).to.be.at.most(numberOfSQLQueries + 11);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           const textColumn = await sqlManagerPage.getTextColumnFromTable(page, row, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -178,7 +178,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter${index}`, baseContext);
 
         numberOfSQLQueries = await sqlManagerPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfSQLQueries).to.be.above(0);
+        expect(numberOfSQLQueries).to.be.above(0);
       });
     });
   });
@@ -233,17 +233,17 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -258,21 +258,21 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
       await sqlManagerPage.filterSQLQuery(page, 'name', 'todelete');
 
       const textResult = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textResult).to.contains('todelete');
+      expect(textResult).to.contains('todelete');
     });
 
     it('should delete categories with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await sqlManagerPage.deleteWithBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(sqlManagerPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(sqlManagerPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfLinesAfterReset = await sqlManagerPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLinesAfterReset).to.equal(numberOfSQLQueries - 11);
+      expect(numberOfLinesAfterReset).to.equal(numberOfSQLQueries - 11);
     });
   });
 });

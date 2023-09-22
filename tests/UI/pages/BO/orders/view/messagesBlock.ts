@@ -1,6 +1,7 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import type {Page} from 'playwright';
+import {OrderMessage} from '@data/types/order';
 
 /**
  * Messages block, contains functions that can be used on view/edit messages block on view order page
@@ -66,14 +67,12 @@ class MessagesBlock extends ViewOrderBasePage {
   /**
    * Send message
    * @param page {Page} Browser tab
-   * @param messageData {{orderMessage: string, displayToCustomer : boolean, message : string}} Data to set on the form
+   * @param messageData {OrderMessage} Data to set on the form
    * @returns {Promise<string>}
    */
-  async sendMessage(page: Page, messageData): Promise<string> {
+  async sendMessage(page: Page, messageData: OrderMessage): Promise<string> {
     await this.selectByVisibleText(page, this.orderMessageSelect, messageData.orderMessage);
-    if (messageData.displayToCustomer) {
-      await this.setChecked(page, this.displayToCustometCheckbox, messageData.displayToCustomer);
-    }
+    await this.setChecked(page, this.displayToCustometCheckbox, messageData.displayToCustomer);
 
     if (messageData.message !== '') {
       await this.setValue(page, this.messageTextarea, messageData.message);
@@ -149,7 +148,7 @@ class MessagesBlock extends ViewOrderBasePage {
    * @returns {Promise<void>}
    */
   async clickOnConfigureMessageLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.configureLink);
+    await this.clickAndWaitForURL(page, this.configureLink);
   }
 }
 

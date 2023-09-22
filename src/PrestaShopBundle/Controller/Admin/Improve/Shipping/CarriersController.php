@@ -116,6 +116,8 @@ class CarriersController extends FrameworkBundleAdminController
     /**
      * Redirect to carrier wizard for carrier editing.
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param int $carrierId
      *
      * @return RedirectResponse
@@ -132,12 +134,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param int $carrierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function deleteAction(int $carrierId): RedirectResponse
     {
         try {
@@ -159,12 +161,11 @@ class CarriersController extends FrameworkBundleAdminController
      *     message="You need permission to edit this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
      * @param int $carrierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function toggleStatusAction(int $carrierId): RedirectResponse
     {
         try {
@@ -190,12 +191,11 @@ class CarriersController extends FrameworkBundleAdminController
      *     message="You need permission to edit this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
      * @param int $carrierId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function toggleIsFreeAction(int $carrierId): RedirectResponse
     {
         try {
@@ -221,12 +221,11 @@ class CarriersController extends FrameworkBundleAdminController
      *     message="You need permission to edit this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function updatePositionAction(Request $request): RedirectResponse
     {
         $positionsData = [
@@ -256,12 +255,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
@@ -286,12 +285,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function bulkEnableStatusAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
@@ -316,12 +315,12 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function bulkDisableStatusAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
@@ -343,7 +342,7 @@ class CarriersController extends FrameworkBundleAdminController
     {
         return [
             CarrierNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotToggleCarrierStatusException::class => [
@@ -393,11 +392,7 @@ class CarriersController extends FrameworkBundleAdminController
      */
     private function getCarrierIdsFromRequest(Request $request): array
     {
-        $carrierIds = $request->request->get('carrier_bulk');
-
-        if (!is_array($carrierIds)) {
-            return [];
-        }
+        $carrierIds = $request->request->all('carrier_bulk');
 
         foreach ($carrierIds as $i => $carrierId) {
             $carrierIds[$i] = (int) $carrierId;

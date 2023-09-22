@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Addresses extends FOBasePage {
+class AddressesPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly addressPageTitle: string;
@@ -35,8 +35,8 @@ class Addresses extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on addresses page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Addresses';
     this.addressPageTitle = 'Address';
@@ -64,7 +64,7 @@ class Addresses extends FOBasePage {
    */
   async openNewAddressForm(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.createNewAddressLink, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.createNewAddressLink);
+      await this.clickAndWaitForURL(page, this.createNewAddressLink);
     }
   }
 
@@ -91,10 +91,12 @@ class Addresses extends FOBasePage {
    */
   async goToEditAddressPage(page: Page, position: string | number = 'last'): Promise<void> {
     const editButtons = await page.$$(this.editAddressLink);
+    const positionEditButtons: number = typeof position === 'string' ? (editButtons.length - 1) : (position - 1);
+    const currentUrl: string = page.url();
 
     await Promise.all([
-      page.waitForNavigation('networkidle'),
-      editButtons[position === 'last' ? (editButtons.length - 1) : (position - 1)].click(),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
+      editButtons[positionEditButtons].click(),
     ]);
   }
 
@@ -106,16 +108,16 @@ class Addresses extends FOBasePage {
    */
   async deleteAddress(page: Page, position: string | number = 'last'): Promise<string> {
     const deleteButtons = await page.$$(this.deleteAddressLink);
+    const positionDeleteButtons: number = typeof position === 'string' ? (deleteButtons.length - 1) : (position - 1);
 
     await Promise.all([
-      page.waitForNavigation({
-        waitUntil: 'networkidle',
-      }),
-      deleteButtons[position === 'last' ? (deleteButtons.length - 1) : (position - 1)].click(),
+      page.waitForLoadState(),
+      deleteButtons[positionDeleteButtons].click(),
     ]);
 
     return this.getTextContent(page, this.notificationsBlock);
   }
 }
 
-export default new Addresses();
+const addressesPage = new AddressesPage();
+export {addressesPage, AddressesPage};

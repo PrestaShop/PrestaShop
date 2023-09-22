@@ -25,8 +25,8 @@
  */
 
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 
 /**
  * @property ImageType $object
@@ -83,17 +83,23 @@ class AdminImagesControllerCore extends AdminController
         parent::init();
 
         $this->canGenerateAvif = $this->get('PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker')->isAvailable();
-        $this->isMultipleImageFormatFeatureEnabled = $this->get(FeatureFlagRepository::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+        $this->isMultipleImageFormatFeatureEnabled = $this->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
         $this->imageFormatConfiguration = $this->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
 
         $formFields = [];
 
         if ($this->isMultipleImageFormatFeatureEnabled) {
+            /* We will disable few image formats
+             * Base JPG is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
+             * AVIF support depends on platform - PHP version and required libraries available
+             */
             $imageFormatsDisabled = [];
-            $imageFormatsDisabled['jpg'] = true; // jpg is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
-            if (false === $this->canGenerateAvif) {
+            $imageFormatsDisabled['jpg'] = true;
+            if (!$this->canGenerateAvif) {
                 $imageFormatsDisabled['avif'] = true;
             }
+
+            // Load configured formats to see what to check
             $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
             $fields = [
@@ -242,15 +248,6 @@ class AdminImagesControllerCore extends AdminController
                 'type' => 'text',
                 'height' => 'px',
                 'suffix' => $this->trans('pixels', [], 'Admin.Design.Feature'),
-                'visibility' => Shop::CONTEXT_ALL,
-            ],
-            'PS_HIGHT_DPI' => [
-                'type' => 'bool',
-                'title' => $this->trans('Generate high resolution images', [], 'Admin.Design.Feature'),
-                'required' => false,
-                'is_bool' => true,
-                'hint' => $this->trans('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.', [], 'Admin.Design.Help'),
-                'desc' => $this->trans('Enable to optimize the display of your images on high pixel density screens.', [], 'Admin.Design.Help'),
                 'visibility' => Shop::CONTEXT_ALL,
             ],
         ];
@@ -450,6 +447,19 @@ class AdminImagesControllerCore extends AdminController
         ];
     }
 
+    public function beforeUpdateOptions()
+    {
+        // Unset AVIF if not supported, add JPG if missing
+        foreach ($_POST['PS_IMAGE_FORMAT'] as $k => $v) {
+            if ($v == 'avif' && !$this->canGenerateAvif) {
+                unset($_POST['PS_IMAGE_FORMAT'][$k]);
+            }
+        }
+        if (!in_array('jpg', $_POST['PS_IMAGE_FORMAT'])) {
+            $_POST['PS_IMAGE_FORMAT'][] = 'jpg';
+        }
+    }
+
     public function updateOptionPsImageFormat($value): void
     {
         if ($this->access('edit') != '1') {
@@ -630,9 +640,6 @@ class AdminImagesControllerCore extends AdminController
             return false;
         }
 
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
@@ -680,17 +687,6 @@ class AdminImagesControllerCore extends AdminController
                                         )) {
                                         $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                     }
-
-                                    if ($generate_high_dpi_images && !ImageManager::resize(
-                                        $dir . $image,
-                                        $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                        (int) $imageType['width'] * 2,
-                                        (int) $imageType['height'] * 2,
-                                        $imageFormat,
-                                        $forceFormat
-                                    )) {
-                                        $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
-                                    }
                                 }
                             }
                         }
@@ -731,27 +727,6 @@ class AdminImagesControllerCore extends AdminController
                                     );
                                 }
                             }
-                            if ($generate_high_dpi_images) {
-                                if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat)) {
-                                    if (!ImageManager::resize(
-                                            $existing_img,
-                                            $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                            (int) $imageType['width'] * 2,
-                                            (int) $imageType['height'] * 2,
-                                            $imageFormat,
-                                            $forceFormat
-                                        )) {
-                                        $this->errors[] = $this->trans(
-                                            'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
-                                            [
-                                                '%filename%' => $existing_img,
-                                                '%id%' => (int) $imageObj->id_product,
-                                            ],
-                                            'Admin.Design.Notification'
-                                        );
-                                    }
-                                }
-                            }
                         }
                     }
                 } else {
@@ -786,9 +761,6 @@ class AdminImagesControllerCore extends AdminController
     {
         $errors = false;
 
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
@@ -817,16 +789,6 @@ class AdminImagesControllerCore extends AdminController
                             $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat,
                             (int) $image_type['width'],
                             (int) $image_type['height'],
-                            $imageFormat,
-                            $forceFormat
-                        )) {
-                            $errors = true;
-                        }
-                        if ($generate_high_dpi_images && !ImageManager::resize(
-                            $file,
-                            $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat,
-                            (int) $image_type['width'] * 2,
-                            (int) $image_type['height'] * 2,
                             $imageFormat,
                             $forceFormat
                         )) {
@@ -969,6 +931,11 @@ class AdminImagesControllerCore extends AdminController
         return count($this->errors) > 0 ? false : true;
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if ($this->display != 'edit' && $this->display != 'add') {

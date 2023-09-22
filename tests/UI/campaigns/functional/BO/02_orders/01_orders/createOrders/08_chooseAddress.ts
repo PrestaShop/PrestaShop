@@ -16,9 +16,9 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -93,7 +93,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
@@ -102,7 +102,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await ordersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
     it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
@@ -111,7 +111,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-      await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+      expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
 
     it('should add to cart the product \'demo_12\' and check details', async function () {
@@ -134,7 +134,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseCreatedDeliveryAddress', baseContext);
 
       const newAddress = await addOrderPage.chooseDeliveryAddress(page, newAddressToCreate.alias);
-      await expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
+      expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
         + `${newAddressToCreate.company}${newAddressToCreate.address}${newAddressToCreate.secondAddress}`
         + `${newAddressToCreate.postalCode} ${newAddressToCreate.city}${newAddressToCreate.country}`
         + `${newAddressToCreate.phone}`);
@@ -144,7 +144,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseCreatedInvoiceAddress', baseContext);
 
       const newAddress = await addOrderPage.chooseInvoiceAddress(page, newAddressToCreate.alias);
-      await expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
+      expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
         + `${newAddressToCreate.company}${newAddressToCreate.address}${newAddressToCreate.secondAddress}`
         + `${newAddressToCreate.postalCode} ${newAddressToCreate.city}${newAddressToCreate.country}`
         + `${newAddressToCreate.phone}`);
@@ -156,14 +156,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, OrderStatuses.paymentAccepted);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
 
     it('should get the order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
 
       orderID = await orderPageCustomerBlock.getOrderID(page);
-      await expect(orderID).to.be.at.least(5);
+      expect(orderID).to.be.at.least(5);
     });
   });
 
@@ -179,7 +179,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
@@ -188,7 +188,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await ordersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
     it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
@@ -197,14 +197,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-      await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+      expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
 
     it(`should choose the delivery address '${newAddressToCreate.alias}' and check details`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseCreatedDeliveryAddress2', baseContext);
 
       const newAddress = await addOrderPage.chooseDeliveryAddress(page, newAddressToCreate.alias);
-      await expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
+      expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
         + `${newAddressToCreate.company}${newAddressToCreate.address}${newAddressToCreate.secondAddress}`
         + `${newAddressToCreate.postalCode} ${newAddressToCreate.city}${newAddressToCreate.country}`
         + `${newAddressToCreate.phone}`);
@@ -214,7 +214,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseCreatedInvoiceAddress2', baseContext);
 
       const newAddress = await addOrderPage.chooseInvoiceAddress(page, newAddressToCreate.alias);
-      await expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
+      expect(newAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
         + `${newAddressToCreate.company}${newAddressToCreate.address}${newAddressToCreate.secondAddress}`
         + `${newAddressToCreate.postalCode} ${newAddressToCreate.city}${newAddressToCreate.country}`
         + `${newAddressToCreate.phone}`);
@@ -228,17 +228,19 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditAddress', baseContext);
 
         const isIframeVisible = await addOrderPage.clickOnEditDeliveryAddressButton(page);
-        await expect(isIframeVisible, 'Edit address iframe is not visible!').to.be.true;
+        expect(isIframeVisible, 'Edit address iframe is not visible!').to.eq(true);
       });
 
       it('should edit the address and check it', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAddress', baseContext);
 
         editAddressIframe = await addOrderPage.getEditAddressIframe(page);
-        await addAddressPage.createEditAddress(editAddressIframe, addressToEditData, true, false);
+        expect(editAddressIframe).to.not.eq(null);
+
+        await addAddressPage.createEditAddress(editAddressIframe!, addressToEditData, true, false);
 
         const editedAddress = await addOrderPage.getDeliveryAddressDetails(page);
-        await expect(editedAddress).to.be.equal(`${addressToEditData.firstName} ${addressToEditData.lastName}`
+        expect(editedAddress).to.be.equal(`${addressToEditData.firstName} ${addressToEditData.lastName}`
           + `${addressToEditData.company}${addressToEditData.address}${addressToEditData.secondAddress}`
           + `${addressToEditData.postalCode} ${addressToEditData.city}${addressToEditData.country}`
           + `${addressToEditData.phone}`);
@@ -256,16 +258,16 @@ describe('BO - Orders - Create order : Choose address', async () => {
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should filter the list by order ID', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterOrdersTableByID', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'id_order', orderID);
+        await ordersPage.filterOrders(page, 'input', 'id_order', orderID.toString());
 
         const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfOrdersAfterFilter).to.be.equal(1);
+        expect(numberOfOrdersAfterFilter).to.be.equal(1);
       });
 
       it('should view the order', async function () {
@@ -274,14 +276,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await ordersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
       });
 
       it('should check the shipping address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
 
         const shippingAddress = await orderPageCustomerBlock.getShippingAddress(page);
-        await expect(shippingAddress)
+        expect(shippingAddress)
           .to.contain(newAddressToCreate.firstName)
           .and.to.contain(newAddressToCreate.lastName)
           .and.to.contain(newAddressToCreate.address)
@@ -295,7 +297,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddress', baseContext);
 
         const shippingAddress = await orderPageCustomerBlock.getInvoiceAddress(page);
-        await expect(shippingAddress)
+        expect(shippingAddress)
           .to.contain(newAddressToCreate.firstName)
           .and.to.contain(newAddressToCreate.lastName)
           .and.to.contain(newAddressToCreate.address)
@@ -316,7 +318,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+        expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to login page', async function () {
@@ -325,7 +327,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await homePage.goToLoginPage(page);
 
         const pageTitle = await foLoginPage.getPageTitle(page);
-        await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+        expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
       });
 
       it('should sign in with customer credentials', async function () {
@@ -334,7 +336,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await foLoginPage.customerLogin(page, Customers.johnDoe);
 
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-        await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+        expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
       });
 
       it('should go to account page', async function () {
@@ -343,7 +345,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await homePage.goToMyAccountPage(page);
 
         const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+        expect(pageTitle).to.contains(myAccountPage.pageTitle);
       });
 
       it('should go to \'Order history and details\' page', async function () {
@@ -352,7 +354,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await myAccountPage.goToHistoryAndDetailsPage(page);
 
         const pageTitle = await orderHistoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+        expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
       });
 
       it('should click on details link of the first created order and check the delivery address', async function () {
@@ -361,7 +363,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await orderHistoryPage.goToOrderDetailsPage(page, orderID);
 
         const deliveryAddress = await orderDetailsPage.getDeliveryAddress(page);
-        await expect(deliveryAddress).to.contain(newAddressToCreate.firstName)
+        expect(deliveryAddress).to.contain(newAddressToCreate.firstName)
           .and.to.contain(newAddressToCreate.lastName)
           .and.to.contain(newAddressToCreate.address)
           .and.to.contain(newAddressToCreate.postalCode)
@@ -374,7 +376,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddressFO', baseContext);
 
         const deliveryAddress = await orderDetailsPage.getInvoiceAddress(page);
-        await expect(deliveryAddress).to.contain(newAddressToCreate.firstName)
+        expect(deliveryAddress).to.contain(newAddressToCreate.firstName)
           .and.to.contain(newAddressToCreate.lastName)
           .and.to.contain(newAddressToCreate.address)
           .and.to.contain(newAddressToCreate.postalCode)
@@ -389,7 +391,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         page = await orderDetailsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
       });
     });
 
@@ -404,7 +406,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should go to create order page', async function () {
@@ -413,7 +415,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await ordersPage.goToCreateOrderPage(page);
 
         const pageTitle = await addOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+        expect(pageTitle).to.contains(addOrderPage.pageTitle);
       });
 
       it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
@@ -422,14 +424,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
         const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-        await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+        expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
       });
 
       it(`should choose the address '${addressToEditData.alias}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'chooseMyAddress', baseContext);
 
         const editedAddress = await addOrderPage.chooseInvoiceAddress(page, addressToEditData.alias);
-        await expect(editedAddress).to.be.equal(`${addressToEditData.firstName} ${addressToEditData.lastName}`
+        expect(editedAddress).to.be.equal(`${addressToEditData.firstName} ${addressToEditData.lastName}`
           + `${addressToEditData.company}${addressToEditData.address}${addressToEditData.secondAddress}`
           + `${addressToEditData.postalCode} ${addressToEditData.city}${addressToEditData.country}`
           + `${addressToEditData.phone}`);
@@ -439,18 +441,19 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditAddress2', baseContext);
 
         const isIframeVisible = await addOrderPage.clickOnEditInvoiceAddressButton(page);
-        await expect(isIframeVisible, 'Edit address iframe is not visible!').to.be.true;
+        expect(isIframeVisible, 'Edit address iframe is not visible!').to.eq(true);
       });
 
       it('should edit the address and check it', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAddress2', baseContext);
 
         editAddressIframe = await addOrderPage.getEditAddressIframe(page);
+        expect(editAddressIframe).to.not.eq(null);
 
-        await addAddressPage.createEditAddress(editAddressIframe, newAddressToCreate, true, false);
+        await addAddressPage.createEditAddress(editAddressIframe!, newAddressToCreate, true, false);
 
         const editedAddress = await addOrderPage.getInvoiceAddressDetails(page);
-        await expect(editedAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
+        expect(editedAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
           + `${newAddressToCreate.company}${newAddressToCreate.address}${newAddressToCreate.secondAddress}`
           + `${newAddressToCreate.postalCode} ${newAddressToCreate.city}${newAddressToCreate.country}`
           + `${newAddressToCreate.phone}`);
@@ -464,24 +467,26 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditAddress3', baseContext);
 
       const isIframeVisible = await addOrderPage.clickOnAddNewAddressButton(page);
-      await expect(isIframeVisible, 'Add address iframe is not visible!').to.be.true;
+      expect(isIframeVisible, 'Add address iframe is not visible!').to.eq(true);
     });
 
     it('should add new address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addNewAddress', baseContext);
 
       addAddressIframe = await addOrderPage.getAddAddressIframe(page);
-      await addAddressPage.createEditAddress(addAddressIframe, newAddressData, true, false);
+      expect(addAddressIframe).to.not.eq(null);
+
+      await addAddressPage.createEditAddress(addAddressIframe!, newAddressData, true, false);
 
       const deliveryAddress = await addOrderPage.getDeliveryAddressList(page);
-      await expect(deliveryAddress).to.contains(newAddressData.alias);
+      expect(deliveryAddress).to.contains(newAddressData.alias);
     });
 
     it('should choose the new delivery address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseNewDeliveryAddress', baseContext);
 
       const newAddress = await addOrderPage.chooseDeliveryAddress(page, newAddressData.alias);
-      await expect(newAddress).to.be.equal(`${newAddressData.firstName} ${newAddressData.lastName}`
+      expect(newAddress).to.be.equal(`${newAddressData.firstName} ${newAddressData.lastName}`
         + `${newAddressData.company}${newAddressData.address}${newAddressData.secondAddress}`
         + `${newAddressData.postalCode} ${newAddressData.city}${newAddressData.country}`
         + `${newAddressData.phone}`);
@@ -491,7 +496,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'selectNewInvoiceAddress', baseContext);
 
       const newAddress = await addOrderPage.chooseInvoiceAddress(page, newAddressData.alias);
-      await expect(newAddress).to.be.equal(`${newAddressData.firstName} ${newAddressData.lastName}`
+      expect(newAddress).to.be.equal(`${newAddressData.firstName} ${newAddressData.lastName}`
         + `${newAddressData.company}${newAddressData.address}${newAddressData.secondAddress}`
         + `${newAddressData.postalCode} ${newAddressData.city}${newAddressData.country}`
         + `${newAddressData.phone}`);

@@ -47,13 +47,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        //We need the list of active modules to load their config, during install the parameter might no be available
-        //if the parameters file has not been generated yet, so we skip this part of the build
-        if (!$container->hasParameter('kernel.active_modules')) {
-            return;
-        }
-
-        $activeModules = $container->getParameter('kernel.active_modules');
+        $activeModules = $container->getParameter('prestashop.installed_modules');
         $compilerPassList = $this->getCompilerPassList($activeModules);
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {

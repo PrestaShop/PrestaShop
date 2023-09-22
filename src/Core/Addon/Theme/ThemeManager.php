@@ -391,7 +391,7 @@ class ThemeManager implements AddonManagerInterface
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
-        foreach ($modules as $key => $moduleName) {
+        foreach ($modules as $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)
                 && !$moduleManager->install($moduleName)
             ) {
@@ -459,7 +459,7 @@ class ThemeManager implements AddonManagerInterface
     private function installFromZip($source)
     {
         /** @var Finder $finderClass */
-        $finderClass = get_class($this->finder);
+        $finderClass = $this->finder::class;
         $this->finder = $finderClass::create();
 
         $sandboxPath = $this->getSandboxPath();

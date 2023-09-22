@@ -12,9 +12,7 @@ class Home extends HomePage {
    * Setting up texts and selectors to use on home page
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
   }
 }
 

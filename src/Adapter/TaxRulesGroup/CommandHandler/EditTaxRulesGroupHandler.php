@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\EditTaxRulesGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\EditTaxRulesGroupHandlerInterface;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupExcep
 /**
  * Handles tax rules group edition
  */
+#[AsCommandHandler]
 class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements EditTaxRulesGroupHandlerInterface
 {
     /**

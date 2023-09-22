@@ -55,7 +55,7 @@ describe('CLDR : Enable/Disable a currency', async () => {
     await localizationPage.closeSfToolBar(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to Currencies Tab', async function () {
@@ -64,14 +64,14 @@ describe('CLDR : Enable/Disable a currency', async () => {
     await localizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter0', baseContext);
 
     numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 
   it(`should filter by iso code of currency '${Currencies.euro.isoCode}'`, async function () {
@@ -82,31 +82,31 @@ describe('CLDR : Enable/Disable a currency', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(Currencies.euro.isoCode);
   });
 
   it('should disable the default currency and check the error message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableCurrency', baseContext);
 
     const isActionPerformed = await currenciesPage.setStatus(page, 1, false);
-    await expect(isActionPerformed).to.be.true;
+    expect(isActionPerformed).to.eq(true);
 
     const resultMessage = await currenciesPage.getAlertDangerBlockParagraphContent(page);
-    await expect(resultMessage).to.contains(currenciesPage.cannotDisableDefaultCurrencyMessage);
+    expect(resultMessage).to.contains(currenciesPage.cannotDisableDefaultCurrencyMessage);
 
     const currencyStatus = await currenciesPage.getStatus(page, 1);
-    await expect(currencyStatus).to.be.true;
+    expect(currencyStatus).to.eq(true);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter1', baseContext);
 
     numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 
   it('should go to create new currency page', async function () {
@@ -115,7 +115,7 @@ describe('CLDR : Enable/Disable a currency', async () => {
     await currenciesPage.goToAddNewCurrencyPage(page);
 
     const pageTitle = await addCurrencyPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
   });
 
   it('should create official currency', async function () {
@@ -123,11 +123,11 @@ describe('CLDR : Enable/Disable a currency', async () => {
 
     // Create and check successful message
     const textResult = await addCurrencyPage.addOfficialCurrency(page, currencyDollar);
-    await expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+    expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
 
     // Check number of currencies after creation
     const numberOfCurrenciesAfterCreation = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1);
+    expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1);
   });
 
   it(`should filter by iso code of currency '${currencyDollar.isoCode}'`, async function () {
@@ -138,24 +138,24 @@ describe('CLDR : Enable/Disable a currency', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(currencyDollar.isoCode);
+    expect(textColumn).to.contains(currencyDollar.isoCode);
   });
 
   it(`should enable the currency '${currencyDollar.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableDollarCurrency', baseContext);
 
     const isActionPerformed = await currenciesPage.setStatus(page, 1, true);
-    await expect(isActionPerformed).to.be.true;
+    expect(isActionPerformed).to.eq(true);
 
     const resultMessage = await currenciesPage.getAlertSuccessBlockParagraphContent(page);
-    await expect(resultMessage).to.contains(currenciesPage.successfulUpdateStatusMessage);
+    expect(resultMessage).to.contains(currenciesPage.successfulUpdateStatusMessage);
 
     const currencyStatus = await currenciesPage.getStatus(page, 1);
-    await expect(currencyStatus).to.be.true;
+    expect(currencyStatus).to.eq(true);
   });
 
   it('should go to Localization Tab', async function () {
@@ -164,14 +164,14 @@ describe('CLDR : Enable/Disable a currency', async () => {
     await localizationPage.goToSubTabLocalizations(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it(`should choose '${currencyDollar.isoCode}' as default currency`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setDollarAsDefaultCurrency', baseContext);
 
     const textResult = await localizationPage.setDefaultCurrency(page, `${currencyDollar.name} (${currencyDollar.isoCode})`);
-    await expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+    expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to Currencies Tab', async function () {
@@ -180,7 +180,7 @@ describe('CLDR : Enable/Disable a currency', async () => {
     await localizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
   it(`should filter by iso code of currency '${Currencies.euro.isoCode}'`, async function () {
@@ -191,37 +191,37 @@ describe('CLDR : Enable/Disable a currency', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(Currencies.euro.isoCode);
   });
 
   it(`should disable the currency '${Currencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableEuroCurrency', baseContext);
 
     const isActionPerformed = await currenciesPage.setStatus(page, 1, false);
-    await expect(isActionPerformed).to.be.true;
+    expect(isActionPerformed).to.eq(true);
 
     const resultMessage = await currenciesPage.getAlertSuccessBlockParagraphContent(page);
-    await expect(resultMessage).to.contains(currenciesPage.successfulUpdateStatusMessage);
+    expect(resultMessage).to.contains(currenciesPage.successfulUpdateStatusMessage);
 
     const currencyStatus = await currenciesPage.getStatus(page, 1);
-    await expect(currencyStatus).to.be.false;
+    expect(currencyStatus).to.eq(false);
   });
 
   it(`should enable the currency '${Currencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableEuroCurrency', baseContext);
 
     const isActionPerformed = await currenciesPage.setStatus(page, 1, true);
-    await expect(isActionPerformed).to.be.true;
+    expect(isActionPerformed).to.eq(true);
 
     const resultMessage = await currenciesPage.getAlertSuccessBlockParagraphContent(page);
-    await expect(resultMessage).to.contains(currenciesPage.successfulUpdateStatusMessage);
+    expect(resultMessage).to.contains(currenciesPage.successfulUpdateStatusMessage);
 
     const currencyStatus = await currenciesPage.getStatus(page, 1);
-    await expect(currencyStatus).to.be.true;
+    expect(currencyStatus).to.eq(true);
   });
 
   it('should go to Localization Tab', async function () {
@@ -230,14 +230,14 @@ describe('CLDR : Enable/Disable a currency', async () => {
     await localizationPage.goToSubTabLocalizations(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it(`should choose '${Currencies.euro.isoCode}' as default currency`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setEuroAsDefaultCurrency', baseContext);
 
     const textResult = await localizationPage.setDefaultCurrency(page, `${Currencies.euro.name} (${Currencies.euro.isoCode})`);
-    await expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+    expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to Currencies Tab', async function () {
@@ -246,7 +246,7 @@ describe('CLDR : Enable/Disable a currency', async () => {
     await localizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
   it(`should filter by iso code of currency '${currencyDollar.isoCode}'`, async function () {
@@ -257,24 +257,24 @@ describe('CLDR : Enable/Disable a currency', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(currencyDollar.isoCode);
+    expect(textColumn).to.contains(currencyDollar.isoCode);
   });
 
   it('should delete currency', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
     const result = await currenciesPage.deleteCurrency(page, 1);
-    await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+    expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
   });
 
   it('should reset filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
     const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies);
+    expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies);
   });
 });

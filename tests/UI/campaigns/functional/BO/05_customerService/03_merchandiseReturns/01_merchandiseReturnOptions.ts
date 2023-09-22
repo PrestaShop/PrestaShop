@@ -12,15 +12,15 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
 // Import data
@@ -68,7 +68,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -77,7 +77,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -86,7 +86,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -100,7 +100,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should go to delivery step', async function () {
@@ -111,7 +111,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to payment step', async function () {
@@ -119,7 +119,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should choose payment method and confirm the order', async function () {
@@ -130,7 +130,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should sign out from FO', async function () {
@@ -139,7 +139,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await orderConfirmationPage.logout(page);
 
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 
@@ -163,21 +163,21 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await boMerchandiseReturnsPage.closeSfToolBar(page);
 
         const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
+        expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
       });
 
       it(`should ${test.args.action} merchandise returns`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Returns`, baseContext);
 
         const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, test.args.enable);
-        await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
+        expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
       });
 
       it('should update Returns prefix', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateReturnPrefix${index}`, baseContext);
 
         const result = await boMerchandiseReturnsPage.setReturnsPrefix(page, test.args.prefix);
-        await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
+        expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {
@@ -190,7 +190,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should filter the Orders table by the default customer and check the result', async function () {
@@ -199,7 +199,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(Customers.johnDoe.lastName);
       });
 
       it('should go to the first order page', async function () {
@@ -209,21 +209,21 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await ordersPage.goToOrder(page, 1);
 
         const pageTitle = await viewOrderBasePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+        expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
 
       it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
         const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
-        await expect(result).to.equal(OrderStatuses.shipped.name);
+        expect(result).to.equal(OrderStatuses.shipped.name);
       });
 
       it('should check if the button \'Return products\' is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkReturnProductsButton${index}`, baseContext);
 
         const result = await viewOrderBasePage.isReturnProductsButtonVisible(page);
-        await expect(result).to.equal(test.args.enable);
+        expect(result).to.equal(test.args.enable);
       });
 
       it('should go to FO', async function () {
@@ -235,7 +235,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+        expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       // Go to My account page by login the first time and click on account link the second time
@@ -247,12 +247,12 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
           await foLoginPage.customerLogin(page, Customers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-          await expect(isCustomerConnected).to.be.true;
+          expect(isCustomerConnected).to.eq(true);
 
           await homePage.goToMyAccountPage(page);
 
           const pageTitle = await myAccountPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+          expect(pageTitle).to.contains(myAccountPage.pageTitle);
         });
       } else {
         it('should go to account page', async function () {
@@ -261,7 +261,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
           await homePage.goToMyAccountPage(page);
 
           const pageTitle = await myAccountPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+          expect(pageTitle).to.contains(myAccountPage.pageTitle);
         });
       }
 
@@ -271,7 +271,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await myAccountPage.goToHistoryAndDetailsPage(page);
 
         const pageTitle = await orderHistoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+        expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
       });
 
       it('should go to the first order in the list and check the existence of order return form', async function () {
@@ -280,7 +280,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await orderHistoryPage.goToDetailsPage(page, 1);
 
         const result = await orderDetailsPage.isOrderReturnFormVisible(page);
-        await expect(result).to.equal(test.args.enable);
+        expect(result).to.equal(test.args.enable);
       });
       if (test.args.enable) {
         it('should create a merchandise return', async function () {
@@ -289,14 +289,14 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
           await orderDetailsPage.requestMerchandiseReturn(page, 'test');
 
           const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+          expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
         });
 
         it('should verify order return prefix', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnPrefix', baseContext);
 
           const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'fileName');
-          await expect(fileName).to.contains(test.args.prefix);
+          expect(fileName).to.contains(test.args.prefix);
         });
       }
 
@@ -306,7 +306,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         page = await orderDetailsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await viewOrderBasePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+        expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
     });
   });

@@ -52,14 +52,14 @@ describe('BO - International - Translation : Add update a language', async () =>
     await translationsPage.closeSfToolBar(page);
 
     const pageTitle = await translationsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+    expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   it(`should choose the '${Languages.deutsch.name}' language to add or update`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage', baseContext);
 
     const textResult = await translationsPage.addUpdateLanguage(page, Languages.deutsch.name);
-    await expect(textResult).to.equal(translationsPage.successAlertMessage);
+    expect(textResult).to.equal(translationsPage.successAlertMessage);
   });
 
   it('should go to FO page and check the new language', async function () {
@@ -69,7 +69,7 @@ describe('BO - International - Translation : Add update a language', async () =>
     await homePage.changeLanguage(page, Languages.deutsch.isoCode);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should go back to BO', async function () {
@@ -79,7 +79,7 @@ describe('BO - International - Translation : Add update a language', async () =>
     page = await homePage.closePage(browserContext, page, 0);
 
     const pageTitle = await translationsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+    expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   it('should go to localization page', async function () {
@@ -92,7 +92,7 @@ describe('BO - International - Translation : Add update a language', async () =>
     );
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to languages page', async function () {
@@ -101,14 +101,14 @@ describe('BO - International - Translation : Add update a language', async () =>
     await localizationPage.goToSubTabLanguages(page);
 
     const pageTitle = await languagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(languagesPage.pageTitle);
+    expect(pageTitle).to.contains(languagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfLanguages).to.be.above(0);
+    expect(numberOfLanguages).to.be.above(0);
   });
 
   it(`should filter language by name '${Languages.deutsch.name}'`, async function () {
@@ -118,20 +118,20 @@ describe('BO - International - Translation : Add update a language', async () =>
     await languagesPage.filterTable(page, 'input', 'name', Languages.deutsch.name);
 
     const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-    await expect(textColumn).to.contains(Languages.deutsch.name);
+    expect(textColumn).to.contains(Languages.deutsch.name);
   });
 
   it('should delete language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
     const textResult = await languagesPage.deleteLanguage(page, 1);
-    await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+    expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
     const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages - 1);
+    expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages - 1);
   });
 });

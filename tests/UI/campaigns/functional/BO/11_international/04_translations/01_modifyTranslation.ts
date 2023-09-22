@@ -46,7 +46,7 @@ describe('BO - International - Translation : Edit', async () => {
     );
 
     const pageTitle = await translationsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+    expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   it('should choose the translation to modify', async function () {
@@ -54,7 +54,7 @@ describe('BO - International - Translation : Edit', async () => {
 
     await translationsPage.modifyTranslation(page, 'Front office Translations', 'classic', Languages.french.name);
     const pageTitle = await translationsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+    expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   it('should search \'Popular Products\' expression and modify the french translation', async function () {
@@ -62,7 +62,7 @@ describe('BO - International - Translation : Edit', async () => {
 
     await translationsPage.searchTranslation(page, 'Popular Products');
     const textResult = await translationsPage.translateExpression(page, 'translate');
-    await expect(textResult).to.equal(translationsPage.validationMessage);
+    expect(textResult).to.equal(translationsPage.validationMessage);
   });
 
   it('should go to FO page and change the language to French', async function () {
@@ -72,14 +72,14 @@ describe('BO - International - Translation : Edit', async () => {
     await homePage.changeLanguage(page, 'fr');
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should check the translation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
 
     const title = await homePage.getBlockTitle(page);
-    await expect(title).to.contain('translate');
+    expect(title).to.contain('translate');
   });
 
   it('should go back to BO', async function () {
@@ -89,14 +89,14 @@ describe('BO - International - Translation : Edit', async () => {
     page = await homePage.closePage(browserContext, page, 0);
 
     const pageTitle = await translationsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+    expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   it('should reset the french translation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchAndResetTranslation', baseContext);
 
     const textResult = await translationsPage.resetTranslation(page);
-    await expect(textResult).to.equal(translationsPage.validationResetMessage);
+    expect(textResult).to.equal(translationsPage.validationResetMessage);
   });
 
   it('should go to FO page and change the language to French', async function () {
@@ -106,13 +106,13 @@ describe('BO - International - Translation : Edit', async () => {
     await homePage.changeLanguage(page, 'fr');
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should check the translation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTranslationAfterReset', baseContext);
 
     const title = await homePage.getBlockTitle(page);
-    await expect(title).to.equal('Produits populaires');
+    expect(title).to.equal('Produits populaires');
   });
 });

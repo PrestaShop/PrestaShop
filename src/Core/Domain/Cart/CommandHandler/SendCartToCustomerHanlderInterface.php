@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SendCartToCustomerCommand;
 
 /**
  * Interface for service that handles sending cart to customer.
+ *
+ * @deprecated Since 9.0 and will be removed in the next major.
  */
 interface SendCartToCustomerHanlderInterface
 {

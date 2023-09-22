@@ -74,18 +74,21 @@ class ImageRetriever
             $language->id
         );
 
+        // Get all product images that are related to this object
         $images = $productInstance->getImages($language->id);
-
         if (empty($images)) {
             return [];
         }
 
+        // Load all pairs of images assigned to combinations
         $combinationImages = $productInstance->getCombinationImages($language->id);
         if (!$combinationImages) {
             $combinationImages = [];
         }
-        $imageToCombinations = [];
 
+        // And resolve them by id_image
+        // We can't assign them directly because the $images array keys are not id_image
+        $imageToCombinations = [];
         foreach ($combinationImages as $imgs) {
             foreach ($imgs as $img) {
                 $imageToCombinations[$img['id_image']][] = $img['id_product_attribute'];
@@ -96,11 +99,14 @@ class ImageRetriever
             $productInstance,
             $imageToCombinations
         ) {
-            $image = array_merge($this->getImage(
-                $productInstance,
-                $image['id_image']
-            ), $image);
+            // Now let's fetch extra information about thumbnail sizes etc. and add this information.
+            // getImage also resolves a proper image legend, if it was missing in $image originally.
+            $image = array_merge(
+                $image,
+                $this->getImage($productInstance, $image['id_image'])
+            );
 
+            // Assign a list of variants related to the given image
             if (isset($imageToCombinations[$image['id_image']])) {
                 $image['associatedVariants'] = $imageToCombinations[$image['id_image']];
             } else {
@@ -137,7 +143,7 @@ class ImageRetriever
 
     /**
      * @param Product|Store|Category|Manufacturer|Supplier $object
-     * @param int $id_image
+     * @param int|string $id_image Identifier of the image
      *
      * @return array|null
      *
@@ -150,7 +156,7 @@ class ImageRetriever
         }
 
         // Resolve functions we will use to get image links from Link class
-        if (get_class($object) === 'Product') {
+        if ($object::class === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
             // Product images are the only exception in path structure, they are placed in folder
@@ -159,15 +165,15 @@ class ImageRetriever
                 rtrim(_PS_PRODUCT_IMG_DIR_, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
             ]);
-        } elseif (get_class($object) === 'Store') {
+        } elseif ($object::class === 'Store') {
             $type = 'stores';
             $getImageURL = 'getStoreImageLink';
             $imageFolderPath = rtrim(_PS_STORE_IMG_DIR_, DIRECTORY_SEPARATOR);
-        } elseif (get_class($object) === 'Manufacturer') {
+        } elseif ($object::class === 'Manufacturer') {
             $type = 'manufacturers';
             $getImageURL = 'getManufacturerImageLink';
             $imageFolderPath = rtrim(_PS_MANU_IMG_DIR_, DIRECTORY_SEPARATOR);
-        } elseif (get_class($object) === 'Supplier') {
+        } elseif ($object::class === 'Supplier') {
             $type = 'suppliers';
             $getImageURL = 'getSupplierImageLink';
             $imageFolderPath = rtrim(_PS_SUPP_IMG_DIR_, DIRECTORY_SEPARATOR);
@@ -178,10 +184,6 @@ class ImageRetriever
         }
 
         $urls = [];
-
-        // Should we generate all sizes also in double the resolution?
-        // Obsolete solution, will be removed
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
         $originalImagePath = implode(DIRECTORY_SEPARATOR, [
@@ -214,17 +216,27 @@ class ImageRetriever
         $image_types = ImageType::getImagesTypes($type, true);
         foreach ($image_types as $image_type) {
             $sources = [];
+            $formattedName = ImageType::getFormattedName('small');
+
+            if ($type === 'categories' && $formattedName === $image_type['name']) {
+                $originalFileName = $id_image . '_thumb.jpg';
+            } else {
+                $originalFileName = $id_image . '.jpg';
+            }
+
+            // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
+            $originalImagePath = implode(DIRECTORY_SEPARATOR, [
+                $imageFolderPath,
+                $originalFileName,
+            ]);
 
             foreach ($configuredImageFormats as $imageFormat) {
-                // Generate the thumbnail and optionally a high DPI version
+                // Generate the thumbnail
                 $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
-                if ($generateHighDpiImages) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
-                }
 
                 // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
-                if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
+                if ($object::class === 'Manufacturer' || $object::class === 'Supplier') {
                     $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
                 // Products, categories and stores pass both rewrite and ID
                 } else {
@@ -274,23 +286,15 @@ class ImageRetriever
     /**
      * @param string $originalImagePath
      * @param string $imageFolderPath
-     * @param int $idImage
+     * @param int|string $idImage
      * @param array $imageTypeData
      * @param string $imageFormat
-     * @param bool $hdpi
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int|string $idImage, array $imageTypeData, string $imageFormat)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
-
-        if ($hdpi) {
-            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $imageFormat);
-            $imageTypeData['width'] *= 2;
-            $imageTypeData['height'] *= 2;
-        }
-
         $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
             $fileName,

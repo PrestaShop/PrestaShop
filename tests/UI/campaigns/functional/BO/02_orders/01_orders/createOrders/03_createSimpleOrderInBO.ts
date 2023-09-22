@@ -90,7 +90,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     await ordersPage.closeSfToolBar(page);
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should go to create order page', async function () {
@@ -99,7 +99,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     await ordersPage.goToCreateOrderPage(page);
 
     const pageTitle = await addOrderPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+    expect(pageTitle).to.contains(addOrderPage.pageTitle);
   });
 
   describe('Create order and check result', async () => {
@@ -109,28 +109,28 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await addOrderPage.createOrder(page, orderToMake);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
     });
 
     it('should check order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
       const orderStatus = await orderPageProductsBlock.getOrderStatus(page);
-      await expect(orderStatus).to.equal(orderToMake.status.name);
+      expect(orderStatus).to.equal(orderToMake.status.name);
     });
 
     it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderPrice', baseContext);
 
       const totalPrice = await orderPageProductsBlock.getOrderTotalPrice(page);
-      await expect(totalPrice).to.equal(orderToMake.totalPrice);
+      expect(totalPrice).to.equal(orderToMake.totalPrice);
     });
 
     it('should check order shipping address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
 
       const shippingAddress = await orderPageCustomerBlock.getShippingAddress(page);
-      await expect(shippingAddress)
+      expect(shippingAddress)
         .to.contain(orderToMake.deliveryAddress.firstName)
         .and.to.contain(orderToMake.deliveryAddress.lastName)
         .and.to.contain(orderToMake.deliveryAddress.address)
@@ -143,7 +143,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddress', baseContext);
 
       const invoiceAddress = await orderPageCustomerBlock.getInvoiceAddress(page);
-      await expect(invoiceAddress)
+      expect(invoiceAddress)
         .to.contain(orderToMake.deliveryAddress.firstName)
         .and.to.contain(orderToMake.deliveryAddress.lastName)
         .and.to.contain(orderToMake.deliveryAddress.address)
@@ -157,7 +157,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
 
       for (let i = 1; i <= orderToMake.products.length; i++) {
         const productName = await orderPageProductsBlock.getProductNameFromTable(page, i);
-        await expect(productName).to.contain(orderToMake.products[i - 1].product.name);
+        expect(productName).to.contain(orderToMake.products[i - 1].product.name);
       }
     });
   });

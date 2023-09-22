@@ -78,12 +78,12 @@ class LogsController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.", redirectRoute="admin_logs_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_logs_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_logs_index')]
     public function searchAction(Request $request)
     {
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
@@ -103,12 +103,12 @@ class LogsController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.", redirectRoute="admin_logs_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_logs_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_logs_index')]
     public function saveSettingsAction(Request $request)
     {
         $logsByEmailForm = $this->getFormHandler()->getForm();

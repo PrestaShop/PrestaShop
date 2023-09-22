@@ -52,6 +52,7 @@ final class FileRemoval
     public function remove($filename)
     {
         $fs = new Filesystem();
+        $filename = basename($filename);
         $filesToRemove = [
             $this->importDirectory . $filename,
             $this->importDirectory . 'csvfromexcel/' . $filename,

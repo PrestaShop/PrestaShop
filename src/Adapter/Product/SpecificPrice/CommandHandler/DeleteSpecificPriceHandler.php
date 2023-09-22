@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceHandlerInterface;
 
 /**
  * Handles DeleteSpecificPriceCommand using legacy object model
  */
+#[AsCommandHandler]
 class DeleteSpecificPriceHandler implements DeleteSpecificPriceHandlerInterface
 {
     /**

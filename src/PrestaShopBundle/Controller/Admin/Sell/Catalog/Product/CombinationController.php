@@ -112,7 +112,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param string $languageCode
@@ -162,7 +162,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $productId
@@ -555,7 +555,7 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function generateCombinationsAction(int $productId, ?int $shopId, Request $request): JsonResponse
     {
-        $requestAttributeGroups = $request->request->get('attributes');
+        $requestAttributeGroups = $request->request->all('attributes');
         $attributes = [];
         foreach ($requestAttributeGroups as $attributeGroupId => $requestAttributes) {
             $attributes[(int) $attributeGroupId] = array_map('intval', $requestAttributes);
@@ -752,7 +752,7 @@ class CombinationController extends FrameworkBundleAdminController
                 ),
             ],
             CombinationNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotGenerateCombinationException::class => [

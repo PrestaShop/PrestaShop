@@ -46,14 +46,14 @@ function enableMerchandiseReturns(baseContext: string = 'commonTests-enableMerch
       await merchandiseReturnsPage.closeSfToolBar(page);
 
       const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
     });
 
     it('should enable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
 
       const result = await merchandiseReturnsPage.setOrderReturnStatus(page, true);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 }
@@ -88,14 +88,14 @@ function disableMerchandiseReturns(baseContext: string = 'commonTests-disableMer
       );
 
       const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
     });
 
     it('should disable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
 
       const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 }

@@ -52,14 +52,14 @@ function importFileTest(
       await importPage.closeSfToolBar(page);
 
       const pageTitle = await importPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(importPage.pageTitle);
+      expect(pageTitle).to.contains(importPage.pageTitle);
     });
 
     it(`should import '${fileName}' file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      const uploadSuccessText = await importPage.uploadFile(page, entityToImport, fileName);
-      await expect(uploadSuccessText).contain(fileName);
+      const uploadSuccessText = await importPage.uploadImportFile(page, entityToImport, fileName);
+      expect(uploadSuccessText).contain(fileName);
 
       if (await importPage.isForceAllIDNumbersVisible(page)) {
         await importPage.setForceAllIDNumbers(page);
@@ -70,21 +70,21 @@ function importFileTest(
       await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
 
       const panelTitle = await importPage.goToImportNextStep(page);
-      await expect(panelTitle).contain(importPage.importPanelTitle);
+      expect(panelTitle).contain(importPage.importPanelTitle);
     });
 
     it('should start import file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmImport', baseContext);
 
       const modalTitle = await importPage.startFileImport(page);
-      await expect(modalTitle).contain(importPage.importModalTitle);
+      expect(modalTitle).contain(importPage.importModalTitle);
     });
 
     it('should check that the import is completed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'waitForImport', baseContext);
 
       const isCompleted = await importPage.getImportValidationMessage(page);
-      await expect(isCompleted, 'The import is not completed!')
+      expect(isCompleted, 'The import is not completed!')
         .contain('Data imported')
         .and.contain('Look at your listings to make sure it\'s all there as you wished.');
     });
@@ -93,7 +93,7 @@ function importFileTest(
       await testContext.addContextItem(this, 'testIdentifier', 'closeImportModal', baseContext);
 
       const isModalClosed = await importPage.closeImportModal(page);
-      await expect(isModalClosed).to.be.true;
+      expect(isModalClosed).to.eq(true);
     });
   });
 }

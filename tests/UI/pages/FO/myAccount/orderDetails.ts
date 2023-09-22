@@ -1,5 +1,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
+import {MerchandiseProductReturn} from '@data/types/order';
+
 import type {Page} from 'playwright';
 
 /**
@@ -33,6 +35,10 @@ class OrderDetails extends FOBasePage {
   private readonly tableBodyRow: (row: number) => string;
 
   private readonly tableBodyColumn: (row: number, column: number) => string;
+
+  private readonly tableReturnProductRowCheckboxButton: (row: number) => string;
+
+  private readonly tableReturnQuantityRowSelectButton: (row: number) => string;
 
   private readonly productName: (row: number, column: number) => string;
 
@@ -75,7 +81,9 @@ class OrderDetails extends FOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+    this.tableBodyColumn = (row: number, column: number) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+    this.tableReturnProductRowCheckboxButton = (row: number) => `${this.tableBodyColumn(row, 1)} input`;
+    this.tableReturnQuantityRowSelectButton = (row: number) => `${this.tableBodyColumn(row, 3)} select`;
 
     // Order product table content
     this.productName = (row, column) => `${this.tableBodyColumn(row, column)} a`;
@@ -126,28 +134,32 @@ class OrderDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @param messageText {string} Value of message text to set on return input
    * @param productsNumber {number} Number of products to return
-   * @param returnData {object} Data of return
+   * @param returnData {MerchandiseProductReturn[]} Data of return
    * @returns {Promise<void>}
    */
-  async requestMerchandiseReturn(page: Page, messageText: string = 'test', productsNumber: number = 1,
-    returnData: object = [{quantity: 1}]): Promise<void> {
+  async requestMerchandiseReturn(
+    page: Page,
+    messageText: string = 'test',
+    productsNumber: number = 1,
+    returnData: MerchandiseProductReturn[] = [{quantity: 1}],
+  ): Promise<void> {
     await this.chooseProductsToReturn(page, productsNumber, returnData);
     await this.setValue(page, this.returnTextarea, messageText);
-    await this.clickAndWaitForNavigation(page, this.requestReturnButton);
+    await this.clickAndWaitForURL(page, this.requestReturnButton);
   }
 
   /**
    * Choose products to return
    * @param page {Page} Browser tab
    * @param productsNumber {number} Number of products to return
-   * @param returnData {object} Data of return
+   * @param returnData {MerchandiseProductReturn[]} Data of return
    * @returns {Promise<void>}
    */
-  async chooseProductsToReturn(page: Page, productsNumber: number, returnData: object): Promise<void> {
+  async chooseProductsToReturn(page: Page, productsNumber: number, returnData: MerchandiseProductReturn[]): Promise<void> {
     for (let i = 0; i < productsNumber; i++) {
       const index: number = i + 1;
-      await this.setChecked(page, `${this.tableBodyColumn(index, 1)} input`);
-      await this.selectByVisibleText(page, `${this.tableBodyColumn(index, 3)} select`, returnData[i].quantity);
+      await this.setChecked(page, this.tableReturnProductRowCheckboxButton(index));
+      await this.selectByVisibleText(page, this.tableReturnQuantityRowSelectButton(index), returnData[i].quantity);
     }
   }
 
@@ -161,7 +173,7 @@ class OrderDetails extends FOBasePage {
   async addAMessage(page: Page, messageOption: string, messageText: string): Promise<string> {
     await this.selectByVisibleText(page, this.productIdSelect, messageOption);
     await this.setValue(page, this.messageTextarea, messageText);
-    await this.clickAndWaitForNavigation(page, this.submitMessageButton);
+    await this.clickAndWaitForURL(page, this.submitMessageButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -180,7 +192,7 @@ class OrderDetails extends FOBasePage {
   /**
    * Click on download link
    * @param page {Page} Browser tab
-   * @param row Number} row in orders details table
+   * @param row {Number} row in orders details table
    * @param column {Number} column in orders details table
    * @returns {Promise<void>}
    */
@@ -204,7 +216,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnReorderLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.reorderLink);
+    await this.clickAndWaitForURL(page, this.reorderLink);
   }
 
   /**

@@ -15,15 +15,15 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -53,9 +53,9 @@ Post-condition:
 describe('BO - Customer Service - Merchandise Returns : Update status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
-  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
+  let filePath: string|null;
   let returnID: number;
+  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
 
   // before and after functions
   before(async function () {
@@ -75,7 +75,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -84,7 +84,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -93,7 +93,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should add the first product to the cart', async function () {
@@ -106,7 +106,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await homePage.proceedToCheckout(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(2);
+      expect(notificationsNumber).to.be.equal(2);
     });
 
     it('should go to delivery step', async function () {
@@ -115,14 +115,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await cartPage.clickOnProceedToCheckout(page);
 
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to payment step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should choose payment method and confirm the order', async function () {
@@ -131,7 +131,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -151,14 +151,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await merchandiseReturnsPage.closeSfToolBar(page);
 
       const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
     });
 
     it('should enable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
 
       const result = await merchandiseReturnsPage.setOrderReturnStatus(page, true);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 
@@ -173,7 +173,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -182,21 +182,21 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkReturnProductsButton', baseContext);
 
       const result = await viewOrderBasePage.isReturnProductsButtonVisible(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
   });
 
@@ -208,7 +208,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to account page', async function () {
@@ -217,7 +217,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await homePage.goToMyAccountPage(page);
 
       const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      expect(pageTitle).to.contains(myAccountPage.pageTitle);
     });
 
     it('should go to \'Order history and details\' page', async function () {
@@ -226,7 +226,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageTitle = await orderHistoryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check the existence of order return form', async function () {
@@ -235,7 +235,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await orderHistoryPage.goToDetailsPage(page, 1);
 
       const result = await orderDetailsPage.isOrderReturnFormVisible(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should create a merchandise return', async function () {
@@ -244,7 +244,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await orderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
 
       const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
     });
 
     it('should close the FO page and go back to BO', async function () {
@@ -253,7 +253,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       page = await orderDetailsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
     });
   });
 
@@ -268,14 +268,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       );
 
       const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
     });
 
     it('should get the return number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getReturnNumber', baseContext);
 
       returnID = parseInt(await merchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order_return'), 10);
-      await expect(returnID).to.not.equal(0);
+      expect(returnID).to.not.equal(0);
     });
 
     const tests = [
@@ -292,14 +292,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
           await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
 
           const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
+          expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
         });
 
         it('should update the status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `editStatus${index}`, baseContext);
 
           const textResult = await editMerchandiseReturnsPage.setStatus(page, test.args.status, true);
-          await expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
+          expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
         });
 
         if (test.args.status === OrderReturnStatuses.waitingForPackage.name) {
@@ -309,14 +309,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
             filePath = await editMerchandiseReturnsPage.downloadPDF(page);
 
             const exist = await files.doesFileExist(filePath);
-            await expect(exist, 'File does not exist').to.be.true;
+            expect(exist, 'File does not exist').to.eq(true);
           });
 
           it('should check the file name', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkFileName', baseContext);
 
             const fileName = await editMerchandiseReturnsPage.getFileName(page);
-            await expect(fileName).to.eq('Print out');
+            expect(fileName).to.eq('Print out');
           });
 
           it('should check the header of the return PDF', async function () {
@@ -328,7 +328,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
               returnPrefix = '#RE0000';
             }
             const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${todayDate},,${returnPrefix}${returnID}`);
-            await expect(isVisible, 'The header of the PDF is not correct!').to.be.true;
+            expect(isVisible, 'The header of the PDF is not correct!').to.eq(true);
           });
 
           it('should check the billing address in the PDF', async function () {
@@ -345,7 +345,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
               + `${Addresses.second.country},`
               + `${Addresses.second.phone}`,
             );
-            await expect(billingAddressExist, 'Billing address is not correct in PDF!').to.be.true;
+            expect(billingAddressExist, 'Billing address is not correct in PDF!').to.eq(true);
           });
 
           it('should check the return number', async function () {
@@ -361,7 +361,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
               filePath,
               'We have logged your return request.,Your package must be returned to us within 14 days of receiving your order.'
               + `,,Return Number, ,Date,,${returnPrefix}${returnID}, ,${todayDate}`);
-            await expect(isVisible, 'Order return ID and the date are not correct!').to.be.true;
+            expect(isVisible, 'Order return ID and the date are not correct!').to.eq(true);
           });
 
           it('should check the returned product details', async function () {
@@ -371,14 +371,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
               filePath,
               `Items to be returned, ,Reference, ,Qty,,${Products.demo_1.name} (Size: S - Color: White), ,`
               + `${Products.demo_1.reference}, ,1`);
-            await expect(isVisible, 'Returned product details are not correct!').to.be.true;
+            expect(isVisible, 'Returned product details are not correct!').to.eq(true);
           });
         } else {
-          it('should check the file is not existing', async function () {
+          it('should check that the file is not existing', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkFileNotExisting${index}`, baseContext);
 
             const fileName = await editMerchandiseReturnsPage.getFileName(page);
-            await expect(fileName).to.eq('--');
+            expect(fileName).to.eq('--');
           });
         }
         it('should click on cancel button', async function () {
@@ -387,14 +387,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
           await editMerchandiseReturnsPage.clickOnCancelButton(page);
 
           const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+          expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
         });
 
         it('should check the updated status in the merchandise returns table', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatus${index}`, baseContext);
 
           const status = await merchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'name');
-          await expect(status).to.eq(test.args.status);
+          expect(status).to.eq(test.args.status);
         });
       });
     });
@@ -405,7 +405,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
 
       const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 });

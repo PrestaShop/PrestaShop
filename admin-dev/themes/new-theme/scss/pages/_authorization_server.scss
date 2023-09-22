@@ -1,0 +1,19 @@
+.view-authorized-application-card {
+  .card-body {
+    .row {
+      .text-right {
+        font-weight: $font-weight-semibold;
+      }
+    }
+  }
+}
+
+#api_access_grid_panel {
+  #api_access_grid_table {
+    .column-headers {
+      th[data-column-id="active"] {
+        text-align: center;
+      }
+    }
+  }
+}

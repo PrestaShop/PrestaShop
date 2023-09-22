@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -70,12 +70,12 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @return Employee
      *
-     * @throws UsernameNotFoundException
+     * @throws UserNotFoundException
      */
-    public function loadUserByUsername($username)
+    public function loadUserByIdentifier(string $username): Employee
     {
         $cacheKey = sha1($username);
-        $cachedEmployee = $this->cache->getItem("app.employees_${cacheKey}");
+        $cachedEmployee = $this->cache->getItem("app.employees_{$cacheKey}");
 
         if ($cachedEmployee->isHit()) {
             return $cachedEmployee->get();
@@ -96,7 +96,7 @@ class EmployeeProvider implements UserProviderInterface
             return $cachedEmployee->get();
         }
 
-        throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+        throw new UserNotFoundException(sprintf('Username "%s" does not exist.', $username));
     }
 
     /**
@@ -109,10 +109,10 @@ class EmployeeProvider implements UserProviderInterface
     public function refreshUser(UserInterface $employee)
     {
         if (!$employee instanceof Employee) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($employee)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $employee::class));
         }
 
-        return $this->loadUserByUsername($employee->getUsername());
+        return $this->loadUserByIdentifier($employee->getUserIdentifier());
     }
 
     /**
@@ -125,5 +125,15 @@ class EmployeeProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return $class === 'PrestaShopBundle\Security\Admin\Employee';
+    }
+
+    /**
+     * Needed by the interface but not used.
+     *
+     * @deprecated since 9.0, to be removed when Symfony > 6.à
+     */
+    public function loadUserByUsername(string $username)
+    {
+        return $this->loadUserByIdentifier($username);
     }
 }

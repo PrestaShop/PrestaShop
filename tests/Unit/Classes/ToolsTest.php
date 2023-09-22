@@ -339,17 +339,12 @@ class ToolsTest extends TestCase
             ['stock_mvt_reason_lang', 'stockMvtReasonLang', false],
             ['store_lang', 'storeLang', false],
             ['supplier_lang', 'supplierLang', false],
-            ['supply_order_state', 'supplyOrderState', false],
-            ['supply_order_state_lang', 'supplyOrderStateLang', false],
             ['tab', 'tab', false],
             ['tax_lang', 'taxLang', false],
-            ['warehouse', 'warehouse', false],
             ['web_browser', 'webBrowser', false],
             ['zone', 'zone', false],
             // True
             ['supplier_lang', 'SupplierLang', true],
-            ['supply_order_state', 'SupplyOrderState', true],
-            ['supply_order_state_lang', 'SupplyOrderStateLang', true],
             ['tab', 'Tab', true],
         ];
     }
@@ -843,9 +838,17 @@ class ToolsTest extends TestCase
         $rule = "~$rule~";
         foreach ($testCases as $setName => $case) {
             if ($case['shouldMatch']) {
-                $this->assertRegExp($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
+                if (method_exists($this, 'assertMatchesRegularExpression')) {
+                    $this->assertMatchesRegularExpression($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
+                } else {
+                    $this->assertRegExp($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
+                }
             } else {
-                $this->assertNotRegExp($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
+                if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+                    $this->assertDoesNotMatchRegularExpression($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
+                } else {
+                    $this->assertNotRegExp($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
+                }
             }
 
             if ($case['shouldMatch']) {

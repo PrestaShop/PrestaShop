@@ -9,6 +9,8 @@ Feature: Order from Back Office (BO)
 
   Background:
     Given email sending is disabled
+    And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And the current currency is "USD"
     And country "US" is enabled
     And language with iso code "en" is the default one
@@ -41,11 +43,17 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
-    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
-    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
-    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
+    And there is a cart rule "CartRuleAmountOnSelectedProduct" with following properties:
+      | name[en-US]               | CartRuleAmountOnSelectedProduct          |
+      | priority                  | 1                                        |
+      | discount_amount           | 500                                      |
+      | discount_currency         | usd                                      |
+      | discount_application_type | specific_product                         |
+      | discount_product          | Test Product Cart Rule On Select Product |
+      | discount_includes_tax     | true                                     |
+      | total_quantity            | 100                                      |
+      | quantity_per_user         | 100                                      |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Select Product |
       | amount | 1                                        |
@@ -81,6 +89,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And update the product quantity and price
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -97,11 +106,16 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
-    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
-    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
-    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
+    And there is a cart rule CartRuleAmountOnSelectedProduct with following properties:
+      | name[en-US]               | CartRuleAmountOnSelectedProduct          |
+      | discount_amount           | 500                                      |
+      | discount_currency         | usd                                      |
+      | total_quantity            | 100                                      |
+      | quantity_per_user         | 100                                      |
+      | discount_application_type | specific_product                         |
+      | discount_includes_tax     | false                                    |
+      | discount_product          | Test Product Cart Rule On Select Product |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Select Product |
       | amount | 1                                        |
@@ -225,6 +239,7 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 14.00  |
 #      | total_shipping_tax_incl  | 14.84  |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add discount to all orders, when a product is added the discount is applied, when a product is removed the discount should still be present
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -241,10 +256,15 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
-    Given there is a cart rule named "CartRuleAmountOnWholeOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRuleAmountOnWholeOrder" is applied on every order
+    And there is a cart rule "CartRuleAmountOnEveryOrder" with following properties:
+      | name[en-US]               | CartRuleAmountOnEveryOrder |
+      | priority                  | 1                          |
+      | free_shipping             | false                      |
+      | discount_percentage       | 50                         |
+      | discount_application_type | order_without_shipping     |
+      | total_quantity            | 1000                       |
+      | quantity_per_user         | 1000                       |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
       | amount | 1                               |
@@ -252,7 +272,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$19.40"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnEveryOrder" with amount "$19.40"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
       | total_products_wt        | 41.130 |
@@ -268,7 +288,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$11.90"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnEveryOrder" with amount "$11.90"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -281,6 +301,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add discount to every orders, I remove the discount from order, it is automatically added again until I inactivate it
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -297,10 +318,15 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
-    Given there is a cart rule named "CartRuleAmountOnEveryOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRuleAmountOnEveryOrder" is applied on every order
+    And there is a cart rule "CartRuleAmountOnEveryOrder" with following properties:
+      | name[en-US]               | CartRuleAmountOnEveryOrder |
+      | priority                  | 1                          |
+      | free_shipping             | false                      |
+      | discount_percentage       | 50                         |
+      | discount_application_type | order_without_shipping     |
+      | total_quantity            | 1000                       |
+      | quantity_per_user         | 1000                       |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
       | amount | 1                               |
@@ -353,6 +379,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add product with associated discount to order, Add discount to the specific order, when I remove a product the order specific discount is still present
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -369,9 +396,14 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
+      | name[en-US]               | CartRulePercentForSpecificProduct  |
+      | priority                  | 1                                  |
+      | free_shipping             | false                              |
+      | discount_percentage       | 50                                 |
+      | discount_application_type | specific_product                   |
+      | discount_product          | Test Product With Percent Discount |
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
@@ -427,6 +459,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add product with associated discount to order, Add discount to the specific order, I remove the discount of this product, if I add the product again the discount is still removed
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -443,10 +476,14 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
+    And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
+      | name[en-US]               | CartRulePercentForSpecificProduct  |
+      | priority                  | 1                                  |
+      | free_shipping             | false                              |
+      | discount_percentage       | 50                                 |
+      | discount_application_type | specific_product                   |
+      | discount_product          | Test Product With Percent Discount |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
       | amount | 1                                  |
@@ -502,7 +539,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  Scenario: Add product with associated discount to order, I remove the discount of this product, if I remove the propduct and add it again the discount is applied again
+  @restore-cart-rules-before-scenario
+  Scenario: Add product with associated discount to order, I remove the discount of this product, if I remove the product and add it again the discount is applied again
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
@@ -518,9 +556,13 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
+      | name[en-US]         | CartRulePercentForSpecificProduct |
+      | priority            | 1                                 |
+      | free_shipping       | false                             |
+      | discount_percentage | 50                                |
+    # @todo: this seems to be a restriction based scenario (not specific_product), so the following step should be replaced when SetCartRuleProductRestrictions cqrs command is done
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
@@ -592,6 +634,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add discount to the specific order, then remove it When I perform add/remove product actions the discount is not reapplied
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -608,7 +651,6 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     When I add discount to order "bo_order1" with following details:
       | name  | discount five-percent |
       | type  | percent               |
@@ -627,8 +669,13 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
-    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
+    And there is a cart rule "CartRulePercentForSpecificProduct1" with following properties:
+      | name[en-US]               | CartRulePercentForSpecificProduct1 |
+      | discount_percentage       | 50                                 |
+      | priority                  | 1                                  |
+      | free_shipping             | false                              |
+      | discount_application_type | specific_product                   |
+      | discount_product          | Test Product With Percent Discount |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
       | amount | 1                                  |
@@ -637,7 +684,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 2 cart rule
     Then order "bo_order1" should have cart rule "discount five-percent" with amount "$18.69"
-    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$166.25"
+    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct1" with amount "$166.25"
     Then order "bo_order1" should have following details:
       | total_products           | 373.80 |
       | total_products_wt        | 396.23 |
@@ -651,7 +698,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     When I remove cart rule "discount five-percent" from order "bo_order1"
     Then order "bo_order1" should have 1 cart rule
-    And order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
+    And order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct1" with amount "$175.00"
     And order "bo_order1" should have following details:
       | total_products           | 373.80 |
       | total_products_wt        | 396.23 |
@@ -667,6 +714,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
 
+  @restore-cart-rules-before-scenario
   Scenario: When a cart rule is associated to a carrier, when I change the carrier the cart rule should be added/removed accordingly
     Given there is a product in the catalog named "product1" with a price of 10.00 and 100 items in stock
     And there is a product in the catalog named "product2" with a price of 15.00 and 100 items in stock
@@ -676,9 +724,14 @@ Feature: Order from Back Office (BO)
     And there is a carrier named "carrier2"
     And carrier "carrier1" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
     And carrier "carrier2" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
-    And there is a cart rule named "FreeGift" that applies no discount with priority 1, quantity of 1 and quantity per user 1
-    And cart rule "FreeGift" offers a gift product "product1"
-    And cart rule "FreeGift" is restricted to carrier "carrier1"
+    And there is a cart rule FreeGift with following properties:
+      | name[en-US]  | FreeGift |
+      | gift_product | product1 |
+    And I restrict following carriers for cart rule FreeGift:
+      | restricted carriers | carrier1 |
+    And I save all the restrictions for cart rule FreeGift
+    And cart rule FreeGift should have the following properties:
+      | restricted carriers | carrier1 |
     When I create an empty cart "dummy_cart_freegift" for customer "testCustomer"
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_freegift"
     And I add 1 products "product2" to the cart "dummy_cart_freegift"
@@ -688,6 +741,7 @@ Feature: Order from Back Office (BO)
     When I select carrier "carrier2" for cart "dummy_cart_freegift"
     Then cart "dummy_cart_freegift" should contain 1 products
 
+  @restore-cart-rules-before-scenario
   Scenario: Add a cart rule with free shipping to an order with a total of 0
     Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
     When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
@@ -729,6 +783,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.000 |
       | total_shipping_tax_incl  | 7.420 |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
     Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
     When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
@@ -771,6 +826,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.000 |
       | total_shipping_tax_incl  | 7.420 |
 
+  @restore-cart-rules-before-scenario
   Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
     Given there is a product in the catalog named "product_expensive" with a price of 123.00 and 100 items in stock
     And there is a product in the catalog named "product_cheap" with a price of 10.00 and 100 items in stock
@@ -800,39 +856,10 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have invoice
     ## Create a new cart rule
     And I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                            | Cart Rule 50% which excludes discounted products and applies to cheapest product |
-      | description                            | None                                                                             |
-      | highlight                              | true                                                                             |
-      | is_active                              | true                                                                             |
-      | allow_partial_use                      | false                                                                            |
-      | priority                               | 1                                                                                |
-      | valid_from                             | 2019-01-01 11:00:00                                                              |
-      | valid_to                               | 2040-01-01 12:00:00                                                              |
-      | total_quantity                         | 100                                                                              |
-      | quantity_per_user                      | 100                                                                              |
-      | free_shipping                          | false                                                                            |
-      | minimum_amount                         |                                                                                  |
-      | code                                   |                                                                                  |
-      | reduction_percentage                   | 50                                                                               |
-      | reduction_apply_to_discounted_products | false                                                                            |
-      | discount_application_type              | cheapest_product                                                                 |
-    And cart rule "cart_rule_1" should have the following properties:
-      | name[en-US]                            | Cart Rule 50% which excludes discounted products and applies to cheapest product |
-      | description                            | None                                                                             |
-      | highlight                              | true                                                                             |
-      | is_active                              | true                                                                             |
-      | allow_partial_use                      | false                                                                            |
-      | priority                               | 1                                                                                |
-      | valid_from                             | 2019-01-01 11:00:00                                                              |
-      | valid_to                               | 2040-01-01 12:00:00                                                              |
-      | total_quantity                         | 100                                                                              |
-      | quantity_per_user                      | 100                                                                              |
-      | free_shipping                          | false                                                                            |
-      | minimum_amount                         |                                                                                  |
-      | code                                   |                                                                                  |
-      | reduction_percentage                   | 50                                                                               |
-      | reduction_apply_to_discounted_products | false                                                                            |
-      | discount_application_type              | cheapest_product                                                                 |
+      | name[en-US]                  | Cart Rule 50% which excludes discounted products and applies to cheapest product |
+      | discount_percentage          | 50                                                                               |
+      | apply_to_discounted_products | false                                                                            |
+      | discount_application_type    | cheapest_product                                                                 |
     ## Add the product to the order
     When I add products to order "bo_order1" without invoice and the following products details:
       | name   | product_cheap |

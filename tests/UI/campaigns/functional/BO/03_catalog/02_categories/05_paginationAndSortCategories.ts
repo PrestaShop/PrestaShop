@@ -15,6 +15,7 @@ import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import ImportCategories from '@data/import/categories';
+import type {CategoryFilter} from '@data/types/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,7 +39,7 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
   // Variable used to create empty categories csv file
   const fileName: string = 'categories.csv';
   // Object used to delete imported categories
-  const categoryData: object = {filterBy: 'name', value: 'category'};
+  const categoryData: CategoryFilter = {filterBy: 'name', value: 'category'};
 
   // Pre-condition: Import list of categories
   importFileTest(fileName, ImportCategories.entity, `${baseContext}_preTest_1`);
@@ -74,14 +75,14 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
     it('should reset all filters and get number of categories in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategories).to.be.above(0);
+      expect(numberOfCategories).to.be.above(0);
     });
   });
 
@@ -173,17 +174,17 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

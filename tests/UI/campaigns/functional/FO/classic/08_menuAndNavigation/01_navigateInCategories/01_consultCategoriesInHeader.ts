@@ -39,7 +39,7 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   [Categories.clothes, Categories.accessories, Categories.art].forEach((test: CategoryData) => {
@@ -49,7 +49,7 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
       await homePage.goToCategory(page, test.id);
 
       const pageTitle = await homePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(test.name);
+      expect(pageTitle).to.equal(test.name);
     });
   });
 
@@ -65,7 +65,7 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
       await homePage.goToSubCategory(page, test.args.category.id, test.args.subcategory.id);
 
       const pageTitle = await homePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(test.args.subcategory.name);
+      expect(pageTitle).to.equal(test.args.subcategory.name);
     });
   });
 });

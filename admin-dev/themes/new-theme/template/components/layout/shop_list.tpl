@@ -51,7 +51,7 @@
   <div class="shop-list">
     <a class="link" id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" target= "_blank">
       <i class="material-icons">visibility</i>
-      <span>{l s='View my shop' d='Admin.Navigation.Header'}</span>
+      <span>{l s='View my store' d='Admin.Navigation.Header'}</span>
     </a>
   </div>
 {/if}

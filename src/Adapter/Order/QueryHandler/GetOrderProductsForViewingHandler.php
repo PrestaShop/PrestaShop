@@ -37,6 +37,7 @@ use OrderSlip;
 use Pack;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
@@ -50,12 +51,11 @@ use PrestaShop\PrestaShop\Core\Util\Sorter;
 use Product;
 use Shop;
 use StockAvailable;
-use Warehouse;
-use WarehouseProductLocation;
 
 /**
  * Handles GetOrderProductsForViewing query using legacy object models
  */
+#[AsQueryHandler]
 final class GetOrderProductsForViewingHandler extends AbstractOrderHandler implements GetOrderProductsForViewingHandlerInterface
 {
     /**
@@ -137,20 +137,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             $product['amount_refunded'] = $product[$resumeAmountKey] ?? 0;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
-
-            if ($product['id_warehouse'] != 0) {
-                $warehouse = new Warehouse((int) $product['id_warehouse']);
-                $product['warehouse_name'] = $warehouse->name;
-                $warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
-                if (!empty($warehouse_location)) {
-                    $product['warehouse_location'] = $warehouse_location;
-                } else {
-                    $product['warehouse_location'] = false;
-                }
-            } else {
-                $product['warehouse_name'] = '--';
-                $product['warehouse_location'] = false;
-            }
 
             $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
             foreach ($pack_items as &$pack_item) {

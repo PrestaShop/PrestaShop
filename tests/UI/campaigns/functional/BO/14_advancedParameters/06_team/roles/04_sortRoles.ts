@@ -48,7 +48,7 @@ describe('BO - Advanced Parameters - Team : Sort Roles table', async () => {
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should go to \'Roles\' page', async function () {
@@ -57,14 +57,14 @@ describe('BO - Advanced Parameters - Team : Sort Roles table', async () => {
     await employeesPage.goToRolesPage(page);
 
     const pageTitle = await rolesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(rolesPage.pageTitle);
+    expect(pageTitle).to.contains(rolesPage.pageTitle);
   });
 
   it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfRoles = await rolesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfRoles).to.be.above(0);
+    expect(numberOfRoles).to.be.above(0);
   });
 
   const tests = [
@@ -86,9 +86,9 @@ describe('BO - Advanced Parameters - Team : Sort Roles table', async () => {
       const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
       if (test.args.sortDirection === 'asc') {
-        await expect(sortedTable).to.deep.equal(expectedResult);
+        expect(sortedTable).to.deep.equal(expectedResult);
       } else {
-        await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        expect(sortedTable).to.deep.equal(expectedResult.reverse());
       }
     });
   });

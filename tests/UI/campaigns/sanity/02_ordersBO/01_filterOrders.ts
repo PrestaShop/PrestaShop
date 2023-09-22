@@ -52,14 +52,14 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
     );
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should reset all filters and get number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters1', baseContext);
 
     numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrders).to.be.above(0);
+    expect(numberOfOrders).to.be.above(0);
   });
 
   const tests = [
@@ -104,14 +104,14 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
       );
 
       const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, 1);
-      await expect(textColumn).to.equal(test.args.filterValue);
+      expect(textColumn).to.equal(test.args.filterValue);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
 
       const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
+      expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });
 

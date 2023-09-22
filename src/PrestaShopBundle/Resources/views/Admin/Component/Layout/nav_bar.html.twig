@@ -1,0 +1,133 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<nav class="nav-bar d-none d-print-none d-md-block">
+  <span class="menu-collapse" data-toggle-url="{{ legacy_path('AdminEmployees', {'action' : 'toggleMenu'}) }}">
+    <i class="material-icons rtl-flip">chevron_left</i>
+    <i class="material-icons rtl-flip">chevron_left</i>
+  </span>
+
+  <div class="nav-bar-overflow">
+    <div class="logo-container">
+      <div class="d-flex align-items-center">
+        <a id="header_logo" class="logo float-left" href="{{ legacy_path(this.defaultTab)|escape('html_attr') }}"></a>
+        <span id="shop_version" class="header-version">{{ this.psVersion }}</span>
+      </div>
+      <div class="logo-container__close js-mobile-menu">
+        <i class="material-icons close-btn">close</i>
+      </div>
+    </div>
+
+    <ul class="main-menu{% if this.collapseMenu %} sidebar-closed{% endif %}">
+      {% for level1 in this.tabs %}
+        {% if level1.active %}
+
+        {% set level1Href = level1.href %}
+        {% if level1.sub_tabs|length > 0 and level1.sub_tabs[0].href is defined %}
+          {% set level1Href = level1.sub_tabs[0].href %}
+        {% endif %}
+
+        {% set level1Name = level1.name %}
+        {% if level1.name is same as ''%}
+          {% set level1Name = level1.class_name %}
+        {% endif %}
+
+        {% if level1.icon is not same as '' %}
+
+          <li class="link-levelone{% if level1.current %} link-levelone-active{% endif %}" data-submenu="{{ level1.id_tab }}" id="tab-{{ level1.class_name }}">
+            <a href="{{ level1Href }}" class="link" >
+              <i class="material-icons">{{ level1.icon }}</i> <span>{{ level1Name }}</span>
+            </a>
+          </li>
+
+        {% else %}
+
+        <li class="category-title{% if level1.current %} link-active{% endif %}" data-submenu="{{ level1.id_tab }}" id="tab-{{ level1.class_name }}">
+          <span class="title">{{ level1Name }}</span>
+        </li>
+
+        {% for level2 in level1.sub_tabs %}
+        {% if level2.active %}
+
+        {% set level2Href = level2.href %}
+
+        {% set level2Name = level2.name %}
+        {% if level2.name is same as '' %}
+          {% set level2Name = level2.class_name %}
+        {% endif %}
+        {% set levelOneClass = '' %}
+
+        {% if level2.current and not this.collapseMenu %}
+          {% set levelOneClass = " link-active open ul-open" %}
+        {% elseif level2.current and this.collapseMenu %}
+          {% set levelOneClass =" link-active" %}
+        {% endif %}
+
+        <li class="link-levelone{% if level2.sub_tabs|length > 0 %} has_submenu{% endif %}{{ levelOneClass }}" data-submenu="{{ level2.id_tab }}" id="subtab-{{ level2.class_name }}">
+          <a href="{{ level2Href }}" class="link">
+            <i class="material-icons mi-{{ level2.icon }}">{{ level2.icon }}</i>
+            <span>{{ level2Name }}</span>
+            {% if level1.sub_tabs|length > 0 %}
+              <i class="material-icons sub-tabs-arrow">
+                {% if level2.current %}
+                  keyboard_arrow_up
+                {% else %}
+                  keyboard_arrow_down
+                {% endif %}
+              </i>
+            {% endif %}
+          </a>
+          {% if level2.sub_tabs|length > 0 %}
+            <ul id="collapse-{{ level2.id_tab }}" class="submenu panel-collapse">
+              {% for level3 in level2.sub_tabs %}
+              {% if level3.active %}
+
+              {% set level3Href = level3.href %}
+
+              {% set level3Name = level3.name %}
+              {% if level3.name is same as ''%}
+                {% set level3Name = level3.class_name %}
+              {% endif %}
+
+              <li class="link-leveltwo{% if level3.current %} link-active{% endif %}" data-submenu="{{ level3.id_tab }}" id="subtab-{{ level3.class_name }}">
+                <a href="{{ level3Href }}" class="link"> {{ level3Name }}</a>
+              </li>
+
+              {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% endif %}
+
+        {% endif %}
+      {% endfor%}
+    </ul>
+  </div>
+  {{ renderhook('displayAdminNavBarBeforeEnd') }}
+</nav>
+

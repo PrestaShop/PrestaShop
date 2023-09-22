@@ -2,11 +2,15 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.admin.tab.repository:
-    class: PrestaShopBundle\Entity\Repository\TabRepository
+  PrestaShopBundle\Entity\Repository\TabRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    public: false
     arguments:
       - PrestaShopBundle\Entity\Tab
+
+  prestashop.core.admin.tab.repository:
+    alias: PrestaShopBundle\Entity\Repository\TabRepository
+    deprecated: ~
 
   prestashop.core.admin.shop.repository:
     class: 'PrestaShopBundle\Entity\Repository\ShopRepository'
@@ -129,12 +133,13 @@ services:
     arguments:
       - PrestaShopBundle\Entity\FeatureFlag
 
-  prestashop.core.admin.feature_flag.repository:
-    alias: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
-    deprecated: ~
-
   PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\AuthorizedApplication
     public: true
+
+  PrestaShopBundle\Entity\Repository\ApiAccessRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\ApiAccess

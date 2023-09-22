@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
 
 use Gender;
 use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\EditTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\EditTitleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotUpdateTitleException;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleImageUploadingExcepti
 /**
  * Handles edition of title
  */
+#[AsCommandHandler]
 class EditTitleHandler extends AbstractTitleHandler implements EditTitleHandlerInterface
 {
     /**

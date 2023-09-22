@@ -510,6 +510,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if (isset($_GET['filename'])) {
@@ -575,7 +580,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->id = 'box-pending-messages';
         $helper->icon = 'icon-envelope';
         $helper->color = 'color1';
-        $helper->href = $this->context->link->getAdminLink('AdminCustomerThreads');
         $helper->title = $this->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
         if (ConfigurationKPI::get('PENDING_MESSAGES') !== false) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');

@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\CustomerSessionId;
 
-class CustomerSessionTest extends TestCase
+class CustomerSessionIdTest extends TestCase
 {
     /**
      * @dataProvider createsSessionIdWithValidValuesData

@@ -5,11 +5,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for taking the time to fill out this bug report. Please take the time to provide as much details as possible. Following our [bug report guidelines](https://devdocs.prestashop.com/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) will help maintainers qualify your report faster.
-
-        Reporting bugs with "error 500" or "white page" may not help us reproduce them. This is a universal error that hides what is underneath. Instead, enable debug mode in the Performance section of PrestaShop and try again. You should get a proper error message.
-
-        🇬🇧 Use English, reports in all other languages will be closed.
+         ### ❗️ Read this before submitting your bug report:
+         - **Write in English.** Reports in all other languages will be closed.
+         - **Provide as much detail as possible** - error logs, screenshots, your exact configuration. If the issue cannot be reproduced, it cannot be fixed.
+         - **Follow the [bug report guidelines](https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue).** This will help issue managers qualify your report faster.
+         - **Avoid reporting "error 500" or "white page" errors** - this is a universal error message that does not provide enough information to qualify the issue. Enable debug mode in the Performance section of PrestaShop or manually in `/config/defines.inc.php` and try again. You should get a proper error message.
+         - If reporting a problem with the upgrade process, open `/admin/autoupgrade/tmp` and attach the last part of `log.txt` to the issue. It may contain information about the upgrade errors helpful in resolving the issue. Do not upload the entire `log.txt` as it contains sensitive data.
   - type: checkboxes
     attributes:
       label: Prerequisites
@@ -22,7 +23,7 @@ body:
     id: what-happened
     attributes:
       label: Describe the bug and add attachments
-      description: What went wrong? If applicable, add screenshots, error logs or screen recordings to help explain your problem.
+      description: What went wrong? If possible, add screenshots, error logs or screen recordings to help explain your problem.
     validations:
       required: true
   - type: textarea

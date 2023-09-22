@@ -2,7 +2,7 @@ import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
 
-import {OrderHistory} from '@data/types/order';
+import {OrderHistory, OrderHistoryMessage} from '@data/types/order';
 
 /**
  * Order history page, contains functions that can be used on the page
@@ -52,8 +52,8 @@ class OrderHistoryPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on order history page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Order history';
 
@@ -132,7 +132,7 @@ class OrderHistoryPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnReorderLink(page: Page, orderRow: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.reorderLink(orderRow));
+    await this.clickAndWaitForURL(page, this.reorderLink(orderRow));
   }
 
   /**
@@ -159,9 +159,9 @@ class OrderHistoryPage extends FOBasePage {
    * Get order id from invoice href
    * @param page {Page} Browser tab
    * @param orderRow {number} Row number in orders table
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  getOrderIdFromInvoiceHref(page: Page, orderRow: number = 1): Promise<string | null> {
+  getOrderIdFromInvoiceHref(page: Page, orderRow: number = 1): Promise<string> {
     return this.getAttributeContent(page, this.orderTableColumnInvoice(orderRow), 'href');
   }
 
@@ -181,7 +181,7 @@ class OrderHistoryPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToDetailsPage(page: Page, orderRow: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.detailsLink(orderRow));
+    await this.clickAndWaitForURL(page, this.detailsLink(orderRow));
   }
 
   /**
@@ -191,7 +191,7 @@ class OrderHistoryPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToOrderDetailsPage(page: Page, orderID: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.orderDetailsLink(orderID));
+    await this.clickAndWaitForURL(page, this.orderDetailsLink(orderID));
   }
 
   /**
@@ -199,7 +199,7 @@ class OrderHistoryPage extends FOBasePage {
    * @param page {Page} Browser tab
    */
   async clickOnBackToYourAccountLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.backToYourAccountLink);
+    await this.clickAndWaitForURL(page, this.backToYourAccountLink);
   }
 
   /**
@@ -207,7 +207,7 @@ class OrderHistoryPage extends FOBasePage {
    * @param page {Page} Browser tab
    */
   async clickOnHomeLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.homeLink);
+    await this.clickAndWaitForURL(page, this.homeLink);
   }
 
   // Methods for box messages
@@ -244,19 +244,20 @@ class OrderHistoryPage extends FOBasePage {
   /**
    * Send message
    * @param page {Page} Browser tab
-   * @param messageText {{product: string, message:string}} Data to set on Add message form
+   * @param messageText {OrderHistoryMessage} Data to set on Add message form
    * @returns {Promise<string>}
    */
-  async sendMessage(page: Page, messageText: any): Promise<string> {
+  async sendMessage(page: Page, messageText: OrderHistoryMessage): Promise<string> {
     if (messageText.product !== '') {
       await this.selectByVisibleText(page, this.productSelect, messageText.product);
     }
 
     await this.setValue(page, this.messageTextarea, messageText.message);
-    await this.clickAndWaitForNavigation(page, this.sendMessageButton);
+    await this.clickAndWaitForURL(page, this.sendMessageButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 
-export default new OrderHistoryPage();
+const orderHistoryPage = new OrderHistoryPage();
+export {orderHistoryPage, OrderHistoryPage};

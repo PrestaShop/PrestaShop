@@ -255,7 +255,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<void>}
    */
   async simpleFilter(page: Page, value: string): Promise<void> {
-    await page.type(this.searchInput, value);
+    await page.locator(this.searchInput).fill(value);
     await page.click(this.searchButton);
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
@@ -278,11 +278,11 @@ class Stocks extends BOBasePage {
       case 'supplier':
         return this.getTextContent(page, this.productRowSupplierColumn(row));
       case 'physical':
-        return this.getNumberFromText(page, this.productRowPhysicalColumn(row));
+        return this.getTextContent(page, this.productRowPhysicalColumn(row));
       case 'reserved':
-        return this.getNumberFromText(page, this.productRowReservedColumn(row));
+        return this.getTextContent(page, this.productRowReservedColumn(row));
       case 'available':
-        return this.getNumberFromText(page, this.productRowAvailableColumn(row));
+        return this.getTextContent(page, this.productRowAvailableColumn(row));
       default:
         throw new Error(`${column} was not find as column in this table`);
     }
@@ -296,9 +296,9 @@ class Stocks extends BOBasePage {
    */
   async getStockQuantityForProduct(page: Page, row: number) {
     return {
-      physical: await (this.getTextColumnFromTableStocks(page, row, 'physical')),
-      reserved: await (this.getTextColumnFromTableStocks(page, row, 'reserved')),
-      available: await (this.getTextColumnFromTableStocks(page, row, 'available')),
+      physical: parseInt(await (this.getTextColumnFromTableStocks(page, row, 'physical')), 10),
+      reserved: parseInt(await (this.getTextColumnFromTableStocks(page, row, 'reserved')), 10),
+      available: parseInt(await (this.getTextColumnFromTableStocks(page, row, 'available')), 10),
     };
   }
 

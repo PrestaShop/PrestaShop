@@ -413,7 +413,6 @@ function stockManagementActivationAuthorization()
     getE('PS_ORDER_OUT_OF_STOCK_on').checked = true;
     getE('PS_ORDER_OUT_OF_STOCK_on').disabled = 'disabled';
     getE('PS_ORDER_OUT_OF_STOCK_off').disabled = 'disabled';
-    getE('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT').disabled = 'disabled';
   }
 }
 
@@ -1081,20 +1080,24 @@ function getControllerActionMap(force_action) {
 function ajaxStates(id_state_selected)
 {
   $.ajax({
-    url: "index.php",
+    url: `${$('#contains_states').data('statesUrl')}&id_country=${$('#id_country').val()}`,
     cache: false,
-    data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=0&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
-    success: function(html)
+    success: function(response)
     {
-      if (html == 'false')
-      {
-        $("#contains_states").fadeOut();
+      var $stateIdSelect = $("#id_state");
+      var $stateSelectorRow = $("#contains_states");
+
+      if (!response.states || response.states.length === 0) {
+        $stateSelectorRow.fadeOut();
+        // append initial empty value which is selected (and hidden) when there are no states
+        $stateIdSelect.append(`<option value="0">-</option>`);
         $('#id_state option[value=0]').attr("selected", "selected");
-      }
-      else
-      {
-        $("#id_state").html(html);
-        $("#contains_states").fadeIn();
+      } else {
+        $stateIdSelect.empty();
+        for (const [name, id] of Object.entries(response.states)) {
+          $stateIdSelect.append(`<option value="${id}">${name}</option>`)
+        }
+        $stateSelectorRow.fadeIn();
         $('#id_state option[value=' + id_state_selected + ']').attr("selected", "selected");
       }
     }

@@ -100,6 +100,11 @@ class OrderCarrierCore extends ObjectModel
             throw new PrestaShopException('Can\'t load Address object');
         }
 
+        if (!$carrier->url) {
+            // the url field of the carrier is empty therefore the e-mail must not be sent
+            return true;
+        }
+
         $products = $order->getCartProducts();
         $link = Context::getContext()->link;
 

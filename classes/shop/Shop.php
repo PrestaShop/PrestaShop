@@ -26,11 +26,12 @@
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Model\ShopInterface;
 
 /**
  * @since 1.5.0
  */
-class ShopCore extends ObjectModel
+class ShopCore extends ObjectModel implements ShopInterface
 {
     /** @var int ID of shop group */
     public $id_shop_group;
@@ -1279,6 +1280,7 @@ class ShopCore extends ObjectModel
         if (is_array($modules_list) && count($modules_list) > 0) {
             foreach ($modules_list as $m) {
                 if (!$tables_import || isset($tables_import['Module' . ucfirst($m['module'])])) {
+                    // Hook called only for the module concerned
                     Hook::exec('actionShopDataDuplication', [
                         'old_id_shop' => (int) $old_id,
                         'new_id_shop' => (int) $this->id,
@@ -1363,5 +1365,64 @@ class ShopCore extends ObjectModel
         $result = Db::getInstance()->executeS($sql);
 
         return $result;
+    }
+
+    /*
+     * Interface methods
+     */
+
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getShopGroupId(): int
+    {
+        return (int) $this->id_shop_group;
+    }
+
+    public function getCategoryId(): int
+    {
+        return (int) $this->id_category;
+    }
+
+    public function getThemeName(): string
+    {
+        return $this->theme_name;
+    }
+
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    public function isActive(): bool
+    {
+        return (bool) $this->active;
+    }
+
+    public function getPhysicalUri(): string
+    {
+        return $this->physical_uri;
+    }
+
+    public function getVirtualUri(): string
+    {
+        return $this->virtual_uri;
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
+    public function getDomainSSL(): string
+    {
+        return $this->domain_ssl;
     }
 }

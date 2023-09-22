@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme orderReturnStateForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block order_return_state_form %}
   {{ form_start(orderReturnStateForm) }}
@@ -34,22 +34,7 @@
       </h3>
       <div class="card-body">
         <div class="form-wrapper">
-          {{ form_errors(orderReturnStateForm) }}
-
-          {{ ps.form_group_row(orderReturnStateForm.name, {}, {
-            'label': 'Status name'|trans({}, 'Admin.Shopparameters.Feature'),
-            'help': 'Order\'s return status name.'|trans({}, 'Admin.Shopparameters.Help')
-                    ~ ' '
-                    ~ 'Invalid characters: numbers and'|trans({}, 'Admin.Shopparameters.Help')
-                    ~ ' !<>,;?=+()@#"{}_$%:'
-          }) }}
-
-          {{ ps.form_group_row(orderReturnStateForm.color, {}, {
-            'label': 'Color'|trans({}, 'Admin.Shopparameters.Feature'),
-            'help': 'Status will be highlighted in this color. HTML colors only.'|trans({}, 'Admin.Shopparameters.Help') ~ ' "lightblue", "#CC6600")'
-          }) }}
-
-          {% block order_return_state_form_reset %}
+          {% block order_return_state_form_rest %}
             {{ form_rest(orderReturnStateForm) }}
           {% endblock %}
         </div>
@@ -58,7 +43,7 @@
           <a href="{{ pathWithBackUrl('admin_order_states') }}" class="btn btn-outline-secondary">
           {{ 'Cancel'|trans({}, 'Admin.Actions') }}
         </a>
-        <button class="btn btn-primary float-right">
+        <button class="btn btn-primary float-right" id="save-button">
           {{ 'Save'|trans({}, 'Admin.Actions') }}
         </button>
       </div>

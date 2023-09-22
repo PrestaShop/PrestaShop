@@ -59,7 +59,7 @@ describe('FO - Header and Footer : Change language', async () => {
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
     it('should go to \'Languages\' page', async function () {
@@ -68,14 +68,14 @@ describe('FO - Header and Footer : Change language', async () => {
       await localizationPage.goToSubTabLanguages(page);
 
       const pageTitle = await languagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(languagesPage.pageTitle);
+      expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst1', baseContext);
 
       const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguages).to.be.above(0);
+      expect(numberOfLanguages).to.be.above(0);
     });
 
     it('should filter by iso_code \'fr\'', async function () {
@@ -86,10 +86,10 @@ describe('FO - Header and Footer : Change language', async () => {
 
       // Check number od languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      await expect(textColumn).to.contains(Languages.french.isoCode);
+      expect(textColumn).to.contains(Languages.french.isoCode);
     });
 
     it('should disable language', async function () {
@@ -99,17 +99,17 @@ describe('FO - Header and Footer : Change language', async () => {
 
       if (isActionPerformed) {
         const resultMessage = await languagesPage.getAlertSuccessBlockParagraphContent(page);
-        await expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
+        expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
       }
       const languageStatus = await languagesPage.getStatus(page, 1);
-      await expect(languageStatus).to.be.false;
+      expect(languageStatus).to.eq(false);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset1', baseContext);
 
       const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguages).to.be.above(0);
+      expect(numberOfLanguages).to.be.above(0);
     });
   });
 
@@ -121,21 +121,21 @@ describe('FO - Header and Footer : Change language', async () => {
       await homePage.goToFo(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should check that the languages list is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLanguageListNotVisible', baseContext);
 
       const isVisible = await homePage.isLanguageListVisible(page);
-      await expect(isVisible, 'Language list is visible!').to.be.false;
+      expect(isVisible, 'Language list is visible!').to.eq(false);
     });
 
     it('should check that the shop language is \'English\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShopLanguage', baseContext);
 
       const language = await homePage.getShopLanguage(page);
-      await expect(language).to.equal('en-US');
+      expect(language).to.equal('en-US');
     });
   });
 
@@ -147,7 +147,7 @@ describe('FO - Header and Footer : Change language', async () => {
       await homePage.goToBO(page);
 
       const pageTitle = await dashboardPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      expect(pageTitle).to.contains(dashboardPage.pageTitle);
     });
 
     it('should go to \'International > Localization\' page', async function () {
@@ -161,7 +161,7 @@ describe('FO - Header and Footer : Change language', async () => {
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
     it('should go to \'Languages\' page', async function () {
@@ -170,7 +170,7 @@ describe('FO - Header and Footer : Change language', async () => {
       await localizationPage.goToSubTabLanguages(page);
 
       const pageTitle = await languagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(languagesPage.pageTitle);
+      expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
 
     it('should filter by iso_code \'fr\'', async function () {
@@ -181,10 +181,10 @@ describe('FO - Header and Footer : Change language', async () => {
 
       // Check number od languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      await expect(textColumn).to.contains(Languages.french.isoCode);
+      expect(textColumn).to.contains(Languages.french.isoCode);
     });
 
     it('should enable language', async function () {
@@ -194,17 +194,17 @@ describe('FO - Header and Footer : Change language', async () => {
 
       if (isActionPerformed) {
         const resultMessage = await languagesPage.getAlertSuccessBlockParagraphContent(page);
-        await expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
+        expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
       }
       const languageStatus = await languagesPage.getStatus(page, 1);
-      await expect(languageStatus).to.be.true;
+      expect(languageStatus).to.eq(true);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset2', baseContext);
 
       const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguages).to.be.above(0);
+      expect(numberOfLanguages).to.be.above(0);
     });
   });
 
@@ -216,14 +216,14 @@ describe('FO - Header and Footer : Change language', async () => {
       await homePage.goToFo(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should check that the languages list is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLanguageListVisible', baseContext);
 
       const isVisible = await homePage.isLanguageListVisible(page);
-      await expect(isVisible, 'Language list is not visible!').to.be.true;
+      expect(isVisible, 'Language list is not visible!').to.eq(true);
     });
 
     it('should change the shop language to \'French\'', async function () {

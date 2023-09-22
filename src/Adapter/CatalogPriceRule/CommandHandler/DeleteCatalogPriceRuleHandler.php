@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\DeleteCatalogPriceRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCat
 /**
  * Handles deletion of catalog price rule using legacy object model
  */
+#[AsCommandHandler]
 final class DeleteCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler implements DeleteCatalogPriceRuleHandlerInterface
 {
     /**

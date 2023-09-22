@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,6 +51,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FeatureController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
@@ -75,6 +78,11 @@ class FeatureController extends FrameworkBundleAdminController
                 'add_feature' => [
                     'href' => $this->generateUrl('admin_features_add'),
                     'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+                'add_feature_value' => [
+                    'href' => $this->generateUrl('admin_feature_values_add'),
+                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
             ],
@@ -162,9 +170,7 @@ class FeatureController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_features_edit', [
-                    'featureId' => $featureId,
-                ]);
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -282,7 +288,7 @@ class FeatureController extends FrameworkBundleAdminController
     {
         return [
             FeatureNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             FeatureConstraintException::class => [

@@ -43,6 +43,8 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /** @var ModuleInterface[] */
     private $modules = [];
 
+    private $errors = [];
+
     public function __construct(array $modules = [])
     {
         foreach ($modules as $module) {
@@ -111,5 +113,20 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     public function filter(callable $callable): ModuleCollection
     {
         return static::createFrom(array_filter($this->modules, $callable));
+    }
+
+    public function add(ModuleInterface $module): void
+    {
+        $this->modules[] = $module;
+    }
+
+    public function addError(\Throwable $error): void
+    {
+        $this->errors[] = $error;
+    }
+
+    public function getErrors(): array
+    {
+        return $this->errors;
     }
 }

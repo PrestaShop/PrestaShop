@@ -219,7 +219,7 @@ class PackCore extends Product
         $idProduct = (int) $idProduct;
         $wantedQuantity = (int) $wantedQuantity;
         $product = new Product($idProduct, false);
-        $packQuantity = self::getQuantity($idProduct, null, null, $cart);
+        $packQuantity = self::getQuantity($idProduct, null, null, $cart, false);
 
         if ($product->isAvailableWhenOutOfStock($product->out_of_stock)) {
             return true;
@@ -237,7 +237,7 @@ class PackCore extends Product
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param CartCore|null $cart
-     * @param int|null $idCustomization Product customization id (optional)
+     * @param bool|int|null $idCustomization Product customization id (optional)
      *
      * @return int
      *
@@ -531,21 +531,16 @@ class PackCore extends Product
      * @param int $id_product id_pack
      *
      * @return bool
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public static function usesAdvancedStockManagement($id_product)
     {
-        if (!Pack::isPack($id_product)) {
-            return false;
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        $products = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
-        foreach ($products as $product) {
-            // if one product uses the advanced stock management
-            if ($product->advanced_stock_management == 1) {
-                return true;
-            }
-        }
-        // not used
         return false;
     }
 
@@ -555,22 +550,17 @@ class PackCore extends Product
      * @param int $id_product id_pack
      *
      * @return bool
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public static function allUsesAdvancedStockManagement($id_product)
     {
-        if (!Pack::isPack($id_product)) {
-            return false;
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        $products = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
-        foreach ($products as $product) {
-            // if one product uses the advanced stock management
-            if ($product->advanced_stock_management == 0) {
-                return false;
-            }
-        }
-        // not used
-        return true;
+        return false;
     }
 
     /**

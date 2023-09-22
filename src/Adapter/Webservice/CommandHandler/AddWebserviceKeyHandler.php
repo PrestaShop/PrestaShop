@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Webservice\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\AddWebserviceKeyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\CommandHandler\AddWebserviceKeyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
@@ -40,6 +41,7 @@ use WebserviceKey;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddWebserviceKeyHandler extends AbstractWebserviceKeyHandler implements AddWebserviceKeyHandlerInterface
 {
     /**

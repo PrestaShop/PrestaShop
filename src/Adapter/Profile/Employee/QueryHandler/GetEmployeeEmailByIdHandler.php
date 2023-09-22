@@ -27,10 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Profile\Employee\AbstractEmployeeHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeEmailByIdHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
+#[AsQueryHandler]
 final class GetEmployeeEmailByIdHandler extends AbstractEmployeeHandler implements GetEmployeeEmailByIdHandlerInterface
 {
     /**

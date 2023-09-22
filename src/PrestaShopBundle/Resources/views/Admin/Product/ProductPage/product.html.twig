@@ -91,7 +91,6 @@
         {% block product_panel_combinations %}
           {% set formStockQuantity = form.step3.qty_0 is defined ? form.step3.qty_0 : null  %}
           {{ include('@Product/ProductPage/Panels/combinations.html.twig', {
-              'formDependsOnStocks': form.step3.depends_on_stock,
               'productId': id_product,
               'formStockQuantity': formStockQuantity,
               'formStockMinimalQuantity': form.step3.minimal_quantity,
@@ -99,9 +98,7 @@
               'formLocation': form.step3.location,
               'formLowStockAlert': form.step3.low_stock_alert,
               'formVirtualProduct': form.step3.virtual_product,
-              'asm_globally_activated': asm_globally_activated,
               'formType': form.step1.type_product,
-              'formAdvancedStockManagement': form.step3.advanced_stock_management,
               'formPackStockType': form.step3.pack_stock_type,
               'formStep3': form.step3,
               'formCombinations': formCombinations,
@@ -118,10 +115,7 @@
                   <div class="row">
                     {{ include('@Product/ProductPage/Forms/form_shipping.html.twig', {
                       'form' : form.step4,
-                      'asm_globally_activated': asm_globally_activated,
-                      'isNotVirtual': form.step1.type_product.vars.value != "2",
-                      'isChecked': form.step3.advanced_stock_management.vars.checked,
-                      'warehouses': warehouses
+                      'isNotVirtual': form.step1.type_product.vars.value != "2"
                     }) }}
                   </div>
                 </div>
@@ -186,7 +180,7 @@
                 <div class="module-render-container all-modules">
                   <div>
                     <h2>{{ 'Choose a module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-                    <p>{{ 'These modules are relative to the product page of your shop.'|trans({}, 'Admin.Catalog.Feature') }}<br />
+                    <p>{{ 'These modules are relative to the product page of your store.'|trans({}, 'Admin.Catalog.Feature') }}<br />
                     {{ 'To manage all your modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Feature')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}</p>
                   </div>
                   <div class="row">

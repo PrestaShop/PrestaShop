@@ -38,7 +38,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should check the autocomplete list', async function () {
@@ -48,10 +48,10 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     const numSearchResults: number = 7;
 
     const numResults = await homePage.countAutocompleteSearchResult(page, searchValue);
-    await expect(numResults).equal(numSearchResults);
+    expect(numResults).equal(numSearchResults);
 
     const inputValue = await homePage.getSearchValue(page);
-    await expect(inputValue).equal(searchValue);
+    expect(inputValue).equal(searchValue);
   });
 
   it('should click outside the autocomplete list and check that the list is not displayed', async function () {
@@ -59,8 +59,8 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
 
     await homePage.closeAutocompleteSearch(page);
 
-    const hasAutocompleteList = await homePage.elementVisible(page, homePage.autocompleteSearchResult);
-    await expect(hasAutocompleteList).to.be.false;
+    const hasAutocompleteList = await homePage.isAutocompleteSearchResultVisible(page);
+    expect(hasAutocompleteList).to.eq(false);
   });
 
   [
@@ -81,10 +81,10 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
       await testContext.addContextItem(this, 'testIdentifier', `checkAutocompleteList_${index}`, baseContext);
 
       const numResults = await homePage.countAutocompleteSearchResult(page, search.searchValue);
-      await expect(numResults).equal(search.numResults);
+      expect(numResults).equal(search.numResults);
 
       const inputValue = await homePage.getSearchValue(page);
-      await expect(inputValue).equal(search.searchValue);
+      expect(inputValue).equal(search.searchValue);
 
       await homePage.closeAutocompleteSearch(page);
     });
@@ -94,6 +94,6 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteListSmallString', baseContext);
 
     const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'te');
-    await expect(hasSearchResult, 'There are results in autocomplete search').to.be.false;
+    expect(hasSearchResult, 'There are results in autocomplete search').to.eq(false);
   });
 });

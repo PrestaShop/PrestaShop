@@ -4,17 +4,22 @@ services:
 
   prestashop.adapter.hook.command_handler.update_hook_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Hook\CommandHandler\UpdateHookStatusCommandHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand
+    autoconfigure: true
 
   prestashop.adapter.hook.command_handler.get_hook_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetHookStatusHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetHookHandler:
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\HookManager: ~
 
   prestashop.adapter.hook.manager:
     alias: PrestaShop\PrestaShop\Adapter\HookManager
+
+  prestashop.attributes.ressource.metadata.collection.factory:
+    class: PrestaShopBundle\ApiPlatform\Decorator\AttributesResourceMetadataCollectionFactoryDecorator
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    arguments:
+      $innerFactory: '@prestashop.attributes.ressource.metadata.collection.factory.inner'

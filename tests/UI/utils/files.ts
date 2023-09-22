@@ -1,11 +1,14 @@
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+
 import ImportData from '@data/faker/import';
 
 import {createObjectCsvWriter} from 'csv-writer';
-import fs from 'fs';
 import imgGen from 'js-image-generator';
-import path from 'path';
 import {getDocument, OPS, PDFDocumentProxy} from 'pdfjs-dist/legacy/build/pdf.js';
 import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
+import {RawImageData} from 'jpeg-js';
 
 /**
  * @module FilesHelper
@@ -14,11 +17,11 @@ import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
 export default {
   /**
    * Delete File if exist
-   * @param filePath {string} Filepath to delete
+   * @param filePath {string|null} Filepath to delete
    * @return {Promise<void>}
    */
-  async deleteFile(filePath: string): Promise<void> {
-    if (fs.existsSync(filePath)) {
+  async deleteFile(filePath: string|null): Promise<void> {
+    if (filePath && fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
   },
@@ -48,12 +51,16 @@ export default {
 
   /**
    * Check if file was download in path
-   * @param filePath {string} Filepath to check
+   * @param filePath {string|null} Filepath to check
    * @param attempt {number} Number of attempt to check for the file
    * @returns {Promise<boolean>}
    */
-  async doesFileExist(filePath: string, attempt: number = 5000): Promise<boolean> {
-    let found = false;
+  async doesFileExist(filePath: string|null, attempt: number = 5000): Promise<boolean> {
+    if (filePath === null) {
+      return false;
+    }
+
+    let found: boolean = false;
 
     for (let i = 0; i <= attempt && !found; i += 100) {
       await (new Promise((resolve) => {
@@ -80,11 +87,15 @@ export default {
 
   /**
    * Check text in PDF
-   * @param filePath {string} Path of the PDF file
+   * @param filePath {string|null} Path of the PDF file
    * @param text {string} Text to check on the file
+   * @param deleteComma {boolean} True if we need to delete comma
    * @returns {Promise<boolean>}
    */
-  async isTextInPDF(filePath: string, text: string): Promise<boolean> {
+  async isTextInPDF(filePath: string|null, text: string, deleteComma: boolean = false): Promise<boolean> {
+    if (filePath === null) {
+      return false;
+    }
     const pdf = await getDocument({
       url: filePath,
       standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
@@ -98,15 +109,22 @@ export default {
 
     const pageTexts = await Promise.all(pageTextPromises);
 
+    if (deleteComma) {
+      return (pageTexts.join(' ').split(',').join('').indexOf(text) !== -1);
+    }
+
     return (pageTexts.join(' ').indexOf(text) !== -1);
   },
 
   /**
    * Get quantity of images on the PDF
-   * @param filePath {string} FilePath of the PDF file
+   * @param filePath {string|null} FilePath of the PDF file
    * @return {Promise<number>}
    */
-  async getImageNumberInPDF(filePath: string): Promise<number> {
+  async getImageNumberInPDF(filePath: string|null): Promise<number> {
+    if (filePath === null) {
+      return 0;
+    }
     const pdf = await getDocument({
       url: filePath,
       standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
@@ -166,7 +184,7 @@ export default {
   },
   /**
    * Check text in file
-   * @param filePath {string} Filepath to check
+   * @param filePath {string|null} Filepath to check
    * @param textToCheckWith {string} Text to check on the file
    * @param ignoreSpaces {boolean} True to delete all spaces before the check
    * @param ignoreTimeZone {boolean} True to delete timezone string added to some image url
@@ -174,12 +192,15 @@ export default {
    * @return {Promise<boolean>}
    */
   async isTextInFile(
-    filePath: string,
+    filePath: string|null,
     textToCheckWith: string,
     ignoreSpaces: boolean = false,
     ignoreTimeZone: boolean = false,
     encoding: BufferEncoding = 'utf8',
   ): Promise<boolean> {
+    if (filePath === null) {
+      return false;
+    }
     let fileText: string = await fs.readFileSync(filePath, {
       encoding,
     });
@@ -198,7 +219,19 @@ export default {
   },
 
   /**
-   * Generate image with js-image-generator
+   * Returns the extension of a file
+   * @param path {string}
+   * @return {string}
+   */
+  getFileExtension(path: string): string {
+    return path.substring(path.lastIndexOf('.') + 1, path.length) || path;
+  },
+
+  /**
+   * Generate image relative to the extension :
+   * - JPG : js-image-generator
+   * - PNG : copy existing file
+   * - WebP : copy existing file
    * @param imageName {string} Filename/Filepath of the image
    * @param width {number} Width chosen for the image
    * @param height {number} Height chosen for the image
@@ -206,22 +239,123 @@ export default {
    * @return {Promise<void>}
    */
   async generateImage(imageName: string, width: number = 200, height: number = 200, quality: number = 1): Promise<void> {
-    await imgGen.generateImage(width, height, quality, (err: Error, image: object) => {
-      if ('data' in image) {
-        fs.writeFileSync(imageName, image.data);
+    const extension = this.getFileExtension(imageName);
+
+    switch (extension) {
+      case 'jpg': {
+        await imgGen.generateImage(width, height, quality, (err: Error|null, image: RawImageData<Buffer>) => {
+          if ('data' in image) {
+            fs.writeFileSync(imageName, image.data);
+          }
+        });
+        break;
       }
-    });
+      case 'png': {
+        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.png`, imageName, (err: NodeJS.ErrnoException|null) => {
+          if (err) {
+            throw err;
+          }
+        });
+        break;
+      }
+      case 'webp': {
+        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.webp`, imageName, (err: NodeJS.ErrnoException|null) => {
+          if (err) {
+            throw err;
+          }
+        });
+        break;
+      }
+      default:
+        throw new Error(`You can't generate image for ${extension.toUpperCase()} file.`);
+    }
+  },
+
+  /**
+   * Returns the image type of a file
+   * @param path {string} Path of the file
+   * @return {Promise<string>}
+   */
+  async getImageType(path: string): Promise<string> {
+    const buffer: Buffer = fs.readFileSync(path);
+
+    // Jpeg
+    if (buffer.length >= 3 && buffer[0] === 255 && buffer[1] === 216 && buffer[2] === 255) {
+      return 'jpg';
+    }
+
+    // PNG
+    if (buffer.length >= 8 && buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47
+      && buffer[4] === 0x0D && buffer[5] === 0x0A && buffer[6] === 0x1A && buffer[7] === 0x0A) {
+      return 'png';
+    }
+
+    // WebP
+    if (buffer.length >= 12 && buffer[8] === 87 && buffer[9] === 69 && buffer[10] === 66 && buffer[11] === 80) {
+      return 'webp';
+    }
+
+    return '';
   },
 
   /**
    * Rename files
-   * @param oldPath {string} Old path of the file
+   * @param oldPath {string|null} Old path of the file
    * @param newPath {string} New path of the file
    * @return {Promise<void>}
    */
-  async renameFile(oldPath: string, newPath: string): Promise<void> {
+  async renameFile(oldPath: string|null, newPath: string): Promise<void> {
+    if (oldPath === null) {
+      return;
+    }
     await fs.rename(oldPath, newPath, (err) => {
       if (err) throw err;
+    });
+  },
+
+  /**
+   * Download a file from an URL to a path file
+   * @param url {string} URL of the file
+   * @param path {string} Path of the file
+   * @return {Promise<void>}
+   */
+  async downloadFile(url: string, path: string): Promise<void> {
+    await new Promise((resolve, reject): void => {
+      const httpsAgent: https.Agent = new https.Agent({
+        rejectUnauthorized: false,
+      });
+
+      https.get(
+        url,
+        {
+          agent: httpsAgent,
+        },
+        (response): void => {
+          const code = response.statusCode ?? 0;
+
+          if (code >= 400) {
+            reject(new Error(response.statusMessage));
+            return;
+          }
+
+          // Handle redirects
+          if (code > 300 && code < 400 && !!response.headers.location) {
+            resolve(
+              this.downloadFile(response.headers.location, path),
+            );
+            return;
+          }
+
+          // Save the file to disk
+          const fileWriter: fs.WriteStream = fs
+            .createWriteStream(path)
+            .on('finish', (): void => {
+              fileWriter.close();
+              resolve({});
+            });
+
+          response.pipe(fileWriter);
+        });
     });
   },
 

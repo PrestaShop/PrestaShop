@@ -38,6 +38,8 @@ class ShopURLSettings extends BOBasePage {
 
   private readonly tableColumnActionsEditLink: (row: number) => string;
 
+  private readonly tableColumnActionsEditButton: (row: number) => string;
+
   private readonly tableColumnActionsToggleButton: (row: number) => string;
 
   private readonly tableColumnActionsDropdownMenu: (row: number) => string;
@@ -117,6 +119,7 @@ class ShopURLSettings extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsEditButton = (row: number) => `${this.tableBodyColumn(row)} a.edit`;
     this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
     this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
@@ -160,7 +163,17 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddNewUrl(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewUrlButton);
+    await this.clickAndWaitForURL(page, this.addNewUrlButton);
+  }
+
+  /**
+   * Go to edit shop url
+   * @param page {Page} Browser tab
+   * @param row {number} Row number to edit
+   * @returns {Promise<void>}
+   */
+  async goToEditShopURLPage(page: Page, row: number): Promise<void> {
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditButton(row));
   }
 
   /* Filter methods */
@@ -181,7 +194,7 @@ class ShopURLSettings extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
   }
 
@@ -204,15 +217,17 @@ class ShopURLSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
         ]);
         break;
@@ -227,9 +242,9 @@ class ShopURLSettings extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @param columnName {string} Column name to get text content
-   * @return {Promise<string|null>}
+   * @return {Promise<string>}
    */
-  async getTextColumn(page: Page, row: number, columnName: string): Promise<string|null> {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector: string;
 
     switch (columnName) {
@@ -267,11 +282,11 @@ class ShopURLSettings extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name to get text content
-   * @return {Promise<Array<string|null>>}
+   * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string|null)[]> {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable: (string|null)[] = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
@@ -299,7 +314,7 @@ class ShopURLSettings extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -310,7 +325,7 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -321,7 +336,7 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -341,7 +356,7 @@ class ShopURLSettings extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -376,7 +391,7 @@ class ShopURLSettings extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   // Quick edit methods
@@ -444,7 +459,7 @@ class ShopURLSettings extends BOBasePage {
       this.waitForVisibleSelector(page, this.bulkEnableLink),
     ]);
 
-    await this.clickAndWaitForNavigation(
+    await this.clickAndWaitForURL(
       page,
       wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
     );

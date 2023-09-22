@@ -11,7 +11,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foVouchersPage from '@pages/FO/myAccount/vouchers';
 
 // Import data
@@ -83,7 +83,7 @@ describe('FO - Account : View vouchers', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -92,7 +92,7 @@ describe('FO - Account : View vouchers', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with created customer', async function () {
@@ -101,24 +101,24 @@ describe('FO - Account : View vouchers', async () => {
       await foLoginPage.customerLogin(page, customerData);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to vouchers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToVouchersPage(page);
+      await myAccountPage.goToVouchersPage(page);
 
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
     });
 
     [
       {args: {column: 'code', row: 1, value: firstCartRule.code}},
       {args: {column: 'description', row: 1, value: firstCartRule.name}},
       {args: {column: 'quantity', row: 1, value: '1'}},
-      {args: {column: 'value', row: 1, value: '20.00%'}},
+      {args: {column: 'value', row: 1, value: '20%'}},
       {args: {column: 'minimum', row: 1, value: 'None'}},
       {args: {column: 'cumulative', row: 1, value: 'Yes'}},
       {args: {column: 'expiration_date', row: 1, value: expirationDate}},
@@ -138,7 +138,7 @@ describe('FO - Account : View vouchers', async () => {
           cartRule.args.row,
           cartRule.args.column,
         );
-        await expect(cartRuleTextColumn).to.equal(cartRule.args.value);
+        expect(cartRuleTextColumn).to.equal(cartRule.args.value);
       });
     });
   });

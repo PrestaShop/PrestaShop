@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -51,11 +51,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductSupplierType extends TranslatorAwareType
 {
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $currencyByIdChoiceProvider;
-
     /**
      * @var string
      */
@@ -74,19 +69,18 @@ class ProductSupplierType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $currencyByIdChoiceProvider
      * @param string $defaultCurrencyIsoCode
+     * @param CurrencyRepository $currencyRepository
+     * @param FormCloner $formCloner
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $currencyByIdChoiceProvider,
         string $defaultCurrencyIsoCode,
         CurrencyRepository $currencyRepository,
         FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
-        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->currencyRepository = $currencyRepository;
         $this->formCloner = $formCloner;
@@ -120,8 +114,8 @@ class ProductSupplierType extends TranslatorAwareType
             ->add('price_tax_excluded', MoneyType::class, [
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'currency' => $this->defaultCurrencyIsoCode,
-                'scale' => self::PRESTASHOP_DECIMALS,
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'scale' => FormHelper::DEFAULT_PRICE_PRECISION,
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -129,12 +123,10 @@ class ProductSupplierType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0.0,
             ])
-            ->add('currency_id', ChoiceType::class, [
+            ->add('currency_id', CurrencyChoiceType::class, [
                 'label' => $this->trans('Currency', 'Admin.Global'),
-                'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
-                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
             ])
         ;
 

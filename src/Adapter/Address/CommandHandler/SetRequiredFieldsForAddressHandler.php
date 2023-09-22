@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use CustomerAddress;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\SetRequiredFieldsForAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsForAddressException;
@@ -37,6 +38,7 @@ use PrestaShopDatabaseException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class SetRequiredFieldsForAddressHandler implements SetRequiredFieldsForAddressHandlerInterface
 {
     /**

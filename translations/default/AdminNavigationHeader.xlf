@@ -5,7 +5,7 @@
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>Line: 295</note>
+        <note>Line: 315</note>
       </trans-unit>
       <trans-unit id="d70861cbe7f8c9a1241c39b3e7ef5ef2">
         <source>View my shop</source>
@@ -15,42 +15,42 @@
       <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
         <source>Welcome back %name%</source>
         <target>Welcome back %name%</target>
-        <note>Line: 368</note>
+        <note>Line: 388</note>
       </trans-unit>
       <trans-unit id="3d8de6fcc09baf73f7175fe59f278ced">
         <source>Your profile</source>
         <target>Your profile</target>
-        <note>Line: 369</note>
+        <note>Line: 389</note>
       </trans-unit>
       <trans-unit id="c87aacf5673fada1108c9f809d354311">
         <source>Sign out</source>
         <target>Sign out</target>
-        <note>Line: 384</note>
+        <note>Line: 404</note>
       </trans-unit>
       <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
         <source>Quick Access</source>
         <target>Quick Access</target>
-        <note>Line: 132</note>
+        <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
         <source>Please name this shortcut:</source>
         <target>Please name this shortcut:</target>
-        <note>Line: 178</note>
+        <note>Line: 180</note>
       </trans-unit>
       <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
         <source>Customers</source>
         <target>Customers</target>
-        <note>Line: 301</note>
+        <note>Line: 321</note>
       </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
-        <note>Line: 233</note>
+        <note>Line: 235</note>
       </trans-unit>
       <trans-unit id="38a27c0c7ef7a05e13efa2798ee21533">
         <source>Maintenance mode</source>
         <target>Maintenance mode</target>
-        <note>Line: 248</note>
+        <note>Line: 268</note>
       </trans-unit>
       <trans-unit id="0a71c80de89d7b2d3e6b22974a4a7548">
         <source>A new order has been placed on your shop.</source>
@@ -80,22 +80,42 @@
       <trans-unit id="10df6a640ea9625829122dfb5842795e">
         <source>PrestaShop logo</source>
         <target>PrestaShop logo</target>
-        <note>Line: 122</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="f5c26758149849ee0f84a2eceaf0acfd">
         <source>Remove from QuickAccess</source>
         <target>Remove from QuickAccess</target>
-        <note>Line: 149</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="383247a8cb198be4042d128986100cea">
         <source>Add current page to QuickAccess</source>
         <target>Add current page to QuickAccess</target>
-        <note>Line: 156</note>
+        <note>Line: 158</note>
       </trans-unit>
       <trans-unit id="165122309e15dc09c30b78951e53cb5a">
         <source>Manage quick accesses</source>
         <target>Manage quick accesses</target>
-        <note>Line: 163</note>
+        <note>Line: 165</note>
+      </trans-unit>
+      <trans-unit id="d7e8f7da874f7ef3f4bae2524ad52bfd">
+        <source>View my store</source>
+        <target>View my store</target>
+        <note>Line: 292</note>
+      </trans-unit>
+      <trans-unit id="94b96a5e5bca774e9f863b3b5fe8cd5d">
+        <source>A new order has been placed on your store.</source>
+        <target>A new order has been placed on your store.</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="9e6da9926052b85bb4f32865c08ec8f9">
+        <source>A new customer registered on your store.</source>
+        <target>A new customer registered on your store.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="51b356c2e003bc85b101b12904a6c533">
+        <source>A new message was posted on your store.</source>
+        <target>A new message was posted on your store.</target>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -153,17 +173,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/quick_access.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/new-theme/template/components/layout/mobile_quickaccess.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="572e3c9b387943813b5b1cb2f1a96dc3">
         <source>Remove from Quick Access</source>
         <target>Remove from Quick Access</target>
-        <note>Line: 53</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="6f08b6d95d204a4e08ad0e186c673f4f">
         <source>Manage your quick accesses</source>
         <target>Manage your quick accesses</target>
-        <note>Line: 73</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -266,11 +286,6 @@
   </file>
   <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e5dc8e5afea0a065948622039358de37">
-        <source>New window</source>
-        <target>New window</target>
-        <note>Line: 69</note>
-      </trans-unit>
       <trans-unit id="97e7c9a7d06eac006a28bf05467fcc8b">
         <source>Link</source>
         <target>Link</target>
@@ -307,6 +322,24 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_mainmenu/ps_mainmenu.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e5dc8e5afea0a065948622039358de37">
+        <source>New window</source>
+        <target>New window</target>
+        <note>Line: 1413</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/dropdown.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2f6bb081ffe242f2f09f5a7fb0ca75aa">
+        <source>Search store name</source>
+        <target>Search store name</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a5facb9cd738950e5cb8ba22d8c882d7">
@@ -318,6 +351,15 @@
         <source>To apply specific settings to a store or a group of stores, select the parameter to modify, make your changes and save.</source>
         <target>To apply specific settings to a store or a group of stores, select the parameter to modify, make your changes and save.</target>
         <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/product_header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="41a7f6c804ab172caeb2c2a6f116bdde">
+        <source>Select stores</source>
+        <target>Select stores</target>
+        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>

@@ -77,6 +77,11 @@ class AdminLoginControllerCore extends AdminController
         $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if (!Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) {
@@ -233,7 +238,7 @@ class AdminLoginControllerCore extends AdminController
 
         if (empty($passwd)) {
             $this->errors[] = $this->trans('The password field is blank.', [], 'Admin.Notifications.Error');
-        } elseif (!Validate::isPlaintextPassword($passwd)) {
+        } elseif (!Validate::isAcceptablePasswordLength($passwd)) {
             $this->errors[] = $this->trans('Invalid password.', [], 'Admin.Notifications.Error');
         }
 
@@ -421,7 +426,7 @@ class AdminLoginControllerCore extends AdminController
         } elseif (!$reset_password) {
             // password (twice)
             $this->errors[] = $this->trans('The password is missing: please enter your new password.', [], 'Admin.Login.Notification');
-        } elseif (!Validate::isPlaintextPassword($reset_password)) {
+        } elseif (!Validate::isAcceptablePasswordLength($reset_password)) {
             $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Admin.Login.Notification');
         } elseif (!$reset_confirm) {
             $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well.', [], 'Admin.Login.Notification');

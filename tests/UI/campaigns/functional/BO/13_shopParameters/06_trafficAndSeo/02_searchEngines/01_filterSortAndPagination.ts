@@ -53,7 +53,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
     );
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
   });
 
   it('should go to \'Search Engines\' pge', async function () {
@@ -62,14 +62,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
     await seoAndUrlsPage.goToSearchEnginesPage(page);
 
     const pageTitle = await searchEnginesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchEnginesPage.pageTitle);
+    expect(pageTitle).to.contains(searchEnginesPage.pageTitle);
   });
 
   it('should reset all filters and get number of search engines in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfSearchEngines = await searchEnginesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfSearchEngines).to.be.above(0);
+    expect(numberOfSearchEngines).to.be.above(0);
   });
 
   describe('Filter search engines', async () => {
@@ -90,7 +90,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
         );
 
         const numberOfSearchEnginesAfterFilter = await searchEnginesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfSearchEnginesAfterFilter).to.be.at.most(numberOfSearchEngines);
+        expect(numberOfSearchEnginesAfterFilter).to.be.at.most(numberOfSearchEngines);
 
         for (let i = 1; i <= numberOfSearchEnginesAfterFilter; i++) {
           const textColumn = await searchEnginesPage.getTextColumn(
@@ -98,7 +98,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
             i,
             test.args.filterBy,
           );
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -106,7 +106,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfSearchEnginesAfterReset = await searchEnginesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfSearchEnginesAfterReset).to.equal(numberOfSearchEngines);
+        expect(numberOfSearchEnginesAfterReset).to.equal(numberOfSearchEngines);
       });
     });
   });
@@ -162,17 +162,17 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

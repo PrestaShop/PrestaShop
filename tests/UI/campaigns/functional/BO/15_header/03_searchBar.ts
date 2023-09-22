@@ -37,61 +37,62 @@ describe('BO - Header : Search bar', async () => {
     await dashboardPage.search(page, 'orders');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchResultsPage.pageTitle);
+    expect(pageTitle).to.contains(searchResultsPage.pageTitle);
   });
 
   it('should check results for "orders"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkResultsForOrders', baseContext);
 
     const numberResults = await searchResultsPage.getNumberResults(page);
-    await expect(numberResults).to.be.eq(3);
+    expect(numberResults).to.be.eq(3);
 
     const numberFeatures = await searchResultsPage.getNumberResults(page, 'features');
-    await expect(numberFeatures).to.be.eq(1);
+    expect(numberFeatures).to.be.eq(1);
 
     const numberModules = await searchResultsPage.getNumberResults(page, 'modules');
-    await expect(numberModules).to.be.eq(2);
+    expect(numberModules).to.be.eq(2);
 
     const numberLinks = await searchResultsPage.getSearchPanelsLinksNumber(page);
-    await expect(numberLinks).to.be.eq(1);
+    expect(numberLinks).to.be.eq(1);
 
     const linkHref = await searchResultsPage.getSearchPanelsLinkURL(page, 1);
-    await expect(linkHref).to.contains('https://docs.prestashop-project.org/welcome/?q=');
+    expect(linkHref).to.contains('https://docs.prestashop-project.org/welcome/?q=');
 
     const linkText = await searchResultsPage.getSearchPanelsLinkText(page, 1);
-    await expect(linkText).to.contains('Go to the documentation');
+    expect(linkText).to.contains('Go to the documentation');
   });
 
   it('should search for "John Doe"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForJohnDoe', baseContext);
+
     await searchResultsPage.search(page, 'John Doe');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchResultsPage.pageTitle);
+    expect(pageTitle).to.contains(searchResultsPage.pageTitle);
   });
 
   it('should check results for "John Doe"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkResultsForJohnDoe', baseContext);
 
     const numberResults = await searchResultsPage.getNumberResults(page);
-    await expect(numberResults).to.be.eq(1);
+    expect(numberResults).to.be.eq(1);
 
     const numberCustomers = await searchResultsPage.getNumberResults(page, 'customers');
-    await expect(numberCustomers).to.be.eq(1);
+    expect(numberCustomers).to.be.eq(1);
 
     const customerFirstName = await searchResultsPage.getTextColumn(page, 'customers', 1, 'firstname');
-    await expect(customerFirstName).to.be.eq('John');
+    expect(customerFirstName).to.be.eq('John');
 
     const customerName = await searchResultsPage.getTextColumn(page, 'customers', 1, 'name');
-    await expect(customerName).to.be.eq('DOE');
+    expect(customerName).to.be.eq('DOE');
 
     const numberLinks = await searchResultsPage.getSearchPanelsLinksNumber(page);
-    await expect(numberLinks).to.be.eq(1);
+    expect(numberLinks).to.be.eq(1);
 
     const linkHref = await searchResultsPage.getSearchPanelsLinkURL(page, 1);
-    await expect(linkHref).to.contains('https://docs.prestashop-project.org/welcome/?q=');
+    expect(linkHref).to.contains('https://docs.prestashop-project.org/welcome/?q=');
 
     const linkText = await searchResultsPage.getSearchPanelsLinkText(page, 1);
-    await expect(linkText).to.contains('Go to the documentation');
+    expect(linkText).to.contains('Go to the documentation');
   });
 });

@@ -24,6 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
@@ -34,19 +38,19 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
 }
 
 $smarty->setConfigDir([]);
-$smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
-$smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
+$smarty->setCompileDir(_PS_CACHE_DIR_ . 'smarty/compile');
+$smarty->setCacheDir(_PS_CACHE_DIR_ . 'smarty/cache');
 $smarty->use_sub_dirs = true;
 $smarty->caching = Smarty::CACHING_OFF;
 
 /* @phpstan-ignore-next-line */
 if (_PS_SMARTY_CACHING_TYPE_ == 'mysql') {
-    include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
+    include _PS_CLASS_DIR_ . 'Smarty/SmartyCacheResourceMysql.php';
     $smarty->caching_type = 'mysql';
 }
 $smarty->force_compile = Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? Smarty::COMPILECHECK_ON : Smarty::COMPILECHECK_OFF;
-$smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
+$smarty->debug_tpl = _PS_ALL_THEMES_DIR_ . 'debug.tpl';
 
 /* Use this constant if you want to load smarty without all PrestaShop functions */
 if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
@@ -54,12 +58,12 @@ if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
 }
 
 if (defined('_PS_ADMIN_DIR_')) {
-    require_once dirname(__FILE__).'/smartyadmin.config.inc.php';
+    require_once dirname(__FILE__) . '/smartyadmin.config.inc.php';
 } else {
-    require_once dirname(__FILE__).'/smartyfront.config.inc.php';
+    require_once dirname(__FILE__) . '/smartyfront.config.inc.php';
 }
 
-require_once SMARTY_PLUGINS_DIR.'modifier.truncate.php';
+require_once SMARTY_PLUGINS_DIR . 'modifier.truncate.php';
 
 // This escape modifier is required for invoice PDF generation
 function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
@@ -81,38 +85,55 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
     }
 }
 
+// PrestaShop & Smarty functions
 smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
-smartyRegisterFunction($smarty, 'modifier', 'json_decode', 'json_decode');
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
+smartyRegisterFunction($smarty, 'function', 'render_template', 'renderTemplate');
 
-// Native PHP Functions
+// Native PHP functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
 smartyRegisterFunction($smarty, 'modifier', 'addslashes', 'addslashes');
-smartyRegisterFunction($smarty, 'modifier', 'date','date');
-smartyRegisterFunction($smarty, 'modifier', 'end','end');
+smartyRegisterFunction($smarty, 'modifier', 'date', 'date');
+smartyRegisterFunction($smarty, 'modifier', 'end', 'smarty_endWithoutReference');
+smartyRegisterFunction($smarty, 'modifier', 'explode', 'explode');
 smartyRegisterFunction($smarty, 'modifier', 'floatval', 'floatval');
 smartyRegisterFunction($smarty, 'modifier', 'htmlentities', 'htmlentities');
 smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
 smartyRegisterFunction($smarty, 'modifier', 'json_decode', 'json_decode');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
-smartyRegisterFunction($smarty, 'modifier', 'mt_rand','mt_rand');
-smartyRegisterFunction($smarty, 'modifier', 'rand','rand');
-smartyRegisterFunction($smarty, 'modifier', 'strtolower','strtolower');
-smartyRegisterFunction($smarty, 'modifier', 'str_replace','str_replace');
-smartyRegisterFunction($smarty, 'modifier', 'strval','strval');
+smartyRegisterFunction($smarty, 'modifier', 'mt_rand', 'mt_rand');
+smartyRegisterFunction($smarty, 'modifier', 'rand', 'rand');
+smartyRegisterFunction($smarty, 'modifier', 'strtolower', 'strtolower');
+smartyRegisterFunction($smarty, 'modifier', 'str_replace', 'str_replace');
+smartyRegisterFunction($smarty, 'modifier', 'strval', 'strval');
 smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
 smartyRegisterFunction($smarty, 'modifier', 'ucfirst', 'ucfirst');
-smartyRegisterFunction($smarty, 'modifier', 'urlencode','urlencode');
-smartyRegisterFunction($smarty, 'modifier', 'htmlspecialchars','htmlspecialchars');
+smartyRegisterFunction($smarty, 'modifier', 'urlencode', 'urlencode');
+smartyRegisterFunction($smarty, 'modifier', 'htmlspecialchars', 'htmlspecialchars');
+smartyRegisterFunction($smarty, 'modifier', 'implode', 'implode');
+smartyRegisterFunction($smarty, 'modifier', 'explode', 'explode');
+smartyRegisterFunction($smarty, 'modifier', 'print_r', 'print_r');
+smartyRegisterFunction($smarty, 'modifier', 'var_dump', 'var_dump');
+smartyRegisterFunction($smarty, 'modifier', 'lcfirst', 'lcfirst');
+smartyRegisterFunction($smarty, 'modifier', 'nl2br', 'nl2br');
+smartyRegisterFunction($smarty, 'modifier', 'sizeof', 'sizeof');
+smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
+smartyRegisterFunction($smarty, 'modifier', 'substr', 'substr');
+smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
+smartyRegisterFunction($smarty, 'modifier', 'date', 'date');
+smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
+smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
+smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
+smartyRegisterFunction($smarty, 'modifier', 'stripslashes', 'stripslashes');
+smartyRegisterFunction($smarty, 'modifier', 'md5', 'md5');
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
@@ -198,7 +219,7 @@ function smartyCleanHtml($data)
 function smartyClassname(string $classname)
 {
     $classname = Tools::replaceAccentedChars(strtolower($classname));
-    $classname = preg_replace(['/[^A-Za-z0-9-_]/', '/-{3,}/', '/-+$/'], ['-', '-', ''] , $classname);
+    $classname = preg_replace(['/[^A-Za-z0-9-_]/', '/-{3,}/', '/-+$/'], ['-', '-', ''], $classname);
     return $classname;
 }
 
@@ -212,4 +233,37 @@ function smartyClassnames(array $classnames)
     }
 
     return implode(' ', $enabled_classes);
+}
+
+/**
+ * We add this intermediate method to prevent a warning because end expects its input to be a reference
+ *
+ * @param array<mixed> $arrayValue
+ *
+ * @return false|mixed
+ */
+function smarty_endWithoutReference($arrayValue)
+{
+    return end($arrayValue);
+}
+
+function renderTemplate(array $params) {
+    $twigTemplate = $params['twig_template'];
+    unset($params['twig_template']);
+    $smartyTemplate = $params['smarty_template'];
+    unset($params['smarty_template']);
+
+    if (
+        SymfonyContainer::getInstance()
+            ->get(FeatureFlagStateCheckerInterface::class)
+            ->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)
+    ) {
+        /** @var Twig\Environment $twig */
+        $twig = SymfonyContainer::getInstance()->get('twig');
+        return $twig->render($twigTemplate, $params);
+    } else {
+        global $smarty;
+        $smarty->display($smartyTemplate);
+    }
+
 }

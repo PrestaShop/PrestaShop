@@ -60,7 +60,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -82,11 +82,11 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
         CustomerSettingsOptions.OPTION_CART_LOGIN,
         test.args.enable,
       );
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
-    it('should login FO and add the first product to the cart then logout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
+    it('should view my shop and login FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `loginFO_${index}`, baseContext);
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
@@ -96,7 +96,11 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
-      await expect(connected, 'Customer is not connected in FO').to.be.true;
+      expect(connected, 'Customer is not connected in FO').to.eq(true);
+    });
+
+    it('should add the first product to the cart then logout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
 
       // Add first product to the cart
       await homePage.goToHomePage(page);
@@ -105,48 +109,48 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Check number of product in cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.above(0);
+      expect(notificationsNumber).to.be.above(0);
 
       // Logout from FO
       await homePage.logout(page);
     });
 
-    it('should login FO and check the cart then logout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `loginFOAndCheckNotificationNumber_${index}`,
-        baseContext,
-      );
+    it('should login FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `loginFO_2_${index}`, baseContext);
 
       // Login FO
       await homePage.goToLoginPage(page);
       await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
-      await expect(connected, 'Customer is not connected in FO').to.be.true;
+      expect(connected, 'Customer is not connected in FO').to.eq(true);
+    });
 
-      // Check number of product in cart
+    it('should check the cart then logout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkNotificationNumber_${index}`, baseContext);
+
+      // Check number of products in cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
 
       if (test.args.enable) {
-        await expect(notificationsNumber).to.be.above(0);
+        expect(notificationsNumber).to.be.above(0);
+        // Logout from FO
+        await homePage.logout(page);
       } else {
-        await expect(notificationsNumber).to.be.equal(0);
+        expect(notificationsNumber).to.be.equal(0);
       }
-
-      // Logout from FO
-      await homePage.logout(page);
     });
 
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO_${index}`, baseContext);
+    if (test.args.enable) {
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBO_${index}`, baseContext);
 
-      // Go back to BO
-      page = await homePage.closePage(browserContext, page, 0);
+        // Go back to BO
+        page = await homePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
-    });
+        const pageTitle = await customerSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      });
+    }
   });
 });

@@ -97,6 +97,22 @@ class AbstractBulkCommandHandlerTest extends TestCase
         // and assert that handler continued after first id failure
         Assert::assertSame([2, 3], $handler->getHandledIds());
     }
+
+    public function testItDrillThroughParameterCorrectTypeOfCommand(): void
+    {
+        $handler = new TestAbstractBulkCommandHandler(
+            [],
+            ExampleId::class
+        );
+        $command = new TestCommand(
+            [new ExampleId(1)],
+            true
+        );
+
+        $handler->handle($command->ids, DomainException::class, $command);
+
+        $this->assertInstanceOf(TestCommand::class, $handler->getCommand());
+    }
 }
 
 class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
@@ -115,6 +131,9 @@ class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
      * @var int[]
      */
     private $handledIds = [];
+
+    /** @var mixed */
+    private $command = null;
 
     public function __construct(
         array $failingIdsMock,
@@ -136,23 +155,33 @@ class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
     }
 
     /**
-     * @param IdInterface[] $ids
-     * @param string $exceptionToCatch
+     * Allows test case to check the commands that is drilled through method parameters.
+     *
+     * @return mixed
      */
-    public function handle(array $ids, string $exceptionToCatch): void
+    public function getCommand(): mixed
     {
-        $this->handleBulkAction($ids, $exceptionToCatch);
-    }
-
-    protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface
-    {
-        return new BulkFeatureException($coughtExceptions, 'test bulk action failed');
+        return $this->command;
     }
 
     /**
-     * @param IdInterface $id
+     * @param IdInterface[] $ids
+     * @param string $exceptionToCatch
      */
-    protected function handleSingleAction($id): void
+    public function handle(array $ids, string $exceptionToCatch, mixed $command = null): void
+    {
+        $this->handleBulkAction($ids, $exceptionToCatch, $command);
+    }
+
+    protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
+    {
+        return new BulkFeatureException($caughtExceptions, 'test bulk action failed');
+    }
+
+    /**
+     * @param mixed $id
+     */
+    protected function handleSingleAction(mixed $id, $command): void
     {
         foreach ($this->failingIdsMock as $failingId) {
             if ($id->getValue() === $failingId->getValue()) {
@@ -160,6 +189,7 @@ class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
             }
         }
         $this->handledIds[] = $id->getValue();
+        $this->command = $command;
     }
 
     protected function supports($id): bool
@@ -215,5 +245,12 @@ class FailingId implements IdInterface
     public function getExceptionToThrow(): Throwable
     {
         return $this->exceptionToThrow;
+    }
+}
+
+class TestCommand
+{
+    public function __construct(public readonly array $ids, public readonly bool $enabled)
+    {
     }
 }

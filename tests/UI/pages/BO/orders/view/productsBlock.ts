@@ -1,5 +1,8 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-import type {Page} from 'playwright';
+
+import type {ProductDiscount} from '@data/types/product';
+
+import type {Frame, Page} from 'playwright';
 
 /**
  * Products block, contains functions that can be used on view/edit products block on view order page
@@ -240,7 +243,7 @@ class ProductsBlock extends ViewOrderBasePage {
     if (shipping !== 0) {
       await this.setValue(page, this.refundShippingCost(productRow), shipping);
     }
-    await this.clickAndWaitForNavigation(page, this.partialRefundSubmitButton);
+    await this.clickAndWaitForLoadState(page, this.partialRefundSubmitButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -248,10 +251,10 @@ class ProductsBlock extends ViewOrderBasePage {
   // Methods for product block
   /**
    * Get products number
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @returns {Promise<number>}
    */
-  getProductsNumber(page: Page): Promise<number> {
+  getProductsNumber(page: Frame|Page) : Promise<number> {
     return this.getNumberFromText(page, this.productsCountSpan);
   }
 
@@ -278,9 +281,9 @@ class ProductsBlock extends ViewOrderBasePage {
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
-    await this.setValue(page, this.editProductQuantityInput, quantity);
+    await this.setValue(page, `${this.editProductQuantityInput}:visible`, quantity);
     await Promise.all([
-      page.click(this.UpdateProductButton),
+      page.click(`${this.UpdateProductButton}:visible`),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
     await this.waitForVisibleSelector(page, this.productQuantitySpan(row));
@@ -299,7 +302,7 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.dialogListener(page);
 
     await this.waitForSelectorAndClick(page, this.editProductButton(row));
-    await this.setValue(page, this.editProductPriceInput, price);
+    await this.setValue(page, `${this.editProductPriceInput}:visible`, price);
 
     await Promise.all([
       page.click(this.UpdateProductButton),
@@ -326,7 +329,7 @@ class ProductsBlock extends ViewOrderBasePage {
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductPriceInput),
     ]);
-    await this.setValue(page, this.editProductPriceInput, price);
+    await this.setValue(page, `${this.editProductPriceInput}:visible`, price);
 
     await Promise.all([
       page.click(this.UpdateProductButton),
@@ -504,11 +507,11 @@ class ProductsBlock extends ViewOrderBasePage {
 
   /**
    * Get product details
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param row {number} Product row on table
    * @returns {Promise<{total: number, quantity: number, name: string, available: number, basePrice: number}>}
    */
-  async getProductDetails(page: Page, row: number) {
+  async getProductDetails(page: Frame|Page, row: number) {
     return {
       name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
       reference: await this.getTextContent(page, this.orderProductsTableProductReference(row)),
@@ -562,10 +565,10 @@ class ProductsBlock extends ViewOrderBasePage {
   /**
    * Add discount
    * @param page {Page} Browser tab
-   * @param discountData {{name: string, type: string, value:number}} Data to set on discount form
+   * @param discountData {ProductDiscount} Data to set on discount form
    * @returns {Promise<string>}
    */
-  async addDiscount(page: Page, discountData): Promise<string> {
+  async addDiscount(page: Page, discountData: ProductDiscount): Promise<string> {
     await this.waitForSelectorAndClick(page, this.addDiscountButton);
     await this.waitForVisibleSelector(page, this.orderDiscountModal);
     await this.waitForSelectorAndClick(page, this.addOrderCartRuleNameInput);
@@ -577,7 +580,8 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
 
     await this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`);
-    await this.clickAndWaitForNavigation(page, this.addOrderCartRuleAddButton);
+    await page.click(this.addOrderCartRuleAddButton);
+    await this.waitForVisibleSelector(page, this.alertBlock);
 
     return this.getTextContent(page, this.alertBlock);
   }

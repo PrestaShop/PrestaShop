@@ -122,7 +122,7 @@ class UpdateSchemaCommand extends Command
      */
     public function dropExistingForeignKeys(Connection $connection, OutputInterface $output): int
     {
-        // First drop any existing FK
+        // Get foreign key list in all tables with our prefix
         $query = $connection->executeQuery(
             'SELECT CONSTRAINT_NAME, TABLE_NAME ' .
             'FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS ' .
@@ -132,16 +132,16 @@ class UpdateSchemaCommand extends Command
         );
 
         $results = $query->fetchAllAssociative();
-        $nbQueries = 0;
+        $affectedRows = 0;
 
         foreach ($results as $result) {
             $drop = 'ALTER TABLE ' . $result['TABLE_NAME'] . ' DROP FOREIGN KEY ' . $result['CONSTRAINT_NAME'];
             $output->writeln('Executing: ' . $drop);
 
-            $nbQueries += $connection->executeQuery($drop);
+            $affectedRows += $connection->executeQuery($drop)->rowCount();
         }
 
-        return $nbQueries;
+        return $affectedRows;
     }
 
     /**
@@ -294,7 +294,7 @@ class UpdateSchemaCommand extends Command
                 $extra = $results[0]['Extra'];
 
                 if ($oldDefaultValue !== null
-                    && strpos($oldDefaultValue, 'CURRENT_TIMESTAMP') === false) {
+                    && !str_contains($oldDefaultValue, 'CURRENT_TIMESTAMP')) {
                     $oldDefaultValue = "'" . $oldDefaultValue . "'";
                 }
 
@@ -305,9 +305,9 @@ class UpdateSchemaCommand extends Command
                 // set the old default value
                 if (!($results[0]['Null'] == 'NO' && $results[0]['Default'] === null)
                     && !($oldDefaultValue === 'NULL'
-                         && strpos($matches[0][$matchKey], 'NOT NULL') !== false)
-                    && (strpos($matches[0][$matchKey], 'BLOB') === false)
-                    && (strpos($matches[0][$matchKey], 'TEXT') === false)
+                         && str_contains($matches[0][$matchKey], 'NOT NULL'))
+                    && (!str_contains($matches[0][$matchKey], 'BLOB'))
+                    && (!str_contains($matches[0][$matchKey], 'TEXT'))
                 ) {
                     if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
                         $matches[0][$matchKey] = preg_replace(

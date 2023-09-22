@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\DeleteCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleExc
 /**
  * Handles deletion of cart rule using legacy object model
  */
+#[AsCommandHandler]
 final class DeleteCartRuleHandler extends AbstractCartRuleHandler implements DeleteCartRuleHandlerInterface
 {
     /**

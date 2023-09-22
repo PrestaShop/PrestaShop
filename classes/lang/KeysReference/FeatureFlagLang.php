@@ -43,7 +43,7 @@ trans('Access the new product page, even in a multistore context. This is a work
 
 // Legacy link feature flags
 trans('Attribute groups', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated attribute groups page.', 'Admin.Advparameters.Help');
+trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
 
 // Authorization server feature flag
 trans('Authorization server', 'Admin.Advparameters.Feature');
@@ -90,7 +90,13 @@ trans('Enable or disable the migrated customer threads page.', 'Admin.Advparamet
 
 // Order states feature flag
 trans('Order states', 'Admin.Advparameters.Feature');
-trans('Enable / Disable the migrated order states page.', 'Admin.Advparameters.Help');
+trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.Help');
 
 trans('Features', 'Admin.Advparameters.Feature');
-trans('Enable / Disable the migrated features page.', 'Admin.Advparameters.Help');
+trans('Enable or disable the migrated features page.', 'Admin.Advparameters.Help');
+
+trans('Symfony layout', 'Admin.Advparameters.Feature');
+trans('Enable / Disable symfony layout (in opposition to legacy layout).', 'Admin.Advparameters.Help');
+
+trans('New front container', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new front container.', 'Admin.Advparameters.Help');

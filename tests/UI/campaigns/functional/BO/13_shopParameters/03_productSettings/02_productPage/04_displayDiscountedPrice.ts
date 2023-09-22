@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
     );
 
     const pageTitle = await cartRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    expect(pageTitle).to.contains(cartRulesPage.pageTitle);
   });
 
   it('should go to \'Catalog Price Rules\' tab', async function () {
@@ -75,7 +75,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
     await cartRulesPage.goToCatalogPriceRulesTab(page);
 
     const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+    expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
   });
 
   it('should create new catalog price rule', async function () {
@@ -84,10 +84,10 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
     await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
 
     const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
+    expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
 
     const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, priceRuleData);
-    await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
+    expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
   });
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
@@ -101,7 +101,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
     await productSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -130,7 +130,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
         page,
         test.args.enable,
       );
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop and go to first product page', async function () {
@@ -140,7 +140,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page was not opened').to.be.true;
+      expect(isHomePage, 'Home page was not opened').to.eq(true);
 
       await homePage.goToProductPage(page, 1);
     });
@@ -149,10 +149,10 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       await testContext.addContextItem(this, 'testIdentifier', `checkUnitValue${index}`, baseContext);
 
       const columnTitle = await productPage.getDiscountColumnTitle(page);
-      await expect(columnTitle).to.equal(test.args.textColumnToCheck);
+      expect(columnTitle).to.equal(test.args.textColumnToCheck);
 
       const columnValue = await productPage.getDiscountValue(page);
-      await expect(columnValue).to.equal(test.args.valueToCheck);
+      expect(columnValue).to.equal(test.args.valueToCheck);
     });
 
     it('should go back to BO', async function () {
@@ -161,7 +161,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       page = await productPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 
@@ -175,7 +175,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
     );
 
     const pageTitle = await cartRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    expect(pageTitle).to.contains(cartRulesPage.pageTitle);
   });
 
   it('should go to \'Catalog Price Rules\' tab', async function () {
@@ -184,13 +184,13 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
     await cartRulesPage.goToCatalogPriceRulesTab(page);
 
     const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+    expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
   });
 
   it('should delete catalog price rule', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteCatalogPriceRule', baseContext);
 
     const deleteTextResult = await catalogPriceRulesPage.deleteCatalogPriceRule(page, priceRuleData.name);
-    await expect(deleteTextResult).to.contains(catalogPriceRulesPage.successfulDeleteMessage);
+    expect(deleteTextResult).to.contains(catalogPriceRulesPage.successfulDeleteMessage);
   });
 });

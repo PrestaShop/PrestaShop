@@ -56,7 +56,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
         await ordersPage.closeSfToolBar(page);
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it(`should go to the order page n°${orderToEdit.args.orderRow}`, async function () {
@@ -65,14 +65,14 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
         await ordersPage.goToOrder(page, orderToEdit.args.orderRow);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
 
         const result = await orderPageTabListBlock.modifyOrderStatus(page, orderToEdit.args.status);
-        await expect(result).to.equal(orderToEdit.args.status);
+        expect(result).to.equal(orderToEdit.args.status);
       });
     });
   });
@@ -88,7 +88,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
 
     it('should check the error message when we don\'t select a status', async function () {
@@ -96,7 +96,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
       // Generate PDF
       const textMessage = await invoicesPage.generatePDFByStatusAndFail(page);
-      await expect(textMessage).to.equal(invoicesPage.errorMessageWhenNotSelectStatus);
+      expect(textMessage).to.equal(invoicesPage.errorMessageWhenNotSelectStatus);
     });
 
     it('should check the error message when there is no invoice in the status selected', async function () {
@@ -107,7 +107,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
       // Generate PDF
       const textMessage = await invoicesPage.generatePDFByStatusAndFail(page);
-      await expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByStatus);
+      expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByStatus);
     });
 
     it('should choose the statuses, generate the invoice and check the file existence', async function () {
@@ -119,12 +119,12 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
       // Generate PDF
       filePath = await invoicesPage.generatePDFByStatusAndDownload(page);
-      await expect(filePath).to.be.not.null;
+      expect(filePath).to.not.eq(null);
 
       // Check that file exist
       if (filePath) {
         const exist = await files.doesFileExist(filePath);
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
       }
     });
 
@@ -136,12 +136,12 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
       // Generate PDF
       filePath = await invoicesPage.generatePDFByStatusAndDownload(page);
-      await expect(filePath).to.be.not.null;
+      expect(filePath).to.not.eq(null);
 
       // Check that file exist
       if (filePath) {
         const exist = await files.doesFileExist(filePath);
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
       }
     });
   });

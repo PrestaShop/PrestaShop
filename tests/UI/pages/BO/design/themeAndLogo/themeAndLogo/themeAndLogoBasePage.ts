@@ -11,6 +11,8 @@ import type {Page} from 'playwright';
 export default class themeAndLogoBasePage extends BOBasePage {
   private readonly advancedCustomizationNavItemLink: string;
 
+  private readonly pagesConfigurationNavItemLink: string;
+
   private readonly themeShopCard: string;
 
   private readonly cardInactiveTheme: string;
@@ -27,12 +29,19 @@ export default class themeAndLogoBasePage extends BOBasePage {
 
   private readonly deleteThemeModalDialogYesButton: string;
 
+  protected growlDiv: string;
+
+  protected growlMessageBlock: string;
+
+  protected growlCloseButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on theme & logo page
    */
   constructor() {
     super();
+    this.pagesConfigurationNavItemLink = '#subtab-AdminPsThemeCustoConfiguration';
     this.advancedCustomizationNavItemLink = '#subtab-AdminPsThemeCustoAdvanced';
     this.themeShopCard = '.card-header[data-role="theme-shop"]';
     this.cardInactiveTheme = '.card-body :nth-child(2) .theme-card[data-role="theme-card-container"]';
@@ -42,16 +51,61 @@ export default class themeAndLogoBasePage extends BOBasePage {
     this.deleteThemeButton = '.delete-button';
     this.deleteThemeModalDialog = '#delete_theme_modal .modal-dialog';
     this.deleteThemeModalDialogYesButton = `${this.deleteThemeModalDialog} .js-submit-delete-theme`;
+
+    // Growls
+    this.growlDiv = '#growls';
+    this.growlMessageBlock = `${this.growlDiv} .growl-message`;
+    this.growlCloseButton = `${this.growlDiv} .growl-close`;
   }
 
   /* Methods */
+  /**
+   * Get growl message content
+   * @param page {Page} Browser tab
+   * @param timeout {number} Timeout to wait for the selector
+   * @return {Promise<string|null>}
+   */
+  async getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
+    return page.textContent(this.growlMessageBlock, {timeout});
+  }
+
+  /**
+   * Close growl message
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async closeGrowlMessage(page: Page): Promise<void> {
+    let growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 10000);
+
+    while (!growlNotVisible) {
+      try {
+        await page.click(this.growlCloseButton);
+      } catch (e) {
+        // If element does not exist it's already not visible
+      }
+
+      growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 2000);
+    }
+
+    await this.waitForHiddenSelector(page, this.growlMessageBlock);
+  }
+
+  /**
+   * Go to pages configuration page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToSubTabPagesConfiguration(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, this.pagesConfigurationNavItemLink);
+  }
+
   /**
    * Go to advanced customization page
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabAdvancedCustomization(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.advancedCustomizationNavItemLink);
+    await this.clickAndWaitForURL(page, this.advancedCustomizationNavItemLink);
   }
 
   /**
@@ -81,4 +135,4 @@ export default class themeAndLogoBasePage extends BOBasePage {
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
-};
+}

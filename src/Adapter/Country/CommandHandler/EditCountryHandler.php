@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
 
 /**
  * Handles update of country and address format
  */
+#[AsCommandHandler]
 class EditCountryHandler implements EditCountryHandlerInterface
 {
     /**

@@ -30,14 +30,13 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ManufacturerType extends ChoiceType
+class ManufacturerType extends AbstractType
 {
-    private const MANUFACTURER_MIN_RESULTS_FOR_SEARCH = 7;
-
     /**
      * @var TranslatorInterface
      */
@@ -56,17 +55,20 @@ class ManufacturerType extends ChoiceType
         TranslatorInterface $translator,
         FormChoiceProviderInterface $manufacturerChoiceProvider
     ) {
-        parent::__construct();
         $this->translator = $translator;
         $this->manufacturerChoiceProvider = $manufacturerChoiceProvider;
+    }
+
+    public function getParent(): string
+    {
+        return ChoiceType::class;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver);
         $manufacturers = $this->manufacturerChoiceProvider->getChoices();
         $choices = array_merge([
             $this->trans('No brand', 'Admin.Catalog.Feature') => NoManufacturerId::NO_MANUFACTURER_ID,
@@ -79,10 +81,7 @@ class ManufacturerType extends ChoiceType
             // placeholder false is important to avoid empty option in select input despite required being false
             'placeholder' => false,
             'choices' => $choices,
-            'attr' => [
-                'data-toggle' => 'select2',
-                'data-minimumResultsForSearch' => self::MANUFACTURER_MIN_RESULTS_FOR_SEARCH,
-            ],
+            'autocomplete' => true,
         ]);
     }
 

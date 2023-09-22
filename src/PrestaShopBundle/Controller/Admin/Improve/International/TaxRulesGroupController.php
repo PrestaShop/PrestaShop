@@ -320,11 +320,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      */
     private function getBulkTaxRulesGroupFromRequest(Request $request): array
     {
-        $taxRulesGroupIds = $request->request->get('tax_rules_group_bulk');
-
-        if (!is_array($taxRulesGroupIds)) {
-            return [];
-        }
+        $taxRulesGroupIds = $request->request->all('tax_rules_group_bulk');
 
         return array_map('intval', $taxRulesGroupIds);
     }
@@ -360,7 +356,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             TaxRulesGroupNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotUpdateTaxRulesGroupException::class => [

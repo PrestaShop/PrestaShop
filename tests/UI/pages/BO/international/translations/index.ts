@@ -12,7 +12,7 @@ class Translations extends BOBasePage {
 
   public readonly validationMessage: string;
 
-  private readonly validationResetMessage: string;
+  public readonly validationResetMessage: string;
 
   public readonly successAlertMessage: string;
 
@@ -119,7 +119,7 @@ class Translations extends BOBasePage {
     await this.selectByVisibleText(page, this.typeOfTranslationSelect, translation);
     await this.selectByVisibleText(page, this.selectYourThemeSelect, theme);
     await this.selectByVisibleText(page, this.selectYourLanguageSelect, language);
-    await this.clickAndWaitForNavigation(page, this.modifyTranslationsButton);
+    await this.clickAndWaitForURL(page, this.modifyTranslationsButton);
   }
 
   /**

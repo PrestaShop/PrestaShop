@@ -23,6 +23,7 @@ import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+import type {OrderPayment} from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -64,38 +65,38 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     ],
     paymentMethod: PaymentMethods.wirePayment,
   });
-  const paymentDataAmountInfTotal = {
+  const paymentDataAmountInfTotal: OrderPayment = {
     date: today,
     paymentMethod: 'Payment by check',
-    transactionID: '12156',
+    transactionID: 12156,
     amount: 12.25,
     currency: '€',
   };
-  const paymentDataAmountEqualTotal = {
+  const paymentDataAmountEqualTotal: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12190',
-    amount: (totalOrder - paymentDataAmountInfTotal.amount).toFixed(2),
+    transactionID: 12190,
+    amount: parseFloat((totalOrder - paymentDataAmountInfTotal.amount).toFixed(2)),
     currency: '€',
   };
-  const paymentDataAmountSupTotal = {
+  const paymentDataAmountSupTotal: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12639',
+    transactionID: 12639,
     amount: 30.56,
     currency: '€',
   };
-  const paymentDataWithNewCurrency = {
+  const paymentDataWithNewCurrency: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12640',
+    transactionID: 12640,
     amount: 5.25,
     currency: Currencies.mad.isoCode,
   };
-  const paymentDataAmountEqualRest = {
+  const paymentDataAmountEqualRest: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12190',
+    transactionID: 12190,
     amount: Products.demo_5.price,
     currency: '€',
   };
@@ -137,14 +138,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders, 'Number of orders is not correct!').to.be.above(0);
+      expect(numberOfOrders, 'Number of orders is not correct!').to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
@@ -153,7 +154,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
+      expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -162,7 +163,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
+      expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
     });
   });
 
@@ -172,7 +173,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkPayments1', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
     });
 
     it('should add payment when amount is inferior to the total', async function () {
@@ -195,7 +196,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments2', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
     });
 
     it('should check the payment details', async function () {
@@ -205,7 +206,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountInfTotal.paymentMethod),
-        expect(result.transactionID).to.equal(paymentDataAmountInfTotal.transactionID),
+        expect(result.transactionID).to.equal(paymentDataAmountInfTotal.transactionID.toString()),
         expect(result.amount).to.equal(`€${paymentDataAmountInfTotal.amount}`),
         expect(result.invoice).to.equal(''),
       ]);
@@ -226,7 +227,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments3', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
     });
 
     it('should check the payment details', async function () {
@@ -236,7 +237,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountEqualTotal.paymentMethod),
-        expect(result.transactionID).to.equal(paymentDataAmountEqualTotal.transactionID),
+        expect(result.transactionID).to.equal(paymentDataAmountEqualTotal.transactionID.toString()),
         expect(result.amount).to.equal(`€${paymentDataAmountEqualTotal.amount}`),
         expect(result.invoice).to.equal(''),
       ]);
@@ -266,7 +267,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments4', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(3);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(3);
     });
 
     it('should check the payment details', async function () {
@@ -276,7 +277,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountSupTotal.paymentMethod),
-        expect(result.transactionID).to.equal(paymentDataAmountSupTotal.transactionID),
+        expect(result.transactionID).to.equal(paymentDataAmountSupTotal.transactionID.toString()),
         expect(result.amount).to.equal(`€${paymentDataAmountSupTotal.amount}`),
         expect(result.invoice).to.equal(''),
       ]);
@@ -289,7 +290,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'displayPaymentDetail', baseContext);
 
       const result = await orderPageMessagesBlock.displayPaymentDetail(page);
-      await expect(result)
+      expect(result)
         .to.contain('Card number Not defined')
         .and.to.contain('Card type Not defined')
         .and.to.contain('Expiration date Not defined')
@@ -310,14 +311,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
@@ -326,7 +327,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -335,14 +336,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
+      expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
     });
 
     it('should check that the new currency is visible on select options', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSelectOption', baseContext);
 
       const listOfCurrencies = await orderPageMessagesBlock.getCurrencySelectOptions(page);
-      await expect(listOfCurrencies).to.contain('€')
+      expect(listOfCurrencies).to.contain('€')
         .and.to.contain(Currencies.mad.isoCode);
     });
 
@@ -367,14 +368,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters3', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
@@ -383,7 +384,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 2);
-      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -392,28 +393,28 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await ordersPage.goToOrder(page, 2);
 
       const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
+      expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
     });
 
     it('should check that the payments number is equal to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments5', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
     });
 
     it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
       const textResult = await orderPageMessagesBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-      await expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+      expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the payments number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments6', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
     });
 
     it('should check the payment details and get the invoice number', async function () {
@@ -438,7 +439,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await orderPageProductsBlock.selectInvoice(page);
 
       const textResult = await orderPageProductsBlock.addProductToCart(page, 1, true);
-      await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+      expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
     });
 
     it('should check that products number is equal to 2', async function () {
@@ -447,21 +448,21 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await orderPageMessagesBlock.reloadPage(page);
 
       const productCount = await orderPageProductsBlock.getProductsNumber(page);
-      await expect(productCount).to.equal(2);
+      expect(productCount).to.equal(2);
     });
 
     it('should check that invoices number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber', baseContext);
 
       const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
-      await expect(documentsNumber).to.be.equal(2);
+      expect(documentsNumber).to.be.equal(2);
     });
 
     it('should check that payments number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments7', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
     });
 
     it('should check the warning message', async function () {
@@ -486,7 +487,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments8', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
-      await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
+      expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
     });
 
     it('should download the invoice and check payment method and amount', async function () {
@@ -494,16 +495,16 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       // Download invoice
       filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
-      await expect(filePath).to.be.not.null;
+      expect(filePath).to.not.eq(null);
 
       const exist = await files.doesFileExist(filePath);
-      await expect(exist, 'File doesn\'t exist!').to.be.true;
+      expect(exist, 'File doesn\'t exist!').to.eq(true);
 
       const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.paymentMethod);
-      await expect(paymentMethodExist, 'Payment method does not exist in invoice!').to.be.true;
+      expect(paymentMethodExist, 'Payment method does not exist in invoice!').to.eq(true);
 
-      const amountExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-      await expect(amountExist, 'Payment amount does not exist in invoice!').to.be.true;
+      const amountExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount.toString());
+      expect(amountExist, 'Payment amount does not exist in invoice!').to.eq(true);
     });
   });
 

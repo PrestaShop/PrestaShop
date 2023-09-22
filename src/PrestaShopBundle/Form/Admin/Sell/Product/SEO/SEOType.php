@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
@@ -65,6 +66,11 @@ class SEOType extends TranslatorAwareType
     private $legacyContext;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
@@ -78,13 +84,15 @@ class SEOType extends TranslatorAwareType
         RouterInterface $router,
         bool $friendlyUrlEnabled,
         bool $forceFriendlyUrl,
-        LegacyContext $legacyContext
+        LegacyContext $legacyContext,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->friendlyUrlEnabled = $friendlyUrlEnabled;
         $this->forceFriendlyUrl = $forceFriendlyUrl;
         $this->legacyContext = $legacyContext;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -92,6 +100,12 @@ class SEOType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // Automatic update is only enabled when product is offline and the configuration is enabled
+        $automaticUrlUpdate = false;
+        if (!$options['active'] && (bool) $this->configuration->get('PS_FORCE_FRIENDLY_PRODUCT')) {
+            $automaticUrlUpdate = true;
+        }
+
         $builder
             ->add('serp', SerpType::class)
             ->add('meta_title', TranslatableType::class, [
@@ -169,6 +183,7 @@ class SEOType extends TranslatorAwareType
                     ],
                     'attr' => [
                         'class' => 'serp-watched-url',
+                        'data-automatic-update' => (int) $automaticUrlUpdate,
                     ],
                 ],
                 'modify_all_shops' => true,
@@ -259,11 +274,13 @@ class SEOType extends TranslatorAwareType
                 'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_seo.html.twig',
+                'active' => false,
             ])
             ->setRequired([
                 'product_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('active', ['bool'])
         ;
     }
 }

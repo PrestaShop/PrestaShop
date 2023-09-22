@@ -26,7 +26,7 @@ Pagination next and previous
 Sort attributes table by ID, Name and Position
 Delete the created attributes by bulk actions
  */
-describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delete attributes', async () => {
+describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delete attributes', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfAttributes: number = 0;
@@ -56,14 +56,14 @@ describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delet
     await attributesPage.closeSfToolBar(page);
 
     const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
   it('should reset all filters and get number of attributes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAttributes).to.be.above(0);
+    expect(numberOfAttributes).to.be.above(0);
   });
 
   // 1 : Create 17 new attributes
@@ -77,17 +77,17 @@ describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delet
         await attributesPage.goToAddAttributePage(page);
 
         const pageTitle = await addAttributePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addAttributePage.createPageTitle);
+        expect(pageTitle).to.contains(addAttributePage.createPageTitle);
       });
 
       it(`should create attribute n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewAttribute${index}`, baseContext);
 
         const textResult = await addAttributePage.addEditAttribute(page, createAttributeData);
-        await expect(textResult).to.contains(attributesPage.successfulCreationMessage);
+        expect(textResult).to.contains(attributesPage.successfulCreationMessage);
 
         const numberOfAttributesAfterCreation = await attributesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfAttributesAfterCreation).to.equal(numberOfAttributes + 1 + index);
+        expect(numberOfAttributesAfterCreation).to.equal(numberOfAttributes + 1 + index);
       });
     });
   });
@@ -175,17 +175,17 @@ describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delet
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -200,21 +200,21 @@ describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await attributesPage.filterTable(page, 'b!name', 'todelete');
 
       const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
-      await expect(textColumn).to.contains('todelete');
+      expect(textColumn).to.contains('todelete');
     });
 
     it('should delete attributes with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAttributes', baseContext);
 
       const deleteTextResult = await attributesPage.bulkDeleteAttributes(page);
-      await expect(deleteTextResult).to.be.contains(attributesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(attributesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfAttributesAfterReset).to.be.equal(numberOfAttributes);
+      expect(numberOfAttributesAfterReset).to.be.equal(numberOfAttributes);
     });
   });
 });

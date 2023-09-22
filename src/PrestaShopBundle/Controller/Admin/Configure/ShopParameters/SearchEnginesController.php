@@ -104,7 +104,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -215,7 +215,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (SearchEngineException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -233,7 +233,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
     {
         return [
             SearchEngineNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             DeleteSearchEngineException::class => [
@@ -258,11 +258,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
      */
     private function getBulkSearchEnginesFromRequest(Request $request): array
     {
-        $searchEngineIds = $request->request->get('search_engine_bulk');
-
-        if (!is_array($searchEngineIds)) {
-            return [];
-        }
+        $searchEngineIds = $request->request->all('search_engine_bulk');
 
         return array_map('intval', $searchEngineIds);
     }

@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;

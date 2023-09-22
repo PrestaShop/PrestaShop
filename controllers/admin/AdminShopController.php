@@ -140,6 +140,11 @@ class AdminShopControllerCore extends AdminController
         }
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         parent::initContent();
@@ -261,7 +266,7 @@ class AdminShopControllerCore extends AdminController
         if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) {
             $shop_group = new ShopGroup((int) Tools::getValue('id_shop_group'));
             if ($shop_group->shopNameExists(Tools::getValue('name'), (int) Tools::getValue('id_shop'))) {
-                $this->errors[] = $this->trans('You cannot have two shops with the same name in the same group.', [], 'Admin.Advparameters.Notification');
+                $this->errors[] = $this->trans('You cannot have two stores with the same name in the same group.', [], 'Admin.Advparameters.Notification');
             }
         }
 
@@ -291,7 +296,7 @@ class AdminShopControllerCore extends AdminController
     public function processDelete()
     {
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
-            $this->errors[] = $this->trans('Unable to load this shop.', [], 'Admin.Advparameters.Notification');
+            $this->errors[] = $this->trans('Unable to load this store.', [], 'Admin.Advparameters.Notification');
         } elseif (!Shop::hasDependency($object->id)) {
             $result = Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
             Tools::generateHtaccess();
@@ -580,7 +585,6 @@ class AdminShopControllerCore extends AdminController
             'product_attribute' => $this->trans('Product combinations', [], 'Admin.Advparameters.Feature'),
             'stock_available' => $this->trans('Available quantities for sale', [], 'Admin.Advparameters.Feature'),
             'store' => $this->trans('Stores', [], 'Admin.Global'),
-            'warehouse' => $this->trans('Warehouses', [], 'Admin.Advparameters.Feature'),
             'webservice_account' => $this->trans('Webservice accounts', [], 'Admin.Advparameters.Feature'),
             'attribute_group' => $this->trans('Attribute groups', [], 'Admin.Advparameters.Feature'),
             'feature' => $this->trans('Features', [], 'Admin.Global'),
@@ -612,7 +616,7 @@ class AdminShopControllerCore extends AdminController
                 'select' => [
                     'type' => 'select',
                     'name' => 'importFromShop',
-                    'label' => $this->trans('Choose the source shop', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Choose the source store', [], 'Admin.Advparameters.Feature'),
                     'options' => [
                         'query' => Shop::getShops(false),
                         'name' => 'name',
@@ -888,7 +892,7 @@ class AdminShopControllerCore extends AdminController
 
         $tree = [[
             'data' => [
-                'title' => '<b>' . $this->trans('Shop groups list', [], 'Admin.Advparameters.Feature') . '</b>',
+                'title' => '<b>' . $this->trans('Store groups list', [], 'Admin.Advparameters.Feature') . '</b>',
                 'icon' => 'themes/' . $this->context->employee->bo_theme . '/img/tree-multishop-root.png',
                 'attr' => [
                     'href' => $this->context->link->getAdminLink('AdminShopGroup'),

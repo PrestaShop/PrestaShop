@@ -17,6 +17,13 @@ Feature: Product feature value management
     And product feature "element" should have following details:
       | name[en-US] | Nature Element |
       | name[fr-FR] | Nature Element |
+    And I create product feature "legs_count" with specified properties:
+      | name[en-US]      | Legs count          |
+      | name[fr-FR]      | les jambes comptent |
+      | associated shops | shop1               |
+    And product feature "legs_count" should have following details:
+      | name[en-US] | Legs count          |
+      | name[fr-FR] | les jambes comptent |
 
   Scenario: I create and edit feature value
     When I create feature value "fire" for feature "element" with following properties:
@@ -74,3 +81,61 @@ Feature: Product feature value management
       | name[fr-FR] | Planet |
     When I associate feature value "earth" to feature "planet"
     Then feature value "earth" should be associated to feature "planet"
+
+  Scenario: Delete feature value
+    When I create feature value "3_legs" for feature "legs_count" with following properties:
+      | value[en-US] | 3 |
+      | value[fr-FR] | 3 |
+    And I create feature value "4_legs" for feature "legs_count" with following properties:
+      | value[en-US] | 4 |
+      | value[fr-FR] | 4 |
+    Then feature value "3_legs" localized value should be:
+      | locale | value |
+      | en-US  | 3     |
+      | fr-FR  | 3     |
+    And feature value "4_legs" localized value should be:
+      | locale | value |
+      | en-US  | 4     |
+      | fr-FR  | 4     |
+    When I delete feature value "3_legs"
+    Then feature value "3_legs" should not exist
+    When I delete feature value "4_legs"
+    Then feature value "4_legs" should not exist
+
+  Scenario: Bulk delete feature values
+    Given I create feature value "3_legs" for feature "legs_count" with following properties:
+      | value[en-US] | 3 |
+      | value[fr-FR] | 3 |
+    And I create feature value "4_legs" for feature "legs_count" with following properties:
+      | value[en-US] | 4 |
+      | value[fr-FR] | 4 |
+    And feature value "3_legs" localized value should be:
+      | locale | value |
+      | en-US  | 3     |
+      | fr-FR  | 3     |
+    And feature value "4_legs" localized value should be:
+      | locale | value |
+      | en-US  | 4     |
+      | fr-FR  | 4     |
+    And I create feature value "5_legs" for feature "legs_count" with following properties:
+      | value[en-US] | 5 |
+      | value[fr-FR] | 5 |
+    And feature value "5_legs" localized value should be:
+      | locale | value |
+      | en-US  | 5     |
+      | fr-FR  | 5     |
+    And I create feature value "no_element" for feature "element" with following properties:
+      | value[en-US] | No element |
+      | value[fr-FR] | Non        |
+    And feature value "no_element" localized value should be:
+      | locale | value      |
+      | en-US  | No element |
+      | fr-FR  | Non        |
+    When I bulk delete feature values "3_legs,4_legs,no_element"
+    Then feature value "3_legs" should not exist
+    And feature value "4_legs" should not exist
+    And feature value "no_element" should not exist
+    And feature value "5_legs" localized value should be:
+      | locale | value |
+      | en-US  | 5     |
+      | fr-FR  | 5     |

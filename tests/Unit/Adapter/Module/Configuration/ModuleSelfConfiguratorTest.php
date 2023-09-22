@@ -294,12 +294,6 @@ class ModuleSelfConfiguratorTest extends TestCase
             ->method('onReset')
             ->willReturn(true);
         $moduleS
-            ->method('onMobileDisable')
-            ->willReturn(true);
-        $moduleS
-            ->method('onMobileEnable')
-            ->willReturn(true);
-        $moduleS
             ->method('hasValidInstance')
             ->willReturn(true);
 

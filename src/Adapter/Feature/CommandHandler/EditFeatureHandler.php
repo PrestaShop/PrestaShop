@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\EditFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 /**
  * Handles feature editing.
  */
+#[AsCommandHandler]
 class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatureHandlerInterface
 {
     /**

@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -42,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Product\ProductCsvExporter;
 use PrestaShop\PrestaShop\Core\Security\Permission;
@@ -49,7 +49,6 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Attribute;
 use PrestaShopBundle\Entity\Repository\AttributeRepository;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
@@ -63,7 +62,6 @@ use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
-use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
 use PrestaShopBundle\Service\Hook\HookFinder;
 use Product;
@@ -561,14 +559,7 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductController->processSpecificPricePriorities();
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
-                        // For now, each attribute set the same value.
-                        $adminProductWrapper->processDependsOnStock(
-                            $product,
-                            ($_POST['depends_on_stock'] == '1'),
-                            $combinationValues['id_product_attribute']
-                        );
                     }
-                    $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
                     // If there is no combination, then quantity and location are managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
@@ -584,8 +575,6 @@ class ProductController extends FrameworkBundleAdminController
                         ->processProductCustomization($product, $_POST['custom_fields']);
 
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
-
-                    $adminProductController->processWarehouses();
 
                     $response = new JsonResponse();
                     $response->setData([
@@ -615,12 +604,6 @@ class ProductController extends FrameworkBundleAdminController
 
             throw $e;
         }
-
-        /** @var StockInterface $stockManager */
-        $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
-
-        /** @var WarehouseDataProvider $warehouseProvider */
-        $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
 
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isGroupShopContext()) {
@@ -658,8 +641,6 @@ class ProductController extends FrameworkBundleAdminController
             'ids_product_attribute' => (isset($formData['step3']['id_product_attributes']) ? implode(',', $formData['step3']['id_product_attributes']) : ''),
             'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
             'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
-            'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
-            'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->getConfiguration()->getBoolean('PS_COMBINATION_FEATURE_ACTIVE'),
             'showContentHeader' => false,
@@ -757,7 +738,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        $productIdList = $request->request->get('bulk_action_selected_products');
+        $productIdList = $request->request->all('bulk_action_selected_products');
         /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
@@ -955,8 +936,8 @@ class ProductController extends FrameworkBundleAdminController
                     /* Change position_ordering to position */
                     $routerParams['orderBy'] = 'position';
 
-                    $productIdList = $request->request->get('mass_edit_action_sorted_products');
-                    $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
+                    $productIdList = $request->request->all('mass_edit_action_sorted_products');
+                    $productPositionList = $request->request->all('mass_edit_action_sorted_positions');
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,
                         'product_list_position' => $productPositionList,
@@ -1227,6 +1208,8 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
      * @return CsvResponse
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
@@ -1240,6 +1223,8 @@ class ProductController extends FrameworkBundleAdminController
      * Set the Catalog filters values and redirect to the catalogAction.
      *
      * URL example: /product/catalog_filters/42/last/32
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int|string $quantity the quantity to set on the catalog filters persistence
      * @param string $active the activation state to set on the catalog filters persistence
@@ -1273,7 +1258,7 @@ class ProductController extends FrameworkBundleAdminController
     private function getErrorMessages(): array
     {
         return [
-            ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
             CannotUpdateProductException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_ONLINE_DATA => $this->trans(
@@ -1302,6 +1287,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function shouldRedirectToV2(): bool
     {
-        return $this->get(FeatureFlagRepository::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+        return $this->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 }

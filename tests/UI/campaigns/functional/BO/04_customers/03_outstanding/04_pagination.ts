@@ -82,28 +82,32 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
         it('should go to Orders > Orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
-            page,
-            dashboardPage.ordersParentLink,
-            dashboardPage.ordersLink,
-          );
+          if (index === 0) {
+            await dashboardPage.goToSubMenu(
+              page,
+              dashboardPage.ordersParentLink,
+              dashboardPage.ordersLink,
+            );
+          } else {
+            await ordersPage.reloadPage(page);
+          }
 
           const pageTitle = await ordersPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(ordersPage.pageTitle);
+          expect(pageTitle).to.contains(ordersPage.pageTitle);
         });
 
         it('should update order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus_${index}`, baseContext);
 
           const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
-          await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+          expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
         });
 
         it('should check that the status is updated successfully', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO_${index}`, baseContext);
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-          await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+          expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
         });
       });
     });
@@ -119,7 +123,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       );
 
       const pageTitle = await outstandingPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      expect(pageTitle).to.contains(outstandingPage.pageTitle);
     });
 
     it('should reset all filters and get the number of outstanding', async function () {
@@ -128,7 +132,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       await outstandingPage.resetFilter(page);
 
       numberOutstanding = await outstandingPage.getNumberOutstanding(page);
-      await expect(numberOutstanding).to.be.above(numberOfOrdersToCreate);
+      expect(numberOutstanding).to.be.above(numberOfOrdersToCreate);
     });
 
     it('should change the items number to 10 per page', async function () {

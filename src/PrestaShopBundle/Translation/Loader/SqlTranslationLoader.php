@@ -73,11 +73,15 @@ class SqlTranslationLoader implements LoaderInterface
             throw new NotFoundResourceException(sprintf('Language not found in database: %s', $locale));
         }
 
+        // If we get translations for a theme, realistically we need to get translations
+        // for all active themes from the database, since different stores can use different themes.
+        // If we don't do that, the first store's theme you visit after the cache is cleared will
+        // be the only one that has translations.
         $selectTranslationsQuery = '
-                SELECT `key`, `translation`, `domain`
-                FROM `' . _DB_PREFIX_ . 'translation`
-                WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'] . '
-                AND theme ' . ($this->theme !== null ? ' IN ("' . $this->theme->getName() . '"' . ($this->theme->get('parent') ? ',"' . $this->theme->get('parent') . '"' : '') . ')' : 'IS NULL');
+            SELECT `key`, `translation`, `domain`
+            FROM `' . _DB_PREFIX_ . 'translation`
+            WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'] . '
+            AND theme ' . ($this->theme !== null ? ' IN (SELECT `theme` FROM `' . _DB_PREFIX_ . 'shop` WHERE `active` = 1)' : 'IS NULL');
 
         $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
         $catalogue = new MessageCatalogue($locale);

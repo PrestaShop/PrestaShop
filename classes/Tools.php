@@ -30,13 +30,11 @@ use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
-use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -663,46 +661,6 @@ class ToolsCore
     }
 
     /**
-     * Return price with currency sign for a given product.
-     *
-     * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
-     * @see PrestaShop\PrestaShop\Core\Localization\Locale
-     *
-     * @param float $price Product price
-     * @param int|Currency|array|null $currency Current currency (object, id_currency, NULL => context currency)
-     * @param bool $no_utf8 Not used anymore
-     * @param Context|null $context
-     *
-     * @return string Price correctly formatted (sign, decimal separator...)
-     *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-     *
-     * @throws LocalizationException
-     */
-    public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
-    {
-        @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.6.0. Use ' . Locale::class . '::formatPrice() instead.',
-            E_USER_DEPRECATED
-        );
-
-        if (!is_numeric($price)) {
-            return $price;
-        }
-
-        $context = $context ?: Context::getContext();
-        $currency = $currency ?: $context->currency;
-
-        if (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance($currency);
-        }
-
-        $locale = static::getContextLocale($context);
-        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
-
-        return $locale->formatPrice($price, $currencyCode);
-    }
-
-    /**
      * Return current locale
      *
      * @param Context $context
@@ -731,33 +689,6 @@ class ToolsCore
         );
 
         return $locale;
-    }
-
-    /**
-     * Returns a well formatted number.
-     *
-     * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
-     * @see Locale
-     *
-     * @param int|float|string $number The number to format
-     * @param null $currency not used anymore
-     *
-     * @return string The formatted number
-     *
-     * @throws Exception
-     * @throws LocalizationException
-     */
-    public static function displayNumber($number, $currency = null)
-    {
-        @trigger_error(
-            'Tools::displayNumber() is deprecated since version 1.7.5.0. Use ' . Locale::class . ' instead.',
-            E_USER_DEPRECATED
-        );
-
-        $context = Context::getContext();
-        $locale = static::getContextLocale($context);
-
-        return $locale->formatNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)
@@ -1215,11 +1146,10 @@ class ToolsCore
 
     /**
      * @param array $params
-     * @param Smarty|null $smarty unused parameter, please ignore (@todo: remove in next major)
      *
      * @return bool|string
      */
-    public static function getAdminTokenLiteSmarty($params, &$smarty = null)
+    public static function getAdminTokenLiteSmarty($params)
     {
         $context = Context::getContext();
 
@@ -2048,60 +1978,6 @@ class ToolsCore
         );
     }
 
-    /**
-     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
-     *
-     * @param string $hex
-     *
-     * @return float|int|string
-     */
-    public static function getBrightness($hex)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. Use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        if (Tools::strtolower($hex) == 'transparent') {
-            return '129';
-        }
-
-        $hex = str_replace('#', '', $hex);
-
-        if (Tools::strlen($hex) == 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
-        }
-
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-
-        return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
-    }
-
-    /**
-     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
-     */
-    public static function isBright($hex)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. Use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        if (null === self::$colorBrightnessCalculator) {
-            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
-        }
-
-        return self::$colorBrightnessCalculator->isBright($hex);
-    }
-
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
@@ -2392,11 +2268,6 @@ class ToolsCore
 	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
 		Header set Access-Control-Allow-Origin \"*\"
 	</FilesMatch>
-
-    <FilesMatch \"\.pdf$\">
-      Header set Content-Disposition \"Attachment\"
-      Header set X-Content-Type-Options \"nosniff\"
-    </FilesMatch>
 </IfModule>\n\n");
         fwrite($write_fd, '<Files composer.lock>
     # Apache 2.2
@@ -2415,6 +2286,9 @@ class ToolsCore
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
 	ExpiresActive On
+    AddType image/webp .webp
+    ExpiresByType image/webp \"access plus 1 month\"
+    ExpiresByType image/avif \"access plus 1 month\"
 	ExpiresByType image/gif \"access plus 1 month\"
 	ExpiresByType image/jpeg \"access plus 1 month\"
 	ExpiresByType image/png \"access plus 1 month\"
@@ -3200,20 +3074,6 @@ exit;
     {
         Tools::clearSmartyCache();
         Tools::clearSf2Cache();
-    }
-
-    /**
-     * @deprecated since 8.1 and will be removed in next major version.
-     *
-     * @param int|bool $id_product
-     */
-    public static function clearColorListCache($id_product = false)
-    {
-        // Change template dir if called from the BackOffice
-        $current_template_dir = Context::getContext()->smarty->getTemplateDir();
-        Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, _PS_THEME_DIR_ . 'product-list-colors.tpl', Product::getColorsListCacheId((int) $id_product, false));
-        Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 
     /**

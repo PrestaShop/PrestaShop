@@ -42,6 +42,8 @@ export default class StoreData {
 
   public hours: string[];
 
+  public picture: string|null;
+
   /**
    * Constructor for class StoreData
    * @param storeToCreate {StoreCreator} Could be used to force the value of some members
@@ -54,28 +56,28 @@ export default class StoreData {
     this.name = storeToCreate.name || faker.company.name();
 
     /** @type {string} First line address of the store */
-    this.address1 = storeToCreate.address1 || faker.address.streetAddress();
+    this.address1 = storeToCreate.address1 || faker.location.streetAddress();
 
     /** @type {string} Second line address of the store */
-    this.address2 = storeToCreate.address2 || faker.address.secondaryAddress();
+    this.address2 = storeToCreate.address2 || faker.location.secondaryAddress();
 
     /** @type {string} Postal code of the store */
-    this.postcode = storeToCreate.postcode || faker.address.zipCode('#####');
+    this.postcode = storeToCreate.postcode || faker.location.zipCode('#####');
 
     /** @type {string} City for the address of the store */
-    this.city = storeToCreate.city || faker.address.city();
+    this.city = storeToCreate.city || faker.location.city();
 
     /** @type {string} State for the address of the store */
-    this.state = storeToCreate.state || faker.address.state();
+    this.state = storeToCreate.state || faker.location.state();
 
     /** @type {string} Country of the address of the store */
     this.country = storeToCreate.country || 'France';
 
     /** @type {string} Latitude of the address of the store */
-    this.latitude = storeToCreate.latitude || faker.address.latitude();
+    this.latitude = storeToCreate.latitude || faker.location.latitude().toString();
 
     /** @type {string} Longitude of the address of the store */
-    this.longitude = storeToCreate.longitude || faker.address.longitude();
+    this.longitude = storeToCreate.longitude || faker.location.longitude().toString();
 
     /** @type {string} Phone number of the store (default format 01########) */
     this.phone = storeToCreate.phone || faker.phone.number('01########');
@@ -84,7 +86,7 @@ export default class StoreData {
     this.fax = storeToCreate.fax || faker.phone.number('01########');
 
     /** @type {string} Registration number of the store */
-    this.registrationNumber = storeToCreate.registrationNumber || faker.finance.account();
+    this.registrationNumber = storeToCreate.registrationNumber || faker.finance.accountNumber();
 
     /** @type {string} Email to contact the store */
     this.email = storeToCreate.email || faker.internet.email();
@@ -97,5 +99,8 @@ export default class StoreData {
 
     /** @type {Array<string>} Opening hours of the store */
     this.hours = storeToCreate.hours || new Array(7).fill('10:00 - 18:00', 0, 7);
+
+    /** @type {string|null} Picture of the store */
+    this.picture = storeToCreate.picture || null;
   }
 }

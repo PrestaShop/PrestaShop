@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\DeleteSqlRequestHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
@@ -39,6 +40,7 @@ use RequestSql;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class DeleteSqlRequestHandler implements DeleteSqlRequestHandlerInterface
 {
     /**

@@ -72,6 +72,7 @@ class ReleaseCreator
      * @var array
      */
     protected $filesRemoveList = [
+        '.php-cs-fixer.dist.php',
         '.DS_Store',
         '.gitignore',
         '.gitmodules',

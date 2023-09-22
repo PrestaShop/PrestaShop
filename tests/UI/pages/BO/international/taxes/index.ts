@@ -161,7 +161,8 @@ class Taxes extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.resetFilterButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.resetFilterButton);
+      await page.click(this.resetFilterButton);
+      await this.elementNotVisible(page, this.resetFilterButton, 2000);
     }
   }
 
@@ -199,13 +200,13 @@ class Taxes extends BOBasePage {
         await this.setValue(page, this.taxesFilterColumnInput(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.taxesFilterColumnInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.taxesFilterColumnInput(filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.searchFilterButton);
+    await this.clickAndWaitForURL(page, this.searchFilterButton);
   }
 
   /**
@@ -235,7 +236,7 @@ class Taxes extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.taxesGridStatusColumn(row));
+      await page.click(this.taxesGridStatusColumn(row));
       return true;
     }
 
@@ -277,7 +278,7 @@ class Taxes extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewTaxPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewTaxLink);
+    await this.clickAndWaitForURL(page, this.addNewTaxLink);
   }
 
   /**
@@ -287,7 +288,7 @@ class Taxes extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditTaxPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.taxesGridColumnEditLink(row));
+    await this.clickAndWaitForURL(page, this.taxesGridColumnEditLink(row));
   }
 
   /**
@@ -332,7 +333,9 @@ class Taxes extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status
-    await this.clickAndWaitForNavigation(page, enable ? this.enableSelectionButton : this.disableSelectionButton);
+    await page.click(enable ? this.enableSelectionButton : this.disableSelectionButton);
+    await this.elementNotVisible(page, enable ? this.enableSelectionButton : this.disableSelectionButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -367,7 +370,7 @@ class Taxes extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteTaxes(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
   }
 
   /**
@@ -391,7 +394,7 @@ class Taxes extends BOBasePage {
     }
 
     // Click on save tax Option
-    await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
+    await page.click(this.saveTaxOptionButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -405,7 +408,9 @@ class Taxes extends BOBasePage {
     await this.setChecked(page, this.useEcoTaxToggleInput(enableEcoTax ? 1 : 0));
 
     // Click on save tax Option
-    await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
+    await page.click(this.saveTaxOptionButton);
+    await this.elementNotVisible(page, this.useEcoTaxToggleInput(!enableEcoTax ? 1 : 0));
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -415,7 +420,7 @@ class Taxes extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToTaxRulesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.taxRulesSubTab);
+    await this.clickAndWaitForURL(page, this.taxRulesSubTab);
   }
 
   /* Sort functions */
@@ -432,7 +437,7 @@ class Taxes extends BOBasePage {
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -467,7 +472,7 @@ class Taxes extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -478,7 +483,7 @@ class Taxes extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }

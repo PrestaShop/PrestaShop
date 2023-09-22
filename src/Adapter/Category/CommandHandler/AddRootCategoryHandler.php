@@ -29,18 +29,18 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddRootCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 
 /**
  * Class AddRootCategoryHandler.
  */
+#[AsCommandHandler]
 final class AddRootCategoryHandler extends AbstractObjectModelHandler implements AddRootCategoryHandlerInterface
 {
     /**
@@ -77,8 +77,7 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
         $this->categoryImageUploader->uploadImages(
             $categoryId,
             $command->getCoverImage(),
-            $command->getThumbnailImage(),
-            $command->getMenuThumbnailImages()
+            $command->getThumbnailImage()
         );
 
         return $categoryId;
@@ -96,9 +95,6 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
      */
     private function createRootCategoryFromCommand(AddRootCategoryCommand $command)
     {
-        if (count($command->getMenuThumbnailImages()) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
-            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
-        }
         $category = new Category();
         $category->is_root_category = true;
         $category->level_depth = 1;

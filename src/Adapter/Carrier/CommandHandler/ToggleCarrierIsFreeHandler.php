@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\ToggleCarrierIsFreeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\ToggleCarrierIsFreeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotToggleCarrierIsFreeStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShopException;
 
+#[AsCommandHandler]
 class ToggleCarrierIsFreeHandler extends AbstractCarrierHandler implements ToggleCarrierIsFreeHandlerInterface
 {
     /**

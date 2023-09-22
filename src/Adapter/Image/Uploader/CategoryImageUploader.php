@@ -45,32 +45,23 @@ class CategoryImageUploader
      */
     private $categoryThumbnailUploader;
 
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryMenuThumbnailUploader;
-
     public function __construct(
         ImageUploaderInterface $categoryCoverUploader,
-        ImageUploaderInterface $categoryThumbnailUploader,
-        ImageUploaderInterface $categoryMenuThumbnailUploader
+        ImageUploaderInterface $categoryThumbnailUploader
     ) {
         $this->categoryCoverUploader = $categoryCoverUploader;
         $this->categoryThumbnailUploader = $categoryThumbnailUploader;
-        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
     }
 
     /**
      * @param CategoryId $categoryId
      * @param UploadedFile|null $coverImage
      * @param UploadedFile|null $thumbnailImage
-     * @param UploadedFile[] $menuThumbnailImages
      */
     public function uploadImages(
         CategoryId $categoryId,
         UploadedFile $coverImage = null,
-        UploadedFile $thumbnailImage = null,
-        array $menuThumbnailImages = []
+        UploadedFile $thumbnailImage = null
     ): void {
         if (null !== $coverImage) {
             $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
@@ -78,12 +69,6 @@ class CategoryImageUploader
 
         if (null !== $thumbnailImage) {
             $this->categoryThumbnailUploader->upload($categoryId->getValue(), $thumbnailImage);
-        }
-
-        if (!empty($menuThumbnailImages)) {
-            foreach ($menuThumbnailImages as $menuThumbnail) {
-                $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
-            }
         }
     }
 }

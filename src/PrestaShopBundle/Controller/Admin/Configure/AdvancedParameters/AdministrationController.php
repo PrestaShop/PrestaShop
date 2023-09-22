@@ -85,12 +85,12 @@ class AdministrationController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_administration')]
     public function processGeneralFormAction(Request $request)
     {
         return $this->processForm(
@@ -107,12 +107,12 @@ class AdministrationController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_administration')]
     public function processUploadQuotaFormAction(Request $request)
     {
         return $this->processForm(
@@ -130,12 +130,12 @@ class AdministrationController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration"
      * )
-     * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_administration')]
     public function processNotificationsFormAction(Request $request)
     {
         return $this->processForm(

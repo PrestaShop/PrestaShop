@@ -19,11 +19,11 @@ export default class MessageData {
 
   public readonly emailAddress: string;
 
-  public readonly reference: string;
+  public reference: string;
 
   public readonly fileName: string;
 
-  public readonly message: string;
+  public message: string;
 
   /**
    * Constructor for class MessageData
@@ -34,17 +34,17 @@ export default class MessageData {
     this.subject = messageToCreate.subject || faker.helpers.arrayElement(subject);
 
     /** @type {string} Firstname of the customer */
-    this.firstName = messageToCreate.firstName || faker.name.firstName();
+    this.firstName = messageToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Firstname of the customer */
-    this.lastName = messageToCreate.lastName || faker.name.lastName();
+    this.lastName = messageToCreate.lastName || faker.person.lastName();
 
     /** @type {string} employee to forward the message */
     this.employeeName = messageToCreate.employeeName || `${this.firstName.slice(0.1)}. ${this.lastName}`;
 
     /** @type {string} Email of the customer */
     this.emailAddress = messageToCreate.emailAddress === undefined
-      ? faker.internet.email(this.firstName, this.lastName, 'prestashop.com')
+      ? faker.internet.email({firstName: this.firstName, lastName: this.lastName, provider: 'prestashop.com'})
       : messageToCreate.emailAddress;
 
     /** @type {string} Reference for on order if used */

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Zone\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\EditZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\CommandHandler\EditZoneHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\CannotEditZoneException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShopException;
 use Zone;
 
+#[AsCommandHandler]
 final class EditZoneHandler extends AbstractObjectModelHandler implements EditZoneHandlerInterface
 {
     /**

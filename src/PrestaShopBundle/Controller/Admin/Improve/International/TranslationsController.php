@@ -53,6 +53,8 @@ class TranslationsController extends FrameworkBundleAdminController
 
     /**
      * Renders the translation page
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
     public function overviewAction()
     {

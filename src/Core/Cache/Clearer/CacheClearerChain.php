@@ -52,5 +52,9 @@ final class CacheClearerChain implements CacheClearerInterface
         foreach ($this->cacheClearers as $cacheClearer) {
             $cacheClearer->clear();
         }
+
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
     }
 }

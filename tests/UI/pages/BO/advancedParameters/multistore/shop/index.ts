@@ -125,7 +125,7 @@ class ShopSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToNewShopPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewShopLink);
+    await this.clickAndWaitForURL(page, this.addNewShopLink);
   }
 
   /* Filter methods */
@@ -146,7 +146,7 @@ class ShopSettings extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
   }
 
@@ -169,7 +169,7 @@ class ShopSettings extends BOBasePage {
    */
   async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -256,7 +256,7 @@ class ShopSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditShopPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditLink(row));
   }
 
   /**
@@ -266,7 +266,7 @@ class ShopSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToSetURL(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, `${this.tableColumn(row, 5)} a`);
+    await this.clickAndWaitForURL(page, `${this.tableColumn(row, 5)} a`);
   }
 
   /* Pagination methods */
@@ -287,7 +287,7 @@ class ShopSettings extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+    await this.clickAndWaitForURL(page, this.paginationItems(number));
 
     return this.getPaginationLabel(page);
   }
@@ -298,7 +298,7 @@ class ShopSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -309,7 +309,7 @@ class ShopSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -322,7 +322,7 @@ class ShopSettings extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page: Page, sortBy: string, sortDirection: Promise<void>) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     let columnSelector: string;
 
     switch (sortBy) {
@@ -351,7 +351,7 @@ class ShopSettings extends BOBasePage {
     }
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 }
 

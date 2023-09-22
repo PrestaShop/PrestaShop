@@ -52,14 +52,14 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
     await webservicePage.closeSfToolBar(page);
 
     const pageTitle = await webservicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(webservicePage.pageTitle);
+    expect(pageTitle).to.contains(webservicePage.pageTitle);
   });
 
   it('should reset all filters and get number of webservices', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
     numberOfWebserviceKeys = await webservicePage.resetAndGetNumberOfLines(page);
-    if (numberOfWebserviceKeys !== 0) await expect(numberOfWebserviceKeys).to.be.above(0);
+    if (numberOfWebserviceKeys !== 0) expect(numberOfWebserviceKeys).to.be.above(0);
   });
 
   const tests = [
@@ -74,7 +74,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       await webservicePage.goToAddNewWebserviceKeyPage(page);
 
       const pageTitle = await addWebservicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
+      expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
     });
 
     it('should create webservice key', async function () {
@@ -85,10 +85,10 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         test.args.webserviceToCreate,
         false,
       );
-      await expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
+      expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
 
       const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
-      await expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
+      expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
     });
   });
   describe('Filter webservice table', async () => {
@@ -114,13 +114,13 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
           identifier: 'filterByStatus',
           filterType: 'select',
           filterBy: 'active',
-          filterValue: firstWebServiceData.status,
+          filterValue: firstWebServiceData.status ? '1' : '0',
         },
       },
     ];
 
     testsFilter.forEach((
-      test: {args: {identifier: string, filterType: string, filterBy: string, filterValue: string|boolean, }},
+      test: {args: {identifier: string, filterType: string, filterBy: string, filterValue: string, }},
       index: number,
     ) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
@@ -138,10 +138,10 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const wenServiceStatus = await webservicePage.getStatus(page, i);
-            await expect(wenServiceStatus).to.equal(test.args.filterValue);
+            expect(wenServiceStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -150,7 +150,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
         const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
-        await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys + 2);
+        expect(numberOfElement).to.be.equal(numberOfWebserviceKeys + 2);
       });
     });
   });
@@ -167,7 +167,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       );
 
       const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
-      await expect(key).to.contains(firstWebServiceData.keyDescription);
+      expect(key).to.contains(firstWebServiceData.keyDescription);
     });
 
     const statuses = [
@@ -187,11 +187,11 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
         if (isActionPerformed) {
           const resultMessage = await webservicePage.getValidationMessage(page);
-          await expect(resultMessage).to.contains(webservicePage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(webservicePage.successfulUpdateStatusMessage);
         }
 
         const webserviceStatus = await webservicePage.getStatus(page, 1);
-        await expect(webserviceStatus).to.be.equal(webservice.args.enable);
+        expect(webserviceStatus).to.be.equal(webservice.args.enable);
       });
     });
   });
@@ -207,14 +207,14 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         await testContext.addContextItem(this, 'testIdentifier', `deleteWebserviceKey_${index}`, baseContext);
 
         const textResult = await webservicePage.deleteWebserviceKey(page, 1);
-        await expect(textResult).to.equal(webservicePage.successfulDeleteMessage);
+        expect(textResult).to.equal(webservicePage.successfulDeleteMessage);
       });
 
       it('should reset filter and check the number of webservice keys', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete_${index}`, baseContext);
 
         const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
-        await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys - index + 1);
+        expect(numberOfElement).to.be.equal(numberOfWebserviceKeys - index + 1);
       });
     });
   });

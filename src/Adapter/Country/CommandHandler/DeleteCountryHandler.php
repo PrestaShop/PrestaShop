@@ -30,12 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\DeleteCountryHandlerInterface;
 
 /**
  * Handles country deletion
  */
+#[AsCommandHandler]
 class DeleteCountryHandler implements DeleteCountryHandlerInterface
 {
     /**

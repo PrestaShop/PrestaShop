@@ -53,8 +53,6 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_UNINSTALL => 'Admin.Actions',
         Module::ACTION_ENABLE => 'Admin.Actions',
         Module::ACTION_DISABLE => 'Admin.Actions',
-        Module::ACTION_ENABLE_MOBILE => 'Admin.Modules.Feature',
-        Module::ACTION_DISABLE_MOBILE => 'Admin.Modules.Feature',
         Module::ACTION_RESET => 'Admin.Actions',
         Module::ACTION_UPGRADE => 'Admin.Actions',
         Module::ACTION_CONFIGURE => 'Admin.Actions',
@@ -69,10 +67,8 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_UNINSTALL => 'Uninstall',
         Module::ACTION_ENABLE => 'Enable',
         Module::ACTION_DISABLE => 'Disable',
-        Module::ACTION_ENABLE_MOBILE => 'Enable mobile',
-        Module::ACTION_DISABLE_MOBILE => 'Disable mobile',
         Module::ACTION_RESET => 'Reset',
-        Module::ACTION_UPGRADE => 'Upgrade',
+        Module::ACTION_UPGRADE => 'Update',
         Module::ACTION_CONFIGURE => 'Configure',
         Module::ACTION_DELETE => 'Delete',
     ];
@@ -85,8 +81,6 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_CONFIGURE,
         Module::ACTION_ENABLE,
         Module::ACTION_DISABLE,
-        Module::ACTION_ENABLE_MOBILE,
-        Module::ACTION_DISABLE_MOBILE,
         Module::ACTION_RESET,
         Module::ACTION_UPGRADE,
         Module::ACTION_UNINSTALL,
@@ -248,17 +242,14 @@ class AdminModuleDataProvider implements ModuleInterface
                 unset($urls['delete']);
                 if (!$module->isActive()) {
                     unset(
-                        $urls['disable'],
-                        $urls['enableMobile'],
-                        $urls['disableMobile']
+                        $urls['disable']
                     );
                     if ($moduleDatabaseAttributes->get('active') === null) {
                         unset($urls['enable']);
                     }
                 } else {
                     unset(
-                        $urls['enable'],
-                        $urls[$module->isActiveOnMobile() ? 'enableMobile' : 'disableMobile']
+                        $urls['enable']
                     );
                 }
 
@@ -269,11 +260,13 @@ class AdminModuleDataProvider implements ModuleInterface
                 if (!$module->isConfigurable()) {
                     unset($urls['configure']);
                 }
-            } else {
+            } elseif ($module->isUninstalled()) {
                 $urls = [
                     'install' => $urls['install'],
                     'delete' => $urls['delete'],
                 ];
+            } else {
+                $urls = ['install' => $urls['install']];
             }
 
             // Go through the actions and remove all actions that the current environment
@@ -328,9 +321,9 @@ class AdminModuleDataProvider implements ModuleInterface
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
                         foreach ($modules as $key => $module) {
-                            if (strpos($module->displayName, $keyword) !== false
-                                || strpos($module->name, $keyword) !== false
-                                || strpos($module->description, $keyword) !== false) {
+                            if (str_contains($module->displayName, $keyword)
+                                || str_contains($module->name, $keyword)
+                                || str_contains($module->description, $keyword)) {
                                 $search_result[] = $key;
                             }
                         }

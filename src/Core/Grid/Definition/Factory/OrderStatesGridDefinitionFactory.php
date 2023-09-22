@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -193,7 +192,7 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
     {
         return (new FilterCollection())
             ->add(
-                (new Filter('id_order_state', NumberType::class))
+                (new Filter('id_order_state', TextType::class))
                     ->setTypeOptions([
                         'attr' => [
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),

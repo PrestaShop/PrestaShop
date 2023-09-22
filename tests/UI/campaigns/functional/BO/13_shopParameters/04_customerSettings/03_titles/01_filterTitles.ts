@@ -48,7 +48,7 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   it('should go to \'Titles\' page', async function () {
@@ -57,14 +57,14 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
     await customerSettingsPage.goToTitlesPage(page);
 
     const pageTitle = await titlesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(titlesPage.pageTitle);
+    expect(pageTitle).to.contains(titlesPage.pageTitle);
   });
 
   it('should reset all filters and get number of titles in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfTitles = await titlesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfTitles).to.be.above(0);
+    expect(numberOfTitles).to.be.above(0);
   });
 
   describe('Filter titles', async () => {
@@ -76,12 +76,12 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'b!name', filterValue: Titles.Mrs.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: Titles.Mrs.name,
         },
       },
       {
         args: {
-          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'a!type', filterValue: Titles.Mrs.gender,
+          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'type', filterValue: Titles.Mrs.gender,
         },
       },
     ];
@@ -98,17 +98,17 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
         );
 
         const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
+        expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
 
         const textColumn = await titlesPage.getTextColumn(page, 1, test.args.filterBy);
-        await expect(textColumn).to.contains(test.args.filterValue);
+        expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfTitlesAfterReset = await titlesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfTitlesAfterReset).to.equal(numberOfTitles);
+        expect(numberOfTitlesAfterReset).to.equal(numberOfTitles);
       });
     });
   });

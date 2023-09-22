@@ -241,7 +241,7 @@ class TranslationsExtension extends AbstractExtension
      */
     protected function renderEditTranslationForm($properties)
     {
-        list($domain, $locale) = explode('.', $properties['camelized_domain']);
+        [$domain, $locale] = explode('.', $properties['camelized_domain']);
         $translationValue = $this->getTranslationValue($properties['translation']);
         $defaultTranslationValue = $this->getDefaultTranslationValue(
             $properties['translation_key'],
@@ -521,8 +521,8 @@ class TranslationsExtension extends AbstractExtension
      */
     protected function parseDomain($subtree)
     {
-        list($camelizedDomain) = $subtree['__messages'];
-        list($domain) = explode('.', $camelizedDomain);
+        [$camelizedDomain] = $subtree['__messages'];
+        [$domain] = explode('.', $camelizedDomain);
 
         return $domain;
     }

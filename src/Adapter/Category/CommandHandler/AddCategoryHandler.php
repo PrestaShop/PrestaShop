@@ -29,18 +29,18 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 
 /**
  * Adds new category using legacy object model.
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
 {
     /**
@@ -62,9 +62,6 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      */
     public function handle(AddCategoryCommand $command)
     {
-        if (count($command->getMenuThumbnailImages()) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
-            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
-        }
         $category = $this->createCategoryFromCommand($command);
 
         $categoryId = new CategoryId((int) $category->id);
@@ -72,8 +69,7 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
         $this->categoryImageUploader->uploadImages(
             $categoryId,
             $command->getCoverImage(),
-            $command->getThumbnailImage(),
-            $command->getMenuThumbnailImages()
+            $command->getThumbnailImage()
         );
 
         return $categoryId;
@@ -85,7 +81,6 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      * @return Category
      *
      * @throws CannotAddCategoryException
-     * @throws MenuThumbnailsLimitException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */

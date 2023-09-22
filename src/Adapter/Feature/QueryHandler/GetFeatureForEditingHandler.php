@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Feature\QueryHandler;
 
 use Feature;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryHandler\GetFeatureForEditingHandlerInterface;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 /**
  * Handles get feature for editing query.
  */
+#[AsQueryHandler]
 final class GetFeatureForEditingHandler implements GetFeatureForEditingHandlerInterface
 {
     /**

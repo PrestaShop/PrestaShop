@@ -113,12 +113,12 @@ class StateController extends FrameworkBundleAdminController
      * Deletes state
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function deleteAction(int $stateId): RedirectResponse
     {
         try {
@@ -219,7 +219,7 @@ class StateController extends FrameworkBundleAdminController
             'stateForm' => $stateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -231,12 +231,12 @@ class StateController extends FrameworkBundleAdminController
      * Toggles state status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
      *
      * @return JsonResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function toggleStatusAction(int $stateId): JsonResponse
     {
         try {
@@ -294,12 +294,12 @@ class StateController extends FrameworkBundleAdminController
      * Enables states on bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function bulkEnableAction(Request $request): RedirectResponse
     {
         $stateIds = $this->getBulkStatesFromRequest($request);
@@ -322,12 +322,12 @@ class StateController extends FrameworkBundleAdminController
      * Disables states on bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         $stateIds = $this->getBulkStatesFromRequest($request);
@@ -369,11 +369,7 @@ class StateController extends FrameworkBundleAdminController
      */
     private function getBulkStatesFromRequest(Request $request): array
     {
-        $stateIds = $request->request->get('state_states_bulk');
-
-        if (!is_array($stateIds)) {
-            return [];
-        }
+        $stateIds = $request->request->all('state_states_bulk');
 
         foreach ($stateIds as $i => $stateId) {
             $stateIds[$i] = (int) $stateId;

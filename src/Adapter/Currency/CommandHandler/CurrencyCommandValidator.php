@@ -30,6 +30,7 @@ use Configuration;
 use Currency;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
@@ -110,11 +111,11 @@ final class CurrencyCommandValidator
     /**
      * Prevents from default currency being disabled.
      *
-     * @param EditCurrencyCommand $command
+     * @param EditCurrencyCommand|EditUnofficialCurrencyCommand $command
      *
      * @throws CannotDisableDefaultCurrencyException
      */
-    public function assertDefaultCurrencyIsNotBeingDisabled(EditCurrencyCommand $command)
+    public function assertDefaultCurrencyIsNotBeingDisabled(EditCurrencyCommand|EditUnofficialCurrencyCommand $command)
     {
         if (!$command->isEnabled() && $command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
             throw new CannotDisableDefaultCurrencyException(sprintf('Currency with id "%s" is the default currency and cannot be disabled.', $command->getCurrencyId()->getValue()));
@@ -126,11 +127,11 @@ final class CurrencyCommandValidator
      * from each shop and checks that the shop is not being disabled as well.
      *
      * @param Currency $currency
-     * @param EditCurrencyCommand $command
+     * @param EditCurrencyCommand|EditUnofficialCurrencyCommand $command
      *
      * @throws DefaultCurrencyInMultiShopException
      */
-    public function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(Currency $currency, EditCurrencyCommand $command)
+    public function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(Currency $currency, EditCurrencyCommand|EditUnofficialCurrencyCommand $command)
     {
         if (empty($command->getShopIds())) {
             return;

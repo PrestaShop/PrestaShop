@@ -19,7 +19,7 @@ const baseContext: string = 'functional_BO_orders_orders_exportOrders';
 describe('BO - Orders : Export orders', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {
@@ -46,7 +46,7 @@ describe('BO - Orders : Export orders', async () => {
     await ordersPage.closeSfToolBar(page);
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should export orders to a csv file', async function () {
@@ -55,7 +55,7 @@ describe('BO - Orders : Export orders', async () => {
     filePath = await ordersPage.exportDataToCsv(page);
 
     const doesFileExist = await files.doesFileExist(filePath, 5000);
-    await expect(doesFileExist, 'Export of data has failed').to.be.true;
+    expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
   it('should check existence of orders data in csv file', async function () {
@@ -68,7 +68,7 @@ describe('BO - Orders : Export orders', async () => {
     for (let row = 1; row <= numberOfOrders; row++) {
       const orderInCsvFormat = await ordersPage.getOrderInCsvFormat(page, row);
       const textExist = await files.isTextInFile(filePath, orderInCsvFormat, true, true);
-      await expect(textExist, `${orderInCsvFormat} was not found in the file`).to.be.true;
+      expect(textExist, `${orderInCsvFormat} was not found in the file`).to.eq(true);
     }
   });
 });

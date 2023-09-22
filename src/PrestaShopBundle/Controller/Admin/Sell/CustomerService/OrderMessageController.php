@@ -115,7 +115,7 @@ class OrderMessageController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('New order message', 'Admin.Navigation.Menu'),
             'orderMessageForm' => $form->createView(),
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -214,13 +214,13 @@ class OrderMessageController extends FrameworkBundleAdminController
         try {
             $orderMessageIds = array_map(static function ($orderMessageId) {
                 return (int) $orderMessageId;
-            }, $request->request->get('order_message_order_messages_bulk'));
+            }, $request->request->all('order_message_order_messages_bulk'));
 
             $this->getCommandBus()->handle(new BulkDeleteOrderMessageCommand($orderMessageIds));
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -252,7 +252,7 @@ class OrderMessageController extends FrameworkBundleAdminController
                 ),
             ],
             OrderMessageNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             OrderMessageNameAlreadyUsedException::class => $this->trans(

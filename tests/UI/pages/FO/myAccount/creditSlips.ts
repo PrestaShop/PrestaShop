@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class CreditSlip extends FOBasePage {
+class CreditSlipPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly noCreditSlipsInfoMessage: string;
@@ -30,8 +30,8 @@ class CreditSlip extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on credit slip page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     // Title
     this.pageTitle = 'Credit slip';
@@ -100,7 +100,7 @@ class CreditSlip extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOrderReference(page: Page, creditSlipRow: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, `${this.creditSlipsTableColumn(creditSlipRow, 1)} a`);
+    await this.clickAndWaitForURL(page, `${this.creditSlipsTableColumn(creditSlipRow, 1)} a`);
   }
 
   /**
@@ -128,7 +128,7 @@ class CreditSlip extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickBackToYourAccountLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.backToYourAccountLink);
+    await this.clickAndWaitForURL(page, this.backToYourAccountLink);
   }
 
   /**
@@ -137,8 +137,9 @@ class CreditSlip extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickHomeLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.homeLink);
+    await this.clickAndWaitForURL(page, this.homeLink);
   }
 }
 
-export default new CreditSlip();
+const creditSlipPage = new CreditSlipPage();
+export {creditSlipPage, CreditSlipPage};

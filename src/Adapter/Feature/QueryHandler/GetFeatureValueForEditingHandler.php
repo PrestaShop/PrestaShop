@@ -29,11 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Feature\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryHandler\GetFeatureValueForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
+#[AsQueryHandler]
 class GetFeatureValueForEditingHandler implements GetFeatureValueForEditingHandlerInterface
 {
     /**

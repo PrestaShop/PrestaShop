@@ -8,18 +8,11 @@ services:
   prestashop.adapter.image.uploader.category_thumbnail_image_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryThumbnailImageUploader'
 
-  prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader:
-    class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryMenuThumbnailUploader'
-    arguments:
-      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
-      - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
-
   PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader:
     autowire: true
     arguments:
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
       - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
 
   prestashop.adapter.image.uploader.employee_image_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\EmployeeImageUploader'
@@ -41,7 +34,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Image\ImageGenerator:
     arguments:
-      - '@prestashop.core.admin.feature_flag.repository'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager'
       - '@PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration'
 
   PrestaShop\PrestaShop\Adapter\Image\ImageValidator:
@@ -52,10 +45,6 @@ services:
     arguments:
       - '@=service("prestashop.core.configuration.upload_size_configuration").getMaxUploadSizeInBytes()'
       - '@prestashop.adapter.upload_quota.configuration'
-
-  prestashop.adapter.image.image_validator:
-    alias: PrestaShop\PrestaShop\Adapter\Image\ImageValidator
-    deprecated: ~
 
   prestashop.adapter.image.category_image_path_factory:
     class: 'PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory'

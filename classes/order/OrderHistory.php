@@ -101,10 +101,12 @@ class OrderHistoryCore extends ObjectModel
 
         // executes hook
         if (in_array($new_os->id, [Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT')])) {
+            // Hook called only for the shop concerned
             Hook::exec('actionPaymentConfirmation', ['id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
         }
 
         // executes hook
+        // Hook called only for the shop concerned
         Hook::exec('actionOrderStatusUpdate', [
             'newOrderStatus' => $new_os,
             'oldOrderStatus' => $old_os,
@@ -197,9 +199,6 @@ class OrderHistoryCore extends ObjectModel
 
             /** @since 1.5.0 : gets the stock manager */
             $manager = null;
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                $manager = StockManagerFactory::getManager();
-            }
 
             $error_or_canceled_statuses = [Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED')];
 
@@ -224,8 +223,7 @@ class OrderHistoryCore extends ObjectModel
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         // @since 1.5.0 - Stock Management
                         if (!Pack::isPack($product['product_id']) &&
-                            in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'], (int) $order->id_shop)) {
+                            in_array($old_os->id, $error_or_canceled_statuses)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && $old_os->logable) {
@@ -234,14 +232,12 @@ class OrderHistoryCore extends ObjectModel
 
                         // @since 1.5.0 - Stock Management
                         if (!Pack::isPack($product['product_id']) &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
+                            in_array($new_os->id, $error_or_canceled_statuses)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && !$old_os->logable &&
                         in_array($new_os->id, $error_or_canceled_statuses) &&
-                        !in_array($old_os->id, $error_or_canceled_statuses) &&
-                        !StockAvailable::dependsOnStock($product['id_product'])
+                        !in_array($old_os->id, $error_or_canceled_statuses)
                     ) {
                         // if waiting for payment => payment error/canceled
                         StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
@@ -250,85 +246,9 @@ class OrderHistoryCore extends ObjectModel
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
                 // Or old_os does not exists, and we should consider that initial shipped state is 0 (to allow decrease of stocks)
 
-                // @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
-                // decrements the physical stock using $id_warehouse
-                if ($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0) &&
-                    Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-                    Warehouse::exists($product['id_warehouse']) &&
-                    $manager != null &&
-                    (int) $product['advanced_stock_management'] == 1) {
-                    // gets the warehouse
-                    $warehouse = new Warehouse($product['id_warehouse']);
-
-                    // decrements the stock (if it's a pack, the StockManager does what is needed)
-                    $manager->removeProduct(
-                        $product['product_id'],
-                        $product['product_attribute_id'],
-                        $warehouse,
-                        ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
-                        (int) Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
-                        true,
-                        (int) $order->id
-                    );
-                } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
-                    Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-                    Warehouse::exists($product['id_warehouse']) &&
-                    $manager != null &&
-                    (int) $product['advanced_stock_management'] == 1
-                ) {
-                    // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
-
-                    // if the product is a pack, we restock every products in the pack using the last negative stock mvts
-                    if (Pack::isPack($product['product_id'])) {
-                        $pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT', null, null, $order->id_shop));
-                        foreach ($pack_products as $pack_product) {
-                            if ($pack_product->advanced_stock_management == 1) {
-                                $mvts = StockMvt::getNegativeStockMvts($order->id, $pack_product->id, 0, $pack_product->pack_quantity * $product['product_quantity']);
-                                foreach ($mvts as $mvt) {
-                                    $manager->addProduct(
-                                        $pack_product->id,
-                                        0,
-                                        new Warehouse($mvt['id_warehouse']),
-                                        $mvt['physical_quantity'],
-                                        null,
-                                        $mvt['price_te'],
-                                        true,
-                                        null
-                                    );
-                                }
-                                if (!StockAvailable::dependsOnStock($product['id_product'])) {
-                                    StockAvailable::updateQuantity($pack_product->id, 0, (int) $pack_product->pack_quantity * $product['product_quantity'], $order->id_shop);
-                                }
-                            }
-                        }
-                    } else {
-                        // else, it's not a pack, re-stock using the last negative stock mvts
-
-                        $mvts = StockMvt::getNegativeStockMvts(
-                            $order->id,
-                            $product['product_id'],
-                            $product['product_attribute_id'],
-                            ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return'])
-                        );
-
-                        foreach ($mvts as $mvt) {
-                            $manager->addProduct(
-                                $product['product_id'],
-                                $product['product_attribute_id'],
-                                new Warehouse($mvt['id_warehouse']),
-                                $mvt['physical_quantity'],
-                                null,
-                                $mvt['price_te'],
-                                true
-                            );
-                        }
-                    }
-                }
-
                 // Save movement if :
-                // not Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
                 // new_os->shipped != old_os->shipped
-                if (Validate::isLoadedObject($old_os) && Validate::isLoadedObject($new_os) && $new_os->shipped != $old_os->shipped && !Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                if (Validate::isLoadedObject($old_os) && Validate::isLoadedObject($new_os) && $new_os->shipped != $old_os->shipped) {
                     $product_quantity = (int) ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']);
 
                     if ($product_quantity > 0) {
@@ -415,6 +335,7 @@ class OrderHistoryCore extends ObjectModel
         }
 
         // executes hook
+        // Hook called only for the shop concerned
         Hook::exec('actionOrderStatusPostUpdate', [
             'newOrderStatus' => $new_os,
             'oldOrderStatus' => $old_os,
@@ -569,6 +490,7 @@ class OrderHistoryCore extends ObjectModel
         $order->current_state = $this->id_order_state;
         $order->update();
 
+        // Hook called only for the shop concerned
         Hook::exec('actionOrderHistoryAddAfter', ['order_history' => $this], null, false, true, false, $order->id_shop);
 
         return true;

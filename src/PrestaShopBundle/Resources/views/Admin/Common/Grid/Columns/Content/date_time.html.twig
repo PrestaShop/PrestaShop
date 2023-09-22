@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% if record[column.id] == constant('PrestaShop\\PrestaShop\\Core\\Util\\DateTime\\DateTime::NULL_VALUE') %}
+{% if record[column.id] == constant('PrestaShop\\PrestaShop\\Core\\Util\\DateTime\\DateTime::NULL_VALUE') or record[column.id] is empty %}
   {{  column.options.empty_data }}
 {% else %}
   <time datetime="{{ record[column.id]|date(constant('PrestaShop\\PrestaShop\\Core\\Util\\DateTime\\DateTime::ISO_DATETIME_FORMAT')) }}">{{ record[column.id]|date(column.options.format) }}</time>

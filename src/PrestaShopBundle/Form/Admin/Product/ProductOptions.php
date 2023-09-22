@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -71,7 +72,7 @@ class ProductOptions extends CommonAbstractType
         $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
 
-        $this->suppliers = $this->formatDataChoicesList(
+        $this->suppliers = FormHelper::formatDataChoicesList(
             $supplierDataProvider->getSuppliers(),
             'id_supplier'
         );
@@ -79,7 +80,7 @@ class ProductOptions extends CommonAbstractType
         $this->fullAttachmentList = $attachmentDataprovider->getAllAttachments(
             $this->context->getLanguages()[0]['id_lang']
         );
-        $this->attachmentList = $this->formatDataChoicesList(
+        $this->attachmentList = FormHelper::formatDataChoicesList(
             $this->fullAttachmentList,
             'id_attachment',
             'file'
@@ -199,9 +200,9 @@ class ProductOptions extends CommonAbstractType
             ])
             ->add('condition', FormType\ChoiceType::class, [
                 'choices' => [
-                    $this->translator->trans('New', [], 'Admin.Global') => 'new',
-                    $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => 'used',
-                    $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => 'refurbished',
+                    $this->translator->trans('New', [], 'Admin.Catalog.Feature') => 'new',
+                    $this->translator->trans('Used', [], 'Admin.Catalog.Feature') => 'used',
+                    $this->translator->trans('Refurbished', [], 'Admin.Catalog.Feature') => 'refurbished',
                 ],
                 'attr' => [
                     'class' => 'custom-select',

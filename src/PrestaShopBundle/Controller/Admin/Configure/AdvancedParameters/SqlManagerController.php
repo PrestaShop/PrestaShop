@@ -104,12 +104,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.request_sql');
@@ -131,7 +131,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Process Request SQL settings save.
      *
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *      redirectRoute="admin_sql_requests_index"
@@ -141,6 +140,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function processFormAction(Request $request)
     {
         $handler = $this->getSettingsFormHandler();
@@ -197,7 +197,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -207,7 +207,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show Request SQL edit page.
      *
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
@@ -219,6 +218,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function editAction(int $sqlRequestId, Request $request)
     {
         $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
@@ -235,7 +235,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         } catch (SqlRequestNotFoundException $e) {
             $this->addFlash(
                 'error',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+                $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error')
             );
 
             return $this->redirectToRoute('admin_sql_requests_index');
@@ -260,12 +260,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param int $sqlRequestId ID of selected Request SQL
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function deleteAction(int $sqlRequestId)
     {
         try {
@@ -291,12 +291,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function deleteBulkAction(Request $request)
     {
         try {
@@ -307,7 +307,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleException($e));
@@ -358,12 +358,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param int $sqlRequestId Request SQL id
      *
      * @return RedirectResponse|BinaryFileResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function exportAction(int $sqlRequestId)
     {
         $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request_exporter');
@@ -483,10 +483,10 @@ class SqlManagerController extends FrameworkBundleAdminController
     protected function handleException(SqlRequestException $e)
     {
         $code = $e->getCode();
-        $type = get_class($e);
+        $type = $e::class;
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
             SqlRequestConstraintException::class => $e->getMessage(),
             SqlRequestException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
         ];
@@ -518,10 +518,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function handleViewException(SqlRequestException $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
         ];
 
         if (isset($exceptionMessages[$type])) {
@@ -538,7 +538,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function handleExportException(Exception $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         if ($e instanceof FileWritingException) {
             return $this->handleApplicationExportException($e);
@@ -568,7 +568,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $applicationErrors[$code];
         }
 
-        return $this->getFallbackErrorMessage(get_class($e), $code);
+        return $this->getFallbackErrorMessage($e::class, $code);
     }
 
     /**
@@ -578,10 +578,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function handleDomainExportException(SqlRequestException $e)
     {
-        $type = get_class($e);
+        $type = $e::class;
 
         $domainErrors = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
         ];
 
         if (isset($domainErrors[$type])) {
@@ -611,11 +611,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function getBulkSqlRequestFromRequest(Request $request): array
     {
-        $sqlRequestIds = $request->request->get('sql_request_bulk');
-
-        if (!is_array($sqlRequestIds)) {
-            return [];
-        }
+        $sqlRequestIds = $request->request->all('sql_request_bulk');
 
         return array_map('intval', $sqlRequestIds);
     }

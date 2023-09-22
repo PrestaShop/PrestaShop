@@ -31,9 +31,11 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandlerInterface;
 
+#[AsCommandHandler]
 class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler implements UpdateCombinationSuppliersHandlerInterface
 {
     /**

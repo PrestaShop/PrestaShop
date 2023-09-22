@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormInterface;
@@ -41,8 +42,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomMoneyTypeExtension extends AbstractTypeExtension
 {
-    public const PRESTASHOP_DECIMALS = 6;
-
     /**
      * @var Locale
      */
@@ -85,7 +84,7 @@ class CustomMoneyTypeExtension extends AbstractTypeExtension
     {
         $resolver->setDefaults([
             'precision' => null,
-            'scale' => self::PRESTASHOP_DECIMALS,
+            'scale' => FormHelper::DEFAULT_PRICE_PRECISION,
             'grouping' => false,
             'divisor' => 1,
             'currency' => $this->currencyRepository->getIsoCode(new CurrencyId($this->defaultCurrencyId)) ?: 'EUR',

@@ -493,7 +493,6 @@ class AdminCountriesControllerCore extends AdminController
     {
         /* The following translations are needed later - don't remove the comments!
         $this->trans('Customer', [], 'Admin.Global');
-        $this->trans('Warehouse', [], 'Admin.Global');
         $this->trans('Country', [], 'Admin.Global');
         $this->trans('State', [], 'Admin.Global');
         $this->trans('Address', [], 'Admin.Global');

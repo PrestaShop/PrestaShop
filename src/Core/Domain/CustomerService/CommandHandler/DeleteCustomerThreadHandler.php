@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository;
 
 /**
  * Handles command for customer thread deletion
  */
+#[AsCommandHandler]
 class DeleteCustomerThreadHandler implements DeleteCustomerThreadHandlerInterface
 {
     /**

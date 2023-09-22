@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 /**
  * Handles @see GetSpecificPriceList using legacy object model
  */
+#[AsQueryHandler]
 class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterface
 {
     /**

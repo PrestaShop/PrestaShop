@@ -81,8 +81,12 @@ class OrderCore extends ObjectModel
     /** @var string Gift message if specified */
     public $gift_message;
 
-    /** @var bool Mobile Theme */
-    public $mobile_theme;
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Attribute will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
+     * @var bool Mobile Theme */
+    public $mobile_theme = false;
 
     /** @var float Discounts total */
     public $total_discounts;
@@ -169,6 +173,16 @@ class OrderCore extends ObjectModel
      * @var string internal order note, what is only available in BO
      */
     public $note = '';
+
+    /**
+     * @var array
+     */
+    public $product_list = [];
+
+    /**
+     * @var string|null
+     */
+    public $weight;
 
     /**
      * @see ObjectModel::$definition
@@ -723,21 +737,13 @@ class OrderCore extends ObjectModel
     /**
      * This method allow to add stock information on a product detail.
      *
-     * If advanced stock management is active, get physical stock of this product in the warehouse associated to the ptoduct for the current order
-     * Else get the available quantity of the product in fucntion of the shop associated to the order
+     * Get the available quantity of the product in fucntion of the shop associated to the order
      *
      * @param array $product
      */
     protected function setProductCurrentStock(&$product)
     {
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-            && (int) $product['advanced_stock_management'] == 1
-            && (int) $product['id_warehouse'] > 0) {
-            $product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], (int) $product['id_warehouse'], true);
-        } else {
-            $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
-        }
-
+        $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
         $product['location'] = StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
     }
 
@@ -2235,25 +2241,17 @@ class OrderCore extends ObjectModel
      * Get warehouse associated to the order.
      *
      * return array List of warehouse
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public function getWarehouseList()
     {
-        $results = Db::getInstance()->executeS(
-            'SELECT id_warehouse
-            FROM `' . _DB_PREFIX_ . 'order_detail`
-            WHERE `id_order` =  ' . (int) $this->id . '
-            GROUP BY id_warehouse'
-        );
-        if (!$results) {
-            return [];
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        $warehouse_list = [];
-        foreach ($results as $row) {
-            $warehouse_list[] = $row['id_warehouse'];
-        }
-
-        return $warehouse_list;
+        return [0];
     }
 
     /**
@@ -2493,7 +2491,7 @@ class OrderCore extends ObjectModel
             $discounted_price_tax_excl = $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
             // specific discount
             if (!empty($product_specific_discounts[$order_detail['product_id']])) {
-                $discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']];
+                $discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']] / $order_detail['product_quantity'];
             }
 
             $quantity = $order_detail['product_quantity'];

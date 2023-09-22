@@ -26,42 +26,31 @@
 
 namespace PrestaShopBundle\Security\Annotation;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
-
 /**
  * Forbid access to the page if Demonstration mode is enabled.
- *
- * @Annotation
  */
-class DemoRestricted extends ConfigurationAnnotation
+#[\Attribute(\Attribute::TARGET_METHOD)]
+class DemoRestricted
 {
-    /**
-     * The translation domain for the message.
-     *
-     * @var string
-     */
-    protected $domain = 'Admin.Notifications.Error';
-
-    /**
-     * The message of the exception.
-     *
-     * @var string
-     */
-    protected $message = 'This functionality has been disabled.';
-
-    /**
-     * The route for the redirection.
-     *
-     * @var string
-     */
-    protected $redirectRoute;
-
-    /**
-     * The route params which are used together to generate the redirect route.
-     *
-     * @var array
-     */
-    protected $redirectQueryParamsToKeep = [];
+    public function __construct(
+        /**
+         * The route for the redirection.
+         */
+        private ?string $redirectRoute = null,
+        /**
+         * The message of the exception.
+         */
+        private string $message = 'This functionality has been disabled.',
+        /**
+         * The translation domain for the message.
+         */
+        private string $domain = 'Admin.Notifications.Error',
+        /**
+         * The route params which are used together to generate the redirect route.
+         */
+        private array $redirectQueryParamsToKeep = []
+    ) {
+    }
 
     /**
      * @return string

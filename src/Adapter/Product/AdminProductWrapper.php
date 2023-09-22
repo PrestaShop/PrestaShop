@@ -41,7 +41,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension;
+use PrestaShopBundle\Form\FormHelper;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -145,7 +145,7 @@ class AdminProductWrapper
         // This is VERY UGLY, but since ti ComputingPrecision can never return enough decimals for now we have no
         // choice but to hard code this one to make sure enough precision is saved in the DB or it results in errors
         // of 1 cent in the shop
-        $computingPrecision = CustomMoneyTypeExtension::PRESTASHOP_DECIMALS;
+        $computingPrecision = FormHelper::DEFAULT_PRICE_PRECISION;
         if (!isset($combinationValues['attribute_ecotax']) || 0.0 === (float) $combinationValues['attribute_ecotax']) {
             $combinationValues['attribute_ecotax'] = 0;
         } else {
@@ -194,7 +194,6 @@ class AdminProductWrapper
             $combinationValues['attribute_mpn']
         );
 
-        StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);
         StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, $id_product_attribute);
         StockAvailable::setLocation((int) $product->id, $combinationValues['attribute_location'], null, $id_product_attribute);
 
@@ -223,8 +222,6 @@ class AdminProductWrapper
 
     /**
      * Update a quantity for a product or a combination.
-     *
-     * Does not work in Advanced stock management.
      *
      * @param Product $product
      * @param int $quantity
@@ -255,20 +252,6 @@ class AdminProductWrapper
     public function processLocation(Product $product, $location)
     {
         StockAvailable::setLocation($product->id, $location);
-    }
-
-    /**
-     * Set if a product depends on stock (ASM). For a product or a combination.
-     *
-     * Does work only in Advanced stock management.
-     *
-     * @param Product $product
-     * @param bool $dependsOnStock
-     * @param int $forAttributeId
-     */
-    public function processDependsOnStock(Product $product, $dependsOnStock, $forAttributeId = 0)
-    {
-        StockAvailable::setProductDependsOnStock((int) $product->id, $dependsOnStock, null, $forAttributeId);
     }
 
     /**
@@ -307,11 +290,11 @@ class AdminProductWrapper
 
         // ---- validation ----
         if (($price == '-1') && ((float) $reduction == '0')) {
-            $this->errors[] = $this->translator->trans('No reduction value has been submitted', [], 'Admin.Catalog.Notification');
+            $this->errors[] = $this->translator->trans('No reduction value has been submitted.', [], 'Admin.Catalog.Notification');
         } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
             $this->errors[] = $this->translator->trans('Invalid date range', [], 'Admin.Catalog.Notification');
         } elseif ($reduction_type == 'percentage' && ((float) $reduction <= 0 || (float) $reduction > 100)) {
-            $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', [], 'Admin.Catalog.Notification');
+            $this->errors[] = $this->translator->trans('The submitted reduction value (0-100) is out-of-range.', [], 'Admin.Catalog.Notification');
         }
         $validationResult = $this->validateSpecificPrice(
             $id_product,
@@ -945,7 +928,7 @@ class AdminProductWrapper
 
         $admin_dir = dirname($_SERVER['PHP_SELF']);
         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-        $preview_url_deactivate = $preview_url . ((strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int) $context->employee->id . '&preview=1';
+        $preview_url_deactivate = $preview_url . ((!str_contains($preview_url, '?')) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int) $context->employee->id . '&preview=1';
 
         return $preview_url_deactivate;
     }

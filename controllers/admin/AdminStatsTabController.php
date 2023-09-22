@@ -33,6 +33,11 @@ abstract class AdminStatsTabControllerCore extends AdminController
         $this->display = 'view';
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if ($this->ajax) {
@@ -203,6 +208,7 @@ abstract class AdminStatsTabControllerCore extends AdminController
             }
 
             if ($module_instance && $module_instance->active) {
+                // Hook called only for the module concerned
                 $hook = Hook::exec('displayAdminStatsModules', [], $module_instance->id);
             }
         }

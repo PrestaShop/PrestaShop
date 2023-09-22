@@ -57,7 +57,7 @@ export default class CatalogPriceRuleData {
 
     /** @type {number} Minimum quantity to apply price rule */
     this.fromQuantity = priceRuleToCreate.fromQuantity === undefined
-      ? faker.datatype.number({min: 1, max: 9})
+      ? faker.number.int({min: 1, max: 9})
       : priceRuleToCreate.fromQuantity;
 
     /** @type {string} Starting date to apply the price rule  */
@@ -73,6 +73,6 @@ export default class CatalogPriceRuleData {
     this.reductionTax = priceRuleToCreate.reductionTax || faker.helpers.arrayElement(reductionTax);
 
     /** @type {number} Reduction value of the price rule */
-    this.reduction = priceRuleToCreate.reduction || faker.datatype.number({min: 20, max: 30});
+    this.reduction = priceRuleToCreate.reduction || faker.number.int({min: 20, max: 30});
   }
 }

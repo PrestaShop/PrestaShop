@@ -85,7 +85,7 @@ class OrderConfirmation extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToContactUsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.customerSupportLink);
+    await this.clickAndWaitForURL(page, this.customerSupportLink);
   }
 
   /**

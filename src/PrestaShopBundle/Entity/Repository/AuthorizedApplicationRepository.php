@@ -59,7 +59,7 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
     /**
      * {@inheritdoc}
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface
+    public function getById(ApplicationId $applicationId): AuthorizedApplicationInterface
     {
         $application = $this->find($applicationId->getValue());
         if ($application === null) {
@@ -72,7 +72,7 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
     /**
      * {@inheritdoc}
      */
-    public function getByName(string $name): ?AuthorizedApplicationInterface
+    public function getByName(string $name): AuthorizedApplicationInterface
     {
         $application = $this->findOneBy(['name' => $name]);
         if ($application === null) {
@@ -80,5 +80,14 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
         }
 
         return $application;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(AuthorizedApplicationInterface $application): void
+    {
+        $this->getEntityManager()->remove($application);
+        $this->getEntityManager()->flush();
     }
 }

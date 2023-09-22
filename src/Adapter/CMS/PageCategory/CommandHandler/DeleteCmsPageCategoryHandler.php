@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\DeleteCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
@@ -37,6 +38,7 @@ use PrestaShopException;
 /**
  * Class DeleteCmsPageCategoryHandler is responsible for deleting cms page category.
  */
+#[AsCommandHandler]
 final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandlerInterface
 {
     /**

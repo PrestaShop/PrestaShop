@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
-import foCartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import foCheckoutPage from '@pages/FO/checkout';
 import foProductPage from '@pages/FO/product';
 import {homePage as foHomePage} from '@pages/FO/home';
@@ -61,7 +61,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
     await preferencesPage.closeSfToolBar(page);
 
     const pageTitle = await preferencesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+    expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
   const carriers: CarrierData[] = [
@@ -75,7 +75,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
         const textResult = await preferencesPage.setDefaultCarrier(page, carrier);
-        await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
+        expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
@@ -87,7 +87,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         await foHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foHomePage.isHomePage(page);
-        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+        expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to shipping step in checkout', async function () {
@@ -98,7 +98,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
-        await foCartPage.clickOnProceedToCheckout(page);
+        await cartPage.clickOnProceedToCheckout(page);
 
         // Checkout the order
         if (index === 0) {
@@ -109,14 +109,14 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should verify default carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkDefaultCarrier${index}`, baseContext);
 
         const selectedShippingMethod = await foCheckoutPage.getSelectedShippingMethod(page);
-        await expect(selectedShippingMethod, 'Wrong carrier was selected in FO').to.equal(carrier.name);
+        expect(selectedShippingMethod, 'Wrong carrier was selected in FO').to.equal(carrier.name);
       });
 
       it('should go back to BO', async function () {
@@ -125,7 +125,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         page = await foCheckoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await preferencesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+        expect(pageTitle).to.contains(preferencesPage.pageTitle);
       });
     });
   });

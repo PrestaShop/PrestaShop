@@ -109,7 +109,7 @@ class AddBrand extends BOBasePage {
     await this.setChecked(page, this.statusToggleInput(brandData.enabled ? 1 : 0));
 
     // Save Created brand
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -139,7 +139,7 @@ class AddBrand extends BOBasePage {
   async addKeywords(page: Page, keywords: string[], id: number = 1): Promise<void> {
     /* eslint-disable no-await-in-loop, no-restricted-syntax */
     for (const keyword of keywords) {
-      await page.type(this.metaKeywordsInput(id), keyword);
+      await page.locator(this.metaKeywordsInput(id)).fill(keyword);
       await page.keyboard.press('Enter');
     }
     /* eslint-enable no-await-in-loop, no-restricted-syntax */

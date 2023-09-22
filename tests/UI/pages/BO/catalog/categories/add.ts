@@ -19,8 +19,6 @@ class AddCategory extends BOBasePage {
 
   private readonly categoryThumbnailImage: string;
 
-  private readonly categoryMenuThumbnailImages: string;
-
   private readonly metaTitleInput: string;
 
   private readonly metaDescriptionTextarea: string;
@@ -53,7 +51,6 @@ class AddCategory extends BOBasePage {
     this.descriptionIframe = '#category_description_1_ifr';
     this.categoryCoverImage = '#category_cover_image';
     this.categoryThumbnailImage = '#category_thumbnail_image';
-    this.categoryMenuThumbnailImages = '#category_menu_thumbnail_images';
     this.metaTitleInput = '#category_meta_title_1';
     this.metaDescriptionTextarea = '#category_meta_description_1';
     this.selectAllGroupAccessCheckbox = '.js-choice-table-select-all';
@@ -80,7 +77,10 @@ class AddCategory extends BOBasePage {
   async selectAllGroups(page: Page): Promise<void> {
     if (!(await page.isChecked(this.selectAllGroupAccessCheckbox))) {
       const parentElement = await this.getParentElement(page, this.selectAllGroupAccessCheckbox);
-      await parentElement.click();
+
+      if (parentElement instanceof HTMLElement) {
+        await parentElement.click();
+      }
     }
   }
 
@@ -100,15 +100,12 @@ class AddCategory extends BOBasePage {
     if (categoryData.thumbnailImage) {
       await this.uploadFile(page, this.categoryThumbnailImage, categoryData.thumbnailImage);
     }
-    if (categoryData.metaImage) {
-      await this.uploadFile(page, this.categoryMenuThumbnailImages, categoryData.metaImage);
-    }
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea, categoryData.metaDescription);
     await this.selectAllGroups(page);
 
     // Save Category
-    await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
+    await this.clickAndWaitForURL(page, this.saveCategoryButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -127,7 +124,7 @@ class AddCategory extends BOBasePage {
     await this.setValue(page, this.rootCategoryMetaDescriptionTextarea, categoryData.metaDescription);
     await this.selectAllGroups(page);
     // Save Category
-    await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
+    await this.clickAndWaitForURL(page, this.saveCategoryButton);
     return this.getPageTitle(page);
   }
 }

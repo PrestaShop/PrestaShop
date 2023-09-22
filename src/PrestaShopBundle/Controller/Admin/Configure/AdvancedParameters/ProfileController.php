@@ -120,12 +120,12 @@ class ProfileController extends FrameworkBundleAdminController
      * Show profile's create page
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function createAction(Request $request)
     {
         $form = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder')->getForm();
@@ -150,7 +150,7 @@ class ProfileController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -164,13 +164,13 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param int $profileId
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function editAction($profileId, Request $request)
     {
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
@@ -228,12 +228,12 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param int $profileId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function deleteAction($profileId)
     {
         try {
@@ -256,20 +256,18 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
     public function bulkDeleteAction(Request $request)
     {
-        $profileIds = $request->request->get('profile_bulk');
+        $profileIds = $request->request->all('profile_bulk');
 
         try {
-            $deleteProfilesCommand = new BulkDeleteProfileCommand($profileIds);
-
-            $this->getCommandBus()->handle($deleteProfilesCommand);
+            $this->getCommandBus()->handle(new BulkDeleteProfileCommand($profileIds));
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (ProfileException $e) {
@@ -300,7 +298,7 @@ class ProfileController extends FrameworkBundleAdminController
                 ),
             ],
             ProfileNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotDeleteSuperAdminProfileException::class => $this->trans(

@@ -52,14 +52,14 @@
     youEditFieldFor = '{l s='This field will be modified for this shop:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
     {/if}
     {/if}
-    var new_order_msg = '{l s='A new order has been placed on your shop.' js=1 d='Admin.Navigation.Header'}';
+    var new_order_msg = '{l s='A new order has been placed on your store.' js=1 d='Admin.Navigation.Header'}';
     var order_number_msg = '{l s='Order number:' js=1 d='Admin.Navigation.Header'} ';
     var total_msg = '{l s='Total:' js=1 d='Admin.Global'} ';
     var from_msg = '{l s='From:' js=1 d='Admin.Global'} ';
     var see_order_msg = '{l s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
-    var new_customer_msg = '{l s='A new customer registered on your shop.' js=1 d='Admin.Navigation.Header'}';
+    var new_customer_msg = '{l s='A new customer registered on your store.' js=1 d='Admin.Navigation.Header'}';
     var customer_name_msg = '{l s='Customer name:' js=1 d='Admin.Navigation.Header'} ';
-    var new_msg = '{l s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
+    var new_msg = '{l s='A new message was posted on your store.' js=1 d='Admin.Navigation.Header'}';
     var see_msg = '{l s='Read this message' js=1 d='Admin.Navigation.Header'}';
     var token = '{$token|addslashes}';
     var currentIndex = '{$currentIndex|@addcslashes:'\''}';

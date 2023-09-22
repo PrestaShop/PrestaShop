@@ -58,16 +58,19 @@ class Router extends BaseRouter
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
+        $url = parent::generate($name, $parameters, $referenceType);
+
+        // For now, if we generate a _token and pass it in parameters, we must use it instead of use TokenManager.
+        // todo: to be improved when UserProvider is also improved.
+        // @see https://github.com/PrestaShop/PrestaShop/pull/32861
+        if (TokenInUrls::isDisabled() || isset($parameters['_token'])) {
+            return $url;
+        }
+
         $username = $this->userProvider->getUsername();
         // Do not generate token each time we want to generate a route for a user
         if (!isset($this->tokens[$username])) {
             $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
-        }
-
-        $url = parent::generate($name, $parameters, $referenceType);
-
-        if (TokenInUrls::isDisabled()) {
-            return $url;
         }
 
         return self::generateTokenizedUrl($url, $this->tokens[$username]);

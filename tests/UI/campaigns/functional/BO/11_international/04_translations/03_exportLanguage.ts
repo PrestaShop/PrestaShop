@@ -46,7 +46,7 @@ describe('BO - International - Translation : Export languages', async () => {
     );
 
     const pageTitle = await translationsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+    expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   const tests = [
@@ -81,7 +81,7 @@ describe('BO - International - Translation : Export languages', async () => {
         test.args.types,
       );
       const doesFileExist = await files.doesFileExist(filePath);
-      await expect(doesFileExist, `File '${filePath}' was not downloaded`).to.be.true;
+      expect(doesFileExist, `File '${filePath}' was not downloaded`).to.eq(true);
     });
   });
 });

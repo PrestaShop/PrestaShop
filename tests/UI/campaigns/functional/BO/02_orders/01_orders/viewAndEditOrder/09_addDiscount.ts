@@ -23,6 +23,8 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import OrderShippingData from '@data/faker/orderShipping';
+import type {ProductDiscount} from '@data/types/product';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_addDiscount';
 
@@ -64,64 +66,65 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
   });
   const numberOfCartRules: number = 0;
   // Discount data invalid value
-  const discountDataInvalidValue = {
+  const discountDataInvalidValue: ProductDiscount = {
     name: 'Test discount',
     type: 'Percent',
     value: '10%',
   };
   // Discount percent superior to 100
-  const discountPercentSup100Value = {
+  const discountPercentSup100Value: ProductDiscount = {
     name: 'Test discount',
     type: 'Percent',
-    value: 500,
+    value: '500',
   };
   // Discount percent inferior to 0
-  const discountPercentInf0Value = {
+  const discountPercentInf0Value: ProductDiscount = {
     name: 'Test discount',
     type: 'Percent',
-    value: -2,
+    value: '-2',
   };
   // Discount percent good value
-  const discountPercentGoodValue = {
+  const discountPercentGoodValue: ProductDiscount = {
     name: 'Test discount percent',
     type: 'Percent',
-    value: 50,
+    value: '50',
   };
   // Discount amount invalid value
-  const discountAmountTextValue = {
+  const discountAmountTextValue: ProductDiscount = {
     name: 'Test discount',
     type: 'Amount',
     value: '10 euro',
   };
   // Discount amount negative value
-  const discountAmountNegativeValue = {
+  const discountAmountNegativeValue: ProductDiscount = {
     name: 'Test discount',
     type: 'Amount',
-    value: -10,
+    value: '-10',
   };
   // Discount amount greater than total
-  const discountAmountGreaterThanTotal = {
+  const discountAmountGreaterThanTotal: ProductDiscount = {
     name: 'Test discount',
     type: 'Amount',
-    value: 1000,
+    value: '1000',
   };
   // Discount amount good value
-  const discountAmountGoodValue = {
+  const discountAmountGoodValue: ProductDiscount = {
     name: 'Test discount amount',
     type: 'Amount',
-    value: 10.55,
+    value: '10.55',
   };
   // Discount amount good value
-  const discountFreeShipping = {
+  const discountFreeShipping: ProductDiscount = {
     name: 'Test discount free shipping',
     type: 'Free shipping',
+    value: '',
   };
-  const shippingDetailsData = {
+  const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
     carrier: Carriers.myCarrier.name,
     carrierID: Carriers.myCarrier.id,
-    shippingCost: '€8.40',
-  };
+  });
+  const shippingDetailsCost: string = '€8.40';
 
   // Pre-condition - Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, baseContext);
@@ -153,14 +156,14 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTable1', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders, 'Number of orders is not correct!').to.be.above(0);
+      expect(numberOfOrders, 'Number of orders is not correct!').to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
@@ -169,7 +172,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
+      expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -178,14 +181,14 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageProductsBlock.pageTitle);
+      expect(pageTitle, 'Error when view order page!').to.contains(orderPageProductsBlock.pageTitle);
     });
 
     it('should get the total to pay', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getTotalToPay', baseContext);
 
       totalOrder = await orderPageProductsBlock.getOrderTotalPrice(page);
-      await expect(totalOrder).is.not.equal(0);
+      expect(totalOrder).is.not.equal(0);
     });
   });
 
@@ -195,7 +198,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountInvalidValue', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountDataInvalidValue);
-      await expect(errorMessage, 'Error message is not correct!')
+      expect(errorMessage, 'Error message is not correct!')
         .to.equal(orderPageProductsBlock.discountMustBeNumberErrorMessage);
     });
 
@@ -203,7 +206,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountPercentSup100', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountPercentSup100Value);
-      await expect(errorMessage, 'Error message is not correct!')
+      expect(errorMessage, 'Error message is not correct!')
         .to.equal(orderPageProductsBlock.invalidPercentValueErrorMessage);
     });
 
@@ -211,7 +214,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountPercentInf0', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountPercentInf0Value);
-      await expect(errorMessage, 'Error message is not correct!')
+      expect(errorMessage, 'Error message is not correct!')
         .to.equal(orderPageProductsBlock.percentValueNotPositiveErrorMessage);
     });
 
@@ -219,7 +222,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountPercentGoodValue', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountPercentGoodValue);
-      await expect(errorMessage, 'Validation message is not correct!')
+      expect(errorMessage, 'Validation message is not correct!')
         .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 
@@ -227,22 +230,22 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewDiscountTable', baseContext);
 
       const isVisible = await orderPageProductsBlock.isDiscountListTableVisible(page);
-      await expect(isVisible, 'Discount list table is not visible').to.be.true;
+      expect(isVisible, 'Discount list table is not visible').to.eq(true);
     });
 
     it('should check the discount name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountName', baseContext);
 
       const discountName = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'name');
-      await expect(discountName).to.be.equal(discountPercentGoodValue.name);
+      expect(discountName).to.be.equal(discountPercentGoodValue.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
       const discountValue = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'value');
-      await expect(discountValue).to.equal(
-        `- €${totalOrder - (totalOrder * discountPercentGoodValue.value) / 100}`,
+      expect(discountValue).to.equal(
+        `- €${totalOrder - (totalOrder * parseFloat(discountPercentGoodValue.value)) / 100}`,
       );
     });
 
@@ -250,22 +253,22 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
       const totalAfterDiscount = await orderPageProductsBlock.getOrderTotalPrice(page);
-      await expect(totalAfterDiscount)
-        .to.be.equal(totalOrder - (totalOrder * discountPercentGoodValue.value) / 100);
+      expect(totalAfterDiscount)
+        .to.be.equal(totalOrder - (totalOrder * parseFloat(discountPercentGoodValue.value)) / 100);
     });
 
     it('should check the total discounts value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
-      await expect(discountValue).to.equal((totalOrder * discountPercentGoodValue.value) / 100 - totalOrder);
+      expect(discountValue).to.equal((totalOrder * parseFloat(discountPercentGoodValue.value)) / 100 - totalOrder);
     });
 
     it('should delete the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteDiscount1', baseContext);
 
       const validationMessage = await orderPageProductsBlock.deleteDiscount(page);
-      await expect(validationMessage, 'Successful update alert is not correct')
+      expect(validationMessage, 'Successful update alert is not correct')
         .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 
@@ -273,7 +276,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountAmountInvalidValue', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountAmountTextValue);
-      await expect(errorMessage, 'Error message is not correct!')
+      expect(errorMessage, 'Error message is not correct!')
         .to.equal(orderPageProductsBlock.discountMustBeNumberErrorMessage);
     });
 
@@ -281,14 +284,14 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountAmountNegativeValue', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountAmountNegativeValue);
-      await expect(errorMessage, 'Error message is not correct!').to.equal('Amount value must be greater than 0.');
+      expect(errorMessage, 'Error message is not correct!').to.equal('Amount value must be greater than 0.');
     });
 
     it('should add a discount amount greater than the total and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountAmountGreaterThanTotal', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountAmountGreaterThanTotal);
-      await expect(errorMessage, 'Error message is not correct!')
+      expect(errorMessage, 'Error message is not correct!')
         .to.equal(orderPageProductsBlock.discountCannotExceedTotalErrorMessage);
     });
 
@@ -296,7 +299,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addCorrectDiscountAmount', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountAmountGoodValue);
-      await expect(errorMessage, 'Validation message is not correct!')
+      expect(errorMessage, 'Validation message is not correct!')
         .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 
@@ -304,21 +307,21 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewDiscountTable2', baseContext);
 
       const isVisible = await orderPageProductsBlock.isDiscountListTableVisible(page);
-      await expect(isVisible, 'Discount list table is not visible').to.be.true;
+      expect(isVisible, 'Discount list table is not visible').to.eq(true);
     });
 
     it('should check the discount name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountName2', baseContext);
 
       const discountName = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'name');
-      await expect(discountName).to.be.equal(discountAmountGoodValue.name);
+      expect(discountName).to.be.equal(discountAmountGoodValue.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue2', baseContext);
 
       const discountValue = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'value');
-      await expect(discountValue).to.equal(
+      expect(discountValue).to.equal(
         `- €${discountAmountGoodValue.value}`,
       );
     });
@@ -327,14 +330,14 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount2', baseContext);
 
       const totalAfterDiscount = await orderPageProductsBlock.getOrderTotalPrice(page);
-      await expect(totalAfterDiscount).to.be.equal(totalOrder - discountAmountGoodValue.value);
+      expect(totalAfterDiscount).to.be.equal(totalOrder - parseFloat(discountAmountGoodValue.value));
     });
 
     it('should check the total discounts value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue2', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
-      await expect(discountValue).to.equal(discountAmountGoodValue.value * -1);
+      expect(discountValue).to.equal(parseFloat(discountAmountGoodValue.value) * -1);
     });
   });
 
@@ -350,7 +353,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
     [
       {
@@ -381,11 +384,11 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
         );
 
         const numberOfCartRulesAfterFilter = await cartRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCartRulesAfterFilter).to.be.equal(1);
+        expect(numberOfCartRulesAfterFilter).to.be.equal(1);
 
         for (let row = 1; row <= numberOfCartRulesAfterFilter; row++) {
           const textColumn = await cartRulesPage.getTextColumn(page, row, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -393,7 +396,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfCartRulesAfterReset = await cartRulesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCartRulesAfterReset).to.equal(numberOfCartRules + 2);
+        expect(numberOfCartRulesAfterReset).to.equal(numberOfCartRules + 2);
       });
     });
   });
@@ -411,7 +414,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
@@ -420,7 +423,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
+      expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -429,14 +432,14 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageProductsBlock.pageTitle);
+      expect(pageTitle, 'Error when view order page!').to.contains(orderPageProductsBlock.pageTitle);
     });
 
     it('should delete the created discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteDiscount2', baseContext);
 
       const validationMessage = await orderPageProductsBlock.deleteDiscount(page);
-      await expect(validationMessage, 'Successful update alert is not correct')
+      expect(validationMessage, 'Successful update alert is not correct')
         .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
   });
@@ -447,7 +450,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountFreeShipping', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountFreeShipping);
-      await expect(errorMessage, 'Error message is not correct!')
+      expect(errorMessage, 'Error message is not correct!')
         .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 
@@ -455,70 +458,70 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFreeShippingDiscountTable', baseContext);
 
       const isVisible = await orderPageProductsBlock.isDiscountListTableVisible(page);
-      await expect(isVisible, 'Discount list table is not visible').to.be.true;
+      expect(isVisible, 'Discount list table is not visible').to.eq(true);
     });
 
     it('should check the discount name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFreeShippingDiscountName', baseContext);
 
       const discountName = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'name');
-      await expect(discountName).to.be.equal(discountFreeShipping.name);
+      expect(discountName).to.be.equal(discountFreeShipping.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFreeShippingDiscountValue', baseContext);
 
       const discountValue = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'value');
-      await expect(discountValue).to.equal('€0.00');
+      expect(discountValue).to.equal('€0.00');
     });
 
     it('should click on \'Carriers\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
       const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
-      await expect(isTabOpened).to.be.true;
+      expect(isTabOpened).to.eq(true);
     });
 
     it('should click on \'Edit\' link and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
       const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
-      await expect(isModalVisible, 'Edit shipping modal is not visible!').to.be.true;
+      expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
     });
 
     it('should update the carrier and add a tracking number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
       const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
-      await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
     });
 
     it('should check that the discount value is changed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrierDiscountValue', baseContext);
 
       const discountValue = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'value');
-      await expect(discountValue).to.equal(`- ${shippingDetailsData.shippingCost}`);
+      expect(discountValue).to.equal(`- ${shippingDetailsCost}`);
     });
 
     it('should check total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
 
       const totalAfterDiscount = await orderPageProductsBlock.getOrderTotalPrice(page);
-      await expect(totalAfterDiscount).to.be.equal(totalOrder);
+      expect(totalAfterDiscount).to.be.equal(totalOrder);
     });
 
     it('should check the total discounts value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue3', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
-      await expect(discountValue).to.equal(-8.40);
+      expect(discountValue).to.equal(-8.40);
     });
 
     it('should delete the created discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFreeShippingDiscount', baseContext);
 
       const validationMessage = await orderPageProductsBlock.deleteDiscount(page);
-      await expect(validationMessage, 'Successful update alert is not correct')
+      expect(validationMessage, 'Successful update alert is not correct')
         .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
   });

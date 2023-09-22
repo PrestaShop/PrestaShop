@@ -87,7 +87,6 @@ Feature: Webservice key management
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        |                |
       | alias           | dadadada       |
@@ -113,7 +112,6 @@ Feature: Webservice key management
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        | 0              |
       | alias           | dadadada       |
@@ -136,7 +134,6 @@ Feature: Webservice key management
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        |                |
       | alias           | alias          |
@@ -159,7 +156,6 @@ Feature: Webservice key management
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        | 0              |
       | alias           | alias          |

@@ -32,17 +32,18 @@ use Context;
 use Order;
 use OrderHistory;
 use OrderState;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\BulkChangeOrderStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use StockAvailable;
 
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandlerInterface
 {
     /**
@@ -94,14 +95,6 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
                 $ordersWithFailedToSendEmail[] = $orderId;
 
                 continue;
-            }
-
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                foreach ($order->getProducts() as $product) {
-                    if (StockAvailable::dependsOnStock($product['product_id'])) {
-                        StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
-                    }
-                }
             }
         }
 

@@ -52,7 +52,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
     await zonesPage.closeSfToolBar(page);
 
     const pageTitle = await zonesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(zonesPage.pageTitle);
+    expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
   it('should go to \'States\' page', async function () {
@@ -61,14 +61,14 @@ describe('BO - International - States : Filter and quick edit', async () => {
     await zonesPage.goToSubTabStates(page);
 
     const pageTitle = await statesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(statesPage.pageTitle);
+    expect(pageTitle).to.contains(statesPage.pageTitle);
   });
 
   it('should reset all filters and get number of states in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfStates = await statesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfStates).to.be.above(0);
+    expect(numberOfStates).to.be.above(0);
   });
 
   describe('Filter states', async () => {
@@ -135,18 +135,18 @@ describe('BO - International - States : Filter and quick edit', async () => {
         );
 
         const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfStatesAfterFilter).to.be.at.most(numberOfStates);
+        expect(numberOfStatesAfterFilter).to.be.at.most(numberOfStates);
 
         if (test.args.filterBy === 'active') {
           const countryStatus = await statesPage.getStateStatus(page, 1);
-          await expect(countryStatus).to.equal(test.args.filterValue === '1');
+          expect(countryStatus).to.equal(test.args.filterValue === '1');
         } else {
           const textColumn = await statesPage.getTextColumn(
             page,
             1,
             test.args.filterBy,
           );
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -154,7 +154,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfStatesAfterReset = await statesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfStatesAfterReset).to.equal(numberOfStates);
+        expect(numberOfStatesAfterReset).to.equal(numberOfStates);
       });
     });
   });
@@ -171,10 +171,10 @@ describe('BO - International - States : Filter and quick edit', async () => {
       );
 
       const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfStatesAfterFilter).to.be.below(numberOfStates);
+      expect(numberOfStatesAfterFilter).to.be.below(numberOfStates);
 
       const textColumn = await statesPage.getTextColumn(page, 1, 'name');
-      await expect(textColumn).to.contains(States.california.name);
+      expect(textColumn).to.contains(States.california.name);
     });
 
     [
@@ -191,7 +191,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
         );
 
         const currentStatus = await statesPage.getStateStatus(page, 1);
-        await expect(currentStatus).to.be.equal(status.args.enable);
+        expect(currentStatus).to.be.equal(status.args.enable);
       });
     });
 
@@ -199,7 +199,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
       const numberOfStatesAfterReset = await statesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfStatesAfterReset).to.equal(numberOfStates);
+      expect(numberOfStatesAfterReset).to.equal(numberOfStates);
     });
   });
 });

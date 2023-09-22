@@ -12,7 +12,7 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import contactUsPage from '@pages/FO/contactUs';
+import {contactUsPage} from '@pages/FO/contactUs';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 
@@ -62,7 +62,7 @@ describe('BO - Customer Service : Change status', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -71,7 +71,7 @@ describe('BO - Customer Service : Change status', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -80,7 +80,7 @@ describe('BO - Customer Service : Change status', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to contact us page', async function () {
@@ -90,7 +90,7 @@ describe('BO - Customer Service : Change status', async () => {
       await homePage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      expect(pageTitle).to.equal(contactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
@@ -99,7 +99,7 @@ describe('BO - Customer Service : Change status', async () => {
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
 
       const validationMessage = await contactUsPage.getAlertSuccess(page);
-      await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
   });
 
@@ -118,7 +118,7 @@ describe('BO - Customer Service : Change status', async () => {
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
     [
       {args: {status: 'Handled', statusToCheck: 'Re-open'}},
@@ -132,14 +132,14 @@ describe('BO - Customer Service : Change status', async () => {
         await customerServicePage.goToViewMessagePage(page);
 
         const pageTitle = await viewPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewPage.pageTitle);
+        expect(pageTitle).to.contains(viewPage.pageTitle);
       });
 
       it(`should change the order status to '${test.args.status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setOrderStatus${test.args.status}`, baseContext);
 
         const newStatus = await viewPage.setStatus(page, test.args.status);
-        await expect(newStatus).to.contains(test.args.statusToCheck);
+        expect(newStatus).to.contains(test.args.statusToCheck);
       });
 
       it('should go to \'Customer Service > Customer Service\' page', async function () {
@@ -152,14 +152,14 @@ describe('BO - Customer Service : Change status', async () => {
         );
 
         const pageTitle = await customerServicePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+        expect(pageTitle).to.contains(customerServicePage.pageTitle);
       });
 
       it('should check if the status color is changed', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkStatusColor${index}`, baseContext);
 
         const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.status);
-        await expect(isChanged).to.be.true;
+        expect(isChanged).to.eq(true);
       });
     });
   });
@@ -171,14 +171,14 @@ describe('BO - Customer Service : Change status', async () => {
       await customerServicePage.goToViewMessagePage(page);
 
       const pageTitle = await viewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewPage.pageTitle);
+      expect(pageTitle).to.contains(viewPage.pageTitle);
     });
 
     it('should click on forward message button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton', baseContext);
 
       const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should forward the message and check the thread', async function () {
@@ -187,7 +187,7 @@ describe('BO - Customer Service : Change status', async () => {
       await viewPage.forwardMessage(page, forwardMessageData);
 
       const messages = await viewPage.getThreadMessages(page);
-      await expect(messages)
+      expect(messages)
         .to.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
           + ` ${Employees.DefaultEmployee.lastName}`)
         .and.contains(forwardMessageData.message);
@@ -197,7 +197,7 @@ describe('BO - Customer Service : Change status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
 
       const text = await viewPage.getOrdersAndMessagesTimeline(page);
-      await expect(text).to.contains('Orders and messages timeline')
+      expect(text).to.contains('Orders and messages timeline')
         .and.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
         + ` ${Employees.DefaultEmployee.lastName}`)
         .and.contains(`Comment: ${forwardMessageData.message}`);
@@ -215,20 +215,14 @@ describe('BO - Customer Service : Change status', async () => {
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
-      );
-
       const textResult = await customerServicePage.deleteMessage(page, 1);
-      await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
 });

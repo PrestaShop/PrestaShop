@@ -31,14 +31,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 use DateTimeImmutable;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 class EditCartRuleCommand
@@ -96,7 +94,7 @@ class EditCartRuleCommand
     /**
      * @var bool|null
      */
-    private $enabled;
+    private $active;
 
     /**
      * @var DateTimeImmutable|null
@@ -119,21 +117,9 @@ class EditCartRuleCommand
     private $quantityPerUser;
 
     /**
-     * @var CartRuleActionInterface|null
+     * @var CartRuleAction|null
      */
     private $cartRuleAction;
-
-    /**
-     * @var DiscountApplicationType|null
-     */
-    private $discountApplicationType;
-
-    /**
-     * This is the product to which discount is applied, when discount application type is "specific product".
-     *
-     * @var ProductId|null
-     */
-    private $discountProductId;
 
     public function __construct(
         int $cartRuleId
@@ -204,12 +190,12 @@ class EditCartRuleCommand
 
     public function isActive(): ?bool
     {
-        return $this->enabled;
+        return $this->active;
     }
 
-    public function setEnabled(bool $enabled): EditCartRuleCommand
+    public function setActive(bool $active): EditCartRuleCommand
     {
-        $this->enabled = $enabled;
+        $this->active = $active;
 
         return $this;
     }
@@ -261,7 +247,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function setDateRange(DateTimeImmutable $validFrom, DateTimeImmutable $validTo): EditCartRuleCommand
+    public function setValidityDateRange(DateTimeImmutable $validFrom, DateTimeImmutable $validTo): EditCartRuleCommand
     {
         $this->assertDateRangeIsValid($validFrom, $validTo);
         $this->validFrom = $validFrom;
@@ -312,7 +298,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getCartRuleAction(): ?CartRuleActionInterface
+    public function getCartRuleAction(): ?CartRuleAction
     {
         return $this->cartRuleAction;
     }
@@ -343,35 +329,7 @@ class EditCartRuleCommand
         return $this->minimumAmountShippingIncluded;
     }
 
-    public function setDiscountApplication(string $discountApplicationType, ?int $productId = null): EditCartRuleCommand
-    {
-        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
-        if (DiscountApplicationType::SPECIFIC_PRODUCT === $discountApplicationType) {
-            if (!$productId) {
-                throw new CartRuleConstraintException(
-                    'ProductId is required for discount application "specific_product"',
-                    CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
-                );
-            }
-            $this->discountProductId = new ProductId($productId);
-        } else {
-            $this->discountProductId = null;
-        }
-
-        return $this;
-    }
-
-    public function getDiscountProductId(): ?ProductId
-    {
-        return $this->discountProductId;
-    }
-
-    public function getDiscountApplicationType(): ?DiscountApplicationType
-    {
-        return $this->discountApplicationType;
-    }
-
-    public function setCartRuleAction(CartRuleActionInterface $cartRuleAction): EditCartRuleCommand
+    public function setCartRuleAction(CartRuleAction $cartRuleAction): EditCartRuleCommand
     {
         $this->cartRuleAction = $cartRuleAction;
 

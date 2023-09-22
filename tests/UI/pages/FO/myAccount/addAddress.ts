@@ -9,7 +9,7 @@ import AddressData from '@data/faker/address';
  * @class
  * @extends FOBasePage
  */
-class AddAddress extends FOBasePage {
+class AddAddressPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly creationFormTitle: string;
@@ -48,8 +48,8 @@ class AddAddress extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on add address page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Address';
     this.creationFormTitle = 'New address';
@@ -127,7 +127,7 @@ class AddAddress extends FOBasePage {
     }
 
     // Save address
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -148,7 +148,7 @@ class AddAddress extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async countryExist(page: Page, countryName: string): Promise<boolean> {
-    const options: string = await page.$$eval(
+    const options: (string|null)[] = await page.$$eval(
       `${this.countrySelect} option`,
       (all) => all.map((option) => option.textContent),
     );
@@ -157,4 +157,5 @@ class AddAddress extends FOBasePage {
   }
 }
 
-export default new AddAddress();
+const addAddressPage = new AddAddressPage();
+export {addAddressPage, AddAddressPage};

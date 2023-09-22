@@ -15,9 +15,9 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foVouchersPage from '@pages/FO/myAccount/vouchers';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
@@ -81,7 +81,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -90,14 +90,14 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create new cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
   });
 
@@ -108,7 +108,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -117,7 +117,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -126,24 +126,24 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to vouchers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToVouchersPage(page);
+      await myAccountPage.goToVouchersPage(page);
 
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
     });
 
     [
       {args: {column: 'code', value: ''}},
       {args: {column: 'description', value: newCartRuleData.name}},
       {args: {column: 'quantity', value: '1'}},
-      {args: {column: 'value', value: '20.00%'}},
+      {args: {column: 'value', value: '20%'}},
       {args: {column: 'minimum', value: 'None'}},
       {args: {column: 'cumulative', value: 'Yes'}},
       {args: {column: 'expiration_date', value: expirationDate}},
@@ -152,7 +152,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 
         const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(page, 1, cartRule.args.column);
-        await expect(cartRuleTextColumn).to.equal(cartRule.args.value);
+        expect(cartRuleTextColumn).to.equal(cartRule.args.value);
       });
     });
 
@@ -162,7 +162,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await foVouchersPage.logout(page);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should add the first product to the cart', async function () {
@@ -173,14 +173,14 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(cartPage.pageTitle);
+      expect(pageTitle).to.eq(cartPage.pageTitle);
     });
 
     it('should check that there is no discount applied', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
 
       const isVisible = await cartPage.isCartRuleNameVisible(page);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
     });
 
     it('should delete the last product from the cart', async function () {
@@ -189,7 +189,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.eq(0);
+      expect(notificationNumber).to.eq(0);
     });
   });
 

@@ -5,12 +5,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 // Import FO pages
@@ -29,7 +30,7 @@ describe('FO - Home Page : Display all products', async () => {
   let numberOfProducts: number;
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -57,14 +58,14 @@ describe('FO - Home Page : Display all products', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter by Active Status', async function () {
@@ -73,11 +74,11 @@ describe('FO - Home Page : Display all products', async () => {
       await productsPage.filterProducts(page, 'active', 'Active', 'select');
 
       numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfActiveProducts).to.within(0, numberOfProducts);
+      expect(numberOfActiveProducts).to.within(0, numberOfProducts);
 
       for (let i = 1; i <= numberOfActiveProducts; i++) {
         const productStatus = await productsPage.getProductStatusFromList(page, i);
-        await expect(productStatus).to.be.true;
+        expect(productStatus).to.eq(true);
       }
     });
   });
@@ -89,7 +90,7 @@ describe('FO - Home Page : Display all products', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
@@ -99,7 +100,7 @@ describe('FO - Home Page : Display all products', async () => {
       await homePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check the number of products on the page', async function () {
@@ -120,21 +121,21 @@ describe('FO - Home Page : Display all products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'homeSortAndPaginationLink', baseContext);
 
       const isSortingLinkVisible = await categoryPageFO.isSortButtonVisible(page);
-      await expect(isSortingLinkVisible, 'Sorting Link is not visible').to.be.true;
+      expect(isSortingLinkVisible, 'Sorting Link is not visible').to.eq(true);
     });
 
     it('should check the showing items text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'showingItemTextDisplayed', baseContext);
 
       const numberOfItems = await categoryPageFO.getShowingItems(page);
-      await expect(numberOfItems).equal(`Showing 1-12 of ${numberOfActiveProducts} item(s)`);
+      expect(numberOfItems).equal(`Showing 1-12 of ${numberOfActiveProducts} item(s)`);
     });
 
     it('should check the list of product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayedListOfProduct', baseContext);
 
       const listOfProductDisplayed = await categoryPageFO.getNumberOfProductsDisplayed(page);
-      await expect(listOfProductDisplayed).to.be.above(0);
+      expect(listOfProductDisplayed).to.be.above(0);
     });
   });
 

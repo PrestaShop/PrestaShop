@@ -11,10 +11,6 @@ services:
     alias: PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder
     deprecated: ~
 
-  PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider:
-    autowire: true
-    public: false
-
   PrestaShop\PrestaShop\Core\Category\Provider\CategoryImageFinder:
     autowire: true
     public: false

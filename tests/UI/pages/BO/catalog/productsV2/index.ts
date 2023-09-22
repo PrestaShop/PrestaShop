@@ -1,7 +1,9 @@
-import type {Page} from 'playwright';
-
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Frame, Page} from 'playwright';
+import {expect} from 'chai';
+import {ProductFilterMinMax} from '@data/types/product';
 
 /**
  * Products V2 page, contains functions that can be used on the page
@@ -21,7 +23,7 @@ class Products extends BOBasePage {
 
   public readonly productWithCombinationsDescription: string;
 
-  private readonly virtualProductDescription: string;
+  public readonly virtualProductDescription: string;
 
   public readonly packOfProductsDescription: string;
 
@@ -54,12 +56,6 @@ class Products extends BOBasePage {
   private readonly bulkActionsDropDownMenu: string;
 
   private readonly bulkActionsSelectionLink: (action: string) => string;
-
-  private readonly modalDialog: string;
-
-  private readonly modalDialogFooter: string;
-
-  private readonly modalDialogDeleteButton: string;
 
   private readonly modalBulkActionsProducts: (action: string) => string;
 
@@ -153,7 +149,7 @@ class Products extends BOBasePage {
 
   private readonly productType: (type: string) => string;
 
-  private readonly modalDialog: string;
+  protected readonly modalDialog: string;
 
   private readonly modalDialogFooter: string;
 
@@ -206,11 +202,6 @@ class Products extends BOBasePage {
     this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDropDownMenu = 'div.dropdown-menu.show';
     this.bulkActionsSelectionLink = (action: string) => `#product_grid_bulk_action_${action}_ajax`;
-
-    // Modal dialog
-    this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
-    this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
-    this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
 
     // Modal bulk actions products selectors
     this.modalBulkActionsProducts = (action: string) => `#product-ajax-${action}_ajax-confirm-modal`;
@@ -313,9 +304,10 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
-    return this.getTextContent(createProductFrame, this.productTypeDescription);
+    return this.getTextContent(createProductFrame!, this.productTypeDescription);
   }
 
   /**
@@ -323,7 +315,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertDangerBlockContent(page: Page): Promise<string> {
+  async getAlertDangerBlockContent(page: Page): Promise<string> {
     return this.getAlertDangerBlockParagraphContent(page);
   }
 
@@ -337,8 +329,10 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
-    await this.waitForSelectorAndClick(createProductFrame, this.productType(productType));
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
+
+    await this.waitForSelectorAndClick(createProductFrame!, this.productType(productType));
   }
 
   /**
@@ -347,9 +341,10 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnAddNewProduct(page: Page): Promise<void> {
-    const createProductFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    expect(createProductFrame).to.be.not.eq(null);
 
-    await this.waitForSelectorAndClick(createProductFrame, this.addNewProductButton);
+    await this.waitForSelectorAndClick(createProductFrame!, this.addNewProductButton);
   }
 
   /**
@@ -366,7 +361,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isResetButtonVisible(page: Page): Promise<boolean> {
+  async isResetButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.filterResetButton, 1000);
   }
 
@@ -452,7 +447,8 @@ class Products extends BOBasePage {
     const modalBulkActionsProductsProgress = this.modalBulkActionsProductsProgress(
       (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
     );
-    await this.clickAndWaitForNavigation(page, modalBulkActionsProductsCloseButton);
+    await this.waitForSelectorAndClick(page, modalBulkActionsProductsCloseButton);
+    await page.waitForURL('**/sell/catalog/products-v2/**');
 
     return this.elementNotVisible(page, modalBulkActionsProductsProgress, 1000);
   }
@@ -493,9 +489,7 @@ class Products extends BOBasePage {
     if (!found) {
       throw new Error(`${categoryName} not found as a category`);
     }
-    await page.waitForNavigation({
-      waitUntil: 'networkidle',
-    });
+    await this.waitForHiddenSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
   }
 
   /**
@@ -503,7 +497,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getFilterByCategoryButtonName(page: Page): Promise<string> {
+  async getFilterByCategoryButtonName(page: Page): Promise<string> {
     return this.getTextContent(page, this.filterByCategoriesButton);
   }
 
@@ -518,7 +512,7 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
 
     // Unselect all categories
-    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.clickAndWaitForURL(page, this.filterByCategoriesUnselectButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
   }
 
@@ -527,7 +521,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isClearFilterLinkVisible(page: Page): Promise<boolean> {
+  async isClearFilterLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.clearFilterButton, 2000);
   }
 
@@ -537,7 +531,7 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnClearFilterLink(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.clearFilterButton);
+    await page.click(this.clearFilterButton);
   }
 
   /**
@@ -545,7 +539,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPositionColumnVisible(page: Page): Promise<boolean> {
+  async isPositionColumnVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productFilterPositionInput);
   }
 
@@ -557,8 +551,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterProductsByID(page: Page, idMin: number, idMax: number): Promise<void> {
-    await page.type(this.productFilterIDMinInput, idMin.toString());
-    await page.type(this.productFilterIDMaxInput, idMax.toString());
+    await page.locator(this.productFilterIDMinInput).fill(idMin.toString());
+    await page.locator(this.productFilterIDMaxInput).fill(idMax.toString());
   }
 
   /**
@@ -569,8 +563,8 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterProductsByQuantity(page: Page, quantityMin: number, quantityMax: number): Promise<void> {
-    await page.type(this.productFilterQuantityMinInput, quantityMin.toString());
-    await page.type(this.productFilterQuantityMaxInput, quantityMax.toString());
+    await page.locator(this.productFilterQuantityMinInput).fill(quantityMin.toString());
+    await page.locator(this.productFilterQuantityMaxInput).fill(quantityMax.toString());
   }
 
   /**
@@ -581,55 +575,61 @@ class Products extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterProductsByPrice(page: Page, priceMin: number, priceMax: number): Promise<void> {
-    await page.type(this.productFilterPriceMinInput, priceMin.toString());
-    await page.type(this.productFilterPriceMaxInput, priceMax.toString());
+    await page.locator(this.productFilterPriceMinInput).fill(priceMin.toString());
+    await page.locator(this.productFilterPriceMaxInput).fill(priceMax.toString());
   }
 
   /**
    * Filter products
    * @param page {Page} Browser tab
    * @param filterBy {string} Column to filter
-   * @param value {{min: number, max:number}|string|boolean|number} Value to put on filter
+   * @param value {string|ProductFilterMinMax} Value to put on filter
    * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
-  async filterProducts(page: Page, filterBy: string, value: string | boolean | number = '', filterType: string = 'input')
+  async filterProducts(page: Page, filterBy: string, value: string | ProductFilterMinMax = '', filterType: string = 'input')
     : Promise<void> {
     switch (filterType) {
       case 'input':
-        switch (filterBy) {
-          case 'id_product':
-            await this.filterProductsByID(page, value.min, value.max);
-            break;
-          case 'product_name':
-            await page.type(this.productFilterNameInput, value);
-            break;
-          case 'reference':
-            await page.type(this.productFilterReferenceInput, value);
-            break;
-          case 'category':
-            await page.type(this.productFilterCategoryInput, value);
-            break;
-          case 'price':
-            await this.filterProductsByPrice(page, value.min, value.max);
-            break;
-          case 'quantity':
-            await this.filterProductsByQuantity(page, value.min, value.max);
-            break;
-          case 'position':
-            await this.setValue(page, this.productFilterPositionInput, value);
-            break;
-          default:
+        if (typeof value === 'string') {
+          switch (filterBy) {
+            case 'product_name':
+              await page.locator(this.productFilterNameInput).fill(value);
+              break;
+            case 'reference':
+              await page.locator(this.productFilterReferenceInput).fill(value);
+              break;
+            case 'category':
+              await page.locator(this.productFilterCategoryInput).fill(value);
+              break;
+            case 'position':
+              await this.setValue(page, this.productFilterPositionInput, value);
+              break;
+            default:
+          }
+        } else {
+          switch (filterBy) {
+            case 'id_product':
+              await this.filterProductsByID(page, value.min, value.max);
+              break;
+            case 'price':
+              await this.filterProductsByPrice(page, value.min, value.max);
+              break;
+            case 'quantity':
+              await this.filterProductsByQuantity(page, value.min, value.max);
+              break;
+            default:
+          }
         }
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.productFilterSelectStatus, value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.productFilterSelectStatus, typeof value === 'string' ? value : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForLoadState(page, this.filterSearchButton, 'networkidle', 10000);
   }
 
   /**
@@ -639,7 +639,7 @@ class Products extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
   }
 
@@ -664,13 +664,22 @@ class Products extends BOBasePage {
 
     // In case we filter products and there is only one page, link next from pagination does not appear
     if (!found) {
-      return (await page.$$(this.productRow)).length;
+      return this.getNumberOfProductsFromHeader(page);
     }
 
     const footerText = await this.getTextContent(page, this.productsNumberLabel);
-    const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
+    const resultFooterMatch: RegExpMatchArray | null = footerText.match(/out of ([0-9]+)/);
 
-    return parseInt(numberOfProduct, 10);
+    if (resultFooterMatch === null) {
+      return 0;
+    }
+    const resultExecArray: RegExpExecArray | null = /\d+/g.exec(resultFooterMatch.toString());
+
+    if (resultExecArray === null) {
+      return 0;
+    }
+
+    return parseInt(resultExecArray.toString(), 10);
   }
 
   /**
@@ -683,9 +692,13 @@ class Products extends BOBasePage {
   async getProductPriceFromList(page: Page, row: number, withTaxes: boolean): Promise<number> {
     const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPriceTExc;
     const text = await this.getTextContent(page, selector(row));
-    const price = /\d+(\.\d+)?/g.exec(text).toString();
+    const resultExecArray: RegExpExecArray | null = /\d+/g.exec(text);
 
-    return parseFloat(price);
+    if (resultExecArray === null) {
+      return 0;
+    }
+
+    return parseFloat(resultExecArray.toString());
   }
 
   /**
@@ -740,7 +753,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getTextForEmptyTable(page: Page): Promise<string> {
+  async getTextForEmptyTable(page: Page): Promise<string> {
     return this.getTextContent(page, this.productEmptyRow);
   }
 

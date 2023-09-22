@@ -131,8 +131,14 @@ class AddCurrency extends LocalizationBasePage {
     for (let i = 0; i < 50 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        (selector) => window.getComputedStyle(document.querySelector(selector))
-          .getPropertyValue('display') === 'none',
+        (selector) => {
+          const element: HTMLElement|null = document.querySelector(selector);
+
+          if (element === null) {
+            return false;
+          }
+          return window.getComputedStyle(element).getPropertyValue('display') === 'none';
+        },
         this.currencyLoadingModal,
       );
       await page.waitForTimeout(200);
@@ -144,7 +150,15 @@ class AddCurrency extends LocalizationBasePage {
     for (let i = 0; i < 50 && !inputHasValue; i++) {
       /* eslint-env browser */
       inputHasValue = await page.evaluate(
-        (selector) => document.querySelector(selector).value !== '',
+        (selector) => {
+          const element: HTMLInputElement|null = document.querySelector(selector);
+
+          if (element === null) {
+            return false;
+          }
+
+          return element.value !== '';
+        },
         this.currencyNameInput(1),
       );
 
@@ -202,7 +216,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {Promise<string>}
    */
   async saveCurrencyForm(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -291,7 +305,9 @@ class AddCurrency extends LocalizationBasePage {
 
     const isVisible = this.elementVisible(page, `${this.restoreDefaultSettingsModal}.show`, 2000);
 
-    await this.elementVisible(page, `${this.restoreDefaultSettingsButton}:not(.spinner)`);
+    await this.elementVisible(page, `${this.restoreDefaultSettingsButton}:not(.spinner)`, 2000);
+
+    await this.elementNotVisible(page, `${this.restoreDefaultSettingsModal}.show`, 2000);
 
     return isVisible;
   }

@@ -52,7 +52,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
     await zonesPage.closeSfToolBar(page);
 
     const pageTitle = await zonesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(zonesPage.pageTitle);
+    expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
   it('should go to \'Countries\' page', async function () {
@@ -61,14 +61,14 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
     await zonesPage.goToSubTabCountries(page);
 
     const pageTitle = await countriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(countriesPage.pageTitle);
+    expect(pageTitle).to.contains(countriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of countries in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCountries).to.be.above(0);
+    expect(numberOfCountries).to.be.above(0);
   });
 
   describe('Filter countries', async () => {
@@ -135,18 +135,18 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
         );
 
         const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCountriesAfterFilter).to.be.at.most(numberOfCountries);
+        expect(numberOfCountriesAfterFilter).to.be.at.most(numberOfCountries);
 
         if (test.args.filterBy === 'a!active') {
           const countryStatus = await countriesPage.getCountryStatus(page, 1);
-          await expect(countryStatus).to.equal(test.args.filterValue === '1');
+          expect(countryStatus).to.equal(test.args.filterValue === '1');
         } else {
           const textColumn = await countriesPage.getTextColumnFromTable(
             page,
             1,
             test.args.filterBy,
           );
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -154,7 +154,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
+        expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
       });
     });
   });
@@ -171,10 +171,10 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
       );
 
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCountriesAfterFilter).to.be.below(numberOfCountries);
+      expect(numberOfCountriesAfterFilter).to.be.below(numberOfCountries);
 
       const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      await expect(textColumn).to.contains(Countries.germany.name);
+      expect(textColumn).to.contains(Countries.germany.name);
     });
 
     [
@@ -191,7 +191,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
         );
 
         const currentStatus = await countriesPage.getCountryStatus(page, 1);
-        await expect(currentStatus).to.be.equal(status.args.enable);
+        expect(currentStatus).to.be.equal(status.args.enable);
       });
     });
 
@@ -199,7 +199,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
       const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
+      expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
     });
   });
 });

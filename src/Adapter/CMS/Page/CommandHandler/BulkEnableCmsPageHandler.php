@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\BulkEnableCmsPageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageException;
@@ -36,6 +37,7 @@ use PrestaShopException;
 /**
  * Enables multiple cms pages.
  */
+#[AsCommandHandler]
 final class BulkEnableCmsPageHandler extends AbstractCmsPageHandler implements BulkEnableCmsPageHandlerInterface
 {
     /**

@@ -27,13 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use DateTime;
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class CartRuleFormDataHandler implements FormDataHandlerInterface
@@ -43,10 +40,17 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
      */
     private $commandBus;
 
+    /**
+     * @var CartRuleActionBuilder
+     */
+    private $cartRuleActionBuilder;
+
     public function __construct(
-        CommandBusInterface $commandBus
+        CommandBusInterface $commandBus,
+        CartRuleActionBuilder $cartRuleActionBuilder
     ) {
         $this->commandBus = $commandBus;
+        $this->cartRuleActionBuilder = $cartRuleActionBuilder;
     }
 
     /**
@@ -60,33 +64,22 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         $command = new AddCartRuleCommand(
             $informationData['name'],
-            isset($informationData['highlight']) && (bool) $informationData['highlight'],
-            (bool) $informationData['partial_use'],
-            (int) $informationData['priority'],
-            (bool) $informationData['active'],
-            DateTime::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['from']),
-            DateTime::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['to']),
-            (int) $conditionsData['total_available'],
-            (int) $conditionsData['available_per_user'],
-            $this->buildCartRuleActionForCreate($data['actions'])
+            $this->cartRuleActionBuilder->build($data['actions'])
         );
 
-        $command->setCode($informationData['code']);
-
-        if (!empty($data['actions']['discount']['reduction']['value'])) {
-            $discountProductId = null;
-            if (
-                $data['actions']['discount']['discount_application'] === DiscountApplicationType::SPECIFIC_PRODUCT &&
-                !empty($data['actions']['discount']['specific_product'][0]['id'])
-            ) {
-                $discountProductId = (int) $data['actions']['discount']['specific_product'][0]['id'];
-            }
-
-            $command->setDiscountApplication(
-                $data['actions']['discount']['discount_application'],
-                $discountProductId
-            );
-        }
+        $command
+            ->setCode($informationData['code'])
+            ->setHighlightInCart(isset($informationData['highlight']) && (bool) $informationData['highlight'])
+            ->setAllowPartialUse((bool) $informationData['partial_use'])
+            ->setPriority((int) $informationData['priority'])
+            ->setActive((bool) $informationData['active'])
+            ->setValidityDateRange(
+                DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['from']),
+                DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['to'])
+            )
+            ->setTotalQuantity((int) $conditionsData['total_available'])
+            ->setQuantityPerUser((int) $conditionsData['available_per_user'])
+        ;
 
         if (!empty($conditionsData['minimum_amount']['amount'])) {
             $amountData = $conditionsData['minimum_amount'];
@@ -111,38 +104,5 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data)
     {
         // TODO: Implement update() method.
-    }
-
-    private function buildCartRuleActionForCreate(array $actionsData): CartRuleActionInterface
-    {
-        $actionBuilder = new CartRuleActionBuilder();
-
-        if (!empty($actionsData['discount']['reduction']['value'])) {
-            $reductionData = $actionsData['discount']['reduction'];
-            if ($reductionData['type'] === Reduction::TYPE_AMOUNT) {
-                $actionBuilder->setAmountDiscount(
-                    (string) $actionsData['discount']['reduction']['value'],
-                    (int) $reductionData['currency'],
-                    (bool) $reductionData['include_tax']
-                );
-            } else {
-                $actionBuilder->setPercentageDiscount(
-                    (string) $actionsData['discount']['reduction']['value'],
-                    (bool) $actionsData['discount']['apply_to_discounted_products']
-                );
-            }
-        }
-
-        $actionBuilder->setFreeShipping((bool) $actionsData['free_shipping']);
-
-        if (!empty($actionsData['gift_product'][0])) {
-            $giftProductData = $actionsData['gift_product'][0];
-            $actionBuilder->setGiftProduct(
-                (int) $giftProductData['product_id'],
-                (int) $giftProductData['combination_id'] ?: null
-            );
-        }
-
-        return $actionBuilder->build();
     }
 }

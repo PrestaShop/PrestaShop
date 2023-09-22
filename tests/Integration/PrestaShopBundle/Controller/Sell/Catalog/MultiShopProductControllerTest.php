@@ -557,10 +557,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
      */
     protected static function createProducts(): void
     {
-        $client = static::createClient();
-        $container = $client->getContainer();
-        $commandBus = $container->get('prestashop.core.command_bus');
-
+        $commandBus = self::bootKernel()->getContainer()->get('prestashop.core.command_bus');
         static::createProduct($commandBus, self::PARTIAL_SHOPS_PRODUCT_DATA);
         static::createProduct($commandBus, self::ALL_SHOPS_PRODUCT_DATA);
 
@@ -570,6 +567,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
 
         // copy product to new shops
         $commandBus->handle(new SetProductShopsCommand((int) Product::getIdByReference('demo_14'), static::DEFAULT_SHOP_ID, $shopIds));
+        self::ensureKernelShutdown();
     }
 
     protected static function createProduct(CommandBusInterface $commandBus, array $multiShopProductData): void

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
 
 use Contact;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
@@ -45,6 +46,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditContactHandler extends AbstractObjectModelHandler implements EditContactHandlerInterface
 {
     /**

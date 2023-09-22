@@ -89,7 +89,19 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `updateCreatedOrderStatus${i}`,
+          `${baseContext}_preTest_${i}`,
+        );
+
+        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.shipped);
+        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 
       it('should go to the first order page', async function () {
@@ -103,19 +115,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         await ordersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-      });
-
-      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `updateCreatedOrderStatus${i}`,
-          `${baseContext}_preTest_${i}`,
-        );
-
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-        await expect(result).to.equal(OrderStatuses.shipped.name);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it('should add a partial refund', async function () {
@@ -129,7 +129,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         await orderPageTabListBlock.clickOnPartialRefund(page);
 
         const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
-        await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+        expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
       });
 
       it('should check the existence of the Credit slip document', async function () {
@@ -141,7 +141,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         );
 
         const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
-        await expect(documentType).to.be.equal(creditSlipDocumentName);
+        expect(documentType).to.be.equal(creditSlipDocumentName);
       });
     });
   }
@@ -163,7 +163,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
       await creditSlipsPage.closeSfToolBar(page);
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
     });
 
     it('should reset all filters and get number of credit slips', async function () {
@@ -245,17 +245,17 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

@@ -24,198 +24,165 @@
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
 
-            <!--ORDERS-->
-            <tab id="Orders" id_parent="SELL" active="1" enabled="1" icon="shopping_basket">
-                <class_name>AdminParentOrders</class_name>
-                <wording>Orders</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
+        <!--ORDERS-->
+        <tab id="Orders" id_parent="SELL" active="1" enabled="1" icon="shopping_basket">
+            <class_name>AdminParentOrders</class_name>
+            <wording>Orders</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Orders_1" id_parent="Orders" active="1" enabled="1">
+            <class_name>AdminOrders</class_name>
+            <wording>Orders</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Invoices" id_parent="Orders" active="1" enabled="1">
+            <class_name>AdminInvoices</class_name>
+            <wording>Invoices</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Credit_Slips" id_parent="Orders" active="1" enabled="1">
+            <class_name>AdminSlip</class_name>
+            <wording>Credit Slips</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Delivery_Slips" id_parent="Orders" active="1" enabled="1">
+            <class_name>AdminDeliverySlip</class_name>
+            <wording>Delivery Slips</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Shopping_Carts" id_parent="Orders" active="1" enabled="1">
+            <class_name>AdminCarts</class_name>
+            <wording>Shopping Carts</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-                <tab id="Orders_1" id_parent="Orders" active="1" enabled="1">
-                    <class_name>AdminOrders</class_name>
-                    <wording>Orders</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Invoices" id_parent="Orders" active="1" enabled="1">
-                    <class_name>AdminInvoices</class_name>
-                    <wording>Invoices</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Credit_Slips" id_parent="Orders" active="1" enabled="1">
-                    <class_name>AdminSlip</class_name>
-                    <wording>Credit Slips</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Delivery_Slips" id_parent="Orders" active="1" enabled="1">
-                    <class_name>AdminDeliverySlip</class_name>
-                    <wording>Delivery Slips</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Shopping_Carts" id_parent="Orders" active="1" enabled="1">
-                    <class_name>AdminCarts</class_name>
-                    <wording>Shopping Carts</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
+        <!--CATALOG-->
+        <tab id="Catalog" id_parent="SELL" active="1" enabled="1" icon="store">
+            <class_name>AdminCatalog</class_name>
+            <wording>Catalog</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Products" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminProducts</class_name>
+            <wording>Products</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Categories" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminCategories</class_name>
+            <wording>Categories</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Monitoring" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminTracking</class_name>
+            <wording>Monitoring</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Attributes_and_features" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminParentAttributesGroups</class_name>
+            <wording>Attributes &amp; Features</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Attributes_and_Values" id_parent="Attributes_and_features" active="1" enabled="1">
+            <class_name>AdminAttributesGroups</class_name>
+            <wording>Attributes</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Features" id_parent="Attributes_and_features" active="1" enabled="1">
+            <class_name>AdminFeatures</class_name>
+            <wording>Features</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Manufacturers_and_suppliers" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminParentManufacturers</class_name>
+            <wording>Brands &amp; Suppliers</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Manufacturers" id_parent="Manufacturers_and_suppliers" active="1" enabled="1">
+            <class_name>AdminManufacturers</class_name>
+            <wording>Brands</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Suppliers" id_parent="Manufacturers_and_suppliers" active="1" enabled="1">
+            <class_name>AdminSuppliers</class_name>
+            <wording>Suppliers</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Attachments" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminAttachments</class_name>
+            <wording>Files</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Price_Rules" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminParentCartRules</class_name>
+            <wording>Discounts</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Cart_Rules" id_parent="Price_Rules" active="1" enabled="1">
+            <class_name>AdminCartRules</class_name>
+            <wording>Cart Rules</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Catalog_Price_Rules" id_parent="Price_Rules" active="1" enabled="1">
+            <class_name>AdminSpecificPriceRule</class_name>
+            <wording>Catalog Price Rules</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Stock" id_parent="Catalog" active="1" enabled="1">
+            <class_name>AdminStockManagement</class_name>
+            <wording>Stock</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-            <!--CATALOG-->
-            <tab id="Catalog" id_parent="SELL" active="1" enabled="1" icon="store">
-                <class_name>AdminCatalog</class_name>
-                <wording>Catalog</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
+        <!--CUSTOMERS-->
+        <tab id="Customers" id_parent="SELL" active="1" enabled="1" icon="account_circle">
+            <class_name>AdminParentCustomer</class_name>
+            <wording>Customers</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Customers_2" id_parent="Customers" active="1" enabled="1">
+            <class_name>AdminCustomers</class_name>
+            <wording>Customers</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Addresses" id_parent="Customers" active="1" enabled="1">
+            <class_name>AdminAddresses</class_name>
+            <wording>Addresses</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Outstanding" id_parent="Customers" active="0" enabled="1">
+            <class_name>AdminOutstanding</class_name>
+            <wording>Outstanding</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-                <tab id="Products" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminProducts</class_name>
-                    <wording>Products</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Categories" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminCategories</class_name>
-                    <wording>Categories</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Monitoring" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminTracking</class_name>
-                    <wording>Monitoring</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Attributes_and_features" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminParentAttributesGroups</class_name>
-                    <wording>Attributes &amp; Features</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
+        <!--CUSTOMER SERVICE-->
+        <tab id="Customer_Service" id_parent="SELL" active="1" enabled="1" icon="chat">
+            <class_name>AdminParentCustomerThreads</class_name>
+            <wording>Customer Service</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Customer_Service_2" id_parent="Customer_Service" active="1" enabled="1">
+            <class_name>AdminCustomerThreads</class_name>
+            <wording>Customer Service</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Order_Messages" id_parent="Customer_Service" active="1" enabled="1">
+            <class_name>AdminOrderMessage</class_name>
+            <wording>Order Messages</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Merchandise_Returns" id_parent="Customer_Service" active="1" enabled="1">
+            <class_name>AdminReturn</class_name>
+            <wording>Merchandise Returns</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-                    <tab id="Attributes_and_Values" id_parent="Attributes_and_features" active="1" enabled="1">
-                        <class_name>AdminAttributesGroups</class_name>
-                        <wording>Attributes</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Features" id_parent="Attributes_and_features" active="1" enabled="1">
-                        <class_name>AdminFeatures</class_name>
-                        <wording>Features</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Manufacturers_and_suppliers" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminParentManufacturers</class_name>
-                    <wording>Brands &amp; Suppliers</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Manufacturers" id_parent="Manufacturers_and_suppliers" active="1" enabled="1">
-                        <class_name>AdminManufacturers</class_name>
-                        <wording>Brands</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Suppliers" id_parent="Manufacturers_and_suppliers" active="1" enabled="1">
-                        <class_name>AdminSuppliers</class_name>
-                        <wording>Suppliers</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Attachments" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminAttachments</class_name>
-                    <wording>Files</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Price_Rules" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminParentCartRules</class_name>
-                    <wording>Discounts</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Cart_Rules" id_parent="Price_Rules" active="1" enabled="1">
-                        <class_name>AdminCartRules</class_name>
-                        <wording>Cart Rules</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Catalog_Price_Rules" id_parent="Price_Rules" active="1" enabled="1">
-                        <class_name>AdminSpecificPriceRule</class_name>
-                        <wording>Catalog Price Rules</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                <tab id="Stock" id_parent="Catalog" active="1" enabled="1">
-                    <class_name>AdminStockManagement</class_name>
-                    <wording>Stock</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-            <!--CUSTOMERS-->
-            <tab id="Customers" id_parent="SELL" active="1" enabled="1" icon="account_circle">
-                <class_name>AdminParentCustomer</class_name>
-                <wording>Customers</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
-
-                <tab id="Customers_2" id_parent="Customers" active="1" enabled="1">
-                    <class_name>AdminCustomers</class_name>
-                    <wording>Customers</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Addresses" id_parent="Customers" active="1" enabled="1">
-                    <class_name>AdminAddresses</class_name>
-                    <wording>Addresses</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Outstanding" id_parent="Customers" active="0" enabled="1">
-                    <class_name>AdminOutstanding</class_name>
-                    <wording>Outstanding</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-            <!--CUSTOMER SERVICE-->
-            <tab id="Customer_Service" id_parent="SELL" active="1" enabled="1" icon="chat">
-                <class_name>AdminParentCustomerThreads</class_name>
-                <wording>Customer Service</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
-
-                <tab id="Customer_Service_2" id_parent="Customer_Service" active="1" enabled="1">
-                    <class_name>AdminCustomerThreads</class_name>
-                    <wording>Customer Service</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Order_Messages" id_parent="Customer_Service" active="1" enabled="1">
-                    <class_name>AdminOrderMessage</class_name>
-                    <wording>Order Messages</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Merchandise_Returns" id_parent="Customer_Service" active="1" enabled="1">
-                    <class_name>AdminReturn</class_name>
-                    <wording>Merchandise Returns</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-            <!--STATISTICS-->
-            <tab id="Stats" id_parent="SELL" active="1" enabled="1" icon="assessment">
-                <class_name>AdminStats</class_name>
-                <wording>Stats</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
-
-            <!--ADVANCED STOCK MANAGEMENT-->
-            <tab id="Advanced_stock_management" id_parent="SELL" active="1" enabled="1" icon="store">
-                <class_name>AdminStock</class_name>
-                <wording/>
-                <wording_domain/>
-            </tab>
-
-                <tab id="Warehouses" id_parent="Advanced_stock_management" active="1" enabled="1">
-                    <class_name>AdminWarehouses</class_name>
-                    <wording>Warehouses</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Stock_Management_Parent" id_parent="Advanced_stock_management" active="1" enabled="1">
-                    <class_name>AdminParentStockManagement</class_name>
-                    <wording>Stock Management</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Stock_Management" id_parent="Stock_Management_Parent" active="1" enabled="1">
-                        <class_name>AdminStockManagement</class_name>
-                        <wording>Stock Management</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
+        <!--STATISTICS-->
+        <tab id="Stats" id_parent="SELL" active="1" enabled="1" icon="assessment">
+            <class_name>AdminStats</class_name>
+            <wording>Stats</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
         <!--IMPROVE-->
         <tab id="IMPROVE" id_parent="" active="1" enabled="1">
@@ -224,182 +191,170 @@
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
 
-            <!--MODULES-->
-            <tab id="Modules" id_parent="IMPROVE" active="1" enabled="1" icon="extension">
-                <class_name>AdminParentModulesSf</class_name>
-                <wording>Modules</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
-                <tab id="Module_Page" id_parent="Modules" active="1" enabled="1">
-                    <class_name>AdminModulesSf</class_name>
-                    <wording>Module Manager</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                    <tab id="Module_Page_Manage" id_parent="Module_Page" active="1" enabled="1">
-                        <class_name>AdminModulesManage</class_name>
-                        <wording>Modules</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Module_Page_Notifications" id_parent="Module_Page" active="1" enabled="1">
-                        <class_name>AdminModulesNotifications</class_name>
-                        <wording>Alerts</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Module_Page_Updates" id_parent="Module_Page" active="1" enabled="1">
-                        <class_name>AdminModulesUpdates</class_name>
-                        <wording>Updates</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-            <!--LOOK & FEEL-->
-            <tab id="Look_feel" id_parent="IMPROVE" active="1" enabled="1" icon="desktop_mac">
-                <class_name>AdminParentThemes</class_name>
-                <wording>Design</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
+        <!--MODULES-->
+        <tab id="Modules" id_parent="IMPROVE" active="1" enabled="1" icon="extension">
+            <class_name>AdminParentModulesSf</class_name>
+            <wording>Modules</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Module_Page" id_parent="Modules" active="1" enabled="1">
+            <class_name>AdminModulesSf</class_name>
+            <wording>Module Manager</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Module_Page_Manage" id_parent="Module_Page" active="1" enabled="1">
+            <class_name>AdminModulesManage</class_name>
+            <wording>Modules</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Module_Page_Notifications" id_parent="Module_Page" active="1" enabled="1">
+            <class_name>AdminModulesNotifications</class_name>
+            <wording>Alerts</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Module_Page_Updates" id_parent="Module_Page" active="1" enabled="1">
+            <class_name>AdminModulesUpdates</class_name>
+            <wording>Updates</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <!--LOOK & FEEL-->
+        <tab id="Look_feel" id_parent="IMPROVE" active="1" enabled="1" icon="desktop_mac">
+            <class_name>AdminParentThemes</class_name>
+            <wording>Design</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Themes" id_parent="Look_feel" active="1" enabled="1">
+            <class_name>AdminThemes</class_name>
+            <wording>Theme &amp; Logo</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Mail_Theme_Parent" id_parent="Look_feel" active="1" enabled="1">
+            <class_name>AdminParentMailTheme</class_name>
+            <wording>Email Theme</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Mail_Theme" id_parent="Mail_Theme_Parent" active="1" enabled="1">
+            <class_name>AdminMailTheme</class_name>
+            <wording>Email Theme</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Pages" id_parent="Look_feel" active="1" enabled="1">
+            <class_name>AdminCmsContent</class_name>
+            <wording>Pages</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Positions" id_parent="Look_feel" active="1" enabled="1">
+            <class_name>AdminModulesPositions</class_name>
+            <wording>Positions</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Image_Settings" id_parent="Look_feel" active="1" enabled="1">
+            <class_name>AdminImages</class_name>
+            <wording>Image Settings</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Shipping" id_parent="IMPROVE" active="1" enabled="1" icon="local_shipping">
+            <class_name>AdminParentShipping</class_name>
+            <wording>Shipping</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Carriers" id_parent="Shipping" active="1" enabled="1">
+            <class_name>AdminCarriers</class_name>
+            <wording>Carriers</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Shipping_1" id_parent="Shipping" active="1" enabled="1">
+            <class_name>AdminShipping</class_name>
+            <wording>Preferences</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Payment" id_parent="IMPROVE" active="1" enabled="1" icon="payment">
+            <class_name>AdminParentPayment</class_name>
+            <wording>Payment</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Payment_methods" id_parent="Payment" active="1" enabled="1">
+            <class_name>AdminPayment</class_name>
+            <wording>Payment Methods</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Payment_preferences" id_parent="Payment" active="1" enabled="1">
+            <class_name>AdminPaymentPreferences</class_name>
+            <wording>Preferences</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-                <tab id="Themes" id_parent="Look_feel" active="1" enabled="1">
-                    <class_name>AdminThemes</class_name>
-                    <wording>Theme &amp; Logo</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Mail_Theme_Parent" id_parent="Look_feel" active="1" enabled="1">
-                    <class_name>AdminParentMailTheme</class_name>
-                    <wording>Email Theme</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                    <tab id="Mail_Theme" id_parent="Mail_Theme_Parent" active="1" enabled="1">
-                        <class_name>AdminMailTheme</class_name>
-                        <wording>Email Theme</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Pages" id_parent="Look_feel" active="1" enabled="1">
-                    <class_name>AdminCmsContent</class_name>
-                    <wording>Pages</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Positions" id_parent="Look_feel" active="1" enabled="1">
-                    <class_name>AdminModulesPositions</class_name>
-                    <wording>Positions</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Image_Settings" id_parent="Look_feel" active="1" enabled="1">
-                    <class_name>AdminImages</class_name>
-                    <wording>Image Settings</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                <tab id="Shipping" id_parent="IMPROVE" active="1" enabled="1" icon="local_shipping">
-                    <class_name>AdminParentShipping</class_name>
-                    <wording>Shipping</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Carriers" id_parent="Shipping" active="1" enabled="1">
-                        <class_name>AdminCarriers</class_name>
-                        <wording>Carriers</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Shipping_1" id_parent="Shipping" active="1" enabled="1">
-                        <class_name>AdminShipping</class_name>
-                        <wording>Preferences</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Payment" id_parent="IMPROVE" active="1" enabled="1" icon="payment">
-                    <class_name>AdminParentPayment</class_name>
-                    <wording>Payment</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Payment_methods" id_parent="Payment" active="1" enabled="1">
-                        <class_name>AdminPayment</class_name>
-                        <wording>Payment Methods</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Payment_preferences" id_parent="Payment" active="1" enabled="1">
-                        <class_name>AdminPaymentPreferences</class_name>
-                        <wording>Preferences</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-            <!--INTERNATIONAL OK-->
-            <tab id="International" id_parent="IMPROVE" active="1" enabled="1" icon="language">
-                <class_name>AdminInternational</class_name>
-                <wording>International</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
-
-                <tab id="Localization" id_parent="International" active="1" enabled="1">
-                    <class_name>AdminParentLocalization</class_name>
-                    <wording>Localization</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Localization_1" id_parent="Localization" active="1" enabled="1">
-                        <class_name>AdminLocalization</class_name>
-                        <wording>Localization</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Languages" id_parent="Localization" active="1" enabled="1">
-                        <class_name>AdminLanguages</class_name>
-                        <wording>Languages</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Currencies" id_parent="Localization" active="1" enabled="1">
-                        <class_name>AdminCurrencies</class_name>
-                        <wording>Currencies</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Geolocation" id_parent="Localization" active="1" enabled="1">
-                        <class_name>AdminGeolocation</class_name>
-                        <wording>Geolocation</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Locations" id_parent="International" active="1" enabled="1">
-                    <class_name>AdminParentCountries</class_name>
-                    <wording>Locations</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                    <tab id="Zones" id_parent="Locations" active="1" enabled="1">
-                        <class_name>AdminZones</class_name>
-                        <wording>Zones</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Countries" id_parent="Locations" active="1" enabled="1">
-                        <class_name>AdminCountries</class_name>
-                        <wording>Countries</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="States" id_parent="Locations" active="1" enabled="1">
-                        <class_name>AdminStates</class_name>
-                        <wording>States</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Tax_Management" id_parent="International" active="1" enabled="1">
-                    <class_name>AdminParentTaxes</class_name>
-                    <wording>Taxes</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Taxes" id_parent="Tax_Management" active="1" enabled="1">
-                        <class_name>AdminTaxes</class_name>
-                        <wording>Taxes</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Tax_Rules" id_parent="Tax_Management" active="1" enabled="1">
-                        <class_name>AdminTaxRulesGroup</class_name>
-                        <wording>Tax Rules</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Translations" id_parent="International" active="1" enabled="1">
-                    <class_name>AdminTranslations</class_name>
-                    <wording>Translations</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
+        <!--INTERNATIONAL OK-->
+        <tab id="International" id_parent="IMPROVE" active="1" enabled="1" icon="language">
+            <class_name>AdminInternational</class_name>
+            <wording>International</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Localization" id_parent="International" active="1" enabled="1">
+            <class_name>AdminParentLocalization</class_name>
+            <wording>Localization</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Localization_1" id_parent="Localization" active="1" enabled="1">
+            <class_name>AdminLocalization</class_name>
+            <wording>Localization</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Languages" id_parent="Localization" active="1" enabled="1">
+            <class_name>AdminLanguages</class_name>
+            <wording>Languages</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Currencies" id_parent="Localization" active="1" enabled="1">
+            <class_name>AdminCurrencies</class_name>
+            <wording>Currencies</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Geolocation" id_parent="Localization" active="1" enabled="1">
+            <class_name>AdminGeolocation</class_name>
+            <wording>Geolocation</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Locations" id_parent="International" active="1" enabled="1">
+            <class_name>AdminParentCountries</class_name>
+            <wording>Locations</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Zones" id_parent="Locations" active="1" enabled="1">
+            <class_name>AdminZones</class_name>
+            <wording>Zones</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Countries" id_parent="Locations" active="1" enabled="1">
+            <class_name>AdminCountries</class_name>
+            <wording>Countries</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="States" id_parent="Locations" active="1" enabled="1">
+            <class_name>AdminStates</class_name>
+            <wording>States</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Tax_Management" id_parent="International" active="1" enabled="1">
+            <class_name>AdminParentTaxes</class_name>
+            <wording>Taxes</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Taxes" id_parent="Tax_Management" active="1" enabled="1">
+            <class_name>AdminTaxes</class_name>
+            <wording>Taxes</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Tax_Rules" id_parent="Tax_Management" active="1" enabled="1">
+            <class_name>AdminTaxRulesGroup</class_name>
+            <wording>Tax Rules</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Translations" id_parent="International" active="1" enabled="1">
+            <class_name>AdminTranslations</class_name>
+            <wording>Translations</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
         <!--CONFIGURE-->
         <tab id="CONFIGURE" id_parent="" active="1" enabled="1">
@@ -408,261 +363,247 @@
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
 
-            <!--SHOP PARAMETERS-->
-            <tab id="Shop_parameters" id_parent="CONFIGURE" active="1" enabled="1" icon="settings">
-                <class_name>ShopParameters</class_name>
-                <wording>Shop Parameters</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
+        <!--SHOP PARAMETERS-->
+        <tab id="Shop_parameters" id_parent="CONFIGURE" active="1" enabled="1" icon="settings">
+            <class_name>ShopParameters</class_name>
+            <wording>Shop Parameters</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="General" id_parent="Shop_parameters" active="1" enabled="1">
+            <class_name>AdminParentPreferences</class_name>
+            <wording>General</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="General_1" id_parent="General" active="1" enabled="1">
+            <class_name>AdminPreferences</class_name>
+            <wording>General</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Maintenance" id_parent="General" active="1" enabled="1">
+            <class_name>AdminMaintenance</class_name>
+            <wording>Maintenance</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Order_settings" id_parent="Shop_parameters" active="1" enabled="1">
+            <class_name>AdminParentOrderPreferences</class_name>
+            <wording>Order Settings</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Order_settings_2" id_parent="Order_settings" active="1" enabled="1">
+            <class_name>AdminOrderPreferences</class_name>
+            <wording>Order Settings</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Statuses" id_parent="Order_settings" active="1" enabled="1">
+            <class_name>AdminStatuses</class_name>
+            <wording>Statuses</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Products_1" id_parent="Shop_parameters" active="1" enabled="1">
+            <class_name>AdminPPreferences</class_name>
+            <wording>Product Settings</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Customer_settings" id_parent="Shop_parameters" active="1" enabled="1">
+            <class_name>AdminParentCustomerPreferences</class_name>
+            <wording>Customer Settings</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Customers_2" id_parent="Customer_settings" active="1" enabled="1">
+            <class_name>AdminCustomerPreferences</class_name>
+            <wording>Customer Settings</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Groups" id_parent="Customer_settings" active="1" enabled="1">
+            <class_name>AdminGroups</class_name>
+            <wording>Groups</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Titles" id_parent="Customer_settings" active="1" enabled="1">
+            <class_name>AdminGenders</class_name>
+            <wording>Titles</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Contact" id_parent="Shop_parameters" active="1" enabled="1">
+            <class_name>AdminParentStores</class_name>
+            <wording>Contact</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Contacts" id_parent="Contact" active="1" enabled="1">
+            <class_name>AdminContacts</class_name>
+            <wording>Contacts</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Store_Contacts" id_parent="Contact" active="1" enabled="1">
+            <class_name>AdminStores</class_name>
+            <wording>Stores</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Traffic" id_parent="Shop_parameters" active="1" enabled="1">
+            <class_name>AdminParentMeta</class_name>
+            <wording>Traffic &amp; SEO</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="SEO_URLs" id_parent="Traffic" active="1" enabled="1">
+            <class_name>AdminMeta</class_name>
+            <wording>SEO &amp; URLs</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Search_Engines" id_parent="Traffic" active="1" enabled="1">
+            <class_name>AdminSearchEngines</class_name>
+            <wording>Search Engines</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Search" id_parent="Shop_parameters" active="1" enabled="1">
+            <class_name>AdminParentSearchConf</class_name>
+            <wording>Search</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Search_1" id_parent="Search" active="1" enabled="1">
+            <class_name>AdminSearchConf</class_name>
+            <wording>Search</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Tags" id_parent="Search" active="1" enabled="1">
+            <class_name>AdminTags</class_name>
+            <wording>Tags</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-                <tab id="General" id_parent="Shop_parameters" active="1" enabled="1">
-                    <class_name>AdminParentPreferences</class_name>
-                    <wording>General</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
+        <!--ADVANCED PARAMETERS-->
+        <tab id="Advanced_Parameters" id_parent="CONFIGURE" active="1" enabled="1" icon="settings_applications">
+            <class_name>AdminAdvancedParameters</class_name>
+            <wording>Advanced Parameters</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Information" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminInformation</class_name>
+            <wording>Information</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Performance" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminPerformance</class_name>
+            <wording>Performance</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Administration" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminAdminPreferences</class_name>
+            <wording>Administration</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="E-mail" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminEmails</class_name>
+            <wording>E-mail</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="CSV_Import" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminImport</class_name>
+            <wording>Import</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Employees" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminParentEmployees</class_name>
+            <wording>Team</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Employees_1" id_parent="Employees" active="1" enabled="1">
+            <class_name>AdminEmployees</class_name>
+            <wording>Employees</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Profiles" id_parent="Employees" active="1" enabled="1">
+            <class_name>AdminProfiles</class_name>
+            <wording>Roles</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Permissions" id_parent="Employees" active="1" enabled="1">
+            <class_name>AdminAccess</class_name>
+            <wording>Permissions</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Database" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminParentRequestSql</class_name>
+            <wording>Database</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="SQL_Manager" id_parent="Database" active="1" enabled="1">
+            <class_name>AdminRequestSql</class_name>
+            <wording>SQL Manager</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="DB_Backup" id_parent="Database" active="1" enabled="1">
+            <class_name>AdminBackup</class_name>
+            <wording>DB Backup</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Logs" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminLogs</class_name>
+            <wording>Logs</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Webservice" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminWebservice</class_name>
+            <wording>Webservice</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="AuthorizationServer" id_parent="Advanced_Parameters" active="0" enabled="1">
+            <class_name>AdminAuthorizationServer</class_name>
+            <wording>Authorization Server</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1">
+            <class_name>AdminShopGroup</class_name>
+            <wording>Multistore</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1">
+            <class_name>AdminShopUrl</class_name>
+            <wording>Multistore</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="FeatureFlag" id_parent="Advanced_Parameters" active="1" enabled="1" icon="">
+            <class_name>AdminFeatureFlag</class_name>
+            <wording>New &amp; Experimental Features</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1">
+            <class_name>AdminParentSecurity</class_name>
+            <wording>Security</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Security_1" id_parent="Security" active="1" enabled="1" route_name="admin_security">
+            <class_name>AdminSecurity</class_name>
+            <wording>Security</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="EmployeeSessions" id_parent="Security" active="1" enabled="1" route_name="admin_security_sessions_employee_list">
+            <class_name>AdminSecuritySessionEmployee</class_name>
+            <wording>Employee Sessions</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="CustomerSessions" id_parent="Security" active="1" enabled="1" route_name="admin_security_sessions_customer_list">
+            <class_name>AdminSecuritySessionCustomer</class_name>
+            <wording>Customer Sessions</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-                    <tab id="General_1" id_parent="General" active="1" enabled="1">
-                        <class_name>AdminPreferences</class_name>
-                        <wording>General</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Maintenance" id_parent="General" active="1" enabled="1">
-                        <class_name>AdminMaintenance</class_name>
-                        <wording>Maintenance</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
+        <!--QUICK ACCESS-->
+        <tab id="Quick_Access" id_parent="-1" active="1" enabled="1">
+            <class_name>AdminQuickAccesses</class_name>
+            <wording>Quick Access</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
-                <tab id="Order_settings" id_parent="Shop_parameters" active="1" enabled="1">
-                    <class_name>AdminParentOrderPreferences</class_name>
-                    <wording>Order Settings</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Order_settings_2" id_parent="Order_settings" active="1" enabled="1">
-                        <class_name>AdminOrderPreferences</class_name>
-                        <wording>Order Settings</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Statuses" id_parent="Order_settings" active="1" enabled="1">
-                        <class_name>AdminStatuses</class_name>
-                        <wording>Statuses</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Products_1" id_parent="Shop_parameters" active="1" enabled="1">
-                    <class_name>AdminPPreferences</class_name>
-                    <wording>Product Settings</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Customer_settings" id_parent="Shop_parameters" active="1" enabled="1">
-                    <class_name>AdminParentCustomerPreferences</class_name>
-                    <wording>Customer Settings</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Customers_2" id_parent="Customer_settings" active="1" enabled="1">
-                        <class_name>AdminCustomerPreferences</class_name>
-                        <wording>Customer Settings</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Groups" id_parent="Customer_settings" active="1" enabled="1">
-                        <class_name>AdminGroups</class_name>
-                        <wording>Groups</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Titles" id_parent="Customer_settings" active="1" enabled="1">
-                        <class_name>AdminGenders</class_name>
-                        <wording>Titles</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Contact" id_parent="Shop_parameters" active="1" enabled="1">
-                    <class_name>AdminParentStores</class_name>
-                    <wording>Contact</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Contacts" id_parent="Contact" active="1" enabled="1">
-                        <class_name>AdminContacts</class_name>
-                        <wording>Contacts</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Store_Contacts" id_parent="Contact" active="1" enabled="1">
-                        <class_name>AdminStores</class_name>
-                        <wording>Stores</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Traffic" id_parent="Shop_parameters" active="1" enabled="1">
-                    <class_name>AdminParentMeta</class_name>
-                    <wording>Traffic &amp; SEO</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="SEO_URLs" id_parent="Traffic" active="1" enabled="1">
-                        <class_name>AdminMeta</class_name>
-                        <wording>SEO &amp; URLs</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Search_Engines" id_parent="Traffic" active="1" enabled="1">
-                        <class_name>AdminSearchEngines</class_name>
-                        <wording>Search Engines</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Search" id_parent="Shop_parameters" active="1" enabled="1">
-                    <class_name>AdminParentSearchConf</class_name>
-                    <wording>Search</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Search_1" id_parent="Search" active="1" enabled="1">
-                        <class_name>AdminSearchConf</class_name>
-                        <wording>Search</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Tags" id_parent="Search" active="1" enabled="1">
-                        <class_name>AdminTags</class_name>
-                        <wording>Tags</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-            <!--ADVANCED PARAMETERS-->
-            <tab id="Advanced_Parameters" id_parent="CONFIGURE" active="1" enabled="1" icon="settings_applications">
-                <class_name>AdminAdvancedParameters</class_name>
-                <wording>Advanced Parameters</wording>
-                <wording_domain>Admin.Navigation.Menu</wording_domain>
-            </tab>
-
-                <tab id="Information" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminInformation</class_name>
-                    <wording>Information</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Performance" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminPerformance</class_name>
-                    <wording>Performance</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Administration" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminAdminPreferences</class_name>
-                    <wording>Administration</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="E-mail" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminEmails</class_name>
-                    <wording>E-mail</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="CSV_Import" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminImport</class_name>
-                    <wording>Import</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                <tab id="Employees" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminParentEmployees</class_name>
-                    <wording>Team</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="Employees_1" id_parent="Employees" active="1" enabled="1">
-                        <class_name>AdminEmployees</class_name>
-                        <wording>Employees</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Profiles" id_parent="Employees" active="1" enabled="1">
-                        <class_name>AdminProfiles</class_name>
-                        <wording>Roles</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="Permissions" id_parent="Employees" active="1" enabled="1">
-                        <class_name>AdminAccess</class_name>
-                        <wording>Permissions</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Database" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminParentRequestSql</class_name>
-                    <wording>Database</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-
-                    <tab id="SQL_Manager" id_parent="Database" active="1" enabled="1">
-                        <class_name>AdminRequestSql</class_name>
-                        <wording>SQL Manager</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="DB_Backup" id_parent="Database" active="1" enabled="1">
-                        <class_name>AdminBackup</class_name>
-                        <wording>DB Backup</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-
-                <tab id="Logs" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminLogs</class_name>
-                    <wording>Logs</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Webservice" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminWebservice</class_name>
-                    <wording>Webservice</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="AuthorizationServer" id_parent="Advanced_Parameters" active="0" enabled="1">
-                  <class_name>AdminAuthorizationServer</class_name>
-                  <wording>Authorization Server</wording>
-                  <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1">
-                    <class_name>AdminShopGroup</class_name>
-                    <wording>Multistore</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1">
-                    <class_name>AdminShopUrl</class_name>
-                    <wording>Multistore</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="FeatureFlag" id_parent="Advanced_Parameters" active="1" enabled="1" icon="">
-                  <class_name>AdminFeatureFlag</class_name>
-                  <wording>New &amp; Experimental Features</wording>
-                  <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
-                <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1">
-                    <class_name>AdminParentSecurity</class_name>
-                </tab>
-                    <tab id="Security_1" id_parent="Security" active="1" enabled="1" route_name="admin_security">
-                        <class_name>AdminSecurity</class_name>
-                        <wording>Security</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
-                    <tab id="EmployeeSessions" id_parent="Security" active="1" enabled="1" route_name="admin_security_sessions_employee_list">
-                        <class_name>AdminSecuritySessionEmployee</class_name>
-                    </tab>
-                    <tab id="CustomerSessions" id_parent="Security" active="1" enabled="1" route_name="admin_security_sessions_customer_list">
-
-                        <class_name>AdminSecuritySessionCustomer</class_name>
-                    </tab>
-
-      <!--QUICK ACCESS-->
-      <tab id="Quick_Access" id_parent="-1" active="1" enabled="1">
-          <class_name>AdminQuickAccesses</class_name>
-          <wording>Quick Access</wording>
-          <wording_domain>Admin.Navigation.Menu</wording_domain>
-      </tab>
-
-      <!--DEFAULT-->
-      <tab id="DEFAULT" id_parent="" active="1" enabled="1">
-          <class_name>DEFAULT</class_name>
-          <wording>More</wording>
-          <wording_domain>Admin.Navigation.Menu</wording_domain>
-      </tab>
-
-      <tab id="Patterns" id_parent="-1" active="1" enabled="1">
-          <class_name>AdminPatterns</class_name>
-          <wording/>
-          <wording_domain/>
-      </tab>
+        <!--DEFAULT-->
+        <tab id="DEFAULT" id_parent="" active="1" enabled="1">
+            <class_name>DEFAULT</class_name>
+            <wording>More</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="Patterns" id_parent="-1" active="1" enabled="1">
+            <class_name>AdminPatterns</class_name>
+            <wording/>
+            <wording_domain/>
+        </tab>
     </entities>
 </entity_tab>

@@ -5,12 +5,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
@@ -18,7 +19,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import productPage from '@pages/FO/product';
 import {homePage} from '@pages/FO/home';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -49,7 +50,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
   });
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -77,7 +78,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to create product page and create a product', async function () {
@@ -87,7 +88,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
       await addProductPage.createEditBasicProduct(page, productData);
 
       const validationMessage = await addProductPage.setAttributesInProduct(page, productData);
-      await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
@@ -100,7 +101,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     const tests = [
@@ -121,7 +122,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
           test.args.enable,
         );
 
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should check the unavailable product attributes in FO product page', async function () {
@@ -137,13 +138,13 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
           page,
           productData.attributes[1].values[0],
         );
-        await expect(sizeIsVisible).to.be.equal(test.args.enable);
+        expect(sizeIsVisible).to.be.equal(test.args.enable);
 
         const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(
           page,
           productData.attributes[0].values[0],
         );
-        await expect(colorIsVisible).to.be.equal(test.args.enable);
+        expect(colorIsVisible).to.be.equal(test.args.enable);
       });
 
       it('should close the page and go back to BO', async function () {
@@ -152,7 +153,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
         page = await productPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     });
 
@@ -166,14 +167,14 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
       );
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const deleteTextResult = await productsPage.deleteProduct(page, productData);
-      await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
     });
 
     it('should reset all filters', async function () {
@@ -182,7 +183,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
       await productsPage.resetFilterCategory(page);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
   });
 

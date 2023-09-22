@@ -157,7 +157,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToNewSeoUrlPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewSeoPageLink);
+    await this.clickAndWaitForURL(page, this.addNewSeoPageLink);
   }
 
   /**
@@ -166,7 +166,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSearchEnginesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.searchEnginesSubTabLink);
+    await this.clickAndWaitForURL(page, this.searchEnginesSubTabLink);
   }
 
   /* Bulk actions methods */
@@ -237,7 +237,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditSeoUrlPage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+    await this.clickAndWaitForURL(page, this.editRowLink(row));
   }
 
   /**
@@ -269,7 +269,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteSeoUrlPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
   }
 
   /* Sort functions */
@@ -286,7 +286,7 @@ class SeoAndUrls extends BOBasePage {
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -300,8 +300,9 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page: Page): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await page.click(this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -336,7 +337,7 @@ class SeoAndUrls extends BOBasePage {
   async filterTable(page: Page, filterBy: string, value: string = ''): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value.toString());
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /* Pagination methods */
@@ -367,7 +368,7 @@ class SeoAndUrls extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -378,7 +379,7 @@ class SeoAndUrls extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -392,7 +393,8 @@ class SeoAndUrls extends BOBasePage {
    */
   async enableDisableFriendlyURL(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.friendlyUrlToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveSeoAndUrlFormButton);
+    await this.elementNotVisible(page, this.friendlyUrlToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -405,7 +407,8 @@ class SeoAndUrls extends BOBasePage {
    */
   async enableDisableAccentedURL(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.accentedUrlToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveSeoAndUrlFormButton);
+    await this.elementNotVisible(page, this.accentedUrlToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -418,7 +421,8 @@ class SeoAndUrls extends BOBasePage {
    */
   async setStatusAttributesInProductMetaTitle(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displayAttributesToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveSeoOptionsFormButton);
+    await this.elementNotVisible(page, this.displayAttributesToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

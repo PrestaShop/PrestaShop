@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\EditAttachmentHandlerInterface;
@@ -41,6 +42,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Handles editing of attachment and file uploading procedures
  */
+#[AsCommandHandler]
 final class EditAttachmentHandler extends AbstractAttachmentHandler implements EditAttachmentHandlerInterface
 {
     /**

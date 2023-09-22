@@ -31,7 +31,6 @@ use Doctrine\ORM\EntityManager;
 use Module as LegacyModule;
 use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -104,7 +103,6 @@ class ModuleDataProvider
         if ($result) {
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
-            $result['active_on_mobile'] = (bool) ($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             $lastAccessDate = '0000-00-00 00:00:00';
 
             if (!Tools::isPHPCLI() && null !== $this->entityManager && $this->employeeID) {
@@ -135,7 +133,7 @@ class ModuleDataProvider
 
     /**
      * Return installed modules along with their id, name and version
-     * If a specific shop is selected, active and active_on_mobile keys are added
+     * If a specific shop is selected, active keys are added
      *
      * @return array
      */
@@ -146,7 +144,6 @@ class ModuleDataProvider
 
         $id_shops = (new Context())->getContextListShopID();
         if (count($id_shops) > 0) {
-            $select .= ', ms.`id_module` as active, ms.`enable_device` as active_on_mobile';
             $from .= ' LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON ms.`id_module` = m.`id_module`';
             $from .= ' AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')';
         }
@@ -154,15 +151,10 @@ class ModuleDataProvider
         $results = Db::getInstance()->executeS($select . $from);
         $modules = [];
 
-        /** @var array{id: int, name:string, version: string, installed: int}|array{id: int, name:string, version: string, installed: int, active:int, active_on_mobile: int} $module */
+        /** @var array{id: int, name:string, version: string, installed: int}|array{id: int, name:string, version: string, installed: int, active:int} $module */
         foreach ($results as $module) {
             $module['installed'] = (bool) $module['installed'];
-            if (array_key_exists('active_on_mobile', $module)) {
-                $module['active_on_mobile'] = (bool) ($module['active_on_mobile'] & AddonListFilterDeviceStatus::DEVICE_MOBILE);
-            }
-            if (array_key_exists('active', $module)) {
-                $module['active'] = (bool) $module['active'];
-            }
+            $module['active'] = $this->isModuleActive($module['id'], $id_shops);
             $modules[$module['name']] = $module;
         }
 
@@ -348,26 +340,16 @@ class ModuleDataProvider
     }
 
     /**
-     * Check if the module has been enabled on mobile.
-     *
-     * @param string $name The technical module name to check
-     *
-     * @return int|false The devices enabled for this module
+     * Checks if the module is active on at least one shop of the context.
      */
-    private function getDeviceStatus($name)
+    private function isModuleActive(int $id, array $id_shops): bool
     {
-        $id_shops = (new Context())->getContextListShopID();
-        // ToDo: Load list of all installed modules ?
-
-        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
+        $result = Db::getInstance()->getRow('SELECT m.`active`, ms.`id_module` as `shop_active`
             FROM `' . _DB_PREFIX_ . 'module` m
             LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
-            WHERE `name` = "' . pSQL($name) . '"
-            AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
-        if ($result) {
-            return (int) $result['enable_device'];
-        }
+            WHERE m.`id_module` = ' . $id . '
+            AND ms.`id_shop` IN (' . implode(',', $id_shops) . ')');
 
-        return false;
+        return !empty($result);
     }
 }

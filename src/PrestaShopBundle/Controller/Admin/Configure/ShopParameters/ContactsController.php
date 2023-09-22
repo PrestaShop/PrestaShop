@@ -212,12 +212,11 @@ class ContactsController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_contacts_index")
-     *
      * @param int $contactId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     public function deleteAction($contactId)
     {
         $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
@@ -243,15 +242,14 @@ class ContactsController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_contacts_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     public function deleteBulkAction(Request $request)
     {
-        $contactIds = $request->request->get('contact_bulk');
+        $contactIds = $request->request->all('contact_bulk');
         $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
 
         if ($errors = $contactDeleter->delete($contactIds)) {
@@ -259,7 +257,7 @@ class ContactsController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         }
 
@@ -275,7 +273,7 @@ class ContactsController extends FrameworkBundleAdminController
     {
         return [
             ContactNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             ContactConstraintException::class => [

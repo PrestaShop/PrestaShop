@@ -31,10 +31,11 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProductTypeType extends ChoiceType
+class ProductTypeType extends AbstractType
 {
     /**
      * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
@@ -47,20 +48,27 @@ class ProductTypeType extends ChoiceType
     public function __construct(
         $formChoiceProvider
     ) {
-        parent::__construct();
         $this->formChoiceProvider = $formChoiceProvider;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function getParent(): string
     {
-        parent::configureOptions($resolver);
+        return ChoiceType::class;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
         $resolver->setDefaults([
             'choices' => $this->formChoiceProvider->getChoices(),
             'choice_attr' => $this->formChoiceProvider->getChoicesAttributes(),
             'required' => true,
             'label' => false,
             'empty_data' => ProductType::TYPE_STANDARD,
-            'block_prefix' => 'product_type',
         ]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'product_type';
     }
 }

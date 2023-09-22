@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,8 @@ class ProductImageController extends FrameworkBundleAdminController
 {
     /**
      * Manage upload for product image.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $idProduct
      * @param Request $request
@@ -109,6 +112,8 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Update images positions.
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -128,6 +133,8 @@ class ProductImageController extends FrameworkBundleAdminController
 
     /**
      * Manage form image.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
      *
      * @param string|int $idImage
      * @param Request $request
@@ -189,6 +196,8 @@ class ProductImageController extends FrameworkBundleAdminController
 
     /**
      * Delete an image from its ID.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $idImage
      * @param Request $request

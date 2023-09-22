@@ -173,12 +173,11 @@ class CountryController extends FrameworkBundleAdminController
      *     message="You need permission to delete this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_countries_index")
-     *
      * @param int $countryId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
     public function deleteAction(int $countryId): RedirectResponse
     {
         try {

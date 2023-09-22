@@ -405,6 +405,8 @@ class AdminDashboardControllerCore extends AdminController
             'extra' => (int) Tools::getValue('extra'),
         ];
 
+        // Hook called only for the module concerned
+        // An array [module_name => module_output] will be returned
         die(json_encode(Hook::exec('dashboardData', $params, $id_module, true)));
     }
 

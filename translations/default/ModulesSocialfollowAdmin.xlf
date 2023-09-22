@@ -5,97 +5,117 @@
       <trans-unit id="57066e29e9b1ef80851b42afc0745db7">
         <source>Social media follow links</source>
         <target>Social media follow links</target>
-        <note>Line: 52</note>
+        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="57c5adc84e6b7d212be5f4d48e19107f">
         <source>Facebook, Twitter, let your customers know where to follow you and increase your community.</source>
         <target>Facebook, Twitter, let your customers know where to follow you and increase your community.</target>
-        <note>Line: 53</note>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="4ee6b3b11a0cfe42f0522f01407d7885">
         <source>Please choose a shop to edit the social media links.</source>
         <target>Please choose a shop to edit the social media links.</target>
-        <note>Line: 105</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="76f8961bb8f4bb2b95c07650f30a7e7b">
         <source>Facebook URL</source>
         <target>Facebook URL</target>
-        <note>Line: 131</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="c162369096f0fe5784f05052ceee6b47">
         <source>Your Facebook fan page.</source>
         <target>Your Facebook fan page.</target>
-        <note>Line: 133</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="bcca29e10968edaf6e0154d2339ad556">
         <source>Twitter URL</source>
         <target>Twitter URL</target>
-        <note>Line: 138</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="6aadf667dfc3538abc2708ba76861bba">
         <source>Your official Twitter account.</source>
         <target>Your official Twitter account.</target>
-        <note>Line: 140</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="1a530e4877d8d41f810d9d05f065722d">
         <source>RSS URL</source>
         <target>RSS URL</target>
-        <note>Line: 145</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="672f301ddc5372b2477ed3c1d9322949">
         <source>The RSS feed of your choice (your blog, your store, etc.).</source>
         <target>The RSS feed of your choice (your blog, your store, etc.).</target>
-        <note>Line: 147</note>
+        <note>Line: 155</note>
       </trans-unit>
       <trans-unit id="ad7198d676478ac70c3243c1d3446331">
         <source>YouTube URL</source>
         <target>YouTube URL</target>
-        <note>Line: 152</note>
+        <note>Line: 160</note>
       </trans-unit>
       <trans-unit id="5817a34292f074f9f596de6cb3607540">
         <source>Your official YouTube account.</source>
         <target>Your official YouTube account.</target>
-        <note>Line: 154</note>
+        <note>Line: 162</note>
       </trans-unit>
       <trans-unit id="76abe3a162f22f63fae44d60fbe8f11b">
         <source>Pinterest URL:</source>
         <target>Pinterest URL:</target>
-        <note>Line: 159</note>
+        <note>Line: 167</note>
       </trans-unit>
       <trans-unit id="e158a81859319b5e442bc490b0e81af3">
         <source>Your official Pinterest account.</source>
         <target>Your official Pinterest account.</target>
-        <note>Line: 161</note>
+        <note>Line: 169</note>
       </trans-unit>
       <trans-unit id="815f12ace0a25af8c12e036810002683">
         <source>Vimeo URL:</source>
         <target>Vimeo URL:</target>
-        <note>Line: 166</note>
+        <note>Line: 174</note>
       </trans-unit>
       <trans-unit id="cba991994fe165dfcf4f5bd256bbe119">
         <source>Your official Vimeo account.</source>
         <target>Your official Vimeo account.</target>
-        <note>Line: 168</note>
+        <note>Line: 176</note>
       </trans-unit>
       <trans-unit id="130bab903955b2f6047a0db82f460386">
         <source>Instagram URL:</source>
         <target>Instagram URL:</target>
-        <note>Line: 173</note>
+        <note>Line: 181</note>
       </trans-unit>
       <trans-unit id="d55a27c3408d38f3137182c89b69a7a7">
         <source>Your official Instagram account.</source>
         <target>Your official Instagram account.</target>
-        <note>Line: 175</note>
+        <note>Line: 183</note>
       </trans-unit>
       <trans-unit id="0c7e1cb286c4286bd2c0b0329a1f8c02">
         <source>LinkedIn URL:</source>
         <target>LinkedIn URL:</target>
-        <note>Line: 180</note>
+        <note>Line: 188</note>
       </trans-unit>
       <trans-unit id="419525c6c4f2bb2639719150dbaaca0a">
         <source>Your official LinkedIn account.</source>
         <target>Your official LinkedIn account.</target>
-        <note>Line: 182</note>
+        <note>Line: 190</note>
+      </trans-unit>
+      <trans-unit id="efdfe0348688cd69fa873037857ec3b4">
+        <source>TikTok URL:</source>
+        <target>TikTok URL:</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="ed8b69a1aa92f0abced462c67b79c544">
+        <source>Your official TikTok account.</source>
+        <target>Your official TikTok account.</target>
+        <note>Line: 197</note>
+      </trans-unit>
+      <trans-unit id="840a88e7aee1a20525bf40cd783c32cc">
+        <source>Discord URL:</source>
+        <target>Discord URL:</target>
+        <note>Line: 202</note>
+      </trans-unit>
+      <trans-unit id="f4efc6a67870d353921eb7877deb4749">
+        <source>Your official Discord account.</source>
+        <target>Your official Discord account.</target>
+        <note>Line: 204</note>
       </trans-unit>
     </body>
   </file>

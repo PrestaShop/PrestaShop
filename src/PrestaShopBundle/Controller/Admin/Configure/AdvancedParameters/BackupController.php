@@ -88,7 +88,7 @@ class BackupController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -99,13 +99,13 @@ class BackupController extends FrameworkBundleAdminController
      * Show file download view.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
      * @param string $downloadFileName
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_backups_index')]
     public function downloadViewAction(Request $request, $downloadFileName)
     {
         $backup = new Backup($downloadFileName);
@@ -125,12 +125,12 @@ class BackupController extends FrameworkBundleAdminController
      * Return a backup content as a download.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @param string $downloadFileName
      *
      * @return BinaryFileResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_backup')]
     public function downloadContentAction($downloadFileName)
     {
         $backup = new Backup($downloadFileName);
@@ -146,12 +146,12 @@ class BackupController extends FrameworkBundleAdminController
      *          message="You do not have permission to update this.",
      *          redirectRoute="admin_backups_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_backups_index')]
     public function saveOptionsAction(Request $request)
     {
         $backupFormHandler = $this->getBackupFormHandler();
@@ -179,10 +179,10 @@ class BackupController extends FrameworkBundleAdminController
      *          message="You do not have permission to create this.",
      *          redirectRoute="admin_backups_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_backups_index')]
     public function createAction()
     {
         try {
@@ -220,12 +220,12 @@ class BackupController extends FrameworkBundleAdminController
      *          message="You do not have permission to delete this.",
      *          redirectRoute="admin_backups_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param string $deleteFileName
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_backups_index')]
     public function deleteAction($deleteFileName)
     {
         $backup = new Backup($deleteFileName);
@@ -256,15 +256,15 @@ class BackupController extends FrameworkBundleAdminController
      *          message="You do not have permission to delete this.",
      *          redirectRoute="admin_backups_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_backups_index')]
     public function bulkDeleteAction(Request $request)
     {
-        $backupsToDelete = $request->request->get('backup_backup_bulk_file_names', []);
+        $backupsToDelete = $request->request->all('backup_backup_bulk_file_names');
 
         if (empty($backupsToDelete)) {
             $this->addFlash(
@@ -304,7 +304,7 @@ class BackupController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'success',
-            $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+            $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
         );
 
         return $this->redirectToRoute('admin_backups_index');

@@ -43,23 +43,23 @@ describe('BO - International - Localization : Help Button', async () => {
     );
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await localizationPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await localizationPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await localizationPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
   });
 });

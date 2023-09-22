@@ -353,7 +353,7 @@ class TabCore extends ObjectModel
      */
     public static function getIdFromClassName($className)
     {
-        $className = self::getClassName($className);
+        $className = strtolower($className);
         if (empty(self::$_getIdFromClassName)) {
             self::$_getIdFromClassName = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `' . _DB_PREFIX_ . 'tab`', true, false);
@@ -366,29 +366,6 @@ class TabCore extends ObjectModel
         }
 
         return isset(self::$_getIdFromClassName[$className]) ? (int) self::$_getIdFromClassName[$className] : false;
-    }
-
-    /**
-     * @deprecated 1.7.0, to be removed in 1.7.1. Upgrade module to 1.7.
-     */
-    private static function getClassName($className)
-    {
-        $legacyClassNames = [
-            'AdminTools',
-            'AdminPriceRule',
-            'AdminAdmin',
-            'AdminParentStats',
-            'AdminMarketing',
-            'AdminCarrierWizard',
-            'AdminTabs',
-        ];
-
-        if (in_array($className, $legacyClassNames)) {
-            @trigger_error($className . ' is a deprecated tab since version 1.7.0 and "Default" will be removed in 1.7.1.. Upgrade module using the docs: http://build.prestashop.com/news/how-we-reorganized-main-menu-prestashop-1.7/.', E_USER_DEPRECATED);
-            $className = 'DEFAULT';
-        }
-
-        return strtolower($className);
     }
 
     /**

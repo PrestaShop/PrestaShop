@@ -1,6 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
 
 /**
  * View customer page, contains functions that can be used on the page
@@ -130,11 +130,11 @@ class ViewCustomer extends BOBasePage {
 
   /**
    * Get number of element from title
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param cardTitle {string} Value of card title to get number of elements
    * @returns {Promise<string>}
    */
-  getNumberOfElementFromTitle(page: Page, cardTitle: string): Promise<string> {
+  getNumberOfElementFromTitle(page: Frame|Page, cardTitle: string): Promise<string> {
     let selector: string;
 
     switch (cardTitle) {
@@ -177,10 +177,10 @@ class ViewCustomer extends BOBasePage {
 
   /**
    * Get personal information title
-   * @param page {Page} Browser tab
+   * @param page {Page|Frame} Browser tab
    * @returns {Promise<string>}
    */
-  getPersonalInformationTitle(page: Page): Promise<string> {
+  getPersonalInformationTitle(page: Page|Frame): Promise<string> {
     return this.getTextContent(page, this.personnalInformationDiv);
   }
 
@@ -258,10 +258,10 @@ class ViewCustomer extends BOBasePage {
 
   /**
    * Is private note block visible
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPrivateNoteBlockVisible(page: Page): Promise<boolean> {
+  isPrivateNoteBlockVisible(page: Frame|Page): Promise<boolean> {
     return this.elementVisible(page, this.privateNoteDiv, 1000);
   }
 
@@ -284,7 +284,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditCustomerPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.personnalInformationEditButton);
+    await this.clickAndWaitForURL(page, this.personnalInformationEditButton);
   }
 
   /**
@@ -311,7 +311,7 @@ class ViewCustomer extends BOBasePage {
         throw new Error(`${cardTitle} was not found`);
     }
 
-    return this.clickAndWaitForNavigation(page, selector(row));
+    return this.clickAndWaitForURL(page, selector(row));
   }
 
   /**
