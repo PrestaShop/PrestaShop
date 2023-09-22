@@ -50,7 +50,6 @@ class LogoUploader
     public function __construct(
         private Shop $shop,
         private ImageFormatConfigurationInterface $imageFormatConfiguration,
-        private FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private string $imageDirection
     ) {
     }
@@ -132,15 +131,10 @@ class LogoUploader
                 } else {
                     /*
                     * Let's resolve which formats we will use for image generation.
-                    * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
                     *
                     * In case of .jpg images, the actual format inside is decided by ImageManager.
                     */
-                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-                        $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
-                    } else {
-                        $configuredImageFormats = ['jpg'];
-                    }
+                    $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
                     foreach ($configuredImageFormats as $imageFormat) {
                         // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
                         // For webp and avif extensions, we want it to follow our command and ignore the original format.

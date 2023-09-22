@@ -263,7 +263,7 @@
       <trans-unit id="d56b081f1e66fdf5130276c68d528780">
         <source>Search reference</source>
         <target>Search reference</target>
-        <note>Line: 549</note>
+        <note>Line: 554</note>
       </trans-unit>
     </body>
   </file>
@@ -418,21 +418,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
-        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
-        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
-        <note>Line: 109</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationFormType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="762d425093de542e7ab628b44ff68515">
         <source>This interface allows you to specify the suppliers of the current combination.</source>
         <target>This interface allows you to specify the suppliers of the current combination.</target>
         <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationPriceImpactType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
+        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
+        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
+        <note>Line: 123</note>
       </trans-unit>
     </body>
   </file>
@@ -505,22 +505,61 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/RedirectOptionType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e35bdf9023b638203d854dd2d9382878">
+        <source>[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.</source>
+        <target>[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.</target>
+        <note>Line: 216</note>
+      </trans-unit>
+      <trans-unit id="ce744fb5bb2b0706fdc5b33466a7b500">
+        <source>[1]No redirection (404), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return 404 "Not Found" response.</source>
+        <target>[1]No redirection (404), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return 404 "Not Found" response.</target>
+        <note>Line: 217</note>
+      </trans-unit>
+      <trans-unit id="201ef8721f9aac90fdb54cc6210493ff">
+        <source>[1]No redirection (410), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return 410 "Gone" response.</source>
+        <target>[1]No redirection (410), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return 410 "Gone" response.</target>
+        <note>Line: 218</note>
+      </trans-unit>
+      <trans-unit id="65c29c631954b1e422c860c9353c30f0">
+        <source>[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.</source>
+        <target>[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.</target>
+        <note>Line: 219</note>
+      </trans-unit>
+      <trans-unit id="511d9e488a706dcf908981d845e50a35">
+        <source>[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.</source>
+        <target>[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="63d8f0350459a5cc763e14c4c6411a07">
+        <source>[1]Permanent redirection (301)[/1] [2] Permanently display another product or category instead.</source>
+        <target>[1]Permanent redirection (301)[/1] [2] Permanently display another product or category instead.</target>
+        <note>Line: 221</note>
+      </trans-unit>
+      <trans-unit id="be47cd3941d99bef338eda26d2c1a397">
+        <source>[1]Temporary redirection (302)[/1] [2] Temporarily display another product or category instead.</source>
+        <target>[1]Temporary redirection (302)[/1] [2] Temporarily display another product or category instead.</target>
+        <note>Line: 222</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b51716b6494f24132f3543c516d59742">
         <source>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.</source>
         <target>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.</target>
-        <note>Line: 103</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="390348fb4642f64089e6e9ee71f25a7c">
         <source>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</source>
         <target>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</target>
-        <note>Line: 132</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="a132c5ad0de6c917b5422b923608c87b">
         <source>Separate each tag with a comma or press the Enter key.</source>
         <target>Separate each tag with a comma or press the Enter key.</target>
-        <note>Line: 186</note>
+        <note>Line: 201</note>
       </trans-unit>
     </body>
   </file>
@@ -634,6 +673,21 @@
         <source>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</source>
         <target>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</target>
         <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
+        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
+        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
+        <note>Line: 104</note>
+      </trans-unit>
+      <trans-unit id="1914ce33841a6e52c0577751d9004159">
+        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
+        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
+        <note>Line: 146</note>
+      </trans-unit>
+      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
+        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
+        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
+        <note>Line: 234</note>
       </trans-unit>
     </body>
   </file>
@@ -803,16 +857,6 @@
         <target>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</target>
         <note>Line: 139</note>
       </trans-unit>
-      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
-        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
-        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="1914ce33841a6e52c0577751d9004159">
-        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
-        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
-        <note>Line: 74</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/essentials.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -868,11 +912,6 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
         <source>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</source>
         <target>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</target>
         <note>Line: 132</note>
-      </trans-unit>
-      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
-        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
-        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
-        <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="633bf9436b67e19cd61db84ccab7fee2">
         <source>ISBN is used internationally to identify books and their various editions.</source>

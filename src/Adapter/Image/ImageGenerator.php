@@ -43,7 +43,6 @@ use PrestaShopException;
 class ImageGenerator
 {
     public function __construct(
-        private readonly FeatureFlagManager $featureFlagManager,
         private readonly ImageFormatConfiguration $imageFormatConfiguration
     ) {
     }
@@ -94,15 +93,10 @@ class ImageGenerator
 
         /*
          * Let's resolve which formats we will use for image generation.
-         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
          *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
-        if ($this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
-        } else {
-            $configuredImageFormats = ['jpg'];
-        }
+        $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         $result = true;
 

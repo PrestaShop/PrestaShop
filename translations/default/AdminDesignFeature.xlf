@@ -107,167 +107,167 @@
       <trans-unit id="cc350a9d1eabece4f9299f7bb51c3a9c">
         <source>Images generation options</source>
         <target>Images generation options</target>
-        <note>Line: 275</note>
+        <note>Line: 281</note>
       </trans-unit>
       <trans-unit id="d0efb46cfd8b126482192a343e2142b4">
         <source>Image format</source>
         <target>Image format</target>
-        <note>Line: 158</note>
+        <note>Line: 164</note>
       </trans-unit>
       <trans-unit id="92deb9e729da3800aca668de3491f0c8">
         <source>Use JPEG.</source>
         <target>Use JPEG.</target>
-        <note>Line: 163</note>
+        <note>Line: 169</note>
       </trans-unit>
       <trans-unit id="6178649941eae11401f8bd95d32ad690">
         <source>Use PNG only if the base image is in PNG format.</source>
         <target>Use PNG only if the base image is in PNG format.</target>
-        <note>Line: 164</note>
+        <note>Line: 170</note>
       </trans-unit>
       <trans-unit id="d40849d8da6fe69b751ebaa13595b34d">
         <source>Use PNG for all images.</source>
         <target>Use PNG for all images.</target>
-        <note>Line: 165</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="11c6a44dc07bc78786c8e597caaae38d">
         <source>Use WebP only if the base image is in WebP format.</source>
         <target>Use WebP only if the base image is in WebP format.</target>
-        <note>Line: 166</note>
+        <note>Line: 172</note>
       </trans-unit>
       <trans-unit id="8da7333b05a750dc4a46cb829e9a5761">
         <source>Use WebP for all images.</source>
         <target>Use WebP for all images.</target>
-        <note>Line: 167</note>
+        <note>Line: 173</note>
       </trans-unit>
       <trans-unit id="5a259e0a584d2d8f7de738689c91cb20">
         <source>JPEG compression</source>
         <target>JPEG compression</target>
-        <note>Line: 177</note>
+        <note>Line: 183</note>
       </trans-unit>
       <trans-unit id="9c4936420e1471c2233cfbb40ce49319">
         <source>PNG compression</source>
         <target>PNG compression</target>
-        <note>Line: 185</note>
+        <note>Line: 191</note>
       </trans-unit>
       <trans-unit id="5c1a961f24af9dff17e943c94243fc28">
         <source>WebP compression</source>
         <target>WebP compression</target>
-        <note>Line: 193</note>
+        <note>Line: 199</note>
       </trans-unit>
       <trans-unit id="2f0f4bfac8d0b89ceaf30a94f39f0d58">
         <source>Generate images based on one side of the source image</source>
         <target>Generate images based on one side of the source image</target>
-        <note>Line: 207</note>
+        <note>Line: 213</note>
       </trans-unit>
       <trans-unit id="fbd5c930381c5176afe9310becf39ee5">
         <source>Automatic (longest side)</source>
         <target>Automatic (longest side)</target>
-        <note>Line: 215</note>
+        <note>Line: 221</note>
       </trans-unit>
       <trans-unit id="9cddfad226d0bc7a731c13fbec74aca6">
         <source>Maximum file size of product customization pictures</source>
         <target>Maximum file size of product customization pictures</target>
-        <note>Line: 230</note>
+        <note>Line: 236</note>
       </trans-unit>
       <trans-unit id="4b3a6218bb3e3a7303e8a171a60fcf92">
         <source>bytes</source>
         <target>bytes</target>
-        <note>Line: 236</note>
+        <note>Line: 242</note>
       </trans-unit>
       <trans-unit id="ff534cd9270ca999a39a50a6365ff52e">
         <source>Product picture width</source>
         <target>Product picture width</target>
-        <note>Line: 240</note>
+        <note>Line: 246</note>
       </trans-unit>
       <trans-unit id="d399848208da8b80a306af0fd62bb03f">
         <source>pixels</source>
         <target>pixels</target>
-        <note>Line: 326</note>
+        <note>Line: 332</note>
       </trans-unit>
       <trans-unit id="5891a406596216c63f7a1f8f7c6a81a8">
         <source>Product picture height</source>
         <target>Product picture height</target>
-        <note>Line: 251</note>
+        <note>Line: 257</note>
       </trans-unit>
       <trans-unit id="ace52125644d273380446071bcd6d5fb">
         <source>Generate high resolution images</source>
         <target>Generate high resolution images</target>
-        <note>Line: 263</note>
+        <note>Line: 269</note>
       </trans-unit>
       <trans-unit id="b08ea6a4f29e76c9d843856917642409">
         <source>Use the legacy image filesystem</source>
         <target>Use the legacy image filesystem</target>
-        <note>Line: 288</note>
+        <note>Line: 294</note>
       </trans-unit>
       <trans-unit id="2dd1148046499f9c2422ce1045a4accf">
         <source>Image type</source>
         <target>Image type</target>
-        <note>Line: 300</note>
+        <note>Line: 306</note>
       </trans-unit>
       <trans-unit id="404dede45594c16ad5592b1091cc7ba8">
         <source>Name for the image type</source>
         <target>Name for the image type</target>
-        <note>Line: 306</note>
+        <note>Line: 312</note>
       </trans-unit>
       <trans-unit id="d1e9d1892046943ae96e613646fc0381">
         <source>Add new image type</source>
         <target>Add new image type</target>
-        <note>Line: 963</note>
+        <note>Line: 972</note>
       </trans-unit>
       <trans-unit id="b3bd27a90dda4251ad9942a56f5895b7">
         <source>Image formats to generate</source>
         <target>Image formats to generate</target>
-        <note>Line: 115</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="aae7fe61ac88d3a629ee27e0bd6a92b3">
         <source>Base JPEG/PNG</source>
         <target>Base JPEG/PNG</target>
-        <note>Line: 122</note>
+        <note>Line: 128</note>
       </trans-unit>
       <trans-unit id="73534899ad5e9f6695ba178ba4b3effc">
         <source>WebP</source>
         <target>WebP</target>
-        <note>Line: 123</note>
+        <note>Line: 129</note>
       </trans-unit>
       <trans-unit id="35825f52ac558b8590c66431d1aa9c93">
         <source>AVIF</source>
         <target>AVIF</target>
-        <note>Line: 124</note>
+        <note>Line: 130</note>
       </trans-unit>
       <trans-unit id="089e860773159852c43d9561b5dc9d04">
         <source>Base format</source>
         <target>Base format</target>
-        <note>Line: 135</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="2a911eb0d71d1b707a3f9d722a5935c2">
         <source>Use JPEG</source>
         <target>Use JPEG</target>
-        <note>Line: 140</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="f520fc2ea7f469193c55bc499753a923">
         <source>Use PNG only if the base image is in PNG format</source>
         <target>Use PNG only if the base image is in PNG format</target>
-        <note>Line: 141</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="3e6aabaa02fd2202f87243016af6e117">
         <source>Use PNG</source>
         <target>Use PNG</target>
-        <note>Line: 142</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="a1aa13d5cd0cb601eb4f5618161896f9">
         <source>AVIF compression</source>
         <target>AVIF compression</target>
-        <note>Line: 146</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="b2326c3a3498ee50c8120fbaede6eeed">
         <source>Regenerate</source>
         <target>Regenerate</target>
-        <note>Line: 455</note>
+        <note>Line: 461</note>
       </trans-unit>
       <trans-unit id="f38877714ac2d3683e27fbfa947946e7">
         <source>Are you sure you want to delete this image setting?</source>
         <target>Are you sure you want to delete this image setting?</target>
-        <note>Line: 465</note>
+        <note>Line: 471</note>
       </trans-unit>
     </body>
   </file>
@@ -309,7 +309,7 @@
       <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
         <source>Pages in category "%name%"</source>
         <target>Pages in category "%name%"</target>
-        <note>Line: 115</note>
+        <note>Line: 116</note>
       </trans-unit>
     </body>
   </file>
@@ -356,7 +356,7 @@
       <trans-unit id="ce1e51212c9df52777620dc9de246da0">
         <source>Indexation by search engines</source>
         <target>Indexation by search engines</target>
-        <note>Line: 282</note>
+        <note>Line: 283</note>
       </trans-unit>
     </body>
   </file>

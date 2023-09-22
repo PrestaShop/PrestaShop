@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use ZxcvbnPhp\Zxcvbn;

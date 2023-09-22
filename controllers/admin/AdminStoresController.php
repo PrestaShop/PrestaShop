@@ -421,16 +421,10 @@ class AdminStoresControllerCore extends AdminController
 
         /*
         * Let's resolve which formats we will use for image generation.
-        * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
         *
         * In case of .jpg images, the actual format inside is decided by ImageManager.
         */
-        $sfContainer = SymfonyContainer::getInstance();
-        if ($sfContainer->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-            $configuredImageFormats = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
-        } else {
-            $configuredImageFormats = ['jpg'];
-        }
+        $configuredImageFormats = $this->get(ImageFormatConfiguration::class)->getGenerationFormats();
 
         if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
