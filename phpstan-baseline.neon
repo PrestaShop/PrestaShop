@@ -631,6 +631,11 @@ parameters:
 			path: src/Core/Grid/Query/ProductCombinationQueryBuilder.php
 
 		-
+			message: "#^Namespace FeatureFlag is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Image/ImageFormatConfiguration.php
+
+		-
 			message: "#^Class Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
 			path: src/Core/Image/ImageTypeRepository.php
