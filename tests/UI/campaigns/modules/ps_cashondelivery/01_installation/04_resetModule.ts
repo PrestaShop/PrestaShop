@@ -53,34 +53,34 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should search the module ${Modules.psCashOnDelivery.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psCashOnDelivery);
-    await expect(isModuleVisible).to.be.true;
+    expect(isModuleVisible).to.eq(true);
   });
 
   it('should display the reset modal and cancel it', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
     const textResult = await moduleManagerPage.setActionInModule(page, Modules.psCashOnDelivery, 'reset', true);
-    await expect(textResult).to.eq('');
+    expect(textResult).to.eq('');
 
     const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psCashOnDelivery);
-    await expect(isModuleVisible).to.be.true;
+    expect(isModuleVisible).to.eq(true);
 
     const isModalVisible = await moduleManagerPage.isModalActionVisible(page, Modules.psCashOnDelivery, 'reset');
-    await expect(isModalVisible).to.be.false;
+    expect(isModalVisible).to.eq(false);
   });
 
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psCashOnDelivery, 'reset');
-    await expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(Modules.psCashOnDelivery.tag));
+    expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(Modules.psCashOnDelivery.tag));
   });
 
   it('should go to Front Office', async function () {
@@ -90,7 +90,7 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     await homePage.changeLanguage(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should go to login page', async function () {
@@ -99,7 +99,7 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     await homePage.goToLoginPage(page);
 
     const pageTitle = await foLoginPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(foLoginPage.pageTitle);
+    expect(pageTitle).to.contains(foLoginPage.pageTitle);
   });
 
   it('should sign in with default customer', async function () {
@@ -108,7 +108,7 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     await foLoginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected).to.be.true;
+    expect(isCustomerConnected).to.eq(true);
   });
 
   it('should add the first product to the cart', async function () {
@@ -121,7 +121,7 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     await homePage.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.eq(cartPage.pageTitle);
+    expect(pageTitle).to.eq(cartPage.pageTitle);
   });
 
   it('should proceed to checkout and check Step Address', async function () {
@@ -130,27 +130,27 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     await cartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-    await expect(isCheckoutPage).to.be.true;
+    expect(isCheckoutPage).to.eq(true);
 
     const isStepPersonalInformationComplete = await checkoutPage.isStepCompleted(
       page,
       checkoutPage.personalInformationStepForm,
     );
-    await expect(isStepPersonalInformationComplete).to.be.true;
+    expect(isStepPersonalInformationComplete).to.eq(true);
   });
 
   it('should validate Step Address and go to Delivery Step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryStep', baseContext);
 
     const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-    await expect(isStepAddressComplete).to.be.true;
+    expect(isStepAddressComplete).to.eq(true);
   });
 
   it('should go to payment step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
     const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-    await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
   });
 
   it(`should check the '${Modules.psCashOnDelivery.name}' payment module`, async function () {
@@ -158,6 +158,6 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
 
     // Payment step - Choose payment step
     const isVisible = await checkoutPage.isPaymentMethodExist(page, Modules.psCashOnDelivery.tag);
-    await expect(isVisible).to.be.true;
+    expect(isVisible).to.eq(true);
   });
 });

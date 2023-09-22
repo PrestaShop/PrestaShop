@@ -46,14 +46,14 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it('should check that the bulk action button is disabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkBulkActionButton', baseContext);
 
     const isBulkActionsDisabled = await moduleManagerPage.isBulkActionsButtonDisabled(page);
-    await expect(isBulkActionsDisabled).to.be.true;
+    expect(isBulkActionsDisabled).to.eq(true);
   });
 
   it(`should select the module '${Modules.availableQuantities.name}' and check the bulk actions button`, async function () {
@@ -62,7 +62,7 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
     await moduleManagerPage.selectModule(page, Modules.availableQuantities.tag);
 
     const isBulkActionsDisabled = await moduleManagerPage.isBulkActionsButtonDisabled(page);
-    await expect(isBulkActionsDisabled).to.be.false;
+    expect(isBulkActionsDisabled).to.eq(false);
   });
 
   [
@@ -91,7 +91,7 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `bulkActions${index}`, baseContext);
 
       const successMessage = await moduleManagerPage.bulkActions(page, test.args.action);
-      await expect(successMessage).to.eq(test.args.message);
+      expect(successMessage).to.eq(test.args.message);
     });
   });
 });

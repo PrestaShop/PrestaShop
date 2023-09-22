@@ -44,7 +44,7 @@ describe('BO - Design - Positions : Filter module', async () => {
     await positionsPage.closeSfToolBar(page);
 
     const pageTitle = await positionsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(positionsPage.pageTitle);
+    expect(pageTitle).to.contains(positionsPage.pageTitle);
   });
 
   it(`should filter by module '${moduleName}' and check the result`, async function () {
@@ -53,7 +53,7 @@ describe('BO - Design - Positions : Filter module', async () => {
     await positionsPage.filterModule(page, moduleName);
 
     const numberOfHooks = await positionsPage.getNumberOfHooks(page);
-    await expect(numberOfHooks).to.eq(5);
+    expect(numberOfHooks).to.eq(5);
   });
 
   const hooks: string[] = [
@@ -68,10 +68,10 @@ describe('BO - Design - Positions : Filter module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `checkHooks${hook}`, baseContext);
 
       const isVisible = await positionsPage.isHookVisible(page, hook);
-      await expect(isVisible).to.be.true;
+      expect(isVisible).to.eq(true);
 
       const firstModuleName = await positionsPage.getModulesInHook(page, hook);
-      await expect(firstModuleName).to.contain(moduleName);
+      expect(firstModuleName).to.contain(moduleName);
     });
   });
 
@@ -81,6 +81,6 @@ describe('BO - Design - Positions : Filter module', async () => {
     await positionsPage.filterModule(page, 'All modules');
 
     const numberOfHooks = await positionsPage.getNumberOfHooks(page);
-    await expect(numberOfHooks).to.above(5);
+    expect(numberOfHooks).to.above(5);
   });
 });

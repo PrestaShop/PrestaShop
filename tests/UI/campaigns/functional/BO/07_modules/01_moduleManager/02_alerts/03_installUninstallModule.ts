@@ -47,7 +47,7 @@ describe('BO - Modules - Alerts : Install/Uninstall module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it('should go to \'Alerts\' tab', async function () {
@@ -56,20 +56,20 @@ describe('BO - Modules - Alerts : Install/Uninstall module', async () => {
     await moduleManagerPage.goToAlertsTab(page);
 
     const pageTitle = await moduleAlertsPage.getPageTitle(page);
-    await expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
+    expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
   });
 
   it(`should uninstall the module '${Modules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
     const successMessage = await moduleAlertsPage.setActionInModule(page, Modules.psCheckPayment, 'uninstall');
-    await expect(successMessage).to.eq(moduleAlertsPage.uninstallModuleSuccessMessage(Modules.psCheckPayment.tag));
+    expect(successMessage).to.eq(moduleAlertsPage.uninstallModuleSuccessMessage(Modules.psCheckPayment.tag));
   });
 
   it(`should install the module '${Modules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
     const successMessage = await moduleAlertsPage.setActionInModule(page, Modules.psCheckPayment, 'install');
-    await expect(successMessage).to.eq(moduleAlertsPage.installModuleSuccessMessage(Modules.psCheckPayment.tag));
+    expect(successMessage).to.eq(moduleAlertsPage.installModuleSuccessMessage(Modules.psCheckPayment.tag));
   });
 });

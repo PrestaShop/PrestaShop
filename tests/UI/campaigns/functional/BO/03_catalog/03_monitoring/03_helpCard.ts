@@ -44,23 +44,23 @@ describe('BO - Catalog - Monitoring : Help card in monitoring page', async () =>
     await monitoringPage.closeSfToolBar(page);
 
     const pageTitle = await monitoringPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+    expect(pageTitle).to.contains(monitoringPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await monitoringPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await monitoringPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarClosed = await monitoringPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarClosed).to.be.true;
+    expect(isHelpSidebarClosed).to.eq(true);
   });
 });

@@ -107,7 +107,7 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       await imageSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await imageSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
     });
 
     it('should enable WebP image format', async function () {
@@ -122,11 +122,11 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
 
       // JPEG/PNG should be checked
       const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
-      await expect(jpegChecked).to.be.true;
+      expect(jpegChecked).to.eq(true);
 
       // WebP should be checked
       const webpChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
-      await expect(webpChecked).to.be.true;
+      expect(webpChecked).to.eq(true);
     });
   });
 
@@ -181,14 +181,14 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.type}RegenerateThumbnails`, baseContext);
 
         const textResult = await imageSettingsPage.regenerateThumbnails(page, arg.type);
-        await expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
+        expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
       });
 
       it('should check that the form is reset', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.type}CheckFormReset`, baseContext);
 
         const image = await imageSettingsPage.getRegenerateThumbnailsImage(page);
-        await expect(image).to.contains('all');
+        expect(image).to.contains('all');
       });
 
       it('should check that images have been regenerated', async function () {
@@ -266,14 +266,14 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'allRegenerateThumbnails', baseContext);
 
       const textResult = await imageSettingsPage.regenerateThumbnails(page, 'all');
-      await expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
+      expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
     });
 
     it('should check that the form is reset', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'allCheckFormReset', baseContext);
 
       const image = await imageSettingsPage.getRegenerateThumbnailsImage(page);
-      await expect(image).to.contains('all');
+      expect(image).to.contains('all');
     });
 
     it('should check that images have been regenerated', async function () {
@@ -353,14 +353,14 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'specificCategoryRegenerateThumbnails', baseContext);
 
       const textResult = await imageSettingsPage.regenerateThumbnails(page, 'categories', formats.categories[0]);
-      await expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
+      expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
     });
 
     it('should check that the form is reset', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'specificCategoryCheckFormReset', baseContext);
 
       const image = await imageSettingsPage.getRegenerateThumbnailsImage(page);
-      await expect(image).to.contains('all');
+      expect(image).to.contains('all');
     });
 
     it('should check that images have been regenerated', async function () {
@@ -399,14 +399,14 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'categoryWithEraseRegenerateThumbnails', baseContext);
 
       const textResult = await imageSettingsPage.regenerateThumbnails(page, 'categories', 'All', true);
-      await expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
+      expect(textResult).to.contains(imageSettingsPage.messageThumbnailsRegenerated);
     });
 
     it('should check that the form is reset', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'categoryWithEraseCheckFormReset', baseContext);
 
       const image = await imageSettingsPage.getRegenerateThumbnailsImage(page);
-      await expect(image).to.contains('all');
+      expect(image).to.contains('all');
     });
 
     it('should check that images have been regenerated', async function () {

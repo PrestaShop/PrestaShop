@@ -55,14 +55,14 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await orderMessagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
+    expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order messages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfOrderMessages = await orderMessagesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrderMessages).to.be.above(0);
+    expect(numberOfOrderMessages).to.be.above(0);
   });
 
   describe('Create 10 order messages in BO', async () => {
@@ -78,21 +78,21 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
         await orderMessagesPage.goToAddNewOrderMessagePage(page);
 
         const pageTitle = await addOrderMessagePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
+        expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
       });
 
       it(`should create order message n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index}`, baseContext);
 
         const textResult = await addOrderMessagePage.addEditOrderMessage(page, createOrderMessageData);
-        await expect(textResult).to.equal(orderMessagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(orderMessagesPage.successfulCreationMessage);
       });
 
       it('should check the order messages number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderMessageNumber${index}`, baseContext);
 
         const numberOfOrderMessagesAfterCreation = await orderMessagesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + 1 + index);
+        expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + 1 + index);
       });
     });
   });
@@ -162,17 +162,17 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -186,21 +186,21 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
       await orderMessagesPage.filterTable(page, 'name', 'toSortAndPaginate');
 
       const textResult = await orderMessagesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textResult).to.contains('toSortAndPaginate');
+      expect(textResult).to.contains('toSortAndPaginate');
     });
 
     it('should delete order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await orderMessagesPage.deleteWithBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(orderMessagesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(orderMessagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfOrderMessagesAfterFilter = await orderMessagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrderMessagesAfterFilter).to.be.equal(numberOfOrderMessages);
+      expect(numberOfOrderMessagesAfterFilter).to.be.equal(numberOfOrderMessages);
     });
   });
 });

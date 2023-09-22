@@ -73,7 +73,7 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -82,14 +82,14 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create new cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
   });
 
@@ -100,7 +100,7 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should add the first product to the cart', async function () {
@@ -111,14 +111,14 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(cartPage.pageTitle);
+      expect(pageTitle).to.eq(cartPage.pageTitle);
     });
 
     it('should check that there is no discount applied', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
 
       const isVisible = await cartPage.isCartRuleNameVisible(page);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
     });
 
     it('should delete the last product from the cart', async function () {
@@ -127,7 +127,7 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.eq(0);
+      expect(notificationNumber).to.eq(0);
     });
   });
 

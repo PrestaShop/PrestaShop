@@ -55,7 +55,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesPage.pageTitle);
+    expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   it('should reset filter and get number of categories in BO', async function () {
@@ -64,7 +64,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
     numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
 
     if (numberOfCategories !== 0) {
-      await expect(numberOfCategories).to.be.above(0);
+      expect(numberOfCategories).to.be.above(0);
     }
   });
 
@@ -77,14 +77,14 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
         await pagesPage.goToAddNewPageCategory(page);
 
         const pageTitle = await addPageCategoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });
 
       it(`should create category n° ${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index + 1}`, baseContext);
 
         const textResult = await addPageCategoryPage.createEditPageCategory(page, categoryToCreate);
-        await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
 
       it('should go back to categories list', async function () {
@@ -93,7 +93,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
         await pagesPage.backToList(page);
 
         const pageTitle = await pagesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(pagesPage.pageTitle);
+        expect(pageTitle).to.contains(pagesPage.pageTitle);
       });
     });
   });
@@ -106,7 +106,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
       await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', 'todelete');
 
       const textResult = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
-      await expect(textResult).to.contains('todelete');
+      expect(textResult).to.contains('todelete');
     });
 
     [
@@ -117,7 +117,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
         await testContext.addContextItem(this, 'testIdentifier', `${categoryStatus.args.status}Category`, baseContext);
 
         const textResult = await pagesPage.bulkSetStatus(page, categoriesTableName, categoryStatus.args.enable);
-        await expect(textResult).to.be.equal(pagesPage.successfulUpdateStatusMessage);
+        expect(textResult).to.be.equal(pagesPage.successfulUpdateStatusMessage);
 
         const numberOfCategoriesInGrid = await pagesPage.getNumberOfElementInGrid(page, categoriesTableName);
 
@@ -127,7 +127,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
             categoriesTableName,
             i,
           );
-          await expect(textColumn).to.equal(categoryStatus.args.enable);
+          expect(textColumn).to.equal(categoryStatus.args.enable);
         }
       });
     });
@@ -141,14 +141,14 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
       await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', 'todelete');
 
       const textResult = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
-      await expect(textResult).to.contains('todelete');
+      expect(textResult).to.contains('todelete');
     });
 
     it('should delete categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCategories', baseContext);
 
       const deleteTextResult = await pagesPage.deleteWithBulkActions(page, categoriesTableName);
-      await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
@@ -158,7 +158,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
         page,
         categoriesTableName,
       );
-      await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
+      expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
   });
 });

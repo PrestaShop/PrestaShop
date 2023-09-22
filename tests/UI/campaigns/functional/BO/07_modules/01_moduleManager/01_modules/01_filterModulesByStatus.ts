@@ -46,7 +46,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   describe('Filter modules by status', async () => {
@@ -54,7 +54,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
       const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'uninstall');
-      await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.contactForm.tag));
+      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.contactForm.tag));
     });
 
     ['enabled', 'disabled', 'installed', 'uninstalled'].forEach((status: string, index: number) => {
@@ -65,7 +65,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
 
         const modules = await moduleManagerPage.getAllModulesStatus(page, status);
         modules.map(
-          (module) => expect(module.status, `'${module.name}' is not ${status}`).to.be.true,
+          (module) => expect(module.status, `'${module.name}' is not ${status}`).to.eq(true),
         );
       });
     });
@@ -74,7 +74,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
       const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'install');
-      await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
+      expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
     });
 
     it('should show all modules and check the different blocks', async function () {
@@ -83,7 +83,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
       await moduleManagerPage.filterByStatus(page, 'all-Modules');
 
       const blocksNumber = await moduleManagerPage.getNumberOfBlocks(page);
-      await expect(blocksNumber).greaterThan(2);
+      expect(blocksNumber).greaterThan(2);
     });
   });
 });

@@ -54,7 +54,7 @@ describe('BO - design - Pages : Pagination of Pages table', async () => {
       await pagesPage.closeSfToolBar(page);
 
       const pageTitle = await pagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(pagesPage.pageTitle);
+      expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
 
     it('should reset all filters and get number of pages in BO', async function () {
@@ -62,7 +62,7 @@ describe('BO - design - Pages : Pagination of Pages table', async () => {
 
       numberOfPages = await pagesPage.resetAndGetNumberOfLines(page, 'cms_page');
       if (numberOfPages !== 0) {
-        await expect(numberOfPages).to.be.above(0);
+        expect(numberOfPages).to.be.above(0);
       }
     });
 
@@ -76,14 +76,14 @@ describe('BO - design - Pages : Pagination of Pages table', async () => {
         await pagesPage.goToAddNewPage(page);
 
         const pageTitle = await addPagePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
       });
 
       it(`should create page n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createPage${index}`, baseContext);
 
         const textResult = await addPagePage.createEditPage(page, createPageData);
-        await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
     });
 
@@ -91,7 +91,7 @@ describe('BO - design - Pages : Pagination of Pages table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPagesNumber', baseContext);
 
       const numberOfPagesAfterCreation = await pagesPage.getNumberOfElementInGrid(page, 'cms_page');
-      await expect(numberOfPagesAfterCreation).to.be.equal(numberOfPages + 11);
+      expect(numberOfPagesAfterCreation).to.be.equal(numberOfPages + 11);
     });
   });
 
@@ -134,21 +134,21 @@ describe('BO - design - Pages : Pagination of Pages table', async () => {
       await pagesPage.filterTable(page, 'cms_page', 'input', 'meta_title', 'todelete');
 
       const textResult = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
-      await expect(textResult).to.contains('todelete');
+      expect(textResult).to.contains('todelete');
     });
 
     it('should delete pages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await pagesPage.deleteWithBulkActions(page, 'cms_page');
-      await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfPagesAfterFilter = await pagesPage.resetAndGetNumberOfLines(page, 'cms_page');
-      await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
+      expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
     });
   });
 });

@@ -83,14 +83,14 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await foHomePage.goTo(page, global.FO.URL);
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should check if that any account is connected', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfCustomerNotConnected', baseContext);
 
       const isCustomerConnected = await foHomePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should go on contact us page', async function () {
@@ -100,7 +100,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await foLoginPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      expect(pageTitle).to.equal(contactUsPage.pageTitle);
     });
 
     it('should check if the email is empty', async function () {
@@ -109,7 +109,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await contactUsPage.sendMessage(page, contactUsEmptyEmail);
 
       const invalidEmailError = await contactUsPage.getAlertError(page);
-      await expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
     });
 
     it('should check if the email is invalid', async function () {
@@ -118,7 +118,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await contactUsPage.sendMessage(page, contactUsInvalidEmail);
 
       const invalidEmailError = await contactUsPage.getAlertError(page);
-      await expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
     });
 
     it('should check if the content is empty', async function () {
@@ -127,7 +127,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await contactUsPage.sendMessage(page, contactUsEmptyContent);
 
       const invalidEmailError = await contactUsPage.getAlertError(page);
-      await expect(invalidEmailError).to.contains(contactUsPage.invalidContent);
+      expect(invalidEmailError).to.contains(contactUsPage.invalidContent);
     });
 
     it('should send message to customer service', async function () {
@@ -136,7 +136,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
       const validationMessage = await contactUsPage.getAlertSuccess(page);
-      await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
   });
 
@@ -155,42 +155,42 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
     it('should check customer name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-      await expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
+      expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
     });
 
     it('should check customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-      await expect(email).to.contain(contactUsData.emailAddress);
+      expect(email).to.contain(contactUsData.emailAddress);
     });
 
     it('should check message type', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessageType', baseContext);
 
       const subject = await customerServicePage.getTextColumn(page, 1, 'cl!id_contact');
-      await expect(subject).to.contain(contactUsData.subject);
+      expect(subject).to.contain(contactUsData.subject);
     });
 
     it('should check message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
       const message = await customerServicePage.getTextColumn(page, 1, 'message');
-      await expect(message).to.contain(contactUsData.message);
+      expect(message).to.contain(contactUsData.message);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
       const textResult = await customerServicePage.deleteMessage(page, 1);
-      await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
 });

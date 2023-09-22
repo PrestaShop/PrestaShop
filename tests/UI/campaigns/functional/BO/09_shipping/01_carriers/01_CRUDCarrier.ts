@@ -84,14 +84,14 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(carriersPage.pageTitle);
+    expect(pageTitle).to.contains(carriersPage.pageTitle);
   });
 
   it('should reset all filters and get number of carriers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCarriers).to.be.above(0);
+    expect(numberOfCarriers).to.be.above(0);
   });
 
   // 1 - Create carrier
@@ -102,17 +102,17 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await carriersPage.goToAddNewCarrierPage(page);
 
       const pageTitle = await addCarrierPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
     });
 
     it('should create carrier and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCarrier', baseContext);
 
       const textResult = await addCarrierPage.createEditCarrier(page, createCarrierData);
-      await expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+      expect(textResult).to.contains(carriersPage.successfulCreationMessage);
 
       const numberCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
-      await expect(numberCarriersAfterCreation).to.be.equal(numberOfCarriers + 1);
+      expect(numberCarriersAfterCreation).to.be.equal(numberOfCarriers + 1);
     });
 
     it('should filter list by name and get the new carrier ID', async function () {
@@ -129,7 +129,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       carrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
       const name = await carriersPage.getTextColumn(page, 1, 'name');
-      await expect(name).to.contains(createCarrierData.name);
+      expect(name).to.contains(createCarrierData.name);
     });
   });
 
@@ -144,7 +144,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -153,7 +153,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -162,7 +162,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should create an order', async function () {
@@ -179,14 +179,14 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check that the new carrier is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrier', baseContext);
 
       const isShippingMethodVisible = await checkoutPage.isShippingMethodVisible(page, carrierID);
-      await expect(isShippingMethodVisible, 'The carrier is visible').to.be.false;
+      expect(isShippingMethodVisible, 'The carrier is visible').to.eq(false);
     });
 
     it('should sign out from FO', async function () {
@@ -196,7 +196,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await checkoutPage.logout(page);
 
       const isCustomerConnected = await checkoutPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 
@@ -208,7 +208,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       page = await checkoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await carriersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(carriersPage.pageTitle);
+      expect(pageTitle).to.contains(carriersPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
@@ -223,7 +223,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       );
 
       const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
-      await expect(carrierName).to.contains(createCarrierData.name);
+      expect(carrierName).to.contains(createCarrierData.name);
     });
 
     it('should go to edit carrier page', async function () {
@@ -232,17 +232,17 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await carriersPage.gotoEditCarrierPage(page, 1);
 
       const pageTitle = await addCarrierPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCarrierPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addCarrierPage.pageTitleEdit);
     });
 
     it('should update carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
       const textResult = await addCarrierPage.createEditCarrier(page, editCarrierData);
-      await expect(textResult).to.contains(carriersPage.successfulUpdateMessage);
+      expect(textResult).to.contains(carriersPage.successfulUpdateMessage);
 
       const numberOfCarriersAfterUpdate = await carriersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCarriersAfterUpdate).to.be.equal(numberOfCarriers + 1);
+      expect(numberOfCarriersAfterUpdate).to.be.equal(numberOfCarriers + 1);
     });
 
     it('should filter list by name and get the edited carrier ID', async function () {
@@ -259,7 +259,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       carrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
       const name = await carriersPage.getTextColumn(page, 1, 'name');
-      await expect(name).to.contains(editCarrierData.name);
+      expect(name).to.contains(editCarrierData.name);
     });
   });
 
@@ -274,7 +274,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -283,7 +283,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -292,7 +292,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should create an order', async function () {
@@ -309,14 +309,14 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check that the updated carrier is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedCarrier', baseContext);
 
       const isShippingMethodVisible = await checkoutPage.isShippingMethodVisible(page, carrierID);
-      await expect(isShippingMethodVisible, 'The carrier is not visible').to.be.true;
+      expect(isShippingMethodVisible, 'The carrier is not visible').to.eq(true);
     });
 
     it('should sign out from FO', async function () {
@@ -326,7 +326,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await checkoutPage.logout(page);
 
       const isCustomerConnected = await checkoutPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 
@@ -338,7 +338,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       page = await checkoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await carriersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(carriersPage.pageTitle);
+      expect(pageTitle).to.contains(carriersPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
@@ -353,17 +353,17 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       );
 
       const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
-      await expect(carrierName).to.contains(editCarrierData.name);
+      expect(carrierName).to.contains(editCarrierData.name);
     });
 
     it('should delete carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCarrier', baseContext);
 
       const textResult = await carriersPage.deleteCarrier(page, 1);
-      await expect(textResult).to.contains(carriersPage.successfulDeleteMessage);
+      expect(textResult).to.contains(carriersPage.successfulDeleteMessage);
 
       const numberOfCarriersAfterDelete = await carriersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCarriersAfterDelete).to.be.equal(numberOfCarriers);
+      expect(numberOfCarriersAfterDelete).to.be.equal(numberOfCarriers);
     });
   });
 });

@@ -59,14 +59,14 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
         );
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} stock management`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 
         const result = await productSettingsPage.setEnableStockManagementStatus(page, test.args.enable);
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -79,7 +79,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
         );
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       it('should go to create product page and check the existence of quantity input', async function () {
@@ -88,7 +88,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
         await productsPage.goToAddProductPage(page);
 
         const isVisible = await addProductPage.isQuantityInputVisible(page);
-        await expect(isVisible).to.equal(test.args.isQuantityVisible);
+        expect(isVisible).to.equal(test.args.isQuantityVisible);
       });
     });
   });

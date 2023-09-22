@@ -72,14 +72,14 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addressesPage.pageTitle);
+      expect(pageTitle).to.contains(addressesPage.pageTitle);
     });
 
     it('should reset all filters and get number of addresses in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfAddresses).to.be.above(0);
+      expect(numberOfAddresses).to.be.above(0);
     });
   });
 
@@ -158,17 +158,17 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

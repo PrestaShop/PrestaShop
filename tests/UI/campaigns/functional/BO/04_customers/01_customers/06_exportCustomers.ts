@@ -50,14 +50,14 @@ describe('BO - Customers - Customers : Export customers', async () => {
     );
 
     const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomers).to.be.above(0);
+    expect(numberOfCustomers).to.be.above(0);
   });
 
   it('should export customers to a csv file', async function () {
@@ -66,7 +66,7 @@ describe('BO - Customers - Customers : Export customers', async () => {
     filePath = await customersPage.exportDataToCsv(page);
 
     const doesFileExist = await files.doesFileExist(filePath, 5000);
-    await expect(doesFileExist, 'Export of data has failed').to.be.true;
+    expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
   it('should check existence of customers data in csv file', async function () {
@@ -77,7 +77,7 @@ describe('BO - Customers - Customers : Export customers', async () => {
     for (let row: number = 1; row <= numberOfCustomers; row++) {
       const customerInCsvFormat = await customersPage.getCustomerInCsvFormat(page, row);
       const textExist = await files.isTextInFile(filePath, customerInCsvFormat, true);
-      await expect(textExist, `${customerInCsvFormat} was not found in the file`).to.be.true;
+      expect(textExist, `${customerInCsvFormat} was not found in the file`).to.eq(true);
     }
   });
 });

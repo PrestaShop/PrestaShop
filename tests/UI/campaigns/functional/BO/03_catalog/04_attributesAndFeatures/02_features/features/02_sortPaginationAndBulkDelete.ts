@@ -69,7 +69,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await attributesPage.closeSfToolBar(page);
 
       const pageTitle = await attributesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(attributesPage.pageTitle);
+      expect(pageTitle).to.contains(attributesPage.pageTitle);
     });
 
     it('should go to Features page', async function () {
@@ -78,10 +78,10 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await attributesPage.goToFeaturesPage(page);
 
       const pageTitle = await featuresPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featuresPage.pageTitle);
+      expect(pageTitle).to.contains(featuresPage.pageTitle);
 
       numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfFeatures).to.be.above(0);
+      expect(numberOfFeatures).to.be.above(0);
     });
 
     it('should change the items number to 20 per page', async function () {
@@ -165,17 +165,17 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
 

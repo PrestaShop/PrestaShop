@@ -62,7 +62,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     await attributesPage.closeSfToolBar(page);
 
     const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
   it('should go to Features page', async function () {
@@ -71,7 +71,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     await attributesPage.goToFeaturesPage(page);
 
     const pageTitle = await featuresPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(featuresPage.pageTitle);
+    expect(pageTitle).to.contains(featuresPage.pageTitle);
   });
 
   it('should filter list of features by name \'Composition\'', async function () {
@@ -80,7 +80,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     await featuresPage.filterTable(page, 'name', Features.composition.name);
 
     const textColumn = await featuresPage.getTextColumn(page, 1, 'name', 'id_feature');
-    await expect(textColumn).to.contains('Composition');
+    expect(textColumn).to.contains('Composition');
   });
 
   it('should view feature \'Composition\'', async function () {
@@ -89,10 +89,10 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     await featuresPage.viewFeature(page, 1);
 
     const pageTitle = await viewFeaturePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
+    expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
 
     numberOfValues = await viewFeaturePage.resetAndGetNumberOfLines(page);
-    await expect(numberOfValues).to.be.above(0);
+    expect(numberOfValues).to.be.above(0);
   });
 
   // 1 : Create 15 new values
@@ -104,7 +104,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
       await viewFeaturePage.goToAddNewValuePage(page);
 
       const pageTitle = await addValuePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addValuePage.createPageTitle);
+      expect(pageTitle).to.contains(addValuePage.createPageTitle);
     });
 
     creationTests.forEach((test: number, index: number) => {
@@ -117,7 +117,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
 
         if (index === 14) {
           const textResult = await addValuePage.addEditValue(page, createFeatureValueData, false);
-          await expect(textResult).to.contains(viewFeaturePage.successfulCreationMessage);
+          expect(textResult).to.contains(viewFeaturePage.successfulCreationMessage);
         } else {
           await addValuePage.addEditValue(page, createFeatureValueData, true);
         }
@@ -128,10 +128,10 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeatureComposition2', baseContext);
 
       const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
+      expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
 
       const numberOfValuesAfterCreation = await viewFeaturePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 15);
+      expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 15);
     });
   });
 
@@ -208,17 +208,17 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -233,21 +233,21 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
       await viewFeaturePage.filterTable(page, 'value', 'toDelete');
 
       const numberOfValuesAfterFilter = await viewFeaturePage.getNumberOfElementInGrid(page);
-      await expect(numberOfValuesAfterFilter).to.be.equal(15);
+      expect(numberOfValuesAfterFilter).to.be.equal(15);
     });
 
     it('should delete values with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteFeatures', baseContext);
 
       const deleteTextResult = await viewFeaturePage.bulkDeleteValues(page);
-      await expect(deleteTextResult).to.be.contains(viewFeaturePage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(viewFeaturePage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       const numberOfValuesAfterReset = await viewFeaturePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfValuesAfterReset).to.equal(numberOfValues);
+      expect(numberOfValuesAfterReset).to.equal(numberOfValues);
     });
   });
 });

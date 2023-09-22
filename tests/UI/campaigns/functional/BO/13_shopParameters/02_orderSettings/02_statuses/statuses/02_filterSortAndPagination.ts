@@ -65,7 +65,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
     );
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   it('should go to \'Statuses\' page', async function () {
@@ -74,14 +74,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
     await orderSettingsPage.goToStatusesPage(page);
 
     const pageTitle = await statusesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(statusesPage.pageTitle);
+    expect(pageTitle).to.contains(statusesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfOrderStatuses).to.be.above(0);
+    expect(numberOfOrderStatuses).to.be.above(0);
   });
 
   // 1 - Filter order statuses
@@ -162,12 +162,12 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
         );
 
         const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderStatuses);
+        expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderStatuses);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           if (test.args.filterTypeOf === 'boolean') {
             const columnStatus = await statusesPage.getStatus(page, tableName, row, test.args.filterBy);
-            await expect(columnStatus).to.equal(test.args.filterValue === '1');
+            expect(columnStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await statusesPage.getTextColumn(
               page,
@@ -175,7 +175,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
               row,
               test.args.filterBy,
             );
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -184,7 +184,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-        await expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
+        expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
       });
     });
   });
@@ -249,17 +249,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -281,17 +281,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
         await statusesPage.goToNewOrderStatusPage(page);
 
         const pageTitle = await addOrderStatusPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addOrderStatusPage.pageTitleCreate);
       });
 
       it('should create order status and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderStatus${index}`, baseContext);
 
         const textResult = await addOrderStatusPage.setOrderStatus(page, orderStatusData);
-        await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
+        expect(textResult).to.contains(statusesPage.successfulCreationMessage);
 
         const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + index + 1);
+        expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + index + 1);
       });
 
       after(() => files.deleteFile(`todelete${index}.jpg`));
@@ -346,7 +346,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
         const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name');
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -354,14 +354,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStatus', baseContext);
 
       const deleteTextResult = await statusesPage.bulkDeleteOrderStatuses(page, tableName);
-      await expect(deleteTextResult).to.be.contains(statusesPage.successfulDeleteMessage);
+      expect(deleteTextResult).to.be.contains(statusesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfLinesAfterReset).to.be.equal(numberOfOrderStatuses);
+      expect(numberOfLinesAfterReset).to.be.equal(numberOfOrderStatuses);
     });
   });
 });

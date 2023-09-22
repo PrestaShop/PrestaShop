@@ -47,7 +47,7 @@ describe('BO - Modules - Alerts tab : Reset module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it('should go to \'Alerts\' tab', async function () {
@@ -56,13 +56,13 @@ describe('BO - Modules - Alerts tab : Reset module', async () => {
     await moduleManagerPage.goToAlertsTab(page);
 
     const pageTitle = await moduleAlertsPage.getPageTitle(page);
-    await expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
+    expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
   });
 
   it(`should reset the module '${Modules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
     const successMessage = await moduleAlertsPage.setActionInModule(page, Modules.psCheckPayment, 'reset');
-    await expect(successMessage).to.eq(moduleAlertsPage.resetModuleSuccessMessage(Modules.psCheckPayment.tag));
+    expect(successMessage).to.eq(moduleAlertsPage.resetModuleSuccessMessage(Modules.psCheckPayment.tag));
   });
 });

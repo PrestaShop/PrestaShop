@@ -48,7 +48,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(contactPage.pageTitle);
+    expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
   it('should go to \'Stores\' page', async function () {
@@ -57,14 +57,14 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     await contactPage.goToStoresPage(page);
 
     const pageTitle = await storesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(storesPage.pageTitle);
+    expect(pageTitle).to.contains(storesPage.pageTitle);
   });
 
   it('should reset all filters and get number of stores in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfStores).to.be.above(0);
+    expect(numberOfStores).to.be.above(0);
   });
 
   describe('Filter stores', async () => {
@@ -173,15 +173,15 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
         );
 
         const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
+        expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
         for (let row = 1; row <= numberOfStoresAfterFilter; row++) {
           if (test.args.column === 'Status') {
             const storeStatus = await storesPage.getStoreStatus(page, row);
-            await expect(storeStatus).to.equal(test.args.filterValue === '1');
+            expect(storeStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await storesPage.getTextColumn(page, row, test.args.filterBy);
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -190,7 +190,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter${test.args.column}`, baseContext);
 
         const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfStoresAfterReset).to.equal(numberOfStores);
+        expect(numberOfStoresAfterReset).to.equal(numberOfStores);
       });
     });
   });
@@ -202,10 +202,10 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
       await storesPage.filterTable(page, 'input', 'sl!name', Stores.second.name);
 
       const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
+      expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
       const textColumn = await storesPage.getTextColumn(page, 1, 'sl!name');
-      await expect(textColumn).to.contains(Stores.second.name);
+      expect(textColumn).to.contains(Stores.second.name);
     });
 
     const tests = [
@@ -220,7 +220,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
         await storesPage.setStoreStatus(page, 1, test.args.statusWanted);
 
         const storeStatus = await storesPage.getStoreStatus(page, 1);
-        await expect(storeStatus).to.equal(test.args.statusWanted);
+        expect(storeStatus).to.equal(test.args.statusWanted);
       });
     });
 
@@ -228,7 +228,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
 
       const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfStoresAfterReset).to.equal(numberOfStores);
+      expect(numberOfStoresAfterReset).to.equal(numberOfStores);
     });
   });
 });

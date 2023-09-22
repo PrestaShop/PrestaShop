@@ -46,7 +46,7 @@ describe('BO - Advanced Parameters - Database : Help card in DB Backup page', as
     await sqlManagerPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
   it('should go to \'DB Backup\' page', async function () {
@@ -55,23 +55,23 @@ describe('BO - Advanced Parameters - Database : Help card in DB Backup page', as
     await sqlManagerPage.goToDbBackupPage(page);
 
     const pageTitle = await dbBackupPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dbBackupPage.pageTitle);
+    expect(pageTitle).to.contains(dbBackupPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await dbBackupPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await dbBackupPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarNotVisible = await dbBackupPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarNotVisible).to.be.true;
+    expect(isHelpSidebarNotVisible).to.eq(true);
   });
 });

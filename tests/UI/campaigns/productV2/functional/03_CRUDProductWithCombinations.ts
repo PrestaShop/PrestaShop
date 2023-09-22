@@ -179,7 +179,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      expect(isModalVisible).eq(true);
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should select the product with combination and check the description', async function () {
@@ -250,7 +250,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
       const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
-      expect(isModalClosed).eq(true);
+      expect(isModalClosed).to.eq(true);
     });
   });
 
@@ -266,7 +266,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditSecondCombination', baseContext);
 
       const isVisible = await combinationsTab.clickOnEditIcon(page, 2);
-      expect(isVisible).eq(true);
+      expect(isVisible).to.eq(true);
     });
 
     it('should edit the combination from the modal', async function () {
@@ -291,7 +291,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
       const isModalVisible = await combinationsTab.closeEditCombinationModal(page);
-      expect(isModalVisible).eq(false);
+      expect(isModalVisible).to.eq(false);
     });
   });
 
@@ -445,7 +445,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFirstCombinationCancel', baseContext);
 
       const isModalVisible = await combinationsTab.clickOnDeleteIcon(page, 'cancel');
-      expect(isModalVisible).eq(false);
+      expect(isModalVisible).to.eq(false);
     });
 
     it('should delete the first combination', async function () {
@@ -489,7 +489,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'selectAllCombinations', baseContext);
 
       const isBulkActionsButtonVisible = await combinationsTab.selectAllCombinations(page);
-      expect(isBulkActionsButtonVisible).eq(true);
+      expect(isBulkActionsButtonVisible).to.eq(true);
     });
 
     it('should click on edit combinations by bulk actions and check the modal title', async function () {
@@ -610,14 +610,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations2', baseContext);
 
       const successMessage = await combinationsTab.generateCombinations(page);
-      await expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(6));
+      expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(6));
     });
 
     it('combinations generation modal should be closed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
       const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
-      expect(isModalClosed).eq(true);
+      expect(isModalClosed).to.eq(true);
     });
 
     it('should save the product', async function () {

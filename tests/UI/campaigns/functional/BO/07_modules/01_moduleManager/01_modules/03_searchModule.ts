@@ -46,13 +46,13 @@ describe('BO - Modules - Module Manager : Search module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should search the module ${Modules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
-    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+    expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 });

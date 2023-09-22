@@ -53,14 +53,14 @@ function createAddressTest(addressData: AddressData, baseContext: string = 'comm
       await addressesPage.closeSfToolBar(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addressesPage.pageTitle);
+      expect(pageTitle).to.contains(addressesPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfAddresses).to.be.above(0);
+      expect(numberOfAddresses).to.be.above(0);
     });
 
     it('should go to add new address page', async function () {
@@ -69,17 +69,17 @@ function createAddressTest(addressData: AddressData, baseContext: string = 'comm
       await addressesPage.goToAddNewAddressPage(page);
 
       const pageTitle = await addAddressPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
     });
 
     it('should create address and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
       const textResult = await addAddressPage.createEditAddress(page, addressData);
-      await expect(textResult).to.equal(addressesPage.successfulCreationMessage);
+      expect(textResult).to.equal(addressesPage.successfulCreationMessage);
 
       const numberOfAddressesAfterCreation = await addressesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1);
+      expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1);
     });
   });
 }
@@ -122,14 +122,14 @@ function bulkDeleteAddressesTest(
       await addressesPage.closeSfToolBar(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addressesPage.pageTitle);
+      expect(pageTitle).to.contains(addressesPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfAddresses).to.be.above(0);
+      expect(numberOfAddresses).to.be.above(0);
     });
 
     it(`should filter list by '${filterBy}'`, async function () {
@@ -138,21 +138,21 @@ function bulkDeleteAddressesTest(
       await addressesPage.filterAddresses(page, 'input', filterBy, value);
 
       const address = await addressesPage.getTextColumnFromTableAddresses(page, 1, filterBy);
-      await expect(address).to.contains(value);
+      expect(address).to.contains(value);
     });
 
     it('should delete addresses with bulk actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAddresses', baseContext);
 
       const deleteTextResult = await addressesPage.deleteAddressesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(addressesPage.successfulDeleteMessage);
+      expect(deleteTextResult).to.be.equal(addressesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
       const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfAddressesAfterReset).to.be.above(0);
+      expect(numberOfAddressesAfterReset).to.be.above(0);
     });
   });
 }

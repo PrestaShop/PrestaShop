@@ -49,7 +49,7 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
         false,
         true,
       );
-      await expect(clientSecretKeycloak.length).to.be.gt(0);
+      expect(clientSecretKeycloak.length).to.be.gt(0);
 
       const apiResponse: APIResponse = await apiContextKeycloak.post('realms/master/protocol/openid-connect/token', {
         form: {
@@ -58,11 +58,11 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
           grant_type: 'client_credentials',
         },
       });
-      await expect(apiResponse.status()).to.eq(200);
+      expect(apiResponse.status()).to.eq(200);
 
       const jsonResponse = await apiResponse.json();
-      await expect(jsonResponse).to.have.property('access_token');
-      await expect(jsonResponse.access_token).to.be.a('string');
+      expect(jsonResponse).to.have.property('access_token');
+      expect(jsonResponse.access_token).to.be.a('string');
 
       accessTokenKeycloak = jsonResponse.access_token;
       accessTokenExpiredKeycloak = api.setAccessTokenAsExpired(accessTokenKeycloak);
@@ -74,7 +74,7 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
 
     if (!global.GENERATE_FAILED_STEPS) {
       const isRemoved: boolean = await keycloakHelper.removeClient(global.keycloakConfig.keycloakClientId);
-      await expect(isRemoved).to.be.true;
+      expect(isRemoved).to.eq(true);
     }
   });
 
@@ -96,14 +96,14 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it(`should search the module '${Modules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
       const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
-      await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+      expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it(`should go to the configuration page of the module '${Modules.keycloak.name}'`, async function () {
@@ -112,7 +112,7 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
       await moduleManagerPage.goToConfigurationPage(page, Modules.keycloak.tag);
 
       const pageTitle = await keycloakConnectorDemo.getPageTitle(page);
-      await expect(pageTitle).to.eq(keycloakConnectorDemo.pageTitle);
+      expect(pageTitle).to.eq(keycloakConnectorDemo.pageTitle);
     });
 
     it('should define the Keycloak Realm endpoint', async function () {
@@ -122,16 +122,16 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
         page,
         `${global.keycloakConfig.keycloakInternalUrl}/realms/master`,
       );
-      await expect(textResult).to.be.eq(keycloakConnectorDemo.successfulUpdateMessage);
+      expect(textResult).to.be.eq(keycloakConnectorDemo.successfulUpdateMessage);
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 without access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
       const apiResponse = await apiContext.get('api/hook-status/1');
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {
@@ -142,9 +142,9 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
           Authorization: 'Bearer INVALIDTOKEN',
         },
       });
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 with expired access token', async function () {
@@ -156,9 +156,9 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
         },
       });
 
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 with valid access token', async function () {
@@ -170,15 +170,15 @@ describe.skip('API : External Auth Server - Resource Endpoint', async () => {
         },
       });
 
-      await expect(apiResponse.status()).to.eq(200);
-      await expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+      expect(apiResponse.status()).to.eq(200);
+      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       const jsonResponse = await apiResponse.json();
-      await expect(jsonResponse).to.have.property('id');
-      await expect(jsonResponse.id).to.be.a('number');
-      await expect(jsonResponse).to.have.property('active');
-      await expect(jsonResponse.active).to.be.a('boolean');
+      expect(jsonResponse).to.have.property('id');
+      expect(jsonResponse.id).to.be.a('number');
+      expect(jsonResponse).to.have.property('active');
+      expect(jsonResponse.active).to.be.a('boolean');
     });
   });
 

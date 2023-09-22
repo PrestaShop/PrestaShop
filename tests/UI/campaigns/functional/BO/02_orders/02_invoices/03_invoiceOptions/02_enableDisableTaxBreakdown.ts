@@ -107,7 +107,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await invoicesPage.closeSfToolBar(page);
 
         const pageTitle = await invoicesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+        expect(pageTitle).to.contains(invoicesPage.pageTitle);
       });
 
       it('should enable tax breakdown', async function () {
@@ -116,7 +116,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await invoicesPage.enableTaxBreakdown(page, true);
 
         const textMessage = await invoicesPage.saveInvoiceOptions(page);
-        await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+        expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
       });
     });
 
@@ -131,7 +131,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         );
 
         const pageTitle = await taxesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(taxesPage.pageTitle);
+        expect(pageTitle).to.contains(taxesPage.pageTitle);
       });
 
       it('should go to \'Tax Rules\' page', async function () {
@@ -140,7 +140,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await taxesPage.goToTaxRulesPage(page);
 
         const pageTitle = await taxRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+        expect(pageTitle).to.contains(taxRulesPage.pageTitle);
       });
 
       it('should go to \'Add new tax rules group\' page', async function () {
@@ -149,21 +149,21 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await taxRulesPage.goToAddNewTaxRulesGroupPage(page);
 
         const pageTitle = await addTaxRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
       });
 
       it('should create new tax rule group', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createTaxRuleGroup', baseContext);
 
         const textResult = await addTaxRulesPage.createEditTaxRulesGroup(page, taxRuleGroupToCreate);
-        await expect(textResult).to.contains(addTaxRulesPage.successfulCreationMessage);
+        expect(textResult).to.contains(addTaxRulesPage.successfulCreationMessage);
       });
 
       it('should create new tax rule n°1', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createFirstTaxRule', baseContext);
 
         const textResult = await addTaxRulesPage.createEditTaxRules(page, firstTaxRuleToCreate);
-        await expect(textResult).to.contains(addTaxRulesPage.successfulUpdateMessage);
+        expect(textResult).to.contains(addTaxRulesPage.successfulUpdateMessage);
       });
 
       it('should go to \'Add new tax rule\' page', async function () {
@@ -172,14 +172,14 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await addTaxRulesPage.clickOnAddNewTaxRule(page);
 
         const pageTitle = await addTaxRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addTaxRulesPage.pageTitleEdit);
+        expect(pageTitle).to.contains(addTaxRulesPage.pageTitleEdit);
       });
 
       it('should create new tax rule n°2', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createSecondTaxRule', baseContext);
 
         const textResult = await addTaxRulesPage.createEditTaxRules(page, secondTaxRuleToCreate);
-        await expect(textResult).to.contains(addTaxRulesPage.successfulUpdateMessage);
+        expect(textResult).to.contains(addTaxRulesPage.successfulUpdateMessage);
       });
     });
 
@@ -194,7 +194,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         );
 
         const pageTitle = await boProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(boProductsPage.pageTitle);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should create product', async function () {
@@ -203,7 +203,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await boProductsPage.goToAddProductPage(page);
 
         const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+        expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
     });
 
@@ -216,7 +216,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await foProductPage.changeLanguage(page, 'en');
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productData.name);
+        expect(pageTitle).to.contains(productData.name);
       });
 
       it('should add product to cart', async function () {
@@ -226,7 +226,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await foProductPage.addProductToTheCart(page);
 
         const pageTitle = await cartPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(cartPage.pageTitle);
+        expect(pageTitle).to.equal(cartPage.pageTitle);
       });
 
       it('should proceed to checkout and sign in by default customer', async function () {
@@ -245,7 +245,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should go to payment step', async function () {
@@ -253,7 +253,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should choose payment method and confirm the order', async function () {
@@ -264,7 +264,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go back to BO', async function () {
@@ -274,7 +274,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
         const pageTitle = await addProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addProductPage.pageTitle);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
       });
     });
 
@@ -289,7 +289,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
@@ -298,14 +298,14 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await ordersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it(`should change the order status to '${OrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
 
         const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        await expect(result).to.equal(OrderStatuses.paymentAccepted.name);
+        expect(result).to.equal(OrderStatuses.paymentAccepted.name);
       });
 
       it('should download the invoice', async function () {
@@ -313,11 +313,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Download invoice
         firstInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
-        await expect(firstInvoiceFileName).to.be.not.null;
+        expect(firstInvoiceFileName).to.not.eq(null);
 
         // Check that file exist
         const exist = await files.doesFileExist(firstInvoiceFileName);
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
       });
 
       it('should check the tax breakdown', async function () {
@@ -325,11 +325,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Check the existence of the first tax
         let exist = await files.isTextInPDF(firstInvoiceFileName, '10.000 %');
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
 
         // Check the existence of the second tax
         exist = await files.isTextInPDF(firstInvoiceFileName, '20.000 %');
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
       });
     });
   });
@@ -346,7 +346,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         );
 
         const pageTitle = await invoicesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+        expect(pageTitle).to.contains(invoicesPage.pageTitle);
       });
 
       it('should disable tax breakdown', async function () {
@@ -355,7 +355,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await invoicesPage.enableTaxBreakdown(page, false);
 
         const textMessage = await invoicesPage.saveInvoiceOptions(page);
-        await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+        expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
       });
     });
 
@@ -370,7 +370,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
@@ -379,7 +379,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await ordersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it('should download the invoice', async function () {
@@ -387,10 +387,10 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Download invoice and check existence
         secondInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
-        await expect(secondInvoiceFileName).to.be.not.null;
+        expect(secondInvoiceFileName).to.not.eq(null);
 
         const exist = await files.doesFileExist(secondInvoiceFileName);
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
       });
 
       it('should check that there is no tax breakdown', async function () {
@@ -398,13 +398,13 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Check that there is only one tax line 30.000 %
         let exist = await files.isTextInPDF(secondInvoiceFileName, '10.000 %');
-        await expect(exist).to.be.false;
+        expect(exist).to.eq(false);
 
         exist = await files.isTextInPDF(secondInvoiceFileName, '20.000 %');
-        await expect(exist).to.be.false;
+        expect(exist).to.eq(false);
 
         exist = await files.isTextInPDF(secondInvoiceFileName, '30.000 %');
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
       });
     });
   });
@@ -421,7 +421,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       );
 
       const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
+      expect(pageTitle).to.contains(taxesPage.pageTitle);
     });
 
     it('should go to \'Tax Rules\' page', async function () {
@@ -430,7 +430,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       await taxesPage.goToTaxRulesPage(page);
 
       const pageTitle = await taxRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+      expect(pageTitle).to.contains(taxRulesPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
@@ -451,7 +451,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
           i,
           'name',
         );
-        await expect(textColumn).to.contains(taxRuleGroupToCreate.name);
+        expect(textColumn).to.contains(taxRuleGroupToCreate.name);
       }
     });
 
@@ -459,14 +459,14 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
 
       const deleteTextResult = await taxRulesPage.bulkDeleteTaxRules(page);
-      await expect(deleteTextResult).to.be.contains(taxRulesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(taxRulesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfLinesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLinesAfterReset).to.be.above(0);
+      expect(numberOfLinesAfterReset).to.be.above(0);
     });
   });
 

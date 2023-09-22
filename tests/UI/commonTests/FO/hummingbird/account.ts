@@ -41,7 +41,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to create account page', async function () {
@@ -51,7 +51,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await foLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+      expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
@@ -60,7 +60,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await foCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
+      expect(isCustomerConnected).to.eq(true);
     });
 
     it('should sign out from FO', async function () {
@@ -70,7 +70,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await homePage.logout(page);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 }

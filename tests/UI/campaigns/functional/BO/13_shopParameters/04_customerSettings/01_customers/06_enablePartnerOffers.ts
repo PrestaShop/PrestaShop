@@ -56,7 +56,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -73,7 +73,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
         CustomerSettingsOptions.OPTION_PARTNER_OFFER,
         test.args.enable,
       );
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
     it('should go to create customer account in FO and check partner offer checkbox', async function () {
@@ -89,7 +89,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
 
       // Check partner offer
       const isPartnerOfferVisible = await foCreateAccountPage.isPartnerOfferVisible(page);
-      await expect(isPartnerOfferVisible).to.be.equal(test.args.enable);
+      expect(isPartnerOfferVisible).to.be.equal(test.args.enable);
     });
 
     it('should go back to BO', async function () {
@@ -99,7 +99,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
   });
 });

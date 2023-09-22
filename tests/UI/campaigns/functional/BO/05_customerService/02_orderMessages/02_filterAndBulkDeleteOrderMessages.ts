@@ -56,14 +56,14 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
     await orderMessagesPage.closeSfToolBar(page);
 
     const pageTitle = await orderMessagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
+    expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfOrderMessages = await orderMessagesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrderMessages).to.be.above(0);
+    expect(numberOfOrderMessages).to.be.above(0);
   });
 
   // 1: Create 2 order message
@@ -78,17 +78,17 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
         await orderMessagesPage.goToAddNewOrderMessagePage(page);
 
         const pageTitle = await addOrderMessagePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
+        expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
       });
 
       it('should create order message', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index + 1}`, baseContext);
 
         const result = await addOrderMessagePage.addEditOrderMessage(page, test.args.orderMessageToCreate);
-        await expect(result).to.equal(orderMessagesPage.successfulCreationMessage);
+        expect(result).to.equal(orderMessagesPage.successfulCreationMessage);
 
         const numberOfOrderMessagesAfterCreation = await orderMessagesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + index + 1);
+        expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + index + 1);
       });
     });
   });
@@ -105,17 +105,17 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
         await orderMessagesPage.filterTable(page, test.args.filterBy, test.args.filterValue);
 
         const numberOfOrderMessagesAfterFilter = await orderMessagesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfOrderMessagesAfterFilter).to.be.at.most(numberOfOrderMessages + 1);
+        expect(numberOfOrderMessagesAfterFilter).to.be.at.most(numberOfOrderMessages + 1);
 
         const textColumn = await orderMessagesPage.getTextColumnFromTable(page, 1, test.args.filterBy);
-        await expect(textColumn).to.contains(test.args.filterValue);
+        expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset filters and check number of order messages', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages + 2);
+        expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages + 2);
       });
     });
   });
@@ -128,21 +128,21 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
       await orderMessagesPage.filterTable(page, 'name', firstOrderMessageData.name);
 
       const textColumn = await orderMessagesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textColumn).to.contains(firstOrderMessageData.name);
+      expect(textColumn).to.contains(firstOrderMessageData.name);
     });
 
     it('should delete order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const result = await orderMessagesPage.deleteWithBulkActions(page);
-      await expect(result).to.be.equal(orderMessagesPage.successfulMultiDeleteMessage);
+      expect(result).to.be.equal(orderMessagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset filters and check number of order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
       const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages);
+      expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages);
     });
   });
 });

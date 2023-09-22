@@ -46,7 +46,7 @@ describe('BO - Advanced Parameters - Performance : Enable/Disable debug mode', a
     );
 
     const pageTitle = await performancePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(performancePage.pageTitle);
+    expect(pageTitle).to.contains(performancePage.pageTitle);
   });
 
   const tests = [
@@ -59,14 +59,14 @@ describe('BO - Advanced Parameters - Performance : Enable/Disable debug mode', a
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DebugMode`, baseContext);
 
       const result = await performancePage.setDebugMode(page, test.args.exist);
-      await expect(result).to.contains(performancePage.successUpdateMessage);
+      expect(result).to.contains(performancePage.successUpdateMessage);
     });
 
     it('should check the debug toolbar', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkDebugMode${index}`, baseContext);
 
       const isVisible = await performancePage.isDebugModeToggleVisible(page);
-      await expect(isVisible).to.eq(test.args.exist);
+      expect(isVisible).to.eq(test.args.exist);
     });
   });
 });

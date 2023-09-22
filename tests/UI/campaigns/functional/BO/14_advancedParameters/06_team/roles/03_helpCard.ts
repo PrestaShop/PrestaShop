@@ -45,7 +45,7 @@ describe('BO - Advanced Parameters - Team : Help card in Roles page', async () =
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should go to \'Roles\' page', async function () {
@@ -54,23 +54,23 @@ describe('BO - Advanced Parameters - Team : Help card in Roles page', async () =
     await employeesPage.goToRolesPage(page);
 
     const pageTitle = await rolesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(rolesPage.pageTitle);
+    expect(pageTitle).to.contains(rolesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await rolesPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await rolesPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await rolesPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
   });
 });

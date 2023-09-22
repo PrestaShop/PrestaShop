@@ -34,7 +34,7 @@ describe('Install Prestashop', async () => {
     const stepTitle = await installPage.getStepTitle(page, 'Choose your language');
     const installationTitles = [installPage.firstStepFrTitle, installPage.firstStepEnTitle];
 
-    await expect(installationTitles.some((x) => stepTitle.includes(x))).to.be.true;
+    expect(installationTitles.some((x) => stepTitle.includes(x))).to.eq(true);
   });
 
   it('should change language to English and check title', async function () {
@@ -43,7 +43,7 @@ describe('Install Prestashop', async () => {
     await installPage.setInstallLanguage(page);
 
     const stepTitle = await installPage.getStepTitle(page, 'Choose your language');
-    await expect(stepTitle).to.contain(installPage.firstStepEnTitle);
+    expect(stepTitle).to.contain(installPage.firstStepEnTitle);
   });
 
   it('should click on next and go to step \'License Agreements\'', async function () {
@@ -52,7 +52,7 @@ describe('Install Prestashop', async () => {
     await installPage.nextStep(page);
 
     const stepTitle = await installPage.getStepTitle(page, 'License agreements');
-    await expect(stepTitle).to.contain(installPage.secondStepEnTitle);
+    expect(stepTitle).to.contain(installPage.secondStepEnTitle);
   });
 
   it('should agree to terms and conditions and go to step \'System compatibility\'', async function () {
@@ -63,7 +63,7 @@ describe('Install Prestashop', async () => {
 
     if (!(await installPage.isThirdStepVisible(page))) {
       const stepTitle = await installPage.getStepTitle(page, 'System compatibility');
-      await expect(stepTitle).to.contain(installPage.thirdStepEnTitle);
+      expect(stepTitle).to.contain(installPage.thirdStepEnTitle);
     }
   });
 
@@ -75,7 +75,7 @@ describe('Install Prestashop', async () => {
     }
 
     const stepTitle = await installPage.getStepTitle(page, 'Store information');
-    await expect(stepTitle).to.contain(installPage.fourthStepEnTitle);
+    expect(stepTitle).to.contain(installPage.fourthStepEnTitle);
   });
 
   it('should fill shop Information form and go to step \'Content Configuration\'', async function () {
@@ -86,7 +86,7 @@ describe('Install Prestashop', async () => {
     await installPage.waitForFinishedForthStep(page);
 
     const stepTitle = await installPage.getStepTitle(page, 'Content of your store');
-    await expect(stepTitle).to.contain(installPage.fifthStepEnTitle);
+    expect(stepTitle).to.contain(installPage.fifthStepEnTitle);
   });
 
   it('should click on next and go to step \'System Configuration\'', async function () {
@@ -96,7 +96,7 @@ describe('Install Prestashop', async () => {
     await installPage.waitForFinishedFifthStep(page);
 
     const stepTitle = await installPage.getStepTitle(page, 'System configuration');
-    await expect(stepTitle).to.contain(installPage.sixthStepEnTitle);
+    expect(stepTitle).to.contain(installPage.sixthStepEnTitle);
   });
 
   it('should fill database configuration form and check database connection', async function () {
@@ -104,7 +104,7 @@ describe('Install Prestashop', async () => {
 
     await installPage.fillDatabaseForm(page);
     const result = await installPage.isDatabaseConnected(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should start the installation process', async function () {
@@ -112,7 +112,7 @@ describe('Install Prestashop', async () => {
 
     await installPage.nextStep(page);
     const result = await installPage.isInstallationInProgress(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   const tests = [
@@ -208,7 +208,7 @@ describe('Install Prestashop', async () => {
         test.args.step.name,
         test.args.step.timeout,
       );
-      await expect(stepFinished, `Fail to finish the step ${test.args.step.name}`).to.be.true;
+      expect(stepFinished, `Fail to finish the step ${test.args.step.name}`).to.eq(true);
     });
   });
 
@@ -216,10 +216,10 @@ describe('Install Prestashop', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkInstallationSuccessful', baseContext);
 
     const result = await installPage.isInstallationSuccessful(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
 
     const stepTitle = await installPage.getStepTitle(page, 'Installation finished');
-    await expect(stepTitle).to.contain(installPage.finalStepEnTitle);
+    expect(stepTitle).to.contain(installPage.finalStepEnTitle);
   });
 
   it('should go to FO and check that Prestashop logo exists', async function () {
@@ -228,6 +228,6 @@ describe('Install Prestashop', async () => {
     page = await installPage.goToFOAfterInstall(page);
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 });

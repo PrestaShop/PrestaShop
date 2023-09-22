@@ -59,7 +59,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should go to login page', async function () {
@@ -68,7 +68,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await homePage.goToLoginPage(page);
 
     const pageHeaderTitle = await loginPage.getPageTitle(page);
-    await expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
+    expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
   });
 
   it('should sign in FO', async function () {
@@ -77,7 +77,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
   it('should go to my account page', async function () {
@@ -86,7 +86,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await homePage.goToMyAccountPage(page);
 
     const pageTitle = await myAccountPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+    expect(pageTitle).to.equal(myAccountPage.pageTitle);
   });
 
   it('should go to \'GDPR - Personal data\' page', async function () {
@@ -95,7 +95,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await myAccountPage.goToMyGDPRPersonalDataPage(page);
 
     const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+    expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
   });
 
   it('should click on \'Contact page\' link from Rectification & Erasure requests block', async function () {
@@ -104,7 +104,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await gdprPersonalDataPage.goToContactUsPage(page);
 
     const pageTitle = await contactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    expect(pageTitle).to.equal(contactUsPage.pageTitle);
   });
 
   it('should send message to customer service', async function () {
@@ -113,7 +113,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
     const validationMessage = await contactUsPage.getAlertSuccess(page);
-    await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+    expect(validationMessage).to.equal(contactUsPage.validationMessage);
   });
 
   it('should login in BO', async function () {
@@ -130,20 +130,20 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     );
 
     const pageTitle = await customerServicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    expect(pageTitle).to.contains(customerServicePage.pageTitle);
   });
 
   it('should check message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
     const message = await customerServicePage.getTextColumn(page, 1, 'message');
-    await expect(message).to.contain(contactUsData.message);
+    expect(message).to.contain(contactUsData.message);
   });
 
   it('should delete the message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
     const textResult = await customerServicePage.deleteMessage(page, 1);
-    await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+    expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
   });
 });

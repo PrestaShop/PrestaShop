@@ -43,7 +43,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     await homePage.goTo(page, global.FO.URL);
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should go to login page', async function () {
@@ -52,7 +52,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     await homePage.goToLoginPage(page);
 
     const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
+    expect(pageTitle).to.equal(loginPage.pageTitle);
   });
 
   it('should sign In in FO with default account', async function () {
@@ -61,7 +61,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     await loginPage.customerLogin(page, Customers.johnDoe);
 
     const connected = await homePage.isCustomerConnected(page);
-    await expect(connected, 'Customer is not connected in FO').to.be.true;
+    expect(connected, 'Customer is not connected in FO').to.eq(true);
   });
 
   it('should go to home page', async function () {
@@ -74,7 +74,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     }
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should add first product to cart and Proceed to checkout', async function () {
@@ -84,7 +84,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     await homePage.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(cartPage.pageTitle);
+    expect(pageTitle).to.equal(cartPage.pageTitle);
   });
 
   it('should check the cart details', async function () {
@@ -104,27 +104,27 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     await cartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-    await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
+    expect(isCheckoutPage, 'Browser is not in checkout Page').to.eq(true);
 
     const isStepPersonalInformationComplete = await checkoutPage.isStepCompleted(
       page,
       checkoutPage.personalInformationStepForm,
     );
-    await expect(isStepPersonalInformationComplete, 'Step Personal information is not complete').to.be.true;
+    expect(isStepPersonalInformationComplete, 'Step Personal information is not complete').to.eq(true);
   });
 
   it('should validate Step Address and go to Delivery Step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryStep', baseContext);
 
     const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-    await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
   });
 
   it('should validate Step Delivery and go to Payment Step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
     const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-    await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
   });
 
   it('should Pay by back wire and confirm order', async function () {
@@ -133,9 +133,9 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
     const pageTitle = await orderConfirmationPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+    expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
 
     const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
   });
 });

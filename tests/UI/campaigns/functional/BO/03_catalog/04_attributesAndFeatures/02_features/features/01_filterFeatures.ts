@@ -49,7 +49,7 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
     await attributesPage.closeSfToolBar(page);
 
     const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
   it('should go to features page', async function () {
@@ -58,14 +58,14 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
     await attributesPage.goToFeaturesPage(page);
 
     const pageTitle = await featuresPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(featuresPage.pageTitle);
+    expect(pageTitle).to.contains(featuresPage.pageTitle);
   });
 
   it('should reset all filters and get number of features in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfFeatures).to.be.above(0);
+    expect(numberOfFeatures).to.be.above(0);
   });
 
   describe('Filter features', async () => {
@@ -100,21 +100,21 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
         );
 
         const numberOfFeaturesAfterFilter = await featuresPage.getNumberOfElementInGrid(page);
-        await expect(numberOfFeaturesAfterFilter).to.be.at.most(numberOfFeatures);
+        expect(numberOfFeaturesAfterFilter).to.be.at.most(numberOfFeatures);
 
         const textColumn = await featuresPage.getTextColumn(
           page,
           1,
           test.args.filterBy,
         );
-        await expect(textColumn).to.contains(test.args.filterValue);
+        expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfFeaturesAfterReset = await featuresPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfFeaturesAfterReset).to.equal(numberOfFeatures);
+        expect(numberOfFeaturesAfterReset).to.equal(numberOfFeatures);
       });
     });
   });

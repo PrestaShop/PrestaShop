@@ -85,21 +85,21 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should check the standard product description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStandardProductDescription', baseContext);
 
       const productTypeDescription = await productsPage.getProductDescription(page);
-      await expect(productTypeDescription).to.contains(productsPage.standardProductDescription);
+      expect(productTypeDescription).to.contains(productsPage.standardProductDescription);
     });
 
     it('should choose \'Standard product\'', async function () {
@@ -108,7 +108,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await productsPage.selectProductType(page, newProductData.type);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should go to new product page', async function () {
@@ -117,7 +117,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should create standard product', async function () {
@@ -126,7 +126,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await createProductsPage.closeSfToolBar(page);
 
       const createProductMessage = await createProductsPage.setProduct(page, newProductData);
-      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should check the product header details', async function () {
@@ -148,7 +148,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
       const saveButtonName = await createProductsPage.getSaveButtonName(page);
-      await expect(saveButtonName).to.equal('Save and publish');
+      expect(saveButtonName).to.equal('Save and publish');
     });
   });
 
@@ -163,7 +163,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(newProductData.name);
+      expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check all product information', async function () {
@@ -173,10 +173,10 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([
-        await expect(result.name).to.equal(newProductData.name),
-        await expect(result.price.toFixed(2)).to.equal((newProductData.price + taxValue).toFixed(2)),
-        await expect(result.summary).to.equal(newProductData.summary),
-        await expect(result.description).to.equal(newProductData.description),
+        expect(result.name).to.equal(newProductData.name),
+        expect(result.price.toFixed(2)).to.equal((newProductData.price + taxValue).toFixed(2)),
+        expect(result.summary).to.equal(newProductData.summary),
+        expect(result.description).to.equal(newProductData.description),
       ]);
     });
 
@@ -187,7 +187,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
 
@@ -197,7 +197,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
       const createProductMessage = await createProductsPage.setProduct(page, editProductData);
-      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should check the product header details', async function () {
@@ -227,7 +227,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(editProductData.name);
+      expect(pageTitle).to.contains(editProductData.name);
     });
 
     it('should check all product information', async function () {
@@ -237,9 +237,9 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([
-        await expect(result.name).to.equal(editProductData.name),
-        await expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
-        await expect(result.description).to.equal(editProductData.description),
+        expect(result.name).to.equal(editProductData.name),
+        expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
+        expect(result.description).to.equal(editProductData.description),
       ]);
     });
 
@@ -250,7 +250,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
 
@@ -260,7 +260,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const createProductMessage = await createProductsPage.deleteProduct(page);
-      await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 });

@@ -21,10 +21,10 @@ export default {
     await loginPage.customerLogin(page, customer);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
 
     const pageTitle = await myAccountPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+    expect(pageTitle).to.contains(myAccountPage.pageTitle);
   },
 
   async logoutFO(mochaContext: Context, page: Page): Promise<void> {
@@ -34,6 +34,6 @@ export default {
     await loginPage.logout(page);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is still connected').to.be.false;
+    expect(isCustomerConnected, 'Customer is still connected').to.eq(false);
   },
 };

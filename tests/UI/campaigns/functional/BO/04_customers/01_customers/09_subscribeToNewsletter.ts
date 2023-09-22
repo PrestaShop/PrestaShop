@@ -50,14 +50,14 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
     numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomers).to.be.above(0);
+    expect(numberOfCustomers).to.be.above(0);
   });
 
   it(`should filter by email '${Customers.johnDoe.email}'`, async function () {
@@ -66,7 +66,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
     await customersPage.filterCustomers(page, 'input', 'email', Customers.johnDoe.email);
 
     const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCustomersAfterFilter).to.equal(1);
+    expect(numberOfCustomersAfterFilter).to.equal(1);
   });
 
   [
@@ -79,7 +79,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       await customersPage.setNewsletterStatus(page, 1, test.args.value);
 
       const newsletterStatus = await customersPage.getNewsletterStatus(page, 1);
-      await expect(newsletterStatus).to.be.equal(test.args.value);
+      expect(newsletterStatus).to.be.equal(test.args.value);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
@@ -92,7 +92,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       );
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it(`should go to '${Modules.psEmailSubscription.name}' module`, async function () {
@@ -103,7 +103,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailSubscription.tag);
 
       const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
-      await expect(pageTitle).to.contains(Modules.psEmailSubscription.name);
+      expect(pageTitle).to.contains(Modules.psEmailSubscription.name);
     });
 
     it('should check customer registration to newsletter', async function () {
@@ -113,9 +113,9 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       const listOfEmails = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
 
       if (test.args.value) {
-        await expect(listOfEmails).to.include(Customers.johnDoe.email);
+        expect(listOfEmails).to.include(Customers.johnDoe.email);
       } else {
-        await expect(listOfEmails).to.not.include(Customers.johnDoe.email);
+        expect(listOfEmails).to.not.include(Customers.johnDoe.email);
       }
     });
 
@@ -129,7 +129,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       );
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
   });
 
@@ -137,6 +137,6 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
     await testContext.addContextItem(this, 'testIdentifier', 'resetAfterAll', baseContext);
 
     const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+    expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
   });
 });

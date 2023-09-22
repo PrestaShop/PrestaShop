@@ -49,7 +49,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       await stocksPage.closeSfToolBar(page);
 
       const pageTitle = await stocksPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(stocksPage.pageTitle);
+      expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
     it(`should bulk edit the quantity of the product '${Products.demo_1.name}'`, async function () {
@@ -59,7 +59,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
 
       // Update quantity and check successful message
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
-      await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
     });
   });
 
@@ -70,7 +70,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       await stocksPage.goToSubTabMovements(page);
 
       const pageTitle = await movementsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(movementsPage.pageTitle);
+      expect(pageTitle).to.contains(movementsPage.pageTitle);
     });
 
     const sortTests = [
@@ -115,17 +115,17 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -143,14 +143,14 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       );
 
       const pageTitle = await stocksPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(stocksPage.pageTitle);
+      expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
     it('should bulk edit the quantity of all products in the first page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantityFirstPage', baseContext);
 
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
-      await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
     });
 
     it('should go to the second page and bulk edit the quantity of all products', async function () {
@@ -159,7 +159,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       await stocksPage.paginateTo(page, 2);
 
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
-      await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
     });
   });
 
@@ -170,21 +170,21 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       await stocksPage.goToSubTabMovements(page);
 
       const pageTitle = await movementsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(movementsPage.pageTitle);
+      expect(pageTitle).to.contains(movementsPage.pageTitle);
     });
 
     it('should go to the next page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNextPage', baseContext);
 
       const pageNumber = await movementsPage.paginateTo(page, 2);
-      await expect(pageNumber).to.eq(2);
+      expect(pageNumber).to.eq(2);
     });
 
     it('should go back to the first page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToFirstPage', baseContext);
 
       const pageNumber = await movementsPage.paginateTo(page, 1);
-      await expect(pageNumber).to.eq(1);
+      expect(pageNumber).to.eq(1);
     });
   });
 });

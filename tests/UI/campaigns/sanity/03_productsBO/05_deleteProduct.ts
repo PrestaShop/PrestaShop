@@ -57,21 +57,21 @@ describe('BO - Catalog - Products : Delete product', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset filter and get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
 
       numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Standard product\'', async function () {
@@ -80,7 +80,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
       await productsPage.selectProductType(page, newProductData.type);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should go to new product page', async function () {
@@ -89,7 +89,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
       await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should create standard product', async function () {
@@ -98,7 +98,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
       await createProductsPage.closeSfToolBar(page);
 
       const createProductMessage = await createProductsPage.setProduct(page, newProductData);
-      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
 
@@ -109,7 +109,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
       await createProductsPage.goToCatalogPage(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should filter list by \'Reference\' and check result', async function () {
@@ -118,31 +118,31 @@ describe('BO - Catalog - Products : Delete product', async () => {
       await productsPage.filterProducts(page, 'reference', newProductData.reference, 'input');
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProductsAfterFilter).to.equal(1);
+      expect(numberOfProductsAfterFilter).to.equal(1);
 
       const textColumn = await productsPage.getTextColumn(page, 'reference', 1);
-      await expect(textColumn).to.equal(newProductData.reference);
+      expect(textColumn).to.equal(newProductData.reference);
     });
 
     it('should click on delete product button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
 
       const isModalVisible = await productsPage.clickOnDeleteProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const textMessage = await productsPage.clickOnConfirmDialogButton(page);
-      await expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+      expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });
 });

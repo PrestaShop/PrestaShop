@@ -62,14 +62,14 @@ describe('FO - Header and Footer : Change currency', async () => {
       await homePage.goToFo(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should check that the currencies block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCurrenciesLink', baseContext);
 
       const isVisible = await homePage.isCurrencyVisible(page);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
     });
   });
 
@@ -92,7 +92,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
     it('should go to \'Currencies\' page', async function () {
@@ -101,7 +101,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await localizationPage.goToSubTabCurrencies(page);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it(`should get the currency exchange rate value '${Currencies.mad.isoCode}'`, async function () {
@@ -112,7 +112,7 @@ describe('FO - Header and Footer : Change currency', async () => {
 
       // Check exchange rate
       exchangeRateValue = await currenciesPage.getExchangeRateValue(page, 1);
-      await expect(exchangeRateValue).to.be.above(0);
+      expect(exchangeRateValue).to.be.above(0);
     });
   });
 
@@ -123,7 +123,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await homePage.goToFo(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should change FO currency', async function () {
@@ -133,7 +133,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await homePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
 
       const shopCurrency = await homePage.getDefaultCurrency(page);
-      await expect(shopCurrency).to.contains(Currencies.mad.isoCode);
+      expect(shopCurrency).to.contains(Currencies.mad.isoCode);
     });
 
     it('should search product', async function () {
@@ -142,7 +142,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await homePage.searchProduct(page, Products.demo_11.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
     });
 
     it('should check the product price', async function () {
@@ -151,7 +151,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       const newExchangeRateValue = (exchangeRateValue * Products.demo_11.finalPrice).toFixed(Currencies.mad.decimals);
 
       const productPrice = await searchResultsPage.getProductPrice(page);
-      await expect(productPrice).to.contains(`${Currencies.mad.symbol}${newExchangeRateValue}`);
+      expect(productPrice).to.contains(`${Currencies.mad.symbol}${newExchangeRateValue}`);
     });
 
     it('should switch back to the default currency', async function () {
@@ -166,7 +166,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await homePage.changeCurrency(page, Currencies.euro.isoCode, Currencies.euro.symbol);
 
       const shopCurrency = await homePage.getDefaultCurrency(page);
-      await expect(shopCurrency).to.contains(Currencies.euro.isoCode);
+      expect(shopCurrency).to.contains(Currencies.euro.isoCode);
     });
 
     it('should check the product price', async function () {
@@ -175,7 +175,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       const exchangeRate = Math.round(Currencies.euro.exchangeRate * Products.demo_11.finalPrice);
 
       const productPrice = await searchResultsPage.getProductPrice(page);
-      await expect(productPrice).to.contains(`${Currencies.euro.symbol}${exchangeRate}`);
+      expect(productPrice).to.contains(`${Currencies.euro.symbol}${exchangeRate}`);
     });
   });
 

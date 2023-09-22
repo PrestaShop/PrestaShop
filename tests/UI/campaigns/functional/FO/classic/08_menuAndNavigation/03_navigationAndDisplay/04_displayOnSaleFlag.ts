@@ -67,7 +67,7 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to add product page', async function () {
@@ -76,7 +76,7 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
       await productsPage.goToAddProductPage(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it(`create product '${onSaleProductData.name}'`, async function () {
@@ -85,7 +85,7 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
       await addProductPage.setProduct(page, onSaleProductData);
 
       const createProductMessage = await addProductPage.displayOnSaleFlag(page, true);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
   });
 
@@ -96,14 +96,14 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
       page = await addProductPage.previewProduct(page);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(onSaleProductData.name);
+      expect(pageTitle).to.contains(onSaleProductData.name);
     });
 
     it('should check the discount flag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
       const flagText = await productPage.getProductTag(page);
-      await expect(flagText).to.contains('On sale!');
+      expect(flagText).to.contains('On sale!');
     });
   });
 

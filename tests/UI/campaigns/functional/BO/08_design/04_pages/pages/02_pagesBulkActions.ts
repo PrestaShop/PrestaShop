@@ -56,14 +56,14 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesPage.pageTitle);
+    expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   it('should reset filter and get number of pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
     numberOfPages = await pagesPage.resetAndGetNumberOfLines(page, pagesTable);
-    await expect(numberOfPages).to.be.above(0);
+    expect(numberOfPages).to.be.above(0);
   });
 
   // 1 : Create 2 pages In BO
@@ -75,14 +75,14 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
         await pagesPage.goToAddNewPage(page);
 
         const pageTitle = await addPagePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
       });
 
       it(`should create page n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createPage${index + 1}`, baseContext);
 
         const textResult = await addPagePage.createEditPage(page, pageToCreate);
-        await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
     });
   });
@@ -95,7 +95,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
       await pagesPage.filterTable(page, pagesTable, 'input', 'meta_title', 'todelete');
 
       const textResult = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
-      await expect(textResult).to.contains('todelete');
+      expect(textResult).to.contains('todelete');
     });
 
     [
@@ -106,14 +106,14 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
         await testContext.addContextItem(this, 'testIdentifier', `${pageStatus.args.status}Page`, baseContext);
 
         const textResult = await pagesPage.bulkSetStatus(page, pagesTable, pageStatus.args.enable);
-        await expect(textResult).to.be.equal(pagesPage.successfulUpdateStatusMessage);
+        expect(textResult).to.be.equal(pagesPage.successfulUpdateStatusMessage);
 
         const numberOfPagesInGrid = await pagesPage.getNumberOfElementInGrid(page, pagesTable);
-        await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
+        expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
 
         for (let i = 1; i <= numberOfPagesInGrid; i++) {
           const textColumn = await pagesPage.getStatus(page, pagesTable, i);
-          await expect(textColumn).to.equal(pageStatus.args.enable);
+          expect(textColumn).to.equal(pageStatus.args.enable);
         }
       });
     });
@@ -127,21 +127,21 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
       await pagesPage.filterTable(page, pagesTable, 'input', 'meta_title', 'todelete');
 
       const textResult = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
-      await expect(textResult).to.contains('todelete');
+      expect(textResult).to.contains('todelete');
     });
 
     it('should delete pages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await pagesPage.deleteWithBulkActions(page, pagesTable);
-      await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfPagesAfterFilter = await pagesPage.resetAndGetNumberOfLines(page, pagesTable);
-      await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
+      expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
     });
   });
 });

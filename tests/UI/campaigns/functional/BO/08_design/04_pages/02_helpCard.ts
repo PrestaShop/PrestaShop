@@ -43,23 +43,23 @@ describe('BO - Design - Pages : Help card on pages page', async () => {
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesPage.pageTitle);
+    expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await pagesPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
 
     const documentURL = await pagesPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarClosed = await pagesPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarClosed).to.be.true;
+    expect(isHelpSidebarClosed).to.eq(true);
   });
 });

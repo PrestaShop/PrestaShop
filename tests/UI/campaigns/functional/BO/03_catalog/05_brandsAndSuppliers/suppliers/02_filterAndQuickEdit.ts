@@ -50,7 +50,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
     await brandsPage.closeSfToolBar(page);
 
     const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should go to Suppliers page', async function () {
@@ -59,14 +59,14 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
     await brandsPage.goToSubTabSuppliers(page);
 
     const pageTitle = await suppliersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(suppliersPage.pageTitle);
+    expect(pageTitle).to.contains(suppliersPage.pageTitle);
   });
 
   it('should reset filter', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
     numberOfSuppliers = await suppliersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfSuppliers).to.be.at.least(0);
+    expect(numberOfSuppliers).to.be.at.least(0);
   });
 
   // 2: Filter Suppliers
@@ -121,16 +121,16 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
 
         // Check number of suppliers
         const numberOfSuppliersAfterFilter = await suppliersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
+        expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
 
         // Check text column or status in all rows after filter
         for (let i = 1; i <= numberOfSuppliersAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const supplierStatus = await suppliersPage.getStatus(page, i);
-            await expect(supplierStatus).to.equal(test.args.filterValue === '1');
+            expect(supplierStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, i, test.args.filterBy);
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -139,7 +139,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfSuppliersAfterReset = await suppliersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
+        expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
       });
     });
   });
@@ -153,11 +153,11 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
 
       // Check number od suppliers
       const numberOfSuppliersAfterFilter = await suppliersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
+      expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
 
       // check text column of first row after filter
       const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
-      await expect(textColumn).to.contains(Suppliers.fashionSupplier.name);
+      expect(textColumn).to.contains(Suppliers.fashionSupplier.name);
     });
 
     [
@@ -171,11 +171,11 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
 
         if (isActionPerformed) {
           const resultMessage = await suppliersPage.getAlertSuccessBlockParagraphContent(page);
-          await expect(resultMessage).to.contains(suppliersPage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(suppliersPage.successfulUpdateStatusMessage);
         }
 
         const supplierStatus = await suppliersPage.getStatus(page, 1);
-        await expect(supplierStatus).to.be.equal(test.args.enabledValue);
+        expect(supplierStatus).to.be.equal(test.args.enabledValue);
       });
     });
 
@@ -183,7 +183,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
 
       const numberOfSuppliersAfterReset = await suppliersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
+      expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
     });
   });
 });

@@ -53,7 +53,7 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
     await productSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
       await testContext.addContextItem(this, 'testIdentifier', `updateNumberOfDaysTo${test.args.value}`, baseContext);
 
       const result = await productSettingsPage.updateNumberOfDays(page, test.args.value);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
     it('should check the new flag in the product miniature in FO', async function () {
@@ -75,7 +75,7 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
       page = await productSettingsPage.viewMyShop(page);
 
       const isNewFlagVisible = await homePage.isNewFlagVisible(page, 1);
-      await expect(isNewFlagVisible).to.be.equal(test.args.exist);
+      expect(isNewFlagVisible).to.be.equal(test.args.exist);
     });
 
     it('should close the page and go back to BO', async function () {
@@ -84,7 +84,7 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

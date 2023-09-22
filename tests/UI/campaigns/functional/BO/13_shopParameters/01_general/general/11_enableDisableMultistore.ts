@@ -47,7 +47,7 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
     await generalPage.closeSfToolBar(page);
 
     const pageTitle = await generalPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(generalPage.pageTitle);
+    expect(pageTitle).to.contains(generalPage.pageTitle);
   });
 
   const tests = [
@@ -60,7 +60,7 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}MultiStore`, baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, test.args.exist);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
+      expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
 
     it('should check the existence of \'Advanced Parameters > Multistore\' page', async function () {
@@ -71,7 +71,7 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
         generalPage.advancedParametersLink,
         generalPage.multistoreLink,
       );
-      await expect(result).to.be.equal(test.args.exist);
+      expect(result).to.be.equal(test.args.exist);
     });
   });
 });

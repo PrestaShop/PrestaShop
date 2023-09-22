@@ -87,7 +87,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   describe('Check \'Products\' footer links', async () => {
@@ -103,7 +103,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         const pageTitle = await homePage.getPageTitle(page);
-        await expect(pageTitle).to.equal(args.pageTitle);
+        expect(pageTitle).to.equal(args.pageTitle);
       });
     });
   });
@@ -126,7 +126,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         const pageTitle = await homePage.getPageTitle(page);
-        await expect(pageTitle).to.equal(args.pageTitle);
+        expect(pageTitle).to.equal(args.pageTitle);
       });
     });
   });
@@ -148,7 +148,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         } else {
           pageTitle = await homePage.getPageTitle(page);
         }
-        await expect(pageTitle).to.equal(args.pageTitle);
+        expect(pageTitle).to.equal(args.pageTitle);
       });
     });
   });
@@ -161,7 +161,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await loginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     [
@@ -183,7 +183,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         } else {
           pageTitle = await homePage.getPageTitle(page);
         }
-        await expect(pageTitle).to.equal(args.pageTitle);
+        expect(pageTitle).to.equal(args.pageTitle);
       });
     });
   });
@@ -199,7 +199,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await loginPage.customerLogin(page, createCustomerData);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     [
@@ -221,7 +221,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         } else {
           pageTitle = await homePage.getPageTitle(page);
         }
-        await expect(pageTitle).to.equal(args.pageTitle);
+        expect(pageTitle).to.equal(args.pageTitle);
       });
     });
   });
@@ -231,7 +231,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStoreInformation', baseContext);
 
       const storeInformation = await homePage.getStoreInformation(page);
-      await expect(storeInformation).to.contains(global.INSTALL.SHOP_NAME)
+      expect(storeInformation).to.contains(global.INSTALL.SHOP_NAME)
         .and.to.contain(global.INSTALL.COUNTRY)
         .and.to.contains(global.BO.EMAIL);
     });
@@ -242,7 +242,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCopyright', baseContext);
 
       const copyright = await homePage.getCopyright(page);
-      await expect(copyright).to.equal(`© ${currentYear} - Ecommerce software by PrestaShop™`);
+      expect(copyright).to.equal(`© ${currentYear} - Ecommerce software by PrestaShop™`);
     });
   });
 

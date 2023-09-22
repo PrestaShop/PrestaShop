@@ -48,21 +48,21 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       );
 
       const pageTitle: string = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should check that no filter is applied by default', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoFilter', baseContext);
 
       const isVisible: boolean = await productsPage.isResetButtonVisible(page);
-      await expect(isVisible, 'Reset button is visible!').to.be.false;
+      expect(isVisible, 'Reset button is visible!').to.eq(false);
     });
 
     it('should get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
 
       numberOfProducts = await productsPage.getNumberOfProductsFromHeader(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     [
@@ -131,20 +131,20 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
 
         if (test.args.filterBy === 'active') {
-          await expect(numberOfProductsAfterFilter).to.be.above(0);
+          expect(numberOfProductsAfterFilter).to.be.above(0);
         } else {
-          await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
+          expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
         }
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
           const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
 
           if (typeof test.args.filterValue !== 'string') {
-            await expect(textColumn).to.within(test.args.filterValue.min, test.args.filterValue.max);
+            expect(textColumn).to.within(test.args.filterValue.min, test.args.filterValue.max);
           } else if (test.args.filterBy === 'active') {
-            await expect(textColumn).to.be.true;
+            expect(textColumn).to.eq(true);
           } else {
-            await expect(textColumn).to.be.contain(test.args.filterValue);
+            expect(textColumn).to.be.contain(test.args.filterValue);
           }
         }
       });
@@ -153,7 +153,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `resetAfter${test.args.identifier}`, baseContext);
 
         const numberOfProductsAfterReset: number = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+        expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });
   });

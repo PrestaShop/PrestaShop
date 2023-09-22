@@ -58,14 +58,14 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesPage.pageTitle);
+    expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
-    if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
+    if (numberOfCategories !== 0) expect(numberOfCategories).to.be.above(0);
   });
 
   // 1 : Create 11 categories
@@ -80,14 +80,14 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
         await pagesPage.goToAddNewPageCategory(page);
 
         const pageTitle = await addPageCategoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });
 
       it(`should create category n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreatePageCategory${index}`, baseContext);
 
         const textResult = await addPageCategoryPage.createEditPageCategory(page, createCategoryData);
-        await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
 
       it('should go back to categories list', async function () {
@@ -96,7 +96,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
         await pagesPage.backToList(page);
 
         const pageTitle = await pagesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(pagesPage.pageTitle);
+        expect(pageTitle).to.contains(pagesPage.pageTitle);
       });
 
       it('should check the categories number', async function () {
@@ -106,7 +106,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
           page,
           categoriesTableName,
         );
-        await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
+        expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
       });
     });
   });
@@ -199,17 +199,17 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -224,14 +224,14 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
       await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', 'todelete');
 
       const textResult = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
-      await expect(textResult).to.contains('todelete');
+      expect(textResult).to.contains('todelete');
     });
 
     it('should delete categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCategories', baseContext);
 
       const deleteTextResult = await pagesPage.deleteWithBulkActions(page, categoriesTableName);
-      await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
@@ -241,7 +241,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
         page,
         categoriesTableName,
       );
-      await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
+      expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
   });
 });

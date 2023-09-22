@@ -38,12 +38,12 @@ describe('BO - Header : Left menu', async () => {
         await dashboardPage.clickSubMenu(page, test.parent);
 
         const isVisible = await dashboardPage.isSubmenuVisible(page, test.parent, subTest);
-        await expect(isVisible).to.be.true;
+        expect(isVisible).to.eq(true);
 
         await dashboardPage.goToSubMenu(page, test.parent, subTest);
 
         const isMenuActive = await dashboardPage.isSubMenuActive(page, subTest);
-        await expect(isMenuActive).to.be.true;
+        expect(isMenuActive).to.eq(true);
       });
     });
   });
@@ -54,7 +54,7 @@ describe('BO - Header : Left menu', async () => {
     await dashboardPage.setSidebarCollapsed(page, true);
 
     const isSidebarCollapsed = await dashboardPage.isSidebarCollapsed(page);
-    await expect(isSidebarCollapsed).to.be.true;
+    expect(isSidebarCollapsed).to.eq(true);
   });
 
   dashboardPage.menuTree.forEach((test, index) => {
@@ -70,12 +70,12 @@ describe('BO - Header : Left menu', async () => {
         await dashboardPage.clickSubMenu(page, test.parent);
 
         const isVisible = await dashboardPage.isSubmenuVisible(page, test.parent, subTest);
-        await expect(isVisible).to.be.true;
+        expect(isVisible).to.eq(true);
 
         await dashboardPage.goToSubMenu(page, test.parent, subTest);
 
         const isMenuActive = await dashboardPage.isSubMenuActive(page, subTest);
-        await expect(isMenuActive).to.be.true;
+        expect(isMenuActive).to.eq(true);
       });
     });
   });
@@ -86,7 +86,7 @@ describe('BO - Header : Left menu', async () => {
     await dashboardPage.setSidebarCollapsed(page, false);
 
     const isSidebarCollapsed = await dashboardPage.isSidebarCollapsed(page);
-    await expect(isSidebarCollapsed).to.be.false;
+    expect(isSidebarCollapsed).to.eq(false);
   });
 
   it('should check the menu in mobile context', async function () {
@@ -95,10 +95,10 @@ describe('BO - Header : Left menu', async () => {
     await dashboardPage.resize(page, true);
 
     const isMobileMenuVisible = await dashboardPage.isMobileMenuVisible(page);
-    await expect(isMobileMenuVisible).to.be.true;
+    expect(isMobileMenuVisible).to.eq(true);
 
     const isNavbarVisible = await dashboardPage.isNavbarVisible(page);
-    await expect(isNavbarVisible).to.be.false;
+    expect(isNavbarVisible).to.eq(false);
   });
 
   it('should check the menu in desktop context', async function () {
@@ -107,9 +107,9 @@ describe('BO - Header : Left menu', async () => {
     await dashboardPage.resize(page, false);
 
     const isMobileMenuVisible = await dashboardPage.isMobileMenuVisible(page);
-    await expect(isMobileMenuVisible).to.be.false;
+    expect(isMobileMenuVisible).to.eq(false);
 
     const isNavbarVisible = await dashboardPage.isNavbarVisible(page);
-    await expect(isNavbarVisible).to.be.true;
+    expect(isNavbarVisible).to.eq(true);
   });
 });

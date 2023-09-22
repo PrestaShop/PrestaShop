@@ -63,14 +63,14 @@ describe('BO - International - Localization : Update default currency', async ()
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
     it('should import localization pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importLocalizationPack', baseContext);
 
       const textResult = await localizationPage.importLocalizationPack(page, 'Chile', contentToImport);
-      await expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
+      expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
     });
   });
 
@@ -120,14 +120,14 @@ describe('BO - International - Localization : Update default currency', async ()
         await localizationPage.closeSfToolBar(page);
 
         const pageTitle = await localizationPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(localizationPage.pageTitle);
+        expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       it('should choose default currency', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCurrency${index}`, baseContext);
 
         const textResult = await localizationPage.setDefaultCurrency(page, test.args.defaultCurrency);
-        await expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+        expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to FO and check the existence of currency', async function () {
@@ -137,7 +137,7 @@ describe('BO - International - Localization : Update default currency', async ()
         page = await localizationPage.viewMyShop(page);
 
         const defaultCurrency = await foHomePage.getDefaultCurrency(page);
-        await expect(defaultCurrency).to.equal(test.args.currency);
+        expect(defaultCurrency).to.equal(test.args.currency);
       });
 
       it('should go back to BO', async function () {
@@ -146,7 +146,7 @@ describe('BO - International - Localization : Update default currency', async ()
         page = await foHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await localizationPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(localizationPage.pageTitle);
+        expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       if (index === (currenciesToTest.length - 1)) {
@@ -157,7 +157,7 @@ describe('BO - International - Localization : Update default currency', async ()
             await localizationPage.goToSubTabCurrencies(page);
 
             const pageTitle = await currenciesPage.getPageTitle(page);
-            await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+            expect(pageTitle).to.contains(currenciesPage.pageTitle);
           });
 
           it(`should filter by iso code of currency '${Currencies.chileanPeso.isoCode}'`, async function () {
@@ -166,21 +166,21 @@ describe('BO - International - Localization : Update default currency', async ()
             await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.chileanPeso.isoCode);
 
             const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-            await expect(textColumn).to.contains(Currencies.chileanPeso.isoCode);
+            expect(textColumn).to.contains(Currencies.chileanPeso.isoCode);
           });
 
           it('should delete currency', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
             const result = await currenciesPage.deleteCurrency(page, 1);
-            await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+            expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
           });
 
           it('should reset filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencies', baseContext);
 
             const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
-            await expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
+            expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
           });
         });
 
@@ -191,7 +191,7 @@ describe('BO - International - Localization : Update default currency', async ()
             await localizationPage.goToSubTabLanguages(page);
 
             const pageTitle = await languagesPage.getPageTitle(page);
-            await expect(pageTitle).to.contains(languagesPage.pageTitle);
+            expect(pageTitle).to.contains(languagesPage.pageTitle);
           });
 
           it(`should filter language by name '${Languages.spanish.name}'`, async function () {
@@ -200,24 +200,24 @@ describe('BO - International - Localization : Update default currency', async ()
             await languagesPage.filterTable(page, 'input', 'name', Languages.spanish.name);
 
             const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-            await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+            expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
             const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-            await expect(textColumn).to.contains(Languages.spanish.name);
+            expect(textColumn).to.contains(Languages.spanish.name);
           });
 
           it('should delete language', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
             const textResult = await languagesPage.deleteLanguage(page, 1);
-            await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+            expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
           });
 
           it('should reset all filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetLanguages', baseContext);
 
             const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-            await expect(numberOfLanguagesAfterReset).to.be.at.least(1);
+            expect(numberOfLanguagesAfterReset).to.be.at.least(1);
           });
         });
       }

@@ -58,14 +58,14 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
     await linkWidgetsPage.closeSfToolBar(page);
 
     const pageTitle = await linkWidgetsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
+    expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
   });
 
   it('should get link widget number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getLinkWidgetNumber', baseContext);
 
     numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, Hooks.displayFooter.name);
-    await expect(numberOfLinkWidgetInFooter).to.be.above(0);
+    expect(numberOfLinkWidgetInFooter).to.be.above(0);
   });
 
   describe('Create link widget', async () => {
@@ -75,17 +75,17 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await linkWidgetsPage.goToNewLinkWidgetPage(page);
 
       const pageTitle = await addLinkWidgetPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addLinkWidgetPage.pageTitle);
+      expect(pageTitle).to.contains(addLinkWidgetPage.pageTitle);
     });
 
     it('should create link widget', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFooterLInkWidget', baseContext);
 
       const textResult = await addLinkWidgetPage.addLinkWidget(page, LinkWidgets.demo_1);
-      await expect(textResult).to.equal(linkWidgetsPage.successfulCreationMessage);
+      expect(textResult).to.equal(linkWidgetsPage.successfulCreationMessage);
 
       const numberOfLinkWidget = await linkWidgetsPage.getNumberOfElementInGrid(page, Hooks.displayFooter.name);
-      await expect(numberOfLinkWidget).to.equal(numberOfLinkWidgetInFooter + 1);
+      expect(numberOfLinkWidget).to.equal(numberOfLinkWidgetInFooter + 1);
     });
   });
 
@@ -99,14 +99,14 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await foHomePage.changeLanguage(page, 'en');
 
       const pageTitle = await foHomePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foHomePage.pageTitle);
+      expect(pageTitle).to.contains(foHomePage.pageTitle);
     });
 
     it('should check link widget in the footer of home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLinkWidgetInFO', baseContext);
 
       const title = await foHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter + 1);
-      await expect(title).to.contains(LinkWidgets.demo_1.name);
+      expect(title).to.contains(LinkWidgets.demo_1.name);
 
       const linksTextContent = await foHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter + 1);
       await Promise.all([
@@ -124,7 +124,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await linkWidgetsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
+      expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
     });
   });
 
@@ -137,13 +137,13 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
         Hooks.displayFooter.name,
         numberOfLinkWidgetInFooter + 1,
       );
-      await expect(textResult).to.equal(linkWidgetsPage.successfulDeleteMessage);
+      expect(textResult).to.equal(linkWidgetsPage.successfulDeleteMessage);
 
       const numberOfLinkWidgetAfterDelete = await linkWidgetsPage.getNumberOfElementInGrid(
         page,
         Hooks.displayFooter.name,
       );
-      await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter);
+      expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter);
     });
   });
 });

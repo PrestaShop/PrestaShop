@@ -63,7 +63,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       );
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
     it('should go to shop Urls page', async function () {
@@ -72,14 +72,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await multiStorePage.goToShopURLPage(page, 1);
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
     it('should reset filter and get the number of shop urls', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       numberOfShopUrls = await shopUrlPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopUrls).to.be.above(0);
+      expect(numberOfShopUrls).to.be.above(0);
     });
   });
 
@@ -91,14 +91,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await shopUrlPage.goToAddNewUrl(page);
 
       const pageTitle = await addShopUrlPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
     });
 
     it('should create shop URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
       const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
-      await expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
+      expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
     });
   });
 
@@ -113,7 +113,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
 
       for (let i = 1; i <= numberOfShopUrlsAfterFilter; i++) {
         const textColumn = await shopUrlPage.getTextColumn(page, i, 'url');
-        await expect(textColumn).to.contains(ShopUrlData.name);
+        expect(textColumn).to.contains(ShopUrlData.name);
       }
     });
 
@@ -143,14 +143,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
           const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
 
           if (test.args.columnName === 'Enabled') {
-            await expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
+            expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
           } else {
-            await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
+            expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
           }
         }
 
         const carrierStatus = await shopUrlPage.getStatus(page, 1, test.args.column);
-        await expect(carrierStatus).to.be.equal(test.args.enabledValue);
+        expect(carrierStatus).to.be.equal(test.args.enabledValue);
       });
     });
 
@@ -158,7 +158,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
 
       const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
+      expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
     });
 
     it('should set the default URL as the main URL', async function () {
@@ -168,11 +168,11 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
 
       if (isActionPerformed) {
         const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
-        await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
+        expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
       }
 
       const carrierStatus = await shopUrlPage.getStatus(page, 1, '5');
-      await expect(carrierStatus).to.be.equal(true);
+      expect(carrierStatus).to.be.equal(true);
     });
   });
 
@@ -187,7 +187,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
 
       for (let i = 1; i <= numberOfShopUrlsAfterFilter; i++) {
         const textColumn = await shopUrlPage.getTextColumn(page, i, 'url');
-        await expect(textColumn).to.contains(ShopUrlData.name);
+        expect(textColumn).to.contains(ShopUrlData.name);
       }
     });
 
@@ -201,7 +201,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
         await shopUrlPage.bulkSetStatus(page, test.args.enable);
 
         const textResult = await shopUrlPage.getAlertSuccessBlockContent(page);
-        await expect(textResult, 'Status is not updated!').to.contains(shopUrlPage.successUpdateMessage);
+        expect(textResult, 'Status is not updated!').to.contains(shopUrlPage.successUpdateMessage);
       });
     });
 
@@ -209,7 +209,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkActions', baseContext);
 
       const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
+      expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
     });
   });
 
@@ -221,7 +221,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await shopUrlPage.filterTable(page, 'input', 'url', ShopUrlData.name);
 
       const textResult = await shopUrlPage.deleteShopURL(page, 1);
-      await expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
+      expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
     });
   });
 

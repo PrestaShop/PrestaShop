@@ -61,14 +61,14 @@ describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
       );
 
       const pageTitle = await authorizationServerPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
+      expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
       const noRecordsFoundText = await authorizationServerPage.getTextForEmptyTable(page);
-      await expect(noRecordsFoundText).to.contains('warning No records found');
+      expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
     it('should go to add New Authorized App page', async function () {
@@ -77,17 +77,17 @@ describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
       await authorizationServerPage.goToNewAuthorizedAppPage(page);
 
       const pageTitle = await addNewAuthorizedAppPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleCreate);
+      expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleCreate);
     });
 
     it('should create authorized app', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAuthorizedApp', baseContext);
 
       const textResult = await addNewAuthorizedAppPage.addAuthorizedApplication(page, createApplication);
-      await expect(textResult).to.equal(addNewAuthorizedAppPage.successfulCreationMessage);
+      expect(textResult).to.equal(addNewAuthorizedAppPage.successfulCreationMessage);
 
       const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
-      await expect(numElements).to.equal(1);
+      expect(numElements).to.equal(1);
     });
 
     it('should go to edit Authorized App page', async function () {
@@ -96,27 +96,27 @@ describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
       await authorizationServerPage.goToEditAuthorizedAppPage(page, 1);
 
       const pageTitle = await addNewAuthorizedAppPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleEdit(createApplication.appName));
+      expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleEdit(createApplication.appName));
     });
 
     it('should edit authorized app', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editAuthorizedApp', baseContext);
 
       const textResult = await addNewAuthorizedAppPage.addAuthorizedApplication(page, editApplication);
-      await expect(textResult).to.equal(addNewAuthorizedAppPage.successfulUpdateMessage);
+      expect(textResult).to.equal(addNewAuthorizedAppPage.successfulUpdateMessage);
 
       const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
-      await expect(numElements).to.equal(1);
+      expect(numElements).to.equal(1);
     });
 
     it('should delete authorized app', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAuthorizedApp', baseContext);
 
       const textResult = await authorizationServerPage.deleteAuthorizationApplication(page, 1);
-      await expect(textResult).to.equal(addNewAuthorizedAppPage.successfulDeleteMessage);
+      expect(textResult).to.equal(addNewAuthorizedAppPage.successfulDeleteMessage);
 
       const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
-      await expect(numElements).to.equal(0);
+      expect(numElements).to.equal(0);
     });
   });
 

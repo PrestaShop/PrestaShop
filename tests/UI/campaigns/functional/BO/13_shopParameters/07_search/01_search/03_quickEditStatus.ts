@@ -49,14 +49,14 @@ describe('BO - Shop Parameters - Search : Quick edit status', async () => {
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
   it('should reset all filters and get number of aliases in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfSearch = await searchPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfSearch).to.be.above(0);
+    expect(numberOfSearch).to.be.above(0);
   });
 
   it('should filter list by name', async function () {
@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Search : Quick edit status', async () => {
     await searchPage.filterTable(page, 'input', 'alias', Aliases.bloose.alias);
 
     const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
-    await expect(textAlias).to.contains(Aliases.bloose.alias);
+    expect(textAlias).to.contains(Aliases.bloose.alias);
   });
 
   const statuses = [
@@ -82,11 +82,11 @@ describe('BO - Shop Parameters - Search : Quick edit status', async () => {
 
       if (isActionPerformed) {
         const resultMessage = await searchPage.getAlertSuccessBlockContent(page);
-        await expect(resultMessage).to.contains(searchPage.successfulUpdateStatusMessage);
+        expect(resultMessage).to.contains(searchPage.successfulUpdateStatusMessage);
       }
 
       const currentStatus = await searchPage.getStatus(page, 1);
-      await expect(currentStatus).to.be.equal(aliasStatus.args.enable);
+      expect(currentStatus).to.be.equal(aliasStatus.args.enable);
     });
   });
 
@@ -94,6 +94,6 @@ describe('BO - Shop Parameters - Search : Quick edit status', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
     const numberOfSearchAfterReset = await searchPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfSearchAfterReset).to.be.equal(numberOfSearch);
+    expect(numberOfSearchAfterReset).to.be.equal(numberOfSearch);
   });
 });

@@ -49,14 +49,14 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
     await contactsPage.closeSfToolBar(page);
 
     const pageTitle = await contactsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(contactsPage.pageTitle);
+    expect(pageTitle).to.contains(contactsPage.pageTitle);
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfContacts).to.be.above(0);
+    expect(numberOfContacts).to.be.above(0);
   });
 
   // 1 : Filter Contacts with all inputs and selects in grid table
@@ -82,11 +82,11 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
         await contactsPage.filterContacts(page, test.args.filterBy, test.args.filterValue);
 
         const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
+        expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
 
         for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
           const textColumn = await contactsPage.getTextColumnFromTableContacts(page, i, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -94,7 +94,7 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfContactsAfterReset = await contactsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfContactsAfterReset).to.equal(numberOfContacts);
+        expect(numberOfContactsAfterReset).to.equal(numberOfContacts);
       });
     });
   });

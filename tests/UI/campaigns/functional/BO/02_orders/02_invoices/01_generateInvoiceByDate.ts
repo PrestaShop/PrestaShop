@@ -56,14 +56,14 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters and get number of orders', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it('should go to the first order page', async function () {
@@ -73,14 +73,14 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
   });
 
@@ -95,7 +95,7 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
@@ -105,7 +105,7 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       filePath = await invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
 
       const exist = await files.doesFileExist(filePath);
-      await expect(exist, 'File does not exist').to.be.true;
+      expect(exist, 'File does not exist').to.eq(true);
     });
 
     it('should check the error message when there is no invoice in the entered date', async function () {
@@ -114,7 +114,7 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       // Generate PDF
       const textMessage = await invoicesPage.generatePDFByDateAndFail(page, futureDate, futureDate);
 
-      await expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByDate);
+      expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });

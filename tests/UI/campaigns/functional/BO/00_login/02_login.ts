@@ -37,7 +37,7 @@ describe('BO - Login : Login in BO', async () => {
     await loginPage.goTo(page, global.BO.URL);
 
     const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(loginPage.pageTitle);
+    expect(pageTitle).to.contains(loginPage.pageTitle);
   });
 
   it('should enter an invalid credentials', async function () {
@@ -46,7 +46,7 @@ describe('BO - Login : Login in BO', async () => {
     await loginPage.failedLogin(page, employeeData.email, employeeData.password);
 
     const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    expect(loginError).to.contains(loginPage.loginErrorText);
   });
 
   it('should enter an invalid email', async function () {
@@ -55,7 +55,7 @@ describe('BO - Login : Login in BO', async () => {
     await loginPage.failedLogin(page, employeeData.email, Employees.DefaultEmployee.password);
 
     const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    expect(loginError).to.contains(loginPage.loginErrorText);
   });
 
   it('should enter an invalid password', async function () {
@@ -64,7 +64,7 @@ describe('BO - Login : Login in BO', async () => {
     await loginPage.failedLogin(page, Employees.DefaultEmployee.email, employeeData.password);
 
     const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    expect(loginError).to.contains(loginPage.loginErrorText);
   });
 
   it('should enter a valid credentials', async function () {
@@ -73,6 +73,6 @@ describe('BO - Login : Login in BO', async () => {
     await loginPage.successLogin(page, Employees.DefaultEmployee.email, Employees.DefaultEmployee.password);
 
     const pageTitle = await dashboardPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    expect(pageTitle).to.contains(dashboardPage.pageTitle);
   });
 });

@@ -55,7 +55,7 @@ describe('BO - Customer Service : Respond to message', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to contact us page', async function () {
@@ -65,7 +65,7 @@ describe('BO - Customer Service : Respond to message', async () => {
       await homePage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      expect(pageTitle).to.equal(contactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
@@ -74,7 +74,7 @@ describe('BO - Customer Service : Respond to message', async () => {
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
 
       const validationMessage = await contactUsPage.getAlertSuccess(page);
-      await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
   });
 
@@ -93,7 +93,7 @@ describe('BO - Customer Service : Respond to message', async () => {
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
     it('should go to view message page', async function () {
@@ -102,7 +102,7 @@ describe('BO - Customer Service : Respond to message', async () => {
       await customerServicePage.goToViewMessagePage(page);
 
       const pageTitle = await viewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewPage.pageTitle);
+      expect(pageTitle).to.contains(viewPage.pageTitle);
     });
 
     it('should add a response and check the thread', async function () {
@@ -111,14 +111,14 @@ describe('BO - Customer Service : Respond to message', async () => {
       await viewPage.addResponse(page, answerMessage);
 
       const messages = await viewPage.getThreadMessages(page);
-      await expect(messages).to.contains(answerMessage);
+      expect(messages).to.contains(answerMessage);
     });
 
     it('should check orders and messages timeline', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
 
       const text = await viewPage.getOrdersAndMessagesTimeline(page);
-      await expect(text).to.contains(answerMessage);
+      expect(text).to.contains(answerMessage);
     });
   });
 
@@ -133,14 +133,14 @@ describe('BO - Customer Service : Respond to message', async () => {
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
       const textResult = await customerServicePage.deleteMessage(page, 1);
-      await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
 });

@@ -89,7 +89,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await invoicesPage.closeSfToolBar(page);
 
       const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
 
     it('should change the invoice number, the invoice legal free text and the invoice footer text', async function () {
@@ -98,7 +98,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await invoicesPage.setInputOptions(page, invoiceData);
 
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
     });
   });
 
@@ -113,7 +113,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -122,14 +122,14 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatusUpdatedOptions', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should download the invoice', async function () {
@@ -137,11 +137,11 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
 
       // Download invoice
       filePath = await orderPageTabListBlock.downloadInvoice(page);
-      await expect(filePath).to.be.not.null;
+      expect(filePath).to.not.eq(null);
 
       if (filePath) {
         const exist = await files.doesFileExist(filePath);
-        await expect(exist).to.be.true;
+        expect(exist).to.eq(true);
       }
     });
 
@@ -158,7 +158,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
 
       // Check the existence of the Legal free text
       const exist = await files.isTextInPDF(filePath, invoiceData.legalFreeText);
-      await expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
+      expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.eq(true);
     });
 
     it('should check that the invoice contain the \'Footer text\'', async function () {
@@ -166,7 +166,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
 
       // Check the existence of the Footer text
       const exist = await files.isTextInPDF(filePath, invoiceData.footerText);
-      await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
+      expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.eq(true);
     });
   });
 
@@ -181,7 +181,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
 
     it('should change the Invoice number, legal free text and the footer text to default data', async function () {
@@ -190,7 +190,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await invoicesPage.setInputOptions(page, invoiceDefaultData);
 
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
     });
   });
 });

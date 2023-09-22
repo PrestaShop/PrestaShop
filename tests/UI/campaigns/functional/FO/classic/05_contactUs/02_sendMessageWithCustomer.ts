@@ -63,7 +63,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await foHomePage.goTo(page, global.FO.URL);
 
     const isHomePage = await foHomePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should go to login page', async function () {
@@ -72,7 +72,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await foHomePage.goToLoginPage(page);
 
     const pageTitle = await foLoginPage.getPageTitle(page);
-    await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
   });
 
   it('should sign in with default customer', async function () {
@@ -81,7 +81,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await foLoginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
   it('should go on contact us page', async function () {
@@ -91,7 +91,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await foLoginPage.goToFooterLink(page, 'Contact us');
 
     const pageTitle = await contactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    expect(pageTitle).to.equal(contactUsPage.pageTitle);
   });
 
   it('should send message to customer service', async function () {
@@ -100,7 +100,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
     const validationMessage = await contactUsPage.getAlertSuccess(page);
-    await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+    expect(validationMessage).to.equal(contactUsPage.validationMessage);
   });
 
   it('should login in BO', async function () {
@@ -117,41 +117,41 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     );
 
     const pageTitle = await customerServicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    expect(pageTitle).to.contains(customerServicePage.pageTitle);
   });
 
   it('should check customer name', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
     const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-    await expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
+    expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
   });
 
   it('should check customer email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
     const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-    await expect(email).to.contain(contactUsData.emailAddress);
+    expect(email).to.contain(contactUsData.emailAddress);
   });
 
   it('should check message type', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMessageType', baseContext);
 
     const subject = await customerServicePage.getTextColumn(page, 1, 'cl!id_contact');
-    await expect(subject).to.contain(contactUsData.subject);
+    expect(subject).to.contain(contactUsData.subject);
   });
 
   it('should check message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
     const message = await customerServicePage.getTextColumn(page, 1, 'message');
-    await expect(message).to.contain(contactUsData.message);
+    expect(message).to.contain(contactUsData.message);
   });
 
   it('should delete the message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
     const textResult = await customerServicePage.deleteMessage(page, 1);
-    await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+    expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
   });
 });

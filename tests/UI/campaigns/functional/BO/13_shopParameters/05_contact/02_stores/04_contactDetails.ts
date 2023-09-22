@@ -51,7 +51,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(contactPage.pageTitle);
+    expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
   it('should go to stores page', async function () {
@@ -60,14 +60,14 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
     await contactPage.goToStoresPage(page);
 
     const pageTitle = await storesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(storesPage.pageTitle);
+    expect(pageTitle).to.contains(storesPage.pageTitle);
   });
 
   it('should fill contact details form', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'configureContactDetails', baseContext);
 
     const textResult = await storesPage.setContactDetails(page, storesContactToCreate);
-    await expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
+    expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
   });
 
   it('should view my shop', async function () {
@@ -78,23 +78,23 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
     await foHomePage.changeLanguage(page, 'en');
 
     const isHomePage = await foHomePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should check contact details in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkContactDetailsInFO', baseContext);
 
     const storeInformation = await foHomePage.getStoreInformation(page);
-    await expect(storeInformation).to.contains(storesContactToCreate.name);
-    await expect(storeInformation).to.contains(storesContactToCreate.email);
-    await expect(storeInformation).to.not.contains(storesContactToCreate.registrationNumber);
-    await expect(storeInformation).to.contains(storesContactToCreate.address1);
-    await expect(storeInformation).to.contains(storesContactToCreate.address2);
-    await expect(storeInformation).to.contains(storesContactToCreate.postcode);
-    await expect(storeInformation).to.contains(storesContactToCreate.city);
-    await expect(storeInformation).to.contains(storesContactToCreate.country);
-    await expect(storeInformation).to.contains(storesContactToCreate.phone);
-    await expect(storeInformation).to.contains(storesContactToCreate.fax);
+    expect(storeInformation).to.contains(storesContactToCreate.name);
+    expect(storeInformation).to.contains(storesContactToCreate.email);
+    expect(storeInformation).to.not.contains(storesContactToCreate.registrationNumber);
+    expect(storeInformation).to.contains(storesContactToCreate.address1);
+    expect(storeInformation).to.contains(storesContactToCreate.address2);
+    expect(storeInformation).to.contains(storesContactToCreate.postcode);
+    expect(storeInformation).to.contains(storesContactToCreate.city);
+    expect(storeInformation).to.contains(storesContactToCreate.country);
+    expect(storeInformation).to.contains(storesContactToCreate.phone);
+    expect(storeInformation).to.contains(storesContactToCreate.fax);
   });
 
   it('should go back to BO', async function () {
@@ -104,13 +104,13 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
     page = await foHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await storesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(storesPage.pageTitle);
+    expect(pageTitle).to.contains(storesPage.pageTitle);
   });
 
   it('should back to default contact details information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultInformation', baseContext);
 
     const textResult = await storesPage.setContactDetails(page, Stores.contact);
-    await expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
+    expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
   });
 });

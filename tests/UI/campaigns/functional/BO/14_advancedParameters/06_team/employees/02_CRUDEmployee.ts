@@ -69,14 +69,14 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should reset all filters and get number of employees', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfEmployees = await employeesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfEmployees).to.be.above(0);
+    expect(numberOfEmployees).to.be.above(0);
   });
 
   // 1 : Create employee and go to BO to check sign in is OK
@@ -87,17 +87,17 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       await employeesPage.goToAddNewEmployeePage(page);
 
       const pageTitle = await addEmployeePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+      expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
     });
 
     it('should create employee and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
 
       const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
-      await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
+      expect(textResult).to.equal(employeesPage.successfulCreationMessage);
 
       const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
+      expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
     });
 
     it('should logout from BO', async function () {
@@ -110,7 +110,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should logout from BO', async function () {
@@ -135,7 +135,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         );
 
         const pageTitle = await employeesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(employeesPage.pageTitle);
+        expect(pageTitle).to.contains(employeesPage.pageTitle);
       });
 
       it('should filter list by email', async function () {
@@ -144,7 +144,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await employeesPage.filterEmployees(page, 'input', 'email', createEmployeeData.email);
 
         const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-        await expect(textEmail).to.contains(createEmployeeData.email);
+        expect(textEmail).to.contains(createEmployeeData.email);
       });
 
       it('should go to edit employee page', async function () {
@@ -153,7 +153,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await employeesPage.goToEditEmployeePage(page, 1);
 
         const pageTitle = await addEmployeePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
+        expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
           createEmployeeData.lastName, createEmployeeData.firstName));
       });
 
@@ -161,7 +161,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'updateEmployee', baseContext);
 
         const textResult = await addEmployeePage.createEditEmployee(page, firstEditEmployeeData);
-        await expect(textResult).to.equal(addEmployeePage.successfulUpdateMessage);
+        expect(textResult).to.equal(addEmployeePage.successfulUpdateMessage);
       });
 
       it('should click on cancel and verify the new employee\'s number', async function () {
@@ -170,7 +170,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await addEmployeePage.cancel(page);
 
         const numberOfEmployeesAfterUpdate = await employeesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfEmployeesAfterUpdate).to.be.equal(numberOfEmployees + 1);
+        expect(numberOfEmployeesAfterUpdate).to.be.equal(numberOfEmployees + 1);
       });
 
       it('should logout from BO', async function () {
@@ -183,7 +183,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await loginPage.successLogin(page, firstEditEmployeeData.email, firstEditEmployeeData.password);
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should logout from BO', async function () {
@@ -206,7 +206,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         );
 
         const pageTitle = await employeesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(employeesPage.pageTitle);
+        expect(pageTitle).to.contains(employeesPage.pageTitle);
       });
 
       it('should filter list by email', async function () {
@@ -215,7 +215,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await employeesPage.filterEmployees(page, 'input', 'email', firstEditEmployeeData.email);
 
         const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-        await expect(textEmail).to.contains(firstEditEmployeeData.email);
+        expect(textEmail).to.contains(firstEditEmployeeData.email);
       });
 
       it('should go to edit employee page', async function () {
@@ -224,7 +224,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await employeesPage.goToEditEmployeePage(page, 1);
 
         const pageTitle = await addEmployeePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
+        expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
           firstEditEmployeeData.lastName, firstEditEmployeeData.firstName));
       });
 
@@ -232,7 +232,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'disableEmployee', baseContext);
 
         const textResult = await addEmployeePage.createEditEmployee(page, secondEditEmployeeData);
-        await expect(textResult).to.equal(addEmployeePage.successfulUpdateMessage);
+        expect(textResult).to.equal(addEmployeePage.successfulUpdateMessage);
       });
 
       it('should logout from BO', async function () {
@@ -245,7 +245,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
         await loginPage.failedLogin(page, secondEditEmployeeData.email, secondEditEmployeeData.password);
 
         const loginError = await loginPage.getLoginError(page);
-        await expect(loginError).to.contains(loginPage.loginErrorText);
+        expect(loginError).to.contains(loginPage.loginErrorText);
       });
     });
   });
@@ -266,7 +266,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      expect(pageTitle).to.contains(employeesPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
@@ -275,21 +275,21 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       await employeesPage.filterEmployees(page, 'input', 'email', secondEditEmployeeData.email);
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-      await expect(textEmail).to.contains(secondEditEmployeeData.email);
+      expect(textEmail).to.contains(secondEditEmployeeData.email);
     });
 
     it('should delete employee', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
       const textResult = await employeesPage.deleteEmployee(page, 1);
-      await expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
+      expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of employees', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+      expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
   });
 });

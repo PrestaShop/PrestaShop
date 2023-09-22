@@ -80,7 +80,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       await deliverySlipsPage.closeSfToolBar(page);
 
       const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
 
     it('should change the Delivery slip number', async function () {
@@ -89,7 +89,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       await deliverySlipsPage.changeNumber(page, deliverySlipData.number);
 
       const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
-      await expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
     });
   });
 
@@ -104,7 +104,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -113,14 +113,14 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check that the delivery slip file name contain the \'Delivery slip number\'', async function () {

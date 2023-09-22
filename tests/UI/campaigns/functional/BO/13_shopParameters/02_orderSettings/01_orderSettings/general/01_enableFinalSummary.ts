@@ -57,7 +57,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
     await orderSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -70,7 +70,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}FinalSummary`, baseContext);
 
       const result = await orderSettingsPage.setFinalSummaryStatus(page, test.args.exist);
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -82,7 +82,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should check the final summary after checkout', async function () {
@@ -106,15 +106,15 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Check the final summary existence in payment step
       const isVisible = await orderConfirmationPage.isFinalSummaryVisible(page);
-      await expect(isVisible).to.be.equal(test.args.exist);
+      expect(isVisible).to.be.equal(test.args.exist);
     });
 
     it('should go back to BO', async function () {
@@ -123,7 +123,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
   });
 });

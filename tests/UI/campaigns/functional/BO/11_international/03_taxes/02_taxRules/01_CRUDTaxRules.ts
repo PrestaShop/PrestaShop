@@ -54,7 +54,7 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       );
 
       const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
+      expect(pageTitle).to.contains(taxesPage.pageTitle);
     });
 
     it('should go to \'Tax Rules\' page', async function () {
@@ -63,14 +63,14 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       await taxesPage.goToTaxRulesPage(page);
 
       const pageTitle = await taxRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+      expect(pageTitle).to.contains(taxRulesPage.pageTitle);
     });
 
     it('should reset all filters and get number of Tax rules in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
       numberOfTaxRules = await taxRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfTaxRules).to.be.above(0);
+      expect(numberOfTaxRules).to.be.above(0);
     });
 
     it('should go to Add new tax rules group page', async function () {
@@ -79,14 +79,14 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       await taxRulesPage.goToAddNewTaxRulesGroupPage(page);
 
       const pageTitle = await addTaxRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
     });
 
     it('should create new tax rule group', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createTaxRuleGroup', baseContext);
 
       const textResult = await addTaxRulesPage.createEditTaxRulesGroup(page, taxRuleDataToCreate);
-      await expect(textResult).to.contains(addTaxRulesPage.successfulCreationMessage);
+      expect(textResult).to.contains(addTaxRulesPage.successfulCreationMessage);
     });
   });
 
@@ -98,7 +98,7 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       await taxesPage.goToTaxRulesPage(page);
 
       const pageTitle = await taxRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+      expect(pageTitle).to.contains(taxRulesPage.pageTitle);
     });
 
     it('should filter list by tax name', async function () {
@@ -112,7 +112,7 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       );
 
       const textName = await taxRulesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(taxRuleDataToCreate.name);
+      expect(textName).to.contains(taxRuleDataToCreate.name);
     });
 
     it('should go to edit tax Rule page', async function () {
@@ -121,14 +121,14 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       await taxRulesPage.goToEditTaxRulePage(page, 1);
 
       const pageTitle = await addTaxRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addTaxRulesPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addTaxRulesPage.pageTitleEdit);
     });
 
     it('should update tax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateTaxRule', baseContext);
 
       const textResult = await addTaxRulesPage.createEditTaxRulesGroup(page, taxRuleDataToEdit);
-      await expect(textResult).to.contains(addTaxRulesPage.successfulUpdateMessage);
+      expect(textResult).to.contains(addTaxRulesPage.successfulUpdateMessage);
     });
 
     it('should go to \'Tax Rules\' page', async function () {
@@ -137,14 +137,14 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       await taxesPage.goToTaxRulesPage(page);
 
       const pageTitle = await taxRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+      expect(pageTitle).to.contains(taxRulesPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterUpdate', baseContext);
 
       const numberOfTaxRulesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfTaxRulesAfterReset).to.equal(numberOfTaxRules + 1);
+      expect(numberOfTaxRulesAfterReset).to.equal(numberOfTaxRules + 1);
     });
   });
 
@@ -161,17 +161,17 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
       );
 
       const textName = await taxRulesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(taxRuleDataToEdit.name);
+      expect(textName).to.contains(taxRuleDataToEdit.name);
     });
 
     it('should delete Tax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteTaxRule', baseContext);
 
       const textResult = await taxRulesPage.deleteTaxRule(page, 1);
-      await expect(textResult).to.contains(taxRulesPage.successfulDeleteMessage);
+      expect(textResult).to.contains(taxRulesPage.successfulDeleteMessage);
 
       const numberOfTaxRulesAfterDelete = await taxRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfTaxRulesAfterDelete).to.be.equal(numberOfTaxRules);
+      expect(numberOfTaxRulesAfterDelete).to.be.equal(numberOfTaxRules);
     });
   });
 });

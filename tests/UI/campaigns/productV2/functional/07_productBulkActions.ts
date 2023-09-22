@@ -64,21 +64,21 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset filter and get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
 
       numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Standard product\'', async function () {
@@ -87,7 +87,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await productsPage.selectProductType(page, firstProductData.type);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should go to new product page', async function () {
@@ -96,7 +96,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should create standard product', async function () {
@@ -105,7 +105,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await createProductsPage.closeSfToolBar(page);
 
       const createProductMessage = await createProductsPage.setProduct(page, firstProductData);
-      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
 
@@ -114,7 +114,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton2', baseContext);
 
       const isModalVisible = await createProductsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Standard product\'', async function () {
@@ -123,7 +123,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await createProductsPage.chooseProductType(page, secondProductData.type);
 
       const isIframeVisible = await createProductsPage.isChooseProductIframeVisible(page);
-      await expect(isIframeVisible).to.be.false;
+      expect(isIframeVisible).to.eq(false);
     });
 
     it('should create product', async function () {
@@ -132,7 +132,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await createProductsPage.closeSfToolBar(page);
 
       const createProductMessage = await createProductsPage.setProduct(page, secondProductData);
-      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
 
@@ -143,7 +143,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await createProductsPage.goToCatalogPage(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should filter list by \'Name\' and check result', async function () {
@@ -152,10 +152,10 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       await productsPage.filterProducts(page, 'product_name', 'myFavoriteProduct', 'input');
 
       const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProductsAfterFilter).to.equal(2);
+      expect(numberOfProductsAfterFilter).to.equal(2);
 
       const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
-      await expect(textColumn).to.contains('myFavoriteProduct');
+      expect(textColumn).to.contains('myFavoriteProduct');
     });
   });
 
@@ -194,21 +194,21 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
         await testContext.addContextItem(this, 'testIdentifier', `selectProducts${index}`, baseContext);
 
         const isBulkDeleteButtonEnabled = await productsPage.bulkSelectProducts(page);
-        await expect(isBulkDeleteButtonEnabled).to.be.true;
+        expect(isBulkDeleteButtonEnabled).to.eq(true);
       });
 
       it('should click on bulk actions button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnBulkActionsButton${index}`, baseContext);
 
         const textMessage = await productsPage.clickOnBulkActionsProducts(page, test.args.action);
-        await expect(textMessage).to.equal(`${test.args.message} ${test.args.productsNumber} products`);
+        expect(textMessage).to.equal(`${test.args.message} ${test.args.productsNumber} products`);
       });
 
       it(`should bulk ${test.args.action} products`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}Product`, baseContext);
 
         const textMessage = await productsPage.bulkActionsProduct(page, test.args.action);
-        await expect(textMessage).to.equal(
+        expect(textMessage).to.equal(
           `${test.args.message} ${test.args.productsNumber} / ${test.args.productsNumber} products`);
       });
 
@@ -216,7 +216,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
         await testContext.addContextItem(this, 'testIdentifier', `close${test.args.action}ProgressModal`, baseContext);
 
         const isModalVisible = await productsPage.closeBulkActionsProgressModal(page, test.args.action);
-        await expect(isModalVisible).to.be.true;
+        expect(isModalVisible).to.eq(true);
       });
 
       if (index === 3) {
@@ -224,7 +224,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
           await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProduct', baseContext);
 
           const numberOfProductAfterBulkActions = await productsPage.resetAndGetNumberOfLines(page);
-          await expect(numberOfProductAfterBulkActions).to.be.equal(numberOfProducts);
+          expect(numberOfProductAfterBulkActions).to.be.equal(numberOfProducts);
         });
       }
     });

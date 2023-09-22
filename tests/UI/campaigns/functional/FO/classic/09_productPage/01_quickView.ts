@@ -124,7 +124,7 @@ describe('FO - product page : Product quick view', async () => {
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   // 1 - Add to cart from quick view
@@ -164,7 +164,7 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(cartPage.pageTitle);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
 
       await cartPage.deleteProduct(page, 1);
 
@@ -203,7 +203,7 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(cartPage.pageTitle);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
 
       await cartPage.deleteProduct(page, 1);
 
@@ -255,7 +255,7 @@ describe('FO - product page : Product quick view', async () => {
         }
 
         const url = await homePage.getSocialSharingLink(page, test.args.name);
-        await expect(url).to.contain(test.result.url);
+        expect(url).to.contain(test.result.url);
       });
     });
   });
@@ -294,7 +294,7 @@ describe('FO - product page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
 
       const isQuickViewModalClosed = await homePage.closeQuickViewModal(page);
-      await expect(isQuickViewModalClosed).to.be.true;
+      expect(isQuickViewModalClosed).to.eq(true);
     });
   });
 
@@ -306,7 +306,7 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.quickViewProduct(page, 1);
 
       const isModalVisible = await homePage.isQuickViewProductModalVisible(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should change combination on popup and proceed to checkout', async function () {
@@ -316,14 +316,14 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(cartPage.pageTitle);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should check the products number in the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
 
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(attributesQty);
+      expect(notificationsNumber).to.be.equal(attributesQty);
     });
 
     it('should check product details', async function () {
@@ -362,7 +362,7 @@ describe('FO - product page : Product quick view', async () => {
       await cartPage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should select color \'Ẁhite\' and be on product page', async function () {
@@ -371,7 +371,7 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.selectProductColor(page, 1, 'White');
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should get product image Url and go back to home page', async function () {
@@ -381,7 +381,7 @@ describe('FO - product page : Product quick view', async () => {
 
       await productPage.goToHomePage(page);
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should select color \'Black\' and be on product page', async function () {
@@ -390,14 +390,14 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.selectProductColor(page, 1, 'Black');
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should product image be different from the ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getProductImage2', baseContext);
 
       imageSecondColor = await productPage.getProductImageUrls(page);
-      await expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
+      expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
     });
   });
 
@@ -430,7 +430,7 @@ describe('FO - product page : Product quick view', async () => {
         await boProductsPage.closeSfToolBar(page);
 
         const pageTitle = await boProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(boProductsPage.pageTitle);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should create Product', async function () {
@@ -439,7 +439,7 @@ describe('FO - product page : Product quick view', async () => {
         await boProductsPage.goToAddProductPage(page);
 
         const createProductMessage = await boAddProductPage.createEditBasicProduct(page, productData);
-        await expect(createProductMessage).to.equal(boAddProductPage.settingUpdatedMessage);
+        expect(createProductMessage).to.equal(boAddProductPage.settingUpdatedMessage);
       });
 
       it('should logout from BO', async function () {
@@ -471,7 +471,7 @@ describe('FO - product page : Product quick view', async () => {
         const coverSecondImageURL = await searchResultsPage.selectThumbImage(page, 2);
         const coverFirstImageURL = await searchResultsPage.selectThumbImage(page, 1);
 
-        await expect(coverSecondImageURL).to.not.equal(coverFirstImageURL);
+        expect(coverSecondImageURL).to.not.equal(coverFirstImageURL);
       });
     });
 
@@ -496,7 +496,7 @@ describe('FO - product page : Product quick view', async () => {
         await boProductsPage.closeSfToolBar(page);
 
         const pageTitle = await boProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(boProductsPage.pageTitle);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should delete product', async function () {
@@ -504,7 +504,7 @@ describe('FO - product page : Product quick view', async () => {
 
         await boProductsPage.resetFilter(page);
         const testResult = await boProductsPage.deleteProduct(page, productData);
-        await expect(testResult).to.equal(boProductsPage.productDeletedSuccessfulMessage);
+        expect(testResult).to.equal(boProductsPage.productDeletedSuccessfulMessage);
       });
 
       it('should reset all filters', async function () {
@@ -512,7 +512,7 @@ describe('FO - product page : Product quick view', async () => {
 
         await boProductsPage.resetFilterCategory(page);
         const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProducts).to.be.above(0);
+        expect(numberOfProducts).to.be.above(0);
       });
 
       after(async () => {

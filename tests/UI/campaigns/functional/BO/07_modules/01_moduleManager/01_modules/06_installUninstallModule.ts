@@ -46,28 +46,28 @@ describe('BO - Modules - Module Manager : Install/Uninstall module', async () =>
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should search the module ${Modules.psEmailSubscription.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
-    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+    expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
   it(`should uninstall the module '${Modules.psEmailSubscription.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'uninstall');
-    await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psEmailSubscription.tag));
+    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psEmailSubscription.tag));
   });
 
   it(`should install the module '${Modules.psEmailSubscription.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'install');
-    await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psEmailSubscription.tag));
+    expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psEmailSubscription.tag));
   });
 
   it('should show all modules', async function () {
@@ -76,6 +76,6 @@ describe('BO - Modules - Module Manager : Install/Uninstall module', async () =>
     await moduleManagerPage.filterByStatus(page, 'all-Modules');
 
     const blocksNumber = await moduleManagerPage.getNumberOfBlocks(page);
-    await expect(blocksNumber).greaterThan(2);
+    expect(blocksNumber).greaterThan(2);
   });
 });

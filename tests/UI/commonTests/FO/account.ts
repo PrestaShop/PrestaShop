@@ -44,7 +44,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to create account page', async function () {
@@ -54,7 +54,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await foLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+      expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
@@ -63,7 +63,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await foCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
+      expect(isCustomerConnected).to.eq(true);
     });
 
     it('should sign out from FO', async function () {
@@ -73,7 +73,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
       await homePage.logout(page);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 }
@@ -103,7 +103,7 @@ function createAddressTest(
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -112,7 +112,7 @@ function createAddressTest(
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -120,7 +120,7 @@ function createAddressTest(
 
       await foLoginPage.customerLogin(page, customerLoginData);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to \'My account\' page', async function () {
@@ -129,7 +129,7 @@ function createAddressTest(
       await homePage.goToMyAccountPage(page);
 
       const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go to \'Addresses\' page', async function () {
@@ -138,7 +138,7 @@ function createAddressTest(
       await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.include(addressesPage.addressPageTitle);
+      expect(pageHeaderTitle).to.include(addressesPage.addressPageTitle);
     });
 
     it('should go to create address page', async function () {
@@ -147,14 +147,14 @@ function createAddressTest(
       await addressesPage.openNewAddressForm(page);
 
       const pageHeaderTitle = await addAddressPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(addAddressPage.creationFormTitle);
+      expect(pageHeaderTitle).to.equal(addAddressPage.creationFormTitle);
     });
 
     it('should create address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
       const textResult = await addAddressPage.setAddress(page, addressData);
-      await expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
+      expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
     });
 
     it('should sign out from FO', async function () {
@@ -164,7 +164,7 @@ function createAddressTest(
       await homePage.logout(page);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 }

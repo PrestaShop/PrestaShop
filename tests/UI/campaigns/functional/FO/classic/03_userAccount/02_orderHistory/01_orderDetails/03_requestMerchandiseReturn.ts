@@ -95,7 +95,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -105,21 +105,21 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.delivered.name);
-      await expect(result).to.equal(OrderStatuses.delivered.name);
+      expect(result).to.equal(OrderStatuses.delivered.name);
     });
 
     it('should get the order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
       orderReference = await orderPageTabListBlock.getOrderReference(page);
-      await expect(orderReference).not.null;
+      expect(orderReference).to.not.eq(null);
     });
   });
 
@@ -130,7 +130,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await foHomePage.goToFo(page);
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -139,7 +139,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await foHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
@@ -148,7 +148,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to my account page', async function () {
@@ -157,7 +157,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await foHomePage.goToMyAccountPage(page);
 
       const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go to order history page', async function () {
@@ -166,7 +166,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should go to order details page of the first order in list', async function () {
@@ -175,14 +175,14 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await orderHistoryPage.goToDetailsPage(page);
 
       const pageTitle = await orderDetailsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+      expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
     });
 
     it('should check the existence of order return form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
       const result = await orderDetailsPage.isOrderReturnFormVisible(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should create a merchandise return and check if merchandise return page is displayed', async function () {
@@ -191,7 +191,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await orderDetailsPage.requestMerchandiseReturn(page, 'Test merchandise returns');
 
       const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
     });
 
     it('should check the merchandise returns table', async function () {

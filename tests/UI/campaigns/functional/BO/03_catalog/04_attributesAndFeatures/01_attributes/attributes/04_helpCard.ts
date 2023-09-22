@@ -48,27 +48,27 @@ describe('BO - Catalog - Attributes & Features : Help card on attributes page', 
     await attributesPage.closeSfToolBar(page);
 
     const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
   it('should open the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await attributesPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    expect(isHelpSidebarVisible).to.eq(true);
   });
 
   it('should check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentLanguage', baseContext);
 
     const documentURL = await attributesPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarClosed = await attributesPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarClosed).to.be.true;
+    expect(isHelpSidebarClosed).to.eq(true);
   });
 });

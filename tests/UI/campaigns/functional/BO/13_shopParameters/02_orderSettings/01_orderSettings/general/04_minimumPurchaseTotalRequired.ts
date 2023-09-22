@@ -58,7 +58,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
     await orderSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -71,7 +71,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       await testContext.addContextItem(this, 'testIdentifier', `updateMinimumPurchaseTotal_${index}`, baseContext);
 
       const result = await orderSettingsPage.setMinimumPurchaseRequiredTotal(page, test.args.value);
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -84,7 +84,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should verify the minimum purchase total value', async function () {
@@ -103,15 +103,15 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
 
       // Check proceed to checkout button enable/disable
       const isDisabled = await cartPage.isProceedToCheckoutButtonDisabled(page);
-      await expect(isDisabled).to.equal(test.args.disable);
+      expect(isDisabled).to.equal(test.args.disable);
 
       // Check alert message
       const isAlertVisible = await cartPage.isAlertWarningForMinimumPurchaseVisible(page);
-      await expect(isAlertVisible).to.equal(test.args.alertMessage);
+      expect(isAlertVisible).to.equal(test.args.alertMessage);
 
       if (isAlertVisible) {
         const alertText = await cartPage.getAlertWarning(page);
-        await expect(alertText).to.contains(alertMessage);
+        expect(alertText).to.contains(alertMessage);
       }
     });
 
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       page = await cartPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
   });
 });

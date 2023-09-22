@@ -46,14 +46,14 @@ describe('BO - Shop Parameters - Contact : Sort Contacts list', async () => {
     await contactsPage.closeSfToolBar(page);
 
     const pageTitle = await contactsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(contactsPage.pageTitle);
+    expect(pageTitle).to.contains(contactsPage.pageTitle);
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfContacts).to.be.above(0);
+    expect(numberOfContacts).to.be.above(0);
   });
 
   // Start sorting contacts
@@ -95,17 +95,17 @@ describe('BO - Shop Parameters - Contact : Sort Contacts list', async () => {
         const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          expect(sortedTableFloat).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
         }
       } else {
         const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          expect(sortedTable).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       }
     });

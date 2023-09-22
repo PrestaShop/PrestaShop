@@ -46,7 +46,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -55,7 +55,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -64,7 +64,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
   });
 
@@ -84,7 +84,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
       await preferencesPage.closeSfToolBar(page);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
 
     [
@@ -107,7 +107,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
           test.args.paymentModule,
           test.args.exist,
         );
-        await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
+        expect(result).to.contains(preferencesPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
@@ -119,7 +119,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await homePage.changeLanguage(page, 'en');
 
         const pageTitle = await homePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(homePage.pageTitle);
+        expect(pageTitle).to.contains(homePage.pageTitle);
       });
 
       it('should add the first product to the cart and proceed to checkout', async function () {
@@ -133,7 +133,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await cartPage.clickOnProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-        await expect(isCheckoutPage).to.be.true;
+        expect(isCheckoutPage).to.eq(true);
       });
 
       it('should continue to delivery step', async function () {
@@ -141,7 +141,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should continue to payment step and check the existence of payment method', async function () {
@@ -149,11 +149,11 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
         // Payment step - Check payment method
         const isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModule);
-        await expect(isVisible).to.be.equal(test.args.exist);
+        expect(isVisible).to.be.equal(test.args.exist);
       });
 
       it('should go back to BO', async function () {
@@ -163,7 +163,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         page = await homePage.closePage(browserContext, page, 0);
 
         const pageTitle = await preferencesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+        expect(pageTitle).to.contains(preferencesPage.pageTitle);
       });
     });
   });

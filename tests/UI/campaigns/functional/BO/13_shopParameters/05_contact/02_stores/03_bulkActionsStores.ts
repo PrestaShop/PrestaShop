@@ -54,7 +54,7 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(contactPage.pageTitle);
+    expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
   it('should go to \'Stores\' page', async function () {
@@ -63,14 +63,14 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
     await contactPage.goToStoresPage(page);
 
     const pageTitle = await storesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(storesPage.pageTitle);
+    expect(pageTitle).to.contains(storesPage.pageTitle);
   });
 
   it('should reset all filters and get number of stores in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfStores).to.be.above(0);
+    expect(numberOfStores).to.be.above(0);
   });
 
   describe('Create 2 stores in BO', async () => {
@@ -81,17 +81,17 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
         await storesPage.goToNewStorePage(page);
 
         const pageTitle = await addStorePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addStorePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addStorePage.pageTitleCreate);
       });
 
       it('should create store and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateStore${index + 1}`, baseContext);
 
         const textResult = await addStorePage.createEditStore(page, storeToCreate);
-        await expect(textResult).to.contains(storesPage.successfulCreationMessage);
+        expect(textResult).to.contains(storesPage.successfulCreationMessage);
 
         const numberOfStoresAfterCreation = await storesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfStoresAfterCreation).to.be.equal(numberOfStores + index + 1);
+        expect(numberOfStoresAfterCreation).to.be.equal(numberOfStores + index + 1);
       });
     });
   });
@@ -108,11 +108,11 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
       );
 
       const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
+      expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
       for (let i = 1; i <= numberOfStoresAfterFilter; i++) {
         const textColumn = await storesPage.getTextColumn(page, i, 'sl!name');
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -131,7 +131,7 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
 
         for (let row = 1; row <= numberOfStoresAfterBulkUpdateStatus; row++) {
           const storeStatus = await storesPage.getStoreStatus(page, row);
-          await expect(storeStatus).to.equal(test.args.statusWanted);
+          expect(storeStatus).to.equal(test.args.statusWanted);
         }
       });
     });
@@ -140,14 +140,14 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStores', baseContext);
 
       const deleteTextResult = await storesPage.bulkDeleteStores(page);
-      await expect(deleteTextResult).to.be.contains(storesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(storesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfStoresAfterReset).to.be.equal(numberOfStores);
+      expect(numberOfStoresAfterReset).to.be.equal(numberOfStores);
     });
   });
 });

@@ -61,14 +61,14 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(employeesPage.pageTitle);
+    expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should reset all filters and get number of employees', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfEmployees = await employeesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfEmployees).to.be.above(0);
+    expect(numberOfEmployees).to.be.above(0);
   });
 
   // 1 : Try to Enable/Disable the default employee with bulk actions
@@ -79,7 +79,7 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
       await employeesPage.filterEmployees(page, 'input', 'firstname', Employees.DefaultEmployee.firstName);
 
       const textColumn = await employeesPage.getTextColumnFromTable(page, 1, 'firstname');
-      await expect(textColumn).to.contains(Employees.DefaultEmployee.firstName);
+      expect(textColumn).to.contains(Employees.DefaultEmployee.firstName);
     });
 
     const statuses = [
@@ -91,7 +91,7 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
         await testContext.addContextItem(this, 'testIdentifier', `${employeeStatus.args.status}DefaultEmployee`, baseContext);
 
         const disableTextResult = await employeesPage.bulkSetStatus(page, employeeStatus.args.enable, false);
-        await expect(disableTextResult).to.be.equal(employeesPage.errorDeleteOwnAccountMessage);
+        expect(disableTextResult).to.be.equal(employeesPage.errorDeleteOwnAccountMessage);
       });
     });
   });
@@ -102,7 +102,7 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteDefaultEmployee', baseContext);
 
       const deleteTextResult = await employeesPage.deleteBulkActions(page, false);
-      await expect(deleteTextResult).to.be.equal(employeesPage.errorDeleteOwnAccountMessage);
+      expect(deleteTextResult).to.be.equal(employeesPage.errorDeleteOwnAccountMessage);
     });
   });
 
@@ -117,14 +117,14 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
         await employeesPage.goToAddNewEmployeePage(page);
 
         const pageTitle = await addEmployeePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
       });
 
       it('should create employee', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createEmployee${index + 1}`, baseContext);
 
         const textResult = await addEmployeePage.createEditEmployee(page, employeeToCreate);
-        await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
+        expect(textResult).to.equal(employeesPage.successfulCreationMessage);
       });
     });
   });
@@ -137,11 +137,11 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
       await employeesPage.filterEmployees(page, 'input', 'firstname', firstEmployeeData.firstName);
 
       const numberOfEmployeesAfterFilter = await employeesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees + 2);
+      expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees + 2);
 
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
         const textColumn = await employeesPage.getTextColumnFromTable(page, i, 'firstname');
-        await expect(textColumn).to.contains(firstEmployeeData.firstName);
+        expect(textColumn).to.contains(firstEmployeeData.firstName);
       }
     });
 
@@ -158,13 +158,13 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
           page,
           employeeStatus.args.enable,
         );
-        await expect(disableTextResult).to.be.equal(employeesPage.successfulUpdateStatusMessage);
+        expect(disableTextResult).to.be.equal(employeesPage.successfulUpdateStatusMessage);
 
         const numberOfEmployeesInGrid = await employeesPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
           const textColumn = await employeesPage.getStatus(page, i);
-          await expect(textColumn).to.equal(employeeStatus.args.enable);
+          expect(textColumn).to.equal(employeeStatus.args.enable);
         }
       });
     });
@@ -176,14 +176,14 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
 
       const deleteTextResult = await employeesPage.deleteBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(employeesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(employeesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+      expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
   });
 });

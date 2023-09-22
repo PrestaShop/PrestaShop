@@ -49,7 +49,7 @@ function createCustomerTest(customerData: CustomerData, baseContext: string = 'c
       await customersPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it('should go to add new customer page', async function () {
@@ -58,14 +58,14 @@ function createCustomerTest(customerData: CustomerData, baseContext: string = 'c
       await customersPage.goToAddNewCustomerPage(page);
 
       const pageTitle = await addCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
     });
 
     it('should create customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
       const textResult = await addCustomerPage.createEditCustomer(page, customerData);
-      await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+      expect(textResult).to.equal(customersPage.successfulCreationMessage);
     });
   });
 }
@@ -99,7 +99,7 @@ function createCustomerB2BTest(customerData: CustomerData, baseContext: string =
       await customersPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it('should go to add new customer page', async function () {
@@ -108,14 +108,14 @@ function createCustomerB2BTest(customerData: CustomerData, baseContext: string =
       await customersPage.goToAddNewCustomerPage(page);
 
       const pageTitle = await addCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
     });
 
     it('should create B2B customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
       const textResult = await addCustomerPage.createEditB2BCustomer(page, customerData);
-      await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+      expect(textResult).to.equal(customersPage.successfulCreationMessage);
     });
   });
 }
@@ -149,14 +149,14 @@ function deleteCustomerTest(customerData: CustomerData, baseContext: string = 'c
       await customersPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCustomerFilterFirst', baseContext);
 
       numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomers).to.be.above(0);
+      expect(numberOfCustomers).to.be.above(0);
     });
 
     it('should filter list by customer email', async function () {
@@ -165,21 +165,21 @@ function deleteCustomerTest(customerData: CustomerData, baseContext: string = 'c
       await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
 
       const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textResult).to.contains(customerData.email);
+      expect(textResult).to.contains(customerData.email);
     });
 
     it('should delete customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomer(page, 1);
-      await expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
+      expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteCustomer', baseContext);
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.above(0);
+      expect(numberOfCustomersAfterReset).to.be.above(0);
     });
   });
 }
@@ -218,14 +218,14 @@ function bulkDeleteCustomersTest(
       await customersPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCustomerFilterFirst', baseContext);
 
       numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomers).to.be.above(0);
+      expect(numberOfCustomers).to.be.above(0);
     });
 
     it(`should filter list by '${filterBy}'`, async function () {
@@ -234,21 +234,21 @@ function bulkDeleteCustomersTest(
       await customersPage.filterCustomers(page, 'input', filterBy, value);
 
       const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, filterBy);
-      await expect(textResult).to.contains(value);
+      expect(textResult).to.contains(value);
     });
 
     it('should delete customers with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(customersPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(customersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.below(numberOfCustomers);
+      expect(numberOfCustomersAfterReset).to.be.below(numberOfCustomers);
     });
   });
 }

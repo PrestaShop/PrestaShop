@@ -87,7 +87,7 @@ describe('WS - Stores : CRUD', async () => {
         await webservicePage.closeSfToolBar(page);
 
         const pageTitle = await webservicePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(webservicePage.pageTitle);
+        expect(pageTitle).to.contains(webservicePage.pageTitle);
       });
 
       it('should filter list by key description', async function () {
@@ -102,11 +102,11 @@ describe('WS - Stores : CRUD', async () => {
         );
 
         const description = await webservicePage.getTextColumnFromTable(page, 1, 'description');
-        await expect(description).to.contains(wsKeyDescription);
+        expect(description).to.contains(wsKeyDescription);
 
         wsKey = await webservicePage.getTextColumnFromTable(page, 1, 'key');
         authorization = `Basic ${Buffer.from(`${wsKey}:`).toString('base64')}`;
-        await expect(wsKey).to.be.not.empty;
+        expect(wsKey).to.not.have.lengthOf(0);
       });
     });
 
@@ -121,7 +121,7 @@ describe('WS - Stores : CRUD', async () => {
           apiContext,
           authorization,
         );
-        await expect(apiResponse.status()).to.eq(200);
+        expect(apiResponse.status()).to.eq(200);
       });
 
       it('should check that the blank XML can be parsed', async function () {
@@ -130,7 +130,7 @@ describe('WS - Stores : CRUD', async () => {
         xmlResponse = await apiResponse.text();
 
         const isValidXML = xml.isValid(xmlResponse);
-        await expect(isValidXML).to.be.true;
+        expect(isValidXML).to.eq(true);
       });
 
       it('should check response root node', async function () {
@@ -162,7 +162,7 @@ describe('WS - Stores : CRUD', async () => {
 
           // Empty value
           const isEmptyNode: boolean = xml.isEmpty(node);
-          await expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.be.true;
+          expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
         }
       });
     });
@@ -178,7 +178,7 @@ describe('WS - Stores : CRUD', async () => {
           apiContext,
           authorization,
         );
-        await expect(apiResponse.status()).to.eq(200);
+        expect(apiResponse.status()).to.eq(200);
       });
 
       it('should check that the synopsis XML can be parsed', async function () {
@@ -187,7 +187,7 @@ describe('WS - Stores : CRUD', async () => {
         xmlResponse = await apiResponse.text();
 
         const isValidXML = xml.isValid(xmlResponse);
-        await expect(isValidXML).to.be.true;
+        expect(isValidXML).to.eq(true);
       });
 
       it('should check response root node', async function () {
@@ -224,7 +224,7 @@ describe('WS - Stores : CRUD', async () => {
 
           // Empty value
           const isEmptyNode = xml.isEmpty(node);
-          await expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.be.true;
+          expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
         }
       });
     });
@@ -242,7 +242,7 @@ describe('WS - Stores : CRUD', async () => {
           authorization,
         );
 
-        await expect(apiResponse.status()).to.eq(200);
+        expect(apiResponse.status()).to.eq(200);
       });
 
       it('should check response root node', async function () {
@@ -304,7 +304,7 @@ describe('WS - Stores : CRUD', async () => {
             xmlCreate,
           );
 
-          await expect(apiResponse.status()).to.eq(201);
+          expect(apiResponse.status()).to.eq(201);
         });
 
         it('should check response root node', async function () {
@@ -344,7 +344,7 @@ describe('WS - Stores : CRUD', async () => {
             authorization,
             storeNodeID,
           );
-          await expect(apiResponse.status()).to.eq(200);
+          expect(apiResponse.status()).to.eq(200);
         });
 
         it('should check response root node', async function () {
@@ -428,7 +428,7 @@ describe('WS - Stores : CRUD', async () => {
           await contactPage.closeSfToolBar(page);
 
           const pageTitle = await contactPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(contactPage.pageTitle);
+          expect(pageTitle).to.contains(contactPage.pageTitle);
         });
 
         it('should go to \'Stores\' page', async function () {
@@ -437,7 +437,7 @@ describe('WS - Stores : CRUD', async () => {
           await contactPage.goToStoresPage(page);
 
           const pageTitle = await storesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(storesPage.pageTitle);
+          expect(pageTitle).to.contains(storesPage.pageTitle);
         });
 
         it('should filter store by ID', async function () {
@@ -449,10 +449,10 @@ describe('WS - Stores : CRUD', async () => {
 
           // Check number of stores
           const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
-          await expect(numberOfStoresAfterFilter).to.be.eq(1);
+          expect(numberOfStoresAfterFilter).to.be.eq(1);
 
           const textColumn = await storesPage.getTextColumn(page, 1, 'id_store');
-          await expect(textColumn).to.contains(storeNodeID);
+          expect(textColumn).to.contains(storeNodeID);
         });
 
         it('should go to edit store page', async function () {
@@ -461,7 +461,7 @@ describe('WS - Stores : CRUD', async () => {
           await storesPage.gotoEditStorePage(page, 1);
 
           const pageTitle = await addStorePage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
+          expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
         });
 
         it('should check store\'s name language 1', async function () {
@@ -637,14 +637,14 @@ describe('WS - Stores : CRUD', async () => {
           await contactPage.goToStoresPage(page);
 
           const pageTitle = await storesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(storesPage.pageTitle);
+          expect(pageTitle).to.contains(storesPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost', baseContext);
 
           const numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
-          await expect(numberOfStores).to.be.above(0);
+          expect(numberOfStores).to.be.above(0);
         });
       });
     });
@@ -664,7 +664,7 @@ describe('WS - Stores : CRUD', async () => {
             xmlUpdate,
           );
 
-          await expect(apiResponse.status()).to.eq(200);
+          expect(apiResponse.status()).to.eq(200);
         });
 
         it('should check response root node', async function () {
@@ -705,7 +705,7 @@ describe('WS - Stores : CRUD', async () => {
             storeNodeID,
           );
 
-          await expect(apiResponse.status()).to.eq(200);
+          expect(apiResponse.status()).to.eq(200);
         });
 
         it('should check response root node', async function () {
@@ -787,10 +787,10 @@ describe('WS - Stores : CRUD', async () => {
 
           // Check number of stores
           const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
-          await expect(numberOfStoresAfterFilter).to.be.eq(1);
+          expect(numberOfStoresAfterFilter).to.be.eq(1);
 
           const textColumn = await storesPage.getTextColumn(page, 1, 'id_store');
-          await expect(textColumn).to.contains(storeNodeID);
+          expect(textColumn).to.contains(storeNodeID);
         });
 
         it('should go to edit store page', async function () {
@@ -799,7 +799,7 @@ describe('WS - Stores : CRUD', async () => {
           await storesPage.gotoEditStorePage(page, 1);
 
           const pageTitle = await addStorePage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
+          expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
         });
 
         it('should check store\'s name language 1', async function () {
@@ -980,14 +980,14 @@ describe('WS - Stores : CRUD', async () => {
           await contactPage.goToStoresPage(page);
 
           const pageTitle = await storesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(storesPage.pageTitle);
+          expect(pageTitle).to.contains(storesPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost2', baseContext);
 
           const numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
-          await expect(numberOfStores).to.be.above(0);
+          expect(numberOfStores).to.be.above(0);
         });
       });
     });
@@ -1002,7 +1002,7 @@ describe('WS - Stores : CRUD', async () => {
           storeNodeID,
         );
 
-        await expect(apiResponse.status()).to.eq(200);
+        expect(apiResponse.status()).to.eq(200);
       });
 
       it(`should request the endpoint ${StoreWS.endpoint}/{id} with method GET`, async function () {
@@ -1014,7 +1014,7 @@ describe('WS - Stores : CRUD', async () => {
           storeNodeID,
         );
 
-        await expect(apiResponse.status()).to.eq(404);
+        expect(apiResponse.status()).to.eq(404);
       });
 
       it('should filter store by ID', async function () {
@@ -1026,14 +1026,14 @@ describe('WS - Stores : CRUD', async () => {
 
         // Check number of stores
         const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfStoresAfterFilter).to.be.eq(0);
+        expect(numberOfStoresAfterFilter).to.be.eq(0);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
         const numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfStores).to.be.above(0);
+        expect(numberOfStores).to.be.above(0);
       });
     });
   });

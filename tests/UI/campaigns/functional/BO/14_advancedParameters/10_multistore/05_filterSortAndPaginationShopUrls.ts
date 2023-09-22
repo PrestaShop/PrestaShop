@@ -63,7 +63,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       );
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
     it('should go to \'Shop Urls\' page', async function () {
@@ -72,7 +72,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       await multiStorePage.goToShopURLPage(page, 1);
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
   });
 
@@ -90,14 +90,14 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         await shopUrlPage.goToAddNewUrl(page);
 
         const pageTitle = await addShopUrlPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
       });
 
       it(`should create shop URl n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addURL${index}`, baseContext);
 
         const textResult = await addShopUrlPage.setVirtualUrl(page, shopUrlData);
-        await expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
+        expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
       });
     });
   });
@@ -125,9 +125,9 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
           const textColumn = await shopUrlPage.getTextColumn(page, i, test.args.filterBy);
 
           if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+            expect(textColumn).to.contains(test.expected);
           } else {
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -136,7 +136,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
         const numberOfElement = await shopUrlPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfElement).to.be.above(20);
+        expect(numberOfElement).to.be.above(20);
       });
     });
   });
@@ -227,17 +227,17 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -253,7 +253,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         await shopUrlPage.filterTable(page, 'input', 'url', `ToDelete${index + 1}Shop`);
 
         const textResult = await shopUrlPage.deleteShopURL(page, 1);
-        await expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
+        expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
       });
     });
   });

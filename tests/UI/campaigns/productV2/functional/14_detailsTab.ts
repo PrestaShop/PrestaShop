@@ -119,14 +119,14 @@ describe('BO - Catalog - Products : Details tab', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Standard product\' and go to new product page', async function () {
@@ -136,14 +136,14 @@ describe('BO - Catalog - Products : Details tab', async () => {
       await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductPage.pageTitle);
+      expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
       const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      await expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
     });
   });
 
@@ -411,14 +411,14 @@ describe('BO - Catalog - Products : Details tab', async () => {
       );
 
       const pageTitle = await filesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(filesPage.pageTitle);
+      expect(pageTitle).to.contains(filesPage.pageTitle);
     });
 
     it('should delete files with Bulk Actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await filesPage.deleteFilesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(filesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(filesPage.successfulMultiDeleteMessage);
     });
   });
 });

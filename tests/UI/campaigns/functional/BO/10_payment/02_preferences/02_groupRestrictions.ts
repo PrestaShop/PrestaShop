@@ -63,14 +63,14 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
       await customersPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetBeforeCreate', baseContext);
 
       numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomers).to.be.above(0);
+      expect(numberOfCustomers).to.be.above(0);
     });
 
     [
@@ -83,7 +83,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
         await customersPage.goToAddNewCustomerPage(page);
 
         const pageTitle = await addCustomerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
       });
 
       it(`should create customer n°${index + 1} and check result`, async function () {
@@ -91,11 +91,11 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
         // Create customer
         const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerData);
-        await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+        expect(textResult).to.equal(customersPage.successfulCreationMessage);
 
         // Check number of customers
         const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
+        expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
       });
     });
   });
@@ -111,7 +111,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
       );
 
       const pageTitle = await preferencesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
 
     [
@@ -178,7 +178,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
               test.args.paymentModuleToEdit,
               test.args.check,
             );
-            await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
+            expect(result).to.contains(preferencesPage.successfulUpdateMessage);
           });
 
           it('should view my shop', async function () {
@@ -194,7 +194,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             await homePage.changeLanguage(page, 'en');
 
             const pageTitle = await homePage.getPageTitle(page);
-            await expect(pageTitle).to.contains(homePage.pageTitle);
+            expect(pageTitle).to.contains(homePage.pageTitle);
           });
 
           it('should add the first product to the cart and proceed to checkout', async function () {
@@ -213,7 +213,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             await cartPage.clickOnProceedToCheckout(page);
 
             const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-            await expect(isCheckoutPage).to.be.true;
+            expect(isCheckoutPage).to.eq(true);
           });
 
           // Personal information step - Login
@@ -229,7 +229,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
               await checkoutPage.clickOnSignIn(page);
 
               const isStepLoginComplete = await checkoutPage.customerLogin(page, group.args.customer);
-              await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
+              expect(isStepLoginComplete, 'Step Personal information is not complete').to.eq(true);
             });
           }
 
@@ -244,7 +244,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
               );
 
               const isStepAddressComplete = await checkoutPage.setAddress(page, address);
-              await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+              expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
             });
           }
 
@@ -259,7 +259,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
               );
 
               const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-              await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+              expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
             });
           }
 
@@ -274,15 +274,15 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
             // Go to payment step
             const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-            await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+            expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
             // Check wire Payment block
             let isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModuleToEdit);
-            await expect(isVisible).to.be.equal(test.args.wirePaymentExist);
+            expect(isVisible).to.be.equal(test.args.wirePaymentExist);
 
             // Check Payment block
             isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.defaultPaymentModule);
-            await expect(isVisible).to.be.equal(test.args.checkPaymentExist);
+            expect(isVisible).to.be.equal(test.args.checkPaymentExist);
           });
 
           it('should go back to BO', async function () {
@@ -292,7 +292,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             page = await homePage.closePage(browserContext, page, 0);
 
             const pageTitle = await preferencesPage.getPageTitle(page);
-            await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+            expect(pageTitle).to.contains(preferencesPage.pageTitle);
           });
         });
       });
@@ -310,7 +310,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
       );
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     [
@@ -331,18 +331,18 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
         );
 
         const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-        await expect(textEmail).to.contains(test.args.customerData.email);
+        expect(textEmail).to.contains(test.args.customerData.email);
       });
 
       it(`should delete customer n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCustomer${index}`, baseContext);
 
         const textResult = await customersPage.deleteCustomer(page, 1);
-        await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
+        expect(textResult).to.equal(customersPage.successfulDeleteMessage);
 
         // Check number of customers after delete
         const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - index + 1);
+        expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - index + 1);
       });
     });
   });
