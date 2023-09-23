@@ -35,11 +35,12 @@ class RobotsTextFileGenerator
 {
     /**
      * Generates the robots.txt file.
+     * @param bool $indexOnlyProdEnv index only production environment
      *
      * @return bool
      */
-    public function generateFile()
+    public function generateFile(bool $indexOnlyProdEnv = false)
     {
-        return Tools::generateRobotsFile(true);
+        return Tools::generateRobotsFile(true, $indexOnlyProdEnv);
     }
 }

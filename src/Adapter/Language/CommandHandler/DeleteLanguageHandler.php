@@ -82,6 +82,6 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
         if (false === $language->delete()) {
             throw new LanguageException(sprintf('Failed to delete language "%s"', $language->iso_code));
         }
-        $this->robotsTextFileGenerator->generateFile();
+        $this->robotsTextFileGenerator->generateFile(true);
     }
 }

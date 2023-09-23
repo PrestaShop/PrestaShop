@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use Context as LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Environment\EnvironmentTypeInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
@@ -228,5 +229,11 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
         }
 
         return ShopConstraint::allShops();
+    }
+
+
+    public function getCurrentEnvironmentType() : EnvironmentTypeInterface
+    {
+        return LegacyContext::getContext()->getCurrentEnvironmentType();
     }
 }

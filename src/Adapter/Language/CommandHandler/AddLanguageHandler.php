@@ -85,7 +85,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         );
         $this->uploadFlagImage($language, $command);
         $this->addShopAssociation($language, $command);
-        $this->robotsTextFileGenerator->generateFile();
+        $this->robotsTextFileGenerator->generateFile(true);
 
         return new LanguageId((int) $language->id);
     }

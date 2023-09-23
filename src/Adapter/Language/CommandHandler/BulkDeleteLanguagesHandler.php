@@ -83,6 +83,6 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
                 throw new LanguageException(sprintf('Failed to delete language "%s"', $language->iso_code));
             }
         }
-        $this->robotsTextFileGenerator->generateFile();
+        $this->robotsTextFileGenerator->generateFile(true);
     }
 }
