@@ -876,5 +876,8 @@ Country</value>
     <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
       <value>jpg</value>
     </configuration>
+    <configuration id="PS_ENVIRONMENT_TYPE" name="PS_ENVIRONMENT_TYPE">
+      <value>Develop</value>
+    </configuration>
   </entities>
 </entity_configuration>

@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.environment.finder:
+    class: 'PrestaShop\PrestaShop\Core\Environment\EnvironmentFinder'
+    arguments:
+      - '@translator'
