@@ -99,6 +99,11 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
         return $this->attributeGroupViewDataProvider->getAttributeGroupNameById((int) $this->attributeGroupId);
     }
 
+    protected function getGroupId()
+    {
+        return $this->attributeGroupId;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -191,6 +196,16 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
                 'route' => 'admin_import',
                 'route_params' => [
                     'import_type' => 'attributes',
+                ],
+            ])
+            )
+            ->add((new LinkGridAction('export'))
+            ->setName($this->trans('Export', [], 'Admin.Actions'))
+            ->setIcon('cloud_download')
+            ->setOptions([
+                'route' => 'admin_attribute_export',
+                'route_params' => [
+                    'attributeGroupId' => $this->attributeGroupId,
                 ],
             ])
             )
