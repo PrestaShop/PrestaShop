@@ -243,6 +243,10 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
+        // Resets the id_address_delivery field in the cart_product
+        // after deleting the current address
+        $this->resetCartProductsDeliveryAddress();
+
         // If the address is used in at least one order, we will not delete it, but only mark it and hide it from backoffice
         // However, even if this address is used, we should probably unlink it from all NON ORDERED carts
         if ($this->isUsed()) {
@@ -258,6 +262,20 @@ class AddressCore extends ObjectModel
         }
 
         return parent::delete();
+    }
+
+    /**
+     * Reset the id_address_delivery to 0 for the current address in carts 
+     * that did not complete the checkout process (no associated orders).
+     */
+    public function resetCartProductsDeliveryAddress()
+    {
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product AS cp
+                    LEFT JOIN ' . _DB_PREFIX_ . 'orders AS o ON cp.id_cart = o.id_cart
+                    SET cp.id_address_delivery = 0
+                    WHERE cp.id_address_delivery = ' . (int)$this->id . ' AND o.id_order IS NULL';
+
+        Db::getInstance()->execute($sql);
     }
 
     /**
