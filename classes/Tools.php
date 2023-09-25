@@ -3856,6 +3856,42 @@ exit;
 
         return $array;
     }
+
+    /**
+     * Generate html data attributes by given array
+     *
+     * @param array $dataAttributes list of html data attributes
+     *
+     * @return string
+     */
+    public static function makeHtmlDataAttributes(array $dataAttributes): string
+    {
+        $htmlDataAttributes = '';
+
+        if (empty($dataAttributes)) {
+            return $htmlDataAttributes;
+        }
+
+        $attributesIterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($dataAttributes));
+
+        foreach ($attributesIterator as $attributeName => $value) {
+            if (!Validate::isString($attributeName)) {
+                @trigger_error(
+                    'Tools::makeHtmlDataAttributes() dataAttributes key must be string',
+                    E_USER_WARNING
+                );
+                continue;
+            }
+
+            for ($i = $attributesIterator->getDepth() - 1; $i >= 0; --$i) {
+                $attributeName = $attributesIterator->getSubIterator($i)->key() . '-' . $attributeName;
+            }
+
+            $htmlDataAttributes .= ' data-' . $attributeName . '="' . $attributesIterator->current() . '"';
+        }
+
+        return trim($htmlDataAttributes);
+    }
 }
 
 /**

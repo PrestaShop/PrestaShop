@@ -97,6 +97,7 @@ smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
 smartyRegisterFunction($smarty, 'function', 'render_template', 'renderTemplate');
+smartyRegisterFunction($smarty, 'modifier', 'array_to_data_attributes', ['Tools', 'makeHtmlDataAttributes']);
 
 // Native PHP functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
