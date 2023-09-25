@@ -88,3 +88,18 @@ admin_attributes_update_position:
     _legacy_controller: AdminAttributesGroups
     _legacy_link: AdminAttributesGroups:updateAttributesPositions
     _legacy_feature_flag: attribute_group
+
+admin_attribute_export:
+  path: /export
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::exportAction'
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+    _legacy_controller: AdminAttributesGroups
+    _legacy_link: AdminAttributesGroups:exportattribute_group
+    _legacy_feature_flag: attribute_group
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+  requirements:
+    attributeGroupId: \d+

@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\DeleteAttributeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -295,6 +297,55 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     message="You do not have permission to export this."
+     * )
+     *
+     * @param AttributeFilters $filters
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(AttributeFilters $filters): CsvResponse
+    {
+        $filters = new AttributeFilters(['limit' => null] + $filters->all());
+        $attributeGridFactory = $this->get('prestashop.core.grid.factory.attribute');
+        $attributeGrid = $attributeGridFactory->getGrid($filters);
+        $attributeRecords = $attributeGrid->getData()->getRecords()->all();
+
+        $data = [];
+        $hasColor = false;
+
+        foreach ($attributeRecords as $record) {
+            $dataToPush = [];
+            $dataToPush['id_attribute'] = $record['id_attribute'];
+            $dataToPush['id_attribute_group'] = $record['id_attribute_group'];
+            $dataToPush['value'] = $record['value'];
+            if (!empty($record['color'])) {
+                $dataToPush['color'] = $record['color'];
+                $hasColor = true;
+            }
+            $dataToPush['position'] = $record['position'];
+            $data[] = $dataToPush;
+        }
+
+        $headers = [];
+        $headers['id_attribute'] = $this->trans('ID', 'Admin.Global');
+        $headers['id_attribute_group'] = $this->trans('Attribute Group ID', 'Admin.Global');
+        $headers['value'] = $this->trans('Value', 'Admin.Global');
+        if ($hasColor) {
+            $headers['color'] = $this->trans('Color', 'Admin.Global');
+        }
+        $headers['id_attribute'] = $this->trans('ID', 'Admin.Global');
+        $headers['position'] = $this->trans('Position', 'Admin.Global');
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('attribute_' . date('Y-m-d_His') . '.csv');
+    }
+
+    /**
      * Provides translated error messages for exceptions
      *
      * @return array
@@ -306,9 +357,15 @@ class AttributeController extends FrameworkBundleAdminController
             'Admin.Notifications.Error'
         );
 
+        $wrongValueMessage = $this->trans(
+            'A field is invalid.',
+            'Admin.Notifications.Error'
+        );
+
         return [
             AttributeNotFoundException::class => $notFoundMessage,
             AttributeGroupNotFoundException::class => $notFoundMessage,
+            AttributeConstraintException::class => $wrongValueMessage,
             DeleteAttributeException::class => [
                 DeleteAttributeException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
