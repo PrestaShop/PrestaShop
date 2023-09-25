@@ -35,11 +35,33 @@ else
 fi
 
 if [ "${DISABLE_MAKE}" != "1" ]; then
+  mkdir -p /var/www/.npm
+  chown -R www-data:www-data /var/www/.npm
+
+  echo "\n* Install node $NODE_VERSION...";
+  export NVM_DIR=/usr/local/nvm
+  mkdir -p $NVM_DIR \
+      && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
+      && . $NVM_DIR/nvm.sh \
+      && nvm install $NODE_VERSION \
+      && nvm alias default $NODE_VERSION \
+      && nvm use default
+
+  export NODE_PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin
+  export PATH=$PATH:$NODE_PATH
+
+  echo "\n* Install composer ...";
+  mkdir -p /var/www/.composer
+  chown -R www-data:www-data /var/www/.composer
+  runuser -g www-data -u www-data -- php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
+
   echo "\n* Running composer ...";
   runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
 
   echo "\n* Build assets ...";
   runuser -g www-data -u www-data -- /usr/bin/make assets
+else
+  echo "\n* Build of assets was disabled...";
 fi
 
 if [ "$DB_SERVER" = "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then
