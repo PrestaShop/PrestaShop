@@ -433,6 +433,14 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Is delivery time displayed
+   * @param page
+   */
+  async isDeliveryTimeDisplayed(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.deliveryInformationSpan);
+  }
+
+  /**
    * Select thumb image
    * @param page {Page} Browser tab
    * @param id {number} Id for the thumb

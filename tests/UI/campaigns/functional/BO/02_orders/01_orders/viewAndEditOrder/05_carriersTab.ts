@@ -139,7 +139,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await Promise.all([
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(Carriers.default.name),
-        expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
+        expect(result.weight).to.equal(`${Products.demo_1.packageDimensionWeight}00 kg`),
         expect(result.shippingCost).to.equal('€0.00'),
         expect(result.trackingNumber).to.equal(''),
       ]);
@@ -168,7 +168,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await Promise.all([
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
-        expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
+        expect(result.weight).to.equal(`${Products.demo_1.packageDimensionWeight}00 kg`),
         expect(result.shippingCost).to.equal(shippingDetailsCost),
         expect(result.trackingNumber).to.equal(shippingDetailsData.trackingNumber),
       ]);

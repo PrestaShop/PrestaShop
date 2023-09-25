@@ -112,9 +112,17 @@ export default class ProductData {
 
   public numberOfDays: number | null;
 
-  public weight: number;
-
   public combinations: ProductCombination[];
+
+  public packageDimensionWidth: number;
+
+  public packageDimensionHeight: number;
+
+  public packageDimensionDepth: number;
+
+  public packageDimensionWeight: number;
+
+  public deliveryTime: string;
 
   /**
    * Constructor for class ProductData
@@ -266,9 +274,7 @@ export default class ProductData {
     };
 
     /** @type {number} Minimum quantity to buy for the product */
-    this.minimumQuantity = productToCreate.minimumQuantity === undefined
-      ? faker.number.int({min: 1, max: 9})
-      : productToCreate.minimumQuantity;
+    this.minimumQuantity = productToCreate.minimumQuantity || 1;
 
     /** @type {string} Stock location of the product */
     this.stockLocation = productToCreate.stockLocation || 'stock 1';
@@ -318,7 +324,19 @@ export default class ProductData {
     this.numberOfDays = productToCreate.numberOfDays || null;
 
     /** @type {number} Weight of the package */
-    this.weight = productToCreate.weight || faker.number.int({min: 1, max: 20});
+    this.packageDimensionWeight = productToCreate.packageDimensionWeight || faker.number.int({min: 1, max: 20});
+
+    /** @type {number} Width of the package */
+    this.packageDimensionWidth = productToCreate.packageDimensionWidth || faker.number.int({min: 1, max: 20});
+
+    /** @type {number} Height of the package */
+    this.packageDimensionHeight = productToCreate.packageDimensionHeight || faker.number.int({min: 1, max: 20});
+
+    /** @type {number} Depth of the package */
+    this.packageDimensionDepth = productToCreate.packageDimensionDepth || faker.number.int({min: 1, max: 20});
+
+    /** @type {string} Delivery time */
+    this.deliveryTime = productToCreate.deliveryTime || 'Default delivery time';
 
     /** @type {ProductCombination[]} */
     this.combinations = productToCreate.combinations || [];

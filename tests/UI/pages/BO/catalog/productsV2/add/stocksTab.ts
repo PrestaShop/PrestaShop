@@ -28,6 +28,12 @@ class StocksTab extends BOBasePage {
 
   private readonly productAvailableDateInput: string;
 
+  private readonly denyOrderRadioButton: string;
+
+  private readonly allowOrderRadioButton: string;
+
+  private readonly useDefaultBehaviourRadioButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on stocks tab
@@ -44,6 +50,10 @@ class StocksTab extends BOBasePage {
     this.productLabelAvailableNowInput = '#product_stock_availability_available_now_label';
     this.productLabelAvailableLaterInput = '#product_stock_availability_available_later_label';
     this.productAvailableDateInput = '#product_stock_availability_available_date';
+    // When out of stock selectors
+    this.denyOrderRadioButton = '#product_stock_availability_out_of_stock_type_0 +i';
+    this.allowOrderRadioButton = '#product_stock_availability_out_of_stock_type_1 +i';
+    this.useDefaultBehaviourRadioButton = '#product_stock_availability_out_of_stock_type_2 +i';
   }
 
   /*
@@ -70,6 +80,28 @@ class StocksTab extends BOBasePage {
    */
   async setQuantityDelta(page: Page, quantity: number): Promise<void> {
     await this.setValue(page, this.productQuantityInput, quantity);
+  }
+
+  /**
+   * Set option when out of stock
+   * @param page {Page} Browser tab
+   * @param option {string} Option to check
+   * @returns {Promise<void>}
+   */
+  async setOptionWhenOutOfStock(page: Page, option: string): Promise<void> {
+    switch (option) {
+      case 'Deny orders':
+        await this.setChecked(page, this.denyOrderRadioButton);
+        break;
+      case 'Allow orders':
+        await this.setChecked(page, this.allowOrderRadioButton);
+        break;
+      case 'Use default behavior':
+        await this.setChecked(page, this.useDefaultBehaviourRadioButton);
+        break;
+      default:
+        throw new Error(`Option ${option} was not found`);
+    }
   }
 
   /**

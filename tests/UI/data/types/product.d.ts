@@ -56,7 +56,11 @@ type ProductCreator = {
   allowedDownload?: number
   expirationDate?: string | null
   numberOfDays?: number | null
-  weight?: number
+  packageDimensionWeight?: number
+  packageDimensionDepth?: number
+  packageDimensionHeight?: number
+  packageDimensionWidth?: number
+  deliveryTime?: string
   combinations?: ProductCombination[]
 };
 
