@@ -127,7 +127,7 @@
     "@types/mocha": "^10.0.1",
     "@types/mochawesome": "^6.2.1",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.49.0",
     "eslint-config-airbnb-base": "^15.0.0",
