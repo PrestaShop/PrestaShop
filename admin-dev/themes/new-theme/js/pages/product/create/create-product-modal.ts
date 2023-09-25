@@ -77,7 +77,7 @@ export default class CreateProductModal {
             // for this purpose only
             const editUrl = this.router.generate('admin_products_edit', {
               productId: dataAttributes.productId,
-              forceDefaultActive: dataAttributes.forceDefaultActive ? 1 : 0,
+              forceDefaultActive: parseInt(dataAttributes.forceDefaultActive ?? '0', 10) === 1 ? 1 : 0,
             });
 
             // Keep showing loading until the page is refreshed

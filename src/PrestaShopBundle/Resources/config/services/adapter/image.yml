@@ -34,7 +34,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Image\ImageGenerator:
     arguments:
-      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager'
       - '@PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration'
 
   PrestaShop\PrestaShop\Adapter\Image\ImageValidator:

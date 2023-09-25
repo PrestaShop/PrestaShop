@@ -206,7 +206,7 @@ class ProductShipping extends CommonAbstractType
                     'choices' => [
                         $this->translator->trans('None', [], 'Admin.Catalog.Feature') => 0,
                         $this->translator->trans('Default delivery time', [], 'Admin.Catalog.Feature') => 1,
-                        $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature') => 2,
+                        $this->translator->trans('Specific delivery time for this product', [], 'Admin.Catalog.Feature') => 2,
                     ],
                     'expanded' => true,
                     'multiple' => false,

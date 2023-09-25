@@ -151,9 +151,14 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected function getAjaxProductSearchVariables()
     {
+        // Basic data with rendered products, facets, active filters etc.
         $data = parent::getAjaxProductSearchVariables();
-        $rendered_products_header = $this->render('catalog/_partials/category-header', ['listing' => $data]);
-        $data['rendered_products_header'] = $rendered_products_header;
+
+        // Extra data for category pages, so we can dynamically update also these parts
+        $rendered_category_header = $this->render('catalog/_partials/category-header', ['listing' => $data]);
+        $data['rendered_products_header'] = $rendered_category_header;
+        $rendered_category_footer = $this->render('catalog/_partials/category-footer', ['listing' => $data]);
+        $data['rendered_products_footer'] = $rendered_category_footer;
 
         return $data;
     }

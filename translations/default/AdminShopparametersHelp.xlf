@@ -244,22 +244,22 @@
       <trans-unit id="f45ed1483cf46972b5f225656c9c8991">
         <source>Whether or not to display this store.</source>
         <target>Whether or not to display this store.</target>
-        <note>Line: 277</note>
+        <note>Line: 279</note>
       </trans-unit>
       <trans-unit id="b950eb0054205bc67aa88899eadded22">
         <source>Storefront picture.</source>
         <target>Storefront picture.</target>
-        <note>Line: 286</note>
+        <note>Line: 288</note>
       </trans-unit>
       <trans-unit id="d42de30e9e03274c5c83bd6ce5c27a6f">
         <source>Displayed in emails sent to customers.</source>
         <target>Displayed in emails sent to customers.</target>
-        <note>Line: 466</note>
+        <note>Line: 484</note>
       </trans-unit>
       <trans-unit id="49aaf34d99febc7c13881d121288cd8a">
         <source>Shop registration information (e.g. SIRET or RCS).</source>
         <target>Shop registration information (e.g. SIRET or RCS).</target>
-        <note>Line: 473</note>
+        <note>Line: 491</note>
       </trans-unit>
     </body>
   </file>
@@ -529,6 +529,11 @@
         <target>You can specify the default behavior for all disabled products. The product page can display a "Discontinued" message or an error page. You can also specify which HTTP response is sent to users. This can be set specifically for each product.</target>
         <note>Line: 171</note>
       </trans-unit>
+      <trans-unit id="8f5320453e91fe37d7b5704c92f4f243">
+        <source>When enabled, friendly URL will be updated on every name change for offline products only.</source>
+        <target>When enabled, friendly URL will be updated on every name change for offline products only.</target>
+        <note>Line: 138</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -682,10 +687,6 @@
         <target>Order's return status name.</target>
         <note>Line: 41</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
         <source>Invalid characters: numbers and</source>
         <target>Invalid characters: numbers and</target>
@@ -694,8 +695,12 @@
       <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
         <source>Status will be highlighted in this color. HTML colors only.</source>
         <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>Line: 83</note>
+        <note>Line: 49</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="83b262520a65657b95fd686817c56a09">
         <source>Order status (e.g. 'Pending').</source>
         <target>Order status (e.g. 'Pending').</target>

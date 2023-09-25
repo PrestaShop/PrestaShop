@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use ImageType;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\DeleteManufacturerLogoImageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -65,9 +67,9 @@ class DeleteManufacturerLogoImageHandler extends AbstractManufacturerCommandHand
 
         $imageTypes = ImageType::getImagesTypes('manufacturers');
 
-        /** @var \PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
-        $imageFormatConfiguration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
-        $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
+        // Get image formats we will be deleting. It would probably be easier to use ImageFormatConfiguration::SUPPORTED_FORMATS,
+        // but we want to avoid any behavior change in minor/patch version.
+        $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
 
         foreach ($imageTypes as $imageType) {
             foreach ($configuredImageFormats as $imageFormat) {

@@ -52,7 +52,7 @@
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
-        <note>Line: 322</note>
+        <note>Line: 324</note>
       </trans-unit>
     </body>
   </file>
@@ -61,97 +61,101 @@
       <trans-unit id="ffddcc65274efa9b4c624b34289c922c">
         <source>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.</source>
         <target>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.</target>
-        <note>Line: 504</note>
+        <note>Line: 523</note>
       </trans-unit>
       <trans-unit id="5b8cb2aa659c7d6a98b740d2d788c69d">
         <source>Incorrect value for the selected JPEG image compression.</source>
         <target>Incorrect value for the selected JPEG image compression.</target>
-        <note>Line: 527</note>
+        <note>Line: 546</note>
       </trans-unit>
       <trans-unit id="8357fadc46ff52546c4c69965de0d653">
         <source>Incorrect value for the selected PNG image compression.</source>
         <target>Incorrect value for the selected PNG image compression.</target>
-        <note>Line: 530</note>
+        <note>Line: 549</note>
       </trans-unit>
       <trans-unit id="cfb484c05d54f0af1f6c7134505fe611">
         <source>Incorrect value for the selected WebP image compression.</source>
         <target>Incorrect value for the selected WebP image compression.</target>
-        <note>Line: 533</note>
+        <note>Line: 552</note>
       </trans-unit>
       <trans-unit id="b88862891dbf9c20a73bc59258407d0b">
         <source>Source file does not exist or is empty (%filepath%)</source>
         <target>Source file does not exist or is empty (%filepath%)</target>
-        <note>Line: 697</note>
+        <note>Line: 711</note>
       </trans-unit>
       <trans-unit id="985b5b995c4574ae5eba2062a13ef168">
         <source>Failed to resize image file (%filepath%)</source>
         <target>Failed to resize image file (%filepath%)</target>
-        <note>Line: 707</note>
+        <note>Line: 721</note>
       </trans-unit>
       <trans-unit id="c5e7d0c13104eed0a195c175f2edfdd2">
         <source>Failed to resize image file to high resolution (%filepath%)</source>
         <target>Failed to resize image file to high resolution (%filepath%)</target>
-        <note>Line: 718</note>
+        <note>Line: 732</note>
       </trans-unit>
       <trans-unit id="103d86044b78fa59e02ff8480a3a2f46">
         <source>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</source>
         <target>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</target>
-        <note>Line: 771</note>
+        <note>Line: 785</note>
       </trans-unit>
       <trans-unit id="2934958a3f658892ee502aaf8258a6f7">
         <source>Original image is missing or empty (%filename%) for product ID %id%</source>
         <target>Original image is missing or empty (%filename%) for product ID %id%</target>
-        <note>Line: 785</note>
+        <note>Line: 799</note>
       </trans-unit>
       <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
         <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
         <target>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</target>
-        <note>Line: 937</note>
+        <note>Line: 946</note>
       </trans-unit>
       <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
         <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
         <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
-        <note>Line: 940</note>
+        <note>Line: 949</note>
       </trans-unit>
       <trans-unit id="f2febdafe25d3517afc3c6dd3d815562">
         <source>Server timed out. The watermark may not have been applied to all images.</source>
         <target>Server timed out. The watermark may not have been applied to all images.</target>
-        <note>Line: 944</note>
+        <note>Line: 953</note>
       </trans-unit>
       <trans-unit id="606495559093a136ed6f2c9daee2645f">
         <source>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</source>
         <target>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</target>
-        <note>Line: 949</note>
+        <note>Line: 958</note>
       </trans-unit>
       <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
         <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
         <target>Error: Your server configuration is not compatible with the new image system. No images were moved.</target>
-        <note>Line: 977</note>
+        <note>Line: 986</note>
       </trans-unit>
       <trans-unit id="c26feb9180b94fa563c1e10b7354693b">
         <source>Not all images have been moved. The server timed out before finishing. Click on "%move_images_label%" again to resume the moving process.</source>
         <target>Not all images have been moved. The server timed out before finishing. Click on "%move_images_label%" again to resume the moving process.</target>
-        <note>Line: 984</note>
+        <note>Line: 993</note>
       </trans-unit>
       <trans-unit id="95871efade00fbd0243355ce7937c40a">
         <source>Error: Some -- or all -- images cannot be moved.</source>
         <target>Error: Some -- or all -- images cannot be moved.</target>
-        <note>Line: 991</note>
+        <note>Line: 1000</note>
       </trans-unit>
       <trans-unit id="cb2f901ceed5c3365d056794a1b5047f">
         <source>After modification, do not forget to regenerate thumbnails</source>
         <target>After modification, do not forget to regenerate thumbnails</target>
-        <note>Line: 1010</note>
-      </trans-unit>
-      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
-        <source>This name already exists.</source>
-        <target>This name already exists.</target>
-        <note>Line: 561</note>
+        <note>Line: 1019</note>
       </trans-unit>
       <trans-unit id="de7bf0de52dfa524dc063d610496c957">
         <source>Make sure the theme you use doesn't rely on this image format before deleting it.</source>
         <target>Make sure the theme you use doesn't rely on this image format before deleting it.</target>
-        <note>Line: 1011</note>
+        <note>Line: 1020</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
+        <source>This name already exists.</source>
+        <target>This name already exists.</target>
+        <note>Line: 630</note>
       </trans-unit>
     </body>
   </file>
@@ -174,7 +178,7 @@
       <trans-unit id="f003149576f4755d74550952febe14bb">
         <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
         <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
-        <note>Line: 258</note>
+        <note>Line: 256</note>
       </trans-unit>
     </body>
   </file>

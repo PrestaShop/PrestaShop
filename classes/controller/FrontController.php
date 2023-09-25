@@ -164,8 +164,10 @@ class FrontControllerCore extends Controller
             $useSSL = $this->ssl;
         }
 
+        // Prepare presenters that we will require on every page
         $this->objectPresenter = new ObjectPresenter();
         $this->cart_presenter = new CartPresenter();
+
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
         $this->stylesheetManager = new StylesheetManager(
             [_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__],

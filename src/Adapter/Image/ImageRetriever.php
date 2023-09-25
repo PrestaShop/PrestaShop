@@ -27,15 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Category;
-use Configuration;
-use FeatureFlag;
 use Image;
 use ImageManager;
 use ImageType;
 use Language;
 use Link;
 use Manufacturer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
@@ -52,12 +51,18 @@ class ImageRetriever
      */
     private $link;
 
-    private $isMultipleImageFormatFeatureActive;
+    /**
+     * @deprecated since 8.1.2, it was originally introduced in 8.1.0, but ended up no longer needed - will be removed in 9.0
+     *
+     * @var bool
+     *
+     * @phpstan-ignore-next-line
+     */
+    private $isMultipleImageFormatFeatureActive = false;
 
     public function __construct(Link $link)
     {
         $this->link = $link;
-        $this->isMultipleImageFormatFeatureActive = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
     }
 
     /**
@@ -193,15 +198,10 @@ class ImageRetriever
 
         /*
          * Let's resolve which formats we will use for image generation.
-         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
          *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
-        if ($this->isMultipleImageFormatFeatureActive) {
-            $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
-        } else {
-            $configuredImageFormats = ['jpg'];
-        }
+        $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
 
         // Primary (fake) image name is object rewrite, fallbacks are name and ID
         if (!empty($object->link_rewrite)) {

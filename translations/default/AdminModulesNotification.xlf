@@ -161,82 +161,82 @@
       <trans-unit id="6869dc1977dbff7c5749120241f74ff0">
         <source>Unable to install override: %s</source>
         <target>Unable to install override: %s</target>
-        <note>Line: 864</note>
+        <note>Line: 867</note>
       </trans-unit>
       <trans-unit id="e8f98f4457c87a8aad1d4d625ad1a9f3">
         <source>%1$s is not a valid module name.</source>
         <target>%1$s is not a valid module name.</target>
-        <note>Line: 1199</note>
+        <note>Line: 1203</note>
       </trans-unit>
       <trans-unit id="8f62a26bf441ad698c2c562ec10448c4">
         <source>All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration</source>
         <target>All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration</target>
-        <note>Line: 1367</note>
+        <note>Line: 1371</note>
       </trans-unit>
       <trans-unit id="2cff6a926907204ad5c1916ba96ed815">
         <source>%s could not be loaded.</source>
         <target>%s could not be loaded.</target>
-        <note>Line: 1392</note>
+        <note>Line: 1396</note>
       </trans-unit>
       <trans-unit id="db0275528fda19c75f79d296ded0c6e7">
         <source>Error found in config file:</source>
         <target>Error found in config file:</target>
-        <note>Line: 1400</note>
+        <note>Line: 1404</note>
       </trans-unit>
       <trans-unit id="f9c47597596f7159815c61957f4f8ec2">
         <source>%1$s (parse error in %2$s)</source>
         <target>%1$s (parse error in %2$s)</target>
-        <note>Line: 1455</note>
+        <note>Line: 1459</note>
       </trans-unit>
       <trans-unit id="8014d5d92e09a563588869c623bd0abf">
         <source>%1$s (class missing in %2$s)</source>
         <target>%1$s (class missing in %2$s)</target>
-        <note>Line: 1522</note>
+        <note>Line: 1526</note>
       </trans-unit>
       <trans-unit id="a0b8a508d6ca8113e6439f623e7bf7cf">
         <source>The following module(s) could not be loaded</source>
         <target>The following module(s) could not be loaded</target>
-        <note>Line: 1574</note>
+        <note>Line: 1578</note>
       </trans-unit>
       <trans-unit id="eddeabd79f8ca673d888fa2ffe9cf69a">
         <source>No template found for module</source>
         <target>No template found for module</target>
-        <note>Line: 2213</note>
+        <note>Line: 2217</note>
       </trans-unit>
       <trans-unit id="45e26faecce815f7e1ac16b32ac5278e">
         <source>The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.</source>
         <target>The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.</target>
-        <note>Line: 2895</note>
+        <note>Line: 2899</note>
       </trans-unit>
       <trans-unit id="03c32a7a2568d41e186d59293b02f662">
         <source>The method %1$s in the class %2$s is already overridden.</source>
         <target>The method %1$s in the class %2$s is already overridden.</target>
-        <note>Line: 2898</note>
+        <note>Line: 2902</note>
       </trans-unit>
       <trans-unit id="71bf68c93ca29a72a3a5080a30e20ecc">
         <source>Failed to override method %1$s in class %2$s.</source>
         <target>Failed to override method %1$s in class %2$s.</target>
-        <note>Line: 2975</note>
+        <note>Line: 2979</note>
       </trans-unit>
       <trans-unit id="a08302edbf2d9f7ddd43ae8bd1de5caa">
         <source>The property %1$s in the class %2$s is already defined.</source>
         <target>The property %1$s in the class %2$s is already defined.</target>
-        <note>Line: 2910</note>
+        <note>Line: 2914</note>
       </trans-unit>
       <trans-unit id="7893f5f2917811b37c628f787c83af8a">
         <source>Failed to override property %1$s in class %2$s.</source>
         <target>Failed to override property %1$s in class %2$s.</target>
-        <note>Line: 2983</note>
+        <note>Line: 2987</note>
       </trans-unit>
       <trans-unit id="6f89d5bc3c94e885d4a3716accc12983">
         <source>The constant %1$s in the class %2$s is already defined.</source>
         <target>The constant %1$s in the class %2$s is already defined.</target>
-        <note>Line: 2922</note>
+        <note>Line: 2926</note>
       </trans-unit>
       <trans-unit id="d27626d5c768d3782dcc6343e8a0c0f6">
         <source>Failed to override constant %1$s in class %2$s.</source>
         <target>Failed to override constant %1$s in class %2$s.</target>
-        <note>Line: 2991</note>
+        <note>Line: 2995</note>
       </trans-unit>
     </body>
   </file>
@@ -416,12 +416,12 @@
       <trans-unit id="97aaa428796fc523aae22098428c8a6f">
         <source>Parse error detected in main class of module %module%: %parse_error%</source>
         <target>Parse error detected in main class of module %module%: %parse_error%</target>
-        <note>Line: 293</note>
+        <note>Line: 291</note>
       </trans-unit>
       <trans-unit id="e03545a6c414502e72d232b4c30d9fdd">
         <source>Error while loading file of module %module%. %error_message%</source>
         <target>Error while loading file of module %module%. %error_message%</target>
-        <note>Line: 318</note>
+        <note>Line: 316</note>
       </trans-unit>
     </body>
   </file>
@@ -555,17 +555,17 @@
       <trans-unit id="89d371deca1b2b50a933fabc8005ccfb">
         <source>%module% did not return a valid response on installation.</source>
         <target>%module% did not return a valid response on installation.</target>
-        <note>Line: 389</note>
+        <note>Line: 397</note>
       </trans-unit>
       <trans-unit id="35e839bc1864dd50a75500028c3ebb33">
         <source>Installation of module %module% was successful.</source>
         <target>Installation of module %module% was successful.</target>
-        <note>Line: 395</note>
+        <note>Line: 403</note>
       </trans-unit>
       <trans-unit id="f52c6f7b6fcbd586aee22044aeb6c897">
         <source>Installation of module %module% failed. %error%</source>
         <target>Installation of module %module% failed. %error%</target>
-        <note>Line: 434</note>
+        <note>Line: 442</note>
       </trans-unit>
       <trans-unit id="277a6bb3a47512862fc6a39dbbbb9b8b">
         <source>Impossible to install form source</source>
@@ -575,7 +575,7 @@
       <trans-unit id="003d97add88d9195366bfa9edcb6b357">
         <source>Impossible to install from source</source>
         <target>Impossible to install from source</target>
-        <note>Line: 422</note>
+        <note>Line: 430</note>
       </trans-unit>
     </body>
   </file>
