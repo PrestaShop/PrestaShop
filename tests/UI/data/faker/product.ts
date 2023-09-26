@@ -263,6 +263,7 @@ export default class ProductData {
       discount: faker.number.int({min: 10, max: 100}),
       startingAt: faker.number.int({min: 2, max: 5}),
       reductionType: '',
+      isApplyDiscount: true,
     };
 
     /** @type {number} Minimum quantity to buy for the product */

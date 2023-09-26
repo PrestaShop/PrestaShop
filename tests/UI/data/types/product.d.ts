@@ -201,6 +201,7 @@ type ProductSpecificPrice = {
   discount: number
   startingAt: number
   reductionType: string
+  isApplyDiscount: boolean
 };
 
 type ProductStockMovement = {
