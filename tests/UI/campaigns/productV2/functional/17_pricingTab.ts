@@ -98,14 +98,14 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Standard product\' and go to new product page', async function () {
@@ -115,14 +115,14 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductPage.pageTitle);
+      expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
       const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      await expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
     });
   });
 
@@ -335,7 +335,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await pricingTab.clickOnAddSpecificPriceButton(page);
 
       const message = await pricingTab.setSpecificPrice(page, specificPriceData.specificPrice);
-      await expect(message).to.equal(createProductPage.successfulCreationMessage);
+      expect(message).to.equal(createProductPage.successfulCreationMessage);
     });
 
     it('should preview product', async function () {
@@ -371,7 +371,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await pricingTab.clickOnEditSpecificPriceIcon(page, 1);
 
       const message = await pricingTab.setSpecificPrice(page, editSpecificPriceData.specificPrice);
-      await expect(message).to.equal('Update successful');
+      expect(message).to.equal('Update successful');
     });
 
     it('should preview product', async function () {
@@ -451,7 +451,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
 
       const validationMessage = await createCatalogPriceRulePage.setCatalogPriceRule(page, newCatalogPriceRuleData);
-      await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
+      expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
     });
 
     it('should close the page', async function () {
