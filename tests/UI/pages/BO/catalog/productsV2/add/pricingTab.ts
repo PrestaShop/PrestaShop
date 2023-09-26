@@ -82,9 +82,25 @@ class PricingTab extends BOBasePage {
 
   private readonly pricingOnSaleCheckBox: string;
 
+  private readonly specificPriceTable: string;
+
   private readonly catalogPriceRulesTable: string;
 
+  private readonly deleteSpecificPriceModal: string;
+
+  private readonly deleteSpecificPriceModalConfirmButton: string;
+
+  private readonly showCatalogPriceRuleButton: string;
+
+  private readonly manageCatalogPriceRuleLink: string;
+
   private readonly catalogPriceRuleRow: (row: number) => string;
+
+  private readonly specificPriceTableRow: (row: number) => string;
+
+  private readonly editSpecificPriceIcon: (row: number) => string;
+
+  private readonly deleteSpecificPriceIcon: (row: number) => string;
 
   private readonly catalogPriceRuleRowColumn: (row: number, column: string) => string;
 
@@ -143,11 +159,20 @@ class PricingTab extends BOBasePage {
     // Footer
     this.saveAndPublishButton = `${this.specificPriceModal} div.modal-footer button.btn-confirm-submit`;
 
-    // Selectors in catalog price rules table
+    // Selectors is specific price table
+    this.specificPriceTable = '#specific-prices-list-table';
+    this.specificPriceTableRow = (row: number) => `${this.specificPriceTable} tr:nth-child(${row})`;
+    this.editSpecificPriceIcon = (row: number) => `${this.specificPriceTableRow(row)} td button.js-edit-specific-price-btn`;
+    this.deleteSpecificPriceIcon = (row: number) => `${this.specificPriceTableRow(row)} td button.js-delete-specific-price-btn`;
+    this.deleteSpecificPriceModal = '#modal-confirm-delete-combination';
+    this.deleteSpecificPriceModalConfirmButton = `${this.deleteSpecificPriceModal} button.btn-confirm-submit`;
+
+    // Selectors in catalog price rules section
+    this.showCatalogPriceRuleButton = '#product_pricing_show_catalog_price_rules';
+    this.manageCatalogPriceRuleLink = '#product_pricing a[href*=\'AdminSpecificPriceRule\']';
     this.catalogPriceRulesTable = '#catalog-price-rules-list-table';
     this.catalogPriceRuleRow = (row: number) => `${this.catalogPriceRulesTable} tbody tr:nth-child(${row})`;
     this.catalogPriceRuleRowColumn = (row: number, column: string) => `${this.catalogPriceRuleRow(row)} td.${column}`;
-
   }
 
   /*
@@ -295,7 +320,7 @@ class PricingTab extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.pricingTabLink);
 
     await Promise.all([
-      page.locator(`#specific-prices-list-table tr:nth-child(${row}) td button.js-edit-specific-price-btn`).click(),
+      page.locator(this.editSpecificPriceIcon(row)).click(),
       this.waitForVisibleSelector(page, `${this.specificPriceModal}.show`),
     ]);
   }
@@ -337,30 +362,46 @@ class PricingTab extends BOBasePage {
    * @return {Promise<string|null>}
    */
   async deleteSpecificPrice(page: Page, row: number): Promise<string | null> {
-    await page.locator(`#specific-prices-list-table tr:nth-child(${row}) td button.js-delete-specific-price-btn`).click();
-    await page.locator('#modal-confirm-delete-combination button.btn-confirm-submit').click();
+    await page.locator(this.deleteSpecificPriceIcon(row)).click();
+    await page.locator(this.deleteSpecificPriceModalConfirmButton).click();
 
     return this.getGrowlMessageContent(page);
   }
 
   /**
-   *
-   * @param page
+   * Click on show catalog price rule button
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
    */
   async clickOnShowCatalogPriceRuleButton(page: Page): Promise<void> {
-    await page.locator('#product_pricing_show_catalog_price_rules').click();
+    await page.locator(this.showCatalogPriceRuleButton).click();
   }
 
+  /**
+   * Click on hide catalog price rule button
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
   async clickOnHideCatalogPriceRulesButton(page: Page): Promise<boolean> {
-    await page.locator('#product_pricing_show_catalog_price_rules').click();
+    await page.locator(this.showCatalogPriceRuleButton).click();
 
-    return this.elementVisible(page, '#product_pricing_catalog_price_rules', 1000);
+    return this.elementVisible(page, this.catalogPriceRulesTable, 1000);
   }
 
+  /**
+   * Click on manage catalog price rule link
+   * @param page {Page} Browser tab
+   * @return {Promise<Page>}
+   */
   async clickOnManageCatalogPriceRuleLink(page: Page): Promise<Page> {
-    return this.openLinkWithTargetBlank(page, '#product_pricing a[href*=\'AdminSpecificPriceRule\']', 'body');
+    return this.openLinkWithTargetBlank(page, this.manageCatalogPriceRuleLink, 'body');
   }
 
+  /**
+   * Get catalog price rule data
+   * @param page {Page} Browser tab
+   * @param row {number} Row of catalog price rule
+   */
   async getCatalogPriceRuleData(page: Page, row: number) {
     return {
       id: await this.getTextContent(page, this.catalogPriceRuleRowColumn(row, 'catalog-price-rule-id')),

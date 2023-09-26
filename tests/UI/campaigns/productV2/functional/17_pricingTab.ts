@@ -11,6 +11,7 @@ import createProductPage from '@pages/BO/catalog/productsV2/add';
 import pricingTab from '@pages/BO/catalog/productsV2/add/pricingTab';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
+import cartRulesPage from '@pages/BO/catalog/discounts';
 
 // Import FO pages
 import foProductPage from '@pages/FO/product';
@@ -22,7 +23,6 @@ import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import cartRulesPage from "@pages/BO/catalog/discounts";
 
 const baseContext: string = 'productV2_functional_pricingTab';
 
@@ -39,6 +39,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     taxRule: 'No tax',
     status: true,
   });
+  // Data to create specific price
   const specificPriceData: ProductData = new ProductData({
     specificPrice: {
       attributes: null,
@@ -48,6 +49,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       isApplyDiscount: true,
     },
   });
+  // Data to edit specific price
   const editSpecificPriceData: ProductData = new ProductData({
     specificPrice: {
       attributes: null,
@@ -57,7 +59,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       isApplyDiscount: true,
     },
   });
-
+  // Data to create new catalog price rule
   const newCatalogPriceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
     currency: 'All currencies',
     country: 'All countries',
