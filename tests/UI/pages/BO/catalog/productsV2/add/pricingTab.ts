@@ -335,7 +335,7 @@ class PricingTab extends BOBasePage {
     const addSpecificPriceFrame = await page.frame({name: 'modal-specific-price-form-iframe'});
 
     await this.setValue(addSpecificPriceFrame!, this.startingAtInput, specificPriceData.startingAt);
-    await this.setChecked(addSpecificPriceFrame!, this.applyDiscountToInitialPrice(specificPriceData.isApplyDiscount));
+    await this.setChecked(addSpecificPriceFrame!, this.applyDiscountToInitialPrice(true));
 
     // Choose combinations if exist
     if (specificPriceData.attributes) {

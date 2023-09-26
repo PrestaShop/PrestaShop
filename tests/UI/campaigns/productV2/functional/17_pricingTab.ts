@@ -46,7 +46,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       discount: 20,
       startingAt: 1,
       reductionType: '€',
-      isApplyDiscount: true,
     },
   });
   // Data to edit specific price
@@ -56,7 +55,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       discount: 30,
       startingAt: 1,
       reductionType: '€',
-      isApplyDiscount: true,
     },
   });
   // Data to create new catalog price rule
