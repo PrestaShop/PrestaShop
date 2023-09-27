@@ -163,7 +163,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
             ;
         }
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (!$results) {
             return [];
@@ -225,7 +225,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
             ->andWhere($qb->expr()->in('ag.id_attribute_group', ':attributeGroupIds'))
             ->setParameter('shopIds', $shopIdValues, Connection::PARAM_INT_ARRAY)
             ->setParameter('attributeGroupIds', $attributeGroupIdValues, Connection::PARAM_INT_ARRAY)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 

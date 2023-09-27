@@ -82,11 +82,11 @@ class CatalogPriceRuleRepository
                 spr.from,
                 spr.to
             ')
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
             ->setMaxResults($limit)
         ;
 
-        return $qb->execute()->fetchAllAssociative();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -100,7 +100,7 @@ class CatalogPriceRuleRepository
         $qb = $this->getCatalogPriceRulesQueryBuilder($langId, $productId)
             ->select('COUNT(spr.id_specific_price_rule) as total_catalog_price_rules');
 
-        return (int) $qb->execute()->fetch()['total_catalog_price_rules'];
+        return (int) $qb->executeQuery()->fetchAssociative()['total_catalog_price_rules'];
     }
 
     /**

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
@@ -245,10 +245,10 @@ class StockMovementRepository extends StockManagementRepository
 
         $statement = $this->connection->prepare($query);
         $statement->bindValue('shop_id', $this->getContextualShopId(), PDO::PARAM_INT);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $rows = $statement->fetchAll();
-        $statement->closeCursor();
+        $rows = $result->fetchAllAssociative();
+        $result->free();
         $employees = $this->castNumericToInt($rows);
 
         return $employees;
@@ -289,10 +289,10 @@ class StockMovementRepository extends StockManagementRepository
         $statement = $this->connection->prepare($query);
         $statement->bindValue('language_id', $this->getCurrentLanguageId(), PDO::PARAM_INT);
         $statement->bindValue('shop_id', $this->getContextualShopId(), PDO::PARAM_INT);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $rows = $statement->fetchAll();
-        $statement->closeCursor();
+        $rows = $result->fetchAllAssociative();
+        $result->free();
 
         if ($grouped) {
             $types = $this->castIdsToArray($rows);

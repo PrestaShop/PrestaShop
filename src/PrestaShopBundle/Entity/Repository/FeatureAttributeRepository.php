@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShopBundle\Exception\NotImplementedException;
@@ -141,9 +141,9 @@ class FeatureAttributeRepository
         $statement->bindValue('language_id', $this->languageId);
         $statement->bindValue('shop_id', $this->shopId);
 
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $rows = $statement->fetchAll();
+        $rows = $result->fetchAllAssociative();
         $rows = $this->explodeCollections($rows);
 
         return $this->castNumericToInt($rows);
@@ -191,9 +191,9 @@ class FeatureAttributeRepository
         $statement->bindValue('language_id', $this->languageId);
         $statement->bindValue('shop_id', $this->shopId);
 
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $rows = $statement->fetchAll();
+        $rows = $result->fetchAllAssociative();
         $rows = $this->explodeCollections($rows);
 
         return $this->castNumericToInt($rows);

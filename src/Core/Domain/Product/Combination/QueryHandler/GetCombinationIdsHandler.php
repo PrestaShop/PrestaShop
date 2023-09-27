@@ -80,7 +80,7 @@ class GetCombinationIdsHandler implements GetCombinationIdsHandlerInterface
         $results = $this->productCombinationQueryBuilder
             ->getSearchQueryBuilder($searchCriteria)
             ->select('pas.id_product_attribute')
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 

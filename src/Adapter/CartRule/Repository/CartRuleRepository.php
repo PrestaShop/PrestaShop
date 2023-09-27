@@ -73,7 +73,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule')
             ->where($qb->expr()->in('id_cart_rule', ':cartRuleIds'))
             ->setParameter('cartRuleIds', $cartRuleIds, Connection::PARAM_INT_ARRAY)
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -112,7 +112,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
                     'id_cart_rule' => $cartRuleId->getValue(),
                     'quantity' => $restrictionRuleGroup->getRequiredQuantityInCart(),
                 ])
-                ->execute()
+                ->executeStatement()
             ;
 
             $productRuleGroupId = $this->connection->lastInsertId();
@@ -126,7 +126,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
                     ])
                     ->setParameter('productRuleGroupId', $productRuleGroupId)
                     ->setParameter('type', $restrictionRule->getType())
-                    ->execute()
+                    ->executeStatement()
                 ;
 
                 $productRuleId = $this->connection->lastInsertId();
@@ -174,7 +174,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             )
             ->where('crprg.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -190,7 +190,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             )
             ->where('crprg.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -200,7 +200,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_product_rule_group')
             ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -279,7 +279,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_combination', 'crc')
             ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -377,7 +377,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_carrier', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
 
         if (empty($results)) {
@@ -395,7 +395,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_group', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -419,7 +419,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_country', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -436,7 +436,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->delete($this->dbPrefix . 'cart_rule_combination', 'crc')
             ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeStatement()
         ;
     }
 
@@ -468,7 +468,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->delete($this->dbPrefix . 'cart_rule_product_rule_group')
             ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeStatement()
         ;
     }
 
@@ -519,7 +519,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->delete($this->dbPrefix . 'cart_rule_' . $entityName, 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeStatement()
         ;
     }
 }

@@ -77,7 +77,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                 ->setParameter('parentId', $parentId);
         }
 
-        $positions = $qb->execute()->fetchAll();
+        $positions = $qb->executeQuery()->fetchAllAssociative();
         $currentPositions = [];
         foreach ($positions as $position) {
             $positionId = $position[$positionDefinition->getIdField()];
@@ -111,7 +111,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                 }
 
                 try {
-                    $qb->execute();
+                    $qb->executeStatement();
                 } catch (Exception $e) {
                     throw new PositionUpdateException('Could not update #%i', 'Admin.Catalog.Notification', [$rowId]);
                 }

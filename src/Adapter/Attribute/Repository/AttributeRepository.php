@@ -85,7 +85,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->setParameter('idsList', $attributeIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        $result = (int) $qb->execute()->fetch()['total'];
+        $result = (int) $qb->executeQuery()->fetchAssociative()['total'];
 
         if (count($attributeIds) !== $result) {
             throw new AttributeNotFoundException('Some of provided attributes does not exist');
@@ -149,7 +149,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ;
         }
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (!$results) {
             return [];
@@ -232,7 +232,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
             ->setParameter('shopIds', $shopIdValues, Connection::PARAM_INT_ARRAY)
             ->setParameter('attributeIds', $attributeIdValues, Connection::PARAM_INT_ARRAY)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -271,7 +271,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        return $qb->execute()->fetchAll();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -311,7 +311,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->setParameter('langId', $langId)
         ;
 
-        $attributesInfo = $qb->execute()->fetchAll();
+        $attributesInfo = $qb->executeQuery()->fetchAllAssociative();
 
         $attributesInfoByAttributeId = [];
         foreach ($attributesInfo as $attributeInfo) {

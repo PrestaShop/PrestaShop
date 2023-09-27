@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception as DBALException;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
@@ -62,9 +63,9 @@ class LogRepository implements RepositoryInterface
      */
     public function findAll()
     {
-        $statement = $this->connection->query("SELECT l.* FROM $this->logTable l");
+        $result = $this->connection->executeQuery("SELECT l.* FROM $this->logTable l");
 
-        return $statement->fetchAll();
+        return $result->fetchAllAssociative();
     }
 
     /**
@@ -98,9 +99,9 @@ class LogRepository implements RepositoryInterface
     public function findAllWithEmployeeInformation($filters)
     {
         $queryBuilder = $this->getAllWithEmployeeInformationQuery($filters);
-        $statement = $queryBuilder->execute();
+        $statement = $queryBuilder->executeQuery();
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $statement->fetchAllAssociative();
     }
 
     /**
@@ -159,12 +160,12 @@ class LogRepository implements RepositoryInterface
      *
      * @return int the number of affected rows
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function deleteAll()
     {
         $platform = $this->connection->getDatabasePlatform();
 
-        return $this->connection->executeUpdate($platform->getTruncateTableSQL($this->logTable, true));
+        return $this->connection->executeStatement($platform->getTruncateTableSQL($this->logTable, true));
     }
 }

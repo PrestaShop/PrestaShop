@@ -110,7 +110,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
         }
 
-        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, [$modulePrefix => $moduleNamespace]);
+        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, []);
     }
 
     /**
