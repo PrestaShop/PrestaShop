@@ -1378,7 +1378,13 @@ class ToolsCore
      */
     public static function str2url($str)
     {
-        return (new StringModifier())->str2url((string) $str);
+        static $allow_accented_chars = null;
+
+        if ($allow_accented_chars === null) {
+            $allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+        }
+
+        return (new StringModifier())->str2url((string) $str, $allow_accented_chars);
     }
 
     /**
