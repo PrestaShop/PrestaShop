@@ -2,7 +2,7 @@ import Countries from '@data/demo/countries';
 import CountryData from '@data/faker/country';
 import BrandAddressCreator from '@data/types/brandAddress';
 
-import {faker} from '@faker-js/faker';
+import {fakerFR as faker} from '@faker-js/faker';
 
 const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 
@@ -68,10 +68,10 @@ export default class BrandAddressData {
     this.country = brandAddressToCreate.country || faker.helpers.arrayElement(countriesNames);
 
     /** @type {string} Home phone number linked to the address */
-    this.homePhone = brandAddressToCreate.homePhone || faker.phone.number('01########');
+    this.homePhone = brandAddressToCreate.homePhone || faker.phone.number();
 
     /** @type {string} Mobile phone number linked to the address */
-    this.mobilePhone = brandAddressToCreate.mobilePhone || faker.phone.number('06########');
+    this.mobilePhone = brandAddressToCreate.mobilePhone || faker.phone.number();
 
     /** @type {string} Other information to add on address */
     this.other = brandAddressToCreate.other || '';

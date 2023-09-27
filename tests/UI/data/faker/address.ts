@@ -4,7 +4,7 @@ import type CountryData from '@data/faker/country';
 import type StateData from '@data/faker/state';
 import type AddressCreator from '@data/types/address';
 
-import {faker} from '@faker-js/faker';
+import {fakerFR as faker} from '@faker-js/faker';
 
 const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 const statesNames: string[] = Object.values(States).map((state: StateData) => state.name);
@@ -105,7 +105,7 @@ export default class AddressData {
     this.state = addressToCreate.state || faker.helpers.arrayElement(statesNames);
 
     /** @type {string} Phone number */
-    this.phone = addressToCreate.phone || faker.phone.number('01########');
+    this.phone = addressToCreate.phone || faker.phone.number();
 
     /** @type {string} Other information to add on address */
     this.other = addressToCreate.other || '';
