@@ -1,7 +1,7 @@
 // Import data
 import StoreCreator from '@data/types/store';
 
-import {faker} from '@faker-js/faker';
+import {fakerFR as faker} from '@faker-js/faker';
 
 /**
  * Create new store to use on store creation form on BO
@@ -80,10 +80,10 @@ export default class StoreData {
     this.longitude = storeToCreate.longitude || faker.location.longitude().toString();
 
     /** @type {string} Phone number of the store (default format 01########) */
-    this.phone = storeToCreate.phone || faker.phone.number('01########');
+    this.phone = storeToCreate.phone || faker.phone.number();
 
     /** @type {string} Fax number of the store default format 01########) */
-    this.fax = storeToCreate.fax || faker.phone.number('01########');
+    this.fax = storeToCreate.fax || faker.phone.number();
 
     /** @type {string} Registration number of the store */
     this.registrationNumber = storeToCreate.registrationNumber || faker.finance.accountNumber();

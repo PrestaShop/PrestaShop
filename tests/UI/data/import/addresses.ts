@@ -4,7 +4,7 @@ import CountryData from '@data/faker/country';
 import ImportData from '@data/faker/import';
 import type {ImportAddress} from '@data/types/import';
 
-import {faker} from '@faker-js/faker';
+import {fakerFR as faker} from '@faker-js/faker';
 
 const countriesNames = Object.values(Countries).map((country: CountryData) => country.name);
 
@@ -30,8 +30,8 @@ function createRecord(): ImportAddress[] {
       country: faker.helpers.arrayElement(countriesNames),
       state: '',
       other: '',
-      phone: faker.phone.number('01########'),
-      mobilePhone: faker.phone.number('01########'),
+      phone: faker.phone.number(),
+      mobilePhone: faker.phone.number(),
       vatNumber: '',
       dni: '',
     });
