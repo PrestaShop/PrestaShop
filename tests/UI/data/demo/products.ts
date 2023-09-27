@@ -13,6 +13,7 @@ export default {
       + 'origamis. To wear with a chino or jeans. The sublimation textile printing process provides an exceptional '
       + 'color rendering and a color, guaranteed overtime.',
     retailPrice: 28.68,
+    tax: 20,
     price: 23.90,
     finalPrice: 22.94,
     specificPrice: {

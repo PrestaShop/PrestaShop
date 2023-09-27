@@ -309,12 +309,15 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       const productInformation = await foProductPage.getProductInformation(page);
       expect(productRetailPrice).to.eq(productInformation.price);
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/33962
-      /*
       const productsPrice = await foProductPage.getPackProductsPrice(page);
-      const calculatedPrice = (Products.demo_1.finalPrice * productQuantity + Products.demo_9.finalPrice).toFixed(2);
-      expect(calculatedPrice).to.eq(productsPrice);
-      */
+      const calculatedPrice = (
+        ((
+          (Products.demo_1.price - (Products.demo_1.price * (Products.demo_1.specificPrice.discount / 100)))
+          * (1 + (Products.demo_1.tax / 100))
+        ) * productQuantity)
+        + Products.demo_9.finalPrice
+      ).toFixed(2);
+      expect(calculatedPrice).to.eq(productsPrice.toString());
 
       const product1 = await foProductPage.getProductInPackList(page, 1);
       await Promise.all([
