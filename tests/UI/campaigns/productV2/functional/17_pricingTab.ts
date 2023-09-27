@@ -92,7 +92,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
         dashboardPage.catalogParentLink,
         dashboardPage.productsLink,
       );
-
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
@@ -143,7 +142,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
       page = await createProductPage.previewProduct(page);
-
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -192,7 +190,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
       page = await createProductPage.previewProduct(page);
-
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -241,7 +238,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'editRetailPriceParUnit', baseContext);
 
       await pricingTab.setDisplayRetailPricePerUnit(page, true);
-
       await pricingTab.setRetailPricePerUnit(page, true, 10, 'per unit');
 
       const message = await createProductPage.saveProduct(page);
@@ -268,7 +264,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct3', baseContext);
 
       page = await createProductPage.previewProduct(page);
-
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -304,7 +299,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct4', baseContext);
 
       page = await createProductPage.previewProduct(page);
-
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -340,7 +334,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct5', baseContext);
 
       page = await createProductPage.previewProduct(page);
-
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -376,7 +369,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct6', baseContext);
 
       page = await createProductPage.previewProduct(page);
-
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -410,7 +402,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct7', baseContext);
 
       page = await createProductPage.previewProduct(page);
-
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -456,7 +447,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
 
       page = await catalogPriceRulesPage.closePage(browserContext, page, 0);
-
       await createProductPage.reloadPage(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);

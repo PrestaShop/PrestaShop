@@ -3,7 +3,6 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 // Import data
 import ProductData from '@data/faker/product';
-
 import type {ProductSpecificPrice} from '@data/types/product';
 
 import type {Page} from 'playwright';
