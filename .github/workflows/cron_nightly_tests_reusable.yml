@@ -168,9 +168,19 @@ jobs:
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
       REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
-      TEST_CAMPAIGN: ${{ matrix.CAMPAIGN }}  # Command to execute from the matrix
-      INSTALL_AUTO: ${{ (matrix.CAMPAIGN == 'sanity') && 'false' || 'true' }}
-      ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'false' || 'true' }}
+      TEST_CAMPAIGN: 'test:${{ matrix.CAMPAIGN }}'  # Command to execute from the matrix
+      PS_LANGUAGE: 'en'
+      PS_INSTALL_AUTO: ${{ (matrix.CAMPAIGN == 'sanity') && '0' || '1' }}
+      PS_DEV_MODE: 0
+      PS_ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && '0' || '1' }}
+      PS_DOMAIN: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'localhost:8001' || 'localhost:8002' }}
+      PS_USE_DOCKER_MAILDEV: 0
+      DB_SERVER: 'mysql'
+      DB_NAME: 'prestashop'
+      DB_PREFIX: 'tst_'
+      DB_USER: 'root'
+      DB_PASSWD: 'prestashop'
+      ADMIN_PASSWD: ${{ (matrix.BRANCH == '1.7.8.x') && 'prestashop_demo' || 'Correct Horse Battery Staple' }}
 
     steps:
       - uses: actions/checkout@v3

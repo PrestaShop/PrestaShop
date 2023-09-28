@@ -7,7 +7,7 @@ import MailDev from 'maildev';
 export default {
 
   /**
-   * Create a Maildev server instance (the default smtp port is 1025)
+   * Create a Maildev server instance (the default smtp port is 1026)
    * @param config {{smtpPort: string, smtpServer: string, silent:boolean}} Maildev config to start listening
    * @returns {Object}
    */
@@ -18,7 +18,7 @@ export default {
     });
   },
   /**
-   * Start the maildev listener (listen on 1025 smtp port)
+   * Start the maildev listener (listen on 1026 smtp port)
    * @param mailListener {MailDev} Maildev server instance
    */
   startListener(mailListener: MailDev): void {
