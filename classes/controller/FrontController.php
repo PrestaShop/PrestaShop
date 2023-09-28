@@ -1845,48 +1845,11 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Generate a URL corresponding to the current page but
-     * with the query string altered.
-     *
-     * If $extraParams is set to NULL, then all query params are stripped.
-     *
-     * Otherwise, params from $extraParams that have a null value are stripped,
-     * and other params are added. Params not in $extraParams are unchanged.
+     * @deprecated Since 9.0 and will be removed in the next major.
      */
     protected function updateQueryString(array $extraParams = null)
     {
-        $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
-        $url = Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $uriWithoutParams;
-        $params = [];
-        $paramsFromUri = '';
-        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
-            $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
-        }
-        parse_str($paramsFromUri, $params);
-
-        if (null !== $extraParams) {
-            foreach ($extraParams as $key => $value) {
-                if (null === $value) {
-                    unset($params[$key]);
-                } else {
-                    $params[$key] = $value;
-                }
-            }
-        }
-
-        if (null !== $extraParams) {
-            foreach ($params as $key => $param) {
-                if ('' === $param) {
-                    unset($params[$key]);
-                }
-            }
-        } else {
-            $params = [];
-        }
-
-        $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
-
-        return $url . ($queryString ? "?$queryString" : '');
+        return Tools::updateCurrentQueryString($extraParams);
     }
 
     protected function getCurrentURL()
