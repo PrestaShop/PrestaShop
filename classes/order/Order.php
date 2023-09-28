@@ -2433,6 +2433,9 @@ class OrderCore extends ObjectModel
 
         $expected_total_base = $this->total_products - $this->total_discounts_tax_excl;
 
+        // Get order_details
+        $order_details = $limitToOrderDetails ? $limitToOrderDetails : $this->getOrderDetailList();
+
         foreach ($this->getCartRules() as $order_cart_rule) {
             if ($order_cart_rule['free_shipping'] && $free_shipping_tax === 0) {
                 $free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
@@ -2448,6 +2451,17 @@ class OrderCore extends ObjectModel
 
                 $product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
                 $order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
+            } elseif ($cart_rule->gift_product > 0) {
+                foreach ($order_details as $key => $order_detail) {
+                    if ($order_detail['product_id'] == $cart_rule->gift_product
+                        && $order_detail['product_attribute_id'] == $cart_rule->gift_product_attribute) {
+                        if ($order_detail['product_quantity'] > 1) {
+                            $order_details[$key]['product_quantity']--;
+                        } else {
+                            unset($order_details[$key]);
+                        }
+                    }
+                }
             }
         }
 
@@ -2463,9 +2477,6 @@ class OrderCore extends ObjectModel
         $order_detail_tax_rows = [];
 
         $breakdown = [];
-
-        // Get order_details
-        $order_details = $limitToOrderDetails ? $limitToOrderDetails : $this->getOrderDetailList();
 
         $order_ecotax_tax = 0;
 
