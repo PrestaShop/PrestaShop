@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,41 +27,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\ApiAccess;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+class ApiAccessException extends DomainException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteByApplication(AuthorizedApplication $application): void
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
-
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
-    }
-
-    public function save(ApiAccess $apiAccess): int
-    {
-        $this->getEntityManager()->persist($apiAccess);
-        $this->getEntityManager()->flush();
-
-        return $apiAccess->getId();
-    }
 }

@@ -600,3 +600,9 @@ default:
             - Tests\Integration\Behaviour\Features\Context\Domain\AliasFeatureContext
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        api-access:
+          paths:
+            - "%paths.base%/Features/Scenario/ApiAccess"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ApiAccessManagementFeatureContext

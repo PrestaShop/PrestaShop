@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,41 +27,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\ApiAccess;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+class ApiAccessId
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteByApplication(AuthorizedApplication $application): void
+    private int $apiAccessId;
+
+    public function __construct(int $apiAccessId)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
-
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
+        $this->assertIsIntegerGreaterThanZero($apiAccessId);
+        $this->apiAccessId = $apiAccessId;
     }
 
-    public function save(ApiAccess $apiAccess): int
+    public function getValue(): int
     {
-        $this->getEntityManager()->persist($apiAccess);
-        $this->getEntityManager()->flush();
+        return $this->apiAccessId;
+    }
 
-        return $apiAccess->getId();
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param int $value
+     *
+     * @throws ApiAccessConstraintException
+     */
+    private function assertIsIntegerGreaterThanZero($value)
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new ApiAccessConstraintException(sprintf('Invalid api access id "%s".', var_export($value, true)), ApiAccessConstraintException::INVALID_ID);
+        }
     }
 }

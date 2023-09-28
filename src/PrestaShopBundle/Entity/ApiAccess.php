@@ -29,166 +29,147 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiAccessRepository")
  * @ORM\Table()
- * @UniqueEntity("name")
  *
  * @experimental
  */
-class ApiAccess implements ApiAccessInterface
+#[UniqueEntity('clientId')]
+#[UniqueEntity('clientName')]
+class ApiAccess
 {
     /**
-     * @var int
-     *
      * @ORM\Id
-     * @ORM\Column(name="id_api_access", type="integer", options={"unsigned":true})
+     * @ORM\Column(name="id_api_access", type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    #[Assert\Positive]
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="client_id", type="string", length=255)
      */
-    private $clientId;
+    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank]
+    private string $clientId;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="client_secret", type="string", length=255)
+     * @ORM\Column(name="client_name", type="string", length=255)
      */
-    private $clientSecret;
+    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank]
+    private string $clientName;
 
     /**
-     * @var AuthorizedApplicationInterface
+     * We make the secret nullable for the moment because it prevents the first step of the feature to be implemented.
      *
-     * @ORM\ManyToOne(targetEntity=AuthorizedApplication::class)
-     * @ORM\JoinColumn(name="id_authorized_application", referencedColumnName="id_authorized_application", nullable=false, onDelete="CASCADE")
+     * @ORM\Column(name="client_secret", type="string", length=255, nullable=true)
      */
-    private $authorizedApplication;
+    #[Assert\Length(max: 255)]
+    private ?string $clientSecret;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="active", type="boolean")
+     * @ORM\Column(name="enabled", type="boolean")
      */
-    private $active;
+    #[Assert\NotNull]
+    private bool $enabled;
 
     /**
      * @ORM\Column(name="scopes", type="array")
      */
-    private $scopes = [];
+    private array $scopes = [];
 
     /**
-     * {@inheritdoc}
+     * @ORM\Column(name="description", type="string")
      */
+    #[Assert\Length(max: 21844)]
+    #[Assert\NotBlank]
+    private string $description;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setId(int $id): ApiAccessInterface
+    public function setId(int $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setClientId(string $clientId): ApiAccessInterface
+    public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getClientSecret(): string
+    public function getClientName(): string
+    {
+        return $this->clientName;
+    }
+
+    public function setClientName(string $clientName): self
+    {
+        $this->clientName = $clientName;
+
+        return $this;
+    }
+
+    public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setClientSecret($clientSecret): ApiAccessInterface
+    public function setClientSecret(?string $clientSecret): self
     {
         $this->clientSecret = $clientSecret;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthorizedApplication(): AuthorizedApplicationInterface
+    public function isEnabled(): bool
     {
-        return $this->authorizedApplication;
+        return $this->enabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): ApiAccessInterface
+    public function setEnabled(bool $enabled): self
     {
-        $this->authorizedApplication = $authorizedApplication;
+        $this->enabled = $enabled;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setActive(bool $active): ApiAccessInterface
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getScopes(): array
     {
         return $this->scopes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setScopes(array $scopes): ApiAccessInterface
+    public function setScopes(array $scopes): self
     {
         $this->scopes = $scopes;
+
+        return $this;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
