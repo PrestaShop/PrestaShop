@@ -2456,7 +2456,7 @@ class OrderCore extends ObjectModel
                     if ($order_detail['product_id'] == $cart_rule->gift_product
                         && $order_detail['product_attribute_id'] == $cart_rule->gift_product_attribute) {
                         if ($order_detail['product_quantity'] > 1) {
-                            $order_details[$key]['product_quantity']--;
+                            --$order_details[$key]['product_quantity'];
                         } else {
                             unset($order_details[$key]);
                         }
