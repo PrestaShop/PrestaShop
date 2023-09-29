@@ -76,10 +76,10 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new ToggleColumn('active'))
+                (new ToggleColumn('enabled'))
                     ->setName($this->trans('Api access state', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'active',
+                        'field' => 'enabled',
                         'primary_field' => 'id_api_access',
                         'route' => 'admin_api_accesses_toggle_active',
                         'route_param_name' => 'apiAccessId',

@@ -108,10 +108,9 @@ final class AuthorizedApplicationQueryBuilder extends AbstractDoctrineQueryBuild
     private function appendActiveApiAccessQuery(QueryBuilder $queryBuilder): void
     {
         $shopQueryBuilder = $this->getQueryBuilder()
-            ->select('count(api.active)')
+            ->select('count(api.enabled)')
             ->from($this->dbPrefix . 'api_access', 'api')
-            ->where('api.id_authorized_application = aa.id_authorized_application')
-            ->andWhere('api.active = 1');
+            ->Where('api.enabled = 1');
 
         $queryBuilder->addSelect('(' . $shopQueryBuilder->getSQL() . ') as active_api_access');
     }
@@ -121,8 +120,7 @@ final class AuthorizedApplicationQueryBuilder extends AbstractDoctrineQueryBuild
         $shopQueryBuilder = $this->getQueryBuilder()
             ->select('count(api.id_api_access)')
             ->from($this->dbPrefix . 'api_access', 'api')
-            ->where('api.id_authorized_application = aa.id_authorized_application')
-            ->andWhere('api.active = 0');
+            ->Where('api.enabled = 0');
 
         $queryBuilder->addSelect('(' . $shopQueryBuilder->getSQL() . ') as inactive_api_access');
     }
