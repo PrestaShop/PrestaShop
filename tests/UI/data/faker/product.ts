@@ -112,8 +112,6 @@ export default class ProductData {
 
   public numberOfDays: number | null;
 
-  public weight: number;
-
   public metaTitle: string | null;
 
   public metaDescription: string | null;
