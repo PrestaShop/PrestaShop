@@ -17,8 +17,8 @@ import {searchResultsPage} from '@pages/FO/searchResults';
 import categoryPageFO from '@pages/FO/category';
 
 // Import data
-import ProductData from '@data/faker/product';
 import Products from '@data/demo/products';
+import ProductData from '@data/faker/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
