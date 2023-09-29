@@ -95,6 +95,8 @@ class Product extends FOBasePage {
 
   private readonly unitDiscountValue: string;
 
+  private readonly productUnitPrice: string;
+
   private readonly commentCount: string;
 
   private readonly emptyReviewBlock: string;
@@ -183,6 +185,7 @@ class Product extends FOBasePage {
 
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
+    this.productUnitPrice = `${this.productPricesBlock} p.product-unit-price`;
     this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
     this.discountPercentageSpan = `${this.productPricesBlock} .discount.discount-percentage`;
     this.regularPrice = `${this.productPricesBlock} .regular-price`;
@@ -254,6 +257,15 @@ class Product extends FOBasePage {
    */
   async isProductTagVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productFlag);
+  }
+
+  /**
+   * Get product price
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductPrice(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productPrice);
   }
 
   /**
@@ -367,6 +379,15 @@ class Product extends FOBasePage {
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
       thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
     };
+  }
+
+  /**
+   * Get product unit price
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductUnitPrice(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productUnitPrice);
   }
 
   /**
