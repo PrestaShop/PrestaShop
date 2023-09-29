@@ -68,7 +68,6 @@ describe('BO - Catalog - Products : Seo tab', async () => {
         dashboardPage.catalogParentLink,
         dashboardPage.productsLink,
       );
-
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);

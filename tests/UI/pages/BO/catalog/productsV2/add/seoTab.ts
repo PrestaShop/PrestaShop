@@ -1,9 +1,8 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
+import createProductPage from '@pages/BO/catalog/productsV2/add/index';
 
 import type {Page} from 'playwright';
-import ProductData from "@data/faker/product";
-import createProductPage from "@pages/BO/catalog/productsV2/add/index";
 
 /**
  * SEO tab on new product V2 page, contains functions that can be used on the page
