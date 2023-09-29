@@ -62,6 +62,9 @@ type ProductCreator = {
   packageDimensionWidth?: number
   deliveryTime?: string
   combinations?: ProductCombination[]
+  metaTitle?: string | null
+  metaDescription?: string | null
+  friendlyUrl?: string | null
 };
 
 type ProductCombination = {
