@@ -140,6 +140,7 @@ tests-legacy/.phpunit.result.cache
 
 /admin-dev/backups/*
 !/admin-dev/backups/.htaccess
+!/admin-dev/backups/index.php
 
 /admin-dev/import/*
 !/admin-dev/import/.htaccess
