@@ -173,6 +173,7 @@ php-cs-fixer
 # Translations and emails templates
 
 translations/*
+!translations/index.php
 !translations/default
 mails/*
 !mails/.htaccess
