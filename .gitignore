@@ -260,12 +260,14 @@ themes/default-bootstrap/modules/*/mails/*
 !/var/sessions
 /var/sessions/*
 !var/sessions/.gitkeep
+!var/.htaccess
 !var/SymfonyRequirements.php
 !var/class_stub.php
 !/var/modules
 /var/modules/*
 !/var/modules/.gitkeep
-/vendor/
+/vendor/*
+!vendor/.htaccess
 /web/bundles/
 
 # Release creation
