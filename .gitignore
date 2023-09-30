@@ -204,6 +204,7 @@ modules/*
 !modules/index.php
 override/*
 !override/index.php
+!override/.htaccess
 themes/*/
 themes/classic
 !themes/_core
