@@ -145,8 +145,14 @@ config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
-config/themes/*
+!config/xml/index.php
+!config/xml/.htaccess
+!config/xml/themes/
+config/xml/themes/*
 !config/xml/themes/default.xml
+!config/xml/themes/index.php
+config/themes/*
+!config/themes/.gitkeep
 themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php
