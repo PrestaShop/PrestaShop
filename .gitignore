@@ -134,6 +134,8 @@ tests-legacy/.phpunit.result.cache
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
+!/admin-dev/autoupgrade/backup/
+/admin-dev/autoupgrade/backup/*
 !/admin-dev/autoupgrade/backup/index.php
 
 /admin-dev/backups/*
