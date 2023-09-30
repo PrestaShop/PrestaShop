@@ -173,6 +173,8 @@ php-cs-fixer
 translations/*
 !translations/default
 mails/*
+!mails/.htaccess
+!mails/index.php
 !mails/themes/
 !mails/_partials/
 themes/default-bootstrap/lang/*
