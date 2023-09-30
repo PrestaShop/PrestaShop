@@ -156,6 +156,7 @@ app/config/config.php
 modules/*
 !modules/index.php
 override/*
+!override/index.php
 themes/*/
 themes/classic
 !themes/_core
