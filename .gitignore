@@ -189,7 +189,6 @@ themes/default-bootstrap/modules/*/mails/*
 
 # Symfony
 
-/bin/
 /.web-server-pid
 /app/Resources/geoip/GeoLite2-City.mmdb
 /app/config/parameters.yml
