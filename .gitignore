@@ -175,6 +175,9 @@ php-cs-fixer
 translations/*
 !translations/index.php
 !translations/default
+!translations/export/
+translations/export/*
+!translations/export/index.php
 mails/*
 !mails/.htaccess
 !mails/index.php
