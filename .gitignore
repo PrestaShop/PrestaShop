@@ -154,6 +154,7 @@ app/config/config.php
 # Themes, modules and overrides
 
 modules/*
+!modules/index.php
 override/*
 themes/*/
 themes/classic
