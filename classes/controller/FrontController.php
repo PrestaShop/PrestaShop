@@ -1502,7 +1502,7 @@ class FrontControllerCore extends Controller
                 'id' => $params['id'],
                 'locale' => $locale,
             ]
-        )
+        );
 
         if ($overridden_template !== $template) {
             return $overridden_template;
