@@ -122,21 +122,22 @@ class StringModifierTest extends TestCase
     /**
      * @dataProvider str2UrlProvider
      */
-    public function testStr2url(string $input, string $expected): void
+    public function testStr2url(string $input, string $expected, bool $allow_accented_chars): void
     {
-        self::assertSame($expected, $this->stringModifier->str2url($input));
+        self::assertSame($expected, $this->stringModifier->str2url($input, $allow_accented_chars));
     }
 
     public function str2UrlProvider(): Generator
     {
-        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-'];
-        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text'];
-        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-'];
-        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou'];
-        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-'];
-        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text'];
-        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-'];
-        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou'];
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-áéíóú', true];
     }
 
     /**

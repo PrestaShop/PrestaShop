@@ -317,7 +317,14 @@ class FrontControllerCore extends Controller
             }
         }
 
+        /*
+         * Get proper currency from the cookie and $_GET parameters. It will provide us with a requested currency
+         * or a default currency, if the requested one is not valid anymore.
+         */
         $currency = Tools::setCurrency($this->context->cookie);
+
+        // Assign that currency to the context, so we can immediately use it for calculations.
+        $this->context->currency = $currency;
 
         if (isset($_GET['logout']) || ($this->context->customer->logged && Customer::isBanned($this->context->customer->id))) {
             $this->context->customer->logout();
@@ -328,16 +335,27 @@ class FrontControllerCore extends Controller
             Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
         }
 
-        /* Cart already exists */
+        /*
+         * If we have an information about some cart in the cookie, we will try to use it, but we need to properly validate it.
+         * It can be deleted, order already placed for it and other edge scenarios.
+         */
         if ((int) $this->context->cookie->id_cart) {
             if (!isset($cart)) {
                 $cart = new Cart((int) $this->context->cookie->id_cart);
             }
 
+            /*
+             * Check if cart object is valid and not deleted.
+             * Check if there is not an order already placed on a different device or different tab.
+             */
             if (!Validate::isLoadedObject($cart) || $cart->orderExists()) {
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
+
+            /*
+             * If geolocation is enabled and we are not allowed to order from our country, we will delete the cart.
+             */
             } elseif (
                 (int) (Configuration::get('PS_GEOLOCATION_ENABLED'))
                 && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
@@ -349,6 +367,11 @@ class FrontControllerCore extends Controller
                 /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart);
+
+            /*
+             * Check if cart data is still matching to what is set in our cookie - currency, language and customer.
+             * If not, update it on the cart.
+             */
             } elseif (
                 $this->context->cookie->id_customer != $cart->id_customer
                 || $this->context->cookie->id_lang != $cart->id_lang
@@ -362,7 +385,13 @@ class FrontControllerCore extends Controller
                 $cart->id_currency = (int) $currency->id;
                 $cart->update();
             }
-            /* Select an address if not set */
+
+            /*
+             * If we don't have any addresses set on the cart and we have a valid customer ID, we will try to automatically
+             * assign addresses to that cart. We will do it by taking the first valid address of the customer.
+             *
+             * If that customer exists but don't have any addresses, it will assign zero and we go on.
+             */
             if (
                 isset($cart)
                 && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 || !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)
@@ -383,6 +412,13 @@ class FrontControllerCore extends Controller
             }
         }
 
+        /*
+         * If the previous logic didn't resolve into any valid cart we can use, we will create a new empty one.
+         *
+         * It does not have any ID yet. It's just an empty cart object, but modules can use it and ask for it's data
+         * without checking a cart exists in a context and all that boring stuff. It will get assigned an ID after
+         * first save or update.
+         */
         if (!isset($cart) || !$cart->id) {
             $cart = new Cart();
             $cart->id_lang = (int) $this->context->cookie->id_lang;
@@ -429,7 +465,6 @@ class FrontControllerCore extends Controller
         }
 
         $this->context->cart = $cart;
-        $this->context->currency = $currency;
 
         Hook::exec(
             'actionFrontControllerInitAfter',
