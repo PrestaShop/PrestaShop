@@ -1339,17 +1339,21 @@ class FrontControllerCore extends Controller
         $content_only = (int) Tools::getValue('content_only');
 
         // If a module provides its own custom layout, we ignore what is set in configuration
-        if ($overridden_layout = Hook::exec(
+        $hookLayout = $layout;
+        Hook::exec(
             'overrideLayoutTemplate',
             [
+                'layout' => &$hookLayout,
                 'default_layout' => $layout,
                 'entity' => $entity,
                 'locale' => $this->context->language->locale,
                 'controller' => $this,
                 'content_only' => $content_only,
             ]
-        )) {
-            return $overridden_layout;
+        );
+        
+        if ($hookLayout !== $layout) {
+            return $hookLayout;
         }
 
         // When using content_only, there will be no header, footer and sidebars
@@ -1395,16 +1399,20 @@ class FrontControllerCore extends Controller
             $locale = $this->context->language->locale;
         }
 
-        if ($overridden_template = Hook::exec(
+        $overridden_template = $template;
+        Hook::exec(
             'displayOverrideTemplate',
             [
                 'controller' => $this,
-                'template_file' => $template,
+                'template_file' => &$overridden_template,
+                'original_template_file' => $template,
                 'entity' => $params['entity'],
                 'id' => $params['id'],
                 'locale' => $locale,
             ]
-        )) {
+        )
+
+        if ($overridden_template !== $template) {
             return $overridden_template;
         }
 
