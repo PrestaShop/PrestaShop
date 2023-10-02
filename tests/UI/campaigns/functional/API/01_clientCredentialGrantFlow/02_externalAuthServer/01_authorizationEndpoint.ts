@@ -1,5 +1,4 @@
 import api from '@utils/api';
-import keycloakHelper from '@utils/keycloakHelper';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
@@ -8,7 +7,7 @@ import {APIRequestContext, request} from 'playwright';
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_authorizationEndpoint';
 
 // @todo : https://github.com/PrestaShop/PrestaShop/issues/33946
-describe.skip('API : External Auth Server - Authorization Endpoint', async () => {
+describe('API : External Auth Server - Authorization Endpoint', async () => {
   let apiContextBO: APIRequestContext;
   let apiContextKeycloak: APIRequestContext;
   let accessTokenKeycloak: string;
@@ -20,6 +19,7 @@ describe.skip('API : External Auth Server - Authorization Endpoint', async () =>
       ignoreHTTPSErrors: true,
     });
     if (!global.GENERATE_FAILED_STEPS) {
+      /*
       apiContextKeycloak = await request.newContext({
         baseURL: global.keycloakConfig.keycloakExternalUrl,
         // @todo : Remove it when Puppeteer will accept self signed certificates
@@ -33,19 +33,24 @@ describe.skip('API : External Auth Server - Authorization Endpoint', async () =>
         true,
       );
       expect(accessTokenKeycloak.length).to.be.gt(0);
+      */
     }
   });
 
   after(async () => {
     if (!global.GENERATE_FAILED_STEPS) {
+      /*
       const isRemoved: boolean = await keycloakHelper.removeClient(global.keycloakConfig.keycloakClientId);
       expect(isRemoved).to.eq(true);
+      */
     }
   });
 
   describe('Authorization Endpoint', async () => {
     it('should request the endpoint /admin-dev/api/oauth2/token with method GET', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodGET', baseContext);
+
+      this.skip();
 
       const apiResponse = await apiContextBO.get('api/oauth2/token');
       expect(apiResponse.status()).to.eq(405);
@@ -54,12 +59,16 @@ describe.skip('API : External Auth Server - Authorization Endpoint', async () =>
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOST', baseContext);
 
+      this.skip();
+
       const apiResponse = await apiContextBO.post('api/oauth2/token');
       expect(apiResponse.status()).to.eq(400);
     });
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with unuseful data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTUnusefulData', baseContext);
+
+      this.skip();
 
       const apiResponse = await apiContextBO.post('api/oauth2/token', {
         form: {
@@ -71,6 +80,8 @@ describe.skip('API : External Auth Server - Authorization Endpoint', async () =>
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with invalid data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTInvalidData', baseContext);
+
+      this.skip();
 
       const apiResponse = await apiContextBO.post('api/oauth2/token', {
         form: {
@@ -85,6 +96,8 @@ describe.skip('API : External Auth Server - Authorization Endpoint', async () =>
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with valid + unuseful data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTValidAndUnusefulData', baseContext);
 
+      this.skip();
+
       const apiResponse = await apiContextBO.post('api/oauth2/token', {
         form: {
           client_id: 'my_client_id',
@@ -98,6 +111,8 @@ describe.skip('API : External Auth Server - Authorization Endpoint', async () =>
 
     it('should request the endpoint /admin-dev/api/oauth2/token with method POST with valid data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTValidData', baseContext);
+
+      this.skip();
 
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/33710
       const apiResponse = await apiContextBO.post('api/oauth2/token', {
@@ -124,6 +139,8 @@ describe.skip('API : External Auth Server - Authorization Endpoint', async () =>
       'should request the endpoint /realms/master/protocol/openid-connect/token (Keycloak) with method POST with valid data',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestKeycloakWithMethodPOSTValidData', baseContext);
+
+        this.skip();
 
         const apiResponse = await apiContextKeycloak.post('/realms/master/protocol/openid-connect/token', {
           form: {

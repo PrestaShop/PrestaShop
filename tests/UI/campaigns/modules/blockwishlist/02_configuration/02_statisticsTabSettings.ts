@@ -162,8 +162,10 @@ describe('Wishlist module - Statistics tab settings', async () => {
       expect(pageTitle).to.contains(blockwishlistStatisticsPage.pageTitle);
     });
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/33374
-    it.skip('should click on the refresh button', async function () {
+    it('should click on the refresh button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnRefreshButton', baseContext);
+
+      this.skip();
 
       await blockwishlistStatisticsPage.refreshStatistics(page);
 

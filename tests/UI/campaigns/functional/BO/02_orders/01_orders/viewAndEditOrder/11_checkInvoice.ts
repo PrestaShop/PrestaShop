@@ -363,8 +363,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
-        it.skip('should check the header of the invoice', async function () {
+        it('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice1', baseContext);
+
+          this.skip();
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
           expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
@@ -597,8 +599,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
-        it.skip('should check the header of the invoice', async function () {
+        it('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice2', baseContext);
+
+          this.skip();
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
           expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
@@ -793,8 +797,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
-        it.skip('should check the header of the invoice', async function () {
+        it('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice3', baseContext);
+
+          this.skip();
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
           expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
@@ -1034,8 +1040,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
-        it.skip('should check the header of the invoice', async function () {
+        it('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice4', baseContext);
+
+          this.skip();
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
           expect(imageNumber, 'Logo is not visible!').to.be.equal(1);

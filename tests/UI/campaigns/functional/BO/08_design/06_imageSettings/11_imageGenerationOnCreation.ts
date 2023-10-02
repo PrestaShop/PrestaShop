@@ -296,8 +296,10 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/30520
-    it.skip('should check that images are generated', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductImages', baseContext);
+    it('should check that images are generated', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductImagesFinal', baseContext);
+
+      this.skip();
 
       // Category Image
       const categoryImageExists = await files.doesFileExist(`${files.getRootPath()}/img/c/${idCategory}.jpg`);

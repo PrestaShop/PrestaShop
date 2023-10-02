@@ -231,8 +231,10 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
     describe('Check GDPR data in PDF', async () => {
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
-      it.skip('should check the logo in PDF File', async function () {
+      it('should check the logo in PDF File', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductImage', baseContext);
+
+        this.skip();
 
         const imageNumber = await files.getImageNumberInPDF(filePath);
         expect(imageNumber).to.be.equal(1);
