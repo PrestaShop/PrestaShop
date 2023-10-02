@@ -39,7 +39,7 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       /*
         const apiContextKeycloak: APIRequestContext = await request.newContext({
         baseURL: global.keycloakConfig.keycloakExternalUrl,
-          // @todo : Remove it when Puppeteer will accept self signed certificates
+          // @todo : Remove it when Playwright will accept self signed certificates
           ignoreHTTPSErrors: true,
         });
 
