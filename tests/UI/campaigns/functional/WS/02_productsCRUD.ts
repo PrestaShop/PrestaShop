@@ -658,8 +658,10 @@ describe('WS - Products : CRUD', async () => {
           });
 
           // @todo : https://github.com/PrestaShop/PrestaShop/issues/33455
-          it.skip('should check Receive a low stock alert by email', async function () {
+          it('should check Receive a low stock alert by email', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckLowStockAlert', baseContext);
+
+            this.skip();
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'low_stock_alert');
             const value = (await stocksTab.getValue(page, 'low_stock_threshold_enabled'));
@@ -1322,10 +1324,12 @@ describe('WS - Products : CRUD', async () => {
             const value = (await stocksTab.getValue(page, 'minimal_quantity'));
             expect(value).to.eq(xmlValue);
           });
-          // @todo : https://github.com/PrestaShop/PrestaShop/issues/33455
 
-          it.skip('should check Receive a low stock alert by email', async function () {
+          // @todo : https://github.com/PrestaShop/PrestaShop/issues/33455
+          it('should check Receive a low stock alert by email', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckLowStockAlert', baseContext);
+
+            this.skip();
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'low_stock_alert');
             const value = (await stocksTab.getValue(page, 'low_stock_threshold_enabled'));
