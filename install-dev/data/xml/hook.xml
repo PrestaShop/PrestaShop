@@ -266,6 +266,11 @@
       <title>Successful customer account update</title>
       <description>This hook is called when a customer updates its account successfully</description>
     </hook>
+    <hook id="actionSubmitAccountBefore">
+      <name>actionSubmitAccountBefore</name>
+      <title>Before customer account creation</title>
+      <description>This hook is called before a customer account creation</description>
+    </hook>
     <hook id="displayCustomerAccount">
       <name>displayCustomerAccount</name>
       <title>Customer account displayed in Front Office</title>
