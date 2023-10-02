@@ -17,14 +17,17 @@ class OptionsTab extends BOBasePage {
 
   private readonly productOnlineOnlyRadio: string;
 
+  private readonly productOptionVisibilityRadio: (option: number) => string;
+
   /**
    * @constructs
-   * Setting up texts and selectors to use on Shipping tab
+   * Setting up texts and selectors to use on options tab
    */
   constructor() {
     super();
 
-    // Selectors in stocks tab
+    // Selectors in options tab
+    this.productOptionVisibilityRadio = (option: number) => `product_options_visibility_visibility_${option}`;
     this.productVisibilityRadio = 'input[name="product[options][visibility][visibility]"]';
     this.productAvailableForOrderRadio = '#product_options_visibility_available_for_order_1';
     this.productShowPricesRadio = '#product_options_visibility_show_price_1';
@@ -34,6 +37,25 @@ class OptionsTab extends BOBasePage {
   /*
   Methods
    */
+  async setVisibility(page: Page, visibility: string): Promise<void> {
+    switch (visibility) {
+      case 'everywhere':
+        await this.setChecked(page, this.productOptionVisibilityRadio(0));
+        break;
+      case 'catalog_only':
+        await this.setChecked(page, this.productOptionVisibilityRadio(1));
+        break;
+      case 'search_only':
+        await this.setChecked(page, this.productOptionVisibilityRadio(2));
+        break;
+      case 'nowhere':
+        await this.setChecked(page, this.productOptionVisibilityRadio(3));
+        break;
+      default:
+        throw new Error(`Option ${visibility} was not found`);
+    }
+  }
+
 
   /**
    * Returns the value of a form element
