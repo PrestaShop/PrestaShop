@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Model\Country;
 
 class CountryContextBuilder
 {
-
     private ?int $countryId = null;
 
     public function build(): CountryContext

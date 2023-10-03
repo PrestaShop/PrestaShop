@@ -54,4 +54,3 @@ interface CountryInterface
 
     public function getIsActive(): bool;
 }
-

@@ -39,8 +39,7 @@ class CurrencyContextBuilder
     {
         $currency = null;
 
-        if (!empty($this->currencyId))
-        {
+        if (!empty($this->currencyId)) {
             $legacyCurrency = new LegacyCurrency($this->currencyId);
 
             $currency = new Currency(

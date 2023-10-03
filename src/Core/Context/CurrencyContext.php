@@ -41,6 +41,4 @@ class CurrencyContext
     {
         return $this->currency;
     }
-
-
 }
