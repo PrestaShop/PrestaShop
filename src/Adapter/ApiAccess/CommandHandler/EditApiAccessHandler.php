@@ -52,7 +52,7 @@ class EditApiAccessHandler implements EditApiAccessCommandHandlerInterface
     public function handle(EditApiAccessCommand $command): void
     {
         try {
-            $apiAccess = $this->repository->findOneBy(['id' => $command->getApiAccessId()->getValue()]);
+            $apiAccess = $this->repository->getById($command->getApiAccessId()->getValue());
         } catch (NoResultException $e) {
             throw new ApiAccessNotFoundException(sprintf('Could not find Api access %s', $command->getApiClientId()), 0, $e);
         }

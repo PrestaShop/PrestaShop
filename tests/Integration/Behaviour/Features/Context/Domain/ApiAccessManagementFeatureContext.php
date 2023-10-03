@@ -31,9 +31,11 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessException;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
@@ -184,6 +186,27 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         } catch (ApiAccessException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When /^I delete api access "(.+)"$/
+     */
+    public function iDeleteApiAccess(string $apiAccessReference)
+    {
+        $this->getCommandBus()->handle(new DeleteApiAccessCommand($this->getSharedStorage()->get($apiAccessReference)));
+    }
+
+    /**
+     * @Then /^api access "(.+)" should not exist$/
+     */
+    public function checkApiAccessNotFound(string $apiAccessReference)
+    {
+        try {
+            $this->getCommandBus()->handle(new GetApiAccessForEditing($this->getSharedStorage()->get($apiAccessReference)));
+        } catch (ApiAccessNotFoundException $e) {
+            return;
+        }
+        throw new \RuntimeException(sprintf('API Access %s still exists', $apiAccessReference));
     }
 
     /**
