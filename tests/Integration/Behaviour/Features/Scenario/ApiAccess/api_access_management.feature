@@ -50,7 +50,7 @@ Feature: Api Access Management
       | clientName   | Thomas2              |
       | apiClientId  | test-id-3            |
       | enabled      | true                 |
-      | description  | a simple description |
+      | description  |                      |
     Then I should get an error that clientName is not unique
 
   Scenario: Create an api access with invalid properties:
@@ -66,18 +66,6 @@ Feature: Api Access Management
       | enabled      | true                 |
       | description  | a simple description |
     Then I should get an error that apiClientId is invalid
-    When I create an api access "AA-4" with following properties:
-      | clientName   | Thomas-5             |
-      | apiClientId  | test-id-5            |
-      | enabled      | true                 |
-      | description  |                      |
-    Then I should get an error that description is invalid
-    When I create an api access "AA-4" with following properties:
-      | clientName   | Thomas-5             |
-      | apiClientId  | test-id-5            |
-      | enabled      | true                 |
-      | description  |                      |
-    Then I should get an error that description is invalid
 
   Scenario: Create api access with values over max length:
     When I create an api access "AA-6" with a large value in apiClientId:
