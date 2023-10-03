@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\Authori
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages the "Configure > Advanced Parameters > Authorization Server > Api Access" page.
@@ -40,11 +41,44 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 class ApiAccessController extends FrameworkBundleAdminController
 {
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return Response
+     */
+    public function indexAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig', [
+            'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
+            'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getApiAccessesToolbarButtons(),
+        ]);
+    }
+
+    /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      */
     public function createAction(): void
     {
         // TODO: Implement createAction() method in create PR.
         throw new NotImplementedException();
+    }
+
+    /**
+     * @return array
+     */
+    private function getApiAccessesToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['addApiAccess'] = [
+            'href' => $this->generateUrl('admin_api_accesses_create'),
+            'desc' => $this->trans('Add new API access', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+            'class' => 'btn-primary',
+        ];
+
+        return $toolbarButtons;
     }
 }
