@@ -84,10 +84,9 @@ class ApiAccess
     private array $scopes = [];
 
     /**
-     * @ORM\Column(name="description", type="string")
+     * @ORM\Column(name="description", type="string", options={"default": ""})
      */
     #[Assert\Length(max: 21844)]
-    #[Assert\NotBlank]
     private string $description;
 
     public function getId(): int

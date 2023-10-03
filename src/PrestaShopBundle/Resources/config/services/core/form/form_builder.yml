@@ -321,3 +321,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\TitleType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.api_access_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApiAccessType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiAccessFormDataProvider'
