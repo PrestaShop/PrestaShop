@@ -73,12 +73,9 @@ class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
             );
         }
 
-        $applicationId = $searchCriteria->getApplicationId();
         $queryBuilder = $this->getQueryBuilder()
             ->select('aa.*')
-            ->from($this->dbPrefix . 'api_access', 'aa')
-            ->where('aa.id_authorized_application  = :applicationId')
-            ->setParameter('applicationId', $applicationId);
+            ->from($this->dbPrefix . 'api_access', 'aa');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $queryBuilder)
@@ -101,13 +98,9 @@ class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
             );
         }
 
-        $applicationId = $searchCriteria->getApplicationId();
-
         return $this->getQueryBuilder()
             ->select('COUNT(aa.id_api_access)')
-            ->from($this->dbPrefix . 'api_access', 'aa')
-            ->where('aa.id_authorized_application  = :applicationId')
-            ->setParameter('applicationId', $applicationId);
+            ->from($this->dbPrefix . 'api_access', 'aa');
     }
 
     /**

@@ -595,15 +595,6 @@ services:
     arguments:
       - '@prestashop.core.grid.data.factory.customer_thread'
 
-  prestashop.core.grid.data_factory.authorized_application:
-    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
-    public: false
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Grid\Query\AuthorizedApplicationQueryBuilder'
-      - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.core.grid.query.doctrine_query_parser'
-      - 'authorized_application'
-
   prestashop.core.grid.data.factory.customer_groups:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
     arguments:
