@@ -1,0 +1,4 @@
+legacy_controller_route:
+  path: /legacy
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CustomLegacyController::legacyPageAction
