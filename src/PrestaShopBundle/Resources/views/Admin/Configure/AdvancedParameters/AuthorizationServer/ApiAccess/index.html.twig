@@ -26,9 +26,13 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
-    List of API accesses coming soon.
+  {% block api_access_listing %}
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': apiAccessGrid} %}
+  {% endblock %}
 {% endblock %}
+
 {% block javascripts %}
   {{ parent() }}
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/api_access.bundle.js') }}"></script>
 {% endblock %}

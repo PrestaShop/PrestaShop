@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessExce
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotUpdateApiAccessException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,11 +54,15 @@ class ApiAccessController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(): Response
+    public function indexAction(ApiAccessFilters $apiAccessesFilters): Response
     {
+        $apiAccessGridFactory = $this->get('prestashop.core.grid.factory.api_access');
+        $apiAccessGrid = $apiAccessGridFactory->getGrid($apiAccessesFilters);
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/index.html.twig', [
+            'apiAccessGrid' => $this->presentGrid($apiAccessGrid),
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
-            'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('API Access list', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiAccessesToolbarButtons(),
         ]);
     }

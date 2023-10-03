@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
-final class ApiAccessesFilters extends Filters
+final class ApiAccessFilters extends Filters
 {
     /** @var string */
     protected $filterId = ApiAccessGridDefinitionFactory::GRID_ID;
@@ -45,7 +45,7 @@ final class ApiAccessesFilters extends Filters
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_api_access',
-            'sortOrder' => 'desc',
+            'sortOrder' => 'asc',
             'filters' => [],
         ];
     }
