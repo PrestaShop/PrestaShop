@@ -63,7 +63,7 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
-    it(`should search for the product ${orderData.products[0].product.name}`, async function () {
+    it(`should search for the product '${orderData.products[0].product.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForProduct', baseContext);
 
       await homePage.searchProduct(page, orderData.products[0].product.name);
