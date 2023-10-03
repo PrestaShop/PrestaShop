@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -44,7 +45,8 @@ class ShopContextListener
         private readonly ShopContextBuilder $shopContextBuilder,
         private readonly EmployeeContext $employeeContext,
         private readonly ShopConfigurationInterface $configuration,
-        private readonly LegacyContext $legacyContext
+        private readonly LegacyContext $legacyContext,
+        private readonly MultistoreFeature $multistoreFeature
     ) {
     }
 
@@ -60,6 +62,11 @@ class ShopContextListener
 
         $shopConstraint = ShopConstraint::allShops();
         $cookieShopConstraint = $this->getShopConstraintFromCookie();
+
+        if (!empty($event->getRequest()->get('setShopContext'))) {
+            $this->changeShopContext($event->getRequest()->get('setShopContext'));
+        }
+
         if ($cookieShopConstraint && $cookieShopConstraint->getShopGroupId()) {
             // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
             if ($this->employeeContext->hasAuthorizationOnShopGroup($cookieShopConstraint->getShopGroupId()->getValue())) {
@@ -115,5 +122,14 @@ class ShopContextListener
         }
 
         return null;
+    }
+
+    private function changeShopContext(string $shopContextUrlParameter)
+    {
+        if ($this->multistoreFeature->isUsed()) {
+            $this->legacyContext->getContext()->cookie->shopContext = $shopContextUrlParameter;
+        } else {
+            $this->legacyContext->getContext()->cookie->shopContext = $this->configuration->get('PS_SHOP_DEFAULT');
+        }
     }
 }
