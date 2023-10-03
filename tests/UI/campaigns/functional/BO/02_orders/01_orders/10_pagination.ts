@@ -61,17 +61,17 @@ describe('BO - Orders : Pagination of orders table', async () => {
     createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
   }
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
   describe('Pagination next and previous', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });

@@ -51,17 +51,17 @@ describe('BO - Orders : Bulk update orders status', async () => {
     createOrderByCustomerTest(orderByCustomerData, `${baseContext}_${i}`);
   }
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
   describe('Update orders status in BO', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
