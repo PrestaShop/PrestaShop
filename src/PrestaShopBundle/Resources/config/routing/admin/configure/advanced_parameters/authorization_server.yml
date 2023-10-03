@@ -24,7 +24,7 @@ admin_api_accesses_toggle_active:
   path: /api-accesses/{apiAccessId}/toggle-active
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::toggleActiveAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::toggleStatusAction
     _legacy_controller: AdminAuthorizationServer
 
 admin_api_accesses_delete:

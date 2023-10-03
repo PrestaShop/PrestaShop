@@ -30,15 +30,19 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\Authori
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotUpdateApiAccessException;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,7 +72,7 @@ class ApiAccessController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_index")
      */
     public function createAction(Request $request): Response
     {
@@ -97,7 +101,7 @@ class ApiAccessController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_index")
      */
     public function editAction(Request $request, int $apiAccessId): Response
     {
@@ -121,6 +125,35 @@ class ApiAccessController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/edit.html.twig', [
             'layoutTitle' => $this->trans('Editing API Access "%name%"', 'Admin.Navigation.Menu', ['%name%' => $formData['client_name']]),
             'apiAccessForm' => $apiAccessForm->createView(),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_index")
+     *
+     * @param int $apiAccessId
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusAction(int $apiAccessId): JsonResponse
+    {
+        /** @var EditableApiAccess $apiAccess */
+        $apiAccess = $this->getQueryBus()->handle(new GetApiAccessForEditing($apiAccessId));
+
+        try {
+            $command = new EditApiAccessCommand($apiAccessId);
+            $command->setEnabled(!$apiAccess->isEnabled());
+            $this->getCommandBus()->handle($command);
+        } catch (Exception $e) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ]);
+        }
+
+        return $this->json([
+            'status' => true,
+            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
         ]);
     }
 
