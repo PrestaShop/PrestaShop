@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Model;
+namespace PrestaShop\PrestaShop\Core\Context;
 
-class Currency implements CurrencyInterface
+class Currency
 {
     public function __construct(
         protected int $id,
@@ -45,11 +45,11 @@ class Currency implements CurrencyInterface
         protected string $sign,
         protected string $symbol,
         protected array $localizedSymbols,
-        protected string $format,
+        protected ?string $format,
         protected int $blank,
         protected int $decimals,
         protected int $precision,
-        protected string $pattern,
+        protected array $pattern,
         protected array $localizedPatterns
     ) {
     }

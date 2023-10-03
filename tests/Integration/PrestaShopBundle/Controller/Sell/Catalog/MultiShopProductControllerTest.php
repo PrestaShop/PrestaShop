@@ -172,16 +172,22 @@ class MultiShopProductControllerTest extends GridControllerTestCase
      */
     public function testMultiShopList(array $shopContext, array $listFilters, int $totalCount, array $productsValues): void
     {
+        $shopCookie = '';
         if (!empty($shopContext['shop_name'])) {
-            Shop::setContext(Shop::CONTEXT_SHOP, Shop::getIdByName($shopContext['shop_name']));
+            $shopId = Shop::getIdByName($shopContext['shop_name']);
+            Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+            $shopCookie = 's-' . $shopId;
         } elseif (!empty($shopContext['group_shop_name'])) {
-            Shop::setContext(Shop::CONTEXT_GROUP, ShopGroup::getIdByName($shopContext['group_shop_name']));
+            $shopGroupId = ShopGroup::getIdByName($shopContext['group_shop_name']);
+            Shop::setContext(Shop::CONTEXT_GROUP, $shopGroupId);
+            $shopCookie = 'g-' . $shopGroupId;
         } else {
             Shop::setContext(Shop::CONTEXT_ALL);
         }
+
         Shop::resetStaticCache();
 
-        $products = $this->getFilteredEntitiesFromGrid($listFilters);
+        $products = $this->getFilteredEntitiesFromGrid($listFilters, [], $shopCookie);
         $this->assertEquals($totalCount, $products->getTotalCount(), sprintf(
             'Expected %d product(s) with filters %s but got %d instead',
             $totalCount,

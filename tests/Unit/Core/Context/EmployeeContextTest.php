@@ -29,14 +29,14 @@ declare(strict_types=1);
 namespace Core\Context;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Context\Employee;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
-use PrestaShop\PrestaShop\Core\Model\EmployeeInterface;
 
 class EmployeeContextTest extends TestCase
 {
     public function testIsSuperAdmin(): void
     {
-        $employeeMock = $this->createMock(EmployeeInterface::class);
+        $employeeMock = $this->createMock(Employee::class);
         $employeeMock
             ->method('getProfileId')
             ->willReturn(EmployeeContext::SUPER_ADMIN_PROFILE_ID)
@@ -47,7 +47,7 @@ class EmployeeContextTest extends TestCase
 
     public function testIsNotSuperAdmin(): void
     {
-        $employeeMock = $this->createMock(EmployeeInterface::class);
+        $employeeMock = $this->createMock(Employee::class);
         $employeeMock
             ->method('getProfileId')
             ->willReturn(EmployeeContext::SUPER_ADMIN_PROFILE_ID + 1)
@@ -58,7 +58,7 @@ class EmployeeContextTest extends TestCase
 
     public function testGetDefaultShopId(): void
     {
-        $employeeMock = $this->createMock(EmployeeInterface::class);
+        $employeeMock = $this->createMock(Employee::class);
         $employeeMock
             ->method('getDefaultShopId')
             ->willReturn(42)
@@ -72,7 +72,7 @@ class EmployeeContextTest extends TestCase
      */
     public function testHasAuthorizationOnShop(bool $isSuperAdmin, array $shopIds, int $testedShopId, bool $expectedAuthorization): void
     {
-        $employeeMock = $this->createMock(EmployeeInterface::class);
+        $employeeMock = $this->createMock(Employee::class);
         $employeeMock
             ->method('getProfileId')
             ->willReturn($isSuperAdmin ? EmployeeContext::SUPER_ADMIN_PROFILE_ID : 42)
@@ -122,7 +122,7 @@ class EmployeeContextTest extends TestCase
      */
     public function testHasAuthorizationOnShopGroup(bool $isSuperAdmin, array $groupIds, int $testedGroupId, bool $expectedAuthorization): void
     {
-        $employeeMock = $this->createMock(EmployeeInterface::class);
+        $employeeMock = $this->createMock(Employee::class);
         $employeeMock
             ->method('getProfileId')
             ->willReturn($isSuperAdmin ? EmployeeContext::SUPER_ADMIN_PROFILE_ID : 42)

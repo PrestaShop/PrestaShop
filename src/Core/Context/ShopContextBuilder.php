@@ -28,11 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Model\Shop;
+use Shop as LegacyShop;
 
 /**
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
@@ -43,7 +44,8 @@ class ShopContextBuilder
     private ?int $shopId = null;
 
     public function __construct(
-        private readonly ShopRepository $shopRepository
+        private readonly ShopRepository $shopRepository,
+        private readonly ContextStateManager $contextStateManager
     ) {
     }
 
@@ -83,6 +85,21 @@ class ShopContextBuilder
         );
     }
 
+    public function buildLegacyContext(ShopConstraint $shopConstraint): self
+    {
+        if ($shopConstraint->forAllShops()) {
+            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_ALL);
+        } else if (empty($shopConstraint->getShopId())) {
+            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_GROUP, $shopConstraint->getShopGroupId()->getValue());
+        } else {
+            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_SHOP, $shopConstraint->getShopId()->getValue());
+        }
+
+        $this->contextStateManager->setShop(new LegacyShop($this->shopId));
+
+        return $this;
+    }
+
     public function setShopId(int $shopId): self
     {
         $this->shopId = $shopId;
@@ -95,5 +112,15 @@ class ShopContextBuilder
         $this->shopConstraint = $shopConstraint;
 
         return $this;
+    }
+
+    public function getShopId(): ?int
+    {
+        return $this->shopId;
+    }
+
+    public function getShopConstraint(): ?ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

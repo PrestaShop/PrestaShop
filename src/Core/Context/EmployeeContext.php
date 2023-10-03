@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use PrestaShop\PrestaShop\Core\Model\EmployeeInterface;
-
 /**
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
  */
@@ -38,11 +36,11 @@ class EmployeeContext
     public const SUPER_ADMIN_PROFILE_ID = 1;
 
     public function __construct(
-        private readonly ?EmployeeInterface $employee
+        private readonly ?Employee $employee
     ) {
     }
 
-    public function getEmployee(): ?EmployeeInterface
+    public function getEmployee(): ?Employee
     {
         return $this->employee;
     }

@@ -30,7 +30,6 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContextAdapter;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -48,7 +47,6 @@ class ShopContextListener
         private readonly ShopConfigurationInterface $configuration,
         private readonly LegacyContext $legacyContext,
         private readonly MultistoreFeature $multistoreFeature,
-        private readonly ShopContextAdapter $shopContextAdapter
     ) {
     }
 
@@ -75,6 +73,8 @@ class ShopContextListener
                 $shopConstraint = $cookieShopConstraint;
             } elseif (!empty($this->employeeContext->getDefaultShopId())) {
                 $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
+            } else {
+                $shopConstraint = $cookieShopConstraint;
             }
         } elseif ($cookieShopConstraint && $cookieShopConstraint->getShopId()) {
             // Check if employee has authorization on selected shop if not fallback on single shop context with employee's default shop
@@ -82,18 +82,23 @@ class ShopContextListener
                 $shopConstraint = $cookieShopConstraint;
             } elseif (!empty($this->employeeContext->getDefaultShopId())) {
                 $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
+            } else {
+                $shopConstraint = $cookieShopConstraint;
             }
         }
-        $this->shopContextBuilder->setShopConstraint($shopConstraint);
+
+        if (empty($this->shopContextBuilder->getShopConstraint())) {
+            $this->shopContextBuilder->setShopConstraint($shopConstraint);
+        }
 
         // In all cases a shop must be set for the context even if it's the default one
-        if (!$shopConstraint->getShopId()) {
+        if (empty($this->shopContextBuilder->getShopId()) && !$shopConstraint->getShopId()) {
             $this->shopContextBuilder->setShopId((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
-            $this->shopContextAdapter->setShopContext((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
-        } else {
+        } else if (empty($this->shopContextBuilder->getShopId())) {
             $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
-            $this->shopContextAdapter->setShopContext($shopConstraint->getShopId()->getValue());
         }
+
+        $this->shopContextBuilder->buildLegacyContext($shopConstraint);
     }
 
     /**

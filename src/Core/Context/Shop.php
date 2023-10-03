@@ -26,28 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Model;
+namespace PrestaShop\PrestaShop\Core\Context;
 
 /**
- * Basic DTO class that implements EmployeeInterface
+ * Basic DTO class
  *
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
  */
-class Employee implements EmployeeInterface
+class Shop
 {
     public function __construct(
         protected int $id,
-        protected int $profileId,
-        protected int $languageId,
-        protected string $firstName,
-        protected string $lastName,
-        protected string $email,
-        protected string $password,
-        protected string $imageUrl,
-        protected int $defaultTabId,
-        protected int $defaultShopId,
-        protected array $associatedShopIds,
-        protected array $associatedShopGroupIds,
+        protected string $name,
+        protected int $shopGroupId,
+        protected int $categoryId,
+        protected string $themeName,
+        protected string $color,
+        protected string $physicalUri,
+        protected string $virtualUri,
+        protected string $domain,
+        protected string $domainSSL,
+        protected bool $active,
     ) {
     }
 
@@ -56,58 +55,53 @@ class Employee implements EmployeeInterface
         return $this->id;
     }
 
-    public function getProfileId(): int
+    public function getName(): string
     {
-        return $this->profileId;
+        return $this->name;
     }
 
-    public function getLanguageId(): int
+    public function getShopGroupId(): int
     {
-        return $this->languageId;
+        return $this->shopGroupId;
     }
 
-    public function getFirstName(): string
+    public function getCategoryId(): int
     {
-        return $this->firstName;
+        return $this->categoryId;
     }
 
-    public function getLastName(): string
+    public function getThemeName(): string
     {
-        return $this->lastName;
+        return $this->themeName;
     }
 
-    public function getEmail(): string
+    public function getColor(): string
     {
-        return $this->email;
+        return $this->color;
     }
 
-    public function getPassword(): string
+    public function isActive(): bool
     {
-        return $this->password;
+        return $this->active;
     }
 
-    public function getImageUrl(): string
+    public function getPhysicalUri(): string
     {
-        return $this->imageUrl;
+        return $this->physicalUri;
     }
 
-    public function getDefaultTabId(): int
+    public function getVirtualUri(): string
     {
-        return $this->defaultTabId;
+        return $this->virtualUri;
     }
 
-    public function getAssociatedShopIds(): array
+    public function getDomain(): string
     {
-        return $this->associatedShopIds;
+        return $this->domain;
     }
 
-    public function getDefaultShopId(): int
+    public function getDomainSSL(): string
     {
-        return $this->defaultShopId;
-    }
-
-    public function getAssociatedShopGroupIds(): array
-    {
-        return $this->associatedShopGroupIds;
+        return $this->domainSSL;
     }
 }

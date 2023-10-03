@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Model;
+namespace PrestaShop\PrestaShop\Core\Context;
 
-class Country implements CountryInterface
+class Country
 {
     public function __construct(
         protected int $id,
@@ -53,7 +53,7 @@ class Country implements CountryInterface
 
     public function getIdZone(): int
     {
-        return $this->idZone;
+        return $this->zoneId;
     }
 
     public function getIdCurrency(): int

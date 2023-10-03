@@ -28,35 +28,48 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use Country as LegacyCountry;
-use PrestaShop\PrestaShop\Core\Model\Country;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class CountryContextBuilder
 {
     private ?int $countryId = null;
 
+    public function __construct(
+        private readonly CountryRepository $countryRepository,
+        private readonly LegacyContext $legacyContext,
+        private readonly ContextStateManager $contextStateManager
+    ) {
+    }
+
     public function build(): CountryContext
     {
-        $country = null;
-
-        if ($this->countryId) {
-            $legacyCountry = new LegacyCountry($this->countryId);
-
-            $country = new Country(
-                $legacyCountry->id,
-                $legacyCountry->id_zone,
-                $legacyCountry->id_currency,
-                $legacyCountry->iso_code,
-                $legacyCountry->call_prefix,
-                $legacyCountry->name,
-                $legacyCountry->contains_states,
-                $legacyCountry->need_identification_number,
-                $legacyCountry->need_zip_code,
-                $legacyCountry->zip_code_format,
-                $legacyCountry->display_tax_label,
-                $legacyCountry->active
-            );
+        if (null === $this->countryId) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot build Country context as no countryId has been defined you need to call %s::setCountryId to define it before building the Country context',
+                self::class
+            ));
         }
+
+        $legacyCountry = $this->countryRepository->get(new CountryId($this->countryId));
+
+        $country = new Country(
+            $legacyCountry->id,
+            $legacyCountry->id_zone,
+            $legacyCountry->id_currency,
+            $legacyCountry->iso_code,
+            $legacyCountry->call_prefix,
+            $legacyCountry->name,
+            $legacyCountry->contains_states,
+            $legacyCountry->need_identification_number,
+            $legacyCountry->need_zip_code,
+            $legacyCountry->zip_code_format,
+            $legacyCountry->display_tax_label,
+            $legacyCountry->active
+        );
 
         return new CountryContext($country);
     }
@@ -64,6 +77,19 @@ class CountryContextBuilder
     public function setCountryId(?int $countryId): self
     {
         $this->countryId = $countryId;
+
+        return $this;
+    }
+
+    public function buildLegacyContext(): self
+    {
+        // set country object model in legacy context if country is different or not set
+        if (empty($this->legacyContext->getContext()->country)
+            || (int) $this->legacyContext->getContext()->country->id !== $this->countryId
+        ) {
+            $legacyCountry = $this->countryRepository->get(new CountryId($this->countryId));
+            $this->contextStateManager->setCountry($legacyCountry);
+        }
 
         return $this;
     }

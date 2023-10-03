@@ -28,16 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use PrestaShop\PrestaShop\Core\Model\CountryInterface;
-
 class CountryContext
 {
     public function __construct(
-        private readonly ?CountryInterface $country
+        private readonly Country $country
     ) {
     }
 
-    public function getCurrency(): ?CountryInterface
+    public function getCountry(): Country
     {
         return $this->country;
     }

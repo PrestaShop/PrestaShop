@@ -28,16 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use PrestaShop\PrestaShop\Core\Model\CurrencyInterface;
-
 class CurrencyContext
 {
     public function __construct(
-        private readonly ?CurrencyInterface $currency
+        private readonly Currency $currency
     ) {
     }
 
-    public function getCurrency(): ?CurrencyInterface
+    public function getCurrency(): Currency
     {
         return $this->currency;
     }

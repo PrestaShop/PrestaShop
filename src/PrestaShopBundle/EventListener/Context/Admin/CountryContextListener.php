@@ -47,5 +47,6 @@ class CountryContextListener
         }
 
         $this->countryContextBuilder->setCountryId((int) $this->configuration->get('PS_COUNTRY_DEFAULT'));
+        $this->countryContextBuilder->buildLegacyContext();
     }
 }

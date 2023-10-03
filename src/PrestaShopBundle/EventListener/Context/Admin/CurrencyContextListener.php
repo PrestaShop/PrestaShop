@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -37,8 +36,7 @@ class CurrencyContextListener
 {
     public function __construct(
         private readonly CurrencyContextBuilder $currencyContextBuilder,
-        private readonly LegacyContext $legacyContext,
-        private readonly ConfigurationInterface $configuration
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -49,5 +47,6 @@ class CurrencyContextListener
         }
 
         $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
+        $this->currencyContextBuilder->buildLegacyContext();
     }
 }

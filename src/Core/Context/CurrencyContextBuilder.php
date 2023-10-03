@@ -28,43 +28,56 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use Currency as LegacyCurrency;
-use PrestaShop\PrestaShop\Core\Model\Currency;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class CurrencyContextBuilder
 {
     private ?int $currencyId = null;
 
+    public function __construct(
+        private readonly CurrencyRepository $currencyRepository,
+        private readonly LegacyContext $legacyContext,
+        private readonly ContextStateManager $contextStateManager
+    ) {
+    }
+
     public function build(): CurrencyContext
     {
-        $currency = null;
-
-        if (!empty($this->currencyId)) {
-            $legacyCurrency = new LegacyCurrency($this->currencyId);
-
-            $currency = new Currency(
-                $legacyCurrency->id,
-                $legacyCurrency->getName(),
-                $legacyCurrency->getLocalizedNames(),
-                $legacyCurrency->iso_code,
-                $legacyCurrency->iso_code_num,
-                $legacyCurrency->numeric_iso_code,
-                $legacyCurrency->getConversionRate(),
-                $legacyCurrency->deleted,
-                $legacyCurrency->unofficial,
-                $legacyCurrency->modified,
-                $legacyCurrency->active,
-                $legacyCurrency->getSign(),
-                $legacyCurrency->getSymbol(),
-                $legacyCurrency->getLocalizedSymbols(),
-                $legacyCurrency->format,
-                $legacyCurrency->blank,
-                $legacyCurrency->decimals,
-                $legacyCurrency->precision,
-                $legacyCurrency->pattern,
-                $legacyCurrency->getLocalizedPatterns()
-            );
+        if (null === $this->currencyId) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot build Currency context as no currencyId has been defined you need to call %s::setCurrencyId to define it before building the Currency context',
+                self::class
+            ));
         }
+
+        $legacyCurrency = $this->currencyRepository->get(new CurrencyId($this->currencyId));
+
+        $currency = new Currency(
+            $legacyCurrency->id,
+            $legacyCurrency->getName(),
+            $legacyCurrency->getLocalizedNames(),
+            $legacyCurrency->iso_code,
+            $legacyCurrency->iso_code_num,
+            $legacyCurrency->numeric_iso_code,
+            $legacyCurrency->getConversionRate(),
+            (bool) $legacyCurrency->deleted,
+            (bool) $legacyCurrency->unofficial,
+            (bool) $legacyCurrency->modified,
+            (bool) $legacyCurrency->active,
+            $legacyCurrency->getSign(),
+            $legacyCurrency->getSymbol(),
+            $legacyCurrency->getLocalizedSymbols(),
+            $legacyCurrency->format,
+            $legacyCurrency->blank,
+            $legacyCurrency->decimals,
+            $legacyCurrency->precision,
+            $legacyCurrency->pattern,
+            $legacyCurrency->getLocalizedPatterns()
+        );
 
         return new CurrencyContext($currency);
     }
@@ -72,5 +85,20 @@ class CurrencyContextBuilder
     public function setCurrencyId(int $currencyId)
     {
         $this->currencyId = $currencyId;
+
+        return $this;
+    }
+
+    public function buildLegacyContext(): self
+    {
+        // set currency object model in legacy context if currency is different
+        if (empty($this->legacyContext->getContext()->currency)
+            || (int) $this->legacyContext->getContext()->currency->id !== $this->currencyId
+        ) {
+            $legacyCurrency = $this->currencyRepository->get(new CurrencyId($this->currencyId));
+            $this->contextStateManager->setCurrency($legacyCurrency);
+        }
+
+        return $this;
     }
 }

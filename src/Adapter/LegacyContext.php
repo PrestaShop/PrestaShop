@@ -79,14 +79,7 @@ class LegacyContext
     public function getContext()
     {
         if (null === static::$instance) {
-            $legacyContext = Context::getContext();
-
-            if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
-                //init real legacy shop context
-                $adminController = new AdminController();
-                $adminController->initShopContext();
-            }
-            static::$instance = $legacyContext;
+            static::$instance = Context::getContext();
         }
 
         return static::$instance;

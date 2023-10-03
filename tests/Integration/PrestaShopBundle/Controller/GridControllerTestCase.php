@@ -159,12 +159,14 @@ abstract class GridControllerTestCase extends WebTestCase
      *
      * @param array $testFilters
      * @param array $routeParams
+     * @param string $shopCookieValue
      *
      * @return TestEntityDTOCollection
      */
-    protected function getFilteredEntitiesFromGrid(array $testFilters, array $routeParams = []): TestEntityDTOCollection
+    protected function getFilteredEntitiesFromGrid(array $testFilters, array $routeParams = [], string $shopCookieValue = ''): TestEntityDTOCollection
     {
         $gridUrl = $this->generateGridUrl($routeParams);
+        $this->client->getContainer()->get('prestashop.adapter.legacy.context')->getContext()->cookie->shopContext = $shopCookieValue;
         $crawler = $this->client->request('GET', $gridUrl);
         $this->assertResponseIsSuccessful();
         $gridRoute = $this->client->getRequest()->attributes->get('_route');
