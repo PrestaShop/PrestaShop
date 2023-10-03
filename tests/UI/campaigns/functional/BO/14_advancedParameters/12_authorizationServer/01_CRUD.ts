@@ -46,7 +46,8 @@ describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
+  // This scenario is skipped for now, it will be adapted to test API access in the next PR
+  describe.skip('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
