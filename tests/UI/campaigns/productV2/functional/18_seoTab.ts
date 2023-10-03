@@ -211,7 +211,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
     it('should add tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addTag', baseContext);
 
-      await seoTab.setTag(page, 'hello');
+      await seoTab.setTag(page, 'welcome');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -237,10 +237,10 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
-    it('should search the new tag \'hello\' from the search bar', async function () {
+    it('should search the new tag \'welcome\' from the search bar', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchTag', baseContext);
 
-      await foProductPage.searchProduct(page, 'hello');
+      await foProductPage.searchProduct(page, 'welcome');
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
