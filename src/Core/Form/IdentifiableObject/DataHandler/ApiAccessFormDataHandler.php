@@ -44,8 +44,8 @@ class ApiAccessFormDataHandler implements FormDataHandlerInterface
     {
         /** @var ApiAccessId $apiAccessId */
         $apiAccessId = $this->commandBus->handle(new AddApiAccessCommand(
-            $data['clientName'],
-            $data['clientId'],
+            $data['client_name'],
+            $data['client_id'],
             (bool) $data['enabled'],
             $data['description'],
         ));
@@ -57,8 +57,8 @@ class ApiAccessFormDataHandler implements FormDataHandlerInterface
     {
         $command = new EditApiAccessCommand((int) $id);
         $command
-            ->setClientName($data['clientName'])
-            ->setApiClientId($data['clientId'])
+            ->setClientName($data['client_name'])
+            ->setApiClientId($data['client_id'])
             ->setDescription($data['description'])
             ->setEnabled((bool) $data['enabled'])
         ;

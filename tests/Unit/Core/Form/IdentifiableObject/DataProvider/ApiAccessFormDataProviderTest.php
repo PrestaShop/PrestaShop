@@ -71,8 +71,8 @@ class ApiAccessFormDataProviderTest extends TestCase
                 'short description'
             ),
             [
-                'clientId' => 'client-id',
-                'clientName' => 'client-name',
+                'client_id' => 'client-id',
+                'client_name' => 'client-name',
                 'description' => 'short description',
                 'enabled' => true,
             ],

@@ -45,8 +45,8 @@ class ApiAccessFormDataProvider implements FormDataProviderInterface
         $apiAccess = $this->queryBus->handle(new GetApiAccessForEditing((int) $id));
 
         return [
-            'clientId' => $apiAccess->getApiClientId(),
-            'clientName' => $apiAccess->getClientName(),
+            'client_id' => $apiAccess->getApiClientId(),
+            'client_name' => $apiAccess->getClientName(),
             'description' => $apiAccess->getDescription(),
             'enabled' => $apiAccess->isEnabled(),
         ];
