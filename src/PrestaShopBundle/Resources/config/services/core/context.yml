@@ -18,3 +18,13 @@ services:
   PrestaShop\PrestaShop\Core\Context\ShopContext:
     lazy: true
     factory: [ '@PrestaShop\PrestaShop\Core\Context\ShopContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\CurrencyContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\CountryContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\CountryContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\CountryContextBuilder', 'build' ]

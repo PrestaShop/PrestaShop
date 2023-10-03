@@ -11,3 +11,11 @@ services:
   PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
     tags:
       - { name: kernel.event_listener, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\CurrencyContextListener:
+    tags:
+      - { name: kernel.event_listener, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\CountryContextListener:
+    tags:
+      - { name: kernel.event_listener, method: onKernelRequest }
