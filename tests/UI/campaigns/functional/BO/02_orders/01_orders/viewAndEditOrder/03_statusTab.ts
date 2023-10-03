@@ -110,425 +110,427 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   // Pre-condition: Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_4`);
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+  describe('Check status tab', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
 
-    // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+      // Start listening to maildev server
+      mailListener = mailHelper.createMailListener();
+      mailHelper.startListener(mailListener);
 
-    // Handle every new email
-    mailListener.on('new', (email: MailDevEmail) => {
-      newMail = email;
+      // Handle every new email
+      mailListener.on('new', (email: MailDevEmail) => {
+        newMail = email;
+      });
     });
-  });
 
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
 
-    // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
-  });
+      // Stop listening to maildev server
+      mailHelper.stopListener(mailListener);
+    });
 
-  // 1 - Go to view order page
-  describe('Go to view order page', async () => {
     it('should login in BO by default employee', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
+    // 1 - Go to view order page
+    describe('Go to view order page', async () => {
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-      await ordersPage.closeSfToolBar(page);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+        await ordersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
+      });
+
+      it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
+
+        await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        expect(textColumn).to.contains(customerData.lastName);
+      });
+
+      it('should view the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
     });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
+    // 2 - Check history table and order note after some edit by default employee
+    describe('Check history table after some edits by default employee', async () => {
+      it('should check that the status number is equal to 1', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber', baseContext);
 
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfOrders).to.be.above(0);
+        const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
+        expect(statusNumber).to.be.equal(1);
+      });
+
+      it('should click on \'Resend email\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resendEmail', baseContext);
+
+        const textResult = await orderPageTabListBlock.resendEmail(page);
+        expect(textResult).to.contains(orderPageTabListBlock.validationSendMessage);
+      });
+
+      it('should check if the mail is in mailbox', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkIfResetPasswordMailIsInMailbox', baseContext);
+
+        expect(newMail.subject).to.contains('[PrestaShop] Awaiting bank wire payment');
+      });
+
+      it('should click on update status and check the error message', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnUpdateStatusAndSeeTheErrorMessage', baseContext);
+
+        const textResult = await orderPageTabListBlock.clickOnUpdateStatus(page);
+        expect(textResult).to.contains(orderPageTabListBlock.errorAssignSameStatus);
+      });
+
+      it(`should change the order status to '${OrderStatuses.canceled.name}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'cancelOrderByStatus', baseContext);
+
+        const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.canceled.name);
+        expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      });
+
+      it('should check that the status number is equal to 2', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber2', baseContext);
+
+        const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
+        expect(statusNumber).to.be.equal(2);
+      });
+
+      it('should check the status name from the table', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName1', baseContext);
+
+        const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'status', 1);
+        expect(statusName).to.be.equal(OrderStatuses.canceled.name);
+      });
+
+      it('should check the employee name from the table', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName1', baseContext);
+
+        const employeeName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'employee', 1);
+        expect(employeeName).to.be.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`);
+      });
+
+      it('should check the date from the table', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDate1', baseContext);
+
+        const date = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'date', 1);
+        expect(date).to.contain(today);
+      });
+
+      it('should check that the order note is closed', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed1', baseContext);
+
+        const isOpened = await orderPageTabListBlock.isOrderNoteOpened(page);
+        expect(isOpened).to.eq(false);
+      });
+
+      it('should logout from BO', async function () {
+        await loginCommon.logoutBO(this, page);
+      });
     });
 
-    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
+    // 3 - Check history table and order note after some modifications by new employee
+    describe('Check history table and order note after some modifications by new employee', async () => {
+      it('should login by new employee account', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+        await loginPage.goTo(page, global.BO.URL);
+        await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(customerData.lastName);
+        const pageTitle = await dashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      });
+
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+        await ordersPage.closeSfToolBar(page);
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
+      });
+
+      it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
+
+        await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        expect(textColumn).to.contains(customerData.lastName);
+      });
+
+      it('should view the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock2', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusToAccepted', baseContext);
+
+        const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.paymentAccepted.name);
+        expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      });
+
+      it('should check that the status number is equal to 3', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber3', baseContext);
+
+        const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
+        expect(statusNumber).to.be.equal(3);
+      });
+
+      it('should check the status name from the table', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName2', baseContext);
+
+        const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'status', 1);
+        expect(statusName).to.be.equal(OrderStatuses.paymentAccepted.name);
+      });
+
+      it('should check the employee name from the table', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName2', baseContext);
+
+        const employeeName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'employee', 1);
+        expect(employeeName).to.be.equal(`${createEmployeeData.firstName} ${createEmployeeData.lastName}`);
+      });
+
+      it('should check the date from the table', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDate2', baseContext);
+
+        const date = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'date', 1);
+        expect(date).to.contain(today);
+      });
+
+      it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusToShipped', baseContext);
+
+        const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.shipped.name);
+        expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      });
+
+      it('should check that the status number is equal to 4', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber4', baseContext);
+
+        const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
+        expect(statusNumber).to.be.equal(4);
+      });
+
+      it('should check that the order note still closed', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed2', baseContext);
+
+        const isOpened = await orderPageTabListBlock.isOrderNoteOpened(page);
+        expect(isOpened).to.eq(false);
+      });
+
+      it('should open the order note textarea', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'openOrderNote', baseContext);
+
+        const isOpened = await orderPageTabListBlock.openOrderNoteTextarea(page);
+        expect(isOpened).to.eq(true);
+      });
+
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage3', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+        await ordersPage.closeSfToolBar(page);
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters3', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
+      });
+
+      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer3', baseContext);
+
+        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      });
+
+      it('should view the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock3', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it('should check that the status number is equal to 1', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber5', baseContext);
+
+        const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
+        expect(statusNumber).to.be.equal(1);
+      });
+
+      it('should set an order note', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'setOrderNote', baseContext);
+
+        const textResult = await orderPageTabListBlock.setOrderNote(page, orderNote);
+        expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
+      });
+
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage4', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+        await ordersPage.closeSfToolBar(page);
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters4', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
+      });
+
+      it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer4', baseContext);
+
+        await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        expect(textColumn).to.contains(customerData.lastName);
+      });
+
+      it('should view the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock4', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it('should check that the order note is closed', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed3', baseContext);
+
+        const isOpened = await orderPageTabListBlock.isOrderNoteOpened(page);
+        expect(isOpened).to.eq(false);
+      });
+
+      it('should logout from BO', async function () {
+        await loginCommon.logoutBO(this, page);
+      });
     });
 
-    it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
+    // 4 - delete order note
+    describe('Delete order note by default employee', async () => {
+      it('should login with default account', async function () {
+        await loginCommon.loginBO(this, page);
+      });
 
-      await ordersPage.goToOrder(page, 1);
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage5', baseContext);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-  });
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+        await ordersPage.closeSfToolBar(page);
 
-  // 2 - Check history table and order note after some edit by default employee
-  describe('Check history table after some edits by default employee', async () => {
-    it('should check that the status number is equal to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber', baseContext);
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
 
-      const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
-      expect(statusNumber).to.be.equal(1);
-    });
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters5', baseContext);
 
-    it('should click on \'Resend email\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resendEmail', baseContext);
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
+      });
 
-      const textResult = await orderPageTabListBlock.resendEmail(page);
-      expect(textResult).to.contains(orderPageTabListBlock.validationSendMessage);
-    });
+      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
 
-    it('should check if the mail is in mailbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkIfResetPasswordMailIsInMailbox', baseContext);
+        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
-      expect(newMail.subject).to.contains('[PrestaShop] Awaiting bank wire payment');
-    });
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      });
 
-    it('should click on update status and check the error message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnUpdateStatusAndSeeTheErrorMessage', baseContext);
+      it('should view the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock', baseContext);
 
-      const textResult = await orderPageTabListBlock.clickOnUpdateStatus(page);
-      expect(textResult).to.contains(orderPageTabListBlock.errorAssignSameStatus);
-    });
+        await ordersPage.goToOrder(page, 1);
 
-    it(`should change the order status to '${OrderStatuses.canceled.name}' and check it`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'cancelOrderByStatus', baseContext);
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
 
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.canceled.name);
-      expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
-    });
+      it('should check that the order note is not empty', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteEmpty', baseContext);
 
-    it('should check that the status number is equal to 2', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber2', baseContext);
+        const orderNote = await orderPageTabListBlock.getOrderNoteContent(page);
+        expect(orderNote).to.be.equal(orderNote);
+      });
 
-      const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
-      expect(statusNumber).to.be.equal(2);
-    });
+      it('should delete the order note', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderNote', baseContext);
 
-    it('should check the status name from the table', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName1', baseContext);
-
-      const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'status', 1);
-      expect(statusName).to.be.equal(OrderStatuses.canceled.name);
-    });
-
-    it('should check the employee name from the table', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName1', baseContext);
-
-      const employeeName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'employee', 1);
-      expect(employeeName).to.be.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`);
-    });
-
-    it('should check the date from the table', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDate1', baseContext);
-
-      const date = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'date', 1);
-      expect(date).to.contain(today);
-    });
-
-    it('should check that the order note is closed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed1', baseContext);
-
-      const isOpened = await orderPageTabListBlock.isOrderNoteOpened(page);
-      expect(isOpened).to.eq(false);
-    });
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
-    });
-  });
-
-  // 3 - Check history table and order note after some modifications by new employee
-  describe('Check history table and order note after some modifications by new employee', async () => {
-    it('should login by new employee account', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
-
-      await loginPage.goTo(page, global.BO.URL);
-      await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
-
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dashboardPage.pageTitle);
-    });
-
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-      await ordersPage.closeSfToolBar(page);
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
-
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfOrders).to.be.above(0);
-    });
-
-    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
-
-      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
-
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(customerData.lastName);
-    });
-
-    it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock2', baseContext);
-
-      await ordersPage.goToOrder(page, 1);
-
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-
-    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusToAccepted', baseContext);
-
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.paymentAccepted.name);
-      expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
-    });
-
-    it('should check that the status number is equal to 3', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber3', baseContext);
-
-      const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
-      expect(statusNumber).to.be.equal(3);
-    });
-
-    it('should check the status name from the table', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName2', baseContext);
-
-      const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'status', 1);
-      expect(statusName).to.be.equal(OrderStatuses.paymentAccepted.name);
-    });
-
-    it('should check the employee name from the table', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName2', baseContext);
-
-      const employeeName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'employee', 1);
-      expect(employeeName).to.be.equal(`${createEmployeeData.firstName} ${createEmployeeData.lastName}`);
-    });
-
-    it('should check the date from the table', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDate2', baseContext);
-
-      const date = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'date', 1);
-      expect(date).to.contain(today);
-    });
-
-    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusToShipped', baseContext);
-
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.shipped.name);
-      expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
-    });
-
-    it('should check that the status number is equal to 4', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber4', baseContext);
-
-      const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
-      expect(statusNumber).to.be.equal(4);
-    });
-
-    it('should check that the order note still closed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed2', baseContext);
-
-      const isOpened = await orderPageTabListBlock.isOrderNoteOpened(page);
-      expect(isOpened).to.eq(false);
-    });
-
-    it('should open the order note textarea', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'openOrderNote', baseContext);
-
-      const isOpened = await orderPageTabListBlock.openOrderNoteTextarea(page);
-      expect(isOpened).to.eq(true);
-    });
-
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage3', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-      await ordersPage.closeSfToolBar(page);
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters3', baseContext);
-
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfOrders).to.be.above(0);
-    });
-
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer3', baseContext);
-
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
-
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
-    });
-
-    it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock3', baseContext);
-
-      await ordersPage.goToOrder(page, 1);
-
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-
-    it('should check that the status number is equal to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber5', baseContext);
-
-      const statusNumber = await orderPageTabListBlock.getStatusNumber(page);
-      expect(statusNumber).to.be.equal(1);
-    });
-
-    it('should set an order note', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setOrderNote', baseContext);
-
-      const textResult = await orderPageTabListBlock.setOrderNote(page, orderNote);
-      expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
-    });
-
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage4', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-      await ordersPage.closeSfToolBar(page);
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters4', baseContext);
-
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfOrders).to.be.above(0);
-    });
-
-    it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer4', baseContext);
-
-      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
-
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(customerData.lastName);
-    });
-
-    it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock4', baseContext);
-
-      await ordersPage.goToOrder(page, 1);
-
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-
-    it('should check that the order note is closed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteClosed3', baseContext);
-
-      const isOpened = await orderPageTabListBlock.isOrderNoteOpened(page);
-      expect(isOpened).to.eq(false);
-    });
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
-    });
-  });
-
-  // 4 - delete order note
-  describe('Delete order note by default employee', async () => {
-    it('should login with default account', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage5', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-      await ordersPage.closeSfToolBar(page);
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters5', baseContext);
-
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfOrders).to.be.above(0);
-    });
-
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
-
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
-
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
-    });
-
-    it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock', baseContext);
-
-      await ordersPage.goToOrder(page, 1);
-
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-
-    it('should check that the order note is not empty', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNoteEmpty', baseContext);
-
-      const orderNote = await orderPageTabListBlock.getOrderNoteContent(page);
-      expect(orderNote).to.be.equal(orderNote);
-    });
-
-    it('should delete the order note', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderNote', baseContext);
-
-      const textResult = await orderPageTabListBlock.setOrderNote(page, '');
-      expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
+        const textResult = await orderPageTabListBlock.setOrderNote(page, '');
+        expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
+      });
     });
   });
 

@@ -77,6 +77,10 @@ function createAddressTest(addressData: AddressData, baseContext: string = 'comm
 
       const textResult = await addAddressPage.createEditAddress(page, addressData);
       expect(textResult).to.equal(addressesPage.successfulCreationMessage);
+    });
+
+    it('should check the addresses number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumber', baseContext);
 
       const numberOfAddressesAfterCreation = await addressesPage.getNumberOfElementInGrid(page);
       expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1);
