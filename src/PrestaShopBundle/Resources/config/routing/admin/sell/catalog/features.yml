@@ -132,6 +132,8 @@ admin_feature_values_export:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::exportAction
     _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
 
 admin_feature_values_delete:
   path: /{featureId}/values/{featureValueId}/delete
