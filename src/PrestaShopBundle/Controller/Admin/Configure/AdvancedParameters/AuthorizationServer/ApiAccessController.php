@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\Authori
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
@@ -155,6 +156,28 @@ class ApiAccessController extends FrameworkBundleAdminController
             'status' => true,
             'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.", redirectRoute="admin_api_accesses_index")
+     *
+     * @param int $apiAccessId
+     *
+     * @return Response
+     */
+    public function deleteAction(int $apiAccessId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteApiAccessCommand($apiAccessId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_api_accesses_index');
     }
 
     private function getFormHandler(): FormHandlerInterface
