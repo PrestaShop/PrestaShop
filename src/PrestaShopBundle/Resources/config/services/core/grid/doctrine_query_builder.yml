@@ -485,13 +485,6 @@ services:
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
     public: true
 
-  PrestaShop\PrestaShop\Core\Grid\Query\AuthorizedApplicationQueryBuilder:
-    parent: 'prestashop.core.grid.abstract_query_builder'
-    public: false
-    autowire: true
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-
   PrestaShop\PrestaShop\Core\Grid\Query\ApiAccessQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: false

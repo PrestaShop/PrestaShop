@@ -382,12 +382,6 @@ services:
       - '@prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider'
     public: true
 
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory'
-    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
-    public: false
-    autowire: true
-
   prestashop.core.grid.definition.factory.customer_groups:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGroupsGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory

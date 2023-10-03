@@ -261,11 +261,6 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApplicationFormDataHandler:
-    arguments:
-      - '@prestashop.core.command_bus'
-    autowire: true
-
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxRulesGroupFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'

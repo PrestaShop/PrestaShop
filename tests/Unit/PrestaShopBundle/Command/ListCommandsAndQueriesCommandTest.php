@@ -111,26 +111,26 @@ class ListCommandsAndQueriesCommandTest extends TestCase
         return [
             [
                 [],
-                "1.\nClass: PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand\nType: Command\nAPI: \nCreates application with provided data\n\n2.\nClass: PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand\nType: Command\nAPI: \nEdit application with provided data\n\n3.\nClass: PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing\nType: Query\nAPI: \nGets application for editing in Back Office\n\n4.\nClass: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand\nType: Command\nAPI: \n\n\n",
+                "1.\nClass: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand\nType: Command\nAPI: \n\n\n2.\nClass: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand\nType: Command\nAPI: \n\n\n3.\nClass: PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand\nType: Command\nAPI: \nThis command adds/sends message to the customer related with the order.\n\n4.\nClass: PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing\nType: Query\nAPI: \nGets customer thread for viewing\n\n",
             ],
             [
                 [
-                    '--domain' => ['CustomerService'],
+                    '--domain' => ['CustomerMessage'],
                 ],
-                "4.\nClass: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand\nType: Command\nAPI: \n\n\n",
+                "3.\nClass: PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand\nType: Command\nAPI: \nThis command adds/sends message to the customer related with the order.\n\n",
             ],
             [
                 [
                     '--format' => 'simple',
                 ],
-                "PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand NOT OK\nPrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand NOT OK\nPrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing NOT OK\nPrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand NOT OK\n",
+                "PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand NOT OK\nPrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand NOT OK\nPrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand NOT OK\nPrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing NOT OK\n",
             ],
             [
                 [
-                    '--domain' => ['CustomerService'],
+                    '--domain' => ['CustomerMessage'],
                     '--format' => 'simple',
                 ],
-                "PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand NOT OK\n",
+                "PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand NOT OK\n",
             ],
         ];
     }
@@ -141,10 +141,10 @@ class ListCommandsAndQueriesCommandTest extends TestCase
     private function getListOfCQRSCommands(): array
     {
         return [
-            "PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand",
-            "PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand",
-            "PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing",
             "PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand",
+            "PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand",
+            "PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand",
+            "PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing",
         ];
     }
 }

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
@@ -36,36 +35,6 @@ final class ApiAccessesFilters extends Filters
 {
     /** @var string */
     protected $filterId = ApiAccessGridDefinitionFactory::GRID_ID;
-
-    /**
-     * @var int
-     */
-    private $applicationId;
-
-    /**
-     * @param array $filters
-     * @param $filterId
-     *
-     * @throws InvalidArgumentException
-     */
-    public function __construct(array $filters = [], $filterId = '')
-    {
-        if (!isset($filters['filters']['application_id'])) {
-            throw new InvalidArgumentException(sprintf('%s filters expect a application_id filter', static::class));
-        }
-
-        $this->applicationId = (int) $filters['filters']['application_id'];
-
-        parent::__construct($filters, $filterId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getApplicationId(): int
-    {
-        return $this->applicationId;
-    }
 
     /**
      * {@inheritdoc}

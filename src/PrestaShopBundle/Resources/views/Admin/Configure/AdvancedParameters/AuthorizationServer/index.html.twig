@@ -26,12 +26,9 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
-  {% block authorized_applications_main_panel %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
-  {% endblock %}
+    List of API accesses coming soon.
 {% endblock %}
 {% block javascripts %}
   {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/authorization_server.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}

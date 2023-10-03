@@ -301,13 +301,6 @@ services:
       - 'PrestaShopBundle\Form\Admin\Improve\International\Locations\StateType'
       - '@prestashop.core.form.identifiable_object.data_provider.state_form_data_provider'
 
-  prestashop.core.form.identifiable_object.builder.application_form_builder:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
-    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
-    arguments:
-      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType'
-      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApplicationFormDataProvider'
-
   prestashop.core.form.identifiable_object.builder.tax_rules_group_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]

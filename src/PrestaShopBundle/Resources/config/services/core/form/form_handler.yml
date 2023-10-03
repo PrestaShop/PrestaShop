@@ -280,12 +280,6 @@ services:
     arguments:
       - '@prestashop.core.form.identifiable_object.data_handler.state_form_data_handler'
 
-  prestashop.core.form.identifiable_object.handler.application_form_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
-    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApplicationFormDataHandler'
-
   prestashop.core.form.identifiable_object.handler.tax_rules_group_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
