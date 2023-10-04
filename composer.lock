@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60acf169894ee319fe6a50e661a284fa",
+    "content-hash": "4f89715abcb2550538fade0f7ff55de8",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5509,6 +5509,53 @@
                 "source": "https://github.com/PrestaShop/productcomments/tree/v6.0.2"
             },
             "time": "2023-08-30T08:14:56+00:00"
+        },
+        {
+            "name": "prestashop/ps_apiresources",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_apiresources.git",
+                "reference": "f55c54cef7037148bf8b8fd6d3922c44f9cf7f92"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/f55c54cef7037148bf8b8fd6d3922c44f9cf7f92",
+                "reference": "f55c54cef7037148bf8b8fd6d3922c44f9cf7f92",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^4.2"
+            },
+            "default-branch": true,
+            "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\APIResources\\": "src/"
+                },
+                "classmap": [
+                    "ps_apiresources.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop - API Resources",
+            "homepage": "https://github.com/PrestaShop/ps_apiresources",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev"
+            },
+            "time": "2023-10-04T18:23:48+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -18102,7 +18149,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "prestashop/ps_apiresources": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -18123,5 +18172,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
