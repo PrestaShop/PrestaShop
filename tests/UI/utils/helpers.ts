@@ -36,7 +36,7 @@ export default {
 
       return (await browsers[global.BROWSER.name].launch(browserConfig));
     } catch (e: any) {
-      if (attempt <= 3) {
+      if (attempt <= 5) {
         await (new Promise((resolve) => {
           setTimeout(resolve, 5000);
         }));
