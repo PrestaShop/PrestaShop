@@ -75,11 +75,11 @@ Enjoy your store :)
 
 Essential links about PrestaShop:
 
-* User Guide: https://docs.prestashop-project.org/1.7-documentation/user-guide
+* User Guide: https://docs.prestashop-project.org/v.8-documentation/getting-started/installing-prestashop
 * Tech docs (modules & themes): https://devdocs.prestashop-project.org/
-* Official blog: https://www.prestashop.com/en/blog
-* Developer blog: https://build.prestashop.com/
-* Get community support: https://www.prestashop.com/forums/
+* Official site: https://www.prestashop-project.org/
+* Developer blog: https://build.prestashop-project.org/
+* Get community support: https://www.prestashop-project.org/support/
 * Contribute with code: https://github.com/PrestaShop/PrestaShop
 * Contribute with translation: https://crowdin.net/project/prestashop-official
 
