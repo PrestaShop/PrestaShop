@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,50 +21,12 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-declare(strict_types=1);
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
-use PrestaShopBundle\Entity\ApiAccess;
-
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository
-{
-    /**
-     * @param int $apiAccessId
-     *
-     * @return ApiAccess
-     *
-     * @throws NoResultException
-     */
-    public function getById(int $apiAccessId): ApiAccess
-    {
-        $apiAccess = $this->findOneBy(['id' => $apiAccessId]);
-
-        if (null === $apiAccess) {
-            throw new NoResultException();
-        }
-
-        return $apiAccess;
-    }
-
-    public function delete(ApiAccess $apiAccess): void
-    {
-        $this->getEntityManager()->remove($apiAccess);
-        $this->getEntityManager()->flush();
-    }
-
-    public function save(ApiAccess $apiAccess): int
-    {
-        $this->getEntityManager()->persist($apiAccess);
-        $this->getEntityManager()->flush();
-
-        return $apiAccess->getId();
-    }
-}
+{% block content %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/form.html.twig' with {
+      apiAccessForm: apiAccessForm
+    } %}
+{% endblock %}

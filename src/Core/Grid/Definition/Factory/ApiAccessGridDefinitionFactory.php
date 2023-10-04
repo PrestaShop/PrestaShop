@@ -28,11 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 
@@ -58,7 +61,7 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Api accesses', [], 'Admin.Navigation.Menu');
+        return $this->trans('Api Accesses', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -68,22 +71,35 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add(
-                (new IdentifierColumn('client_id'))
-                    ->setName($this->trans('Name', [], 'Admin.Global'))
+                (new IdentifierColumn('id_api_access'))
+                    ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
-                        'identifier_field' => 'client_id',
+                        'identifier_field' => 'id_api_access',
                         'clickable' => false,
                     ])
             )
             ->add(
-                (new ToggleColumn('active'))
-                    ->setName($this->trans('Api access state', [], 'Admin.Global'))
+                (new DataColumn('client_name'))
+                    ->setName($this->trans('Client Name', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'client_name',
+                    ])
+            )
+            ->add(
+                (new DataColumn('client_id'))
+                    ->setName($this->trans('Client ID', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'client_id',
+                    ])
+            )
+            ->add(
+                (new ToggleColumn('enabled'))
+                    ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_api_access',
                         'route' => 'admin_api_accesses_toggle_active',
                         'route_param_name' => 'apiAccessId',
-                        'sortable' => false,
                     ])
             )
             ->add((new ActionColumn('actions'))
@@ -119,5 +135,28 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
 
         return $rowActions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
+            )
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
+            )
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
+            );
     }
 }

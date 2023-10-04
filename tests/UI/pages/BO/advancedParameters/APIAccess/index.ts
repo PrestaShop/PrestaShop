@@ -3,14 +3,14 @@ import BOBasePage from '@pages/BO/BObasePage';
 import type {Page} from 'playwright';
 
 /**
- * AuthorizationServer page, contains functions that can be used on the page
+ * API Access page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
-class AuthorizationServer extends BOBasePage {
+class APIAccess extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly newAuthorizedAppLink: string;
+  private readonly newApiAccessLink: string;
 
   private readonly gridPanel: string;
 
@@ -44,25 +44,25 @@ class AuthorizationServer extends BOBasePage {
 
   /**
    * @constructs
-   * Setting up texts and selectors to use on AuthorizationServer page
+   * Setting up texts and selectors to use on API Access page
    */
   constructor() {
     super();
 
-    this.pageTitle = `Authorization Server Management • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = `API Access list • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
 
     // Header
-    this.newAuthorizedAppLink = '#page-header-desc-configuration-addApplication';
+    this.newApiAccessLink = '#page-header-desc-configuration-addApiAccess';
 
     // Selectors grid panel
-    this.gridPanel = '#authorized_application_grid_panel';
+    this.gridPanel = '#api_access_grid_panel';
     this.gridHeader = `${this.gridPanel} .card-header`;
     this.gridHeaderTitle = `${this.gridHeader} h3`;
 
     // Table rows and columns
-    this.gridTable = '#authorized_application_grid_table';
+    this.gridTable = '#api_access_grid_table';
     this.gridTableBody = `${this.gridTable} tbody`;
     this.gridTableEmptyRow = `${this.gridTableBody} tr.empty_row`;
     this.gridTableRow = (row: number) => `${this.gridTable} tbody tr:nth-child(${row})`;
@@ -75,7 +75,7 @@ class AuthorizationServer extends BOBasePage {
     this.gridTableEditLink = (row: number) => `${this.gridTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Delete modal
-    this.confirmDeleteModal = '#authorized_application-grid-confirm-modal';
+    this.confirmDeleteModal = '#api_access-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
@@ -84,38 +84,22 @@ class AuthorizationServer extends BOBasePage {
    */
   /* Header methods */
   /**
-   * Go to new Authorized App page
+   * Go to new API Access page
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToNewAuthorizedAppPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.newAuthorizedAppLink);
+  async goToNewAPIAccessPage(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, this.newApiAccessLink);
   }
 
   /**
-   * Go to edit Authorized App page
+   * Go to edit API Access page
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToEditAuthorizedAppPage(page: Page, row: number): Promise<void> {
+  async goToEditAPIAccessPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForURL(page, this.gridTableEditLink(row));
-  }
-
-  /**
-   * Go to view Authorized App page
-   * @param page {Page} Browser tab
-   * @param row {number} Row on table
-   * @returns {Promise<void>}
-   */
-  async goToViewAuthorizedAppPage(page: Page, row: number): Promise<void> {
-    // Click on dropDown
-    await Promise.all([
-      page.click(this.gridTableToggleDropDown(row)),
-      this.waitForVisibleSelector(page, `${this.gridTableToggleDropDown(row)}[aria-expanded='true']`),
-    ]);
-    // Click on delete
-    return this.clickAndWaitForURL(page, this.gridTableViewLink(row));
   }
 
   /* Grid methods */
@@ -143,7 +127,7 @@ class AuthorizationServer extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteAuthorizationApplication(page: Page, row: number): Promise<string> {
+  async deleteAPIAccess(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.click(this.gridTableToggleDropDown(row)),
@@ -162,4 +146,4 @@ class AuthorizationServer extends BOBasePage {
   }
 }
 
-export default new AuthorizationServer();
+export default new APIAccess();

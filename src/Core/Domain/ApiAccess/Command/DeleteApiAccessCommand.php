@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,14 +22,25 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Advparameters.Feature" %}
+ */
 
-{% block content %}
-    List of API accesses coming soon.
-{% endblock %}
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
+
+class DeleteApiAccessCommand
+{
+    private ApiAccessId $apiAccessId;
+
+    public function __construct(int $apiAccessId)
+    {
+        $this->apiAccessId = new ApiAccessId($apiAccessId);
+    }
+
+    public function getApiAccessId(): ApiAccessId
+    {
+        return $this->apiAccessId;
+    }
+}

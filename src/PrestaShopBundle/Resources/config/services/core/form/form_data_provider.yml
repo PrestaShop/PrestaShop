@@ -245,3 +245,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider:
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiAccessFormDataProvider:
+    autowire: true
+    public: false

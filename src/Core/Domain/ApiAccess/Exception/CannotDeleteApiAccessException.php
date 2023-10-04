@@ -26,27 +26,8 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
-
-final class ApiAccessesFilters extends Filters
+class CannotDeleteApiAccessException extends ApiAccessException
 {
-    /** @var string */
-    protected $filterId = ApiAccessGridDefinitionFactory::GRID_ID;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaults(): array
-    {
-        return [
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_api_access',
-            'sortOrder' => 'desc',
-            'filters' => [],
-        ];
-    }
 }

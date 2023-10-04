@@ -8,4 +8,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler\EditApiAccessHandler:
 
+  PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler\DeleteApiAccessHandler:
+
   PrestaShop\PrestaShop\Adapter\ApiAccess\QueryHandler\GetApiAccessForEditingHandler:

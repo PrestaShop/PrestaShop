@@ -26,46 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler;
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
-use PrestaShopBundle\Entity\ApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository
+interface DeleteApiAccessHandlerInterface
 {
-    /**
-     * @param int $apiAccessId
-     *
-     * @return ApiAccess
-     *
-     * @throws NoResultException
-     */
-    public function getById(int $apiAccessId): ApiAccess
-    {
-        $apiAccess = $this->findOneBy(['id' => $apiAccessId]);
-
-        if (null === $apiAccess) {
-            throw new NoResultException();
-        }
-
-        return $apiAccess;
-    }
-
-    public function delete(ApiAccess $apiAccess): void
-    {
-        $this->getEntityManager()->remove($apiAccess);
-        $this->getEntityManager()->flush();
-    }
-
-    public function save(ApiAccess $apiAccess): int
-    {
-        $this->getEntityManager()->persist($apiAccess);
-        $this->getEntityManager()->flush();
-
-        return $apiAccess->getId();
-    }
+    public function handle(DeleteApiAccessCommand $command): void;
 }

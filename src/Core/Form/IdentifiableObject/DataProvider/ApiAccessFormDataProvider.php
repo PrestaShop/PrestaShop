@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,37 +26,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\ApiAccess\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use Doctrine\ORM\NoResultException;
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryHandler\GetApiAccessForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
 
-#[AsQueryHandler]
-class GetApiAccessForEditingHandler implements GetApiAccessForEditingHandlerInterface
+class ApiAccessFormDataProvider implements FormDataProviderInterface
 {
-    public function __construct(private readonly ApiAccessRepository $repository)
-    {
+    public function __construct(
+        private CommandBusInterface $queryBus
+    ) {
     }
 
-    public function handle(GetApiAccessForEditing $query): EditableApiAccess
+    public function getData($id)
     {
-        try {
-            $apiAccess = $this->repository->getById($query->getApiAccessId()->getValue());
-        } catch (NoResultException $e) {
-            throw new ApiAccessNotFoundException(sprintf('Could not find Api access %s', $query->getApiAccessId()->getValue()), 0, $e);
-        }
+        /** @var EditableApiAccess $apiAccess */
+        $apiAccess = $this->queryBus->handle(new GetApiAccessForEditing((int) $id));
 
-        return new EditableApiAccess(
-            $apiAccess->getId(),
-            $apiAccess->getClientId(),
-            $apiAccess->getClientName(),
-            $apiAccess->isEnabled(),
-            $apiAccess->getDescription()
-        );
+        return [
+            'client_id' => $apiAccess->getApiClientId(),
+            'client_name' => $apiAccess->getClientName(),
+            'description' => $apiAccess->getDescription(),
+            'enabled' => $apiAccess->isEnabled(),
+        ];
+    }
+
+    public function getDefaultData()
+    {
+        return [];
     }
 }

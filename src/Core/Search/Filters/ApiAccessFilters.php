@@ -26,46 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
-use PrestaShopBundle\Entity\ApiAccess;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository
+final class ApiAccessFilters extends Filters
 {
+    /** @var string */
+    protected $filterId = ApiAccessGridDefinitionFactory::GRID_ID;
+
     /**
-     * @param int $apiAccessId
-     *
-     * @return ApiAccess
-     *
-     * @throws NoResultException
+     * {@inheritdoc}
      */
-    public function getById(int $apiAccessId): ApiAccess
+    public static function getDefaults(): array
     {
-        $apiAccess = $this->findOneBy(['id' => $apiAccessId]);
-
-        if (null === $apiAccess) {
-            throw new NoResultException();
-        }
-
-        return $apiAccess;
-    }
-
-    public function delete(ApiAccess $apiAccess): void
-    {
-        $this->getEntityManager()->remove($apiAccess);
-        $this->getEntityManager()->flush();
-    }
-
-    public function save(ApiAccess $apiAccess): int
-    {
-        $this->getEntityManager()->persist($apiAccess);
-        $this->getEntityManager()->flush();
-
-        return $apiAccess->getId();
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_api_access',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }

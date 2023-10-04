@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,37 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\ApiAccess\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler;
 
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\DeleteApiAccessHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryHandler\GetApiAccessForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotDeleteApiAccessException;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
 
-#[AsQueryHandler]
-class GetApiAccessForEditingHandler implements GetApiAccessForEditingHandlerInterface
+#[AsCommandHandler]
+class DeleteApiAccessHandler implements DeleteApiAccessHandlerInterface
 {
-    public function __construct(private readonly ApiAccessRepository $repository)
-    {
+    public function __construct(
+        private readonly ApiAccessRepository $repository,
+    ) {
     }
 
-    public function handle(GetApiAccessForEditing $query): EditableApiAccess
+    public function handle(DeleteApiAccessCommand $command): void
     {
         try {
-            $apiAccess = $this->repository->getById($query->getApiAccessId()->getValue());
+            $apiAccess = $this->repository->getById($command->getApiAccessId()->getValue());
         } catch (NoResultException $e) {
-            throw new ApiAccessNotFoundException(sprintf('Could not find Api access %s', $query->getApiAccessId()->getValue()), 0, $e);
+            throw new ApiAccessNotFoundException(sprintf('Could not find Api access with ID %s', $command->getApiAccessId()->getValue()), 0, $e);
         }
 
-        return new EditableApiAccess(
-            $apiAccess->getId(),
-            $apiAccess->getClientId(),
-            $apiAccess->getClientName(),
-            $apiAccess->isEnabled(),
-            $apiAccess->getDescription()
-        );
+        try {
+            $this->repository->delete($apiAccess);
+        } catch (ORMException $e) {
+            throw new CannotDeleteApiAccessException('Could not delete Api access', 0, $e);
+        }
     }
 }
