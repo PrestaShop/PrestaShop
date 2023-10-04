@@ -192,7 +192,11 @@ class FeatureValueController extends FrameworkBundleAdminController
      */
     public function exportAction(FeatureValueFilters $filters): CsvResponse
     {
-        $filters = new FeatureValueFilters(['limit' => null] + $filters->all());
+        $filtersParameters = $filters->all();
+        $filtersParameters['filters']['feature_id'] = $filters->getFeatureId();
+        $filtersParameters['filters']['language_id'] = $filters->getLanguageId();
+        $filters = new FeatureValueFilters(['limit' => null] + $filtersParameters);
+        $filters->setNeedsToBePersisted(false);
 
         $gridFactory = $this->get(FeatureValueGridFactory::class);
 
