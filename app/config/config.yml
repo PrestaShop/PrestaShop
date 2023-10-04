@@ -96,13 +96,19 @@ twig:
 api_platform:
   title: Backoffice API
   version: 0.1.0
+  enable_docs: true
   enable_entrypoint: false
+  enable_swagger: true
+  enable_swagger_ui: true
   formats:
     json:
       mime_types: [ 'application/json' ]
     # Allow this format for other API endpoint than native endpoint (by default we will use json)
     jsonld:
       mime_types: [ 'application/ld+json' ]
+    # This is used to allow using the Swagger UI in HTML presentation
+    html:
+      mime_types: [ 'text/html' ]
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
