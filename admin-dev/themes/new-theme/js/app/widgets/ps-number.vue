@@ -38,6 +38,7 @@
       @keydown="onKeydown($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
+      @change.stop="onChange()"
     >
     <div
       class="ps-number-spinner d-flex"
@@ -78,11 +79,19 @@
       },
     },
     methods: {
+      getValue(): number {
+        const value = Number.isNaN(this.value) ? 0 : Number.parseInt(<string> this.value, 10);
+
+        return Number.isNaN(value) ? 0 : value;
+      },
       onKeyup($event: Event): void {
         this.$emit('keyup', $event);
       },
       onKeydown($event: Event): void {
         this.$emit('keydown', $event);
+      },
+      onChange(): void {
+        this.$emit('change', this.getValue());
       },
       focusIn(): void {
         this.$emit('focus');
@@ -91,12 +100,10 @@
         this.$emit('blur', $event);
       },
       increment() {
-        const value = Number.isNaN(this.value) ? 0 : Number.parseInt(<string> this.value, 10);
-        this.$emit('change', Number.isNaN(value) ? 1 : value + 1);
+        this.$emit('change', this.getValue() + 1);
       },
       decrement(): void {
-        const value = Number.isNaN(this.value) ? 0 : Number.parseInt(<string> this.value, 10);
-        this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
+        this.$emit('change', this.getValue() - 1);
       },
     },
   });
