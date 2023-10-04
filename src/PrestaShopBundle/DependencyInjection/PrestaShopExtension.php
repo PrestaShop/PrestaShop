@@ -92,7 +92,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
              */
 
             // Load ApiPLatform DTOs from the src/ApiPlatform/Resources folder
-            $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resource', $modulePath);
+            $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);
             if (file_exists($moduleRessourcesPath)) {
                 $paths[] = $moduleRessourcesPath;
             }
