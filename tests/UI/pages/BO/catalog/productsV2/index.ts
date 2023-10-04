@@ -87,6 +87,12 @@ class Products extends BOBasePage {
 
   private readonly selectAllProductsCheckbox: string;
 
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
   private readonly productFilterIDMinInput: string;
 
   private readonly productFilterIDMaxInput: string;
@@ -114,6 +120,8 @@ class Products extends BOBasePage {
   private readonly productEmptyRow: string;
 
   private readonly productsListTableRow: (row: number) => string;
+
+  private readonly productsListTableColumn: (row: number, column: number) => string;
 
   private readonly productsListTableColumnID: (row: number) => string;
 
@@ -159,7 +167,15 @@ class Products extends BOBasePage {
 
   private readonly productsNumberLabel: string;
 
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDropdown: string;
+
+  private readonly paginationPreviousLink: string;
+
   private readonly paginationNextLink: string;
+
+  private readonly paginationJumpToPage: string;
 
   /**
    * @constructs
@@ -227,6 +243,11 @@ class Products extends BOBasePage {
     this.filterResetButton = `${this.productTableFilterLine} button.js-reset-search`;
     this.selectAllProductsCheckbox = `${this.productTableFilterLine} td[data-type=bulk_action] div.md-checkbox`;
 
+    // Sort input
+    this.tableHead = `${this.productGridTable} thead`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Filters input
     this.productFilterIDMinInput = '#product_id_product_min_field';
     this.productFilterIDMaxInput = '#product_id_product_max_field';
@@ -244,6 +265,8 @@ class Products extends BOBasePage {
     this.productRow = `${this.productGridTable} tbody tr`;
     this.productEmptyRow = `${this.productRow}.empty_row`;
     this.productsListTableRow = (row: number) => `${this.productRow}:nth-child(${row})`;
+    this.productsListTableColumn = (row: number, column: number) => `${this.productRow}:nth-child(${row}) td:`
+      + `nth-child(${column})`;
     this.productsListTableColumnID = (row: number) => `${this.productsListTableRow(row)} td.column-id_product`;
     this.productsListTableColumnName = (row: number) => `${this.productsListTableRow(row)} td.column-name a`;
     this.productsListTableColumnReference = (row: number) => `${this.productsListTableRow(row)} td.column-reference`;
@@ -277,7 +300,13 @@ class Products extends BOBasePage {
     // Pagination
     this.paginationBlock = `${this.productGridPanel} div.pagination-block`;
     this.productsNumberLabel = `${this.paginationBlock} label.col-form-label`;
-    this.paginationNextLink = '.page-item.next:not(.disabled) [data-role=next-page-link]';
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.paginationBlock} .col-form-label`;
+    this.paginationDropdown = `${this.paginationBlock} #paginator_select_page_limit`;
+    this.paginationPreviousLink = `${this.paginationBlock} .pagination .previous a.page-link`;
+    this.paginationNextLink = `${this.paginationBlock} #pagination_next_url`;
+    this.paginationJumpToPage = `${this.paginationBlock} input[class="jump-to-page"]`;
   }
 
   /*
@@ -792,6 +821,112 @@ class Products extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.modalDialogConfirmButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getPaginationLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    await this.selectByValue(page, this.paginationDropdown, number, true);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Set pagination page
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async setPaginationPage(page: Page, number: number): Promise<string> {
+    await this.setValue(page, this.paginationJumpToPage, number.toString());
+    await page.keyboard.press('Enter');
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get text value
+   * @return {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page: Page, column: number): Promise<string[]> {
+    const rowsNumber = await this.getNumberOfProductsFromList(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let i: number = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTable(page, i, column);
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
+   * Get text from a column
+   * @param page {Page} Browser tab
+   * @param row {number} Row in table to get text column
+   * @param column {number} Column to get text content
+   * @return {Promise<string>}
+   */
+  async getTextColumnFromTable(page: Page, row: number, column: number): Promise<string> {
+    return this.getTextContent(page, this.productsListTableColumn(row, column));
+  }
+
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @returns {Promise<void>}
+   */
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 
