@@ -184,7 +184,7 @@ class CountryCore extends ObjectModel
     public static function getByIso($isoCode, $active = false)
     {
         if (!Validate::isLanguageIsoCode($isoCode)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Given iso code (' . $isoCode . ') is not valid.'));
         }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
