@@ -26,6 +26,24 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+      {{ 'PrestaShop provides numerous APIs if you need you can see their details in the dedicated automated documentation:'|trans({}, 'Admin.Advparameters.Feature') }}
+      <ul>
+        <li>
+          <a target="_blank" href="{{ path('api_doc') }}">
+            {{ 'API Documentation (HTML format)'|trans({}, 'Admin.Advparameters.Feature') }}
+          </a>
+        </li>
+        <li>
+          <a target="_blank" href="{{ path('api_doc', {_format: 'json'}) }}">
+            {{ 'API Documentation (JSON format)'|trans({}, 'Admin.Advparameters.Feature') }}
+          </a>
+        </li>
+      </ul>
+    </p>
+  </div>
+
   {% block api_access_listing %}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': apiAccessGrid} %}
   {% endblock %}
