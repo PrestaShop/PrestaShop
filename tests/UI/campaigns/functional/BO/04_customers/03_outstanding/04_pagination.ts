@@ -96,19 +96,15 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
         expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
-      it('should filter by delivery = France', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterByDelivery', baseContext);
-
-        await ordersPage.filterOrders(page, 'select', 'country_name', 'France');
-
-        const textColumn = await ordersPage.getTextColumn(page, 'country_name', 1);
-        expect(textColumn).to.equal('France');
-      });
-
-      it('should update orders status with bulk action', async function () {
+      it('should update created orders status with bulk action', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'bulkUpdateOrdersStatus', baseContext);
 
-        const textResult = await ordersPage.bulkUpdateOrdersStatus(page, OrderStatuses.paymentAccepted.name, true);
+        const textResult = await ordersPage.bulkUpdateOrdersStatus(
+          page,
+          OrderStatuses.paymentAccepted.name,
+          false,
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        );
         expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
     });

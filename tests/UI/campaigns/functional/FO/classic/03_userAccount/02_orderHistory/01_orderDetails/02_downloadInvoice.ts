@@ -60,159 +60,161 @@ describe('FO - Account - Order details : Download invoice', async () => {
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_2`);
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
-  describe('Change the first order status to \'Delivered\'', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForUpdatedPrefix', baseContext);
-
-      await invoicesPage.goToSubMenu(
-        page,
-        invoicesPage.ordersParentLink,
-        invoicesPage.ordersLink,
-      );
-
-      const pageTitle: string = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should go to the first order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForUpdatedPrefix', baseContext);
-
-      // View order
-      await ordersPage.goToOrder(page, 1);
-
-      const pageTitle: string = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
-
-      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
-    });
-
-    it('should get the invoice file name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
-
-      // Get invoice file name
-      fileName = await orderPageTabListBlock.getFileName(page);
-      expect(fileName).to.not.eq(null);
-    });
-  });
-
   describe('Download invoice', async () => {
-    it('should go to FO home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
-
-      await foHomePage.goToFo(page);
-
-      const isHomePage: boolean = await foHomePage.isHomePage(page);
-      expect(isHomePage).to.eq(true);
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
     });
 
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
-
-      await foHomePage.goToLoginPage(page);
-
-      const pageHeaderTitle: string = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
     });
 
-    it('should sign in FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
+    describe('Change the first order status to \'Delivered\'', async () => {
+      it('should login in BO', async function () {
+        await loginCommon.loginBO(this, page);
+      });
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForUpdatedPrefix', baseContext);
 
-      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+        await invoicesPage.goToSubMenu(
+          page,
+          invoicesPage.ordersParentLink,
+          invoicesPage.ordersLink,
+        );
+
+        const pageTitle: string = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForUpdatedPrefix', baseContext);
+
+        // View order
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle: string = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
+
+        const result: string = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+        expect(result).to.equal(OrderStatuses.shipped.name);
+      });
+
+      it('should get the invoice file name', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
+
+        // Get invoice file name
+        fileName = await orderPageTabListBlock.getFileName(page);
+        expect(fileName).to.not.eq(null);
+      });
     });
 
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+    describe('Download invoice', async () => {
+      it('should go to FO home page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+        await foHomePage.goToFo(page);
 
-      const pageTitle: string = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
-    });
+        const isHomePage: boolean = await foHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
+      });
 
-    it('should go to order history page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
+      it('should go to login page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+        await foHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
-    });
+        const pageHeaderTitle: string = await foLoginPage.getPageTitle(page);
+        expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      });
 
-    it('should go to order details page of the first order in list', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
+      it('should sign in FO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await orderHistoryPage.goToDetailsPage(page);
+        await foLoginPage.customerLogin(page, Customers.johnDoe);
 
-      const pageTitle: string = await orderDetailsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
-    });
+        const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
+        expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+      });
 
-    it('should download the invoice', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDownloadFile', baseContext);
+      it('should go to my account page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      const downloadFilePath: string | null = await orderDetailsPage.downloadInvoice(page);
+        await foHomePage.goToMyAccountPage(page);
 
-      const doesFileExist: boolean = await files.doesFileExist(downloadFilePath, 5000);
-      expect(doesFileExist, 'File is not downloaded!').to.eq(true);
+        const pageTitle: string = await myAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      });
 
-      const exist: boolean = await files.isTextInPDF(downloadFilePath, fileName);
-      expect(exist).to.eq(true);
-    });
+      it('should go to order history page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
+        await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      await foHomePage.goToMyAccountPage(page);
+        const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+        expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
+      });
 
-      const pageTitle: string = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
-    });
+      it('should go to order details page of the first order in list', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-    it('should go to order history page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
+        await orderHistoryPage.goToDetailsPage(page);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+        const pageTitle: string = await orderDetailsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+      });
 
-      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
-    });
+      it('should download the invoice', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDownloadFile', baseContext);
 
-    it('should go to order details page of the second order in list', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails2', baseContext);
+        const downloadFilePath: string | null = await orderDetailsPage.downloadInvoice(page);
 
-      await orderHistoryPage.goToDetailsPage(page, 2);
+        const doesFileExist: boolean = await files.doesFileExist(downloadFilePath, 5000);
+        expect(doesFileExist, 'File is not downloaded!').to.eq(true);
 
-      const pageTitle: string = await orderDetailsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
-    });
+        const exist: boolean = await files.isTextInPDF(downloadFilePath, fileName);
+        expect(exist).to.eq(true);
+      });
 
-    it('should check that no invoice is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceIsVisible', baseContext);
+      it('should go to my account page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
 
-      const isInvoiceVisible: boolean = await orderDetailsPage.isInvoiceVisible(page);
-      expect(isInvoiceVisible).to.eq(false);
+        await foHomePage.goToMyAccountPage(page);
+
+        const pageTitle: string = await myAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      });
+
+      it('should go to order history page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
+
+        await myAccountPage.goToHistoryAndDetailsPage(page);
+
+        const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+        expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
+      });
+
+      it('should go to order details page of the second order in list', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails2', baseContext);
+
+        await orderHistoryPage.goToDetailsPage(page, 2);
+
+        const pageTitle: string = await orderDetailsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+      });
+
+      it('should check that no invoice is visible', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceIsVisible', baseContext);
+
+        const isInvoiceVisible: boolean = await orderDetailsPage.isInvoiceVisible(page);
+        expect(isInvoiceVisible).to.eq(false);
+      });
     });
   });
 });
