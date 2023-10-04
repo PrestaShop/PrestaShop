@@ -39,7 +39,7 @@ Scenario :
 describe('BO - Orders - View and edit order : Check order documents tab', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string|null;
+  let filePath: string | null;
 
   const note: string = 'Test note for document';
   // New order by customer data
@@ -57,341 +57,343 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
   // Pre-condition - Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
-  // 1 - Disable invoices
-  describe('Disable invoices', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+  describe('Check order documents tab', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
     });
 
-    it('should go to \'Orders > Invoices\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage1', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.invoicesLink,
-      );
-      await invoicesPage.closeSfToolBar(page);
-
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(invoicesPage.pageTitle);
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
     });
 
-    it('should disable invoices', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableInvoices', baseContext);
+    // 1 - Disable invoices
+    describe('Disable invoices', async () => {
+      it('should login in BO', async function () {
+        await loginCommon.loginBO(this, page);
+      });
 
-      await invoicesPage.enableInvoices(page, false);
+      it('should go to \'Orders > Invoices\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage1', baseContext);
 
-      const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
-    });
-  });
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.invoicesLink,
+        );
+        await invoicesPage.closeSfToolBar(page);
 
-  // 2 - Go to view order page
-  describe('Go to view order page', async () => {
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
+        const pageTitle = await invoicesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      });
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-      await ordersPage.closeSfToolBar(page);
+      it('should disable invoices', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'disableInvoices', baseContext);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
+        await invoicesPage.enableInvoices(page, false);
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
-
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfOrders).to.be.above(0);
+        const textMessage = await invoicesPage.saveInvoiceOptions(page);
+        expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      });
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
+    // 2 - Go to view order page
+    describe('Go to view order page', async () => {
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+        await ordersPage.closeSfToolBar(page);
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
+      });
+
+      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
+
+        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      });
+
+      it('should view the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
     });
 
-    it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
+    // 3 - Check generate invoice button
+    describe('Check generate invoice button', async () => {
+      it('should click on \'Documents\' tab', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab1', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+        const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+        expect(isTabOpened).to.eq(true);
+      });
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-  });
+      it('should check that \'Generate invoice\' button is not visible', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton1', baseContext);
 
-  // 3 - Check generate invoice button
-  describe('Check generate invoice button', async () => {
-    it('should click on \'Documents\' tab', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab1', baseContext);
-
-      const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
-      expect(isTabOpened).to.eq(true);
+        const isVisible = await orderPageTabListBlock.isGenerateInvoiceButtonVisible(page);
+        expect(isVisible).to.eq(false);
+      });
     });
 
-    it('should check that \'Generate invoice\' button is not visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton1', baseContext);
+    // 4 - Enable invoices
+    describe('Enable invoices', async () => {
+      it('should go to \'Orders > Invoices\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage2', baseContext);
 
-      const isVisible = await orderPageTabListBlock.isGenerateInvoiceButtonVisible(page);
-      expect(isVisible).to.eq(false);
-    });
-  });
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.invoicesLink,
+        );
+        await invoicesPage.closeSfToolBar(page);
 
-  // 4 - Enable invoices
-  describe('Enable invoices', async () => {
-    it('should go to \'Orders > Invoices\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage2', baseContext);
+        const pageTitle = await invoicesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      });
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.invoicesLink,
-      );
-      await invoicesPage.closeSfToolBar(page);
+      it('should enable invoices', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'enableInvoices', baseContext);
 
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(invoicesPage.pageTitle);
-    });
+        await invoicesPage.enableInvoices(page, true);
 
-    it('should enable invoices', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableInvoices', baseContext);
-
-      await invoicesPage.enableInvoices(page, true);
-
-      const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
-    });
-  });
-
-  // 5 - Go to view order page
-  describe('Go to view order page', async () => {
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-      await ordersPage.closeSfToolBar(page);
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const textMessage = await invoicesPage.saveInvoiceOptions(page);
+        expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      });
     });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
+    // 5 - Go to view order page
+    describe('Go to view order page', async () => {
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfOrders).to.be.above(0);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+        await ordersPage.closeSfToolBar(page);
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
+      });
+
+      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
+
+        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      });
+
+      it('should view the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock2', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
+    // 6 - Check documents tab
+    describe('Check documents tab', async () => {
+      it('should click on \'Documents\' tab', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab2', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+        expect(isTabOpened).to.eq(true);
+      });
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
-    });
+      it('should check that \'Generate invoice\' button is visible', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton2', baseContext);
 
-    it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock2', baseContext);
+        const isVisible = await orderPageTabListBlock.isGenerateInvoiceButtonVisible(page);
+        expect(isVisible).to.eq(true);
+      });
 
-      await ordersPage.goToOrder(page, 1);
+      it('should check that documents number is equal to 0', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber0', baseContext);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-  });
+        const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
+        expect(documentsNumber).to.be.equal(0);
+      });
 
-  // 6 - Check documents tab
-  describe('Check documents tab', async () => {
-    it('should click on \'Documents\' tab', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab2', baseContext);
+      it('should check the existence of the message \'There is no available document\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
-      const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
-      expect(isTabOpened).to.eq(true);
-    });
+        const textMessage = await orderPageTabListBlock.getTextColumnFromDocumentsTable(page, 'alert-available', 1);
+        expect(textMessage).to.be.equal(orderPageTabListBlock.noAvailableDocumentsMessage);
+      });
 
-    it('should check that \'Generate invoice\' button is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton2', baseContext);
+      it('should click on \'Generate invoice\' button', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'create invoice', baseContext);
 
-      const isVisible = await orderPageTabListBlock.isGenerateInvoiceButtonVisible(page);
-      expect(isVisible).to.eq(true);
-    });
+        const textResult = await orderPageTabListBlock.generateInvoice(page);
+        expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      });
 
-    it('should check that documents number is equal to 0', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber0', baseContext);
+      it('should check that documents number is equal to 1', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber1', baseContext);
 
-      const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
-      expect(documentsNumber).to.be.equal(0);
-    });
+        const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
+        expect(documentsNumber).to.be.equal(1);
+      });
 
-    it('should check the existence of the message \'There is no available document\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
+      it('should check if \'Invoice\' document is created', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceDocument', baseContext);
 
-      const textMessage = await orderPageTabListBlock.getTextColumnFromDocumentsTable(page, 'alert-available', 1);
-      expect(textMessage).to.be.equal(orderPageTabListBlock.noAvailableDocumentsMessage);
-    });
+        const documentType = await orderPageTabListBlock.getDocumentType(page, 1);
+        expect(documentType).to.be.equal('Invoice');
+      });
 
-    it('should click on \'Generate invoice\' button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'create invoice', baseContext);
+      it('should download the \'Invoice\' file', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
-      const textResult = await orderPageTabListBlock.generateInvoice(page);
-      expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
-    });
+        filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
+        expect(filePath).to.not.eq(null);
 
-    it('should check that documents number is equal to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber1', baseContext);
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
+        expect(doesFileExist).to.eq(true);
+      });
 
-      const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
-      expect(documentsNumber).to.be.equal(1);
-    });
+      it('should add note', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'addNote', baseContext);
 
-    it('should check if \'Invoice\' document is created', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceDocument', baseContext);
+        const textResult = await orderPageTabListBlock.setDocumentNote(page, note, 1);
+        expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
+      });
 
-      const documentType = await orderPageTabListBlock.getDocumentType(page, 1);
-      expect(documentType).to.be.equal('Invoice');
-    });
+      it('should check that the button \'Edit note\' is visible', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkEditNoteButton', baseContext);
 
-    it('should download the \'Invoice\' file', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
+        const isVisible = await orderPageTabListBlock.isEditDocumentNoteButtonVisible(page);
+        expect(isVisible).to.eq(true);
+      });
 
-      filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
-      expect(filePath).to.not.eq(null);
+      it('should delete note', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'deleteNote', baseContext);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
-      expect(doesFileExist).to.eq(true);
-    });
+        const textResult = await orderPageTabListBlock.setDocumentNote(page, '', 1);
+        expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
+      });
 
-    it('should add note', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addNote', baseContext);
+      it('should check that the button \'Add note\' is visible', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkAddNoteButton', baseContext);
 
-      const textResult = await orderPageTabListBlock.setDocumentNote(page, note, 1);
-      expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
-    });
+        const isVisible = await orderPageTabListBlock.isAddDocumentNoteButtonVisible(page);
+        expect(isVisible).to.eq(true);
+      });
 
-    it('should check that the button \'Edit note\' is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEditNoteButton', baseContext);
+      it('should click on \'Enter payment\' button', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentButton', baseContext);
 
-      const isVisible = await orderPageTabListBlock.isEditDocumentNoteButtonVisible(page);
-      expect(isVisible).to.eq(true);
-    });
+        await orderPageTabListBlock.clickOnEnterPaymentButton(page);
 
-    it('should delete note', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteNote', baseContext);
+        const amountValue = await orderPagePaymentBlock.getPaymentAmountInputValue(page);
+        expect(amountValue).to.not.equal('');
+      });
 
-      const textResult = await orderPageTabListBlock.setDocumentNote(page, '', 1);
-      expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
-    });
+      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-    it('should check that the button \'Add note\' is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAddNoteButton', baseContext);
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+        expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+      });
 
-      const isVisible = await orderPageTabListBlock.isAddDocumentNoteButtonVisible(page);
-      expect(isVisible).to.eq(true);
-    });
+      it('should check that the button \'Enter payment\' is not visible', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkEnterPaymentButton', baseContext);
 
-    it('should click on \'Enter payment\' button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentButton', baseContext);
+        const isVisible = await orderPageTabListBlock.isEnterPaymentButtonVisible(page);
+        expect(isVisible).to.eq(false);
+      });
 
-      await orderPageTabListBlock.clickOnEnterPaymentButton(page);
+      it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusShipped', baseContext);
 
-      const amountValue = await orderPagePaymentBlock.getPaymentAmountInputValue(page);
-      expect(amountValue).to.not.equal('');
-    });
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+        expect(textResult).to.equal(OrderStatuses.shipped.name);
+      });
 
-    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
+      it('should check that documents number is equal to 2', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber2', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-      expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
-    });
+        const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
+        expect(documentsNumber).to.be.equal(2);
+      });
 
-    it('should check that the button \'Enter payment\' is not visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEnterPaymentButton', baseContext);
+      it('should check if \'Delivery slip\' document is created', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipDocument', baseContext);
 
-      const isVisible = await orderPageTabListBlock.isEnterPaymentButtonVisible(page);
-      expect(isVisible).to.eq(false);
-    });
+        const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
+        expect(documentType).to.be.equal('Delivery slip');
+      });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusShipped', baseContext);
+      it('should download \'Delivery slip\' file', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(textResult).to.equal(OrderStatuses.shipped.name);
-    });
+        filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
+        expect(filePath).to.not.eq(null);
 
-    it('should check that documents number is equal to 2', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber2', baseContext);
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
+        expect(doesFileExist).to.eq(true);
+      });
 
-      const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
-      expect(documentsNumber).to.be.equal(2);
-    });
+      it('should create \'Partial refund\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
 
-    it('should check if \'Delivery slip\' document is created', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipDocument', baseContext);
+        await orderPageTabListBlock.clickOnPartialRefund(page);
 
-      const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
-      expect(documentType).to.be.equal('Delivery slip');
-    });
+        const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
+        expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+      });
 
-    it('should download \'Delivery slip\' file', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
+      it('should check if \'Credit slip\' document is created', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
-      filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
-      expect(filePath).to.not.eq(null);
+        // Get document name
+        const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
+        expect(documentType).to.be.equal('Credit slip');
+      });
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
-      expect(doesFileExist).to.eq(true);
-    });
+      it('should download \'Credit slip\' file', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'downloadCreditSlip', baseContext);
 
-    it('should create \'Partial refund\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
+        filePath = await orderPageTabListBlock.downloadInvoice(page, 4);
+        expect(filePath).to.not.eq(null);
 
-      await orderPageTabListBlock.clickOnPartialRefund(page);
-
-      const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
-      expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
-    });
-
-    it('should check if \'Credit slip\' document is created', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
-
-      // Get document name
-      const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
-      expect(documentType).to.be.equal('Credit slip');
-    });
-
-    it('should download \'Credit slip\' file', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'downloadCreditSlip', baseContext);
-
-      filePath = await orderPageTabListBlock.downloadInvoice(page, 4);
-      expect(filePath).to.not.eq(null);
-
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
-      expect(doesFileExist).to.eq(true);
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
+        expect(doesFileExist).to.eq(true);
+      });
     });
   });
 });

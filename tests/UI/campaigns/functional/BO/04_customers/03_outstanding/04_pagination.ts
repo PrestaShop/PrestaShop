@@ -21,6 +21,7 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import bulkUpdateOrderStatusTest from "@commonTests/BO/orders/orders";
 
 const baseContext: string = 'functional_BO_customers_outstanding_pagination';
 
@@ -56,9 +57,16 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
     paymentMethod: PaymentMethods.wirePayment,
   });
 
+  const orderStatusData: object = ({
+    orderStatus: OrderStatuses.paymentAccepted.name,
+    isAllOrders: false,
+    rows: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  });
+
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
+  // Pre-Condition : Create 11 orders on FO
   describe('PRE-TEST: Create 11 orders on FO', async () => {
     const creationTests: number[] = new Array(numberOfOrdersToCreate).fill(0, 0, numberOfOrdersToCreate);
     creationTests.forEach((value: number, index: number) => {
@@ -66,7 +74,10 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
     });
   });
 
-  describe('BO: Update order status to payment accepted & pagination of outstanding table', async () => {
+  // Pre-Condition : Bulk update order status
+  bulkUpdateOrderStatusTest(orderStatusData, baseContext);
+
+  describe('Pagination next and previous', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -77,91 +88,61 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       await helper.closeBrowserContext(browserContext);
     });
 
-    // Pre-condition: Update order status to payment accepted
-    describe('PRE-TEST: Update order status to payment accepted', async () => {
-      it('should login to BO', async function () {
-        await loginCommon.loginBO(this, page);
-      });
-
-      it('should go to Orders > Orders page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
-        );
-
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
-      });
-
-      it('should update created orders status with bulk action', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'bulkUpdateOrdersStatus', baseContext);
-
-        const textResult = await ordersPage.bulkUpdateOrdersStatus(
-          page,
-          OrderStatuses.paymentAccepted.name,
-          false,
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        );
-        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
-      });
+    it('should login to BO', async function () {
+      await loginCommon.loginBO(this, page);
     });
 
-    describe('Pagination next and previous', async () => {
-      it('should go to BO > Customers > Outstanding page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
+    it('should go to BO > Customers > Outstanding page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.customersParentLink,
-          dashboardPage.outstandingLink,
-        );
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customersParentLink,
+        dashboardPage.outstandingLink,
+      );
 
-        const pageTitle = await outstandingPage.getPageTitle(page);
-        expect(pageTitle).to.contains(outstandingPage.pageTitle);
-      });
+      const pageTitle = await outstandingPage.getPageTitle(page);
+      expect(pageTitle).to.contains(outstandingPage.pageTitle);
+    });
 
-      it('should reset all filters and get the number of outstanding', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding');
+    it('should reset all filters and get the number of outstanding', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding');
 
-        await outstandingPage.resetFilter(page);
+      await outstandingPage.resetFilter(page);
 
-        numberOutstanding = await outstandingPage.getNumberOutstanding(page);
-        expect(numberOutstanding).to.be.above(10);
-      });
+      numberOutstanding = await outstandingPage.getNumberOutstanding(page);
+      expect(numberOutstanding).to.be.above(10);
+    });
 
-      it('should change the items number to 10 per page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-        const paginationNumber = await outstandingPage.selectPaginationLimit(page, 10);
-        expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOutstanding / 10)})`)
-          .to.contains(`(page 1 / ${Math.ceil(numberOutstanding / 10)})`);
-      });
+      const paginationNumber = await outstandingPage.selectPaginationLimit(page, 10);
+      expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOutstanding / 10)})`)
+        .to.contains(`(page 1 / ${Math.ceil(numberOutstanding / 10)})`);
+    });
 
-      it('should click on next', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-        const paginationNumber = await outstandingPage.paginationNext(page);
-        expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOutstanding / 10)})`)
-          .to.contains(`(page 2 / ${Math.ceil(numberOutstanding / 10)})`);
-      });
+      const paginationNumber = await outstandingPage.paginationNext(page);
+      expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOutstanding / 10)})`)
+        .to.contains(`(page 2 / ${Math.ceil(numberOutstanding / 10)})`);
+    });
 
-      it('should click on previous', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-        const paginationNumber = await outstandingPage.paginationPrevious(page);
-        expect(paginationNumber, `Number of pages is not (page 1 / ${Math.ceil(numberOutstanding / 10)})`)
-          .to.contains(`(page 1 / ${Math.ceil(numberOutstanding / 10)})`);
-      });
+      const paginationNumber = await outstandingPage.paginationPrevious(page);
+      expect(paginationNumber, `Number of pages is not (page 1 / ${Math.ceil(numberOutstanding / 10)})`)
+        .to.contains(`(page 1 / ${Math.ceil(numberOutstanding / 10)})`);
+    });
 
-      it('should change the items number to 50 per page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-        const paginationNumber = await outstandingPage.selectPaginationLimit(page, 50);
-        expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
-      });
+      const paginationNumber = await outstandingPage.selectPaginationLimit(page, 50);
+      expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
   });
 
