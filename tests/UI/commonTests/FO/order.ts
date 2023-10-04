@@ -30,6 +30,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
       page = await helper.newTab(browserContext);
     });
 
@@ -126,6 +127,7 @@ function createOrderSpecificProductTest(
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
       page = await helper.newTab(browserContext);
     });
 
@@ -224,6 +226,7 @@ function createOrderByGuestTest(orderData: OrderData, baseContext: string = 'com
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
       page = await helper.newTab(browserContext);
     });
 

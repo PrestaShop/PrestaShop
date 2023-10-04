@@ -9,9 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
