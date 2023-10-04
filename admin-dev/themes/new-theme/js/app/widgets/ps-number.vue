@@ -36,9 +36,8 @@
       placeholder="0"
       @keyup="onKeyup($event)"
       @keydown="onKeydown($event)"
-      @focus="focusIn"
+      @focus="focusIn($event)"
       @blur="focusOut($event)"
-      @change.stop="onChange()"
     >
     <div
       class="ps-number-spinner d-flex"
@@ -46,11 +45,11 @@
     >
       <span
         class="ps-number-up"
-        @click="increment"
+        @click="increment($event)"
       />
       <span
         class="ps-number-down"
-        @click="decrement"
+        @click="decrement($event)"
       />
     </div>
   </div>
@@ -90,20 +89,19 @@
       onKeydown($event: Event): void {
         this.$emit('keydown', $event);
       },
-      onChange(): void {
-        this.$emit('change', this.getValue());
-      },
-      focusIn(): void {
-        this.$emit('focus');
+      focusIn($event: Event): void {
+        this.$emit('focus', $event);
       },
       focusOut($event: Event): void {
         this.$emit('blur', $event);
       },
-      increment() {
-        this.$emit('change', this.getValue() + 1);
+      increment($event: Event) {
+        (<HTMLInputElement>$event.target).value = `${this.getValue() + 1}`;
+        this.$emit('change', $event);
       },
-      decrement(): void {
-        this.$emit('change', this.getValue() - 1);
+      decrement($event: Event): void {
+        (<HTMLInputElement>$event.target).value = `${this.getValue() - 1}`;
+        this.$emit('change', $event);
       },
     },
   });
