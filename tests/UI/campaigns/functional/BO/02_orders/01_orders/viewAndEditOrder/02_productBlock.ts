@@ -214,13 +214,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   // Pre-condition: Disable new product page
   setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
   describe('Create 9 products in BO & check product block', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
+      page = await helper.newTab(browserContext);
+    });
+
     after(async () => {
       await helper.closeBrowserContext(browserContext);
     });

@@ -64,6 +64,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
       page = await helper.newTab(browserContext);
     });
 

@@ -78,6 +78,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
       page = await helper.newTab(browserContext);
     });
 
