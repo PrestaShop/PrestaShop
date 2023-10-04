@@ -72,264 +72,267 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   // Pre-condition: Create a non-ordered shopping cart being connected in the FO
   createShoppingCart(orderData, `${baseContext}_preTest_3`);
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
   describe('View carts', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
+      page = await helper.newTab(browserContext);
     });
 
-    it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
-      );
-
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
     });
 
-    it('should reset all filters and get number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+    describe('View carts', async () => {
+      it('should login in BO', async function () {
+        await loginCommon.loginBO(this, page);
+      });
 
-      numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfShoppingCarts).to.be.above(0);
-    });
+      it('should go to \'Orders > Shopping carts\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
 
-    it('should search the non ordered shopping cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
-
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
-
-      const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-      expect(numberOfShoppingCartsAfterFilter).to.equal(1);
-
-      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
-      expect(textColumn).to.contains('Non ordered');
-    });
-
-    it('should go the Shopping Cart details page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage1', baseContext);
-
-      const lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
-      await shoppingCartsPage.goToViewPage(page, 1);
-
-      const pageTitle = await shoppingCartViewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
-    });
-
-    it('should check the cart total', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCardTotal', baseContext);
-
-      const cartTotal = await shoppingCartViewPage.getCartTotal(page);
-      expect(cartTotal.toString())
-        .to.be.equal((Products.demo_1.finalPrice).toFixed(2));
-    });
-
-    it('should check the customer Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock1', baseContext);
-
-      const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
-      expect(customerInformation)
-        .to.contains(`${customerData.socialTitle} ${customerData.firstName} ${customerData.lastName}`)
-        .and.to.contains(customerData.email)
-        .and.to.contains(todayCartFormat);
-    });
-
-    it('should check the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock1', baseContext);
-
-      const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
-      expect(orderInformation).to.contains('No order was created from this cart.');
-
-      const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
-      expect(hasButtonCreateOrderFromCart).to.eq(true);
-    });
-
-    [
-      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
-      {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
-      {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'quantity', result: 1}},
-      {args: {columnName: 'total', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice).toFixed(2)}`, row: 0}},
-    ].forEach((test) => {
-      it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
-        await testContext
-          .addContextItem(
-            this,
-            'testIdentifier',
-            `checkProduct${test.args.columnName}InCartSummaryBlock1`,
-            baseContext,
-          );
-
-        const cartSummary = await shoppingCartViewPage.getTextColumn(
+        await dashboardPage.goToSubMenu(
           page,
-          test.args.columnName,
-          test.args.row === undefined ? 1 : test.args.row,
+          dashboardPage.ordersParentLink,
+          dashboardPage.shoppingCartsLink,
         );
 
-        if (test.args.columnName === 'title') {
-          expect(cartSummary).to.contains(test.args.result).and.to.contains(test.args.result_2);
-        }
-        expect(cartSummary).to.contains(test.args.result);
+        const pageTitle = await shoppingCartsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
       });
-    });
 
-    it('should click on "Create an order from this cart." button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickCreateOrderFromCartButton', baseContext);
+      it('should reset all filters and get number of shopping carts', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-      await shoppingCartViewPage.createOrderFromThisCart(page);
+        numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+        expect(numberOfShoppingCarts).to.be.above(0);
+      });
 
-      const pageTitle = await addOrderPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addOrderPage.pageTitle);
-    });
+      it('should search the non ordered shopping cart', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-    it('should fill the order and create it', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'fillAndCreateOrder', baseContext);
+        await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
 
-      // Choose payment method
-      await addOrderPage.setPaymentMethod(page, PaymentMethods.checkPayment.moduleName);
-      // Set order status
-      await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
-      // Create the order
-      await addOrderPage.clickOnCreateOrderButton(page);
+        const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
+        expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+        expect(textColumn).to.contains('Non ordered');
+      });
 
-      orderId = await orderPageProductsBlock.getOrderID(page);
-      expect(orderId).to.be.gt(0);
-    });
+      it('should go the Shopping Cart details page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage1', baseContext);
 
-    it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
+        const lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
+        await shoppingCartsPage.goToViewPage(page, 1);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
-      );
+        const pageTitle = await shoppingCartViewPage.getPageTitle(page);
+        expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
+      });
 
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
-    });
+      it('should check the cart total', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCardTotal', baseContext);
 
-    it('should search a shopping cart with a specific order Id', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchSpecificOrderShoppingCarts', baseContext);
+        const cartTotal = await shoppingCartViewPage.getCartTotal(page);
+        expect(cartTotal.toString())
+          .to.be.equal((Products.demo_1.finalPrice).toFixed(2));
+      });
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', orderId.toString());
+      it('should check the customer Information Block', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock1', baseContext);
 
-      const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-      expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);
+        const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
+        expect(customerInformation)
+          .to.contains(`${customerData.socialTitle} ${customerData.firstName} ${customerData.lastName}`)
+          .and.to.contains(customerData.email)
+          .and.to.contains(todayCartFormat);
+      });
 
-      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
-      expect(textColumn).to.contains(orderId);
-    });
+      it('should check the order Information Block', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock1', baseContext);
 
-    it('should go the Shopping Cart details page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage2', baseContext);
+        const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
+        expect(orderInformation).to.contains('No order was created from this cart.');
 
-      const lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
-      await shoppingCartsPage.goToViewPage(page, 1);
+        const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
+        expect(hasButtonCreateOrderFromCart).to.eq(true);
+      });
 
-      const pageTitle = await shoppingCartViewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
-    });
+      [
+        {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
+        {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
+        {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
+        {args: {columnName: 'quantity', result: 1}},
+        {args: {columnName: 'total', result: `€${Products.demo_1.finalPrice}`}},
+        {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
+        {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice).toFixed(2)}`, row: 0}},
+      ].forEach((test) => {
+        it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
+          await testContext
+            .addContextItem(
+              this,
+              'testIdentifier',
+              `checkProduct${test.args.columnName}InCartSummaryBlock1`,
+              baseContext,
+            );
 
-    it('should check the customer Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock2', baseContext);
-
-      const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
-      expect(customerInformation)
-        .to.contains(`${customerData.socialTitle} ${customerData.firstName} ${customerData.lastName}`)
-        .and.to.contains(customerData.email)
-        .and.to.contains(todayCartFormat);
-    });
-
-    it('should check the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock2', baseContext);
-
-      const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
-      expect(orderInformation).to.contains(`Order #${orderId}`);
-
-      const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
-      expect(hasButtonCreateOrderFromCart).to.eq(false);
-    });
-
-    [
-      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
-      {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
-      {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'quantity', result: 1}},
-      {args: {columnName: 'total', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice).toFixed(2)}`, row: 0}},
-    ].forEach((test) => {
-      it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
-        await testContext
-          .addContextItem(
-            this,
-            'testIdentifier',
-            `checkProduct${test.args.columnName}InCartSummaryBlock2`,
-            baseContext,
+          const cartSummary = await shoppingCartViewPage.getTextColumn(
+            page,
+            test.args.columnName,
+            test.args.row === undefined ? 1 : test.args.row,
           );
 
-        const cartSummary = await shoppingCartViewPage.getTextColumn(
+          if (test.args.columnName === 'title') {
+            expect(cartSummary).to.contains(test.args.result).and.to.contains(test.args.result_2);
+          }
+          expect(cartSummary).to.contains(test.args.result);
+        });
+      });
+
+      it('should click on "Create an order from this cart." button', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickCreateOrderFromCartButton', baseContext);
+
+        await shoppingCartViewPage.createOrderFromThisCart(page);
+
+        const pageTitle = await addOrderPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      });
+
+      it('should fill the order and create it', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'fillAndCreateOrder', baseContext);
+
+        // Choose payment method
+        await addOrderPage.setPaymentMethod(page, PaymentMethods.checkPayment.moduleName);
+        // Set order status
+        await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
+        // Create the order
+        await addOrderPage.clickOnCreateOrderButton(page);
+
+        const pageTitle = await orderPageProductsBlock.getPageTitle(page);
+        expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+
+        orderId = await orderPageProductsBlock.getOrderID(page);
+        expect(orderId).to.be.gt(0);
+      });
+
+      it('should go to \'Orders > Shopping carts\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
+
+        await dashboardPage.goToSubMenu(
           page,
-          test.args.columnName,
-          test.args.row === undefined ? 1 : test.args.row,
+          dashboardPage.ordersParentLink,
+          dashboardPage.shoppingCartsLink,
         );
 
-        if (test.args.columnName === 'title') {
-          expect(cartSummary).to.contains(test.args.result).and.to.contains(test.args.result_2);
-        }
-        expect(cartSummary).to.contains(test.args.result);
+        const pageTitle = await shoppingCartsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
       });
-    });
 
-    it('should click on the order Link in the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOrderLink', baseContext);
+      it('should search a shopping cart with a specific order Id', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'searchSpecificOrderShoppingCarts', baseContext);
 
-      await shoppingCartViewPage.goToOrderPage(page);
+        await shoppingCartsPage.filterTable(page, 'input', 'status', orderId.toString());
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+        const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
+        expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);
 
-      const orderDetailId = await orderPageProductsBlock.getOrderID(page);
-      expect(orderDetailId).to.be.eq(orderId);
-    });
+        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+        expect(textColumn).to.contains(orderId);
+      });
 
-    it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage3', baseContext);
+      it('should go the Shopping Cart details page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
-      );
+        const lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
+        await shoppingCartsPage.goToViewPage(page, 1);
 
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
-    });
+        const pageTitle = await shoppingCartViewPage.getPageTitle(page);
+        expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
+      });
 
-    it('should reset all filters and check number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+      it('should check the customer Information Block', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock2', baseContext);
 
-      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfShoppingCartsAfterReset).to.be.above(0);
+        const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
+        expect(customerInformation)
+          .to.contains(`${customerData.socialTitle} ${customerData.firstName} ${customerData.lastName}`)
+          .and.to.contains(customerData.email)
+          .and.to.contains(todayCartFormat);
+      });
+
+      it('should check the order Information Block', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock2', baseContext);
+
+        const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
+        expect(orderInformation).to.contains(`Order #${orderId}`);
+
+        const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
+        expect(hasButtonCreateOrderFromCart).to.eq(false);
+      });
+
+      [
+        {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
+        {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
+        {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
+        {args: {columnName: 'quantity', result: 1}},
+        {args: {columnName: 'total', result: `€${Products.demo_1.finalPrice}`}},
+        {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
+        {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice).toFixed(2)}`, row: 0}},
+      ].forEach((test) => {
+        it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
+          await testContext
+            .addContextItem(
+              this,
+              'testIdentifier',
+              `checkProduct${test.args.columnName}InCartSummaryBlock2`,
+              baseContext,
+            );
+
+          const cartSummary = await shoppingCartViewPage.getTextColumn(
+            page,
+            test.args.columnName,
+            test.args.row === undefined ? 1 : test.args.row,
+          );
+
+          if (test.args.columnName === 'title') {
+            expect(cartSummary).to.contains(test.args.result).and.to.contains(test.args.result_2);
+          }
+          expect(cartSummary).to.contains(test.args.result);
+        });
+      });
+
+      it('should click on the order Link in the order Information Block', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOrderLink', baseContext);
+
+        await shoppingCartViewPage.goToOrderPage(page);
+
+        const pageTitle = await orderPageProductsBlock.getPageTitle(page);
+        expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+
+        const orderDetailId = await orderPageProductsBlock.getOrderID(page);
+        expect(orderDetailId).to.be.eq(orderId);
+      });
+
+      it('should go to \'Orders > Shopping carts\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage3', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.shoppingCartsLink,
+        );
+
+        const pageTitle = await shoppingCartsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+      });
+
+      it('should reset all filters and check number of shopping carts', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+        const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+        expect(numberOfShoppingCartsAfterReset).to.be.above(0);
+      });
     });
   });
 

@@ -37,6 +37,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
+    await browserContext.clearCookies();
     page = await helper.newTab(browserContext);
   });
 

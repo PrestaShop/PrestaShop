@@ -31,6 +31,7 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
+    await browserContext.clearCookies();
     page = await helper.newTab(browserContext);
   });
 

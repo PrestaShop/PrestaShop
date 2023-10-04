@@ -54,98 +54,101 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
-  describe('Create Credit slip ', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to \'Orders > Orders\' page\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should go to the first order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
-
-      await ordersPage.goToOrder(page, 1);
-
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-    });
-
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
-
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
-    });
-
-    it('should add a partial refund', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
-
-      await orderPageTabListBlock.clickOnPartialRefund(page);
-
-      const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
-      expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
-    });
-
-    it('should check the existence of the Credit slip document', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentName', baseContext);
-
-      const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
-      expect(documentType).to.be.equal(creditSlipDocumentName);
-    });
-  });
-
   describe('Generate Credit slip file by date', async () => {
-    it('should go to Credit slips page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
-
-      await orderPageTabListBlock.goToSubMenu(
-        page,
-        orderPageTabListBlock.ordersParentLink,
-        orderPageTabListBlock.creditSlipsLink,
-      );
-      await creditSlipsPage.closeSfToolBar(page);
-
-      const pageTitle = await creditSlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      await browserContext.clearCookies();
+      page = await helper.newTab(browserContext);
     });
 
-    it('should generate PDF file by date and check the file existence', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'generatePdfFileExistence', baseContext);
-
-      // Generate credit slip
-      const filePath = await creditSlipsPage.generatePDFByDateAndDownload(page);
-
-      const exist = await files.doesFileExist(filePath);
-      expect(exist).to.eq(true);
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
     });
 
-    it('should check the error message when there is no credit slip in the entered date', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
+    describe('Create Credit slip ', async () => {
+      it('should login in BO', async function () {
+        await loginCommon.loginBO(this, page);
+      });
 
-      // Generate credit slip and get error message
-      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
-      expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
+      it('should go to \'Orders > Orders\' page\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
+
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+        expect(result).to.equal(OrderStatuses.shipped.name);
+      });
+
+      it('should add a partial refund', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
+
+        await orderPageTabListBlock.clickOnPartialRefund(page);
+
+        const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
+        expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+      });
+
+      it('should check the existence of the Credit slip document', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentName', baseContext);
+
+        const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
+        expect(documentType).to.be.equal(creditSlipDocumentName);
+      });
+    });
+
+    describe('Generate Credit slip file by date', async () => {
+      it('should go to Credit slips page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
+
+        await orderPageTabListBlock.goToSubMenu(
+          page,
+          orderPageTabListBlock.ordersParentLink,
+          orderPageTabListBlock.creditSlipsLink,
+        );
+        await creditSlipsPage.closeSfToolBar(page);
+
+        const pageTitle = await creditSlipsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      });
+
+      it('should generate PDF file by date and check the file existence', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'generatePdfFileExistence', baseContext);
+
+        // Generate credit slip
+        const filePath = await creditSlipsPage.generatePDFByDateAndDownload(page);
+
+        const exist = await files.doesFileExist(filePath);
+        expect(exist).to.eq(true);
+      });
+
+      it('should check the error message when there is no credit slip in the entered date', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
+
+        // Generate credit slip and get error message
+        const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+        expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
+      });
     });
   });
 });

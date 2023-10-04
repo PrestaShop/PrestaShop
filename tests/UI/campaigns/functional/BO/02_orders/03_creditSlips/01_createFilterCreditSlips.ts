@@ -59,6 +59,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
+    await browserContext.clearCookies();
     page = await helper.newTab(browserContext);
   });
 

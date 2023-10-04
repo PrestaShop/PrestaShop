@@ -33,6 +33,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
+    await browserContext.clearCookies();
     page = await helper.newTab(browserContext);
   });
 
