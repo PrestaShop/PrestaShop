@@ -2295,6 +2295,22 @@ class ToolsCore
     </IfModule>
 </Files>
 ');
+
+        // Protect .git folder
+        fwrite($write_fd, '# Protect .git folder
+<Directory .git>
+    # Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Directory>
+');
         // Cache control
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
