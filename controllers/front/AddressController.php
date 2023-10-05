@@ -59,11 +59,22 @@ class AddressControllerCore extends FrontController
     public function postProcess()
     {
         $this->context->smarty->assign('editing', false);
-        $id_address = (int) Tools::getValue('id_address');
-        // Initialize address if an id exists
+
+        $params = Tools::getAllValues();
+        $id_address = isset($params['id_address']) ? (int) $params['id_address'] : 0;
+
+        // Initialize address if an id exists and prevent fill form with default country second time.
         if ($id_address) {
             $this->address_form->loadAddressById($id_address);
+            $address = new Address($id_address, $this->context->language->id);
+            // If this is only form request. Adding param id_country for CustomerAddressForm class.
+            if (!Tools::isSubmit('submitAddress')) {
+                $params['id_country'] = $address->id_country;
+            }
         }
+
+        // Fill the form with data
+        $this->address_form->fillWith($params);
 
         // Submit the address, don't care if it's an edit or add
         if (Tools::isSubmit('submitAddress')) {
