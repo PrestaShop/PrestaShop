@@ -47,7 +47,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $activeModules = $container->getParameter('prestashop.installed_modules');
+        $activeModules = $container->getParameter('prestashop.active_modules');
         $compilerPassList = $this->getCompilerPassList($activeModules);
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {

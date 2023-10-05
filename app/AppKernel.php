@@ -50,6 +50,11 @@ abstract class AppKernel extends Kernel
     protected static $lockStream = null;
 
     /**
+     * @var ModuleRepository
+     */
+    protected $moduleRepository = null;
+
+    /**
      * {@inheritdoc}
      */
     public function registerBundles()
@@ -77,10 +82,10 @@ abstract class AppKernel extends Kernel
         }
 
         /* Will not work until PrestaShop is installed */
-        $activeModules = $this->getActiveModules();
-        if (!empty($activeModules)) {
+        $installedModules = $this->getModuleRepository()->getInstalledModules();
+        if (!empty($installedModules)) {
             try {
-                $this->enableComposerAutoloaderOnModules($activeModules);
+                $this->enableComposerAutoloaderOnModules($installedModules);
             } catch (\Exception $e) {
             }
         }
@@ -193,11 +198,12 @@ abstract class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $installedModules = $this->getActiveModules();
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
 
+        $activeModules = $this->getModuleRepository()->getActiveModules();
+        // We only load translations and services of active modules (not simply installed)
         $moduleTranslationsPaths = [];
-        foreach ($installedModules as $activeModulePath)
+        foreach ($activeModules as $activeModulePath)
         {
             $modulePath = _PS_MODULE_DIR_ . $activeModulePath;
             $translationsPath = sprintf('%s/translations', $modulePath);
@@ -220,12 +226,14 @@ abstract class AppKernel extends Kernel
             }
         }
 
-        $loader->load(function (ContainerBuilder $container) use ($moduleTranslationsPaths, $installedModules) {
+        $installedModules = $this->getModuleRepository()->getInstalledModules();
+        $loader->load(function (ContainerBuilder $container) use ($moduleTranslationsPaths, $activeModules, $installedModules) {
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->setParameter('container.dumper.inline_class_loader', false);
             $container->setParameter('prestashop.module_dir', _PS_MODULE_DIR_);
-            /** @deprecated kernel.active_modules is deprecated. Use prestashop.installed_modules instead. */
-            $container->setParameter('kernel.active_modules', $installedModules);
+            /** @deprecated kernel.active_modules is deprecated. Use prestashop.active_modules instead. */
+            $container->setParameter('kernel.active_modules', $activeModules);
+            $container->setParameter('prestashop.active_modules', $activeModules);
             $container->setParameter('prestashop.installed_modules', $installedModules);
             $container->addObjectResource($this);
             $container->setParameter('modules_translation_paths', $moduleTranslationsPaths);
@@ -266,17 +274,13 @@ abstract class AppKernel extends Kernel
         return realpath(__DIR__ . '/..');
     }
 
-    private function getActiveModules(): array
+    protected function getModuleRepository(): ModuleRepository
     {
-        $activeModules = [];
-        try {
-            $activeModules = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModules();
-        } catch (\Exception $e) {
-            //Do nothing because the modules retrieval must not block the kernel, and it won't work
-            //during the installation process
+        if ($this->moduleRepository === null) {
+            $this->moduleRepository = new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_);
         }
 
-        return $activeModules;
+        return $this->moduleRepository;
     }
 
     protected function getContainerClearCacheLockPath(): string

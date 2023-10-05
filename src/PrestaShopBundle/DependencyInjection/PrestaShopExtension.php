@@ -71,10 +71,11 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     public function preprendApiConfig(ContainerBuilder $container)
     {
         $paths = [];
-        $installedModules = $container->getParameter('prestashop.installed_modules');
+        $activeModules = $container->getParameter('prestashop.active_modules');
         $moduleDir = $container->getParameter('prestashop.module_dir');
 
-        foreach ($installedModules as $moduleName) {
+        // We only load endpoints from active modules
+        foreach ($activeModules as $moduleName) {
             $modulePath = $moduleDir . $moduleName;
             // Load YAML definition from the config/api_platform folder in the module
             $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
@@ -83,7 +84,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
             }
 
             /**
-             * TODO: Understand why this crashes PrestaShop and redirects to Front Office - no support of entities until then
+             * TODO: Understand why this crashes PrestaShop and redirects to Front Office - maybe duplicated/conflicts with ModulesDoctrineCompilerPass that could be removed in favor of this method
              * // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
              * $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
              * if (file_exists($entitiesRessourcesPath)) {
@@ -91,7 +92,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
              * }
              */
 
-            // Load ApiPLatform DTOs from the src/ApiPlatform/Resources folder
+            // Load ApiPlatform DTOs from the src/ApiPlatform/Resources folder
             $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);
             if (file_exists($moduleRessourcesPath)) {
                 $paths[] = $moduleRessourcesPath;
