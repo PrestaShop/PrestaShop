@@ -78,7 +78,7 @@ export default class AddressData {
     this.dni = addressToCreate.dni || '';
 
     /** @type {string} Address alias or name */
-    this.alias = addressToCreate.alias || faker.location.streetAddress();
+    this.alias = addressToCreate.alias || faker.location.streetAddress().substring(0, 30);
 
     /** @type {string} Company name if it's a company address */
     this.company = (addressToCreate.company || faker.company.name()).substring(0, 63);

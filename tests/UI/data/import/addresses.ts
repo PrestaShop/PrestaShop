@@ -14,7 +14,7 @@ function createRecord(): ImportAddress[] {
   for (let i: number = 0; i < 10; i++) {
     records.push({
       id: i + 3,
-      alias: faker.location.streetAddress(),
+      alias: faker.location.streetAddress().substring(0, 30),
       active: faker.number.int({min: 0, max: 1}),
       email: Customers.johnDoe.email,
       customerID: Customers.johnDoe.id,
