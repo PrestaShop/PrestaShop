@@ -59,7 +59,7 @@ jobs:
           - 'functional:BO:orders:01-view-and-edit-order'
           - 'functional:BO:orders:02'
           - 'functional:BO:orders:03-05'
-          'functional:BO:catalog:01'
+          - 'functional:BO:catalog:01'
           - 'functional:BO:catalog:02'
           - 'functional:BO:catalog:03'
           - 'functional:BO:catalog:04'
