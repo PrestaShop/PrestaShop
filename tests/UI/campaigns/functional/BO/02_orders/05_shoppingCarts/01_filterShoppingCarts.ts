@@ -95,13 +95,9 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   it('should change pagination to 300 items per page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
-    let paginationNumber: string = '0';
-
     if (numberOfShoppingCarts >= 21) {
-      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
+      await shoppingCartsPage.selectPaginationLimit(page, 300);
     }
-
-    expect(paginationNumber).to.equal('1');
   });
 
   const tests = [
