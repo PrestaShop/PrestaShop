@@ -108,6 +108,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       await seoTab.setMetaTitle(page, editProductData.metaTitle!);
       await seoTab.setMetaDescription(page, editProductData.metaDescription!);
       await seoTab.setFriendlyUrl(page, editProductData.friendlyUrl!);
+      await createProductPage.clickOnSaveProductButton(page);
 
       const errorMessage = await seoTab.getErrorMessageOfFriendlyUrl(page);
       expect(errorMessage).to.eq('"lorem ipsum" is invalid - Language: English (English)');

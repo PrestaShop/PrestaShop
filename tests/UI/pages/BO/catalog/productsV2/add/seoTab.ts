@@ -1,6 +1,5 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
-import createProductPage from '@pages/BO/catalog/productsV2/add/index';
 
 import type {Page} from 'playwright';
 
@@ -89,8 +88,6 @@ class SeoTab extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getErrorMessageOfFriendlyUrl(page: Page): Promise<string> {
-    await this.clickAndWaitForLoadState(page, createProductPage.saveProductButton);
-
     return this.getTextContent(page, this.alertText);
   }
 
