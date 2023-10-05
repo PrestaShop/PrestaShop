@@ -138,7 +138,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
     it('should check if there is a welcome email for the new customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `searchNewCustomerEmail${index + 1}`, baseContext);
 
-      await emailPage.filterEmailLogs(page, 'input', 'recipient', test.args.customer.email);
+      if (index !== 0) {
+        await emailPage.filterEmailLogs(page, 'input', 'recipient', test.args.customer.email);
+      }
 
       const numberOfEmailAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       expect(numberOfEmailAfterFilter).to.be.equal(test.args.nbrAfterFilter);
