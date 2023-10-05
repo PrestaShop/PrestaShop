@@ -134,16 +134,12 @@ class LogoUploader
                     */
                     $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
                     foreach ($configuredImageFormats as $imageFormat) {
-                        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
-                        // For webp and avif extensions, we want it to follow our command and ignore the original format.
-                        $forceFormat = ($imageFormat !== 'jpg');
                         if (!ImageManager::resize(
                             $tmpName,
                             $this->imageDirection . $this->getLogoName($logoPrefix, '.' . $imageFormat),
                             null,
                             null,
-                            $imageFormat,
-                            $forceFormat
+                            $imageFormat
                         )) {
                             throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                         }

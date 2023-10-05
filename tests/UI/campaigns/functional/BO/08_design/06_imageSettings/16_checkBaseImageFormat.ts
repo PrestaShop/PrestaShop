@@ -4,12 +4,10 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
@@ -45,9 +43,6 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
     coverImage: 'coverPNGBaseFormatPNG.png',
     status: true,
   });
-
-  // Pre-condition: Enable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   // before and after functions
   before(async function () {
@@ -265,7 +260,4 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
   ].forEach((product: ProductData, index: number) => {
     deleteProductTest(product, `${baseContext}_removeProduct${index}`);
   });
-
-  // Post-condition: Disable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });
