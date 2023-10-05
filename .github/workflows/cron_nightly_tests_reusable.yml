@@ -59,12 +59,17 @@ jobs:
           - 'functional:BO:orders:01-view-and-edit-order'
           - 'functional:BO:orders:02'
           - 'functional:BO:orders:03-05'
-          - 'functional:BO:catalog:01-02'
-          - 'functional:BO:catalog:03-04'
-          - 'functional:BO:catalog:05-06'
-          - 'functional:BO:catalog:07-08'
+          'functional:BO:catalog:01'
+          - 'functional:BO:catalog:02'
+          - 'functional:BO:catalog:03'
+          - 'functional:BO:catalog:04'
+          - 'functional:BO:catalog:05'
+          - 'functional:BO:catalog:06'
+          - 'functional:BO:catalog:07'
+          - 'functional:BO:catalog:08'
           - 'functional:BO:customer:01'
-          - 'functional:BO:customer:02-03'
+          - 'functional:BO:customer:02'
+          - 'functional:BO:customer:03'
           - 'functional:BO:customer-service'
           - 'functional:BO:modules'
           - 'functional:BO:design'
@@ -73,19 +78,26 @@ jobs:
           - 'functional:BO:international:01'
           - 'functional:BO:international:02'
           - 'functional:BO:international:03-04'
-          - 'functional:BO:shop-parameters:01-02'
-          - 'functional:BO:shop-parameters:03-04'
-          - 'functional:BO:shop-parameters:05-07'
+          - 'functional:BO:shop-parameters:01'
+          - 'functional:BO:shop-parameters:02'
+          - 'functional:BO:shop-parameters:03'
+          - 'functional:BO:shop-parameters:04'
+          - 'functional:BO:shop-parameters:05'
+          - 'functional:BO:shop-parameters:06'
+          - 'functional:BO:shop-parameters:07'
           - 'functional:BO:advanced-parameters:01-06'
-          - 'functional:BO:advanced-parameters:07-10'
-          - 'functional:BO:advanced-parameters:11-12'
+          - 'functional:BO:advanced-parameters:07-08'
+          - 'functional:BO:advanced-parameters:09-10'
           - 'functional:BO:header'
           - 'functional:FO:01-03'
           - 'functional:FO:04-07'
           - 'functional:FO:08-12'
-          - 'functional:FO:classic:01-03'
+          - 'functional:FO:classic:01-02'
+          - 'functional:FO:classic:02'
           - 'functional:FO:classic:04-07'
-          - 'functional:FO:classic:08-12'
+          - 'functional:FO:classic:08'
+          - 'functional:FO:classic:09-10'
+          - 'functional:FO:classic:11-12'
           - 'functional:FO:hummingbird:01-03'
           - 'functional:productV2'
           - 'functional:API'
@@ -105,11 +117,17 @@ jobs:
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'functional:API'
           - BRANCH: 1.7.8.x
-            CAMPAIGN: 'functional:FO:classic:01-03'
+            CAMPAIGN: 'functional:FO:classic:01-02'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:03'
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'functional:FO:classic:04-07'
           - BRANCH: 1.7.8.x
-            CAMPAIGN: 'functional:FO:classic:08-12'
+            CAMPAIGN: 'functional:FO:classic:08'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:09-10'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:11-12'
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'functional:FO:hummingbird:01-03'
           - BRANCH: 1.7.8.x
@@ -130,11 +148,17 @@ jobs:
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:API'
           - BRANCH: 8.0.x
-            CAMPAIGN: 'functional:FO:classic:01-03'
+            CAMPAIGN: 'functional:FO:classic:01-02'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:03'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:FO:classic:04-07'
           - BRANCH: 8.0.x
-            CAMPAIGN: 'functional:FO:classic:08-12'
+            CAMPAIGN: 'functional:FO:classic:08'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:09-10'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:11-12'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:FO:hummingbird:01-03'
           - BRANCH: 8.0.x
