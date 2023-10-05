@@ -57,7 +57,7 @@ class Movements extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Stock •';
+    this.pageTitle = `Stock • ${global.INSTALL.SHOP_NAME}`;
 
     // Header selectors
     this.stocksNavItemLink = '#head_tabs li:nth-child(1) > a';
