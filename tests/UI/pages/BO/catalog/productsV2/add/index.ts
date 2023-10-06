@@ -151,7 +151,7 @@ class CreateProduct extends BOBasePage {
     // Modal : Switch Product Type
     this.modalSwitchType = '#switch-product-type-modal';
     this.modalSwitchTypeBtnChoice = (productType: string) => `${this.modalSwitchType} button.product-type-choice`
-        + `[data-value="${productType}"]`;
+      + `[data-value="${productType}"]`;
     this.modalSwitchTypeBtnSubmit = `${this.modalSwitchType} .modal-footer button.btn-confirm-submit`;
     this.modalConfirmType = '#modal-confirm-product-type';
     this.modalConfirmTypeBtnSubmit = `${this.modalConfirmType} .modal-footer button.btn-confirm-submit`;
@@ -339,6 +339,15 @@ class CreateProduct extends BOBasePage {
       this.productNameLanguageDropdownItem(locale),
     );
     await this.setValue(page, this.productNameInput(locale), name);
+  }
+
+  /**
+   * Click on save product button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnSaveProductButton(page: Page): Promise<void> {
+    await this.clickAndWaitForLoadState(page, this.saveProductButton);
   }
 
   /**

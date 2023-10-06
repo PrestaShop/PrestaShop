@@ -112,6 +112,12 @@ export default class ProductData {
 
   public numberOfDays: number | null;
 
+  public metaTitle: string | null;
+
+  public metaDescription: string | null;
+
+  public friendlyUrl: string | null;
+
   public combinations: ProductCombination[];
 
   public packageDimensionWidth: number;
@@ -322,6 +328,15 @@ export default class ProductData {
 
     /** @type {number} Number of days limit */
     this.numberOfDays = productToCreate.numberOfDays || null;
+
+    /** @type {string} Meta title */
+    this.metaTitle = productToCreate.metaTitle || null;
+
+    /** @type {string} Meta description */
+    this.metaDescription = productToCreate.metaDescription || null;
+
+    /** @type {string} Friendly URL */
+    this.friendlyUrl = productToCreate.friendlyUrl || null;
 
     /** @type {number} Weight of the package */
     this.packageDimensionWeight = productToCreate.packageDimensionWeight || faker.number.int({min: 1, max: 20});
