@@ -2640,8 +2640,9 @@ class AdminControllerCore extends Controller
             if ($this->isMultistoreEnabled()) {
                 $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/multistore_dropdown.bundle.js?v=' . _PS_VERSION_);
             }
+
             $this->addJqueryPlugin(['chosen', 'fancybox']);
-        } else {
+        }  else {
             if ($this->context->language->is_rtl) {
                 $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/rtl.css?v=' . _PS_VERSION_, 'all', 0);
             }

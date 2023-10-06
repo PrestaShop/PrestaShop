@@ -222,6 +222,8 @@ tools/build/releases/*
 install.lock
 docker-compose.override.yml
 
+/admin-dev/themes/new-theme/.npmrc
+
 # DotEnv files
 /.env.local
 /.env.local.php

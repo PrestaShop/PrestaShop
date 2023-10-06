@@ -144,7 +144,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
      */
     public function setMedia($isNewTheme = false)
     {
-        parent::setMedia(true);
+        parent::setMedia($isNewTheme);
+
+        if ($this->usePuikTheme) {
+            // Add CSS for PUIK
+            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/puik-theme/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
+
+            // Then add JS files after
+        }
     }
 
     /**

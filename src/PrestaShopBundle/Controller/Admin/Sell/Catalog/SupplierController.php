@@ -83,6 +83,7 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig',
             [
+                'usePuikTheme' => true,
                 'supplierGrid' => $this->presentGrid($supplierGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
