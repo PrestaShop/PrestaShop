@@ -29,6 +29,7 @@ type GlobalBrowserConfig = {
   headless: any
   timeout: number
   slowMo: number
+  channel?: string
   args?: Array<string>
 }
 
