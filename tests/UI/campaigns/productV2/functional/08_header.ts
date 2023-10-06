@@ -4,6 +4,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
+import {deleteProductV2Test} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -338,4 +339,6 @@ describe('BO - Catalog - Products : Header', async () => {
     const message = await createProductsPage.saveProduct(page);
     expect(message).to.eq(createProductsPage.successfulUpdateMessage);
   });
+
+  deleteProductV2Test(newProductData, `${baseContext}_postTest_0`);
 });

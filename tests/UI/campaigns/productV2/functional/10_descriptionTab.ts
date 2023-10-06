@@ -4,6 +4,7 @@ import testContext from '@utils/testContext';
 import files from '@utils/files';
 
 // Import common tests
+import {deleteProductV2Test} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -234,4 +235,6 @@ describe('BO - Catalog - Products : Description tab', async () => {
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
+
+  deleteProductV2Test(productData, `${baseContext}_postTest_0`);
 });
