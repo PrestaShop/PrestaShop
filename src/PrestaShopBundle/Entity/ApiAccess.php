@@ -79,8 +79,9 @@ class ApiAccess
     private bool $enabled;
 
     /**
-     * @ORM\Column(name="scopes", type="array")
+     * @ORM\Column(name="scopes", type="json")
      */
+    #[Assert\NotNull]
     private array $scopes = [];
 
     /**

@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
 
 class EditApiAccessCommand
@@ -42,6 +43,8 @@ class EditApiAccessCommand
     private ?bool $enabled = null;
 
     private ?string $description = null;
+
+    private ?array $scopes = null;
 
     public function __construct(int $apiAccessId)
     {
@@ -97,6 +100,24 @@ class EditApiAccessCommand
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getScopes(): ?array
+    {
+        return $this->scopes;
+    }
+
+    public function setScopes(?array $scopes): self
+    {
+        foreach ($scopes as $scope) {
+            if (empty($scope) || !is_string($scope)) {
+                throw new ApiAccessConstraintException('Expected list of non empty string for scopes', ApiAccessConstraintException::INVALID_SCOPES);
+            }
+        }
+
+        $this->scopes = $scopes;
 
         return $this;
     }

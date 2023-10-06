@@ -43,6 +43,7 @@ class ApiAccessConstraintException extends ApiAccessException
     public const CLIENT_ID_TOO_LARGE = 8;
     public const CLIENT_NAME_TOO_LARGE = 9;
     public const DESCRIPTION_TOO_LARGE = 10;
+    public const INVALID_SCOPES = 11;
 
     public static function buildFromPropertyPath(string $propertyPath, string $message, string $template): self
     {

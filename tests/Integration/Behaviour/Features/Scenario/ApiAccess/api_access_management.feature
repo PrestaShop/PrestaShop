@@ -17,6 +17,7 @@ Feature: Api Access Management
       | apiClientId | test-id              |
       | enabled     | true                 |
       | description | a simple description |
+      | scopes      |                      |
     When I edit api access "AA-1" with the following values:
       | clientName  | Toto                |
       | apiClientId | test-id-toto        |
@@ -27,6 +28,7 @@ Feature: Api Access Management
       | apiClientId | test-id-toto        |
       | enabled     | false               |
       | description | another description |
+      | scopes      |                     |
     When I edit api access "AA-1" with the following values:
     # Just a quick edition to show partial update is possible
       | apiClientId | test-id-toto-2 |
@@ -123,3 +125,33 @@ Feature: Api Access Management
       | description |            |
     When I delete api access "AA-12"
     Then api access "AA-12" should not exist
+
+  Scenario: Create a simple api access with scopes and edit its scopes
+    When I create an api access "AA-13" with following properties:
+      | clientName  | Obiwan                     |
+      | apiClientId | jedi                       |
+      | enabled     | true                       |
+      | description | may the force              |
+      | scopes      | api_access_read, hook_read |
+    Then api access "AA-13" should have the following properties:
+      | clientName  | Obiwan                     |
+      | apiClientId | jedi                       |
+      | enabled     | true                       |
+      | description | may the force              |
+      | scopes      | api_access_read, hook_read |
+    When I edit api access "AA-13" with the following values:
+      | scopes | api_access_read, hook_read, hook_write |
+    Then api access "AA-13" should have the following properties:
+      | clientName  | Obiwan                                 |
+      | apiClientId | jedi                                   |
+      | enabled     | true                                   |
+      | description | may the force                          |
+      | scopes      | api_access_read, hook_read, hook_write |
+    When I edit api access "AA-13" with the following values:
+      | scopes |  |
+    Then api access "AA-13" should have the following properties:
+      | clientName  | Obiwan        |
+      | apiClientId | jedi          |
+      | enabled     | true          |
+      | description | may the force |
+      | scopes      |               |
