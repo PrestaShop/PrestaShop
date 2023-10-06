@@ -80,7 +80,7 @@ class TinyMCEEditor {
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins: 
+      plugins:
         /* eslint-disable-next-line max-len */
         'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr',
       browser_spellcheck: true,
