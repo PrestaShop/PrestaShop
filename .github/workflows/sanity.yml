@@ -46,7 +46,7 @@ jobs:
 
       - name: Install browsers
         working-directory: ./tests/UI
-        run: npx playwright install --with-deps
+        run: npx playwright install chrome-beta
 
       - name: Run tests
         run: npm run test:sanity:fast-fail

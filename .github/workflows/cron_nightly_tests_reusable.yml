@@ -227,8 +227,13 @@ jobs:
 
       - name: Install browsers
         working-directory: ${{ inputs.TESTS_DIR }}
-        if: env.GH_BRANCH != '1.7.8.x'
+        if: ${{ env.GH_BRANCH == '8.0.x' || env.GH_BRANCH == '8.1.x' }}
         run: npx playwright install --with-deps
+
+      - name: Install browsers
+        working-directory: ${{ inputs.TESTS_DIR }}
+        if: env.GH_BRANCH == 'develop'
+        run: npx playwright install chrome-beta
 
       # Run tests (if error, we continue for uploading report)
       - name: Run tests
@@ -296,11 +301,6 @@ jobs:
       - name: Install dependencies
         working-directory: ${{ inputs.TESTS_DIR }}
         run: npm ci
-
-      - name: Install browsers
-        working-directory: ${{ inputs.TESTS_DIR }}
-        if: env.GH_BRANCH != '1.7.8.x'
-        run: npx playwright install --with-deps
 
       - name: Combine reports
         working-directory: ${{ inputs.TESTS_DIR }}

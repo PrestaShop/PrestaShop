@@ -42,9 +42,6 @@ jobs:
       - name: Install dependencies in UI tests directory
         run: npm ci
 
-      - name: Install browsers
-        run: npx playwright install --with-deps
-
       - name: Check eslint errors
         run: npm run lint
 
@@ -68,7 +65,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies in UI tests directory
-        run: npm install
+        run: npm ci
 
       - name: Check TypeScript errors
         run: npm run check:typescript
@@ -96,7 +93,7 @@ jobs:
         run: npm ci
 
       - name: Install browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install chrome-beta
 
       - name: Generate mocha reports with failed steps
         run: GENERATE_FAILED_STEPS=true npm run test:all
