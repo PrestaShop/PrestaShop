@@ -29,18 +29,35 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
+use PrestaShopBundle\ApiPlatform\ResourceScopeProvider;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ApiAccessType extends TranslatorAwareType
 {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        private readonly ResourceScopeProvider $resourceScopeProvider
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $scopes = $this->resourceScopeProvider->getScopes();
+        $scopeChoices = [];
+        foreach ($scopes as $scope) {
+            $scopeChoices[$scope] = $scope;
+        }
+
         $builder
             ->add('client_name', TextType::class, [
                 'label' => $this->trans('Client Name', 'Admin.Advparameters.Feature'),
@@ -96,6 +113,12 @@ class ApiAccessType extends TranslatorAwareType
             ->add('enabled', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => true,
+            ])
+            ->add('scopes', ChoiceType::class, [
+                'label' => $this->trans('Scopes', 'Admin.Advparameters.Feature'),
+                'choices' => $scopeChoices,
+                'multiple' => true,
+                'expanded' => true,
             ])
         ;
     }

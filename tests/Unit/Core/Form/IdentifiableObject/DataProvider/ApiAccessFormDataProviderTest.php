@@ -68,13 +68,15 @@ class ApiAccessFormDataProviderTest extends TestCase
                 'client-id',
                 'client-name',
                 true,
-                'short description'
+                'short description',
+                ['api_access_read', 'hook_read']
             ),
             [
                 'client_id' => 'client-id',
                 'client_name' => 'client-name',
                 'description' => 'short description',
                 'enabled' => true,
+                'scopes' => ['api_access_read', 'hook_read'],
             ],
         ];
     }
