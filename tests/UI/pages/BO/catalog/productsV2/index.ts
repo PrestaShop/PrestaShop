@@ -123,6 +123,8 @@ class Products extends BOBasePage {
 
   private readonly productsListTableColumn: (row: number, column: number) => string;
 
+  private readonly productsListTableColumnBulk: (row: number) => string;
+
   private readonly productsListTableColumnID: (row: number) => string;
 
   private readonly productsListTableColumnName: (row: number) => string;
@@ -147,6 +149,8 @@ class Products extends BOBasePage {
 
   private readonly productListTableDuplicateButton: (row: number) => string;
 
+  private readonly productListTablePreviewButton: (row: number) => string;
+
   readonly modalCreateProduct: string;
 
   private readonly modalCreateProductLoader: string;
@@ -160,6 +164,8 @@ class Products extends BOBasePage {
   protected readonly modalDialog: string;
 
   private readonly modalDialogFooter: string;
+
+  private readonly modalDialogCancelButton: string;
 
   private readonly modalDialogConfirmButton: string;
 
@@ -267,6 +273,7 @@ class Products extends BOBasePage {
     this.productsListTableRow = (row: number) => `${this.productRow}:nth-child(${row})`;
     this.productsListTableColumn = (row: number, column: number) => `${this.productRow}:nth-child(${row}) td:`
       + `nth-child(${column})`;
+    this.productsListTableColumnBulk = (row: number) => `${this.productsListTableRow(row)} td.column-bulk input[type="checkbox"]`;
     this.productsListTableColumnID = (row: number) => `${this.productsListTableRow(row)} td.column-id_product`;
     this.productsListTableColumnName = (row: number) => `${this.productsListTableRow(row)} td.column-name a`;
     this.productsListTableColumnReference = (row: number) => `${this.productsListTableRow(row)} td.column-reference`;
@@ -284,6 +291,8 @@ class Products extends BOBasePage {
       + ' td.column-actions a.grid-delete-row-link';
     this.productListTableDuplicateButton = (row: number) => `${this.productsListTableRow(row)}`
       + ' td.column-actions a.grid-duplicate-row-link';
+    this.productListTablePreviewButton = (row: number) => `${this.productsListTableRow(row)}`
+      + ' td.column-actions a.grid-preview-row-link';
 
     // Modal create product selectors
     this.modalCreateProduct = '#modal-create-product';
@@ -295,6 +304,7 @@ class Products extends BOBasePage {
     // Modal dialog
     this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
     this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
+    this.modalDialogCancelButton = `${this.modalDialogFooter} button:not(.btn-confirm-submit)`;
     this.modalDialogConfirmButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
 
     // Pagination
@@ -459,8 +469,9 @@ class Products extends BOBasePage {
     );
     await this.waitForSelectorAndClick(page, modalDialogBulkActionButton);
     await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
+    await page.waitForTimeout(2000);
 
-    return this.getTextContent(page, modalBulkActionsProgressSuccessMessage);
+    return this.getTextContent(page, modalBulkActionsProgressSuccessMessage, true);
   }
 
   /**
@@ -813,6 +824,28 @@ class Products extends BOBasePage {
   }
 
   /**
+   * Click on preview product button
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<Page>}
+   */
+  async clickOnPreviewProductButton(page: Page, row: number = 1): Promise<Page> {
+    await this.waitForSelectorAndClick(page, this.productListTableDropDownList(row));
+    return this.openLinkWithTargetBlank(page, this.productListTablePreviewButton(row));
+  }
+
+  /**
+   * Cancel dialog product
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>} Is the modal displayed ?
+   */
+  async clickOnCancelDialogButton(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.modalDialogCancelButton);
+
+    return !(await this.elementNotVisible(page, this.modalDialog, 2000));
+  }
+
+  /**
    * Confirm dialog product
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
@@ -821,6 +854,16 @@ class Products extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.modalDialogConfirmButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Return if the bulk column is checked
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<boolean>}
+   */
+  async isRowChecked(page: Page, row: number = 1): Promise<boolean> {
+    return this.isChecked(page, this.productsListTableColumnBulk(row));
   }
 
   /* Pagination methods */
