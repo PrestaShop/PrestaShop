@@ -80,10 +80,12 @@ class ContainerParametersExtension implements ContainerBuilderExtensionInterface
         $container->setParameter('kernel.cache_dir', $this->environment->getCacheDir());
 
         //Init the active modules
-        $activeModules = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModules();
-        /* @deprecated kernel.active_modules is deprecated. Use prestashop.installed_modules instead. */
+        $moduleRepository = new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_);
+        $activeModules = $moduleRepository->getActiveModules();
+        /* @deprecated kernel.active_modules is deprecated. Use prestashop.active_modules instead. */
         $container->setParameter('kernel.active_modules', $activeModules);
-        $container->setParameter('prestashop.installed_modules', $activeModules);
+        $container->setParameter('prestashop.active_modules', $activeModules);
+        $container->setParameter('prestashop.installed_modules', $moduleRepository->getInstalledModules());
         $container->setParameter('prestashop.module_dir', _PS_MODULE_DIR_);
 
         if (!$container->hasParameter('kernel.project_dir')) {

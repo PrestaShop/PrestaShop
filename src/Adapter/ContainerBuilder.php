@@ -245,9 +245,9 @@ class ContainerBuilder
      */
     private function loadModulesAutoloader(ContainerInterface $container)
     {
-        $activeModules = $container->getParameter('prestashop.installed_modules');
-        /** @var array<string> $activeModules */
-        foreach ($activeModules as $module) {
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        /** @var array<string> $installedModules */
+        foreach ($installedModules as $module) {
             $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {

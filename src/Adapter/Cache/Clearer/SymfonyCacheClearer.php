@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
 use AppKernel;
+use Exception;
 use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -65,18 +66,26 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 return;
             }
 
-            $application = new Application($kernel);
-            $application->setAutoExit(false);
+            $environments = ['dev', 'prod'];
+            foreach ($environments as $environment) {
+                try {
+                    $application = new Application($kernel);
+                    $application->setAutoExit(false);
 
-            // Clear cache
-            $input = new ArrayInput([
-                'command' => 'cache:clear',
-                '--no-optional-warmers' => true,
-                '--env' => $kernel->getEnvironment(),
-            ]);
+                    // Clear cache without warmup to be fast
+                    $input = new ArrayInput([
+                        'command' => 'cache:clear',
+                        '--no-optional-warmers' => true,
+                        '--no-warmup' => true,
+                        '--env' => $environment,
+                    ]);
 
-            $output = new NullOutput();
-            $application->run($input, $output);
+                    $output = new NullOutput();
+                    $application->run($input, $output);
+                } catch (Exception) {
+                    // Do nothing but at least does not break the loop nor function
+                }
+            }
 
             Hook::exec('actionClearSf2Cache');
         });
