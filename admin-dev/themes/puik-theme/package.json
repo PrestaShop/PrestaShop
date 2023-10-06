@@ -17,9 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prestashopcorp/puik": "^1.5.1",
     "postcss": "^8.2.1",
     "postcss-prefix-selector": "^1.16.0"
-  },
-  "devDependencies": {
   }
 }
