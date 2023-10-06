@@ -14,6 +14,7 @@ GitHub contributors:
 - Adonis Karavokyros
 - Adrien
 - Adrien Astier
+- Adrien Foulon
 - adviva
 - Agence CINS
 - Agnes
@@ -110,6 +111,7 @@ GitHub contributors:
 - Benjamin
 - Benjamin Dussouillez
 - Benjamin PONGY
+- Benoît Gross
 - bercik999
 - Bersam Karbasion
 - Berto Ferrero
@@ -879,7 +881,7 @@ GitHub contributors:
 - Thomas L'huillier
 - Thomas Leguillant
 - Thomas Leviandier
-- Thomas LEONE
+- Thomas Leone
 - Thomas Nabord
 - Thomas Nares
 - Thomas Roux

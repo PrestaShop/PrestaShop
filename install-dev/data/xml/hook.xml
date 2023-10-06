@@ -4534,5 +4534,10 @@
       <title>Add parameters to language link</title>
       <description>Allows modules to provide proper parameters for links in other languages.</description>
     </hook>
+    <hook id="actionAfterLoadRoutes">
+      <name>actionAfterLoadRoutes</name>
+      <title>Triggers after loading routes</title>
+      <description>Allow modules to modify routes in any way or add their own multilanguage routes.</description>
+    </hook>
   </entities>
 </entity_hook>

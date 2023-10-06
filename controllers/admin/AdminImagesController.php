@@ -449,6 +449,12 @@ class AdminImagesControllerCore extends AdminController
 
     public function beforeUpdateOptions()
     {
+        // We check this only if new image system is enabled
+        // With the old system, PS_IMAGE_FORMAT is not present in the form
+        if (!$this->isMultipleImageFormatFeatureEnabled) {
+            return;
+        }
+
         // Unset AVIF if not supported, add JPG if missing
         foreach ($_POST['PS_IMAGE_FORMAT'] as $k => $v) {
             if ($v == 'avif' && !$this->canGenerateAvif) {
