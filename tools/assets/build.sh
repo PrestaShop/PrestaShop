@@ -32,6 +32,10 @@ function build {
 
 build_asset() {
   case $1 in
+    admin-puik-theme)
+      echo ">>> Building admin puik theme..."
+      build "$ADMIN_DIR/themes/puik-theme"
+    ;;
     admin-default)
       echo ">>> Building admin default theme..."
       build "$ADMIN_DIR/themes/default"
@@ -49,7 +53,7 @@ build_asset() {
       build "$PROJECT_PATH/themes/classic/_dev"
     ;;
     all)
-      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic
+      build_asset admin-puik-theme & build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic
     ;;
     *)
       echo "Unknown asset to build $1"

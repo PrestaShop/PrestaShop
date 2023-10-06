@@ -3,10 +3,23 @@
   "version": "1.0.0",
   "description": "PUIK Theme",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --reporter spec \"tests/**/*.spec.js\"",
+    "build": "webpack --progress --mode=production",
+    "dev": "webpack --progress --watch --mode=development",
+    "serve": "webpack serve --mode=development",
+    "watch": "npm run dev",
+    "lint": "eslint -c .eslintrc.js --ext .js,.vue,.ts .",
+    "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue,.ts . --fix",
+    "scss-lint": "stylelint \"**/*.scss\" --formatter verbose",
+    "scss-fix": "stylelint \"**/*.scss\" --fix"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "postcss": "^8.2.1",
+    "postcss-prefix-selector": "^1.16.0"
+  },
+  "devDependencies": {
+  }
 }

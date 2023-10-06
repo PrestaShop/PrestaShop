@@ -22,6 +22,9 @@ admin-default: ## Building admin default theme assets
 admin-new-theme: ## Building admin new theme assets
 	./tools/assets/build.sh admin-new-theme
 
+admin-puik-theme:
+	./tools/assets/build.sh admin-puik-theme
+
 admin: admin-default admin-new-theme ## Building admin assets
 
 front: front-core front-classic ## Building front assets
