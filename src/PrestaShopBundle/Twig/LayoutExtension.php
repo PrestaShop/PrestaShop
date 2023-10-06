@@ -168,7 +168,8 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
         $jsRouterMetadata = [],
         $metaTitle = '',
         $useRegularH1Structure = true,
-        $baseLayout = 'layout.tpl'
+        $baseLayout = 'layout.tpl',
+        $usePuikTheme = false
     ) {
         if ($this->environment == 'test') {
             return <<<'EOF'
@@ -201,7 +202,8 @@ EOF;
             $jsRouterMetadata,
             $metaTitle,
             $useRegularH1Structure,
-            $baseLayout
+            $baseLayout,
+            $usePuikTheme
         );
 
         // There is nothing to display no legacy layout are generated

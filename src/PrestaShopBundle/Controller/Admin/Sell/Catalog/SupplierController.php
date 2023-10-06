@@ -130,6 +130,7 @@ class SupplierController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/add.html.twig', [
+            'usePuikTheme' => true,
             'supplierForm' => $supplierForm->createView(),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('New supplier', 'Admin.Navigation.Menu'),
