@@ -13,6 +13,10 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Product extends FOBasePage {
+  public readonly messageNotVisibleToCustomers: string;
+
+  private readonly warningMessage: string;
+
   private readonly productFlags: string;
 
   private readonly productFlag: string;
@@ -152,7 +156,11 @@ class Product extends FOBasePage {
   constructor() {
     super();
 
+    // Messages
+    this.messageNotVisibleToCustomers = 'This product is not visible to your customers.';
+
     // Selectors for product page
+    this.warningMessage = 'main div.alert-warning p.alert-text';
     this.productFlags = '#content ul.product-flags';
     this.productFlag = '#content li.product-flag';
     this.productName = '#main h1';
@@ -763,6 +771,15 @@ class Product extends FOBasePage {
    */
   async getReviewRating(page: Page, row: number = 1): Promise<number> {
     return page.$$eval(this.productRatingStar(row), (divs) => divs.length);
+  }
+
+  /**
+   * Get the warning message
+   * @param page {Page} browser tab
+   * @returns {Promise<string>}
+   */
+  async getWarningMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.warningMessage);
   }
 }
 
