@@ -144,8 +144,8 @@ fi
 
 echo "\n***"
 echo "**"
-echo "** To view storefront point your browser to http://localhost:8001/"
-echo "** To view backoffice point your browser to http://localhost:8001/admin-dev"
+echo "** Front-office: http://${PS_DOMAIN}/"
+echo "**  Back-office: http://${PS_DOMAIN}/admin-dev"
 echo "**   Login with:"
 echo "**     username: ${ADMIN_MAIL}"
 echo "**     password: Correct Horse Battery Staple"
