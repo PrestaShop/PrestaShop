@@ -63,7 +63,7 @@ class AddressControllerCore extends FrontController
         $params = Tools::getAllValues();
         $id_address = isset($params['id_address']) ? (int) $params['id_address'] : 0;
 
-        // Initialize address if an id exists and prevent fill form with default country second time.
+        // Initialize address if an id exists.
         if ($id_address) {
             $this->address_form->loadAddressById($id_address);
         }
@@ -85,7 +85,7 @@ class AddressControllerCore extends FrontController
                 $this->should_redirect = true;
             }
         } else {
-            // If this is only form request. Adding param id_country for CustomerAddressForm class.
+            // This is only form call, pass id_country for form.
             $address = new Address($id_address, $this->context->language->id);
             $params['id_country'] = $address->id_country;
         }
