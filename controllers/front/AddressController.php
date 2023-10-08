@@ -84,10 +84,6 @@ class AddressControllerCore extends FrontController
 
                 $this->should_redirect = true;
             }
-        } else {
-            // This is only form call, pass id_country for form.
-            $address = new Address($id_address, $this->context->language->id);
-            $params['id_country'] = $address->id_country;
         }
 
         // There is no id_adress, no need to continue
