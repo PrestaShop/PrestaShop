@@ -60,8 +60,7 @@ class AddressControllerCore extends FrontController
     {
         $this->context->smarty->assign('editing', false);
 
-        $params = Tools::getAllValues();
-        $id_address = isset($params['id_address']) ? (int) $params['id_address'] : 0;
+        $id_address = (int) Tools::getValue('id_address', 0);
 
         // Initialize address if an id exists.
         if ($id_address) {
