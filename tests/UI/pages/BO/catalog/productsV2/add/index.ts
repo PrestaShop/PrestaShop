@@ -45,6 +45,8 @@ class CreateProduct extends BOBasePage {
 
   private readonly productActiveSwitchButton: string;
 
+  private readonly modifyAllShopsNameSwitchButton: string;
+
   private readonly productActiveSwitchButtonToggleInput: string;
 
   private readonly productHeaderSummary: string;
@@ -108,6 +110,7 @@ class CreateProduct extends BOBasePage {
 
     // Header selectors
     this.productActiveSwitchButton = '#product_header_active.ps-switch';
+    this.modifyAllShopsNameSwitchButton = '#product_header_modify_all_shops_name +i';
     this.productActiveSwitchButtonToggleInput = `${this.productActiveSwitchButton} input`;
     this.productImageUrl = '#product_header_cover_thumbnail';
     this.productName = '#product_header_name';
@@ -151,7 +154,7 @@ class CreateProduct extends BOBasePage {
     // Modal : Switch Product Type
     this.modalSwitchType = '#switch-product-type-modal';
     this.modalSwitchTypeBtnChoice = (productType: string) => `${this.modalSwitchType} button.product-type-choice`
-        + `[data-value="${productType}"]`;
+      + `[data-value="${productType}"]`;
     this.modalSwitchTypeBtnSubmit = `${this.modalSwitchType} .modal-footer button.btn-confirm-submit`;
     this.modalConfirmType = '#modal-confirm-product-type';
     this.modalConfirmTypeBtnSubmit = `${this.modalConfirmType} .modal-footer button.btn-confirm-submit`;
@@ -273,6 +276,16 @@ class CreateProduct extends BOBasePage {
     }
 
     return false;
+  }
+
+  /**
+   * Apply changes to all stores
+   * @param page {Page} Browser tab
+   * @param status {boolean} True if we need to apply all changes
+   * @returns {Promise<void>}
+   */
+  async applyChangesToAllStores(page: Page, status: boolean): Promise<void> {
+    await page.setChecked(this.modifyAllShopsNameSwitchButton, status, {force: true});
   }
 
   /**

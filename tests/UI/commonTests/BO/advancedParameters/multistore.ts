@@ -21,7 +21,7 @@ let page: Page;
  * @param baseContext {string} String to identify the test
  */
 function setMultiStoreStatus(status: boolean, baseContext: string = 'commonTests-setMultiStoreStatus'): void {
-  describe(`${status ? 'Enable' : 'Disable'} the Webservice`, async () => {
+  describe(`${status ? 'Enable' : 'Disable'} the multistore`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -50,7 +50,7 @@ function setMultiStoreStatus(status: boolean, baseContext: string = 'commonTests
       expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it(`should ${status ? 'enable' : 'disable'} the webservice`, async function () {
+    it(`should ${status ? 'enable' : 'disable'} the multistore`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMultiStoreStatus', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, status);

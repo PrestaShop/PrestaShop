@@ -137,6 +137,8 @@ class Products extends BOBasePage {
 
   private readonly productListTableDeleteButton: (row: number) => string;
 
+  private readonly productListTableDeleteFromStoreButton: (row: number) => string;
+
   private readonly productListTableDuplicateButton: (row: number) => string;
 
   readonly modalCreateProduct: string;
@@ -259,6 +261,8 @@ class Products extends BOBasePage {
       + 'a.dropdown-toggle';
     this.productListTableDeleteButton = (row: number) => `${this.productsListTableRow(row)}`
       + ' td.column-actions a.grid-delete-row-link';
+    this.productListTableDeleteFromStoreButton = (row: number) => `${this.productsListTableRow(row)}`
+      + ' td.column-actions a.grid-delete.from.store-row-link';
     this.productListTableDuplicateButton = (row: number) => `${this.productsListTableRow(row)}`
       + ' td.column-actions a.grid-duplicate-row-link';
 
@@ -283,7 +287,6 @@ class Products extends BOBasePage {
   /*
   Methods
    */
-
   /**
    * Click on new product button
    * @param page {Page} Browser tab
@@ -758,7 +761,7 @@ class Products extends BOBasePage {
   }
 
   /**
-   * Click on duplicate product button
+   * Click on delete product button
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @returns {Promise<boolean>}
@@ -771,7 +774,20 @@ class Products extends BOBasePage {
   }
 
   /**
-   * Click on delete product button
+   * Click on delete from store product button
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<boolean>}
+   */
+  async clickOnDeleteProductFromStoreButton(page: Page, row: number = 1): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.productListTableDropDownList(row));
+    await this.waitForSelectorAndClick(page, this.productListTableDeleteFromStoreButton(row));
+
+    return this.elementVisible(page, this.modalDialog, 1000);
+  }
+
+  /**
+   * Click on duplicate product button
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @returns {Promise<boolean>}

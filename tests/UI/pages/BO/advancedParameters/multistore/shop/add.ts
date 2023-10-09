@@ -24,6 +24,8 @@ class AddShop extends BOBasePage {
 
   private readonly saveButton: string;
 
+  private readonly colorInput: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add shop page
@@ -39,6 +41,7 @@ class AddShop extends BOBasePage {
     this.colorInput = '#color_0';
     this.shopGroupSelect = '#id_shop_group';
     this.categoryRootSelect = '#id_category';
+    this.colorInput = '#color_0';
     this.saveButton = '#shop_form_submit_btn';
   }
 
@@ -57,6 +60,7 @@ class AddShop extends BOBasePage {
 
     await this.setValue(page, this.nameInput, shopData.name);
     await this.selectByVisibleText(page, this.shopGroupSelect, shopData.shopGroup);
+    await this.setValue(page, this.colorInput, shopData.color);
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
     await Promise.all([
