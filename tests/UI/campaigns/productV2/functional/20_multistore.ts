@@ -15,7 +15,6 @@ import createProductPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
 
 // Import FO pages
-import foProductPage from '@pages/FO/product';
 import {homePage} from '@pages/FO/home';
 
 // Import data
@@ -24,7 +23,6 @@ import ShopData from '@data/faker/shop';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import productsV2 from "@pages/BO/catalog/productsV2";
 
 const baseContext: string = 'productV2_functional_multistore';
 
@@ -251,8 +249,8 @@ describe('BO - Catalog - Products : Multistore', async () => {
       const isModalVisible = await productsPage.clickOnDeleteProductFromStoreButton(page, 1);
       expect(isModalVisible).to.equal(true);
 
-      const textMessage = await productsV2.clickOnConfirmDialogButton(page);
-      expect(textMessage).to.equal(productsV2.successfulDeleteMessage);
+      const textMessage = await productsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 

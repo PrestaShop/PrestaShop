@@ -1,7 +1,5 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type ShopData from '@data/faker/shop';
-
 import type {Page} from 'playwright';
 
 /**
