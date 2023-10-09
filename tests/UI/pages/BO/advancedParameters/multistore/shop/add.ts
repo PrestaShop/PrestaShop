@@ -24,8 +24,6 @@ class AddShop extends BOBasePage {
 
   private readonly saveButton: string;
 
-  private readonly colorInput: string;
-
   /**
    * @constructs
    * Setting up texts and selectors to use on add shop page
@@ -41,7 +39,6 @@ class AddShop extends BOBasePage {
     this.colorInput = '#color_0';
     this.shopGroupSelect = '#id_shop_group';
     this.categoryRootSelect = '#id_category';
-    this.colorInput = '#color_0';
     this.saveButton = '#shop_form_submit_btn';
   }
 
