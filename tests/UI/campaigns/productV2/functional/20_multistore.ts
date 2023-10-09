@@ -66,52 +66,52 @@ describe('BO - Catalog - Products : Multistore', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    /* it('should go to \'Advanced Parameters > Multistore\' page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
+    it('should go to \'Advanced Parameters > Multistore\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
-       await dashboardPage.goToSubMenu(
-         page,
-         dashboardPage.advancedParametersLink,
-         dashboardPage.multistoreLink,
-       );
-       await multiStorePage.closeSfToolBar(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.multistoreLink,
+      );
+      await multiStorePage.closeSfToolBar(page);
 
-       const pageTitle = await multiStorePage.getPageTitle(page);
-       expect(pageTitle).to.contains(multiStorePage.pageTitle);
-     });
+      const pageTitle = await multiStorePage.getPageTitle(page);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
+    });
 
-     it('should go to add new shop page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopPage', baseContext);
+    it('should go to add new shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopPage', baseContext);
 
-       await multiStorePage.goToNewShopPage(page);
+      await multiStorePage.goToNewShopPage(page);
 
-       const pageTitle = await addShopPage.getPageTitle(page);
-       expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
-     });
+      const pageTitle = await addShopPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
+    });
 
-     it('should create shop', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'createShop', baseContext);
+    it('should create shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createShop', baseContext);
 
-       const textResult = await addShopPage.setShop(page, createShopData);
-       expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
-     });
+      const textResult = await addShopPage.setShop(page, createShopData);
+      expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
+    });
 
-     it('should go to add URL', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToAddURL', baseContext);
+    it('should go to add URL', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddURL', baseContext);
 
-       await shopPage.filterTable(page, 'a!name', createShopData.name);
-       await shopPage.goToSetURL(page, 1);
+      await shopPage.filterTable(page, 'a!name', createShopData.name);
+      await shopPage.goToSetURL(page, 1);
 
-       const pageTitle = await addShopUrlPage.getPageTitle(page);
-       expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
-     });
+      const pageTitle = await addShopUrlPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
+    });
 
-     it('should set URL', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
+    it('should set URL', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
-       const textResult = await addShopUrlPage.setVirtualUrl(page, createShopData.name);
-       expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
-     });*/
+      const textResult = await addShopUrlPage.setVirtualUrl(page, createShopData.name);
+      expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
+    });
   });
 
   describe('Check multistore', async () => {
