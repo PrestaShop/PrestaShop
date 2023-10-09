@@ -235,7 +235,7 @@ describe('BO - Catalog - Products : Multistore', async () => {
     });
 
     it('should select the created shop and delete product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnMultistoreHeader2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnMultistoreHeader3', baseContext);
 
       // To delete when https://github.com/PrestaShop/PrestaShop/issues/34197 is fixed
       await productsPage.clickOnMultiStoreHeader(page);
