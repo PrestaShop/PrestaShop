@@ -40,11 +40,15 @@ class ViewCustomer extends BOBasePage {
 
   private readonly vouchersDiv: string;
 
-  private readonly voucherEditButton: string;
+  private readonly voucherEditButton: (row: number) => string;
 
-  private readonly voucherToggleDropdown: string;
+  private readonly voucherToggleDropdown: (row: number) => string;
 
   private readonly voucherDeleteButton: string;
+
+  private readonly voucherDeleteConfirmButton: string;
+
+  private readonly voucherDeleteModal: string;
 
   private readonly lastEmailsDiv: string;
 
@@ -100,9 +104,11 @@ class ViewCustomer extends BOBasePage {
 
     // Vouchers
     this.vouchersDiv = '.customer-discounts-card';
-    this.voucherEditButton = `${this.vouchersDiv} a.grid-edit-row-link`;
-    this.voucherToggleDropdown = `${this.vouchersDiv} a[data-toggle='dropdown']`;
-    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu a.grid-delete-row-link`;
+    this.voucherEditButton = (row: number) => `${this.vouchersDiv} tr:nth-child(${row}) a.grid-edit-row-link`;
+    this.voucherToggleDropdown = (row: number) => `${this.vouchersDiv} tr:nth-child(${row}) a[data-toggle='dropdown']`;
+    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu button.grid-delete-row-link`;
+    this.voucherDeleteModal = '#customer_discount-grid-confirm-modal';
+    this.voucherDeleteConfirmButton = `${this.voucherDeleteModal} button.btn-confirm-submit`;
 
     // Last emails
     this.lastEmailsDiv = '.customer-sent-emails-card';
@@ -134,7 +140,7 @@ class ViewCustomer extends BOBasePage {
    * @param cardTitle {string} Value of card title to get number of elements
    * @returns {Promise<string>}
    */
-  getNumberOfElementFromTitle(page: Frame|Page, cardTitle: string): Promise<string> {
+  async getNumberOfElementFromTitle(page: Frame | Page, cardTitle: string): Promise<string> {
     let selector: string;
 
     switch (cardTitle) {
@@ -180,7 +186,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page|Frame} Browser tab
    * @returns {Promise<string>}
    */
-  getPersonalInformationTitle(page: Page|Frame): Promise<string> {
+  async getPersonalInformationTitle(page: Page | Frame): Promise<string> {
     return this.getTextContent(page, this.personnalInformationDiv);
   }
 
@@ -190,7 +196,7 @@ class ViewCustomer extends BOBasePage {
    * @param element {string} Value of element to get text content
    * @returns {Promise<string>}
    */
-  getTextFromElement(page: Page, element: string): Promise<string> {
+  async getTextFromElement(page: Page, element: string): Promise<string> {
     let selector: string;
 
     switch (element) {
@@ -241,7 +247,7 @@ class ViewCustomer extends BOBasePage {
    * @param row {number} Row number in table Last connections
    * @returns {Promise<string>}
    */
-  getTextColumnFromTableLastConnections(page: Page, column: string, row: number = 1): Promise<string> {
+  async getTextColumnFromTableLastConnections(page: Page, column: string, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.lastConnectionTableColumn(row, column));
   }
 
@@ -252,7 +258,7 @@ class ViewCustomer extends BOBasePage {
    * @param row {number} Row number in table carts
    * @returns {Promise<string>}
    */
-  getTextColumnFromTableCarts(page: Page, column: string, row: number = 1): Promise<string> {
+  async getTextColumnFromTableCarts(page: Page, column: string, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.cartsTableColumn(row, column));
   }
 
@@ -261,7 +267,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Frame|Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPrivateNoteBlockVisible(page: Frame|Page): Promise<boolean> {
+  async isPrivateNoteBlockVisible(page: Frame | Page): Promise<boolean> {
     return this.elementVisible(page, this.privateNoteDiv, 1000);
   }
 
@@ -307,11 +313,29 @@ class ViewCustomer extends BOBasePage {
       case 'Addresses':
         selector = this.addressesEditButton;
         break;
+      case 'Vouchers':
+        selector = this.voucherEditButton;
+        break;
       default:
         throw new Error(`${cardTitle} was not found`);
     }
 
     return this.clickAndWaitForURL(page, selector(row));
+  }
+
+  /**
+   * Delete voucher
+   * @param page {Page} Browser tab
+   * @param row {number} Row in vouchers table
+   * @returns {Promise<string>}
+   */
+  async deleteVoucher(page: Page, row: number) {
+    await page.locator(this.voucherToggleDropdown(row)).click();
+    await page.locator(this.voucherDeleteButton).click();
+    await this.waitForVisibleSelector(page, this.voucherDeleteModal);
+    await page.locator(this.voucherDeleteConfirmButton).click();
+
+    return this.getTextContent(page, `${this.alertSuccessBlock}[role='alert']`);
   }
 
   /**
