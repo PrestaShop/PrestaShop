@@ -613,7 +613,7 @@ CREATE TABLE `PREFIX_customer` (
   `id_risk` int(10) unsigned NOT NULL DEFAULT '1',
   `company` varchar(255),
   `siret` varchar(14),
-  `ape` varchar(5),
+  `ape` varchar(6),
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
