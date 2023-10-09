@@ -175,6 +175,7 @@ jobs:
       DB_USER: 'root'
       DB_PASSWD: 'prestashop'
       ADMIN_PASSWD: ${{ (matrix.BRANCH == '1.7.8.x') && 'prestashop_demo' || 'Correct Horse Battery Staple' }}
+      DISABLE_MAKE: 1
 
     steps:
       - uses: actions/checkout@v3
@@ -214,6 +215,7 @@ jobs:
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) \
           docker-compose -f docker-compose.yml up -d --build
+          make install
           bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
 
       - name: Setup Node
