@@ -15,15 +15,15 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/productsV2';
-import createProductsPage from '@pages/BO/catalog/productsV2/add';
-import descriptionTab from '@pages/BO/catalog/productsV2/add/descriptionTab';
-import detailsTab from '@pages/BO/catalog/productsV2/add/detailsTab';
-import optionsTab from '@pages/BO/catalog/productsV2/add/optionsTab';
-import pricingTab from '@pages/BO/catalog/productsV2/add/pricingTab';
-import seoTab from '@pages/BO/catalog/productsV2/add/seoTab';
-import shippingTab from '@pages/BO/catalog/productsV2/add/shippingTab';
-import stocksTab from '@pages/BO/catalog/productsV2/add/stocksTab';
+import productsPage from '@pages/BO/catalog/products';
+import createProductsPage from '@pages/BO/catalog/products/add';
+import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
+import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
+import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
+import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
+import seoTab from '@pages/BO/catalog/products/add/seoTab';
+import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
+import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
 // Import data
 import {WebservicePermission} from '@data/types/webservice';

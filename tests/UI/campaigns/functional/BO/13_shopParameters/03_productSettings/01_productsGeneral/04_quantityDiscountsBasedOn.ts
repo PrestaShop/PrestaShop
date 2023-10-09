@@ -4,18 +4,15 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
+import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
+import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
+import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import foProductPage from '@pages/FO/product';
 import {cartPage} from '@pages/FO/cart';
@@ -42,8 +39,10 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
   let numberOfProducts: number = 0;
 
   const productWithCombinations: ProductData = new ProductData({
-    type: 'Standard product',
+    type: 'combinations',
     price: 20,
+    tax: 0,
+    taxRule: 'No tax',
     attributes: [
       {
         name: 'color',
@@ -56,7 +55,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
     ],
     quantity: 10,
     specificPrice: {
-      attributes: 'Size - S, Color - White',
+      attributes: 2,
       discount: 50,
       startingAt: 2,
       reductionType: '%',
@@ -84,9 +83,6 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
   ];
   const firstCartTotalATI: number = 30;
   const secondCartTotalATI: number = 40;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -132,6 +128,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
         productSettingsPage.catalogParentLink,
         productSettingsPage.productsLink,
       );
+      await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productsPage.pageTitle);
@@ -144,19 +141,56 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       expect(numberOfProducts).to.be.above(0);
     });
 
-    it('should create product with combinations and add a specific price', async function () {
+    it('should click on new product button and go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
+
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+
+      await productsPage.selectProductType(page, productWithCombinations.type);
+      await productsPage.clickOnAddNewProduct(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create product with combinations', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      await productsPage.goToAddProductPage(page);
-      await addProductPage.createEditBasicProduct(page, productWithCombinations);
+      const createProductMessage = await addProductPage.setProduct(page, productWithCombinations);
+      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+    });
 
-      const createProductMessage = await addProductPage.setAttributesInProduct(
-        page,
-        productWithCombinations,
-      );
-      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    it('should create combinations and edit the quantity', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createCombination', baseContext);
 
-      await addProductPage.addSpecificPrices(page, productWithCombinations.specificPrice);
+      const createProductMessage = await combinationsTab.setProductAttributes(page, productWithCombinations.attributes);
+      expect(createProductMessage).to.equal(combinationsTab.generateCombinationsMessage(2));
+
+      let successMessage = await combinationsTab.generateCombinations(page);
+      expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(2));
+
+      await combinationsTab.editCombinationRowQuantity(page, 1, 5);
+      await combinationsTab.editCombinationRowQuantity(page, 2, 5);
+
+      successMessage = await combinationsTab.saveCombinationsForm(page);
+      expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
+    });
+
+    it('should add specific price', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addSpecificPrice', baseContext);
+
+      await pricingTab.clickOnAddSpecificPriceButton(page);
+
+      const createProductMessage = await pricingTab.setSpecificPrice(page, productWithCombinations.specificPrice);
+      expect(createProductMessage).to.equal(addProductPage.successfulCreationMessage);
+    });
+
+    it('should save the product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
+
+      const updateProductMessage = await addProductPage.saveProduct(page);
+      expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
     });
 
     it('should preview product and check price ATI in FO', async function () {
@@ -224,11 +258,16 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should delete product from dropDown menu', async function () {
+    it('should filter list by the created product and delete product from dropDown menu', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const deleteTextResult = await productsPage.deleteProduct(page, productWithCombinations);
-      expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      await productsPage.filterProducts(page, 'reference', productWithCombinations.reference, 'input');
+
+      const isModalVisible = await productsPage.clickOnDeleteProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+
+      const textMessage = await productsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
 
       const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
@@ -241,7 +280,4 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       expect(numberOfProducts).to.be.above(0);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

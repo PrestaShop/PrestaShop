@@ -4,15 +4,15 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
-import {deleteProductV2Test} from '@commonTests/BO/catalog/product';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
+import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import productsPage from '@pages/BO/catalog/productsV2';
-import createProductsPage from '@pages/BO/catalog/productsV2/add';
-import descriptionTab from '@pages/BO/catalog/productsV2/add/descriptionTab';
+import productsPage from '@pages/BO/catalog/products';
+import createProductsPage from '@pages/BO/catalog/products/add';
+import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
@@ -332,7 +332,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       extension: 'webp',
     },
   ].forEach((arg: {product: ProductData, extension: string}) => {
-    deleteProductV2Test(arg.product, `${baseContext}_removeProduct${arg.extension}`);
+    deleteProductTest(arg.product, `${baseContext}_removeProduct${arg.extension}`);
   });
 
   // Post-condition: Disable Multiple image formats

@@ -11,15 +11,12 @@ import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/order';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
+import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
+import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
@@ -70,10 +67,11 @@ Post-conditions:
 describe('BO - Orders - View and edit order: Check invoice', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfProducts: number = 0;
   let filePath: string | null;
   let fileName: string = '';
   let orderReference: string = '';
+  let createProductMessage: string | null = '';
+  let updateProductMessage: string | null = '';
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // Prefix for the new products to simply delete them by bulk actions
@@ -92,9 +90,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Customized product data
   const customizedProduct: ProductData = new ProductData({
     name: `Customized product ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     reference: 'bbcdef',
     taxRule: 'No tax',
+    tax: 0,
     customization: {
       label: 'Type your text here',
       type: 'Text',
@@ -115,18 +114,19 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Virtual product data
   const virtualProduct: ProductData = new ProductData({
     name: `Virtual product ${prefixNewProduct}`,
-    type: 'Virtual product',
+    type: 'virtual',
     quantity: 20,
-    tax: 20,
     taxRule: 'FR Taux standard (20%)',
+    tax: 20,
     stockLocation: 'stock 1',
   });
   // Product with specific price data
   const productWithSpecificPrice: ProductData = new ProductData({
     name: `Product with sp price ${prefixNewProduct}`,
     reference: 'abcdef',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
+    tax: 0,
     quantity: 20,
     specificPrice: {
       attributes: null,
@@ -138,8 +138,9 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Product with ecoTax data
   const productWithEcoTax: ProductData = new ProductData({
     name: `Product with ecotax ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
+    tax: 0,
     quantity: 20,
     minimumQuantity: 1,
   });
@@ -164,9 +165,6 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Pre-condition - Enable Ecotax
   enableEcoTaxTest(`${baseContext}_preTest_2`);
 
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
-
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -175,6 +173,20 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+  });
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
+
+  it('should go to \'Catalog > Products\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+    await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+    await productsPage.closeSfToolBar(page);
+
+    const pageTitle = await productsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   // Pre-condition - Create 4 products
@@ -186,56 +198,78 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   ].forEach((product: ProductData, index: number) => {
     describe(`PRE-TEST: Create product '${product.name}'`, async () => {
       if (index === 0) {
-        it('should login in BO', async function () {
-          await loginCommon.loginBO(this, page);
+        it('should click on \'New product\' button and check new product modal', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${index}`, baseContext);
+
+          const isModalVisible = await productsPage.clickOnNewProductButton(page);
+          expect(isModalVisible).to.be.eq(true);
         });
 
-        it('should go to \'Catalog > Products\' page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+        it(`should choose '${product.type} product'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `chooseProductType${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
-          await productsPage.closeSfToolBar(page);
+          await productsPage.selectProductType(page, product.type);
 
-          const pageTitle = await productsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(productsPage.pageTitle);
-        });
-
-        it('should reset all filters and get number of products', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersBeforeCreate', baseContext);
-
-          numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-          expect(numberOfProducts).to.be.above(0);
+          const pageTitle = await addProductPage.getPageTitle(page);
+          expect(pageTitle).to.contains(addProductPage.pageTitle);
         });
       }
 
-      it('should go to add product page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
+      it('should go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewProductPage${index}`, baseContext);
 
-        if (index === 0) {
-          await productsPage.goToAddProductPage(page);
+        if (index !== 0) {
+          await addProductPage.clickOnNewProductButton(page);
         } else {
-          await addProductPage.goToAddProductPage(page);
+          await productsPage.clickOnAddNewProduct(page);
         }
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
       });
 
-      it('should create Product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
+      if (index !== 0) {
+        it(`should choose '${product.type} product'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `chooseTypeOfProduct2${index}`, baseContext);
 
-        const createProductMessage = await addProductPage.createEditBasicProduct(page, product);
+          await addProductPage.chooseProductType(page, product.type);
+          await addProductPage.closeSfToolBar(page);
 
-        if (product === customizedProduct) {
-          await addProductPage.addCustomization(page, product.customization);
-        }
+          const pageTitle = await addProductPage.getPageTitle(page);
+          expect(pageTitle).to.contains(addProductPage.pageTitle);
+        });
+      }
+
+      it(`should create product '${product.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createProduct2${index}`, baseContext);
+
+        createProductMessage = await addProductPage.setProduct(page, product);
+        expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+
+        // Add specific price
         if (product === productWithSpecificPrice) {
-          await addProductPage.addSpecificPrices(page, product.specificPrice);
+          await addProductPage.goToTab(page, 'pricing');
+          await pricingTab.clickOnAddSpecificPriceButton(page);
+
+          createProductMessage = await pricingTab.setSpecificPrice(page, productWithSpecificPrice.specificPrice);
+          expect(createProductMessage).to.equal(addProductPage.successfulCreationMessage);
         }
+        // Add eco tax
         if (product === productWithEcoTax) {
-          await addProductPage.addEcoTax(page, product.ecoTax);
+          await addProductPage.goToTab(page, 'pricing');
+          await pricingTab.addEcoTax(page, productWithEcoTax.ecoTax);
+
+          updateProductMessage = await addProductPage.saveProduct(page);
+          expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
         }
-        expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+        // Add customization
+        if (product === customizedProduct) {
+          await addProductPage.goToTab(page, 'details');
+          await detailsTab.addNewCustomizations(page, product);
+
+          updateProductMessage = await addProductPage.saveProduct(page);
+          expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+        }
       });
     });
   });
@@ -687,9 +721,9 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const productPriceExist = await files.isTextInPDF(
             filePath,
             `${customizedProduct.name}, ,`
-            + `€${customizedProduct.price.toFixed(2)}, ,`
+            + `€${customizedProduct.priceTaxExcluded.toFixed(2)}, ,`
             + '1, ,'
-            + `€${customizedProduct.price.toFixed(2)}`,
+            + `€${customizedProduct.priceTaxExcluded.toFixed(2)}`,
           );
           expect(
             productPriceExist,
@@ -889,7 +923,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const basePriceVisible = await files.isTextInPDF(
             filePath,
             `${productWithSpecificPrice.name}, ,`
-            + `€${productWithSpecificPrice.price.toFixed(2)}, ,`
+            + `€${productWithSpecificPrice.priceTaxExcluded.toFixed(2)}, ,`
             + `€${unitPrice.toFixed(2)}, ,`
             + '1, ,'
             + `€${unitPrice.toFixed(2)}`,
@@ -1528,7 +1562,4 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
   // Post-condition: Delete discount
   deleteCartRuleTest(discountData.name, `${baseContext}_postTest_3`);
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -4,13 +4,8 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
@@ -34,10 +29,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
   let page: Page;
   let numberOfProducts: number = 0;
 
-  const productData: ProductData = new ProductData({type: 'Standard product', status: false});
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
+  const productData: ProductData = new ProductData({type: 'standard', status: false});
 
   // before and after functions
   before(async function () {
@@ -71,19 +63,44 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      await productsPage.resetFilterCategory(page);
+      await productsPage.resetFilter(page);
 
       numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
 
-    it('should create disabled Product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+    it('should click on \'New product\' button and check new product modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      await productsPage.goToAddProductPage(page);
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.eq(true);
+    });
 
-      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    it('should choose \'Standard product\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+      await productsPage.selectProductType(page, productData.type);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await productsPage.clickOnAddNewProduct(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create standard product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+      await addProductPage.closeSfToolBar(page);
+
+      const createProductMessage = await addProductPage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
     });
   });
 
@@ -125,17 +142,37 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
+    it('should filter list by the created product and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterListByReference', baseContext);
+
+      await productsPage.filterProducts(page, 'reference', productData.reference, 'input');
+
+      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      expect(numberOfProductsAfterFilter).to.equal(1);
+
+      const textColumn = await productsPage.getTextColumn(page, 'reference', 1);
+      expect(textColumn).to.equal(productData.reference);
+    });
+
+    it('should click on delete product button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
+
+      const isModalVisible = await productsPage.clickOnDeleteProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+    });
+
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const testResult = await productsPage.deleteProduct(page, productData);
-      expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      const textMessage = await productsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
+    });
 
-      const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
+    it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

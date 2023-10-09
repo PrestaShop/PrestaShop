@@ -4,7 +4,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
 import loginCommon from '@commonTests/BO/loginBO';
 

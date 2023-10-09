@@ -169,7 +169,7 @@ class ViewOrderBasePage extends BOBasePage {
 
     if (status !== actualStatus) {
       await this.selectByVisibleText(page, this.orderStatusesSelect, status);
-      await this.clickAndWaitForLoadState(page, this.updateStatusButton);
+      await this.clickAndWaitForURL(page, this.updateStatusButton);
       return this.getOrderStatus(page);
     }
 

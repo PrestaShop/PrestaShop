@@ -15,24 +15,6 @@ import type {BrowserContext, Page} from 'playwright';
 let browserContext: BrowserContext;
 let page: Page;
 
-/**
- * Indicate the default state of new page with feature flags, depending on its initial value we need to
- * adapt the tests behaviour especially the part that enables/disables the page. We keep this value editable
- * here in case the default value changes the tests will be easy to adapt.
- */
-function isNewProductPageEnabledByDefault(): boolean {
-  return true;
-}
-
-/**
- * Reset the new product page to its initial state.
- *
- * @param baseContext {string}
- */
-function resetNewProductPageAsDefault(baseContext: string = 'commonTests-resetNewProductPage'): void {
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, isNewProductPageEnabledByDefault(), baseContext);
-}
-
 function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContext: string = 'commonTests-setFeatureFlag'): void {
   let title: string;
 
@@ -42,9 +24,6 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
       break;
     case featureFlagPage.featureFlagMultipleImageFormats:
       title = 'Multiple image formats';
-      break;
-    case featureFlagPage.featureFlagProductPageV2:
-      title = 'New product page';
       break;
     default:
       throw new Error(`The feature flag ${featureFlag} is not defined`);
@@ -88,8 +67,4 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
   });
 }
 
-export {
-  isNewProductPageEnabledByDefault,
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-};
+export default setFeatureFlag;

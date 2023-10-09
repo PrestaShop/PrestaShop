@@ -4,14 +4,9 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
@@ -34,10 +29,12 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({type: 'Standard product', quantity: 0});
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
+  const productData: ProductData = new ProductData({
+    type: 'standard',
+    quantity: 0,
+    labelWhenOutOfStock: ' ',
+    labelWhenInStock: ' ',
+  });
 
   // before and after functions
   before(async function () {
@@ -68,13 +65,25 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should go to create product page and create a product', async function () {
+    it('should click on new product button and go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
+
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+
+      await productsPage.selectProductType(page, productData.type);
+
+      await productsPage.clickOnAddNewProduct(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      await productsPage.goToAddProductPage(page);
-
-      const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
-      expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+      const createProductMessage = await addProductPage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
@@ -222,23 +231,27 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
+    it('should click on delete product button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
+
+      const isModalVisible = await productsPage.clickOnDeleteProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+    });
+
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const deleteTextResult = await productsPage.deleteProduct(page, productData);
-      expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      const textMessage = await productsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-      await productsPage.resetFilterCategory(page);
+      await productsPage.resetFilter(page);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

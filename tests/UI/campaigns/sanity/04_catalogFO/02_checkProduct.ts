@@ -2,14 +2,6 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {
-  setFeatureFlag,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
-
-// Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
@@ -29,9 +21,6 @@ const baseContext: string = 'sanity_catalogFO_checkProduct';
 describe('FO - Catalog : Check the Product page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -74,7 +63,4 @@ describe('FO - Catalog : Check the Product page', async () => {
       ]);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

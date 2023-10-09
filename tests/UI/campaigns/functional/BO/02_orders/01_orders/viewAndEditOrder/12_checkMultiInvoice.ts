@@ -8,13 +8,8 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderSpecificProductTest} from '@commonTests/FO/order';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -63,14 +58,14 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   // First product to create
   const firstProduct: ProductData = new ProductData({
     name: `First product ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
   });
   // Second product to create
   const secondProduct: ProductData = new ProductData({
     name: `second product ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
   });
@@ -90,9 +85,6 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     carrier: Carriers.myCarrier.name,
     carrierID: Carriers.myCarrier.id,
   });
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // Pre-condition: Create first product
   createProductTest(firstProduct, `${baseContext}_preTest_1`);
@@ -493,7 +485,4 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
   // Post-condition: Delete 'Free shipping' cart rule
   deleteCartRuleTest(`${baseContext}_postTest_2`);
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
