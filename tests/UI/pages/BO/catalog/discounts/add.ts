@@ -286,7 +286,7 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on information form
    * @return {Promise<void>}
    */
-  async fillInformationForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillInformationForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
     await page.click(this.infomationsTabLink);
 
@@ -320,7 +320,7 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on conditions form
    * @return {Promise<void>}
    */
-  async fillConditionsForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillConditionsForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
     await page.click(this.conditionsTabLink);
 
@@ -407,7 +407,7 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on actions form
    * @return {Promise<void>}
    */
-  async fillActionsForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillActionsForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to actions tab
     await page.click(this.actionsTabLink);
 
@@ -485,10 +485,10 @@ class AddCartRule extends BOBasePage {
    * @returns {Promise<string|null>}
    */
   async createEditCartRules(
-    page: Frame|Page,
+    page: Frame | Page,
     cartRuleData: CartRuleData,
     waitForNavigation: boolean = true,
-  ): Promise<string|null> {
+  ): Promise<string | null> {
     // Fill information form
     await this.fillInformationForm(page, cartRuleData);
 
@@ -500,13 +500,26 @@ class AddCartRule extends BOBasePage {
 
     if (waitForNavigation) {
       // Save and return successful message
-      await this.clickAndWaitForURL(page, this.saveButton);
-      return this.getAlertSuccessBlockContent(page);
+      return this.saveCartRule(page);
     }
 
     // Save
     await this.waitForSelectorAndClick(page, this.saveButton);
     return null;
+  }
+
+  /**
+   * Save cart rule
+   * @param page {Frame|Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async saveCartRule(page: Frame | Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.saveButton);
+
+    if (await this.elementVisible(page, `${this.alertSuccessBlock}[role='alert']`, 2000)) {
+      return this.getTextContent(page, `${this.alertSuccessBlock}[role='alert']`);
+    }
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
