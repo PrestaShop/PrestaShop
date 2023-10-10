@@ -16,6 +16,8 @@ class ViewCustomer extends BOBasePage {
 
   private readonly personalInformationEditButton: string;
 
+  private readonly transformCustomerAccountButton: string;
+
   private readonly ordersDiv: string;
 
   private readonly ordersViewButton: (row: number) => string;
@@ -80,6 +82,7 @@ class ViewCustomer extends BOBasePage {
     // Personnel information
     this.personalInformationDiv = '.customer-personal-informations-card';
     this.personalInformationEditButton = `${this.personalInformationDiv} a.edit-link`;
+    this.transformCustomerAccountButton = '#transfer_guest_account_transfer_guest_account';
 
     // Orders
     this.ordersDiv = '.customer-orders-card';
@@ -187,7 +190,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getPersonalInformationTitle(page: Page | Frame): Promise<string> {
-    return this.getTextContent(page, this.personnalInformationDiv);
+    return this.getTextContent(page, this.personalInformationDiv);
   }
 
   /**
@@ -347,8 +350,24 @@ class ViewCustomer extends BOBasePage {
     return this.getNumberFromText(page, this.personalInformationDiv);
   }
 
-  async clickOnTransformToCustomerAccount(page: Page): Promise<void> {
-    await page.locator('').click();
+  /**
+   * Click on transform to customer account
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnTransformToCustomerAccount(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.transformCustomerAccountButton);
+
+    return this.getTextContent(page, `${this.alertSuccessBlock}[role='alert']`);
+  }
+
+  /**
+   * Is transform to customer account button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isTransformToCustomerAccountButtonVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.transformCustomerAccountButton, 1000);
   }
 }
 

@@ -3,9 +3,9 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/order';
+import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -21,11 +21,10 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import Customers from "@data/demo/customers";
 
 const baseContext = 'functional_BO_customers_customers_transformGuestToCustomer';
 
-describe('BO - Customers _ Customers : Transform a guest to a customer', async () => {
+describe('BO - Customers _ Customers : Transform guest to customer account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCustomers: number;
@@ -105,9 +104,44 @@ describe('BO - Customers _ Customers : Transform a guest to a customer', async (
 
     it('should click on transform to customer account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnTransferToCustomerAccount', baseContext);
+
+      const successMessage = await viewCustomerPage.clickOnTransformToCustomerAccount(page);
+      expect(successMessage).to.contains(viewCustomerPage.successfulCreationMessage);
+    });
+
+    it('should check the transform to customer account button is not visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'isButtonVisible', baseContext);
+
+      const isButtonVisible = await viewCustomerPage.isTransformToCustomerAccountButtonVisible(page);
+      expect(isButtonVisible).to.eq(false);
+    });
+
+    it('should go back to Customers page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToCustomersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+
+      const pageTitle = await customersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
+    });
+
+    it('should check that the customers table is empty', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNoRecordFound', baseContext);
+
+      const noRecordsFoundText = await customersPage.getTextWhenTableIsEmpty(page);
+      expect(noRecordsFoundText).to.contains('No records found');
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      await customersPage.resetFilter(page);
+
+      const numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCustomers).to.be.at.least(0);
     });
   });
 
   // Post-condition: Delete customers
-  //deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 });
