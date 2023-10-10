@@ -121,7 +121,7 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
     it('should set URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
-      const textResult = await addShopUrlPage.setVirtualUrl(page, updateShopData);
+      const textResult = await addShopUrlPage.setVirtualUrl(page, updateShopData.name);
       expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
     });
   });

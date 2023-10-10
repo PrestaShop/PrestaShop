@@ -394,8 +394,8 @@ describe('BO - Catalog - Products : Details tab', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const createProductMessage = await createProductPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      const deleteProductMessage = await createProductPage.deleteProduct(page);
+      expect(deleteProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 

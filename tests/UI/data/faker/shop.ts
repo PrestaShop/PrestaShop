@@ -11,6 +11,8 @@ export default class ShopData {
 
   public readonly shopGroup: string;
 
+  public readonly color: string;
+
   public readonly categoryRoot: string;
 
   /**
@@ -23,6 +25,9 @@ export default class ShopData {
 
     /** @type {string} Shop group chosen from list */
     this.shopGroup = shopToCreate.shopGroup;
+
+    /** @type {string} Color of the shop */
+    this.color = shopToCreate.color || '#00a7ac';
 
     /** @type {string} Root category of the shop */
     this.categoryRoot = shopToCreate.categoryRoot;

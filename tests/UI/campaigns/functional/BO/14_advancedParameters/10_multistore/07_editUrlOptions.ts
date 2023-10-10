@@ -116,7 +116,7 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
     it('should create shop URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
-      const textResult = await editShopUrlPage.setVirtualUrl(page, ShopUrlData);
+      const textResult = await editShopUrlPage.setVirtualUrl(page, ShopUrlData.name);
       expect(textResult).to.contains(editShopUrlPage.successfulCreationMessage);
     });
 

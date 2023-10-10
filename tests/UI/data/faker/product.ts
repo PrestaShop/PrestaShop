@@ -38,6 +38,8 @@ export default class ProductData {
 
   public status: boolean;
 
+  public applyChangesToAllStores: boolean;
+
   public summary: string;
 
   public description: string;
@@ -164,6 +166,9 @@ export default class ProductData {
 
     /** @type {boolean} Status of the product */
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
+
+    /** @type {boolean} Apply changes to all stores */
+    this.applyChangesToAllStores = productToCreate.applyChangesToAllStores || false;
 
     /** @type {string} Summary of the product */
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;

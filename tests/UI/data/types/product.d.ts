@@ -19,6 +19,7 @@ type ProductCreator = {
   category?: string
   type?: string
   status?: boolean
+  applyChangesToAllStores?: boolean
   summary?: string
   description?: string
   reference?: string

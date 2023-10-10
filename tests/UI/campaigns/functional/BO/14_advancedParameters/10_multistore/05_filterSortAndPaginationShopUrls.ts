@@ -96,7 +96,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should create shop URl n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addURL${index}`, baseContext);
 
-        const textResult = await addShopUrlPage.setVirtualUrl(page, shopUrlData);
+        const textResult = await addShopUrlPage.setVirtualUrl(page, shopUrlData.name);
         expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
       });
     });

@@ -1,7 +1,5 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type ShopData from '@data/faker/shop';
-
 import type {Page} from 'playwright';
 
 /**
@@ -56,11 +54,11 @@ class AddUrl extends BOBasePage {
   /**
    * Add shop URL
    * @param page {Page} Browser tab
-   * @param shopData {ShopData} Data to set on edit/add shop form
+   * @param url {string} url to set on edit/add shop form
    * @returns {Promise<string>}
    */
-  async setVirtualUrl(page: Page, shopData: ShopData): Promise<string> {
-    await this.setValue(page, this.virtualUrlInput, shopData.name);
+  async setVirtualUrl(page: Page, url: string): Promise<string> {
+    await this.setValue(page, this.virtualUrlInput, url);
 
     await this.clickAndWaitForURL(page, this.saveButton, 'networkidle', 60000);
     return this.getTextContent(page, this.alertSuccessBlock);

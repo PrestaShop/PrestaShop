@@ -257,6 +257,20 @@ export default class BOBasePage extends CommonPage {
 
   public readonly debugModeToolbar: string;
 
+  public readonly multistoreHeader: string;
+
+  public readonly multistoreButton: string;
+
+  public readonly multistoreModal: string;
+
+  public readonly viewMyStoreButton: string;
+
+  public readonly multistoreTopBar: string;
+
+  public readonly storeName: string;
+
+  public readonly chooseShopName: (shopNumber: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on all BO pages
@@ -309,6 +323,16 @@ export default class BOBasePage extends CommonPage {
       : ':not(.page-sidebar-closed)'}`;
 
     this.debugModeToolbar = 'div[id*=sfToolbarMainContent]';
+
+    // Multistore selectors
+    this.multistoreHeader = '#header-multishop';
+    this.multistoreButton = `${this.multistoreHeader} button.header-multishop-button`;
+    this.multistoreModal = '#multishop-modal';
+    this.chooseShopName = (shopNumber: number) => `${this.multistoreModal} li:nth-child(${2 + shopNumber})`
+      + ' a.multishop-modal-shop-name';
+    this.viewMyStoreButton = `${this.multistoreHeader} div.header-multishop-right a.header-multishop-view-action`;
+    this.multistoreTopBar = `${this.multistoreHeader} div.header-multishop-top-bar`;
+    this.storeName = `${this.multistoreTopBar} div h2`;
 
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';
@@ -902,7 +926,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Frame|Page} Browser tab
    * @return {Promise<void>}
    */
-  async closeSfToolBar(page: Frame|Page): Promise<void> {
+  async closeSfToolBar(page: Frame | Page): Promise<void> {
     if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await page.click(this.sfCloseToolbarLink);
     }
@@ -1004,7 +1028,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertSuccessBlockContent(page: Frame|Page): Promise<string> {
+  async getAlertSuccessBlockContent(page: Frame | Page): Promise<string> {
     await this.elementVisible(page, this.alertSuccessBlock, 2000);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -1014,7 +1038,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertSuccessBlockParagraphContent(page: Frame|Page): Promise<string> {
+  async getAlertSuccessBlockParagraphContent(page: Frame | Page): Promise<string> {
     await this.elementVisible(page, this.alertSuccessBlockParagraph, 2000);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
@@ -1067,6 +1091,53 @@ export default class BOBasePage extends CommonPage {
   async resize(page: Page, mobileSize: boolean): Promise<void> {
     await super.resize(page, mobileSize);
     await this.waitForSelector(page, this.menuMobileButton, mobileSize ? 'visible' : 'hidden');
+  }
+
+  // Multistore methods
+  /**
+   * Click on multistore header
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnMultiStoreHeader(page: Page): Promise<void> {
+    await page.locator(this.multistoreButton).click();
+  }
+
+  /**
+   * Choose shop
+   * @param page {Page} Browser tab
+   * @param shopNumber
+   * @returns {Promise<void>}
+   */
+  async chooseShop(page: Page, shopNumber: number): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.chooseShopName(shopNumber));
+  }
+
+  /**
+   * View my store
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async viewMyStore(page: Page): Promise<Page> {
+    return this.openLinkWithTargetBlank(page, this.viewMyStoreButton);
+  }
+
+  /**
+   * Get store color
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getShopColor(page: Page): Promise<string> {
+    return this.getAttributeContent(page, this.multistoreTopBar, 'style');
+  }
+
+  /**
+   * Get store name
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getShopName(page: Page): Promise<string> {
+    return this.getTextContent(page, this.storeName);
   }
 }
 

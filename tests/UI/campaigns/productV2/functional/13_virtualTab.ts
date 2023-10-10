@@ -372,8 +372,8 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const createProductMessage: string = await createProductsPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      const deleteProductMessage = await createProductsPage.deleteProduct(page);
+      expect(deleteProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 });
