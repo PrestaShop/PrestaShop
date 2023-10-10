@@ -70,7 +70,7 @@ class ProductShopsType extends TranslatorAwareType
                     ],
                     'submit' => [
                         'type' => SubmitType::class,
-                        'group' => 'right',
+                        'group' => 'left',
                         'options' => [
                             'label' => $this->trans('Save', 'Admin.Global'),
                         ],
