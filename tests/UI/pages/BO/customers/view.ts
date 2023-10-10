@@ -12,9 +12,9 @@ class ViewCustomer extends BOBasePage {
 
   public readonly updateSuccessfulMessage: string;
 
-  private readonly personnalInformationDiv: string;
+  private readonly personalInformationDiv: string;
 
-  private readonly personnalInformationEditButton: string;
+  private readonly personalInformationEditButton: string;
 
   private readonly ordersDiv: string;
 
@@ -78,8 +78,8 @@ class ViewCustomer extends BOBasePage {
 
     // Selectors
     // Personnel information
-    this.personnalInformationDiv = '.customer-personal-informations-card';
-    this.personnalInformationEditButton = `${this.personnalInformationDiv} a.edit-link`;
+    this.personalInformationDiv = '.customer-personal-informations-card';
+    this.personalInformationEditButton = `${this.personalInformationDiv} a.edit-link`;
 
     // Orders
     this.ordersDiv = '.customer-orders-card';
@@ -201,7 +201,7 @@ class ViewCustomer extends BOBasePage {
 
     switch (element) {
       case 'Personal information':
-        selector = this.personnalInformationDiv;
+        selector = this.personalInformationDiv;
         break;
       case 'Orders':
         selector = this.ordersDiv;
@@ -290,7 +290,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditCustomerPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.personnalInformationEditButton);
+    await this.clickAndWaitForURL(page, this.personalInformationEditButton);
   }
 
   /**
@@ -344,7 +344,11 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getCustomerID(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.personnalInformationDiv);
+    return this.getNumberFromText(page, this.personalInformationDiv);
+  }
+
+  async clickOnTransformToCustomerAccount(page: Page): Promise<void> {
+    await page.locator('').click();
   }
 }
 
