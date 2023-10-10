@@ -1269,7 +1269,7 @@ class ValidateCore
      */
     public static function isApe($ape)
     {
-        return (bool) preg_match('/^[0-9]{1,2}?.[0-9]{1,2}[a-zA-Z]{1}$/s', $ape);
+        return (bool) preg_match('/^[0-9]{1,2}?\.?[0-9]{1,2}[a-zA-Z]{1}$/s', $ape);
     }
 
     public static function isControllerName($name)
