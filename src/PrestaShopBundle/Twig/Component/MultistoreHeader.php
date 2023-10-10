@@ -56,7 +56,8 @@ class MultistoreHeader
         private readonly LegacyContext $legacyContext,
         private readonly TranslatorInterface $translator,
         private readonly MenuBuilder $menuBuilder,
-        private readonly ShopContext $shopContext
+        private readonly ShopContext $shopContext,
+        private readonly array $controllersLockedToAllShopContext
     ) {
     }
 
@@ -92,20 +93,8 @@ class MultistoreHeader
     public function isLockedToAllShopContext(): bool
     {
         $controllerName = $this->menuBuilder->getLegacyControllerClassName();
-        $controllers = [
-            'AdminAccess',
-            'AdminFeatureFlag',
-            'AdminLanguages',
-            'AdminProfiles',
-            'AdminSpecificPriceRule',
-            'AdminStatuses',
-            'AdminSecurity',
-            'AdminSecuritySessionEmployee',
-            'AdminSecuritySessionCustomer',
-            'AdminTranslations',
-        ];
 
-        return in_array($controllerName, $controllers);
+        return in_array($controllerName, $this->controllersLockedToAllShopContext);
     }
 
     public function isMultistoreUsed(): bool

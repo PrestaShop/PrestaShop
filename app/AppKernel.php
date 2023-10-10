@@ -178,14 +178,6 @@ abstract class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getCacheDir()
-    {
-        return _PS_CACHE_DIR_;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getLogDir()
     {
         return dirname(__DIR__) . '/var/logs';
