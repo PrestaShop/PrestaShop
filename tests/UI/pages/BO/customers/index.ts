@@ -18,7 +18,7 @@ class Customers extends BOBasePage {
 
   private readonly customerGridTitle: string;
 
-  private readonly CustomersEmptyTable: string;
+  private readonly customersEmptyTable: string;
 
   private readonly customersListForm: string;
 
@@ -108,7 +108,7 @@ class Customers extends BOBasePage {
     this.customerGridPanel = '#customer_grid_panel';
     this.customerGridTitle = `${this.customerGridPanel} h3.card-header-title`;
     this.customersListForm = '#customer_grid';
-    this.CustomersEmptyTable = `${this.customersListForm} tbody div.grid-table-empty`;
+    this.customersEmptyTable = `${this.customersListForm} tbody div.grid-table-empty`;
     this.customersListTableRow = (row: number) => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row: number, column: string) => `${this.customersListTableRow(row)} td.column-${column}`;
     this.customersListToggleColumn = (row: number, column: string) => `${this.customersListTableColumn(row, column)} .ps-switch`;
@@ -666,7 +666,7 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getTextWhenTableIsEmpty(page: Page): Promise<string> {
-    return this.getTextContent(page, this.CustomersEmptyTable, true);
+    return this.getTextContent(page, this.customersEmptyTable, true);
   }
 }
 
