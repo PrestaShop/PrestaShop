@@ -127,7 +127,6 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
-
     it('should check the final summary after checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 

@@ -71,8 +71,22 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
     });
 
     const tests = [
-      {args: {action: 'enable', toEnable: true, carrierData: shippingDetailsData, cost: '€8.40'}},
-      {args: {action: 'disable', toEnable: false, carrierData: editShippingDetailsData, cost: '€8.40'}},
+      {
+        args: {
+          action: 'enable',
+          toEnable: true,
+          carrierData: shippingDetailsData,
+          cost: '€8.40',
+        },
+      },
+      {
+        args: {
+          action: 'disable',
+          toEnable: false,
+          carrierData: editShippingDetailsData,
+          cost: '€8.40',
+        },
+      },
     ];
 
     tests.forEach((test, index: number) => {
