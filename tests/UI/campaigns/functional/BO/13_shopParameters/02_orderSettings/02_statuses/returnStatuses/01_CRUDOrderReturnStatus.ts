@@ -24,8 +24,7 @@ Create new order return status
 Update order return status
 Delete order return status
  */
-describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
-  + 'and delete order return status in BO', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order return status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfOrderReturnStatuses: number = 0;
