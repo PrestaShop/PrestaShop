@@ -51,7 +51,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SpecificPriceType extends TranslatorAwareType
 {
-    private const COMBINATION_RESULTS_LIMIT = 20;
+    private const COMBINATION_RESULTS_LIMIT = 0;
 
     /**
      * @var ProductRepository
