@@ -112,7 +112,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
     });
 
     it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
