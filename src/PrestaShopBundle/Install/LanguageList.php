@@ -187,7 +187,7 @@ class LanguageList
     public function detectLanguage()
     {
         // This code is from a php.net comment : http://www.php.net/manual/fr/reserved.variables.server.php#94237
-        $split_languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $split_languages = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) : [];
         if (!is_array($split_languages)) {
             return false;
         }
