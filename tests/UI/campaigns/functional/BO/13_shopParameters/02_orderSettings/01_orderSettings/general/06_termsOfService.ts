@@ -101,18 +101,33 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should check terms of service checkbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop_${index}`, baseContext);
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
       // Change FO language
       await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
+    });
+
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
+
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
-      // Proceed to checkout the shopping cart
+
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(1);
+    });
+
+    it('should proceed to checkout and go to deliveryStep', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `proceedToCheckout${index}`, baseContext);
+
       await cartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
@@ -125,10 +140,18 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
+    });
+
+    it('should check terms of service checkbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
 
       // Check terms of service checkbox existence
       const isVisible = await checkoutPage.isConditionToApproveCheckboxVisible(page);

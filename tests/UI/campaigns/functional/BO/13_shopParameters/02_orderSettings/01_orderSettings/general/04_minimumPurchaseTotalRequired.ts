@@ -87,19 +87,21 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
-    it('should verify the minimum purchase total value', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkMinimumPurchaseTotal_${index}`,
-        baseContext,
-      );
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToCart_${index}`, baseContext);
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
 
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
+
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(1);
+    });
+
+    it('should verify the minimum purchase total value', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkMinimumPurchaseTotal_${index}`, baseContext);
 
       // Check proceed to checkout button enable/disable
       const isDisabled = await cartPage.isProceedToCheckoutButtonDisabled(page);

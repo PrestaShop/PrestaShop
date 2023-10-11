@@ -22,6 +22,8 @@ class OrderSettings extends BOBasePage {
 
   private readonly minimumPurchaseRequiredValue: string;
 
+  private readonly recalculateShippingCostAfterEditOrder: (toggle: number) => string;
+
   private readonly enableTermsOfServiceToggleInput: (toggle: number) => string;
 
   private readonly pageForTermsAndConditionsSelect: string;
@@ -59,6 +61,7 @@ class OrderSettings extends BOBasePage {
     this.enableGuestCheckoutToggleInput = (toggle: number) => `#general_enable_guest_checkout_${toggle}`;
     this.disableReorderingToggleInput = (toggle: number) => `#general_disable_reordering_option_${toggle}`;
     this.minimumPurchaseRequiredValue = '#general_purchase_minimum_value';
+    this.recalculateShippingCostAfterEditOrder = (toggle: number) => `#general_recalculate_shipping_cost_${toggle}`;
     this.enableTermsOfServiceToggleInput = (toggle: number) => `#general_enable_tos_${toggle}`;
     this.pageForTermsAndConditionsSelect = '#general_tos_cms_id';
     this.saveGeneralFormButton = `${this.generalForm} #form-general-save-button`;
@@ -127,6 +130,20 @@ class OrderSettings extends BOBasePage {
   async setMinimumPurchaseRequiredTotal(page: Page, value: number): Promise<string> {
     await this.setValue(page, this.minimumPurchaseRequiredValue, value.toString());
     await page.click(this.saveGeneralFormButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Recalculate shipping cost after editing order
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable recalculate shipping cost
+   * @returns {Promise<string>}
+   */
+  async recalculateShippingCostAfterEditingOrder(page: Page, toEnable: boolean): Promise<string> {
+    await this.setChecked(page, this.recalculateShippingCostAfterEditOrder(toEnable ? 1 : 0));
+    await page.click(this.saveGeneralFormButton);
+    await this.elementNotVisible(page, this.recalculateShippingCostAfterEditOrder(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
