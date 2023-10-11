@@ -24,7 +24,7 @@ const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses
 /*
 Filter order return status by : Id, Name
 Sort order return status by : Id, Name
-Create 16 order return statuses
+Create 6 order return statuses
 Pagination next and previous
 Delete by bulk actions
  */
@@ -214,8 +214,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     });
   });
 
-  // 3 - Create 16 order return statuses
-  const creationTests: number[] = new Array(16).fill(0, 0, 16);
+  // 3 - Create 6 order return statuses
+  const creationTests: number[] = new Array(6).fill(0, 0, 6);
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create order return status n°${index + 1} in BO`, async () => {
@@ -244,10 +244,10 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
 
   // 4 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the items number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -265,10 +265,10 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the items number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 50);
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
