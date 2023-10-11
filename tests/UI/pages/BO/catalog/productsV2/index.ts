@@ -75,6 +75,8 @@ class Products extends BOBasePage {
 
   private readonly modalBulkActionsProductsProgressBarDone: string;
 
+  private readonly modalBulkActionsProductsStopProcessButton: (action: string) => string;
+
   private readonly modalBulkActionsProductsCloseButton: (action: string) => string;
 
   private readonly productGridTable: string;
@@ -241,6 +243,8 @@ class Products extends BOBasePage {
     this.modalBulkActionsProductsProgressFooter = (action: string) => `${this.modalBulkActionsProductsProgress(action)} `
       + 'div.modal-footer';
     this.modalBulkActionsProductsProgressBarDone = '#modal_progressbar_done';
+    this.modalBulkActionsProductsStopProcessButton = (action: string) => `${this.modalBulkActionsProductsProgressFooter(action)} `
+      + 'button.stop-processing';
     this.modalBulkActionsProductsCloseButton = (action: string) => `${this.modalBulkActionsProductsProgressFooter(action)} `
       + 'button.close-modal-button';
 
@@ -464,15 +468,14 @@ class Products extends BOBasePage {
    * @returns {Promise<string>}
    */
   async bulkActionsProduct(page: Page, action: string): Promise<string> {
-    const modalDialogBulkActionButton = this.modalDialogBulkActionButton(
-      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
-    );
-    const modalBulkActionsProgressSuccessMessage = this.modalBulkActionsProgressSuccessMessage(
-      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
-    );
+    const actionSelector: string = (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`;
+
+    const modalDialogBulkActionButton = this.modalDialogBulkActionButton(actionSelector);
+    const modalBulkActionsProgressSuccessMessage = this.modalBulkActionsProgressSuccessMessage(actionSelector);
+
     await this.waitForSelectorAndClick(page, modalDialogBulkActionButton);
     await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
-    await page.waitForTimeout(2000);
+    await this.waitForHiddenSelector(page, this.modalBulkActionsProductsStopProcessButton(actionSelector), 5000);
 
     return this.getTextContent(page, modalBulkActionsProgressSuccessMessage, true);
   }
