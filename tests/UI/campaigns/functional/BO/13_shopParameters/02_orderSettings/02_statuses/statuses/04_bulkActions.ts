@@ -18,7 +18,7 @@ import OrderStatusData from '@data/faker/orderStatus';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_statuses_filterSortAndPagination';
+const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_statuses_bulkActions';
 
 /*
 Create 2 order statuses
