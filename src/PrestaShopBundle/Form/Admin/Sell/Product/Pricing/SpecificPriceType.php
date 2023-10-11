@@ -154,7 +154,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'choices' => $this->getSelectedChoices($builder),
                 'attr' => [
                     // select2 jQuery component is added in javascript manually for this ChoiceType
-                    'data-minimum-results-for-search' => self::COMBINATION_RESULTS_LIMIT,
+                    'data-minimum-results-for-search' => 0,
                     // we still need to pass all combinations choice to javascript
                     // to prepend it to the ajax-fetched list of combination choices
                     'data-all-combinations-label' => $this->getAllCombinationsChoiceLabel(),
