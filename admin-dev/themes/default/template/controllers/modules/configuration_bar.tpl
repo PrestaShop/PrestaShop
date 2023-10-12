@@ -29,7 +29,7 @@
   <div class="form-wrapper">
     <div class="form-group">
       <label class="control-label col-lg-4">
-        {l s='Activate module for this shop context: %s.' sprintf=[$shop_context] d='Admin.Modules.Notification'}
+        {l s='Activate module for this shop context: %s.' sprintf=[$shop_context] d='Admin.Modules.Notification' html=true}
       </label>
       <div class="col-lg-8">
         <span class="switch prestashop-switch fixed-width-lg">
