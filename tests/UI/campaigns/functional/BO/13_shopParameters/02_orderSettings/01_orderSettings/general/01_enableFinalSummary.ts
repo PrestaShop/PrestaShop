@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(index + 1);
     });
 
     it('should proceed to checkout and login', async function () {

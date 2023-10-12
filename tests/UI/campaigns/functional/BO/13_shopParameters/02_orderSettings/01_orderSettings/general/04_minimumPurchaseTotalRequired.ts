@@ -97,7 +97,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(index + 1);
     });
 
     it('should verify the minimum purchase total value', async function () {

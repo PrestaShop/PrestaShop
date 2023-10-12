@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(index + 1);
     });
 
     it('should check active link', async function () {
