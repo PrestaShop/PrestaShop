@@ -34,7 +34,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Filter products table by : ID, Name, Reference, Category, Price, Quantity and Status', async () => {
+  describe('Filter products table : Go to BO', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -65,7 +65,9 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       numberOfProducts = await productsPage.getNumberOfProductsFromHeader(page);
       expect(numberOfProducts).to.be.above(0);
     });
+  });
 
+  describe('Filter products table by : ID, Name, Reference, Category, Price, Quantity and Status', async () => {
     [
       {
         args: {
