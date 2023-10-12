@@ -268,7 +268,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Frame|Page} Browser tab
    * @returns {Promise<number>}
    */
-  getProductsNumber(page: Frame | Page): Promise<number> {
+  async getProductsNumber(page: Frame | Page): Promise<number> {
     return this.getNumberFromText(page, this.productsCountSpan);
   }
 
@@ -278,7 +278,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param row {number} Product row on table
    * @returns {Promise<string>}
    */
-  getProductNameFromTable(page: Page, row: number): Promise<string> {
+  async getProductNameFromTable(page: Page, row: number): Promise<string> {
     return this.getTextContent(page, this.orderProductsTableProductName(row));
   }
 
@@ -384,7 +384,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getOrderTotalPrice(page: Page): Promise<number> {
+  async getOrderTotalPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.orderTotalPriceSpan, 1000);
   }
 
@@ -393,7 +393,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getOrderWrappingTotal(page: Page): Promise<number> {
+  async getOrderWrappingTotal(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.orderWrappingTotal);
   }
 
@@ -402,7 +402,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getOrderTotalDiscounts(page: Page): Promise<number> {
+  async getOrderTotalDiscounts(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.orderTotalDiscountsSpan);
   }
 
@@ -421,7 +421,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getInvoicesFromSelectOptions(page: Page): Promise<string> {
+  async getInvoicesFromSelectOptions(page: Page): Promise<string> {
     return this.getTextContent(page, this.addProductInvoiceSelect);
   }
 
@@ -430,7 +430,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getNewInvoiceCarrierName(page: Page): Promise<string> {
+  async getNewInvoiceCarrierName(page: Page): Promise<string> {
     return this.getTextContent(page, this.addProductNewInvoiceCarrierName);
   }
 
@@ -439,7 +439,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isFreeShippingSelected(page: Page): Promise<boolean> {
+  async isFreeShippingSelected(page: Page): Promise<boolean> {
     return this.isChecked(page, this.addProductNewInvoiceFreeShippingCheckbox);
   }
 
@@ -506,7 +506,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddButtonDisabled(page: Page): Promise<boolean> {
+  async isAddButtonDisabled(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.addProductAddButton}[disabled]`, 1000);
   }
 
@@ -515,7 +515,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddProductTableRowVisible(page: Page): Promise<boolean> {
+  async isAddProductTableRowVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.addProductTableRow, 1000);
   }
 

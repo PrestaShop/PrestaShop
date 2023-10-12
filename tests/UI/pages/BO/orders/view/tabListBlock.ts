@@ -234,7 +234,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param page {Page|Frame} Browser tab
    * @returns {Promise<number>}
    */
-  async getStatusNumber(page: Page|Frame): Promise<number> {
+  async getStatusNumber(page: Page | Frame): Promise<number> {
     return this.getNumberFromText(page, this.historyTabContent);
   }
 
@@ -245,7 +245,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param row {number} status row in table
    * @returns {Promise<string>}
    */
-  async getTextColumnFromHistoryTable(page: Frame|Page, columnName: string, row: number): Promise<string> {
+  async getTextColumnFromHistoryTable(page: Frame | Page, columnName: string, row: number): Promise<string> {
     return this.getTextContent(page, this.statusTableColumn(row, columnName));
   }
 
@@ -401,7 +401,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param row {number} Document row on table
    * @return {Promise<string|null>}
    */
-  downloadDocument(page: Page, row: number): Promise<string|null> {
+  async downloadDocument(page: Page, row: number): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.documentNumberLink(row));
   }
 
@@ -411,7 +411,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param row {number} Row of the invoice
    * @returns {Promise<string|null>}
    */
-  async downloadInvoice(page: Page, row: number = 1): Promise<string|null> {
+  async downloadInvoice(page: Page, row: number = 1): Promise<string | null> {
     await this.goToDocumentsTab(page);
 
     return this.downloadDocument(page, row);
@@ -483,7 +483,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async downloadDeliverySlip(page: Page): Promise<string|null> {
+  async downloadDeliverySlip(page: Page): Promise<string | null> {
     await this.goToDocumentsTab(page);
 
     // Delete the target because a new tab is opened when downloading the file
@@ -496,7 +496,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getCarriersNumber(page: Page): Promise<number> {
+  async getCarriersNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, `${this.carriersTab} .count`);
   }
 
@@ -581,7 +581,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getMerchandiseReturnsNumber(page: Page): Promise<number> {
+  async getMerchandiseReturnsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.merchandisereturnCount);
   }
 
