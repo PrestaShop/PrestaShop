@@ -16,6 +16,12 @@ class ProductsBlock extends ViewOrderBasePage {
 
   private readonly orderProductsTable: string;
 
+  private readonly returnProductButton: string;
+
+  private readonly returnQuantityInput: (row: number) => string;
+
+  private readonly returnQuantityCheckbox: (row: number) => string;
+
   private readonly orderProductsRowTable: (row: number) => string;
 
   private readonly orderProductsTableNameColumn: (row: number) => string;
@@ -137,6 +143,11 @@ class ProductsBlock extends ViewOrderBasePage {
     this.productsCountSpan = '#orderProductsPanelCount';
     this.orderProductsLoading = '#orderProductsLoading';
 
+    // Return block
+    this.returnQuantityInput = (row: number) => `[id*=cancel_product_quantity]:nth-child(${row})`;
+    this.returnQuantityCheckbox = (row: number) => `tr:nth-child(${row}) div.cancel-product-selector i`;
+    this.returnProductButton = '#cancel_product_save';
+
     // Products table
     this.orderProductsTable = '#orderProductsTable';
     this.orderProductsRowTable = (row: number) => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
@@ -254,7 +265,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Frame|Page} Browser tab
    * @returns {Promise<number>}
    */
-  getProductsNumber(page: Frame|Page) : Promise<number> {
+  getProductsNumber(page: Frame | Page): Promise<number> {
     return this.getNumberFromText(page, this.productsCountSpan);
   }
 
@@ -511,7 +522,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param row {number} Product row on table
    * @returns {Promise<{total: number, quantity: number, name: string, available: number, basePrice: number}>}
    */
-  async getProductDetails(page: Frame|Page, row: number) {
+  async getProductDetails(page: Frame | Page, row: number) {
     return {
       name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
       reference: await this.getTextContent(page, this.orderProductsTableProductReference(row)),
@@ -523,6 +534,10 @@ class ProductsBlock extends ViewOrderBasePage {
       available: parseInt(await this.getTextContent(page, this.orderProductsTableProductAvailable(row)), 10),
       total: parseFloat((await this.getTextContent(page, this.orderProductsTableProductPrice(row))).replace('€', '')),
     };
+  }
+
+  async isRefundedColumnVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, '#orderProductsTable th.cellProductRefunded');
   }
 
   /**
@@ -669,6 +684,40 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(1));
 
     return this.elementVisible(page, this.paginationNextLink, 1000);
+  }
+
+  // Methods to return products
+
+  /**
+   * Set returned product quantity
+   * @param page {Page} Browser tab
+   * @param row {number} Row in return product table
+   * @param quantity {number} Quantity to return
+   * @returns {Promise<void>}
+   */
+  async setReturnedProductQuantity(page: Page, row: number = 1, quantity: number = 1): Promise<void> {
+    await this.setValue(page, this.returnQuantityInput(row), quantity);
+  }
+
+  /**
+   * Check returned quantity
+   * @param page {Page} Browser tab
+   * @param row {number} Row in return product table
+   * @returns {Promise<void>}
+   */
+  async checkReturnedQuantity(page: Page, row: number = 1): Promise<void> {
+    await page.setChecked(this.returnQuantityCheckbox(row), true, {force: true});
+  }
+
+  /**
+   * Click on return products
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnReturnProducts(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.returnProductButton);
+
+    return this.getAlertBlockContent(page);
   }
 }
 
