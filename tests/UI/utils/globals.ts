@@ -48,7 +48,6 @@ global.BROWSER = {
     headless: process.env.HEADLESS ? JSON.parse(process.env.HEADLESS) : true,
     timeout: 0,
     slowMo: process.env.SLOW_MO ? parseInt(process.env.SLOW_MO, 10) : 5,
-    channel: 'chrome-beta',
   },
   interceptErrors: process.env.INTERCEPT_ERRORS ? JSON.parse(process.env.INTERCEPT_ERRORS) : false,
 };

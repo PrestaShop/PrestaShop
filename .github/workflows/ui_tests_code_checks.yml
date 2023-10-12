@@ -93,7 +93,7 @@ jobs:
         run: npm ci
 
       - name: Install browsers
-        run: npx playwright install chrome-beta
+        run: npx playwright install --with-deps
 
       - name: Generate mocha reports with failed steps
         run: GENERATE_FAILED_STEPS=true npm run test:all
