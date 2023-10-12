@@ -132,6 +132,8 @@ class ProductsBlock extends ViewOrderBasePage {
 
   private readonly paginationPreviousLink: string;
 
+  private readonly refundProductColumn: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products block
@@ -162,6 +164,7 @@ class ProductsBlock extends ViewOrderBasePage {
     this.deleteProductButton = (row: number) => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
     this.editProductButton = (row: number) => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
     this.productQuantitySpan = (row: number) => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
+    this.refundProductColumn = `${this.orderProductsTable} th.cellProductRefunded`;
 
     // Edit row table
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
@@ -536,8 +539,13 @@ class ProductsBlock extends ViewOrderBasePage {
     };
   }
 
+  /**
+   * Is refunded column visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
   async isRefundedColumnVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, '#orderProductsTable th.cellProductRefunded');
+    return this.elementVisible(page, this.refundProductColumn);
   }
 
   /**
