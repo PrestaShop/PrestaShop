@@ -586,7 +586,7 @@ class Products extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isPositionColumnVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.productFilterPositionInput);
+    return this.elementVisible(page, this.productFilterPositionInput, 2000);
   }
 
   /**
