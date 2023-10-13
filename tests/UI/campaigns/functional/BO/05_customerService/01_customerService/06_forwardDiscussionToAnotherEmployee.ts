@@ -13,10 +13,19 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import {contactUsPage} from '@pages/FO/contactUs';
-import {homePage as foHomePage, homePage} from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
+import {loginPage} from '@pages/FO/login';
+import Products from '@data/demo/products';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import orderDetails from '@pages/FO/myAccount/orderDetails';
+import {myAccountPage} from '@pages/FO/myAccount';
+import {cartPage} from '@pages/FO/cart';
 
 // Import data
+import PaymentMethods from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildevEmail';
@@ -25,17 +34,6 @@ import {expect} from 'chai';
 import MailDev from 'maildev';
 import mailHelper from '@utils/mailHelper';
 import type {BrowserContext, Page} from 'playwright';
-import {loginPage as foLoginPage} from "@pages/FO/login";
-import Customers from "@data/demo/customers";
-import {myAccountPage} from "@pages/FO/myAccount";
-import {cartPage} from "@pages/FO/cart";
-import Products from "@data/demo/products";
-import checkoutPage from "@pages/FO/checkout";
-import PaymentMethods from "@data/demo/paymentMethods";
-import orderConfirmationPage from "@pages/FO/checkout/orderConfirmation";
-import {orderHistoryPage} from "@pages/FO/myAccount/orderHistory";
-import orderDetails from "@pages/FO/myAccount/orderDetails";
-import {faker} from "@faker-js/faker";
 
 const baseContext: string = 'functional_BO_customerService_customerService_forwardDiscussionToAnotherEmployee';
 
@@ -108,16 +106,16 @@ describe('BO - Customer Service : Forward the discussion to another employee', a
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await homePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await loginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, Customers.johnDoe);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
@@ -125,16 +123,16 @@ describe('BO - Customer Service : Forward the discussion to another employee', a
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await foHomePage.goToHomePage(page);
-      const result = await foHomePage.isHomePage(page);
+      await homePage.goToHomePage(page);
+      const result = await homePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foHomePage.addProductToCartByQuickView(page, 1, 1);
-      await foHomePage.proceedToCheckout(page);
+      await homePage.addProductToCartByQuickView(page, 1, 1);
+      await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -178,7 +176,7 @@ describe('BO - Customer Service : Forward the discussion to another employee', a
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await homePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
