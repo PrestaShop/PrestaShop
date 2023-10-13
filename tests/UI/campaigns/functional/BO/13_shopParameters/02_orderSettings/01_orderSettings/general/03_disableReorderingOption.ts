@@ -25,7 +25,7 @@ const baseContext: string = 'functional_BO_shopParameters_orderSettings_orderSet
 
 /*
 Enable/disable reordering option
-Check reordering option in FO (Go to history page and check reodering link)
+Check reordering option in FO (Go to history page and check reordering link)
  */
 describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering option', async () => {
   let browserContext: BrowserContext;

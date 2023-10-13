@@ -85,8 +85,8 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
-    it('should check the final summary after checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
@@ -94,6 +94,12 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
 
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(index + 1);
+    });
+
+    it('should proceed to checkout and login', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `proceedToCheckout${index}`, baseContext);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -103,14 +109,26 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
         await checkoutPage.clickOnSignIn(page);
         await checkoutPage.customerLogin(page, Customers.johnDoe);
       }
+    });
+
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
+    });
+
+    it('should check the final summary after checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
       // Check the final summary existence in payment step
       const isVisible = await orderConfirmationPage.isFinalSummaryVisible(page);

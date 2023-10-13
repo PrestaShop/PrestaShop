@@ -85,8 +85,8 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
-    it('should verify the guest checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkGuestCheckout${index}`, baseContext);
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
@@ -94,12 +94,23 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
 
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(index + 1);
+    });
+
+    it('should check active link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkIfNoticeVisible${index}`, baseContext);
+
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
       // Check guest checkout
       const isNoticeVisible = await checkoutPage.getActiveLinkFromPersonalInformationBlock(page);
       expect(isNoticeVisible).to.be.equal(test.args.tabName);
+    });
+
+    it('should verify the guest checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkGuestCheckout${index}`, baseContext);
 
       const isPasswordRequired = await checkoutPage.isPasswordRequired(page);
       expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);
