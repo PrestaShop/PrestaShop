@@ -87,7 +87,7 @@ class OrderSettings extends BOBasePage {
    */
   async setFinalSummaryStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableFinalSummaryToggleInput(toEnable ? 1 : 0));
-    await page.click(this.saveGeneralFormButton);
+    await page.locator(this.saveGeneralFormButton).click();
     await this.elementNotVisible(page, this.enableFinalSummaryToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -101,7 +101,7 @@ class OrderSettings extends BOBasePage {
    */
   async setGuestCheckoutStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableGuestCheckoutToggleInput(toEnable ? 1 : 0));
-    await page.click(this.saveGeneralFormButton);
+    await page.locator(this.saveGeneralFormButton).click();
     await this.elementNotVisible(page, this.enableGuestCheckoutToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -115,7 +115,7 @@ class OrderSettings extends BOBasePage {
    */
   async setReorderOptionStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.disableReorderingToggleInput(toEnable ? 1 : 0));
-    await page.click(this.saveGeneralFormButton);
+    await page.locator(this.saveGeneralFormButton).click();
     await this.elementNotVisible(page, this.disableReorderingToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -129,7 +129,7 @@ class OrderSettings extends BOBasePage {
    */
   async setMinimumPurchaseRequiredTotal(page: Page, value: number): Promise<string> {
     await this.setValue(page, this.minimumPurchaseRequiredValue, value.toString());
-    await page.click(this.saveGeneralFormButton);
+    await page.locator(this.saveGeneralFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -142,7 +142,7 @@ class OrderSettings extends BOBasePage {
    */
   async recalculateShippingCostAfterEditingOrder(page: Page, toEnable: boolean): Promise<string> {
     await this.setChecked(page, this.recalculateShippingCostAfterEditOrder(toEnable ? 1 : 0));
-    await page.click(this.saveGeneralFormButton);
+    await page.locator(this.saveGeneralFormButton).click();
     await this.elementNotVisible(page, this.recalculateShippingCostAfterEditOrder(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -160,7 +160,7 @@ class OrderSettings extends BOBasePage {
     if (toEnable) {
       await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
-    await page.click(this.saveGeneralFormButton);
+    await page.locator(this.saveGeneralFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
