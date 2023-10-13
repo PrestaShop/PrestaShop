@@ -1,7 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+// Import data
+import CustomerServiceOptionsData from '@data/faker/customerServiceOptions';
+
 import type {Page} from 'playwright';
-import CustomerServiceOptionsData from "@data/faker/customerServiceOptions";
 
 /**
  * Customer service page, contains selectors and functions for the page
