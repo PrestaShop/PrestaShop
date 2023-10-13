@@ -2,6 +2,7 @@
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -32,12 +33,11 @@ import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
 import MailDev from 'maildev';
-import mailHelper from '@utils/mailHelper';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_customerService_customerService_forwardDiscussionToAnotherEmployee';
+const baseContext: string = 'functional_BO_customerService_customerService_forwardMessage';
 
-describe('BO - Customer Service : Forward the discussion to another employee', async () => {
+describe('BO - Customer Service : Forward message', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let newMail: MailDevEmail;
@@ -232,14 +232,14 @@ describe('BO - Customer Service : Forward the discussion to another employee', a
     });
 
     it('should click on forward message button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton1', baseContext);
 
       const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should forward the message and check the thread', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage1', baseContext);
 
       await viewPage.forwardMessage(page, forwardMessageData);
 
@@ -251,7 +251,7 @@ describe('BO - Customer Service : Forward the discussion to another employee', a
     });
 
     it('should check orders and messages timeline', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm1', baseContext);
 
       const text = await viewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains('Orders and messages timeline')
@@ -262,6 +262,46 @@ describe('BO - Customer Service : Forward the discussion to another employee', a
 
     it('should check if the mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMailIsInMailbox2', baseContext);
+
+      expect(newMail.subject).to.contains('Fwd: Customer message');
+    });
+  });
+
+  describe('BO: Forward message to someone else', async () => {
+    const forwardMessageData: MessageData = new MessageData({
+      employeeName: 'Someone else',
+      emailAddress: 'someoneelse@prestashop.com',
+      message: 'checkThis',
+    });
+    it('should click on forward message button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton2', baseContext);
+
+      const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
+      expect(isModalVisible).to.eq(true);
+    });
+
+    it('should forward the message and check the thread', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage2', baseContext);
+
+      await viewPage.forwardMessage(page, forwardMessageData);
+
+      const messages = await viewPage.getThreadMessages(page);
+      expect(messages)
+        .to.contains(`Message forwarded to ${forwardMessageData.emailAddress}`)
+        .and.contains(forwardMessageData.message);
+    });
+
+    it('should check orders and messages timeline', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm2', baseContext);
+
+      const text = await viewPage.getOrdersAndMessagesTimeline(page);
+      expect(text).to.contains('Orders and messages timeline')
+        .and.contains(`Message forwarded to ${forwardMessageData.emailAddress}`)
+        .and.contains(`Comment: ${forwardMessageData.message}`);
+    });
+
+    it('should check if the mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMailIsInMailbox3', baseContext);
 
       expect(newMail.subject).to.contains('Fwd: Customer message');
     });
