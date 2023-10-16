@@ -601,7 +601,10 @@ class ProductCore extends ObjectModel
             'id_category_default' => [
                 'xlink_resource' => 'categories',
             ],
-            'new' => [],
+            'new' => [
+                'getter' => 'getWsIsNew',
+                'setter' => false,
+            ],
             'cache_default_attribute' => [],
             'id_default_image' => [
                 'getter' => 'getCoverWs',
@@ -1705,6 +1708,21 @@ class ProductCore extends ObjectModel
             AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
 
         return (bool) Db::getInstance()->getValue($query, false);
+    }
+
+    /**
+     * Webservice getter : get if product is new.
+     *
+     * @return int
+     */
+    public function getWsIsNew()
+    {
+        $isNew = $this->isNew();
+        if (true === $isNew) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**
