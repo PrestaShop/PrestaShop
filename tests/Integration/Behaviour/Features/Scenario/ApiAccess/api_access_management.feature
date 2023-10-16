@@ -186,3 +186,16 @@ Feature: Api Access Management
       | enabled     | true            |
       | description | may the force   |
       | scopes      | api_access_read |
+
+  Scenario: Generate secret for api access:
+    When I create an api access "AA-13" with following properties:
+      | clientName  | Jojo-2         |
+      | apiClientId | test-id-jojo-2 |
+      | enabled     | true             |
+      | description | description      |
+    When I generate new secret for api access "AA-13"
+    Then I should get a new secret
+
+  Scenario: Check secret for api access:
+    When I check secret for api access "AA-13"
+    Then I should get the correct secret

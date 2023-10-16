@@ -33,6 +33,7 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateSecretApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
@@ -68,6 +69,31 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             $this->setLastException($e);
         }
     }
+
+    /**
+     * @When /^I generate new secret for api access "(.+)"$/
+     */
+    public function generateSecretApiAccessUsingCommand(string $apiAccessReference)
+    {
+        $this->getSharedStorage()->exists($apiAccessReference);
+
+        $commandBus = $this->getCommandBus();
+        $command = new GenerateSecretApiAccessCommand($this->getSharedStorage()->get($apiAccessReference));
+        $secret = $commandBus->handle($command);
+
+        $this->getSharedStorage()->set('apiAccessSecret_' . $apiAccessReference, $secret);
+    }
+
+    /**
+     * @When /^I check secret for api access "(.+)"$/
+     */
+    public function checkSecretApiAccessUsingCommand(string $apiAccessReference)
+    {
+        $this->getSharedStorage()->exists($apiAccessReference);
+
+        $secret = $this->getSharedStorage()->get('apiAccessSecret_' . $apiAccessReference);
+    }
+
 
     /**
      * @Then /^api access "(.+)" should have the following properties:$/
@@ -256,6 +282,22 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             ApiAccessConstraintException::class,
             $this->getTooLargeConstraintErrorCode($fieldName)
         );
+    }
+
+    /**
+     * @Then I should get a new secret
+     */
+    public function iShouldGetANewSecret(): void
+    {
+        // @todo
+    }
+
+    /**
+     * @Then I should get the correct secret
+     */
+    public function iShouldGetTheCorrectSecret(): void
+    {
+        // @todo
     }
 
     /**

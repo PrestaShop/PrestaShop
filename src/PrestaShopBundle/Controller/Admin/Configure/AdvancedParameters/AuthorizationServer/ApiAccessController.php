@@ -32,12 +32,14 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateSecretApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotUpdateApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessFilters;
@@ -82,11 +84,23 @@ class ApiAccessController extends FrameworkBundleAdminController
 
         try {
             $handlerResult = $this->getFormHandler()->handle($apiAccessForm);
-
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                /** @var ApiAccessSecret $apiAccess */
+                $apiAccess = $handlerResult->getIdentifiableObjectId();
+                $this->addFlash('info', $this->trans('The API access and Client secret has been generated successfully. Note that client secret will be visible only once and must be saved.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $handlerResult->getIdentifiableObjectId()]);
+                $this->addFlash(
+                    'success',
+                    $this->trans(
+                        'Client secret: %s <a href="#">Copy</a>',
+                        'Admin.Notifications.Success',
+                        [
+                            $apiAccess->getSecret(),
+                        ]
+                    )
+                );
+
+                return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccess->getValue()]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -127,6 +141,33 @@ class ApiAccessController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Editing API Access "%name%"', 'Admin.Navigation.Menu', ['%name%' => $formData['client_name']]),
             'apiAccessForm' => $apiAccessForm->createView(),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_edit")
+     */
+    public function regenerateSecretAction(Request $request, int $apiAccessId): Response
+    {
+        try {
+            /** @var ApiAccessSecret $apiSecretAccess */
+            $apiSecretAccess = $this->getCommandBus()->handle(new GenerateSecretApiAccessCommand($apiAccessId));
+            $this->addFlash('info', $this->trans('The API access and Client secret has been generated successfully. Note that client secret will be visible only once and must be saved.', 'Admin.Notifications.Success'));
+
+            $this->addFlash(
+                'success',
+                $this->trans(
+                    'Client secret: %s <a href="#">Copy</a>',
+                    'Admin.Notifications.Success',
+                    [
+                        $apiSecretAccess->getSecret(),
+                    ]
+                )
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccessId]);
     }
 
     /**

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,12 +26,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
 
-interface AddApiAccessCommandHandlerInterface
+class GenerateSecretApiAccessCommand
 {
-    public function handle(AddApiAccessCommand $command): ApiAccessSecret;
+    private ApiAccessSecret $apiAccessId;
+    private ?string $secret = null;
+
+    public function __construct(int $apiAccessId)
+    {
+        $this->apiAccessId = new ApiAccessSecret($apiAccessId);
+    }
+
+    public function getApiAccessSecret(): ApiAccessSecret
+    {
+        return $this->apiAccessId;
+    }
+
+    public function getSecret(): ?string
+    {
+        return $this->secret;
+    }
+
+    public function setSecret(string $secret): self
+    {
+        $this->secret = $secret;
+
+        return $this;
+    }
 }

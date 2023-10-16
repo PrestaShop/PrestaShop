@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,12 +26,24 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler;
+namespace PrestaShopBundle\Service;
 
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher;
 
-interface AddApiAccessCommandHandlerInterface
+class HashService
 {
-    public function handle(AddApiAccessCommand $command): ApiAccessSecret;
+    public function __construct(
+        private readonly NativePasswordHasher $passwordHasher
+    ) {
+    }
+
+    public function generateRandom(int $length = 32): string
+    {
+        return substr(bin2hex(random_bytes($length)), 0, $length);
+    }
+
+    public function hash(string $plainString): string
+    {
+        return $this->passwordHasher->hash($plainString);
+    }
 }

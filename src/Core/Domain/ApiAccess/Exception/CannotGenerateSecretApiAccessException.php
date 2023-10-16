@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,12 +26,8 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
-
-interface AddApiAccessCommandHandlerInterface
+class CannotGenerateSecretApiAccessException extends ApiAccessException
 {
-    public function handle(AddApiAccessCommand $command): ApiAccessSecret;
 }
