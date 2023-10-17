@@ -74,15 +74,87 @@ class Dashboard extends BOBasePage {
   }
 
   async clickOnOnlineVisitorsLink(page: Page): Promise<void> {
-    return this.clickAndWaitForURL(page, this.onlineVisitorLink);
+    await this.clickAndWaitForURL(page, this.onlineVisitorLink);
   }
 
   async clickOnActiveShoppingCartsLink(page: Page): Promise<void> {
-    return this.clickAndWaitForURL(page, this.activeShoppingCartsLink);
+    await this.clickAndWaitForURL(page, this.activeShoppingCartsLink);
   }
 
   async getActiveShoppingCarts(page: Page): Promise<number> {
     return this.getNumberFromText(page, '#active_shopping_cart');
+  }
+
+  async clickOnOrdersLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'sell/orders\']');
+  }
+
+  async getOrdersNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#pending_orders');
+  }
+
+  async clickOnReturnExchangeLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminReturn\']');
+  }
+
+  async getReturnExchangeNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#return_exchanges');
+  }
+
+  async clickOnAbandonedCartsLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminCarts\']');
+  }
+
+  async getAbandonedCartsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#abandoned_cart');
+  }
+
+  async getOutOfStockProducts(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#products_out_of_stock');
+  }
+
+  async clickOnOutOfStockProductsLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'catalog/monitoring\']');
+  }
+
+  async getNewMessagesNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#new_messages');
+  }
+
+  async clickOnNewMessagesLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminCustomerThreads\']');
+  }
+
+  async getProductReviewsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#product_reviews');
+  }
+
+  async clickOnProductReviewsLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminModules\']');
+  }
+
+  async getNewCustomersNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#new_customers');
+  }
+
+  async clickOnNewCustomersLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'sell/customers\']');
+  }
+
+  async getNewSubscriptionsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#new_registrations');
+  }
+
+  async clickOnNewSubscriptionsLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminStats\']');
+  }
+
+  async getTotalSubscribersNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#total_suscribers');
+  }
+
+  async clickOnTotalSubscribersLink(page:Page):Promise<void>{
+    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminModules\']');
   }
 }
 

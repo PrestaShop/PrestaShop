@@ -269,6 +269,8 @@ export default class BOBasePage extends CommonPage {
 
   public readonly storeName: string;
 
+  public readonly pageSubtitle: string;
+
   public readonly chooseShopName: (shopNumber: number) => string;
 
   /**
@@ -287,6 +289,8 @@ export default class BOBasePage extends CommonPage {
     // Access denied message
     this.accessDeniedMessage = 'Access denied';
     this.pageNotFoundMessage = 'Page not found';
+
+    this.pageSubtitle = '#content .page-subtitle';
 
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
@@ -609,6 +613,15 @@ export default class BOBasePage extends CommonPage {
   /*
   Methods
    */
+  /**
+   * Get page subtitle
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPageSubTitle(page: Page): Promise<string> {
+    return this.getTextContent(page, this.pageSubtitle);
+  }
+
   /**
    * Go to dashboard page
    * @param page {Page} Browser tab

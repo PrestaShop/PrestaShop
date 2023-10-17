@@ -57,4 +57,12 @@ export default {
     invoiceOn: false,
     emailTemplate: 'bankwire',
   }),
+  processingInProgress: new OrderStatusData({
+    id: 3,
+    name: 'Processing in progress',
+    sendEmailOn: true,
+    deliveryOn: true,
+    invoiceOn: true,
+    emailTemplate: 'preparation',
+  }),
 };

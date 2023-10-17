@@ -8,6 +8,8 @@ import type {Page} from 'playwright';
  * @extends ModuleConfiguration
  */
 class PsEmailSubscription extends ModuleConfiguration {
+  public readonly pageTitle: string;
+
   private readonly newsletterTable: string;
 
   private readonly newsletterTableBody: string;
@@ -26,6 +28,7 @@ class PsEmailSubscription extends ModuleConfiguration {
    */
   constructor() {
     super();
+    this.pageTitle = 'Newsletter subscription';
 
     // Newsletter registrations table selectors
     this.newsletterTable = '#table-merged';
