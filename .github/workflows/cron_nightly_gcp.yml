@@ -7,12 +7,11 @@ on:
     types:
       - requested
 
-permissions:
-  contents: read
+permissions: write-all
 
 jobs:
   nightly:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest, windows-latest, macos-latest, ios-latest, Android-latest
     name: Nightly
     strategy:
       matrix:
