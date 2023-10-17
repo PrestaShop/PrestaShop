@@ -279,7 +279,6 @@ class AdminSearchControllerCore extends AdminController
         );
         $result = Db::getInstance()->executeS($sql);
         $mainControllers = Dispatcher::getControllers([
-            _PS_ADMIN_DIR_ . '/tabs/',
             _PS_ADMIN_CONTROLLER_DIR_,
             _PS_OVERRIDE_DIR_ . 'controllers/admin/',
         ]);
