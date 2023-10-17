@@ -73,6 +73,10 @@ class Dashboard extends BOBasePage {
     return parseFloat(salesScore);
   }
 
+  async getNumberOfOnlineVisitors(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#online_visitor');
+  }
+
   async clickOnOnlineVisitorsLink(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.onlineVisitorLink);
   }
@@ -122,7 +126,7 @@ class Dashboard extends BOBasePage {
   }
 
   async clickOnNewMessagesLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminCustomerThreads\']');
+    await this.clickAndWaitForURL(page, '#dash_notifications span.data_label a[href*=\'controller=AdminCustomerThreads\']');
   }
 
   async getProductReviewsNumber(page: Page): Promise<number> {
@@ -130,7 +134,7 @@ class Dashboard extends BOBasePage {
   }
 
   async clickOnProductReviewsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminModules\']');
+    await this.clickAndWaitForURL(page, '#dash_notifications span.data_label a[href*=\'controller=AdminModules\']');
   }
 
   async getNewCustomersNumber(page: Page): Promise<number> {
@@ -138,7 +142,7 @@ class Dashboard extends BOBasePage {
   }
 
   async clickOnNewCustomersLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'sell/customers\']');
+    await this.clickAndWaitForURL(page, '#dash_customers span.data_label a[href*=\'sell/customers\']');
   }
 
   async getNewSubscriptionsNumber(page: Page): Promise<number> {
@@ -146,15 +150,35 @@ class Dashboard extends BOBasePage {
   }
 
   async clickOnNewSubscriptionsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminStats\']');
+    await this.clickAndWaitForURL(page, '#dash_customers span.data_label a[href*=\'controller=AdminStats\']');
   }
 
   async getTotalSubscribersNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, '#total_suscribers');
   }
 
-  async clickOnTotalSubscribersLink(page:Page):Promise<void>{
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminModules\']');
+  async clickOnTotalSubscribersLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_customers span.data_label a[href*=\'controller=AdminModules\']');
+  }
+
+  async getNumberOfVisits(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#visits');
+  }
+
+  async clickOnVisitsLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_traffic li:nth-child(1) span.data_label a[href*=\'controller=AdminStats\']');
+  }
+
+  async getNumberOfUniqueVisitors(page: Page): Promise<number> {
+    return this.getNumberFromText(page, '#unique_visitors');
+  }
+
+  async clickOnUniqueVisitorsLink(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, '#dash_traffic li:nth-child(2) span.data_label a[href*=\'controller=AdminStats\']');
+  }
+
+  async getTrafficSources(page:Page):Promise<string>{
+    return this.getTextContent(page, '#dash_traffic_source');
   }
 }
 
