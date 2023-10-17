@@ -79,6 +79,10 @@ class Dashboard extends BOBasePage {
 
   private readonly dashboardTrafficSourceSection: string;
 
+  private readonly configureLink: string;
+
+  private readonly configureForm: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on dashboard page
@@ -125,6 +129,8 @@ class Dashboard extends BOBasePage {
     this.uniqueVisitorsNumber = '#unique_visitors';
     this.uniqueVisitorsLink = `${this.dashboardTrafficSections} li:nth-child(2) span.data_label a[href*='controller=AdminStats']`;
     this.dashboardTrafficSourceSection = '#dash_traffic_source';
+    this.configureLink = '#dashactivity span.panel-heading-action i.process-icon-configure';
+    this.configureForm = '#fieldset_0 div.form-wrapper';
   }
 
   /* Methods */
@@ -169,7 +175,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfOnlineVisitors(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.onlineVisitorsNumber);
+    return this.getNumberFromText(page, this.onlineVisitorsNumber, 1000);
   }
 
   /**
@@ -196,7 +202,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfActiveShoppingCarts(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.activeShoppingCartNumber);
+    return this.getNumberFromText(page, this.activeShoppingCartNumber, 1000);
   }
 
   /**
@@ -214,7 +220,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfOrders(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.ordersNumber);
+    return this.getNumberFromText(page, this.ordersNumber, 1000);
   }
 
   /**
@@ -232,7 +238,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfReturnExchange(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.returnExchangeNumber);
+    return this.getNumberFromText(page, this.returnExchangeNumber, 1000);
   }
 
   /**
@@ -250,7 +256,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfAbandonedCarts(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.abandonedCartsNumber);
+    return this.getNumberFromText(page, this.abandonedCartsNumber, 1000);
   }
 
   /**
@@ -286,7 +292,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfNewMessages(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.newMessagesNumber);
+    return this.getNumberFromText(page, this.newMessagesNumber, 1000);
   }
 
   /**
@@ -295,7 +301,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfProductReviews(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.productReviewsNumber);
+    return this.getNumberFromText(page, this.productReviewsNumber, 1000);
   }
 
   /**
@@ -313,7 +319,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfNewCustomers(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.newCustomersNumber);
+    return this.getNumberFromText(page, this.newCustomersNumber, 1000);
   }
 
   /**
@@ -331,7 +337,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfNewSubscriptions(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.newRegistrationsNumber);
+    return this.getNumberFromText(page, this.newRegistrationsNumber, 1000);
   }
 
   /**
@@ -349,7 +355,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfTotalSubscribers(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.totalSubscribersNumber);
+    return this.getNumberFromText(page, this.totalSubscribersNumber, 1000);
   }
 
   /**
@@ -367,7 +373,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfVisits(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.visitsNumber);
+    return this.getNumberFromText(page, this.visitsNumber, 1000);
   }
 
   /**
@@ -385,7 +391,7 @@ class Dashboard extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfUniqueVisitors(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.uniqueVisitorsNumber);
+    return this.getNumberFromText(page, this.uniqueVisitorsNumber, 1000);
   }
 
   /**
@@ -404,6 +410,17 @@ class Dashboard extends BOBasePage {
    */
   async getTrafficSources(page: Page): Promise<string> {
     return this.getTextContent(page, this.dashboardTrafficSourceSection);
+  }
+
+  /**
+   * Click on configure link
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnConfigureLink(page: Page): Promise<boolean> {
+    await page.locator(this.configureLink).click();
+
+    return this.elementVisible(page, this.configureForm, 1000);
   }
 }
 

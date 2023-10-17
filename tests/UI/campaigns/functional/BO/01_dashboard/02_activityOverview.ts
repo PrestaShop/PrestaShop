@@ -815,6 +815,17 @@ describe('BO - Dashboard : Activity overview', async () => {
     });
   });
 
+  describe('Configuration', async () => {
+    it('should click on configure link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnConfigureLink', baseContext);
+
+      const isConfigureFormVisible = await dashboardPage.clickOnConfigureLink(page);
+      expect(isConfigureFormVisible).to.eq(true);
+    });
+
+    // @todo https://github.com/PrestaShop/PrestaShop/issues/34326
+  });
+
   // Post-condition : Delete created customer
   deleteCustomerTest(createCustomerData, baseContext);
 
