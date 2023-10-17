@@ -424,7 +424,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<string|null>}
    */
-  downloadInvoice(page: Page, row: number): Promise<string | null> {
+  async downloadInvoice(page: Page, row: number): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.viewInvoiceRowLink(row));
   }
 
@@ -434,7 +434,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<string|null>}
    */
-  downloadDeliverySlip(page: Page, row: number): Promise<string | null> {
+  async downloadDeliverySlip(page: Page, row: number): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.viewDeliverySlipsRowLink(row));
   }
 
@@ -444,7 +444,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<Page>} New browser tab to work with
    */
-  viewCustomer(page: Page, row: number): Promise<Page> {
+  async viewCustomer(page: Page, row: number): Promise<Page> {
     return this.openLinkWithTargetBlank(
       page,
       `${this.tableColumn(row, 'customer')} a`,
