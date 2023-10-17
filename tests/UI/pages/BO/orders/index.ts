@@ -208,7 +208,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async exportDataToCsv(page: Page): Promise<string|null> {
+  async exportDataToCsv(page: Page): Promise<string | null> {
     await Promise.all([
       page.click(this.gridActionButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
@@ -268,14 +268,7 @@ class Order extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      const currentUrl: string = page.url();
-
-      if (currentUrl.indexOf('filters') === -1) {
-        await page.locator(this.filterResetButton).click();
-        await page.waitForResponse(async (response) => response.url().indexOf('common/reset_search/order') !== -1);
-      } else {
-        await this.clickAndWaitForURL(page, this.filterResetButton);
-      }
+      await this.clickAndWaitForURL(page, this.filterResetButton);
     }
   }
 
@@ -431,7 +424,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<string|null>}
    */
-  downloadInvoice(page: Page, row: number): Promise<string|null> {
+  downloadInvoice(page: Page, row: number): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.viewInvoiceRowLink(row));
   }
 
@@ -441,7 +434,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<string|null>}
    */
-  downloadDeliverySlip(page: Page, row: number): Promise<string|null> {
+  downloadDeliverySlip(page: Page, row: number): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.viewDeliverySlipsRowLink(row));
   }
 
