@@ -19,6 +19,66 @@ class Dashboard extends BOBasePage {
 
   private readonly activeShoppingCartsLink: string;
 
+  private readonly dashboardLiveSection: string;
+
+  private readonly onlineVisitorsNumber: string;
+
+  private readonly activeShoppingCartNumber: string;
+
+  private readonly dashboardPendingSection: string;
+
+  private readonly dashboardOrdersLink: string;
+
+  private readonly ordersNumber: string;
+
+  private readonly returnExchangeLink: string;
+
+  private readonly returnExchangeNumber: string;
+
+  private readonly abandonedCartsLink: string;
+
+  private readonly abandonedCartsNumber: string;
+
+  private readonly outOfStockProductsLink: string;
+
+  private readonly outOfStockProductsNumber: string;
+
+  private readonly dashboardNotificationsSection: string;
+
+  private readonly newMessagesLink: string;
+
+  private readonly newMessagesNumber: string;
+
+  private readonly productReviewsLink: string;
+
+  private readonly productReviewsNumber: string;
+
+  private readonly dashboardCustomersSection: string;
+
+  private readonly newCustomersNumber: string;
+
+  private readonly newCustomersLink: string;
+
+  private readonly newRegistrationsNumber: string;
+
+  private readonly newSubscriptionsLink: string;
+
+  private readonly totalSubscribersNumber: string;
+
+  private readonly totalSubscribersLink: string;
+
+  private readonly dashboardTrafficSections: string;
+
+  private readonly visitsLink: string;
+
+  private readonly visitsNumber: string;
+
+  private readonly uniqueVisitorsNumber: string;
+
+  private readonly uniqueVisitorsLink: string;
+
+  private readonly dashboardTrafficSourceSection: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on dashboard page
@@ -33,8 +93,38 @@ class Dashboard extends BOBasePage {
     this.demoModeToggle = (toEnable: string) => `.process-icon-toggle-${toEnable}.switch_demo`;
     this.salesScore = '#sales_score';
     // Activity overview selectors
-    this.onlineVisitorLink = '#dash_live span.data_label a[href*=\'controller=AdminStats\']';
-    this.activeShoppingCartsLink = '#dash_live span.data_label a[href*=\'controller=AdminCarts\']';
+    this.dashboardLiveSection = '#dash_live span.data_label';
+    this.onlineVisitorLink = `${this.dashboardLiveSection} a[href*='controller=AdminStats']`;
+    this.onlineVisitorsNumber = '#online_visitor';
+    this.activeShoppingCartsLink = `${this.dashboardLiveSection} a[href*='controller=AdminCarts']`;
+    this.activeShoppingCartNumber = '#active_shopping_cart';
+    this.dashboardPendingSection = '#dash_pending span.data_label';
+    this.dashboardOrdersLink = `${this.dashboardPendingSection} a[href*='sell/orders']`;
+    this.ordersNumber = '#pending_orders';
+    this.returnExchangeLink = `${this.dashboardPendingSection} a[href*='controller=AdminReturn']`;
+    this.returnExchangeNumber = '#return_exchanges';
+    this.abandonedCartsLink = `${this.dashboardPendingSection} a[href*='controller=AdminCarts']`;
+    this.abandonedCartsNumber = '#abandoned_cart';
+    this.outOfStockProductsLink = `${this.dashboardPendingSection} a[href*='catalog/monitoring']`;
+    this.outOfStockProductsNumber = '#products_out_of_stock';
+    this.dashboardNotificationsSection = '#dash_notifications span.data_label';
+    this.newMessagesLink = `${this.dashboardNotificationsSection} a[href*='controller=AdminCustomerThreads']`;
+    this.newMessagesNumber = '#new_messages';
+    this.productReviewsLink = `${this.dashboardNotificationsSection} a[href*='controller=AdminModules']`;
+    this.productReviewsNumber = '#product_reviews';
+    this.dashboardCustomersSection = '#dash_customers span.data_label';
+    this.newCustomersNumber = '#new_customers';
+    this.newCustomersLink = `${this.dashboardCustomersSection} a[href*='sell/customers']`;
+    this.newRegistrationsNumber = '#new_registrations';
+    this.newSubscriptionsLink = `${this.dashboardCustomersSection} a[href*='controller=AdminStats']`;
+    this.totalSubscribersNumber = '#total_suscribers';
+    this.totalSubscribersLink = `${this.dashboardCustomersSection} a[href*='controller=AdminModules']`;
+    this.dashboardTrafficSections = '#dash_traffic';
+    this.visitsLink = `${this.dashboardTrafficSections} li:nth-child(1) span.data_label a[href*='controller=AdminStats']`;
+    this.visitsNumber = '#visits';
+    this.uniqueVisitorsNumber = '#unique_visitors';
+    this.uniqueVisitorsLink = `${this.dashboardTrafficSections} li:nth-child(2) span.data_label a[href*='controller=AdminStats']`;
+    this.dashboardTrafficSourceSection = '#dash_traffic_source';
   }
 
   /* Methods */
@@ -73,112 +163,247 @@ class Dashboard extends BOBasePage {
     return parseFloat(salesScore);
   }
 
+  /**
+   * Get number of online visitors
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
   async getNumberOfOnlineVisitors(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#online_visitor');
+    return this.getNumberFromText(page, this.onlineVisitorsNumber);
   }
 
+  /**
+   * Click on online visitors link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnOnlineVisitorsLink(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.onlineVisitorLink);
   }
 
+  /**
+   * Click active shopping carts link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnActiveShoppingCartsLink(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.activeShoppingCartsLink);
   }
 
-  async getActiveShoppingCarts(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#active_shopping_cart');
+  /**
+   * Get number of active shopping carts
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfActiveShoppingCarts(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.activeShoppingCartNumber);
   }
 
+  /**
+   * Click on orders link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnOrdersLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'sell/orders\']');
+    await this.clickAndWaitForURL(page, this.dashboardOrdersLink);
   }
 
-  async getOrdersNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#pending_orders');
+  /**
+   * Get number of orders
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfOrders(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.ordersNumber);
   }
 
+  /**
+   * Click on return exchange link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnReturnExchangeLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminReturn\']');
+    await this.clickAndWaitForURL(page, this.returnExchangeLink);
   }
 
-  async getReturnExchangeNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#return_exchanges');
+  /**
+   * Get number of return exchange
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfReturnExchange(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.returnExchangeNumber);
   }
 
+  /**
+   * Click on abandoned carts link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnAbandonedCartsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'controller=AdminCarts\']');
+    await this.clickAndWaitForURL(page, this.abandonedCartsLink);
   }
 
-  async getAbandonedCartsNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#abandoned_cart');
+  /**
+   * Get number of abandoned carts
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfAbandonedCarts(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.abandonedCartsNumber);
   }
 
-  async getOutOfStockProducts(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#products_out_of_stock');
-  }
-
+  /**
+   * Click on out of stock products link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnOutOfStockProductsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_pending span.data_label a[href*=\'catalog/monitoring\']');
+    await this.clickAndWaitForURL(page, this.outOfStockProductsLink);
   }
 
-  async getNewMessagesNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#new_messages');
+  /**
+   * Get number of out of stock products
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getOutOfStockProducts(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.outOfStockProductsNumber);
   }
 
+  /**
+   * Click on new messages link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnNewMessagesLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_notifications span.data_label a[href*=\'controller=AdminCustomerThreads\']');
+    await this.clickAndWaitForURL(page, this.newMessagesLink);
   }
 
-  async getProductReviewsNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#product_reviews');
+  /**
+   * Get number of new messages
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfNewMessages(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.newMessagesNumber);
   }
 
+  /**
+   * Get number of reviews
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfProductReviews(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.productReviewsNumber);
+  }
+
+  /**
+   * Click on products reviews link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnProductReviewsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_notifications span.data_label a[href*=\'controller=AdminModules\']');
+    await this.clickAndWaitForURL(page, this.productReviewsLink);
   }
 
-  async getNewCustomersNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#new_customers');
+  /**
+   * Get the number of new customers
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfNewCustomers(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.newCustomersNumber);
   }
 
+  /**
+   * Click on new customers link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnNewCustomersLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_customers span.data_label a[href*=\'sell/customers\']');
+    await this.clickAndWaitForURL(page, this.newCustomersLink);
   }
 
-  async getNewSubscriptionsNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#new_registrations');
+  /**
+   * Get number of new subscriptions
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfNewSubscriptions(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.newRegistrationsNumber);
   }
 
+  /**
+   * Click on new subscriptions link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnNewSubscriptionsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_customers span.data_label a[href*=\'controller=AdminStats\']');
+    await this.clickAndWaitForURL(page, this.newSubscriptionsLink);
   }
 
-  async getTotalSubscribersNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#total_suscribers');
+  /**
+   * Get number of total subscribers
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfTotalSubscribers(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.totalSubscribersNumber);
   }
 
+  /**
+   * Click on total subscribers link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnTotalSubscribersLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_customers span.data_label a[href*=\'controller=AdminModules\']');
+    await this.clickAndWaitForURL(page, this.totalSubscribersLink);
   }
 
+  /**
+   * Get number of visits
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
   async getNumberOfVisits(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#visits');
+    return this.getNumberFromText(page, this.visitsNumber);
   }
 
+  /**
+   * Click on visits link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnVisitsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_traffic li:nth-child(1) span.data_label a[href*=\'controller=AdminStats\']');
+    await this.clickAndWaitForURL(page, this.visitsLink);
   }
 
+  /**
+   * Get number of unique visitors
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
   async getNumberOfUniqueVisitors(page: Page): Promise<number> {
-    return this.getNumberFromText(page, '#unique_visitors');
+    return this.getNumberFromText(page, this.uniqueVisitorsNumber);
   }
 
+  /**
+   * Click on unique visitors link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnUniqueVisitorsLink(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, '#dash_traffic li:nth-child(2) span.data_label a[href*=\'controller=AdminStats\']');
+    await this.clickAndWaitForURL(page, this.uniqueVisitorsLink);
   }
 
-  async getTrafficSources(page:Page):Promise<string>{
-    return this.getTextContent(page, '#dash_traffic_source');
+  /**
+   * Get traffic sources
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getTrafficSources(page: Page): Promise<string> {
+    return this.getTextContent(page, this.dashboardTrafficSourceSection);
   }
 }
 

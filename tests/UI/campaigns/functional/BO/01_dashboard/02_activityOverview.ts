@@ -197,7 +197,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get the number of active shopping carts', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfActiveShoppingCarts', baseContext);
 
-        activeShoppingCarts = await dashboardPage.getActiveShoppingCarts(page);
+        activeShoppingCarts = await dashboardPage.getNumberOfActiveShoppingCarts(page);
       });
 
       it('should view my shop', async function () {
@@ -286,7 +286,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check the number of active shopping carts', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfShoppingCarts', baseContext);
 
-        const newActiveShoppingCarts = await dashboardPage.getActiveShoppingCarts(page);
+        const newActiveShoppingCarts = await dashboardPage.getNumberOfActiveShoppingCarts(page);
         expect(newActiveShoppingCarts).to.eq(activeShoppingCarts + 1);
       });
     });
@@ -297,7 +297,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get Orders number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrdersNumber', baseContext);
 
-        ordersNumber = await dashboardPage.getOrdersNumber(page);
+        ordersNumber = await dashboardPage.getNumberOfOrders(page);
       });
 
       it('should click on Orders link and check Orders page', async function () {
@@ -328,7 +328,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check Orders number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersNumber', baseContext);
 
-        const newOrdersNumber = await dashboardPage.getOrdersNumber(page);
+        const newOrdersNumber = await dashboardPage.getNumberOfOrders(page);
         expect(newOrdersNumber).to.eq(ordersNumber + 1);
       });
     });
@@ -337,7 +337,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get Return/Exchange number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getReturnExchangeNumber', baseContext);
 
-        numberOfReturnExchanges = await dashboardPage.getReturnExchangeNumber(page);
+        numberOfReturnExchanges = await dashboardPage.getNumberOfReturnExchange(page);
       });
 
       it('should click on Return/Exchange link and check merchandise returns page', async function () {
@@ -436,9 +436,9 @@ describe('BO - Dashboard : Activity overview', async () => {
 
       // @todo https://github.com/PrestaShop/PrestaShop/issues/34321
       it.skip('should check Return/Exchange number', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'getReturnExchangeNumber', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'checkReturnExchangeNumber', baseContext);
 
-        const newNumberOfReturnExchanges = await dashboardPage.getReturnExchangeNumber(page);
+        const newNumberOfReturnExchanges = await dashboardPage.getNumberOfReturnExchange(page);
         expect(newNumberOfReturnExchanges).to.eq(numberOfReturnExchanges + 1);
       });
     });
@@ -447,7 +447,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check Abandoned carts number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getAbandonedCartsNumber', baseContext);
 
-        const abandonedCartsNumber = await dashboardPage.getAbandonedCartsNumber(page);
+        const abandonedCartsNumber = await dashboardPage.getNumberOfAbandonedCarts(page);
         expect(abandonedCartsNumber).to.eq(0);
       });
 
@@ -547,7 +547,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get new message number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNewMessagesNumber', baseContext);
 
-        messagesNumber = await dashboardPage.getNewMessagesNumber(page);
+        messagesNumber = await dashboardPage.getNumberOfNewMessages(page);
       });
 
       it('should click on New messages link and check Customer service page', async function () {
@@ -608,7 +608,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check the number of new messages', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfNewMessages', baseContext);
 
-        const newMessagesNumber = await dashboardPage.getNewMessagesNumber(page);
+        const newMessagesNumber = await dashboardPage.getNumberOfNewMessages(page);
         expect(newMessagesNumber).to.eq(messagesNumber + 1);
       });
     });
@@ -617,7 +617,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get the number of product reviews', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductReviews', baseContext);
 
-        const productReviewsNumber = await dashboardPage.getProductReviewsNumber(page);
+        const productReviewsNumber = await dashboardPage.getNumberOfProductReviews(page);
         expect(productReviewsNumber).to.eq(0);
       });
 
@@ -645,19 +645,19 @@ describe('BO - Dashboard : Activity overview', async () => {
     it('should get the number of customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfCustomers', baseContext);
 
-      newCustomersNumber = await dashboardPage.getNewCustomersNumber(page);
+      newCustomersNumber = await dashboardPage.getNumberOfNewCustomers(page);
     });
 
     it('should get the number of new subscriptions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfNewSubscriptions', baseContext);
 
-      newSubscriptionsNumber = await dashboardPage.getNewSubscriptionsNumber(page);
+      newSubscriptionsNumber = await dashboardPage.getNumberOfNewSubscriptions(page);
     });
 
     it('should get the number of total subscribers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfTotalSubscribers', baseContext);
 
-      totalSubscribersNumber = await dashboardPage.getTotalSubscribersNumber(page);
+      totalSubscribersNumber = await dashboardPage.getNumberOfTotalSubscribers(page);
     });
 
     describe('Check Customers', async () => {
@@ -693,7 +693,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check the number of new customers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfNewCustomer', baseContext);
 
-        const newCustomers = await dashboardPage.getNewCustomersNumber(page);
+        const newCustomers = await dashboardPage.getNumberOfNewCustomers(page);
         expect(newCustomers).to.eq(newCustomersNumber + 1);
       });
     });
@@ -702,7 +702,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check the number of new subscriptions', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfNewSubscriptions', baseContext);
 
-        const newSubscriptions = await dashboardPage.getNewSubscriptionsNumber(page);
+        const newSubscriptions = await dashboardPage.getNumberOfNewSubscriptions(page);
         expect(newSubscriptions).to.eq(newSubscriptionsNumber + 1);
       });
 
@@ -729,7 +729,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check the number of total subscribers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfTotalSubscribers', baseContext);
 
-        const newTotalSubscribers = await dashboardPage.getTotalSubscribersNumber(page);
+        const newTotalSubscribers = await dashboardPage.getNumberOfTotalSubscribers(page);
         expect(newTotalSubscribers).to.eq(totalSubscribersNumber + 1);
       });
 
