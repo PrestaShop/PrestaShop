@@ -42,8 +42,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
 
-#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/head.html.twig')]
-class Head
+#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/head_tag.html.twig')]
+class HeadTag
 {
     private string $metaTitle;
 

@@ -33,7 +33,7 @@
       {% block core_javascript %}
         {% include '@PrestaShop/Admin/Layout/core_javascript.html.twig' %}
       {% endblock %}
-      {{ component('Head', { metaTitle: metaTitle }) }}
+      {{ component('HeadTag', { metaTitle: metaTitle }) }}
       {% block stylesheets %}
         {% include '@PrestaShop/Admin/Layout/stylesheets.html.twig' %}
       {% endblock %}
