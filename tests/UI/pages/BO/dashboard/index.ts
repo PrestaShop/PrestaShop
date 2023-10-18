@@ -113,6 +113,12 @@ class Dashboard extends BOBasePage {
 
   private readonly configureProductsAndSalesForm: string;
 
+  private readonly helpCardButton: string;
+
+  private readonly helpCardDocument: string;
+
+  private readonly helpCardDocumentTitle: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on dashboard page
@@ -126,6 +132,10 @@ class Dashboard extends BOBasePage {
     this.demoModeButton = '#page-header-desc-configuration-switch_demo';
     this.demoModeToggle = (toEnable: string) => `.process-icon-toggle-${toEnable}.switch_demo`;
     this.salesScore = '#sales_score';
+    // Selectors of help card
+    this.helpCardButton = '#toolbar-nav a.btn-help';
+    this.helpCardDocument = '#help-container div.page-wrap';
+    this.helpCardDocumentTitle = '#help-container section.article h1';
     // Selectors of Products and sales block
     this.recentOrdersTitle = '#dash_recent_orders div.panel-heading';
     this.recentOrdersTable = '#table_recent_orders';
@@ -578,6 +588,37 @@ class Dashboard extends BOBasePage {
     await page.locator(this.configureProductsAndSalesLink).click();
 
     return this.elementVisible(page, this.configureProductsAndSalesForm, 1000);
+  }
+
+  /**
+   * Open help sidebar
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async openHelpCard(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.helpCardButton);
+
+    return this.elementVisible(page, this.helpCardDocument, 2000);
+  }
+
+  /**
+   * Close help sidebar
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpCard(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.helpCardButton);
+
+    return this.elementNotVisible(page, this.helpCardDocument, 2000);
+  }
+
+  /**
+   * Get help document title
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentTitle(page: Page): Promise<string> {
+    return this.getTextContent(page, this.helpCardDocumentTitle);
   }
 }
 
