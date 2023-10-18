@@ -79,7 +79,7 @@ class CartRuleCore extends ObjectModel
     /** @var bool */
     public $group_restriction;
     /** @var bool */
-    public $cart_rule_restriction;
+    public $cart_rule_restriction = 1;
     /** @var bool */
     public $product_restriction;
     /** @var bool */
@@ -157,6 +157,12 @@ class CartRuleCore extends ObjectModel
             ],
         ],
     ];
+
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    {
+        parent::__construct($id, $id_lang, $id_shop);
+        $this->cart_rule_restriction = 1;
+    }
 
     public static function resetStaticCache()
     {
@@ -904,7 +910,7 @@ class CartRuleCore extends ObjectModel
                 }
 
                 if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'] && $otherCartRule['id_cart_rule'] != $this->id) {
-                    $combinable = Db::getInstance()->getValue('
+                    $combinable = !Db::getInstance()->getValue('
 					SELECT id_cart_rule_1
 					FROM ' . _DB_PREFIX_ . 'cart_rule_combination
 					WHERE (id_cart_rule_1 = ' . (int) $this->id . ' AND id_cart_rule_2 = ' . (int) $otherCartRule['id_cart_rule'] . ')
@@ -1533,8 +1539,7 @@ class CartRuleCore extends ObjectModel
 		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) Context::getContext()->language->id . ')
 		WHERE cr.id_cart_rule != ' . (int) $this->id . ($search ? ' AND crl.name LIKE "%' . pSQL($search) . '%"' : '') . '
 		AND (
-			cr.cart_rule_restriction = 0
-			OR EXISTS (
+			EXISTS (
 				SELECT 1
 				FROM ' . _DB_PREFIX_ . 'cart_rule_combination
 				WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_1 AND ' . (int) $this->id . ' = id_cart_rule_2
@@ -1552,8 +1557,8 @@ class CartRuleCore extends ObjectModel
 		INNER JOIN ' . _DB_PREFIX_ . 'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) Context::getContext()->language->id . ')
 		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_combination crc1 ON (cr.id_cart_rule = crc1.id_cart_rule_1 AND crc1.id_cart_rule_2 = ' . (int) $this->id . ')
 		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_combination crc2 ON (cr.id_cart_rule = crc2.id_cart_rule_2 AND crc2.id_cart_rule_1 = ' . (int) $this->id . ')
-		WHERE cr.cart_rule_restriction = 1
-		AND cr.id_cart_rule != ' . (int) $this->id . ($search ? ' AND crl.name LIKE "%' . pSQL($search) . '%"' : '') . '
+		WHERE
+		cr.id_cart_rule != ' . (int) $this->id . ($search ? ' AND crl.name LIKE "%' . pSQL($search) . '%"' : '') . '
 		AND crc1.id_cart_rule_1 IS NULL
 		AND crc2.id_cart_rule_1 IS NULL  ORDER BY cr.id_cart_rule' . $sql_limit);
 
@@ -1621,6 +1626,10 @@ class CartRuleCore extends ObjectModel
                 (in_array($type, ['carrier', 'shop']) ? ' ORDER BY t.name ASC ' : '') .
                 (in_array($type, ['country', 'group', 'cart_rule']) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                 $sql_limit);
+            if ($type == 'cart_rule') {
+                $array['unselected'] = $array['selected'];
+                $array['selected'] = [];
+            }
         } else {
             if ($type == 'cart_rule') {
                 $array = $this->getCartRuleCombinations($offset, $limit, $search_cart_rule_name);
