@@ -13,8 +13,8 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_dashboard_helpCard';
 
-// Check help card language in dashboard page
-describe('BO - dashboard : Help card in order page', async () => {
+// Check help card in dashboard page
+describe('BO - dashboard : Help card in dashboard page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
