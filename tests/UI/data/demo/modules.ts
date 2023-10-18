@@ -13,6 +13,11 @@ export default {
     tag: 'ps_checkpayment',
     name: 'Payments by check',
   }),
+  psEmailAlerts: new ModuleData({
+    tag: 'ps_emailalerts',
+    name: 'Mail alerts',
+    releaseZip: 'https://github.com/PrestaShop/ps_emailalerts/releases/download/v2.4.2/ps_emailalerts.zip',
+  }),
   psEmailSubscription: new ModuleData({
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
