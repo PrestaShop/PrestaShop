@@ -307,7 +307,7 @@ class CustomerType extends TranslatorAwareType
                     'label' => $this->trans('APE', 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                     'constraints' => [
-                       new Regex([
+                        new Regex([
                             'pattern' => '/^[0-9]{1,2}?\.?[0-9]{1,2}[a-zA-Z]{1}$/s',
                             'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                         ]),
