@@ -10,8 +10,8 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 import monitoringPage from '@pages/BO/catalog/monitoring';
-import productsPage from '@pages/BO/catalog/productsV2';
-import createProductPage from '@pages/BO/catalog/productsV2/add';
+import productsPage from '@pages/BO/catalog/products';
+import createProductPage from '@pages/BO/catalog/products/add';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import productCommentsPage from '@pages/BO/modules/productComments';
 import newsletterSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
@@ -34,7 +34,7 @@ import addCustomerPage from '@pages/BO/customers/add';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
-import {deleteProductV2Test} from '@commonTests/BO/catalog/product';
+import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import data
@@ -830,7 +830,7 @@ describe('BO - Dashboard : Activity overview', async () => {
   deleteCustomerTest(createCustomerData, baseContext);
 
   // Post-condition : Delete created product
-  deleteProductV2Test(productData, baseContext);
+  deleteProductTest(productData, baseContext);
 
   // Post-condition : Disable merchandise returns
   disableMerchandiseReturns(baseContext);
