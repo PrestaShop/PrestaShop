@@ -95,7 +95,7 @@ class ShoppingCarts extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Shopping Carts •';
+    this.pageTitle = `Shopping Carts • ${global.INSTALL.SHOP_NAME}`;
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Selectors

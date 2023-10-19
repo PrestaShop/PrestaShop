@@ -8,6 +8,8 @@ import type {Page} from 'playwright';
  * @extends ModuleConfiguration
  */
 class ProductComments extends ModuleConfiguration {
+  public readonly pageTitle: string;
+
   private readonly reviewsTable: (table: string) => string;
 
   private readonly reviewsTableBody: (table: string) => string;
@@ -36,6 +38,7 @@ class ProductComments extends ModuleConfiguration {
    */
   constructor() {
     super();
+    this.pageTitle = 'Product Comments';
 
     // Selectors
     // Table Selectors
@@ -164,11 +167,11 @@ class ProductComments extends ModuleConfiguration {
   }
 
   /**
-  * Approve a review in the "waiting for approval table"
-  * @param page {Page} Browser tab
-  * @param row {number} The review row
-  * @returns {Promise<void>}
-  */
+   * Approve a review in the "waiting for approval table"
+   * @param page {Page} Browser tab
+   * @param row {number} The review row
+   * @returns {Promise<void>}
+   */
   async approveReview(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForURL(page, this.approveWaitingReviewButton('waiting-approval', row));
   }
@@ -218,12 +221,12 @@ class ProductComments extends ModuleConfiguration {
   }
 
   /**
-  * Confirm a review in the "reported review" table
-  * @param page {Page} Browser tab
-  * @param table {string} The review table
-  * @param row {number} The review row
-  * @returns {Promise<void>}
-  */
+   * Confirm a review in the "reported review" table
+   * @param page {Page} Browser tab
+   * @param table {string} The review table
+   * @param row {number} The review row
+   * @returns {Promise<void>}
+   */
   async confirmNotAbusiveReview(page: Page, table: string, row: number = 1): Promise<void> {
     await this.openProductReviewDropdown(page, 'reported', row);
     await this.waitForVisibleSelector(page, this.confirmNotAbusiveReviewButton(table, row));
