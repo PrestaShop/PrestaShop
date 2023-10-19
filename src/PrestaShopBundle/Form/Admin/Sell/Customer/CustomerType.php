@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as DomainEmail;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use PrestaShopBundle\Form\Admin\Type\ApeType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -50,7 +51,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Validate;
 
@@ -303,15 +303,9 @@ class CustomerType extends TranslatorAwareType
                     'label' => $this->trans('SIRET', 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                 ])
-                ->add('ape_code', TextType::class, [
+                ->add('ape_code', ApeType::class, [
                     'label' => $this->trans('APE', 'Admin.Orderscustomers.Feature'),
                     'required' => false,
-                    'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[0-9]{1,2}?\.?[0-9]{1,2}[a-zA-Z]{1}$/s',
-                            'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
-                        ]),
-                    ],
                 ])
                 ->add('website', TextType::class, [
                     'label' => $this->trans('Website', 'Admin.Orderscustomers.Feature'),
