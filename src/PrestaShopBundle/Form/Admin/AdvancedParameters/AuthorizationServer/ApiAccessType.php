@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
-use PrestaShopBundle\ApiPlatform\ResourceScopeProvider;
+use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,17 +45,26 @@ class ApiAccessType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly ResourceScopeProvider $resourceScopeProvider
+        private readonly ResourceScopesExtractor $resourceScopeExtractor
     ) {
         parent::__construct($translator, $locales);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $scopes = $this->resourceScopeProvider->getScopes();
+        $resourceScopes = $this->resourceScopeExtractor->getScopes();
         $scopeChoices = [];
-        foreach ($scopes as $scope) {
-            $scopeChoices[$scope] = $scope;
+        foreach ($resourceScopes as $resourceScope) {
+            $resourceScopesChoices = [];
+            foreach ($resourceScope->getScopes() as $scope) {
+                $resourceScopesChoices[$scope] = $scope;
+            }
+
+            if ($resourceScope->fromCore()) {
+                $scopeChoices['Core'] = $resourceScopesChoices;
+            } else {
+                $scopeChoices[$resourceScope->getModuleName()] = $resourceScopesChoices;
+            }
         }
 
         $builder

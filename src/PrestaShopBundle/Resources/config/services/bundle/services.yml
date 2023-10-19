@@ -137,11 +137,15 @@ services:
       [ !tagged prestashop.api.denormalizers ]
 
   prestashop.attributes.ressource.metadata.collection.factory:
-    class: PrestaShopBundle\ApiPlatform\Decorator\ScopesToSecurityMetadataCollectionFactoryDecorator
+    class: PrestaShopBundle\ApiPlatform\Metadata\ScopesToSecurityMetadataCollectionFactoryDecorator
     decorates: api_platform.metadata.resource.metadata_collection_factory
     arguments:
       $innerFactory: '@prestashop.attributes.ressource.metadata.collection.factory.inner'
 
-  PrestaShopBundle\ApiPlatform\ResourceScopeProvider:
+  PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor:
     public: false
     autowire: true
+    arguments:
+      $moduleDir: '%prestashop.module_dir%'
+      $installedModules: '%prestashop.installed_modules%'
+      $projectDir: '%kernel.project_dir%'

@@ -26,24 +26,76 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform;
+namespace PrestaShopBundle\ApiPlatform\Scopes;
 
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 
-class ResourceScopeProvider
+/**
+ * @internal
+ */
+class ResourceScopesExtractor
 {
     public function __construct(
-        private readonly ResourceNameCollectionFactoryInterface $resourceExtractor,
-        private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory
+        private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
+        private readonly string $moduleDir,
+        private readonly array $installedModules,
+        private readonly string $projectDir
     ) {
     }
 
+    /**
+     * @return ResourceScopes[]
+     */
     public function getScopes(): array
     {
+        $resourceScopes = [];
+
+        // First extract scopes from the core
+        $coreScopes = $this->extractScopes(new AttributesResourceNameCollectionFactory([
+            $this->projectDir . '/src/PrestaShopBundle/ApiPlatform/Resources',
+        ]));
+        if (!empty($coreScopes)) {
+            $resourceScopes[] = ResourceScopes::createCoreScopes($coreScopes);
+        }
+
+        foreach ($this->installedModules as $moduleName) {
+            $moduleScopes = $this->extractScopes(new AttributesResourceNameCollectionFactory(
+                $this->getModulePaths($moduleName)
+            ));
+            if (!empty($moduleScopes)) {
+                $resourceScopes[] = ResourceScopes::createModuleScopes($moduleScopes, $moduleName);
+            }
+        }
+
+        return $resourceScopes;
+    }
+
+    private function getModulePaths(string $moduleName): array
+    {
+        $paths = [];
+        $modulePath = $this->moduleDir . $moduleName;
+        // Load YAML definition from the config/api_platform folder in the module
+        $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
+        if (file_exists($moduleConfigPath)) {
+            $paths[] = $moduleConfigPath;
+        }
+
+        // Folder containing ApiPlatform resources classes
+        $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);
+        if (file_exists($moduleRessourcesPath)) {
+            $paths[] = $moduleRessourcesPath;
+        }
+
+        return $paths;
+    }
+
+    private function extractScopes(ResourceNameCollectionFactoryInterface $resourceExtractor): array
+    {
         $scopes = [];
-        foreach ($this->resourceExtractor->create() as $resourceName) {
+        foreach ($resourceExtractor->create() as $resourceName) {
             $resourceMetadata = $this->resourceMetadataCollectionFactory->create($resourceName);
             foreach ($resourceMetadata as $resource) {
                 /** @var Operation $operation */

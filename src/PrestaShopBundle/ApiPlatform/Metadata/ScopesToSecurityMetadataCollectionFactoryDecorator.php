@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Decorator;
+namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
