@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import createAPIAccessTest from '@commonTests/BO/advancedParameters/authServer';
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import apiAccessPage from 'pages/BO/advancedParameters/APIAccess';
