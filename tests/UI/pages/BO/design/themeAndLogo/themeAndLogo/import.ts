@@ -77,7 +77,7 @@ class ImportTheme extends themeAndLogoBasePage {
    */
   async importFromFTP(page: Page, zipName: string): Promise<void> {
     await this.selectByVisibleText(page, this.selectArchive, zipName);
-    await page.click(this.importFTPSubmit);
+    await this.clickAndWaitForURL(page, this.importFTPSubmit);
   }
 }
 
