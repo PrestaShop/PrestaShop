@@ -160,8 +160,6 @@ describe('Mail alerts module - Uninstall and install module', async () => {
 
       await categoryPage.goToNextPage(page);
 
-      console.log(idProduct);
-
       nthProduct = await categoryPage.getNThChildFromIDProduct(page, idProduct);
       expect(nthProduct).to.not.eq(null);
     });
