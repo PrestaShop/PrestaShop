@@ -264,11 +264,9 @@ class StocksTab extends BOBasePage {
    */
   async setLabelWhenInStock(page: Page, label: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.productLabelAvailableNowDropdown);
-    await this.waitForSelectorAndClick(page, this.productLabelAvailableNowDropdownItem('en'));
-    await page.evaluate(
-      (selector: string) => (document.querySelector(selector) as HTMLElement).click(),
-      this.productLabelAvailableNowDropdownItem('en'),
-    );
+    await page
+      .locator(this.productLabelAvailableNowDropdownItem('en'))
+      .evaluate((el: HTMLElement) => el.click());
     await this.setValue(page, this.productLabelAvailableNowInput('1'), label);
   }
 
@@ -279,11 +277,9 @@ class StocksTab extends BOBasePage {
    */
   async setLabelWhenOutOfStock(page: Page, label: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.productLabelAvailableLaterDropdown);
-    await this.waitForSelectorAndClick(page, this.productLabelAvailableLaterDropdownItem('en'));
-    await page.evaluate(
-      (selector: string) => (document.querySelector(selector) as HTMLElement).click(),
-      this.productLabelAvailableLaterDropdownItem('en'),
-    );
+    await page
+      .locator(this.productLabelAvailableLaterDropdownItem('en'))
+      .evaluate((el: HTMLElement) => el.click());
     await this.setValue(page, this.productLabelAvailableLaterInput('1'), label);
   }
 
