@@ -2,14 +2,6 @@
 import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
 
-// Import commonTests
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
-
-// Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 
@@ -31,9 +23,6 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
   let browserContext: BrowserContext;
   let page: Page;
   let allProductsNumber: number = 0;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -83,7 +72,4 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
       expect(numberOfProducts).to.be.below(allProductsNumber);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

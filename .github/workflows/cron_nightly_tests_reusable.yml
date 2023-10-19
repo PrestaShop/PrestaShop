@@ -159,6 +159,8 @@ jobs:
             CAMPAIGN: 'functional:FO:08-12'
           - BRANCH: develop
             CAMPAIGN: 'sanity:productV2'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:productV2'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test

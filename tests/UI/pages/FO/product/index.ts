@@ -53,9 +53,9 @@ class Product extends FOBasePage {
 
   private readonly continueShoppingButton: string;
 
-  private readonly productAvailabilityIcon: string;
-
   private readonly productAvailability: string;
+
+  private readonly productAvailabilityIcon: string;
 
   private readonly productSizeSelect: string;
 
@@ -179,8 +179,8 @@ class Product extends FOBasePage {
     this.productDetail = 'div.product-information a[href=\'#product-details\']';
     this.productFeaturesList = '#product-details section.product-features';
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
-    this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
+    this.productAvailabilityIcon = `${this.productAvailability} i`;
     this.productSizeSelect = '#group_1';
     this.productSizeOption = (size: string) => `${this.productSizeSelect} option[title=${size}]`;
     this.productColorUl = '#group_2';

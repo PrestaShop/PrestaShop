@@ -5,14 +5,9 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // BO
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import boDashboardPage from '@pages/BO/dashboard';
 import boProductsPage from '@pages/BO/catalog/products';
 import boAddProductPage from '@pages/BO/catalog/products/add';
@@ -61,7 +56,7 @@ describe('FO - product page : Product quick view', async () => {
   const attributesQty = 4;
   const attributesTotalTaxInc = 91.78;
   const productData: ProductData = new ProductData({
-    type: 'Standard product',
+    type: 'standard',
     productHasCombinations: false,
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -104,9 +99,6 @@ describe('FO - product page : Product quick view', async () => {
       value: 'White',
     },
   ];
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -433,13 +425,38 @@ describe('FO - product page : Product quick view', async () => {
         expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
-      it('should create Product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+      it('should click on \'New product\' button and check new product modal', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-        await boProductsPage.goToAddProductPage(page);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.eq(true);
+      });
 
-        const createProductMessage = await boAddProductPage.createEditBasicProduct(page, productData);
-        expect(createProductMessage).to.equal(boAddProductPage.settingUpdatedMessage);
+      it('should choose \'Standard product\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+        await boProductsPage.selectProductType(page, productData.type);
+
+        const pageTitle = await boAddProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boAddProductPage.pageTitle);
+      });
+
+      it('should go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+        await boProductsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await boAddProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boAddProductPage.pageTitle);
+      });
+
+      it('should create product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+        await boAddProductPage.closeSfToolBar(page);
+
+        const createProductMessage = await boAddProductPage.setProduct(page, productData);
+        expect(createProductMessage).to.equal(boAddProductPage.successfulUpdateMessage);
       });
 
       it('should logout from BO', async function () {
@@ -499,18 +516,23 @@ describe('FO - product page : Product quick view', async () => {
         expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
+      it('should click on delete product button', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct2', baseContext);
+
+        const isModalVisible = await boProductsPage.clickOnDeleteProductButton(page);
+        expect(isModalVisible).to.be.eq(true);
+      });
+
       it('should delete product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-        await boProductsPage.resetFilter(page);
-        const testResult = await boProductsPage.deleteProduct(page, productData);
-        expect(testResult).to.equal(boProductsPage.productDeletedSuccessfulMessage);
+        const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
+        expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-        await boProductsPage.resetFilterCategory(page);
         const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
         expect(numberOfProducts).to.be.above(0);
       });
@@ -520,7 +542,4 @@ describe('FO - product page : Product quick view', async () => {
       });
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

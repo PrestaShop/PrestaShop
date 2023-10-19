@@ -205,7 +205,7 @@ type ProductReviewCreator = {
 };
 
 type ProductSpecificPrice = {
-  attributes: string | null
+  attributes: number | null
   discount: number
   startingAt: number
   reductionType: string

@@ -4,14 +4,9 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 // Import FO pages
@@ -28,9 +23,6 @@ describe('FO - Home Page : Display all products', async () => {
   let page: Page;
   let numberOfActiveProducts: number;
   let numberOfProducts: number;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -71,7 +63,7 @@ describe('FO - Home Page : Display all products', async () => {
     it('should filter by Active Status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByStatus', baseContext);
 
-      await productsPage.filterProducts(page, 'active', 'Active', 'select');
+      await productsPage.filterProducts(page, 'active', 'Yes', 'select');
 
       numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfActiveProducts).to.within(0, numberOfProducts);
@@ -138,7 +130,4 @@ describe('FO - Home Page : Display all products', async () => {
       expect(listOfProductDisplayed).to.be.above(0);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

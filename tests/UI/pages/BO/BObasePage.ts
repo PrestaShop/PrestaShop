@@ -630,6 +630,17 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Quick access to page with frame
+   * @param page {Page} Browser tab
+   * @param linkId {number} Page ID
+   * @returns {Promise<Page>}
+   */
+  async quickAccessToPageWithFrame(page: Page, linkId: number): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.quickAccessLink(linkId));
+  }
+
+  /**
    * Click on link from Quick access dropdown toggle and get the opened Page
    * @param page {Page} Browser tab
    * @param linkId {number} Page ID

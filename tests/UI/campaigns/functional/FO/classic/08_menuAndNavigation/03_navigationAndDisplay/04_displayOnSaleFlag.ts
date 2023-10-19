@@ -4,11 +4,9 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
@@ -37,12 +35,9 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
 
   const onSaleProductData: ProductData = new ProductData({
     name: 'On sale product',
-    type: 'Standard product',
+    type: 'standard',
     onSale: true,
   });
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -70,22 +65,25 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should go to add product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage2', baseContext);
+    it('should click on new product button and go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
 
-      await productsPage.goToAddProductPage(page);
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.eq(true);
+
+      await productsPage.selectProductType(page, onSaleProductData.type);
+
+      await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
-    it(`create product '${onSaleProductData.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+    it('should create standard product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-      await addProductPage.setProduct(page, onSaleProductData);
-
-      const createProductMessage = await addProductPage.displayOnSaleFlag(page, true);
-      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      const createProductMessage = await addProductPage.setProduct(page, onSaleProductData);
+      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
     });
   });
 
@@ -109,7 +107,4 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
 
   // Post-condition: Delete created product
   deleteProductTest(onSaleProductData, `${baseContext}_deleteProduct`);
-
-  // Post-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 });

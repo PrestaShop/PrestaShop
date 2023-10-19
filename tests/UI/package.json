@@ -66,7 +66,6 @@
     "test:functional:BO:advanced-parameters:07-10": "TEST_PATH='functional/BO/14_advancedParameters/{0[7-9],10}*/**/*' npm run test:specific",
     "test:functional:BO:advanced-parameters:11-12": "TEST_PATH='functional/BO/14_advancedParameters/{11,12}*/**/*' npm run test:specific",
     "test:functional:BO:header": "TEST_PATH='functional/BO/15_header/**/*' npm run test:specific",
-    "test:functional:productV2": "TEST_PATH='productV2/functional/**/*' npm run test:specific",
     "// Functional FO": "Scripts to run functional FO tests",
     "test:functional:FO": "TEST_PATH='functional/FO/**/*' npm run test:specific",
     "// Functional FO - Classic": "Scripts to run functional FO Classic tests",

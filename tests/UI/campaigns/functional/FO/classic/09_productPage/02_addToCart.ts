@@ -5,14 +5,9 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // BO
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import boDashboardPage from '@pages/BO/dashboard';
 import boProductsPage from '@pages/BO/catalog/products';
 import boAddProductPage from '@pages/BO/catalog/products/add';
@@ -66,7 +61,7 @@ describe('FO - product page : Add product to cart', async () => {
     },
   ];
   const productData: ProductData = new ProductData({
-    type: 'Standard product',
+    type: 'standard',
     productHasCombinations: false,
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -74,9 +69,6 @@ describe('FO - product page : Add product to cart', async () => {
 
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -240,14 +232,25 @@ describe('FO - product page : Add product to cart', async () => {
         const pageTitle = await boProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
+      it('should click on new product button and go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
 
-      it('should create Product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.eq(true);
 
-        await boProductsPage.goToAddProductPage(page);
+        await boProductsPage.selectProductType(page, productData.type);
 
-        const createProductMessage = await boAddProductPage.createEditBasicProduct(page, productData);
-        expect(createProductMessage).to.equal(boAddProductPage.settingUpdatedMessage);
+        await boProductsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await boAddProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boAddProductPage.pageTitle);
+      });
+
+      it('should create standard product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+        const createProductMessage = await boAddProductPage.setProduct(page, productData);
+        expect(createProductMessage).to.equal(boAddProductPage.successfulUpdateMessage);
       });
 
       it('should logout from BO', async function () {
@@ -307,18 +310,23 @@ describe('FO - product page : Add product to cart', async () => {
         expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
+      it('should click on delete product button', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
+
+        const isModalVisible = await boProductsPage.clickOnDeleteProductButton(page);
+        expect(isModalVisible).to.be.eq(true);
+      });
+
       it('should delete product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-        await boProductsPage.resetFilter(page);
-        const testResult = await boProductsPage.deleteProduct(page, productData);
-        expect(testResult).to.equal(boProductsPage.productDeletedSuccessfulMessage);
+        const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
+        expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-        await boProductsPage.resetFilterCategory(page);
         const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
         expect(numberOfProducts).to.be.above(0);
       });
@@ -373,7 +381,4 @@ describe('FO - product page : Add product to cart', async () => {
       });
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
