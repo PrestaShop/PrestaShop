@@ -21,7 +21,7 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_authorizationServer_editAPIAccess';
 
-describe('BO - Advanced Parameter - API Access : Edit API Access', async () => {
+describe('BO - Advanced Parameter - Authorization Server : Edit API Access', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
