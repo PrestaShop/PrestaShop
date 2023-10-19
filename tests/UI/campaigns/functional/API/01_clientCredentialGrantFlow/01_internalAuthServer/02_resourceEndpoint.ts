@@ -20,7 +20,7 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
     it('should request the authorization endpoint and fetch valid token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthorizationEndpoint', baseContext);
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/33710
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34297
       const apiResponse = await apiContext.post('api/oauth2/token', {
         form: {
           client_id: 'my_client_id',
