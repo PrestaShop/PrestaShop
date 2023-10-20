@@ -22,54 +22,56 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-<div class="dropdown quick-accesses">
-  <button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="quick_select">
-    {{ 'Quick Access'|trans({}, 'Admin.Navigation.Header') }}
-  </button>
-  <div class="dropdown-menu">
-    {% for quickAccess in this.quickAccesses %}
-      <a class="dropdown-item quick-row-link
-        {% if quickAccess.class is defined %}{{ quickAccess.class|escape('html_attr') }}{% endif %}
-        {% if quickAccess.active %}active{% endif %}"
-      href="{{ quickAccess.link|escape('html_attr') }}"
-      {% if quickAccess.new_window %} target="_blank"{% endif %}
-      data-item="{{ quickAccess.name }}"
-      >{{ quickAccess.name|escape('html_attr') }}</a>
-    {% endfor %}
-    <div class="dropdown-divider"></div>
-    {% if this.currentQuickAccess %}
-      <a id="quick-remove-link"
-         class="dropdown-item js-quick-link"
-         href="#"
-         data-method="remove"
-         data-quicklink-id="{{ this.currentQuickAccess.id_quick_access }}"
-         data-rand="{{ random(1, 200) }}"
-         data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
-         data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
-         data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr') }}"
-         data-link="{{ this.currentQuickAccess.name|escape('html_attr') }}"
-      >
-        <i class="material-icons">remove_circle_outline</i>
-        {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+<div class="component" id="quick-access-container">
+  <div class="dropdown quick-accesses">
+    <button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="quick_select">
+      {{ 'Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+    </button>
+    <div class="dropdown-menu">
+      {% for quickAccess in this.quickAccesses %}
+        <a class="dropdown-item quick-row-link
+          {% if quickAccess.class is defined %}{{ quickAccess.class|escape('html_attr') }}{% endif %}
+          {% if quickAccess.active %}active{% endif %}"
+        href="{{ quickAccess.link|escape('html_attr') }}"
+        {% if quickAccess.new_window %} target="_blank"{% endif %}
+        data-item="{{ quickAccess.name }}"
+        >{{ quickAccess.name|escape('html_attr') }}</a>
+      {% endfor %}
+      <div class="dropdown-divider"></div>
+      {% if this.currentQuickAccess %}
+        <a id="quick-remove-link"
+           class="dropdown-item js-quick-link"
+           href="#"
+           data-method="remove"
+           data-quicklink-id="{{ this.currentQuickAccess.id_quick_access }}"
+           data-rand="{{ random(1, 200) }}"
+           data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
+           data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
+           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr') }}"
+           data-link="{{ this.currentQuickAccess.name|escape('html_attr') }}"
+        >
+          <i class="material-icons">remove_circle_outline</i>
+          {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+        </a>
+      {% else %}
+        <a id="quick-add-link"
+           class="dropdown-item js-quick-link"
+           href="#"
+           data-rand="{{ random(1, 200) }}"
+           data-method="add"
+           data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
+           data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
+           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr')}}"
+           data-link="{{ this.currentUrlTitle|escape('html_attr') }}"
+        >
+          <i class="material-icons">add_circle</i>
+          {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
+        </a>
+      {% endif %}
+      <a id="quick-manage-link" class="dropdown-item" href="{{ legacy_path('AdminQuickAccesses') }}">
+      <i class="material-icons">settings</i>
+      {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
       </a>
-    {% else %}
-      <a id="quick-add-link"
-         class="dropdown-item js-quick-link"
-         href="#"
-         data-rand="{{ random(1, 200) }}"
-         data-method="add"
-         data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
-         data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
-         data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr')}}"
-         data-link="{{ this.currentUrlTitle|escape('html_attr') }}"
-      >
-        <i class="material-icons">add_circle</i>
-        {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
-      </a>
-    {% endif %}
-    <a id="quick-manage-link" class="dropdown-item" href="{{ legacy_path('AdminQuickAccesses') }}">
-    <i class="material-icons">settings</i>
-    {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
-    </a>
+    </div>
   </div>
 </div>

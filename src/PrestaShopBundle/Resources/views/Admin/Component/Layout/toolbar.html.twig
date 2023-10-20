@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div class="header-toolbar d-print-none">
-  {{ component('MultistoreHeader', {lockedToAllShopContext: lockedToAllShopContext}) }}
+  {{ component('MultistoreHeader') }}
   <div class="container-fluid">
 
     {% block pageBreadcrumb %}
@@ -44,34 +44,23 @@
       {% endif %}
     {% endblock %}
 
-    {% set persistent_help_btn = help_link is defined and help_link is not same as (false) and toolbarBtn is empty %}
+    {% set persistent_help_btn = help_link is defined and help_link is not same as (false) and layoutHeaderToolbarBtn is empty %}
     <div class="title-row {% if persistent_help_btn %}flex-nowrap flex-md-wrap{% endif %}">
       {% block pageTitle %}
-        {% if useRegularH1Structure %}
           <h1 class="title">
-            {% if title is iterable and title is not empty %}
-              {{ title|last|e }}
-            {% else %}
-              {{ title|e }}
-            {% endif %}
+            {{ title|e }}
           </h1>
-        {% else %}
-          {% autoescape false %}
-            {{ title }}
-          {% endautoescape %}
-        {% endif %}
       {% endblock %}
-
       {% block toolbarBox %}
         <div class="toolbar-icons{% if persistent_help_btn %} toolbar-icons--persistent{% endif %}">
           <div class="wrapper">
             {{ renderhook('displayDashboardToolbarTopMenu') }}
-            {% for k, btn in toolbarBtn %}
+            {% for k, btn in layoutHeaderToolbarBtn %}
               {% if k != 'back' and k != 'modules-list' %}
                 {#TODO: REFACTOR ALL THIS THINGS#}
                 <a
                   class="btn {% if btn.class is defined and btn.class %}{{ btn.class|escape }}{% else %}btn-primary{% endif %}{% if btn.target is defined and btn.target %} _blank{% endif %}{% if btn.disabled is defined and btn.disabled %} disabled auto-pointer-events{% endif %} pointer"{% if btn.href is defined %}
-                  id="page-header-desc-{{ table }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}"
+                  id="page-header-desc-{{ table|default('configuration') }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}"
                 href="{{ btn.href|escape }}"{% endif %}
                   title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"{% if btn.js is defined and btn.js %}
                   onclick="{{ btn.js }}" {% endif %}{% if btn.modal_target is defined and btn.modal_target %}
@@ -90,16 +79,16 @@
                 </a>
               {% endif %}
             {% endfor %}
-            {% if toolbarBtn['modules-list'] is defined %}
+            {% if layoutHeaderToolbarBtn['modules-list'] is defined %}
               {#TODO: REFACTOR ALL THIS THINGS#}
               <a
-                class="btn btn-outline-secondary {% if toolbarBtn['modules-list'].target is defined and toolbarBtn['modules-list'].target %} _blank{% endif %}"
-                id="page-header-desc-{{ table }}-{% if toolbarBtn['modules-list'].imgclass is defined %}{{ toolbarBtn['modules-list'].imgclass }}{% else %}modules-list{% endif %}"
-                {% if toolbarBtn['modules-list'].href is defined %}href="{{ toolbarBtn['modules-list'].href }}"{% endif %}
-                title="{{ toolbarBtn['modules-list'].desc }}"
-                {% if toolbarBtn['modules-list'].js is defined and toolbarBtn['modules-list'].js %}onclick="{{ toolbarBtn['modules-list'].js }}"{% endif %}
+                class="btn btn-outline-secondary {% if layoutHeaderToolbarBtn['modules-list'].target is defined and layoutHeaderToolbarBtn['modules-list'].target %} _blank{% endif %}"
+                id="page-header-desc-{{ table|default('configuration') }}-{% if layoutHeaderToolbarBtn['modules-list'].imgclass is defined %}{{ layoutHeaderToolbarBtn['modules-list'].imgclass }}{% else %}modules-list{% endif %}"
+                {% if layoutHeaderToolbarBtn['modules-list'].href is defined %}href="{{ layoutHeaderToolbarBtn['modules-list'].href }}"{% endif %}
+                title="{{ layoutHeaderToolbarBtn['modules-list'].desc }}"
+                {% if layoutHeaderToolbarBtn['modules-list'].js is defined and layoutHeaderToolbarBtn['modules-list'].js %}onclick="{{ layoutHeaderToolbarBtn['modules-list'].js }}"{% endif %}
               >
-                {{ toolbarBtn['modules-list'].desc }}
+                {{ layoutHeaderToolbarBtn['modules-list'].desc }}
               </a>
             {% endif %}
 
@@ -170,7 +159,7 @@
     </div>
   {% endif %}
 
-  {% if toolbarBtn is not empty %}
+  {% if layoutHeaderToolbarBtn is not empty %}
     <div class="btn-floating">
       <button class="btn btn-primary collapsed" data-toggle="collapse" data-target=".btn-floating-container"
               aria-expanded="false">
@@ -180,11 +169,11 @@
         <div class="btn-floating-menu">
           {{ renderhook('displayDashboardToolbarTopMenu') }}
 
-          {% for k, btn in toolbarBtn %}
+          {% for k, btn in layoutHeaderToolbarBtn %}
             {% if k != 'back' and k != 'modules-list' %}
               <a
                 class="btn btn-floating-item {% if btn.floating_class is defined and btn.floating_class %}{{ btn.floating_class|escape }}{% endif %} {% if btn.target is defined and btn.target %} _blank{% endif %} pointer"{% if btn.href is defined %}
-                id="page-header-desc-floating-{{ table }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}"
+                id="page-header-desc-floating-{{ table|default('configuration') }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}"
               href="{{ btn.href|escape }}"{% endif %}
                 title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"{% if btn.js is defined and btn.js %}
               onclick="{{ btn.js }}"{% endif %}{% if btn.modal_target is defined and btn.modal_target %}

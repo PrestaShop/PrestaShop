@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component;
 
 use Configuration;
-use Dispatcher;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -44,6 +44,7 @@ class NavBar
     public function __construct(
         private readonly LegacyContext $context,
         private readonly LoggerInterface $logger,
+        private readonly MenuBuilder $menuBuilder,
         private readonly string $psVersion,
     ) {
     }
@@ -56,17 +57,6 @@ class NavBar
     public function getPsVersion(): string
     {
         return $this->psVersion;
-    }
-
-    public function isCollapseMenu(): bool
-    {
-        $cookie = $this->context->getContext()->cookie;
-
-        if (isset($cookie->collapse_menu)) {
-            return boolval($cookie->collapse_menu);
-        }
-
-        return false;
     }
 
     public function getTabs(): array
@@ -82,7 +72,7 @@ class NavBar
     {
         $tabs = Tab::getTabs($this->context->getContext()->language->id, $parentId);
         $currentId = Tab::getCurrentParentId();
-        $controllerName = Dispatcher::getInstance()->getController();
+        $controllerName = $this->menuBuilder->getLegacyControllerClassName();
 
         $filteredTabs = array_filter($tabs, function ($tab) {
             return $this->isValidTab($tab);

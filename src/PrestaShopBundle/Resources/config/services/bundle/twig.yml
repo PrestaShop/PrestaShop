@@ -5,6 +5,18 @@ services:
     autoconfigure: true
     bind:
       $psVersion: !php/const _PS_VERSION_
+      $debugMode: !php/const _PS_MODE_DEV_
+      $controllersLockedToAllShopContext:
+        - AdminAccess
+        - AdminFeatureFlag
+        - AdminLanguages
+        - AdminProfiles
+        - AdminSpecificPriceRule
+        - AdminStatuses
+        - AdminSecurity
+        - AdminSecuritySessionEmployee
+        - AdminSecuritySessionCustomer
+        - AdminTranslations
 
   Twig\Extension\StringLoaderExtension: ~
 

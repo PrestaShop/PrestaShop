@@ -41,8 +41,15 @@
 
 {% include "@AdminNewTheme/public/preload.html.twig" ignore missing with { 'admin_dir': '/admin-dev/themes/new-theme/public/' } %}
 
+{# Many modules register on this hook to add their assets, they use addCss and/or addJs methods to do that
+(even if this is supposed to be a display hook). These methods must be executed before we loop through the
+list of assets which is why it must be executed before the loop, its content is temporarily stored to be
+then correctly appended in the output (after the loops). This little hack is necessary to avoid a breaking change
+and keep backward compatibility for this use case even if it's not very clean. #}
+{% set displayBackOfficeHeaderRendered = renderhook('displayBackOfficeHeader') %}
+
 {% for css_uri, css_media in this.cssFiles %}
-  <link href="{{ css_uri|e('html_attr') }}" rel="stylesheet" type="text/css" media="{{ css_media }}"/>
+  <link href="{{ css_uri }}" rel="stylesheet" type="text/css" media="{{ css_media }}"/>
 {% endfor %}
 
 {% if this.jsDef %}
@@ -53,8 +60,11 @@
   </script>
 {% endif %}
 
-{% for js_uri in  this.jsFiles %}
-  <script type="text/javascript" src="{{ js_uri|e('html_attr') }}"></script>
+{% block headJavascripts %}{% endblock %}
+
+{% for js_uri in this.jsFiles %}
+  <script type="text/javascript" src="{{ js_uri }}"></script>
 {% endfor %}
 
-{{ renderhook('displayBackOfficeHeader') }}
+{# After some CSS/JS files inclusion (that can be added in 'displayBackOfficeHeader' hook), we need to display the html compiled that are returned for this hook. #}
+{{ displayBackOfficeHeaderRendered|raw }}
