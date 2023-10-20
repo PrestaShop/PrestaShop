@@ -126,7 +126,7 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
 
   describe('Delete the created webservice keys by bulk actions', async () => {
     it('should reset filter and check the number of webservice keys', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterBeforeDelete', baseContext);
 
       const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
       expect(numberOfElement).to.be.equal(numberOfWebserviceKeys + 2);
