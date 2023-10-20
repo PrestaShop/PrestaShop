@@ -175,12 +175,12 @@ class CreateProduct extends BOBasePage {
   /**
    * Go to a tab
    * @param page {Page} Browser tab
-   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @param tabName {'combinations'|'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
    * @returns {Promise<void>}
    */
   async goToTab(
     page: Page,
-    tabName: 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
+    tabName: 'combinations' | 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
   ): Promise<void> {
     await this.waitForSelectorAndClick(page, this.tabLink(tabName));
     await this.waitForVisibleSelector(page, `${this.tabLink(tabName)} a.active`, 2000);
@@ -189,12 +189,12 @@ class CreateProduct extends BOBasePage {
   /**
    * Is Tab active
    * @param page {Page} Browser tab
-   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @param tabName {'combinations'|'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
    * @returns {Promise<boolean>}
    */
   async isTabActive(
     page: Page,
-    tabName: 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
+    tabName: 'combinations' | 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
   ): Promise<boolean> {
     return this.elementVisible(page, `${this.tabLink(tabName)} a.active`, 2000);
   }
@@ -202,12 +202,12 @@ class CreateProduct extends BOBasePage {
   /**
    * Is Tab visible
    * @param page {Page} Browser tab
-   * @param tabName {'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
+   * @param tabName {'combinations'|'description'|'details'|'options'|'pricing'|'seo'|'shipping'|'stock'} Name of the tab
    * @returns {Promise<boolean>}
    */
   async isTabVisible(
     page: Page,
-    tabName: 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
+    tabName: 'combinations' | 'description' | 'details' | 'options' | 'pricing' | 'seo' | 'shipping' | 'stock',
   ): Promise<boolean> {
     return this.elementVisible(page, `${this.tabLink(tabName)} a`, 2000);
   }

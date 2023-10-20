@@ -225,8 +225,10 @@ describe('BO - Catalog - Products : Multistore', async () => {
       expect(shopColor).to.eq('');
     });
 
-    it.skip('should check the updated product name', async function () {
+    it('should check the updated product name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductName', baseContext);
+
+      this.skip();
 
       const productName = await productsPage.getTextColumn(page, 'product_name', 1);
       expect(productName).to.eq(editProductData.name);
