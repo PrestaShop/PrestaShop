@@ -60,7 +60,11 @@ class ProductsBlock extends ViewOrderBasePage {
 
   private readonly orderWrappingTotal: string;
 
+  private readonly orderTotalProductsSpan: string;
+
   private readonly orderTotalDiscountsSpan: string;
+
+  private readonly orderTotalShippingSpan: string;
 
   private readonly addProductButton: string;
 
@@ -179,7 +183,9 @@ class ProductsBlock extends ViewOrderBasePage {
     this.orderWrappingTotal = '#orderWrappingTotal';
 
     // Add discount
+    this.orderTotalProductsSpan = '#orderProductsTotal';
     this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
+    this.orderTotalShippingSpan = '#orderShippingTotal';
 
     // Add product
     this.addProductButton = '#addProductBtn';
@@ -402,8 +408,26 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
+  async getOrderTotalProducts(page: Page): Promise<number> {
+    return this.getPriceFromText(page, this.orderTotalProductsSpan);
+  }
+
+  /**
+   * Get order total discounts
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
   async getOrderTotalDiscounts(page: Page): Promise<number> {
-    return this.getPriceFromText(page, this.orderTotalDiscountsSpan);
+    return this.getPriceFromText(page, this.orderTotalDiscountsSpan, 0, false);
+  }
+
+  /**
+   * Get order total shipping
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getOrderTotalShipping(page: Page): Promise<number> {
+    return this.getPriceFromText(page, this.orderTotalShippingSpan, 0, false);
   }
 
   /**
@@ -527,6 +551,8 @@ class ProductsBlock extends ViewOrderBasePage {
    */
   async getProductDetails(page: Frame | Page, row: number) {
     return {
+      orderDetailId: await this.getAttributeContent(page, this.editProductButton(row), 'data-order-detail-id'),
+      productId: await this.getAttributeContent(page, this.editProductButton(row), 'data-product-id'),
       name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
       reference: await this.getTextContent(page, this.orderProductsTableProductReference(row)),
       basePrice: parseFloat((await this.getTextContent(

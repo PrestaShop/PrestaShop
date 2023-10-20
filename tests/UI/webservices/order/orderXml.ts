@@ -1,16 +1,16 @@
 import BaseXml from '@webservices/baseXml';
 import xmlHelper from '@utils/xml';
 
-export default class CountryXml extends BaseXml {
-  private static countriesBasicPath = '/prestashop/countries';
+export default class OrderXml extends BaseXml {
+  private static ordersBasicPath = '/prestashop/orders';
 
-  private static countriesPath = `${this.countriesBasicPath}/*`;
+  private static ordersPath = `${this.ordersBasicPath}/*`;
 
-  private static countryBasicPath = '/prestashop/country';
+  private static orderBasicPath = '/prestashop/order';
 
-  private static countryPath = `${this.countryBasicPath}/*`;
+  private static orderPath = `${this.orderBasicPath}/*`;
 
-  private static attributePath = (attribute: string) => `${this.countryBasicPath}/${attribute}`;
+  private static attributePath = (attribute: string) => `${this.orderBasicPath}/${attribute}`;
 
   private static attributeLangPath = (
     attribute: string,
@@ -18,23 +18,23 @@ export default class CountryXml extends BaseXml {
   ) => `${this.attributePath(attribute)}/language[@id="${lang}"]`;
 
   /**
-   * Get all countries nodes
+   * Get all orders nodes
    * @param xml
    */
-  public static getAllCountries(
+  public static getAllOrders(
     xml: string,
   ): Element[] {
-    return xmlHelper.getNodes(xml, this.countriesPath);
+    return xmlHelper.getNodes(xml, this.ordersPath);
   }
 
   /**
-   * Get country nodes
+   * Get order nodes
    * @param xml
    */
-  public static getCountryNodes(
+  public static getOrderNodes(
     xml: string,
   ): Element[] {
-    return xmlHelper.getNodes(xml, this.countryPath);
+    return xmlHelper.getNodes(xml, this.orderPath);
   }
 
   /**

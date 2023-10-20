@@ -45,7 +45,7 @@ export default class ProductXml extends BaseXml {
   public static getAttributeValue(
     xml: string,
     attribute: string,
-  ): string {
+  ): string|null {
     return xmlHelper.getNodeValue(xml, this.attributePath(attribute));
   }
 
@@ -59,7 +59,7 @@ export default class ProductXml extends BaseXml {
     xml: string,
     attribute: string,
     lang: string,
-  ): string {
+  ): string|null {
     return xmlHelper.getNodeValue(xml, this.attributeLangPath(attribute, lang));
   }
 }

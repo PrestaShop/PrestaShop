@@ -532,11 +532,17 @@ export default class CommonPage {
    * @param page {Frame|Page} Browser tab
    * @param selector {string} String to locate the element
    * @param timeout {number} Time to wait on milliseconds before throwing an error
+   * @param waitForSelector {boolean} Wait for visible selector
    * @returns {Promise<number>}
    */
-  async getPriceFromText(page: Frame | Page, selector: string, timeout: number = 0): Promise<number> {
+  async getPriceFromText(
+    page: Frame|Page,
+    selector: string,
+    timeout: number = 0,
+    waitForSelector: boolean = true,
+  ): Promise<number> {
     await page.waitForTimeout(timeout);
-    const text = await this.getTextContent(page, selector);
+    const text = await this.getTextContent(page, selector, waitForSelector);
 
     return Number(text.replace(/[^0-9.-]+/g, ''));
   }
