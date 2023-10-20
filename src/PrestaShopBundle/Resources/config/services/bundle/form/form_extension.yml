@@ -13,6 +13,7 @@ services:
       - '@prestashop.core.localization.locale.context_locale'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
       - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
+      - '@PrestaShop\PrestaShop\Core\Localization\Number\LocaleNumberTransformer'
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
 
