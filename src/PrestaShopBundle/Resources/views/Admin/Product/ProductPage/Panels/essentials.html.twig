@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://devdocs.prestashop-project.org/ for more information.
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
@@ -36,9 +36,9 @@
         </div>
 
         <div id="product-images-container" class="mb-4">
-          <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12" 
-               url-upload="{{ path('admin_product_image_upload', {'idProduct': productId}) }}" 
-               url-position="{{ path('admin_product_image_positions') }}" 
+          <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
+               url-upload="{{ path('admin_product_image_upload', {'idProduct': productId}) }}"
+               url-position="{{ path('admin_product_image_positions') }}"
                data-max-size="{{ configuration('PS_LIMIT_UPLOAD_IMAGE_VALUE') }}">
             <div id="product-images-dropzone-error" class="text-danger"></div>
             <div class="dz-default dz-message openfilemanager">
@@ -59,8 +59,8 @@
                 </div>
               {% endif %}
               {% for image in images %}
-                <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}" 
-                     url-delete="{{ path('admin_product_image_delete', {'idImage': image.id}) }}" 
+                <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}"
+                     url-delete="{{ path('admin_product_image_delete', {'idImage': image.id}) }}"
                      url-update="{{ path('admin_product_image_form', {'idImage': image.id}) }}">
                   <div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
                   <div class="dz-details">
@@ -148,8 +148,8 @@
           <div class="form-group mb-3" id="show_variations_selector">
             <h2>
               {{ "Combinations"|trans({}, 'Admin.Catalog.Feature') }}
-              <span class="help-box" 
-                    data-toggle="popover" 
+              <span class="help-box"
+                    data-toggle="popover"
                     data-content="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?"|trans({}, 'Admin.Catalog.Help') }}">
               </span>
             </h2>
@@ -178,8 +178,8 @@
         <div class="form-group mb-4">
           <h2>
             {{ "Reference"|trans({}, 'Admin.Catalog.Feature') }}
-            <span class="help-box" 
-                  data-toggle="popover" 
+            <span class="help-box"
+                  data-toggle="popover"
                   data-content="{{ "Your reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}">
             </span>
           </h2>
@@ -195,8 +195,8 @@
           <div class="form-group mb-4" id="product_qty_0_shortcut_div">
             <h2>
               {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
-              <span class="help-box" 
-                    data-toggle="popover" 
+              <span class="help-box"
+                    data-toggle="popover"
                     data-content="{{ "How many products should be available for sale?"|trans({}, 'Admin.Catalog.Help') }}">
               </span>
             </h2>
@@ -217,8 +217,8 @@
         <div class="form-group mb-4">
           <h2>
             {{ "Price"|trans({}, 'Admin.Global') }}
-            <span class="help-box" 
-                  data-toggle="popover" 
+            <span class="help-box"
+                  data-toggle="popover"
                   data-content="{{ "This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select."|trans({}, 'Admin.Catalog.Help') }}">
             </span>
           </h2>

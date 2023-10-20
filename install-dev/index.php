@@ -17,7 +17,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://devdocs.prestashop-project.org/ for more information.
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
@@ -29,7 +29,7 @@ require_once 'install_version.php';
 if (
     !defined('PHP_VERSION_ID') // PHP_VERSION_ID is available since 5.2.7
     || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_
-    || PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_ 
+    || PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_
     || !extension_loaded('SimpleXML') /** @phpstan-ignore-line */
     || !extension_loaded('zip') /** @phpstan-ignore-line */
     || !is_writable(

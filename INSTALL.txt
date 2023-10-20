@@ -48,7 +48,7 @@
 
 To install PrestaShop 8, you need a web server running PHP 7.2+ and any flavor of MySQL 5.6+ (MySQL, MariaDB, Percona Server, etc.).
 
-You can find more information on our System requirements (https://devdocs.prestashop.com/8/basics/installation/system-requirements/) page and on the System Administrator Guide (https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide).
+You can find more information on our System requirements (https://devdocs.prestashop-project.org/8/basics/installation/system-requirements/) page and on the System Administrator Guide (https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide).
 
 === Installing PrestaShop
 

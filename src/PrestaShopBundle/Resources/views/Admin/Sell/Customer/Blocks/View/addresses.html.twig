@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://devdocs.prestashop-project.org/ for more information.
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
@@ -29,7 +29,7 @@
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ customerInformation.addressesInformation|length }}</span>
 
-    <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right" 
+    <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right"
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
       <i class="material-icons">add_circle</i>
     </a>

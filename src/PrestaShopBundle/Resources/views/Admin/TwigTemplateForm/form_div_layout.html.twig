@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://devdocs.prestashop-project.org/ for more information.
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
@@ -312,7 +312,7 @@
     {% set form_method = "POST" %}
   {%- endif -%}
   <form name="{{ name }}"
-        method="{{ form_method|lower }}" 
+        method="{{ form_method|lower }}"
         action="{{ action }}"
         {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}
         {% if multipart %} enctype="multipart/form-data"{% endif %}>

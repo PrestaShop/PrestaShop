@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://devdocs.prestashop-project.org/ for more information.
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
@@ -536,11 +536,11 @@ function showRedirectProductOptions(show)
 function redirectSelectChange()
 {
   redirectTypeValue = $('#redirect_type :selected').val();
-  if (redirectTypeValue == '404' || 
-      redirectTypeValue == '410' || 
-      redirectTypeValue == 'default' || 
-      redirectTypeValue == '200-displayed' || 
-      redirectTypeValue == '404-displayed' || 
+  if (redirectTypeValue == '404' ||
+      redirectTypeValue == '410' ||
+      redirectTypeValue == 'default' ||
+      redirectTypeValue == '200-displayed' ||
+      redirectTypeValue == '404-displayed' ||
       redirectTypeValue == '410-displayed')
     showRedirectProductSelectOptions(false);
   else

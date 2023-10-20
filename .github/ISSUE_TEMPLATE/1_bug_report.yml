@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for taking the time to fill out this bug report. Please take the time to provide as much details as possible. Following our [bug report guidelines](https://devdocs.prestashop.com/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) will help maintainers qualify your report faster.
+        Thank you for taking the time to fill out this bug report. Please take the time to provide as much details as possible. Following our [bug report guidelines](https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) will help maintainers qualify your report faster.
 
         Reporting bugs with "error 500" or "white page" may not help us reproduce them. This is a universal error that hides what is underneath. Instead, enable debug mode in the Performance section of PrestaShop and try again. You should get a proper error message.
   - type: checkboxes

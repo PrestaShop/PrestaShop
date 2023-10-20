@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://devdocs.prestashop-project.org/ for more information.
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
@@ -85,19 +85,19 @@
             <div class="modal-footer">
               <input type="button" class="btn btn-outline-secondary" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}"/>
               {% if module_action == 'disable' %}
-                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}" href="{{ module_url }}" 
+                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}" href="{{ module_url }}"
                 data-dismiss="modal" data-tech-name="{{module.attributes.name}}">
                   {{ "Yes, disable it"|trans({}, 'Admin.Modules.Feature') }}
                 </a>
               {% endif %}
               {% if module_action == 'uninstall' %}
-                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}" href="{{ module_url }}" 
+                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}" href="{{ module_url }}"
                 data-dismiss="modal" data-tech-name="{{module.attributes.name}}">
                   {{ "Yes, uninstall it"|trans({}, 'Admin.Modules.Feature') }}
                 </a>
               {% endif %}
               {% if module_action == 'reset' %}
-                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}" href="{{ module_url }}" 
+                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}" href="{{ module_url }}"
                 data-dismiss="modal" data-tech-name="{{module.attributes.name}}">
                   {{ "Yes, reset it"|trans({}, 'Admin.Modules.Feature') }}
                 </a>

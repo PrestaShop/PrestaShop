@@ -17,7 +17,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://devdocs.prestashop-project.org/ for more information.
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
@@ -64,7 +64,7 @@ class WebserviceRequestCore
      *
      * @var string
      */
-    protected $_docUrl = 'https://devdocs.prestashop.com/8/webservice';
+    protected $_docUrl = 'https://devdocs.prestashop-project.org/8/webservice';
 
     /**
      * Set if the authentication key was checked.
