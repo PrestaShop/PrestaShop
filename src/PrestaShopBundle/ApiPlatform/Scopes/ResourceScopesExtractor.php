@@ -49,7 +49,7 @@ class ResourceScopesExtractor
     /**
      * @return ResourceScopes[]
      */
-    public function getScopes(): array
+    public function getResourceScopes(): array
     {
         $resourceScopes = [];
 

@@ -1465,12 +1465,15 @@
 {% endblock %}
 
 {%- block accordion_widget -%}
-  <div class="accordion accordion-form" id="{{ form.vars.id }}">
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' accordion accordion-form')|trim,
+  }) -%}
+  <div {{ block('widget_attributes') }}>
     {% set firstChild = true %}
     {% for child in form %}
       {% if child.vars.compound %}
       {% set hasError = child.vars.valid != true %}
-      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) %}
+      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) or expand_all %}
       <div class="card">
         <div class="card-header" id="{{ child.vars.id }}_accordion_header">
           <h2 class="mb-0">

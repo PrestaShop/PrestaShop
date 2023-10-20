@@ -29,44 +29,18 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
-use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ApiAccessType extends TranslatorAwareType
 {
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        private readonly ResourceScopesExtractor $resourceScopeExtractor
-    ) {
-        parent::__construct($translator, $locales);
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $resourceScopes = $this->resourceScopeExtractor->getScopes();
-        $scopeChoices = [];
-        foreach ($resourceScopes as $resourceScope) {
-            $resourceScopesChoices = [];
-            foreach ($resourceScope->getScopes() as $scope) {
-                $resourceScopesChoices[$scope] = $scope;
-            }
-
-            if ($resourceScope->fromCore()) {
-                $scopeChoices['Core'] = $resourceScopesChoices;
-            } else {
-                $scopeChoices[$resourceScope->getModuleName()] = $resourceScopesChoices;
-            }
-        }
-
         $builder
             ->add('client_name', TextType::class, [
                 'label' => $this->trans('Client Name', 'Admin.Advparameters.Feature'),
@@ -123,11 +97,8 @@ class ApiAccessType extends TranslatorAwareType
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => true,
             ])
-            ->add('scopes', ChoiceType::class, [
+            ->add('scopes', ResourceScopesType::class, [
                 'label' => $this->trans('Scopes', 'Admin.Advparameters.Feature'),
-                'choices' => $scopeChoices,
-                'multiple' => true,
-                'expanded' => true,
             ])
         ;
     }
