@@ -17,6 +17,12 @@ services:
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
 
+  PrestaShopBundle\Form\Extension\NumberTypeExtension:
+    public: false
+    autowire: true
+    tags:
+      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\NumberType }
+
   form.type.extension.resizable_text:
     class: 'PrestaShopBundle\Form\Admin\Type\ResizableTextType'
     tags:
