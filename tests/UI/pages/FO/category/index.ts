@@ -283,6 +283,16 @@ class Category extends FOBasePage {
     await this.clickAndWaitForURL(page, this.paginationPrevious);
   }
 
+  /**
+   * Go to product page
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
+   * @returns {Promise<void>}
+   */
+  async goToProductPage(page: Page, id: number): Promise<void> {
+    await this.clickAndWaitForURL(page, this.productAttribute(id, 'thumbnail'));
+  }
+
   // Quick view methods
   /**
    * Click on Quick view Product

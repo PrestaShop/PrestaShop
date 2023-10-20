@@ -19,7 +19,7 @@ class Product extends FOBasePage {
 
   private readonly productFlags: string;
 
-  private readonly productFlag: string;
+  private readonly productFlag: (flag: string) => string;
 
   private readonly productName: string;
 
@@ -90,6 +90,10 @@ class Product extends FOBasePage {
   private readonly taxShippingDeliveryBlock: string;
 
   private readonly deliveryInformationSpan: string;
+
+  private readonly productInformationBlock: string;
+
+  private readonly productMailAlertsBlock: string;
 
   private readonly discountTable: string;
 
@@ -162,7 +166,7 @@ class Product extends FOBasePage {
     // Selectors for product page
     this.warningMessage = 'main div.alert-warning p.alert-text';
     this.productFlags = '#content ul.product-flags';
-    this.productFlag = '#content li.product-flag';
+    this.productFlag = (flag: string) => `#content li.product-flag${flag.length === 0 ? '' : `.${flag}`}`;
     this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
     this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
@@ -201,6 +205,10 @@ class Product extends FOBasePage {
     this.productPrice = `${this.productPricesBlock} .current-price span`;
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
+
+    // Product information block
+    this.productInformationBlock = 'div.product-information';
+    this.productMailAlertsBlock = `${this.productInformationBlock} div.js-mailalert`;
 
     // Volume discounts table
     this.discountTable = '.table-product-discounts';
@@ -245,7 +253,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getProductPageURL(page: Page): Promise<string> {
+  async getProductPageURL(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.metaLink, 'content');
   }
 
@@ -254,7 +262,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getProductTag(page: Page): Promise<string> {
+  async getProductTag(page: Page): Promise<string> {
     return this.getTextContent(page, this.productFlags);
   }
 
@@ -264,7 +272,26 @@ class Product extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isProductTagVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.productFlag);
+    return this.elementVisible(page, this.productFlag(''));
+  }
+
+  /**
+   * Is a specific product flag visible
+   * @param page {Page} Browser tab
+   * @param name {string}
+   * @return {Promise<boolean>}
+   */
+  async hasProductFlag(page: Page, name: string): Promise<boolean> {
+    return this.elementVisible(page, this.productFlag(name), 2000);
+  }
+
+  /**
+   * Is the Block Mail Alert visible ?
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasBlockMailAlert(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.productMailAlertsBlock, 2000);
   }
 
   /**
@@ -403,7 +430,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountColumnTitle(page: Page): Promise<string> {
+  async getDiscountColumnTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.unitDiscountColumn);
   }
 
@@ -412,7 +439,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getQuantityDiscountValue(page: Page): Promise<number> {
+  async getQuantityDiscountValue(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.quantityDiscountValue);
   }
 
@@ -421,7 +448,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountValue(page: Page): Promise<string> {
+  async getDiscountValue(page: Page): Promise<string> {
     return this.getTextContent(page, this.unitDiscountValue);
   }
 
