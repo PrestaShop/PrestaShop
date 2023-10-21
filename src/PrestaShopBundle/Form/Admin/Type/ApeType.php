@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
