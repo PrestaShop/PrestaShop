@@ -2220,3 +2220,11 @@ services:
     public: false
     arguments:
       $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
+
+  PrestaShopBundle\Form\Admin\Type\ApeType:
+    class: 'PrestaShopBundle\Form\Admin\Type\ApeType'
+    public: true
+    calls:
+      - { method: setTranslator, arguments: [ '@translator' ] }
+    tags:
+      - { name: form.type }
