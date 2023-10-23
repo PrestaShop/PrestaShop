@@ -129,7 +129,7 @@
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "babel-eslint": "^10.1.0",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-deprecation": "^2.0.0",
     "eslint-plugin-html": "^7.1.0",
