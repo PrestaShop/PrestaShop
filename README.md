@@ -87,6 +87,12 @@ cp docker-compose.override.yml.dist docker-compose.override.yml
 docker-compose up
 ```
 
+One-Click Deployment with Elestio
+--------
+[![Deploy](https://pub-da36157c854648669813f3f76c526c2b.r2.dev/deploy-on-elestio-black.png)](https://elest.io/open-source/prestashop)
+
+Elestio provides an option of a fully managed and configured Prestashop instance in just few clicks. Elestio takes care of your instance security, configurations, version updates and backups for you!
+
 Documentation
 --------
 
