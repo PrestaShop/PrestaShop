@@ -148,4 +148,5 @@ services:
     arguments:
       $moduleDir: '%prestashop.module_dir%'
       $installedModules: '%prestashop.installed_modules%'
+      $enabledModules: '%prestashop.active_modules%'
       $projectDir: '%kernel.project_dir%'

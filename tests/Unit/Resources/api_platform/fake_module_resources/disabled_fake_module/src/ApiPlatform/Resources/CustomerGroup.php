@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,49 +27,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Scopes;
+namespace Resources\api_platform\fake_module_resources\disabled_fake_module\src\ApiPlatform\Resources;
 
-/**
- * @internal
- */
-class ResourceScopes
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/customers/group',
+            processor: CommandProcessor::class,
+            extraProperties: [
+                'command' => AddCustomerGroupCommand::class,
+                'scopes' => ['customer_group_read'],
+            ],
+        ),
+    ]
+)]
+class CustomerGroup
 {
-    public static function createModuleScopes(
-        array $scopes,
-        string $moduleName
-    ) {
-        return new self($scopes, $moduleName);
-    }
+    public array $localizedNames;
 
-    public static function createCoreScopes(
-        array $scopes
-    ) {
-        return new self($scopes, null);
-    }
+    public float $reductionPercent;
 
-    private function __construct(
-        private array $scopes,
-        private ?string $moduleName
-    ) {
-    }
+    public bool $displayPriceTaxExcluded;
 
-    /**
-     * List of scopes.
-     *
-     * @return string[]
-     */
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
+    public bool $showPrice;
 
-    public function fromCore(): bool
-    {
-        return $this->moduleName === null;
-    }
-
-    public function getModuleName(): ?string
-    {
-        return $this->moduleName;
-    }
+    public array $shopIds;
 }

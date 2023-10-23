@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Scopes;
 
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
@@ -42,26 +43,44 @@ class ResourceScopesExtractor
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private readonly string $moduleDir,
         private readonly array $installedModules,
+        private readonly array $enabledModules,
         private readonly string $projectDir
     ) {
     }
 
     /**
+     * Returns all installed resource scopes even the ones that are not enabled for now.
+     *
      * @return ResourceScopes[]
      */
-    public function getResourceScopes(): array
+    public function getAllResourceScopes(): array
+    {
+        return $this->getCoreAndModulesResources($this->installedModules);
+    }
+
+    /**
+     * Returns resource scopes for core and ENABLED modules.
+     *
+     * @return ResourceScopes[]
+     */
+    public function getEnabledResourceScopes(): array
+    {
+        return $this->getCoreAndModulesResources($this->enabledModules);
+    }
+
+    private function getCoreAndModulesResources(array $modules): array
     {
         $resourceScopes = [];
 
         // First extract scopes from the core
         $coreScopes = $this->extractScopes(new AttributesResourceNameCollectionFactory([
-            $this->projectDir . '/src/PrestaShopBundle/ApiPlatform/Resources',
+            rtrim($this->projectDir, '/') . '/src/PrestaShopBundle/ApiPlatform/Resources',
         ]));
         if (!empty($coreScopes)) {
             $resourceScopes[] = ResourceScopes::createCoreScopes($coreScopes);
         }
 
-        foreach ($this->installedModules as $moduleName) {
+        foreach ($modules as $moduleName) {
             $moduleScopes = $this->extractScopes(new AttributesResourceNameCollectionFactory(
                 $this->getModulePaths($moduleName)
             ));
@@ -76,7 +95,7 @@ class ResourceScopesExtractor
     private function getModulePaths(string $moduleName): array
     {
         $paths = [];
-        $modulePath = $this->moduleDir . $moduleName;
+        $modulePath = rtrim($this->moduleDir, '/') . '/' . $moduleName;
         // Load YAML definition from the config/api_platform folder in the module
         $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
         if (file_exists($moduleConfigPath)) {
@@ -98,21 +117,35 @@ class ResourceScopesExtractor
         foreach ($resourceExtractor->create() as $resourceName) {
             $resourceMetadata = $this->resourceMetadataCollectionFactory->create($resourceName);
             foreach ($resourceMetadata as $resource) {
-                /** @var Operation $operation */
-                foreach ($resource->getOperations() as $operation) {
-                    $extraProperties = $operation->getExtraProperties();
-                    if (array_key_exists('scopes', $extraProperties)) {
-                        $operationScopes = $extraProperties['scopes'];
-                        foreach ($operationScopes as $operationScope) {
-                            if (!in_array($operationScope, $scopes)) {
-                                $scopes[] = $operationScope;
-                            }
-                        }
+                $scopes = array_merge($scopes, $this->getScopesByResources($resource));
+            }
+        }
+
+        // We want unique scopes in the list
+        $scopes = array_unique($scopes);
+        // array_unique can change the keys, so we create a new array with values only
+        $scopes = array_values($scopes);
+        // And finally sorted alphabetically
+        sort($scopes);
+
+        return $scopes;
+    }
+
+    private function getScopesByResources(ApiResource $resource): array
+    {
+        $scopes = [];
+        /** @var Operation $operation */
+        foreach ($resource->getOperations() as $operation) {
+            $extraProperties = $operation->getExtraProperties();
+            if (array_key_exists('scopes', $extraProperties)) {
+                $operationScopes = $extraProperties['scopes'];
+                foreach ($operationScopes as $operationScope) {
+                    if (!in_array($operationScope, $scopes)) {
+                        $scopes[] = $operationScope;
                     }
                 }
             }
         }
-        sort($scopes);
 
         return $scopes;
     }

@@ -55,7 +55,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $resourceScopes = $this->resourceScopeExtractor->getResourceScopes();
+        $resourceScopes = $this->resourceScopeExtractor->getAllResourceScopes();
         foreach ($resourceScopes as $resourceScope) {
             $builder->add($this->getResourceFormName($resourceScope), CollectionType::class, [
                 'label' => $this->getResourceLabel($resourceScope),
@@ -71,7 +71,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         /** @var FormInterface[] $forms */
         $forms = iterator_to_array($forms);
 
-        $resources = $this->resourceScopeExtractor->getResourceScopes();
+        $resources = $this->resourceScopeExtractor->getAllResourceScopes();
         foreach ($resources as $resource) {
             $resourceForm = $forms[$this->getResourceFormName($resource)];
             $formattedData = [];

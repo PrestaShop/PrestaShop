@@ -245,7 +245,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Tests\\Unit\\Resources\\": "tests/Unit/Resources/api_platform/fake_core_resources/src",
+            "FakeModule\\": "tests/Unit/Resources/api_platform/fake_module_resources/fake_module/src"
         }
     },
     "minimum-stability": "dev",
