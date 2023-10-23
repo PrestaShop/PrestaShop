@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use AdminController;
 use AdminLegacyLayoutControllerCore;
 use Context;
 use Currency;

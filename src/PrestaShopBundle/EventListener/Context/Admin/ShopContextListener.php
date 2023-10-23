@@ -69,21 +69,17 @@ class ShopContextListener
 
         if ($cookieShopConstraint && $cookieShopConstraint->getShopGroupId()) {
             // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
-            if ($this->employeeContext->hasAuthorizationOnShopGroup($cookieShopConstraint->getShopGroupId()->getValue())) {
+            if (empty($this->employeeContext->getEmployee()) || $this->employeeContext->hasAuthorizationOnShopGroup($cookieShopConstraint->getShopGroupId()->getValue())) {
                 $shopConstraint = $cookieShopConstraint;
             } elseif (!empty($this->employeeContext->getDefaultShopId())) {
                 $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
-            } else {
-                $shopConstraint = $cookieShopConstraint;
             }
         } elseif ($cookieShopConstraint && $cookieShopConstraint->getShopId()) {
             // Check if employee has authorization on selected shop if not fallback on single shop context with employee's default shop
-            if ($this->employeeContext->hasAuthorizationOnShop($cookieShopConstraint->getShopId()->getValue())) {
+            if (empty($this->employeeContext->getEmployee()) || $this->employeeContext->hasAuthorizationOnShop($cookieShopConstraint->getShopId()->getValue())) {
                 $shopConstraint = $cookieShopConstraint;
             } elseif (!empty($this->employeeContext->getDefaultShopId())) {
                 $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
-            } else {
-                $shopConstraint = $cookieShopConstraint;
             }
         }
 
@@ -94,7 +90,7 @@ class ShopContextListener
         // In all cases a shop must be set for the context even if it's the default one
         if (empty($this->shopContextBuilder->getShopId()) && !$shopConstraint->getShopId()) {
             $this->shopContextBuilder->setShopId((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
-        } else if (empty($this->shopContextBuilder->getShopId())) {
+        } elseif (empty($this->shopContextBuilder->getShopId())) {
             $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
         }
 

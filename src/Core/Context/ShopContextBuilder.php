@@ -89,7 +89,7 @@ class ShopContextBuilder
     {
         if ($shopConstraint->forAllShops()) {
             $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_ALL);
-        } else if (empty($shopConstraint->getShopId())) {
+        } elseif (empty($shopConstraint->getShopId())) {
             $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_GROUP, $shopConstraint->getShopGroupId()->getValue());
         } else {
             $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_SHOP, $shopConstraint->getShopId()->getValue());
