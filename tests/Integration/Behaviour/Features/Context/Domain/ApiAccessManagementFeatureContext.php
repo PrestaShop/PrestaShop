@@ -142,7 +142,11 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             $command->setScopes(PrimitiveUtils::castStringArrayIntoArray($data['scopes']));
         }
 
-        $commandBus->handle($command);
+        try {
+            $commandBus->handle($command);
+        } catch (ApiAccessConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -292,6 +296,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             'clientName' => ApiAccessConstraintException::INVALID_CLIENT_NAME,
             'enabled' => ApiAccessConstraintException::INVALID_ENABLED,
             'description' => ApiAccessConstraintException::INVALID_DESCRIPTION,
+            'scopes' => ApiAccessConstraintException::NON_INSTALLED_SCOPES,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

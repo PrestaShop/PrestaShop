@@ -35,7 +35,6 @@ Feature: Api Access Management
     Then api access "AA-1" should have the following properties:
       | apiClientId | test-id-toto-2 |
 
-
   Scenario: Create an api access with non unique properties:
     When I create an api access "AA-2" with following properties:
       | clientName  | Thomas2              |
@@ -155,3 +154,35 @@ Feature: Api Access Management
       | enabled     | true          |
       | description | may the force |
       | scopes      |               |
+
+  Scenario: Create or edit an api access with invalid scopes
+    When I create an api access "AA-14" with following properties:
+      | clientName  | Palpatine          |
+      | apiClientId | sith               |
+      | enabled     | true               |
+      | description | may the force      |
+      | scopes      | unknown_api_access |
+    Then I should get an error that scopes is invalid
+    When I create an api access "AA-14" with following properties:
+      | clientName  | Palpatine       |
+      | apiClientId | sith            |
+      | enabled     | true            |
+      | description | may the force   |
+      | scopes      | api_access_read |
+    Then api access "AA-14" should have the following properties:
+      | clientName  | Palpatine       |
+      | apiClientId | sith            |
+      | enabled     | true            |
+      | description | may the force   |
+      | scopes      | api_access_read |
+    When I edit api access "AA-14" with the following values:
+      | clientName | Emperor                             |
+      | scopes     | api_access_read, unknown_api_access |
+    Then I should get an error that scopes is invalid
+    # Api Access data do not change because of invalid scope values
+    And api access "AA-14" should have the following properties:
+      | clientName  | Palpatine       |
+      | apiClientId | sith            |
+      | enabled     | true            |
+      | description | may the force   |
+      | scopes      | api_access_read |

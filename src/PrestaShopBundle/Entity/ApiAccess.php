@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\InstalledApiResourceScope;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -82,6 +83,7 @@ class ApiAccess
      * @ORM\Column(name="scopes", type="json")
      */
     #[Assert\NotNull]
+    #[InstalledApiResourceScope]
     private array $scopes = [];
 
     /**
