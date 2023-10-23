@@ -125,7 +125,7 @@
     "@types/chai-string": "^1.4.3",
     "@types/libsodium-wrappers": "^0.7.11",
     "@types/mocha": "^10.0.2",
-    "@types/mochawesome": "^6.2.2",
+    "@types/mochawesome": "^6.2.3",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "babel-eslint": "^10.1.0",
