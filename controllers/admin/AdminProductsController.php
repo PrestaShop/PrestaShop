@@ -2895,7 +2895,7 @@ class AdminProductsControllerCore extends AdminController
                     *
                     * In case of .jpg images, the actual format inside is decided by ImageManager.
                     */
-                    $configuredImageFormats = $this->get(ImageFormatConfiguration::class)->getGenerationFormats();
+                    $configuredImageFormats = SymfonyContainer::getInstance()->get(ImageFormatConfiguration::class)->getGenerationFormats();
 
                     foreach ($imagesTypes as $imageType) {
                         foreach ($configuredImageFormats as $imageFormat) {
