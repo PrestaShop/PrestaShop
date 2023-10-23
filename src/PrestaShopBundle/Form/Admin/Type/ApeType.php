@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -50,7 +51,7 @@ class ApeType extends AbstractType implements DataTransformerInterface
         $resolver->setDefaults([
             'constraints' => [
                 new Regex([
-                    'pattern' => '/^[0-9]{1,2}?\.?[0-9]{1,2}[a-zA-Z]{1}$/s',
+                    'pattern' => ApeCode::PATTERN,
                     'message' => $this->trans('This field is invalid.', [], 'Admin.Notifications.Error'),
                 ]),
             ],
