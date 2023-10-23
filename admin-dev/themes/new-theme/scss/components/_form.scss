@@ -196,9 +196,20 @@
 
     .accordion-form-button {
       display: flex;
+      flex-direction: row;
+      align-content: flex-end;
+      width: 100%;
 
-      i.material-icons {
-        margin-left: auto;
+      span.accordion-form-button-label {
+        margin-right: auto;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      span.accordion-form-button-sub-label {
+        margin-right: 1rem;
+        font-size: 0.875rem;
+        font-weight: 400;
       }
 
       i.material-icons::after {

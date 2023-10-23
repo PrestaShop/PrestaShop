@@ -1484,7 +1484,10 @@
               data-target="#{{ child.vars.id }}_accordion"
               aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}"
               aria-controls="{{ child.vars.id }}_accordion">
-              {{ child.vars.label }}
+              <span class="accordion-form-button-label">{{ child.vars.label }}</span>
+              {% if child.vars.label_subtitle is defined %}
+                <span class="accordion-form-button-sub-label">{{ child.vars.label_subtitle }}</span>
+              {% endif %}
               <i class="material-icons"></i>
             </button>
           </h2>

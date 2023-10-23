@@ -59,6 +59,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         foreach ($resourceScopes as $resourceScope) {
             $builder->add($this->getResourceFormName($resourceScope), CollectionType::class, [
                 'label' => $this->getResourceLabel($resourceScope),
+                'label_subtitle' => $this->getResourceLabelSubtitle($resourceScope),
                 'entry_type' => SwitchScopeType::class,
             ]);
         }
@@ -126,5 +127,18 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         $module = $this->moduleRepository->getModule($resourceScopes->getModuleName());
 
         return $module->attributes->get('displayName');
+    }
+
+    private function getResourceLabelSubtitle(ResourceScopes $resourceScopes): string
+    {
+        if ($resourceScopes->fromCore()) {
+            return '';
+        }
+
+        $module = $this->moduleRepository->getModule($resourceScopes->getModuleName());
+
+        return $module->database->get('active') === true ?
+            $this->trans('Enabled', 'Admin.Global') :
+            $this->trans('Disabled', 'Admin.Global');
     }
 }
