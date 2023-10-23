@@ -35,6 +35,7 @@ use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Shop;
 use Tests\Integration\Utility\ContextMockerTrait;
@@ -102,5 +103,22 @@ abstract class ContextStateTestCase extends TestCase
         }
 
         return $contextField;
+    }
+
+    /**
+     * @param string $controllerName
+     *
+     * @return MockObject|LegacyControllerContext
+     */
+    protected function createLegacyControllerContextMock(string $controllerName)
+    {
+        $legacyControllerContextBuilder = $this->getMockBuilder(LegacyControllerContext::class)->disableOriginalConstructor();
+
+        /** @var LegacyControllerContext $legacyControllerContext */
+        $legacyControllerContext = $legacyControllerContextBuilder->getMock();
+
+        $legacyControllerContext->controller_name = $controllerName;
+
+        return $legacyControllerContext;
     }
 }

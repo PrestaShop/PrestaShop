@@ -30,10 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Cart;
 use Context;
+use Controller;
 use Country;
 use Currency;
 use Customer;
 use Language;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use Shop;
 
 /**
@@ -48,6 +50,7 @@ class ContextStateManager
 {
     private const MANAGED_FIELDS = [
         'cart',
+        'controller',
         'country',
         'currency',
         'language',
@@ -93,6 +96,19 @@ class ContextStateManager
     {
         $this->saveContextField('cart');
         $this->getContext()->cart = $cart;
+
+        return $this;
+    }
+
+    /**
+     * Sets context controller and saves previous value
+     *
+     * @return $this
+     */
+    public function setController(LegacyControllerContext|Controller|null $legacyController): self
+    {
+        $this->saveContextField('controller');
+        $this->getContext()->controller = $legacyController;
 
         return $this;
     }
