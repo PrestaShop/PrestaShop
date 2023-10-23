@@ -43,7 +43,7 @@ class ApeCode
      * @var string
      */
     public const PATTERN = '/^[0-9]{1,2}?\.?[0-9]{1,2}[a-zA-Z]{1}$/s';
-    
+
     /**
      * @param mixed $code
      */
