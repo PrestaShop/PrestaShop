@@ -1717,12 +1717,7 @@ class ProductCore extends ObjectModel
      */
     public function getWsIsNew()
     {
-        $isNew = $this->isNew();
-        if (true === $isNew) {
-            return 1;
-        }
-
-        return 0;
+        return $this->isNew() === true ? 1 : 0;
     }
 
     /**
