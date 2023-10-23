@@ -2162,6 +2162,9 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
+        // Protect .git files or folders
+        fwrite($write_fd, "# Protect .git\nRewriteRule \.git - [F,L]\n");
+
         if (
             !$medias
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
@@ -2294,22 +2297,6 @@ class ToolsCore
         Require all denied
     </IfModule>
 </Files>
-');
-
-        // Protect .git folder
-        fwrite($write_fd, '# Protect .git folder
-<Directory .git>
-    # Apache 2.2
-    <IfModule !mod_authz_core.c>
-        Order deny,allow
-        Deny from all
-    </IfModule>
-
-    # Apache 2.4
-    <IfModule mod_authz_core.c>
-        Require all denied
-    </IfModule>
-</Directory>
 ');
         // Cache control
         if ($cache_control) {
