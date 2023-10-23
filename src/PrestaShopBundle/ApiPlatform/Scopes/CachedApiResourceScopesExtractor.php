@@ -32,43 +32,43 @@ use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * This class decorates ResourceScopesExtractor and stores the returned value in a filesystem
+ * This class decorates ApiResourceScopesExtractor and stores the returned value in a filesystem
  * cache, we additionally keep the result in a local class field to avoid too many request on
  * the cache and multiple un-serialization.
  *
  * @internal
  */
-class CachedResourceScopesExtractor implements ResourceScopesExtractorInterface
+class CachedApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
 {
     /**
      * Locale array cache to avoid passing through the cache pool several times in the same request.
      *
-     * @var array<string, ResourceScopes[]>
+     * @var array<string, ApiResourceScopes[]>
      */
     private array $localeCache;
 
     public function __construct(
         private readonly CacheItemPoolInterface $cacheItemPool,
-        private readonly ResourceScopesExtractorInterface $decorated
+        private readonly ApiResourceScopesExtractorInterface $decorated
     ) {
     }
 
-    public function getAllResourceScopes(): array
+    public function getAllApiResourceScopes(): array
     {
         return $this->getCachedResourceOrUseFallback(
             md5(self::class) . 'all_resources',
             function () {
-                return $this->decorated->getAllResourceScopes();
+                return $this->decorated->getAllApiResourceScopes();
             }
         );
     }
 
-    public function getEnabledResourceScopes(): array
+    public function getEnabledApiResourceScopes(): array
     {
         return $this->getCachedResourceOrUseFallback(
             md5(self::class) . 'enabled_resources',
             function () {
-                return $this->decorated->getEnabledResourceScopes();
+                return $this->decorated->getEnabledApiResourceScopes();
             }
         );
     }

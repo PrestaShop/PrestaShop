@@ -28,47 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Scopes;
 
-/**
- * @internal
- */
-class ResourceScopes
+interface ApiResourceScopesExtractorInterface
 {
-    public static function createModuleScopes(
-        array $scopes,
-        string $moduleName
-    ) {
-        return new self($scopes, $moduleName);
-    }
-
-    public static function createCoreScopes(
-        array $scopes
-    ) {
-        return new self($scopes, null);
-    }
-
-    private function __construct(
-        private array $scopes,
-        private ?string $moduleName
-    ) {
-    }
+    /**
+     * Returns all installed resource scopes even the ones that are not enabled for now.
+     *
+     * @return ApiResourceScopes[]
+     */
+    public function getAllApiResourceScopes(): array;
 
     /**
-     * List of scopes.
+     * Returns resource scopes for core and ENABLED modules.
      *
-     * @return string[]
+     * @return ApiResourceScopes[]
      */
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
-
-    public function fromCore(): bool
-    {
-        return $this->moduleName === null;
-    }
-
-    public function getModuleName(): ?string
-    {
-        return $this->moduleName;
-    }
+    public function getEnabledApiResourceScopes(): array;
 }

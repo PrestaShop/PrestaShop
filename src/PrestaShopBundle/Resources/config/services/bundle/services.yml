@@ -142,7 +142,7 @@ services:
     arguments:
       $innerFactory: '@prestashop.attributes.ressource.metadata.collection.factory.inner'
 
-  PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor:
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor:
     public: false
     autowire: true
     arguments:
@@ -151,9 +151,9 @@ services:
       $enabledModules: '%prestashop.active_modules%'
       $projectDir: '%kernel.project_dir%'
 
-  PrestaShopBundle\ApiPlatform\Scopes\CachedResourceScopesExtractor:
+  PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor:
     public: false
     autowire: true
-    decorates: PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor
+    decorates: PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
 
-  PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedResourceScopesExtractor'
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor'

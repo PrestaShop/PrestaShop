@@ -30,10 +30,10 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Scopes;
 
 use ApiPlatform\Metadata\Resource\Factory\AttributesResourceMetadataCollectionFactory;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopes;
-use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor;
+use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopes;
+use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
 
-class ResourceScopesExtractorTest extends TestCase
+class ApiResourceScopesExtractorTest extends TestCase
 {
     private string $moduleDir;
 
@@ -49,12 +49,12 @@ class ResourceScopesExtractorTest extends TestCase
     public function testGetAllResourceScopes(): void
     {
         $scopesExtractor = $this->buildExtractor();
-        $resourceScopes = $scopesExtractor->getAllResourceScopes();
+        $resourceScopes = $scopesExtractor->getAllApiResourceScopes();
 
         $expectedResourceScopes = [
-            ResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
-            ResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
-            ResourceScopes::createModuleScopes(['customer_group_read'], 'disabled_fake_module'),
+            ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
+            ApiResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
+            ApiResourceScopes::createModuleScopes(['customer_group_read'], 'disabled_fake_module'),
         ];
         $this->assertEquals($expectedResourceScopes, $resourceScopes);
     }
@@ -62,18 +62,18 @@ class ResourceScopesExtractorTest extends TestCase
     public function testGetEnabledResourceScopes(): void
     {
         $scopesExtractor = $this->buildExtractor();
-        $resourceScopes = $scopesExtractor->getEnabledResourceScopes();
+        $resourceScopes = $scopesExtractor->getEnabledApiResourceScopes();
 
         $expectedResourceScopes = [
-            ResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
-            ResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
+            ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
+            ApiResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
         ];
         $this->assertEquals($expectedResourceScopes, $resourceScopes);
     }
 
-    private function buildExtractor(): ResourceScopesExtractor
+    private function buildExtractor(): ApiResourceScopesExtractor
     {
-        return new ResourceScopesExtractor(
+        return new ApiResourceScopesExtractor(
             new AttributesResourceMetadataCollectionFactory(),
             $this->moduleDir,
             ['fake_module', 'disabled_fake_module'],

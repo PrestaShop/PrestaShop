@@ -44,7 +44,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface
  *
  * @internal
  */
-class ResourceScopesExtractor implements ResourceScopesExtractorInterface
+class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
 {
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
@@ -58,9 +58,9 @@ class ResourceScopesExtractor implements ResourceScopesExtractorInterface
     /**
      * Returns all installed resource scopes even the ones that are not enabled for now.
      *
-     * @return ResourceScopes[]
+     * @return ApiResourceScopes[]
      */
-    public function getAllResourceScopes(): array
+    public function getAllApiResourceScopes(): array
     {
         return $this->getCoreAndModulesResources($this->installedModules);
     }
@@ -68,9 +68,9 @@ class ResourceScopesExtractor implements ResourceScopesExtractorInterface
     /**
      * Returns resource scopes for core and ENABLED modules.
      *
-     * @return ResourceScopes[]
+     * @return ApiResourceScopes[]
      */
-    public function getEnabledResourceScopes(): array
+    public function getEnabledApiResourceScopes(): array
     {
         return $this->getCoreAndModulesResources($this->enabledModules);
     }
@@ -84,7 +84,7 @@ class ResourceScopesExtractor implements ResourceScopesExtractorInterface
             rtrim($this->projectDir, '/') . '/src/PrestaShopBundle/ApiPlatform/Resources',
         ]));
         if (!empty($coreScopes)) {
-            $resourceScopes[] = ResourceScopes::createCoreScopes($coreScopes);
+            $resourceScopes[] = ApiResourceScopes::createCoreScopes($coreScopes);
         }
 
         foreach ($modules as $moduleName) {
@@ -92,7 +92,7 @@ class ResourceScopesExtractor implements ResourceScopesExtractorInterface
                 $this->getModulePaths($moduleName)
             ));
             if (!empty($moduleScopes)) {
-                $resourceScopes[] = ResourceScopes::createModuleScopes($moduleScopes, $moduleName);
+                $resourceScopes[] = ApiResourceScopes::createModuleScopes($moduleScopes, $moduleName);
             }
         }
 

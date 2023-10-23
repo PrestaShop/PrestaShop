@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopes;
-use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractorInterface;
+use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopes;
+use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface;
 use PrestaShopBundle\Form\Admin\Type\AccordionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\DataMapperInterface;
@@ -47,7 +47,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly ResourceScopesExtractorInterface $resourceScopeExtractor,
+        private readonly ApiResourceScopesExtractorInterface $resourceScopeExtractor,
         private readonly ModuleRepository $moduleRepository
     ) {
         parent::__construct($translator, $locales);
@@ -55,7 +55,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $resourceScopes = $this->resourceScopeExtractor->getAllResourceScopes();
+        $resourceScopes = $this->resourceScopeExtractor->getAllApiResourceScopes();
         foreach ($resourceScopes as $resourceScope) {
             $builder->add($this->getResourceFormName($resourceScope), CollectionType::class, [
                 'label' => $this->getResourceLabel($resourceScope),
@@ -71,7 +71,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         /** @var FormInterface[] $forms */
         $forms = iterator_to_array($forms);
 
-        $resources = $this->resourceScopeExtractor->getAllResourceScopes();
+        $resources = $this->resourceScopeExtractor->getAllApiResourceScopes();
         foreach ($resources as $resource) {
             $resourceForm = $forms[$this->getResourceFormName($resource)];
             $formattedData = [];
@@ -113,12 +113,12 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         return AccordionType::class;
     }
 
-    private function getResourceFormName(ResourceScopes $resourceScopes): string
+    private function getResourceFormName(ApiResourceScopes $resourceScopes): string
     {
         return $resourceScopes->fromCore() ? self::CORE_FILE_NAME : $resourceScopes->getModuleName();
     }
 
-    private function getResourceLabel(ResourceScopes $resourceScopes): string
+    private function getResourceLabel(ApiResourceScopes $resourceScopes): string
     {
         if ($resourceScopes->fromCore()) {
             return $this->trans('Native scopes', 'Admin.Advparameters.Feature');
@@ -129,7 +129,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         return $module->attributes->get('displayName');
     }
 
-    private function getResourceLabelSubtitle(ResourceScopes $resourceScopes): string
+    private function getResourceLabelSubtitle(ApiResourceScopes $resourceScopes): string
     {
         if ($resourceScopes->fromCore()) {
             return '';
