@@ -111,12 +111,9 @@ class EditApiAccessCommand
 
     public function setScopes(?array $scopes): self
     {
-        foreach ($scopes as $scope) {
-            if (empty($scope) || !is_string($scope)) {
-                throw new ApiAccessConstraintException('Expected list of non empty string for scopes', ApiAccessConstraintException::INVALID_SCOPES);
-            }
+        if ((count($scopes) !== count(array_filter($scopes, 'is_string')))) {
+            throw new ApiAccessConstraintException('Expected list of non empty string for scopes', ApiAccessConstraintException::INVALID_SCOPES);
         }
-
         $this->scopes = $scopes;
 
         return $this;
