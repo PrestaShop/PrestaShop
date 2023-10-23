@@ -150,3 +150,10 @@ services:
       $installedModules: '%prestashop.installed_modules%'
       $enabledModules: '%prestashop.active_modules%'
       $projectDir: '%kernel.project_dir%'
+
+  PrestaShopBundle\ApiPlatform\Scopes\CachedResourceScopesExtractor:
+    public: false
+    autowire: true
+    decorates: PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor
+
+  PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedResourceScopesExtractor'

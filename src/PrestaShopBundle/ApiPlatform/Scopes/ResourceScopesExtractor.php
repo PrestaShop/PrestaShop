@@ -35,9 +35,16 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 
 /**
+ * This service manually extracts data from the ApiResource classes to get the scopes associated
+ * to them, following our internal convention to set the scopes via extra parameters.
+ *
+ * We cannot use the ApiPlatform metadata collection because it only contains resources for enabled modules,
+ * as it should, that were set in our PrestaShopExtension. Since in forms we need all the installed scopes,
+ * not just the enabled ones, we need this service to extract them.
+ *
  * @internal
  */
-class ResourceScopesExtractor
+class ResourceScopesExtractor implements ResourceScopesExtractorInterface
 {
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,

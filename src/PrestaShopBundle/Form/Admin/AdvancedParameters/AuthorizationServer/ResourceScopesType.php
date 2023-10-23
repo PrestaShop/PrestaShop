@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopes;
-use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractor;
+use PrestaShopBundle\ApiPlatform\Scopes\ResourceScopesExtractorInterface;
 use PrestaShopBundle\Form\Admin\Type\AccordionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\DataMapperInterface;
@@ -47,7 +47,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly ResourceScopesExtractor $resourceScopeExtractor,
+        private readonly ResourceScopesExtractorInterface $resourceScopeExtractor,
         private readonly ModuleRepository $moduleRepository
     ) {
         parent::__construct($translator, $locales);
