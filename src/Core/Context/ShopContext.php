@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
+ * This context service gives access to all contextual data related to shop.
+ *
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
  */
 class ShopContext

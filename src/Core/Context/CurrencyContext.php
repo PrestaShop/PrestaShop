@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+/**
+ * This context service gives access to all contextual data related to currency.
+ */
 class CurrencyContext
 {
     public function __construct(

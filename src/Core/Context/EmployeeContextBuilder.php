@@ -43,16 +43,16 @@ class EmployeeContextBuilder
         if ($this->employeeId) {
             $legacyEmployee = new LegacyEmployee($this->employeeId);
             $employee = new Employee(
-                id: $legacyEmployee->getId(),
-                profileId: $legacyEmployee->getProfileId(),
-                languageId: $legacyEmployee->getLanguageId(),
-                firstName: $legacyEmployee->getFirstName(),
-                lastName: $legacyEmployee->getLastName(),
-                email: $legacyEmployee->getEmail(),
-                password: $legacyEmployee->getPassword(),
-                imageUrl: $legacyEmployee->getImageUrl(),
-                defaultTabId: $legacyEmployee->getDefaultTabId(),
-                defaultShopId: $legacyEmployee->getDefaultShopId(),
+                id: (int) $legacyEmployee->id,
+                profileId: (int) $legacyEmployee->id_profile,
+                languageId: (int) $legacyEmployee->id_lang,
+                firstName: $legacyEmployee->firstname,
+                lastName: $legacyEmployee->lastname,
+                email: $legacyEmployee->email,
+                password: $legacyEmployee->passwd,
+                imageUrl: $legacyEmployee->getImage(),
+                defaultTabId: (int) $legacyEmployee->default_tab,
+                defaultShopId: (int) $legacyEmployee->getDefaultShopID(),
                 associatedShopIds: $legacyEmployee->getAssociatedShopIds(),
                 associatedShopGroupIds: $legacyEmployee->getAssociatedShopGroupIds()
             );

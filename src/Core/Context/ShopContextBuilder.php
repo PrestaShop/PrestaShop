@@ -58,17 +58,17 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
         return new ShopContext(
             $this->shopConstraint,
             new Shop(
-                id: $legacyShop->getId(),
-                name: $legacyShop->getName(),
-                shopGroupId: $legacyShop->getShopGroupId(),
-                categoryId: $legacyShop->getCategoryId(),
-                themeName: $legacyShop->getThemeName(),
-                color: $legacyShop->getColor(),
-                physicalUri: $legacyShop->getPhysicalUri(),
-                virtualUri: $legacyShop->getVirtualUri(),
-                domain: $legacyShop->getDomain(),
-                domainSSL: $legacyShop->getDomainSSL(),
-                active: $legacyShop->isActive()
+                id: (int) $legacyShop->id,
+                name: $legacyShop->name,
+                shopGroupId: (int) $legacyShop->id_shop_group,
+                categoryId: (int) $legacyShop->id_category,
+                themeName: $legacyShop->theme_name,
+                color: $legacyShop->color,
+                physicalUri: $legacyShop->physical_uri,
+                virtualUri: $legacyShop->virtual_uri,
+                domain: $legacyShop->domain,
+                domainSSL: $legacyShop->domain_ssl,
+                active: (bool) $legacyShop->active
             )
         );
     }
