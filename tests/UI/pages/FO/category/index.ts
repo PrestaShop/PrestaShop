@@ -311,7 +311,7 @@ class Category extends FOBasePage {
       /* eslint-env browser */
       displayed = await page.evaluate(
         (selector) => {
-          const element: HTMLElement|null = document.querySelector(selector);
+          const element: HTMLElement | null = document.querySelector(selector);
 
           if (element === null) {
             return false;
@@ -343,7 +343,7 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getQuickViewImageMain(page: Page): Promise<string|null> {
+  async getQuickViewImageMain(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, `${this.quickViewModalProductImageCover} source`, 'srcset');
   }
 
@@ -362,7 +362,7 @@ class Category extends FOBasePage {
    * @param name {string} Name of a category
    * @returns {Promise<string|null>}
    */
-  async getCategoryImageMain(page: Page, name: string): Promise<string|null> {
+  async getCategoryImageMain(page: Page, name: string): Promise<string | null> {
     return this.getAttributeContent(page, `${this.subCategoriesItem(name)} source`, 'srcset');
   }
 
@@ -372,7 +372,7 @@ class Category extends FOBasePage {
    * @param idProduct {number} ID of a product
    * @return {Promise<number|null>}
    */
-  async getNThChildFromIDProduct(page:Page, idProduct: number): Promise<number|null> {
+  async getNThChildFromIDProduct(page: Page, idProduct: number): Promise<number | null> {
     const productItemsLength = await this.getNumberOfProductsDisplayed(page);
 
     for (let idx: number = 1; idx <= productItemsLength; idx++) {
@@ -405,6 +405,44 @@ class Category extends FOBasePage {
    */
   async isSearchFiltersCheckbox(page: Page, facetType: string): Promise<boolean> {
     return page.$$eval(this.searchFiltersCheckbox(facetType), (all) => all.length !== 0);
+  }
+
+  async filterByCheckbox(page: Page, facetType: string, checkboxName: string, toEnable: boolean): Promise<void> {
+    await page.setChecked(`${this.searchFiltersCheckbox(facetType)}[data-search-url*=${checkboxName}]`, toEnable, {force: true});
+    await page.waitForTimeout(2000);
+  }
+
+  async getActiveFilters(page: Page): Promise<string> {
+    return this.getTextContent(page, '#js-active-search-filters');
+  }
+
+  async getProductHref(page: Page, productRow: number): Promise<string> {
+    return this.getAttributeContent(page, `${this.productArticle(productRow)} div.thumbnail-top a`, 'href');
+  }
+
+  async clearAllFilters(page: Page): Promise<boolean> {
+    await page.locator('#_desktop_search_filters_clear_all button.js-search-filters-clear-all').click();
+
+    return this.elementNotVisible(page, '#js-active-search-filters', 2000);
+  }
+
+  async filterByPrice(page: Page): Promise<void> {
+    const sliderTrack = await page.locator('.ui-slider-horizontal');
+
+    const sliderOffsetWidth = await sliderTrack.evaluate(el => {
+      return el.getBoundingClientRect().width;
+    });
+
+    // Using the hover method to place the mouse cursor then moving it to the right
+    await sliderTrack.hover({force: true, position: {x: 25, y: 0}});
+    await page.mouse.down();
+    console.log('part 1 done');
+    await page.waitForTimeout(10000);
+
+    await sliderTrack.hover({force: true, position: {x: sliderOffsetWidth, y: 50}});
+    await page.mouse.up();
+    console.log('part 2 done');
+    await page.waitForTimeout(10000);
   }
 
   /**
