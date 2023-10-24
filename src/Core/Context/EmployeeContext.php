@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 /**
+ * This context service gives access to all contextual data related to employee.
+ *
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
  */
 class EmployeeContext

@@ -26,26 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace PrestaShop\PrestaShop\Core\Context;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-
-class CurrencyContextListener
+/**
+ * This interface is used to build the legacy context for backward compatibility. The legacy context is being
+ * replaced by modern split Symfony services that offer more stability and control. But we still need to maintain
+ * some backward compatibility for all parts of code that are not yet migrated to new contexts, or for old modules
+ * that still rely a lot on the legacy Context.
+ */
+interface LegacyContextBuilderInterface
 {
-    public function __construct(
-        private readonly CurrencyContextBuilder $currencyContextBuilder,
-        private readonly ConfigurationInterface $configuration,
-    ) {
-    }
-
-    public function onKernelRequest(RequestEvent $event): void
-    {
-        if (!$event->isMainRequest()) {
-            return;
-        }
-
-        $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
-    }
+    public function buildLegacyContext(): void;
 }

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 /**
- * Basic DTO class
+ * Immutable DTO Class representing the employee accessible via the EmployeeContext
  *
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
  */

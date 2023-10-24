@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -60,12 +62,15 @@ class ShopContextListener
             return;
         }
 
+        $redirectResponse = $this->redirectShopContext($event);
+        if ($redirectResponse) {
+            $event->setResponse($redirectResponse);
+
+            return;
+        }
+
         $shopConstraint = ShopConstraint::allShops();
         $cookieShopConstraint = $this->getShopConstraintFromCookie();
-
-        if (!empty($event->getRequest()->get('setShopContext'))) {
-            $this->changeShopContext($event->getRequest()->get('setShopContext'));
-        }
 
         if ($cookieShopConstraint && $cookieShopConstraint->getShopGroupId()) {
             // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
@@ -93,8 +98,6 @@ class ShopContextListener
         } elseif (empty($this->shopContextBuilder->getShopId())) {
             $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
         }
-
-        $this->shopContextBuilder->buildLegacyContext($shopConstraint);
     }
 
     /**
@@ -129,12 +132,29 @@ class ShopContextListener
         return null;
     }
 
-    private function changeShopContext(string $shopContextUrlParameter)
+    /**
+     * Update cookie value and redirect to current utl to refresh the context.
+     *
+     * @param RequestEvent $requestEvent
+     */
+    private function redirectShopContext(RequestEvent $requestEvent): ?RedirectResponse
     {
-        if ($this->multistoreFeature->isUsed()) {
-            $this->legacyContext->getContext()->cookie->shopContext = $shopContextUrlParameter;
-        } else {
-            $this->legacyContext->getContext()->cookie->shopContext = $this->configuration->get('PS_SHOP_DEFAULT');
+        $shopContextUrlParameter = $requestEvent->getRequest()->get('setShopContext');
+        if (empty($shopContextUrlParameter)) {
+            return null;
         }
+        $cookie = $this->legacyContext->getContext()->cookie;
+        if ($this->multistoreFeature->isUsed()) {
+            $cookie->shopContext = $shopContextUrlParameter;
+        } else {
+            $cookie->shopContext = 's-' . $this->configuration->get('PS_SHOP_DEFAULT');
+        }
+        $cookie->update();
+
+        // Redirect to same url but remove setShopContext and conf parameters
+        $requestEvent->setResponse(new RedirectResponse(UrlCleaner::cleanUrl(
+            $requestEvent->getRequest()->getUri(),
+            ['setShopContext', 'conf']
+        )));
     }
 }

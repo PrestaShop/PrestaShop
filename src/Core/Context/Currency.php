@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+/**
+ * Immutable DTO Class representing the currency accessible via the CurrencyContext
+ */
 class Currency
 {
     public function __construct(
@@ -144,7 +147,7 @@ class Currency
         return $this->precision;
     }
 
-    public function getPattern(): string
+    public function getPattern(): array
     {
         return $this->pattern;
     }

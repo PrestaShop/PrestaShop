@@ -38,10 +38,11 @@ use Shop as LegacyShop;
 /**
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
  */
-class ShopContextBuilder
+class ShopContextBuilder implements LegacyContextBuilderInterface
 {
     private ?ShopConstraint $shopConstraint = null;
     private ?int $shopId = null;
+    private ?LegacyShop $legacyShop;
 
     public function __construct(
         private readonly ShopRepository $shopRepository,
@@ -51,53 +52,39 @@ class ShopContextBuilder
 
     public function build(): ShopContext
     {
-        if (null === $this->shopConstraint) {
-            throw new InvalidArgumentException(sprintf(
-                'Cannot build shop context as no shopConstraint has been defined you need to call %s::setShopConstraint to define it before building the shop context',
-                self::class
-            ));
-        }
-
-        if (null === $this->shopId) {
-            throw new InvalidArgumentException(sprintf(
-                'Cannot build shop context as no shopId has been defined you need to call %s::setShopId to define it before building the shop context',
-                self::class
-            ));
-        }
-
-        $shop = $this->shopRepository->get(new ShopId($this->shopId));
+        $this->assertArguments();
+        $legacyShop = $this->getLegacyShop();
 
         return new ShopContext(
             $this->shopConstraint,
             new Shop(
-                id: $shop->getId(),
-                name: $shop->getName(),
-                shopGroupId: $shop->getShopGroupId(),
-                categoryId: $shop->getCategoryId(),
-                themeName: $shop->getThemeName(),
-                color: $shop->getColor(),
-                physicalUri: $shop->getPhysicalUri(),
-                virtualUri: $shop->getVirtualUri(),
-                domain: $shop->getDomain(),
-                domainSSL: $shop->getDomainSSL(),
-                active: $shop->isActive()
+                id: $legacyShop->getId(),
+                name: $legacyShop->getName(),
+                shopGroupId: $legacyShop->getShopGroupId(),
+                categoryId: $legacyShop->getCategoryId(),
+                themeName: $legacyShop->getThemeName(),
+                color: $legacyShop->getColor(),
+                physicalUri: $legacyShop->getPhysicalUri(),
+                virtualUri: $legacyShop->getVirtualUri(),
+                domain: $legacyShop->getDomain(),
+                domainSSL: $legacyShop->getDomainSSL(),
+                active: $legacyShop->isActive()
             )
         );
     }
 
-    public function buildLegacyContext(ShopConstraint $shopConstraint): self
+    public function buildLegacyContext(): void
     {
-        if ($shopConstraint->forAllShops()) {
+        $this->assertArguments();
+        if ($this->shopConstraint->forAllShops()) {
             $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_ALL);
-        } elseif (empty($shopConstraint->getShopId())) {
-            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_GROUP, $shopConstraint->getShopGroupId()->getValue());
+        } elseif (!empty($this->shopConstraint->getShopGroupId())) {
+            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_GROUP, $this->shopConstraint->getShopGroupId()->getValue());
         } else {
-            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_SHOP, $shopConstraint->getShopId()->getValue());
+            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_SHOP, $this->shopConstraint->getShopId()->getValue());
         }
 
         $this->contextStateManager->setShop(new LegacyShop($this->shopId));
-
-        return $this;
     }
 
     public function setShopId(int $shopId): self
@@ -122,5 +109,31 @@ class ShopContextBuilder
     public function getShopConstraint(): ?ShopConstraint
     {
         return $this->shopConstraint;
+    }
+
+    private function assertArguments(): void
+    {
+        if (null === $this->shopConstraint) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot build shop context as no shopConstraint has been defined you need to call %s::setShopConstraint to define it before building the shop context',
+                self::class
+            ));
+        }
+
+        if (null === $this->shopId) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot build shop context as no shopId has been defined you need to call %s::setShopId to define it before building the shop context',
+                self::class
+            ));
+        }
+    }
+
+    private function getLegacyShop(): LegacyShop
+    {
+        if (!$this->legacyShop) {
+            $this->legacyShop = $this->shopRepository->get(new ShopId($this->shopId));
+        }
+
+        return $this->legacyShop;
     }
 }

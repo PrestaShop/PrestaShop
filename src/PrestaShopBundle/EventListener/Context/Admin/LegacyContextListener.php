@@ -28,24 +28,39 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
-class CurrencyContextListener
+/**
+ * This listener is responsible for calling every LegacyContextBuilderInterface services and
+ * ask them to build the legacy context. This interface is usually implement by the recent
+ * context builders that are already responsible for building the recent split context services.
+ *
+ * Since they already handle the new context it makes sense to give them the responsibility of keeping
+ * the backward compatibility on legacy context, so they also fill the legacy context fields based on
+ * the settings that ere provided to them, this way we keep a single source of truth.
+ *
+ * This listener is only executed on kernel.controller event, this way we are sure that a Symfony controller
+ * has been found, so this listener shouldn't mess with legacy pages.
+ */
+class LegacyContextListener
 {
+    /**
+     * @param iterable|LegacyContextBuilderInterface[] $legacyBuilders
+     */
     public function __construct(
-        private readonly CurrencyContextBuilder $currencyContextBuilder,
-        private readonly ConfigurationInterface $configuration,
+        private readonly iterable $legacyBuilders
     ) {
     }
 
-    public function onKernelRequest(RequestEvent $event): void
+    public function onKernelController(ControllerEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
 
-        $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
+        foreach ($this->legacyBuilders as $legacyBuilder) {
+            $legacyBuilder->buildLegacyContext();
+        }
     }
 }

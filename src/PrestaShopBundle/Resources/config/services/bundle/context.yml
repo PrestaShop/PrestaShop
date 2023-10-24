@@ -6,16 +6,22 @@ services:
 
   PrestaShopBundle\EventListener\Context\Admin\EmployeeContextListener:
     tags:
-      - { name: kernel.event_listener, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
     tags:
-      - { name: kernel.event_listener, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   PrestaShopBundle\EventListener\Context\Admin\CurrencyContextListener:
     tags:
-      - { name: kernel.event_listener, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   PrestaShopBundle\EventListener\Context\Admin\CountryContextListener:
     tags:
-      - { name: kernel.event_listener, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\LegacyContextListener:
+    arguments:
+      $legacyBuilders: !tagged_iterator core.legacy_context_builder
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

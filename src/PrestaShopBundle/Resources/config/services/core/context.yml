@@ -3,11 +3,9 @@ services:
     public: false
     autowire: true
     autoconfigure: true
-
-  PrestaShop\PrestaShop\Core\Context\CookieContextBuilder: ~
-  PrestaShop\PrestaShop\Core\Context\CookieContext:
-    lazy: true
-    factory: [ '@PrestaShop\PrestaShop\Core\Context\CookieContextBuilder', 'build' ]
+  _instanceof:
+    PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface:
+      tags: [ 'core.legacy_context_builder' ]
 
   PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder: ~
   PrestaShop\PrestaShop\Core\Context\EmployeeContext:

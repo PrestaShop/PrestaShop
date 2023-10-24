@@ -28,34 +28,28 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+use Currency as LegacyCurrency;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
-class CurrencyContextBuilder
+class CurrencyContextBuilder implements LegacyContextBuilderInterface
 {
     private ?int $currencyId = null;
 
+    private ?LegacyCurrency $legacyCurrency;
+
     public function __construct(
         private readonly CurrencyRepository $currencyRepository,
-        private readonly LegacyContext $legacyContext,
         private readonly ContextStateManager $contextStateManager
     ) {
     }
 
     public function build(): CurrencyContext
     {
-        if (null === $this->currencyId) {
-            throw new InvalidArgumentException(sprintf(
-                'Cannot build Currency context as no currencyId has been defined you need to call %s::setCurrencyId to define it before building the Currency context',
-                self::class
-            ));
-        }
-
-        $legacyCurrency = $this->currencyRepository->get(new CurrencyId($this->currencyId));
-
+        $this->assertArguments();
+        $legacyCurrency = $this->getLegacyCurrency();
         $currency = new Currency(
             $legacyCurrency->id,
             $legacyCurrency->getName(),
@@ -82,6 +76,12 @@ class CurrencyContextBuilder
         return new CurrencyContext($currency);
     }
 
+    public function buildLegacyContext(): void
+    {
+        $this->assertArguments();
+        $this->contextStateManager->setCurrency($this->getLegacyCurrency());
+    }
+
     public function setCurrencyId(int $currencyId)
     {
         $this->currencyId = $currencyId;
@@ -89,16 +89,22 @@ class CurrencyContextBuilder
         return $this;
     }
 
-    public function buildLegacyContext(): self
+    private function assertArguments(): void
     {
-        // set currency object model in legacy context if currency is different
-        if (empty($this->legacyContext->getContext()->currency)
-            || (int) $this->legacyContext->getContext()->currency->id !== $this->currencyId
-        ) {
-            $legacyCurrency = $this->currencyRepository->get(new CurrencyId($this->currencyId));
-            $this->contextStateManager->setCurrency($legacyCurrency);
+        if (null === $this->currencyId) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot build Currency context as no currencyId has been defined you need to call %s::setCurrencyId to define it before building the Currency context',
+                self::class
+            ));
+        }
+    }
+
+    private function getLegacyCurrency(): LegacyCurrency
+    {
+        if (!$this->legacyCurrency) {
+            $this->legacyCurrency = $this->currencyRepository->get(new CurrencyId($this->currencyId));
         }
 
-        return $this;
+        return $this->legacyCurrency;
     }
 }

@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+/**
+ * Immutable DTO Class representing the country accessible via the CountryContext
+ */
 class Country
 {
     public function __construct(
