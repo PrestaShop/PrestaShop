@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,50 +26,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-class EditableApiAccess
+use PrestaShop\PrestaShop\Core\ConstraintValidator\InstalledApiResourceScopeValidator;
+use Symfony\Component\Validator\Constraint;
+
+/**
+ * @Annotation
+ * @Target({"PROPERTY"})
+ */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
+class InstalledApiResourceScope extends Constraint
 {
-    public function __construct(
-        private readonly int $apiAccessId,
-        private readonly string $apiClientId,
-        private readonly string $clientName,
-        private readonly bool $enabled,
-        private readonly string $description,
-        private readonly array $scopes
-    ) {
-    }
-
-    public function getApiAccessId(): int
-    {
-        return $this->apiAccessId;
-    }
-
-    public function getApiClientId(): string
-    {
-        return $this->apiClientId;
-    }
-
-    public function getClientName(): string
-    {
-        return $this->clientName;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
+    public $message = 'The scopes %scope_names% are not associated to any installed API.';
 
     /**
-     * @return string[]
+     * {@inheritdoc}
      */
-    public function getScopes(): array
+    public function validatedBy()
     {
-        return $this->scopes;
+        return InstalledApiResourceScopeValidator::class;
     }
 }

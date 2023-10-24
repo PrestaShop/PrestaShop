@@ -49,6 +49,7 @@ class ApiAccessFormDataProvider implements FormDataProviderInterface
             'client_name' => $apiAccess->getClientName(),
             'description' => $apiAccess->getDescription(),
             'enabled' => $apiAccess->isEnabled(),
+            'scopes' => $apiAccess->getScopes(),
         ];
     }
 

@@ -27,50 +27,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult;
+namespace Resources\api_platform\fake_module_resources\disabled_fake_module\src\ApiPlatform\Resources;
 
-class EditableApiAccess
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/customers/group',
+            processor: CommandProcessor::class,
+            extraProperties: [
+                'command' => AddCustomerGroupCommand::class,
+                'scopes' => ['customer_group_read'],
+            ],
+        ),
+    ]
+)]
+class CustomerGroup
 {
-    public function __construct(
-        private readonly int $apiAccessId,
-        private readonly string $apiClientId,
-        private readonly string $clientName,
-        private readonly bool $enabled,
-        private readonly string $description,
-        private readonly array $scopes
-    ) {
-    }
+    public array $localizedNames;
 
-    public function getApiAccessId(): int
-    {
-        return $this->apiAccessId;
-    }
+    public float $reductionPercent;
 
-    public function getApiClientId(): string
-    {
-        return $this->apiClientId;
-    }
+    public bool $displayPriceTaxExcluded;
 
-    public function getClientName(): string
-    {
-        return $this->clientName;
-    }
+    public bool $showPrice;
 
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
+    public array $shopIds;
 }

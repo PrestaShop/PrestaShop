@@ -135,3 +135,25 @@ services:
     class: PrestaShopBundle\ApiPlatform\DomainSerializer
     arguments:
       [ !tagged prestashop.api.denormalizers ]
+
+  prestashop.attributes.ressource.metadata.collection.factory:
+    class: PrestaShopBundle\ApiPlatform\Metadata\ScopesToSecurityMetadataCollectionFactoryDecorator
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    arguments:
+      $innerFactory: '@prestashop.attributes.ressource.metadata.collection.factory.inner'
+
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor:
+    public: false
+    autowire: true
+    arguments:
+      $moduleDir: '%prestashop.module_dir%'
+      $installedModules: '%prestashop.installed_modules%'
+      $enabledModules: '%prestashop.active_modules%'
+      $projectDir: '%kernel.project_dir%'
+
+  PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor:
+    public: false
+    autowire: true
+    decorates: PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
+
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor'

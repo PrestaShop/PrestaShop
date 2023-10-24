@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundExcep
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\Resetter\ApiAccessResetter;
 
 class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
@@ -51,10 +52,11 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         $data = $this->fixDataType($table->getRowsHash());
 
         $command = new AddApiAccessCommand(
-          $data['clientName'],
-          $data['apiClientId'],
-          $data['enabled'],
-          $data['description']
+            $data['clientName'],
+            $data['apiClientId'],
+            $data['enabled'],
+            $data['description'],
+            PrimitiveUtils::castStringArrayIntoArray($data['scopes'] ?? '')
         );
 
         try {
@@ -100,6 +102,13 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
+        if (isset($expectedData['scopes'])) {
+            $expectedScopes = PrimitiveUtils::castStringArrayIntoArray($expectedData['scopes']);
+            if ($result->getScopes() !== $expectedScopes) {
+                $errors[] = 'scopes';
+            }
+        }
+
         if (count($errors) > 0) {
             throw new \RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
         }
@@ -129,8 +138,15 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['description'])) {
             $command->setDescription($data['description']);
         }
+        if (isset($data['scopes'])) {
+            $command->setScopes(PrimitiveUtils::castStringArrayIntoArray($data['scopes']));
+        }
 
-        $commandBus->handle($command);
+        try {
+            $commandBus->handle($command);
+        } catch (ApiAccessConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -280,6 +296,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             'clientName' => ApiAccessConstraintException::INVALID_CLIENT_NAME,
             'enabled' => ApiAccessConstraintException::INVALID_ENABLED,
             'description' => ApiAccessConstraintException::INVALID_DESCRIPTION,
+            'scopes' => ApiAccessConstraintException::NON_INSTALLED_SCOPES,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

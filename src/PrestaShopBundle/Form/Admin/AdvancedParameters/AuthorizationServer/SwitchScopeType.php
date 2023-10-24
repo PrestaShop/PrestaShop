@@ -26,33 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * This form type is used as a container of sub forms, each sub form will be rendered as a part of an accordion.
- */
-class AccordionType extends AbstractType
+class SwitchScopeType extends TranslatorAwareType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $view->vars['expand_first'] = $options['expand_first'];
-        $view->vars['expand_all'] = $options['expand_all'];
-        $view->vars['expand_on_error'] = $options['expand_on_error'];
-        $view->vars['display_one'] = $options['display_one'];
+        $builder
+            ->add('scope', TextPreviewType::class, [
+                'label' => false,
+            ])
+            ->add('associated', SwitchType::class, [
+                'label' => false,
+                'choices' => [
+                    $this->trans('Access: unauthorized', 'Admin.Advparameters.Feature') => false,
+                    $this->trans('Access: authorized', 'Admin.Advparameters.Feature') => true,
+                ],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'expand_first' => true,
-            'expand_all' => false,
-            'expand_on_error' => true,
-            'display_one' => true,
+            'label' => false,
+            'attr' => [
+                'class' => 'switch-scope',
+            ],
         ]);
     }
 }

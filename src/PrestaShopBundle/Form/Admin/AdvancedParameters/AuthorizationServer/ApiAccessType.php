@@ -97,6 +97,9 @@ class ApiAccessType extends TranslatorAwareType
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => true,
             ])
+            ->add('scopes', ResourceScopesType::class, [
+                'label' => $this->trans('Scopes', 'Admin.Advparameters.Feature'),
+            ])
         ;
     }
 }

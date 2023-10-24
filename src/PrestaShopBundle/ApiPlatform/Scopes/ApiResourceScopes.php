@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,50 +26,49 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult;
+namespace PrestaShopBundle\ApiPlatform\Scopes;
 
-class EditableApiAccess
+/**
+ * @internal
+ */
+class ApiResourceScopes
 {
-    public function __construct(
-        private readonly int $apiAccessId,
-        private readonly string $apiClientId,
-        private readonly string $clientName,
-        private readonly bool $enabled,
-        private readonly string $description,
-        private readonly array $scopes
+    public static function createModuleScopes(
+        array $scopes,
+        string $moduleName
+    ) {
+        return new self($scopes, $moduleName);
+    }
+
+    public static function createCoreScopes(
+        array $scopes
+    ) {
+        return new self($scopes, null);
+    }
+
+    private function __construct(
+        private array $scopes,
+        private ?string $moduleName
     ) {
     }
 
-    public function getApiAccessId(): int
-    {
-        return $this->apiAccessId;
-    }
-
-    public function getApiClientId(): string
-    {
-        return $this->apiClientId;
-    }
-
-    public function getClientName(): string
-    {
-        return $this->clientName;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
     /**
+     * List of scopes.
+     *
      * @return string[]
      */
     public function getScopes(): array
     {
         return $this->scopes;
+    }
+
+    public function fromCore(): bool
+    {
+        return $this->moduleName === null;
+    }
+
+    public function getModuleName(): ?string
+    {
+        return $this->moduleName;
     }
 }

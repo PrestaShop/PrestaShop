@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Decorator;
+namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
@@ -35,7 +35,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 
 /** Decorate Api platform's ResourceMetadataCollectionFactory, so we can alter the results it returns */
-class AttributesResourceMetadataCollectionFactoryDecorator implements ResourceMetadataCollectionFactoryInterface
+class ScopesToSecurityMetadataCollectionFactoryDecorator implements ResourceMetadataCollectionFactoryInterface
 {
     private ResourceMetadataCollectionFactoryInterface $innerFactory;
 
@@ -56,16 +56,11 @@ class AttributesResourceMetadataCollectionFactoryDecorator implements ResourceMe
             foreach ($operations as $key => $operation) {
                 $extraProperties = $operation->getExtraProperties();
                 if (array_key_exists('scopes', $extraProperties)) {
-                    $scopesToAdd = $extraProperties['scopes'];
-                    $modifiedOperationWithSecurity = $operation->withSecurity(
-                        $this->translateScopeToSecurity($scopesToAdd, $operation->getSecurity())
-                    );
-                    // We unset the extra property scopes so that the element is not treated again.
-                    unset($extraProperties['scopes']);
-                    $modifiedOperation = $modifiedOperationWithSecurity->withExtraProperties($extraProperties);
-                    // We remove the original element and replace it with our clone.
+                    // We remove the original element and replace it with our modified clone.
                     $operations->remove($key);
-                    $operations->add($key, $modifiedOperation);
+                    $operations->add($key, $operation->withSecurity(
+                        $this->translateScopeToSecurity($extraProperties['scopes'], $operation->getSecurity())
+                    ));
                 }
             }
         }

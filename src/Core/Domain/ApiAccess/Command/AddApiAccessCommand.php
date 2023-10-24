@@ -29,14 +29,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
+
 class AddApiAccessCommand
 {
     public function __construct(
         private readonly string $clientName,
         private readonly string $apiClientId,
         private readonly bool $enabled,
-        private readonly string $description
+        private readonly string $description,
+        private readonly array $scopes = []
     ) {
+        if ((count($scopes) !== count(array_filter($scopes, 'is_string')))) {
+            throw new ApiAccessConstraintException('Expected list of non empty string for scopes', ApiAccessConstraintException::INVALID_SCOPES);
+        }
     }
 
     public function getClientName(): ?string
@@ -57,5 +63,13 @@ class AddApiAccessCommand
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getScopes(): array
+    {
+        return $this->scopes;
     }
 }

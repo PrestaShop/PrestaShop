@@ -56,6 +56,7 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
         $apiAccess->setClientName($command->getClientName());
         $apiAccess->setEnabled($command->isEnabled());
         $apiAccess->setDescription($command->getDescription());
+        $apiAccess->setScopes($command->getScopes());
 
         $errors = $this->validator->validate($apiAccess);
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,50 +26,21 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult;
+namespace PrestaShopBundle\ApiPlatform\Scopes;
 
-class EditableApiAccess
+interface ApiResourceScopesExtractorInterface
 {
-    public function __construct(
-        private readonly int $apiAccessId,
-        private readonly string $apiClientId,
-        private readonly string $clientName,
-        private readonly bool $enabled,
-        private readonly string $description,
-        private readonly array $scopes
-    ) {
-    }
-
-    public function getApiAccessId(): int
-    {
-        return $this->apiAccessId;
-    }
-
-    public function getApiClientId(): string
-    {
-        return $this->apiClientId;
-    }
-
-    public function getClientName(): string
-    {
-        return $this->clientName;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
+    /**
+     * Returns all installed resource scopes even the ones that are not enabled for now.
+     *
+     * @return ApiResourceScopes[]
+     */
+    public function getAllApiResourceScopes(): array;
 
     /**
-     * @return string[]
+     * Returns resource scopes for core and ENABLED modules.
+     *
+     * @return ApiResourceScopes[]
      */
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
+    public function getEnabledApiResourceScopes(): array;
 }

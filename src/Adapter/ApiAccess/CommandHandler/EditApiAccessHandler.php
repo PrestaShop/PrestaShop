@@ -73,6 +73,10 @@ class EditApiAccessHandler implements EditApiAccessCommandHandlerInterface
             $apiAccess->setDescription($command->getDescription());
         }
 
+        if (!is_null($command->getScopes())) {
+            $apiAccess->setScopes($command->getScopes());
+        }
+
         $errors = $this->validator->validate($apiAccess);
 
         if (count($errors) > 0) {
