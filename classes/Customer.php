@@ -322,7 +322,9 @@ class CustomerCore extends ObjectModel
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
-        if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') {
+
+        // This must only be done in the BO, when this is done in the FO the customer group is deleted
+        if ((isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') || defined('_PS_ADMIN_DIR_')) {
             $this->updateGroup($this->groupBox);
         }
 
