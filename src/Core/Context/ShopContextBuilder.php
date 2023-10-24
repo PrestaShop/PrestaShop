@@ -42,7 +42,7 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
 {
     private ?ShopConstraint $shopConstraint = null;
     private ?int $shopId = null;
-    private ?LegacyShop $legacyShop;
+    private ?LegacyShop $legacyShop = null;
 
     public function __construct(
         private readonly ShopRepository $shopRepository,
@@ -76,6 +76,11 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
     public function buildLegacyContext(): void
     {
         $this->assertArguments();
+        // It is very important to start by setting the shop, because the ContextStateManager forcefully sets the Context shop to single shop when setShop
+        // is called. If we set it first we can then correctly set the appropriate shop context based on the shop constraint
+        $this->contextStateManager->setShop(new LegacyShop($this->shopId));
+
+        // Now we properly set the context
         if ($this->shopConstraint->forAllShops()) {
             $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_ALL);
         } elseif (!empty($this->shopConstraint->getShopGroupId())) {
@@ -83,8 +88,6 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
         } else {
             $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_SHOP, $this->shopConstraint->getShopId()->getValue());
         }
-
-        $this->contextStateManager->setShop(new LegacyShop($this->shopId));
     }
 
     public function setShopId(int $shopId): self
@@ -99,16 +102,6 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
         $this->shopConstraint = $shopConstraint;
 
         return $this;
-    }
-
-    public function getShopId(): ?int
-    {
-        return $this->shopId;
-    }
-
-    public function getShopConstraint(): ?ShopConstraint
-    {
-        return $this->shopConstraint;
     }
 
     private function assertArguments(): void

@@ -38,7 +38,7 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
 {
     private ?int $currencyId = null;
 
-    private ?LegacyCurrency $legacyCurrency;
+    private ?LegacyCurrency $legacyCurrency = null;
 
     public function __construct(
         private readonly CurrencyRepository $currencyRepository,

@@ -38,7 +38,7 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
 {
     private ?int $countryId = null;
 
-    private ?LegacyCountry $legacyCountry;
+    private ?LegacyCountry $legacyCountry = null;
 
     public function __construct(
         private readonly CountryRepository $countryRepository,
