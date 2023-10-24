@@ -578,7 +578,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getCombinationSpecificData()
     {
-        if (!isset($this->product['attributes']) || empty($this->product['attributes'])) {
+        if (!isset($this->product['attributes']) || !is_array($this->product['attributes']) || empty($this->product['attributes'])) {
             return null;
         }
 
