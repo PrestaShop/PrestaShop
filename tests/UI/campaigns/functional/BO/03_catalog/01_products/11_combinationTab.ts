@@ -250,8 +250,6 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         // Click on preview button
         page = await createProductsPage.previewProduct(page);
 
-        await foProductPage.changeLanguage(page, 'en');
-
         const pageTitle = await foProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(newProductData.name);
       });
@@ -419,7 +417,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
     });
   });
 
-  describe('Post-Test: Delete product', async () => {
+  describe('POST-TEST: Delete product', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
