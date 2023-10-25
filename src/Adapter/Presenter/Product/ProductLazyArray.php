@@ -691,7 +691,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     private function fillImages(array $product, Language $language): void
     {
-        // Get all product images, including potential cover
+        // Get all product images assigned to this product.
         $productImages = $this->imageRetriever->getAllProductImages(
             $product,
             $language
@@ -700,37 +700,34 @@ class ProductLazyArray extends AbstractLazyArray
         // Get filtered product images matching the specified id_product_attribute
         $this->product['images'] = $this->filterImagesForCombination($productImages, $product['id_product_attribute']);
 
-        // Get default image for selected combination (used for product page, cart details, ...)
+        /*
+         * Get default image for the current product/combination.
+         * This image is usually used on places where we 100% need to show the image of the combination (cart, order confirmation).
+         * It's always the first image associated to that product/combination.
+         */
         $this->product['default_image'] = reset($this->product['images']);
-        foreach ($this->product['images'] as $image) {
-            // If one of the image is a cover it is used as such
-            if (isset($image['cover']) && null !== $image['cover']) {
-                $this->product['default_image'] = $image;
 
-                break;
-            }
-        }
+        /*
+         * Now let's define product's cover - the image used in listings.
+         *
+         * For products without combinations, it's simple. It's always the cover.
+         *
+         * For products with combinations, we can configure it. Two options:
+         * 1) Always use the cover, even if it's not assigned to the combination (for example some general image with color palette).
+         * 2) Use first image assigned to the combination passed to the presenter.
+         * This setting is controlled by PS_USE_COMBINATION_IMAGE_IN_LISTING property.
+         */
+        if (empty($product['id_product_attribute']) || !$this->configuration->get('PS_USE_COMBINATION_IMAGE_IN_LISTING')) {
+            foreach ($productImages as $image) {
+                if (isset($image['cover']) && $image['cover'] !== null) {
+                    $this->product['cover'] = $image;
 
-        // Get generic product image, used for product listing
-        if (isset($product['cover_image_id'])) {
-            // First try to find cover in product images
-            foreach ($productImages as $productImage) {
-                if ($productImage['id_image'] == $product['cover_image_id']) {
-                    $this->product['cover'] = $productImage;
                     break;
                 }
             }
-
-            // If the cover is not associated to the product images it is fetched manually
-            if (!isset($this->product['cover'])) {
-                $coverImage = $this->imageRetriever->getImage(new Product($product['id_product'], false, $language->getId()), $product['cover_image_id']);
-                $this->product['cover'] = array_merge($coverImage, [
-                    'legend' => $coverImage['legend'],
-                ]);
-            }
         }
 
-        // If no cover fallback on default image
+        // In other cases or if cover was not found, we use the first image
         if (!isset($this->product['cover'])) {
             $this->product['cover'] = $this->product['default_image'];
         }
