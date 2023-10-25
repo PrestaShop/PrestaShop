@@ -33,6 +33,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
   // Data to create standard product
   const newProductData: ProductData = new ProductData({
+    name: 'Sleek Concrete Shirt',
     type: 'standard',
     coverImage: 'cover.jpg',
     quantity: 100,
@@ -205,7 +206,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
       expect(pageTitle).to.contains('CLOTHES');
     });
 
-    it('should check that the created product not is visible in clothes category list', async function () {
+    it('should check that the created product is not visible in clothes category list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatProductIsNotVisible', baseContext);
 
       const productsNumberInCategory = await homePage.getProductsNumber(page);
@@ -260,7 +261,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
       expect(pageTitle).to.contains('CLOTHES');
     });
 
-    it('should check that the created product not is visible in clothes category list', async function () {
+    it('should check that the created product is not visible in clothes category list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatProductIsNotVisible2', baseContext);
 
       const productsNumberInCategory = await homePage.getProductsNumber(page);
