@@ -36,7 +36,7 @@ admin_api_accesses_delete:
 
 admin_api_accesses_regenerate_secret:
   path: /api-accesses/{apiAccessId}/regenerate-secret
-  methods: [ GET, POST, PATCH ]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::regenerateSecretAction
     _legacy_controller: AdminAuthorizationServer

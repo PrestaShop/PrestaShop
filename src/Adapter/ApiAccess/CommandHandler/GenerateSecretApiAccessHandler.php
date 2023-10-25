@@ -36,15 +36,16 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\GenerateSecretApi
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotGenerateSecretApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
-use PrestaShopBundle\Service\HashService;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 #[AsCommandHandler]
 class GenerateSecretApiAccessHandler implements GenerateSecretApiAccessHandlerInterface
 {
     public function __construct(
         private readonly ApiAccessRepository $repository,
-        private readonly HashService $generateSecretService
+        private readonly PasswordHasherInterface $passwordHasher
     ) {
     }
 
@@ -57,8 +58,8 @@ class GenerateSecretApiAccessHandler implements GenerateSecretApiAccessHandlerIn
         }
 
         try {
-            $secret = $this->generateSecretService->generateRandom();
-            $apiAccess->setClientSecret($this->generateSecretService->hash($secret));
+            $secret = RandomString::generate();
+            $apiAccess->setClientSecret($this->passwordHasher->hash($secret));
             $this->repository->save($apiAccess);
 
             return new ApiAccessSecret($command->getApiAccessSecret()->getValue(), $secret);

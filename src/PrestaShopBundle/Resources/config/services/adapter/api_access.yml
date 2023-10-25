@@ -13,10 +13,3 @@ services:
   PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler\GenerateSecretApiAccessHandler:
 
   PrestaShop\PrestaShop\Adapter\ApiAccess\QueryHandler\GetApiAccessForEditingHandler:
-
-  prestashop.hasher:
-    class: 'Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher'
-
-  PrestaShopBundle\Service\HashService:
-    arguments:
-      - '@prestashop.hasher'

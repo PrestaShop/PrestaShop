@@ -187,15 +187,18 @@ Feature: Api Access Management
       | description | may the force   |
       | scopes      | api_access_read |
 
-  Scenario: Generate secret for api access:
-    When I create an api access "AA-13" with following properties:
+  Scenario: Check secret validity and generate ne secret
+    When I create an api access "AA-13" with generated secret "AA-13-secret" using following properties:
       | clientName  | Jojo-2         |
       | apiClientId | test-id-jojo-2 |
-      | enabled     | true             |
-      | description | description      |
-    When I generate new secret for api access "AA-13"
-    Then I should get a new secret
-
-  Scenario: Check secret for api access:
-    When I check secret for api access "AA-13"
-    Then I should get the correct secret
+      | enabled     | true           |
+      | description | description    |
+    Then api access "AA-13" should have the following properties:
+      | clientName  | Jojo-2         |
+      | apiClientId | test-id-jojo-2 |
+      | enabled     | true           |
+      | description | description    |
+    Then secret "AA-13-secret" is valid for api access "AA-13"
+    When I generate new secret "AA-13-new-secret" for api access "AA-13"
+    Then secret "AA-13-secret" is invalid for api access "AA-13"
+    And secret "AA-13-new-secret" is valid for api access "AA-13"

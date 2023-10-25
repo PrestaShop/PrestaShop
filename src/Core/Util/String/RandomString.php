@@ -26,24 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Service;
+namespace PrestaShop\PrestaShop\Core\Util\String;
 
-use Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher;
-
-class HashService
+class RandomString
 {
-    public function __construct(
-        private readonly NativePasswordHasher $passwordHasher
-    ) {
-    }
-
-    public function generateRandom(int $length = 32): string
+    public static function generate(int $length = 32): string
     {
         return substr(bin2hex(random_bytes($length)), 0, $length);
-    }
-
-    public function hash(string $plainString): string
-    {
-        return $this->passwordHasher->hash($plainString);
     }
 }

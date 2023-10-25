@@ -36,9 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\AddApiAccessComma
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Entity\ApiAccess;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
-use PrestaShopBundle\Service\HashService;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommandHandler]
@@ -47,7 +48,7 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
     public function __construct(
         private readonly ApiAccessRepository $repository,
         private readonly ValidatorInterface $validator,
-        private readonly HashService $generateSecretService
+        private readonly PasswordHasherInterface $passwordHasher
     ) {
     }
 
@@ -56,8 +57,8 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
         $apiAccess = new ApiAccess();
         $apiAccess->setClientId($command->getApiClientId());
         $apiAccess->setClientName($command->getClientName());
-        $secret = $this->generateSecretService->generateRandom();
-        $apiAccess->setClientSecret($this->generateSecretService->hash($secret));
+        $secret = RandomString::generate();
+        $apiAccess->setClientSecret($this->passwordHasher->hash($secret));
         $apiAccess->setEnabled($command->isEnabled());
         $apiAccess->setDescription($command->getDescription());
         $apiAccess->setScopes($command->getScopes());
@@ -73,11 +74,11 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
         }
 
         try {
-            $savedApiAccess = $this->repository->save($apiAccess);
+            $apiAccessId = $this->repository->save($apiAccess);
         } catch (ORMException $e) {
             throw new CannotAddApiAccessException('Could not add Api access', 0, $e);
         }
 
-        return new ApiAccessSecret($savedApiAccess, $secret);
+        return new ApiAccessSecret($apiAccessId, $secret);
     }
 }

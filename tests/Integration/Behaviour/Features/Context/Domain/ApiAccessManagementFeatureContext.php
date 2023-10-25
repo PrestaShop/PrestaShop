@@ -40,60 +40,43 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundExcep
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\Resetter\ApiAccessResetter;
 
 class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When /^I create an api access "(.+)" with following properties:$/
+     * @When I create an api access :apiAccessReference with following properties:
      */
     public function createApiAccessUsingCommand(string $apiAccessReference, TableNode $table)
     {
-        $data = $this->fixDataType($table->getRowsHash());
-
-        $command = new AddApiAccessCommand(
-            $data['clientName'],
-            $data['apiClientId'],
-            $data['enabled'],
-            $data['description'],
-            PrimitiveUtils::castStringArrayIntoArray($data['scopes'] ?? '')
-        );
-
-        try {
-            /** @var ApiAccessId $id */
-            $id = $this->getCommandBus()->handle($command);
-
-            $this->getSharedStorage()->set($apiAccessReference, $id->getValue());
-        } catch (ApiAccessConstraintException $e) {
-            $this->setLastException($e);
-        }
+        $this->createApiAccess($apiAccessReference, $table);
     }
 
     /**
-     * @When /^I generate new secret for api access "(.+)"$/
+     * @When I create an api access :apiAccessReference with generated secret :secretReference using following properties:
      */
-    public function generateSecretApiAccessUsingCommand(string $apiAccessReference)
+    public function createApiAccessUsingCommandAndStoreSecret(string $apiAccessReference, string $secretReference, TableNode $table)
+    {
+        $this->createApiAccess($apiAccessReference, $table, $secretReference);
+    }
+
+    /**
+     * @When I generate new secret :secretReference for api access :apiAccessReference
+     */
+    public function generateSecretApiAccessUsingCommand(string $secretReference, string $apiAccessReference)
     {
         $this->getSharedStorage()->exists($apiAccessReference);
 
         $commandBus = $this->getCommandBus();
         $command = new GenerateSecretApiAccessCommand($this->getSharedStorage()->get($apiAccessReference));
-        $secret = $commandBus->handle($command);
-
-        $this->getSharedStorage()->set('apiAccessSecret_' . $apiAccessReference, $secret);
+        /** @var ApiAccessSecret $apiAccess */
+        $apiAccess = $commandBus->handle($command);
+        $this->getSharedStorage()->set($secretReference, $apiAccess->getSecret());
     }
-
-    /**
-     * @When /^I check secret for api access "(.+)"$/
-     */
-    public function checkSecretApiAccessUsingCommand(string $apiAccessReference)
-    {
-        $this->getSharedStorage()->exists($apiAccessReference);
-
-        $secret = $this->getSharedStorage()->get('apiAccessSecret_' . $apiAccessReference);
-    }
-
 
     /**
      * @Then /^api access "(.+)" should have the following properties:$/
@@ -285,19 +268,37 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get a new secret
+     * @Then secret :secretReference is valid for api access :apiAccessReference
      */
-    public function iShouldGetANewSecret(): void
+    public function assertSecretIsValid(string $secretReference, string $apiAccessReference): void
     {
-        // @todo
+        $this->assertSecret($secretReference, $apiAccessReference, true);
     }
 
     /**
-     * @Then I should get the correct secret
+     * @Then secret :secretReference is invalid for api access :apiAccessReference
      */
-    public function iShouldGetTheCorrectSecret(): void
+    public function assertSecretIsInvalid(string $secretReference, string $apiAccessReference): void
     {
-        // @todo
+        $this->assertSecret($secretReference, $apiAccessReference, false);
+    }
+
+    private function assertSecret(string $secretReference, string $apiAccessReference, bool $expected): void
+    {
+        // Manually get the entity because secret is not part of the CQRS query
+        $apiAccessRepository = $this->getContainer()->get(ApiAccessRepository::class);
+        $apiAccess = $apiAccessRepository->getById($this->getSharedStorage()->get($apiAccessReference));
+        $hashedSecret = $apiAccess->getClientSecret();
+
+        $plainSecret = $this->getSharedStorage()->get($secretReference);
+        $passwordHasher = $this->getContainer()->get(PasswordHasherInterface::class);
+        if ($expected !== $passwordHasher->verify($hashedSecret, $plainSecret)) {
+            throw new \RuntimeException(sprintf(
+                'Secret %s was expected to be %s',
+                $secretReference,
+                $expected ? 'valid' : 'invalid'
+            ));
+        }
     }
 
     /**
@@ -308,10 +309,35 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         ApiAccessResetter::resetApiAccess();
     }
 
+    private function createApiAccess(string $apiAccessReference, TableNode $table, string $secretReference = null): void
+    {
+        $data = $this->fixDataType($table->getRowsHash());
+
+        $command = new AddApiAccessCommand(
+            $data['clientName'],
+            $data['apiClientId'],
+            $data['enabled'],
+            $data['description'],
+            PrimitiveUtils::castStringArrayIntoArray($data['scopes'] ?? '')
+        );
+
+        try {
+            /** @var ApiAccessSecret $apiAccess */
+            $apiAccess = $this->getCommandBus()->handle($command);
+
+            $this->getSharedStorage()->set($apiAccessReference, $apiAccess->getValue());
+            if (!empty($secretReference)) {
+                $this->getSharedStorage()->set($secretReference, $apiAccess->getSecret());
+            }
+        } catch (ApiAccessConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
     private function fixDataType(array $data): array
     {
         if (array_key_exists('enabled', $data) && !is_null($data['enabled'])) {
-            $data['enabled'] = filter_var($data['enabled'], FILTER_VALIDATE_BOOL);
+            $data['enabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']);
         }
 
         return $data;

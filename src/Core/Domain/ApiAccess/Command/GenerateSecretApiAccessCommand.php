@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
 class GenerateSecretApiAccessCommand
 {
     private ApiAccessSecret $apiAccessId;
-    private ?string $secret = null;
 
     public function __construct(int $apiAccessId)
     {
@@ -43,17 +42,5 @@ class GenerateSecretApiAccessCommand
     public function getApiAccessSecret(): ApiAccessSecret
     {
         return $this->apiAccessId;
-    }
-
-    public function getSecret(): ?string
-    {
-        return $this->secret;
-    }
-
-    public function setSecret(string $secret): self
-    {
-        $this->secret = $secret;
-
-        return $this;
     }
 }
