@@ -31,17 +31,16 @@ namespace PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateSecretApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\GenerateSecretApiAccessHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\GenerateApiAccessSecretHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotGenerateSecretApiAccessException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
 use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 #[AsCommandHandler]
-class GenerateSecretApiAccessHandler implements GenerateSecretApiAccessHandlerInterface
+class GenerateApiAccessSecretHandler implements GenerateApiAccessSecretHandlerInterface
 {
     public function __construct(
         private readonly ApiAccessRepository $repository,
@@ -49,12 +48,12 @@ class GenerateSecretApiAccessHandler implements GenerateSecretApiAccessHandlerIn
     ) {
     }
 
-    public function handle(GenerateSecretApiAccessCommand $command): ApiAccessSecret
+    public function handle(GenerateApiAccessSecretCommand $command): string
     {
         try {
-            $apiAccess = $this->repository->getById($command->getApiAccessSecret()->getValue());
+            $apiAccess = $this->repository->getById($command->getApiAccessId()->getValue());
         } catch (NoResultException $e) {
-            throw new ApiAccessNotFoundException(sprintf('Could not find Api access with ID %s', $command->getApiAccessSecret()->getValue()), 0, $e);
+            throw new ApiAccessNotFoundException(sprintf('Could not find Api access with ID %s', $command->getApiAccessId()->getValue()), 0, $e);
         }
 
         try {
@@ -62,7 +61,7 @@ class GenerateSecretApiAccessHandler implements GenerateSecretApiAccessHandlerIn
             $apiAccess->setClientSecret($this->passwordHasher->hash($secret));
             $this->repository->save($apiAccess);
 
-            return new ApiAccessSecret($command->getApiAccessSecret()->getValue(), $secret);
+            return $secret;
         } catch (ORMException $e) {
             throw new CannotGenerateSecretApiAccessException('Could not generate new token Api access', 0, $e);
         }

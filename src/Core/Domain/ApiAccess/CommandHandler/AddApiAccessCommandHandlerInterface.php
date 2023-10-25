@@ -30,9 +30,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
 
 interface AddApiAccessCommandHandlerInterface
 {
-    public function handle(AddApiAccessCommand $command): ApiAccessSecret;
+    public function handle(AddApiAccessCommand $command): CreatedApiAccess;
 }

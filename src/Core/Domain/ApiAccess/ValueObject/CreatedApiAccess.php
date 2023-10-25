@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,12 +27,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateSecretApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 
-interface GenerateSecretApiAccessHandlerInterface
+class CreatedApiAccess
 {
-    public function handle(GenerateSecretApiAccessCommand $command): ApiAccessSecret;
+    private ApiAccessId $apiAccessId;
+    private string $secret;
+
+    public function __construct(int $apiAccessId, string $secret = null)
+    {
+        $this->apiAccessId = new ApiAccessId($apiAccessId);
+        if (empty($secret)) {
+            throw new ApiAccessConstraintException(sprintf('Invalid api access secret "%s".', var_export($secret, true)), ApiAccessConstraintException::INVALID_SECRET);
+        }
+        $this->secret = $secret;
+    }
+
+    public function getApiAccessId(): ApiAccessId
+    {
+        return $this->apiAccessId;
+    }
+
+    public function getSecret(): string
+    {
+        return $this->secret;
+    }
 }

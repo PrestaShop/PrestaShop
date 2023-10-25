@@ -32,14 +32,14 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateSecretApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotUpdateApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessFilters;
@@ -85,14 +85,14 @@ class ApiAccessController extends FrameworkBundleAdminController
         try {
             $handlerResult = $this->getFormHandler()->handle($apiAccessForm);
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                /** @var ApiAccessSecret $apiAccess */
+                /** @var CreatedApiAccess $apiAccess */
                 $apiAccess = $handlerResult->getIdentifiableObjectId();
                 $this->displayTemporarySecret(
                     $this->trans('The API access and client secret have been generated successfully.', 'Admin.Notifications.Success'),
                     $apiAccess->getSecret()
                 );
 
-                return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccess->getValue()]);
+                return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccess->getApiAccessId()->getValue()]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -156,7 +156,7 @@ class ApiAccessController extends FrameworkBundleAdminController
     public function regenerateSecretAction(Request $request, int $apiAccessId): Response
     {
         try {
-            $newSecret = $this->getCommandBus()->handle(new GenerateSecretApiAccessCommand($apiAccessId));
+            $newSecret = $this->getCommandBus()->handle(new GenerateApiAccessSecretCommand($apiAccessId));
             $this->displayTemporarySecret(
                 $this->trans('Your new client secret has been generated successfully. Your former client secret is now obsolete.', 'Admin.Notifications.Success'),
                 $newSecret

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,45 +26,21 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
 
-class ApiAccessSecret
+class GenerateApiAccessSecretCommand
 {
-    private int $apiAccessId;
-    private string $apiAccessSecret;
+    private ApiAccessId $apiAccessId;
 
-    public function __construct(int $apiAccessId, string $secret = null)
+    public function __construct(int $apiAccessId)
     {
-        $this->assertIsIntegerGreaterThanZero($apiAccessId);
-        $this->apiAccessId = $apiAccessId;
-        if (null !== $secret) {
-            $this->apiAccessSecret = $secret;
-        }
+        $this->apiAccessId = new ApiAccessId($apiAccessId);
     }
 
-    public function getValue(): int
+    public function getApiAccessId(): ApiAccessId
     {
         return $this->apiAccessId;
-    }
-
-    public function getSecret(): string
-    {
-        return $this->apiAccessSecret;
-    }
-
-    /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param int $value
-     *
-     * @throws ApiAccessConstraintException
-     */
-    private function assertIsIntegerGreaterThanZero($value)
-    {
-        if (!is_int($value) || 0 >= $value) {
-            throw new ApiAccessConstraintException(sprintf('Invalid api access id "%s".', var_export($value, true)), ApiAccessConstraintException::INVALID_ID);
-        }
     }
 }

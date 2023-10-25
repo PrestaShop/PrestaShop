@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
 
 class ApiAccessFormDataHandler implements FormDataHandlerInterface
 {
@@ -42,7 +42,7 @@ class ApiAccessFormDataHandler implements FormDataHandlerInterface
 
     public function create(array $data)
     {
-        /** @var ApiAccessSecret $apiAccessSecret */
+        /** @var CreatedApiAccess $apiAccessSecret */
         $apiAccessSecret = $this->commandBus->handle(new AddApiAccessCommand(
             $data['client_name'],
             $data['client_id'],

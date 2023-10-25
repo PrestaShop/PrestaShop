@@ -33,14 +33,14 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateSecretApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -72,10 +72,9 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         $this->getSharedStorage()->exists($apiAccessReference);
 
         $commandBus = $this->getCommandBus();
-        $command = new GenerateSecretApiAccessCommand($this->getSharedStorage()->get($apiAccessReference));
-        /** @var ApiAccessSecret $apiAccess */
-        $apiAccess = $commandBus->handle($command);
-        $this->getSharedStorage()->set($secretReference, $apiAccess->getSecret());
+        $command = new GenerateApiAccessSecretCommand($this->getSharedStorage()->get($apiAccessReference));
+        $newSecret = $commandBus->handle($command);
+        $this->getSharedStorage()->set($secretReference, $newSecret);
     }
 
     /**
@@ -322,10 +321,10 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         );
 
         try {
-            /** @var ApiAccessSecret $apiAccess */
+            /** @var CreatedApiAccess $apiAccess */
             $apiAccess = $this->getCommandBus()->handle($command);
 
-            $this->getSharedStorage()->set($apiAccessReference, $apiAccess->getValue());
+            $this->getSharedStorage()->set($apiAccessReference, $apiAccess->getApiAccessId()->getValue());
             if (!empty($secretReference)) {
                 $this->getSharedStorage()->set($secretReference, $apiAccess->getSecret());
             }

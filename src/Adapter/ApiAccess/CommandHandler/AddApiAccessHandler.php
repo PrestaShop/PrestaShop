@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\AddApiAccessCommandHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
 use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Entity\ApiAccess;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
@@ -52,7 +52,7 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
     ) {
     }
 
-    public function handle(AddApiAccessCommand $command): ApiAccessSecret
+    public function handle(AddApiAccessCommand $command): CreatedApiAccess
     {
         $apiAccess = new ApiAccess();
         $apiAccess->setClientId($command->getApiClientId());
@@ -79,6 +79,6 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
             throw new CannotAddApiAccessException('Could not add Api access', 0, $e);
         }
 
-        return new ApiAccessSecret($apiAccessId, $secret);
+        return new CreatedApiAccess($apiAccessId, $secret);
     }
 }

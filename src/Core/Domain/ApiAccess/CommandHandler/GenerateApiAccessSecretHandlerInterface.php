@@ -26,21 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessSecret;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
 
-class GenerateSecretApiAccessCommand
+interface GenerateApiAccessSecretHandlerInterface
 {
-    private ApiAccessSecret $apiAccessId;
-
-    public function __construct(int $apiAccessId)
-    {
-        $this->apiAccessId = new ApiAccessSecret($apiAccessId);
-    }
-
-    public function getApiAccessSecret(): ApiAccessSecret
-    {
-        return $this->apiAccessId;
-    }
+    public function handle(GenerateApiAccessSecretCommand $command): string;
 }
