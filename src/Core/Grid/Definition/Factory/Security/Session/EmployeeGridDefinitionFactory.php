@@ -211,7 +211,6 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_employee_session', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
-                        'size' => 'small',
                         'attr' => [
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                         ],
@@ -222,9 +221,8 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_employee', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
-                        'size' => 'small',
                         'attr' => [
-                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Employee ID', [], 'Admin.Actions'),
                         ],
                     ])
                     ->setAssociatedColumn('id_employee')
