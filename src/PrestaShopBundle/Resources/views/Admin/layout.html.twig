@@ -95,14 +95,14 @@
   {% if app.session.flashbag.peek('failure')|length() > 0 %}
     {{ layout.alert('danger', app.session.flashbag.get('failure')) }}
   {% endif %}
-  {% if app.session.flashbag.peek('info')|length() > 0 %}
-    {{ layout.alert('info', app.session.flashbag.get('info')) }}
-  {% endif %}
   {% if app.session.flashbag.peek('success')|length() > 0 %}
     {{ layout.alert('success', app.session.flashbag.get('success')) }}
   {% endif %}
   {% if app.session.flashbag.peek('warning')|length() > 0 %}
     {{ layout.alert('warning', app.session.flashbag.get('warning')) }}
+  {% endif %}
+  {% if app.session.flashbag.peek('info')|length() > 0 %}
+    {{ layout.alert('info', app.session.flashbag.get('info')) }}
   {% endif %}
 {% endblock %}
 

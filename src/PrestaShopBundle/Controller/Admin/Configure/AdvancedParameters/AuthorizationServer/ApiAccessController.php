@@ -87,17 +87,9 @@ class ApiAccessController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 /** @var ApiAccessSecret $apiAccess */
                 $apiAccess = $handlerResult->getIdentifiableObjectId();
-                $this->addFlash('info', $this->trans('The API access and Client secret has been generated successfully. Note that client secret will be visible only once and must be saved.', 'Admin.Notifications.Success'));
-
-                $this->addFlash(
-                    'success',
-                    $this->trans(
-                        'Client secret: %s <a href="#">Copy</a>',
-                        'Admin.Notifications.Success',
-                        [
-                            $apiAccess->getSecret(),
-                        ]
-                    )
+                $this->displayTemporarySecret(
+                    $this->trans('The API access and client secret have been generated successfully.', 'Admin.Notifications.Success'),
+                    $apiAccess->getSecret()
                 );
 
                 return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccess->getValue()]);
@@ -113,6 +105,21 @@ class ApiAccessController extends FrameworkBundleAdminController
                 'apiAccessForm' => $apiAccessForm->createView(),
             ]
         );
+    }
+
+    private function displayTemporarySecret(string $successMessage, string $secret): void
+    {
+        $this->addFlash(
+            'info',
+            sprintf(
+                '%s <strong>%s</strong>',
+                $successMessage,
+                $this->trans('This secret value will only be displayed once. Don\'t forget to make a copy in a secure location.', 'Admin.Notifications.Info'),
+            )
+        );
+
+        // Pass generated secret via flash message
+        $this->addFlash('client_secret', $secret);
     }
 
     /**
@@ -149,19 +156,10 @@ class ApiAccessController extends FrameworkBundleAdminController
     public function regenerateSecretAction(Request $request, int $apiAccessId): Response
     {
         try {
-            /** @var ApiAccessSecret $apiSecretAccess */
-            $apiSecretAccess = $this->getCommandBus()->handle(new GenerateSecretApiAccessCommand($apiAccessId));
-            $this->addFlash('info', $this->trans('The API access and Client secret has been generated successfully. Note that client secret will be visible only once and must be saved.', 'Admin.Notifications.Success'));
-
-            $this->addFlash(
-                'success',
-                $this->trans(
-                    'Client secret: %s <a href="#">Copy</a>',
-                    'Admin.Notifications.Success',
-                    [
-                        $apiSecretAccess->getSecret(),
-                    ]
-                )
+            $newSecret = $this->getCommandBus()->handle(new GenerateSecretApiAccessCommand($apiAccessId));
+            $this->displayTemporarySecret(
+                $this->trans('Your new client secret has been generated successfully. Your former client secret is now obsolete.', 'Admin.Notifications.Success'),
+                $newSecret
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

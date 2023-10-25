@@ -42,6 +42,7 @@ module.exports = {
   entry: {
     address: './js/pages/address',
     api_access: './js/pages/api-access',
+    api_access_form: './js/pages/api-access/form',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
