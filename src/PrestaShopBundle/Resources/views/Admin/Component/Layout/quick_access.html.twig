@@ -30,12 +30,12 @@
     <div class="dropdown-menu">
       {% for quickAccess in this.quickAccesses %}
         <a class="dropdown-item quick-row-link
-          {% if quickAccess.class is defined %}{{ quickAccess.class|escape('html_attr') }}{% endif %}
+          {% if quickAccess.class is defined %}{{ quickAccess.class }}{% endif %}
           {% if quickAccess.active %}active{% endif %}"
-        href="{{ quickAccess.link|escape('html_attr') }}"
+        href="{{ quickAccess.link }}"
         {% if quickAccess.new_window %} target="_blank"{% endif %}
         data-item="{{ quickAccess.name }}"
-        >{{ quickAccess.name|escape('html_attr') }}</a>
+        >{{ quickAccess.name }}</a>
       {% endfor %}
       <div class="dropdown-divider"></div>
       {% if this.currentQuickAccess %}
@@ -45,10 +45,10 @@
            data-method="remove"
            data-quicklink-id="{{ this.currentQuickAccess.id_quick_access }}"
            data-rand="{{ random(1, 200) }}"
-           data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
+           data-url="{{ this.cleanCurrentUrl }}"
            data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
-           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr') }}"
-           data-link="{{ this.currentQuickAccess.name|escape('html_attr') }}"
+           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}"
+           data-link="{{ this.currentQuickAccess.name }}"
         >
           <i class="material-icons">remove_circle_outline</i>
           {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
@@ -59,10 +59,10 @@
            href="#"
            data-rand="{{ random(1, 200) }}"
            data-method="add"
-           data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
+           data-url="{{ this.cleanCurrentUrl }}"
            data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
-           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr')}}"
-           data-link="{{ this.currentUrlTitle|escape('html_attr') }}"
+           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')}}"
+           data-link="{{ this.currentUrlTitle }}"
         >
           <i class="material-icons">add_circle</i>
           {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
