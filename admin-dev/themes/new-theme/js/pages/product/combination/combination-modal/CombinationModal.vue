@@ -281,6 +281,11 @@
         );
 
         iframeInputs.forEach((input: Element) => {
+          // @ts-ignore
+          if (input.type === 'hidden') {
+            return;
+          }
+
           input.addEventListener('keyup', () => {
             this.isFormUpdated = true;
           });
@@ -288,10 +293,10 @@
           input.addEventListener('change', () => {
             this.isFormUpdated = true;
           });
+        });
 
-          this.getIframeDocument().addEventListener('datepickerChange', () => {
-            this.isFormUpdated = true;
-          });
+        this.getIframeDocument().addEventListener('datepickerChange', () => {
+          this.isFormUpdated = true;
         });
       },
       applyIframeStyling(): void {

@@ -440,7 +440,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       expect(paginationNumber).to.contains('(page 1 / 4)');
     });
 
-    it('should change the items number to 20 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await combinationsTab.selectPaginationLimit(page, 50);
