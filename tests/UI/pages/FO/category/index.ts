@@ -434,14 +434,24 @@ class Category extends FOBasePage {
     });
 
     // Using the hover method to place the mouse cursor then moving it to the right
-    await sliderTrack.hover({force: true, position: {x: 25, y: 0}});
+   /* await sliderTrack.hover({force: true, position: {x: 25, y: 0}});
     await page.mouse.down();
     console.log('part 1 done');
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(10000);*/
 
+/*    await page.mouse.move(0, 100);
     await sliderTrack.hover({force: true, position: {x: sliderOffsetWidth, y: 50}});
     await page.mouse.up();
     console.log('part 2 done');
+    await page.waitForTimeout(10000);*/
+
+    const box = await page.locator('.ui-slider-horizontal').boundingBox();
+    console.log(box);
+    await sliderTrack.hover({force: true, position: {x: box.x + box.width / 2 - 100, y: box.y + box.height / 2}});
+  //  await page.mouse.down(box.x + box.width / 2, box.y + box.height / 2);
+    // Move 100px left.
+    await page.mouse.move(box.x + box.width / 2 - 100, box.y + box.height / 2, { steps: 10 });
+    await page.mouse.up();
     await page.waitForTimeout(10000);
   }
 
