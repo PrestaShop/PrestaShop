@@ -45,7 +45,8 @@ class ApiAccessConstraintException extends ApiAccessException
     public const DESCRIPTION_TOO_LARGE = 10;
     public const INVALID_SCOPES = 11;
     public const NON_INSTALLED_SCOPES = 12;
-    public const INVALID_SECRET = 13;
+    public const NOT_POSITIVE_LIFETIME = 13;
+    public const INVALID_SECRET = 14;
 
     public static function buildFromPropertyPath(string $propertyPath, string $message, string $template): self
     {
@@ -80,6 +81,9 @@ class ApiAccessConstraintException extends ApiAccessException
                 break;
             case 'scopes':
                 $errorCode = self::NON_INSTALLED_SCOPES;
+                break;
+            case 'lifetime':
+                $errorCode = self::NOT_POSITIVE_LIFETIME;
                 break;
             default:
                 throw new InvalidArgumentException(sprintf('Unknown property path %s', $propertyPath));

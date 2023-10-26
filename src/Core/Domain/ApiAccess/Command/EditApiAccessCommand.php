@@ -46,6 +46,8 @@ class EditApiAccessCommand
 
     private ?array $scopes = null;
 
+    private ?int $lifetime = null;
+
     public function __construct(int $apiAccessId)
     {
         $this->apiAccessId = new ApiAccessId($apiAccessId);
@@ -115,6 +117,19 @@ class EditApiAccessCommand
             throw new ApiAccessConstraintException('Expected list of non empty string for scopes', ApiAccessConstraintException::INVALID_SCOPES);
         }
         $this->scopes = $scopes;
+
+        return $this;
+    }
+
+    /** Returns the lifetime in milliseconds. Default is 3600. */
+    public function getLifetime(): ?int
+    {
+        return $this->lifetime;
+    }
+
+    public function setLifetime(?int $lifetime): self
+    {
+        $this->lifetime = $lifetime;
 
         return $this;
     }

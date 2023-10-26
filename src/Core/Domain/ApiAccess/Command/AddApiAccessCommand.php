@@ -38,6 +38,7 @@ class AddApiAccessCommand
         private readonly string $apiClientId,
         private readonly bool $enabled,
         private readonly string $description,
+        private readonly int $lifetime,
         private readonly array $scopes = []
     ) {
         if ((count($scopes) !== count(array_filter($scopes, 'is_string')))) {
@@ -71,5 +72,10 @@ class AddApiAccessCommand
     public function getScopes(): array
     {
         return $this->scopes;
+    }
+
+    public function getLifetime(): ?int
+    {
+        return $this->lifetime;
     }
 }

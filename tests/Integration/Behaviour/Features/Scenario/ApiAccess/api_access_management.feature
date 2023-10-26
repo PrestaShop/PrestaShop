@@ -12,23 +12,27 @@ Feature: Api Access Management
       | apiClientId | test-id              |
       | enabled     | true                 |
       | description | a simple description |
+      | lifetime    | 3600                 |
     Then api access "AA-1" should have the following properties:
       | clientName  | Thomas               |
       | apiClientId | test-id              |
       | enabled     | true                 |
       | description | a simple description |
       | scopes      |                      |
+      | lifetime    | 3600                 |
     When I edit api access "AA-1" with the following values:
       | clientName  | Toto                |
       | apiClientId | test-id-toto        |
       | enabled     | false               |
       | description | another description |
+      | lifetime    | 3000                |
     Then api access "AA-1" should have the following properties:
       | clientName  | Toto                |
       | apiClientId | test-id-toto        |
       | enabled     | false               |
       | description | another description |
       | scopes      |                     |
+      | lifetime    | 3000                |
     When I edit api access "AA-1" with the following values:
     # Just a quick edition to show partial update is possible
       | apiClientId | test-id-toto-2 |
@@ -41,17 +45,20 @@ Feature: Api Access Management
       | apiClientId | test-id-2            |
       | enabled     | true                 |
       | description | a simple description |
+      | lifetime    | 3600                 |
     When I create an api access "AA-3" with following properties:
       | clientName  | Thomas3              |
       | apiClientId | test-id-2            |
       | enabled     | true                 |
       | description | a simple description |
+      | lifetime    | 3600                 |
     Then I should get an error that clientId is not unique
     When I create an api access "AA-4" with following properties:
       | clientName  | Thomas2   |
       | apiClientId | test-id-3 |
       | enabled     | true      |
       | description |           |
+      | lifetime    | 3600      |
     Then I should get an error that clientName is not unique
 
   Scenario: Create an api access with invalid properties:
@@ -60,12 +67,14 @@ Feature: Api Access Management
       | apiClientId | test-id-1            |
       | enabled     | true                 |
       | description | a simple description |
+      | lifetime    | 3600                 |
     Then I should get an error that clientName is invalid
     When I create an api access "AA-2" with following properties:
       | clientName  | Thomas-1             |
       | apiClientId |                      |
       | enabled     | true                 |
       | description | a simple description |
+      | lifetime    | 3600                 |
     Then I should get an error that apiClientId is invalid
 
   Scenario: Create api access with values over max length:
@@ -74,18 +83,21 @@ Feature: Api Access Management
       | apiClientId | valueToBeGenerated |
       | enabled     | true               |
       | description | test description   |
+      | lifetime    | 2000               |
     Then I should get an error that apiClientId is too large
     When I create an api access "AA-7" with a large value in clientName:
       | clientName  | valueToBeGenerated |
       | apiClientId | test-client-id     |
       | enabled     | true               |
       | description | test description   |
+      | lifetime    | 3600               |
     Then I should get an error that clientName is too large
     When I create an api access "AA-8" with a large value in description:
       | clientName  | Thomas-7           |
       | apiClientId | test-client-id-2   |
       | enabled     | true               |
       | description | valueToBeGenerated |
+      | lifetime    | 3600               |
     Then I should get an error that description is too large
 
   Scenario: Edit api access with values over max length:
@@ -94,6 +106,7 @@ Feature: Api Access Management
       | apiClientId | test-client-id-3 |
       | enabled     | true             |
       | description | description      |
+      | lifetime    | 3600             |
     When I edit api access "AA-9" with a large value in apiClientId:
     Then I should get an error that apiClientId is too large
     When I create an api access "AA-10" with following properties:
@@ -101,6 +114,7 @@ Feature: Api Access Management
       | apiClientId | test-client-id-4 |
       | enabled     | true             |
       | description | description      |
+      | lifetime    | 3600             |
     When I edit api access "AA-10" with a large value in clientName:
     Then I should get an error that clientName is too large
     When I create an api access "AA-11" with following properties:
@@ -108,6 +122,7 @@ Feature: Api Access Management
       | apiClientId | test-client-id-5 |
       | enabled     | true             |
       | description | description      |
+      | lifetime    | 3600             |
     When I edit api access "AA-11" with a large value in description:
     Then I should get an error that description is too large
 
@@ -117,11 +132,13 @@ Feature: Api Access Management
       | apiClientId | test-id-jo |
       | enabled     | true       |
       | description |            |
+      | lifetime    | 3600       |
     Then api access "AA-12" should have the following properties:
       | clientName  | Jojo       |
       | apiClientId | test-id-jo |
       | enabled     | true       |
       | description |            |
+      | lifetime    | 3600       |
     When I delete api access "AA-12"
     Then api access "AA-12" should not exist
 
@@ -132,12 +149,14 @@ Feature: Api Access Management
       | enabled     | true                       |
       | description | may the force              |
       | scopes      | api_access_read, hook_read |
+      | lifetime    | 3600                       |
     Then api access "AA-13" should have the following properties:
       | clientName  | Obiwan                     |
       | apiClientId | jedi                       |
       | enabled     | true                       |
       | description | may the force              |
       | scopes      | api_access_read, hook_read |
+      | lifetime    | 3600                       |
     When I edit api access "AA-13" with the following values:
       | scopes | api_access_read, hook_read, hook_write |
     Then api access "AA-13" should have the following properties:
@@ -146,6 +165,7 @@ Feature: Api Access Management
       | enabled     | true                                   |
       | description | may the force                          |
       | scopes      | api_access_read, hook_read, hook_write |
+      | lifetime    | 4000                                   |
     When I edit api access "AA-13" with the following values:
       | scopes |  |
     Then api access "AA-13" should have the following properties:
@@ -154,6 +174,7 @@ Feature: Api Access Management
       | enabled     | true          |
       | description | may the force |
       | scopes      |               |
+      | lifetime    | 4000          |
 
   Scenario: Create or edit an api access with invalid scopes
     When I create an api access "AA-14" with following properties:
@@ -162,6 +183,7 @@ Feature: Api Access Management
       | enabled     | true               |
       | description | may the force      |
       | scopes      | unknown_api_access |
+      | lifetime    | 3600               |
     Then I should get an error that scopes is invalid
     When I create an api access "AA-14" with following properties:
       | clientName  | Palpatine       |
@@ -169,12 +191,14 @@ Feature: Api Access Management
       | enabled     | true            |
       | description | may the force   |
       | scopes      | api_access_read |
+      | lifetime    | 3600            |
     Then api access "AA-14" should have the following properties:
       | clientName  | Palpatine       |
       | apiClientId | sith            |
       | enabled     | true            |
       | description | may the force   |
       | scopes      | api_access_read |
+      | lifetime    | 3600            |
     When I edit api access "AA-14" with the following values:
       | clientName | Emperor                             |
       | scopes     | api_access_read, unknown_api_access |
@@ -186,6 +210,34 @@ Feature: Api Access Management
       | enabled     | true            |
       | description | may the force   |
       | scopes      | api_access_read |
+      | lifetime    | 3600            |
+
+  Scenario: Create or edit an api access with invalid lifetime
+    When I create an api access "AA-15" with following properties:
+      | clientName  | Chewie             |
+      | apiClientId | wookie             |
+      | enabled     | true               |
+      | description | Rhrhhrhrhrrhr      |
+      | scopes      | api_access_read    |
+      | lifetime    | -10                |
+    Then I should get an error that lifetime is invalid
+    When I create an api access "AA-16" with following properties:
+      | clientName  | Chewie             |
+      | apiClientId | wookie             |
+      | enabled     | true               |
+      | description | Rhrhhrhrhrrhr      |
+      | scopes      | api_access_read    |
+      | lifetime    | 3600               |
+    Then api access "AA-16" should have the following properties:
+      | clientName  | Chewie             |
+      | apiClientId | wookie             |
+      | enabled     | true               |
+      | description | Rhrhhrhrhrrhr      |
+      | scopes      | api_access_read    |
+      | lifetime    | 3600               |
+    When I edit api access "AA-16" with the following values:
+      | lifetime    | 0                  |
+    Then I should get an error that lifetime is invalid
 
   Scenario: Check secret validity and generate ne secret
     When I create an api access "AA-13" with generated secret "AA-13-secret" using following properties:
@@ -193,11 +245,13 @@ Feature: Api Access Management
       | apiClientId | test-id-jojo-2 |
       | enabled     | true           |
       | description | description    |
+      | lifetime    | 3600               |
     Then api access "AA-13" should have the following properties:
       | clientName  | Jojo-2         |
       | apiClientId | test-id-jojo-2 |
       | enabled     | true           |
       | description | description    |
+      | lifetime    | 3600               |
     Then secret "AA-13-secret" is valid for api access "AA-13"
     When I generate new secret "AA-13-new-secret" for api access "AA-13"
     Then secret "AA-13-secret" is invalid for api access "AA-13"

@@ -69,7 +69,8 @@ class ApiAccessFormDataProviderTest extends TestCase
                 'client-name',
                 true,
                 'short description',
-                ['api_access_read', 'hook_read']
+                ['api_access_read', 'hook_read'],
+                3600
             ),
             [
                 'client_id' => 'client-id',
@@ -77,6 +78,7 @@ class ApiAccessFormDataProviderTest extends TestCase
                 'description' => 'short description',
                 'enabled' => true,
                 'scopes' => ['api_access_read', 'hook_read'],
+                'lifetime' => 3600,
             ],
         ];
     }

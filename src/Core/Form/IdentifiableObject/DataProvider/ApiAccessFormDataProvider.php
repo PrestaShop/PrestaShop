@@ -50,6 +50,7 @@ class ApiAccessFormDataProvider implements FormDataProviderInterface
             'description' => $apiAccess->getDescription(),
             'enabled' => $apiAccess->isEnabled(),
             'scopes' => $apiAccess->getScopes(),
+            'lifetime' => $apiAccess->getLifetime(),
         ];
     }
 

@@ -48,6 +48,7 @@ class ApiAccessFormDataHandler implements FormDataHandlerInterface
             $data['client_id'],
             (bool) $data['enabled'],
             $data['description'],
+            (int) $data['lifetime'],
             $data['scopes'],
         ));
 
@@ -63,6 +64,7 @@ class ApiAccessFormDataHandler implements FormDataHandlerInterface
             ->setDescription($data['description'])
             ->setEnabled((bool) $data['enabled'])
             ->setScopes($data['scopes'])
+            ->setLifetime((int) $data['lifetime'])
         ;
 
         $this->commandBus->handle($command);

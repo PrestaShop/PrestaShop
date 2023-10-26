@@ -149,6 +149,9 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['scopes'])) {
             $command->setScopes(PrimitiveUtils::castStringArrayIntoArray($data['scopes']));
         }
+        if (isset($data['lifetime'])) {
+            $command->setLifetime($data['lifetime']);
+        }
 
         try {
             $commandBus->handle($command);
@@ -168,7 +171,9 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             $data['clientName'],
             $data['apiClientId'],
             $data['enabled'],
-            $data['description']
+            $data['description'],
+            $data['lifetime'],
+            PrimitiveUtils::castStringArrayIntoArray($data['scopes'] ?? '')
         );
 
         try {
@@ -317,6 +322,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             $data['apiClientId'],
             $data['enabled'],
             $data['description'],
+            $data['lifetime'],
             PrimitiveUtils::castStringArrayIntoArray($data['scopes'] ?? '')
         );
 
@@ -337,6 +343,10 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     {
         if (array_key_exists('enabled', $data) && !is_null($data['enabled'])) {
             $data['enabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']);
+        }
+
+        if (array_key_exists('lifetime', $data) && !is_null($data['lifetime'])) {
+            $data['lifetime'] = intval($data['lifetime']);
         }
 
         return $data;
@@ -364,6 +374,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             'enabled' => ApiAccessConstraintException::INVALID_ENABLED,
             'description' => ApiAccessConstraintException::INVALID_DESCRIPTION,
             'scopes' => ApiAccessConstraintException::NON_INSTALLED_SCOPES,
+            'lifetime' => ApiAccessConstraintException::NOT_POSITIVE_LIFETIME,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
