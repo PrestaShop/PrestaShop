@@ -110,6 +110,8 @@ class ShopContextListener
                     $shopConstraint = $cookieShopConstraint;
                 } elseif (!empty($this->employeeContext->getDefaultShopId())) {
                     $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
+                } else {
+                    $shopConstraint = ShopConstraint::shop($this->getConfiguredDefaultShopId());
                 }
             }
         }
@@ -127,11 +129,12 @@ class ShopContextListener
      */
     private function getShopConstraintFromCookie(): ?ShopConstraint
     {
-        if (empty($this->legacyContext->getContext()->cookie->shopContext)) {
+        $shopContext = $this->legacyContext->getContext()->cookie->shopContext;
+        if (empty($shopContext)) {
             return null;
         }
 
-        $splitShopContext = explode('-', $this->legacyContext->getContext()->cookie->shopContext);
+        $splitShopContext = explode('-', $shopContext);
         if (count($splitShopContext) == 2) {
             $splitShopType = $splitShopContext[0];
             $splitShopValue = (int) $splitShopContext[1];

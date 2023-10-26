@@ -44,7 +44,7 @@ use Shop;
  *  Legacy requires Context properties (currency, country etc.) instead of using cart properties
  *  so some context props must be changed for a while and then restored to previous state.
  */
-final class ContextStateManager
+class ContextStateManager
 {
     private const MANAGED_FIELDS = [
         'cart',
