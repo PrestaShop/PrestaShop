@@ -30,6 +30,9 @@ services:
 framework:
   assets:
     version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION
+    packages:
+      front_js:
+        base_path: '../js'
 
   # esi: ~
   secret: "%secret%"
