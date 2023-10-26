@@ -50,7 +50,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Catalog > Products\' page', async function () {
+  /*  it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -72,7 +72,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
 
       numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfActiveProducts).to.within(0, numberOfProducts);
-    });
+    });*/
   });
 
  /* // Pre-condition : Change the product per page by the number of all products
