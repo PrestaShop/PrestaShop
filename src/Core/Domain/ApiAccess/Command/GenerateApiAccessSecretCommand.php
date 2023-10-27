@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,6 +22,25 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/form.html.twig' %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
+
+class GenerateApiAccessSecretCommand
+{
+    private ApiAccessId $apiAccessId;
+
+    public function __construct(int $apiAccessId)
+    {
+        $this->apiAccessId = new ApiAccessId($apiAccessId);
+    }
+
+    public function getApiAccessId(): ApiAccessId
+    {
+        return $this->apiAccessId;
+    }
+}

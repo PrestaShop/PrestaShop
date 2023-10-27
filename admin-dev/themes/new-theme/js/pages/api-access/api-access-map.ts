@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,6 +21,10 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/form.html.twig' %}
+export default {
+  generateSecretLink: 'a.generate-client-secret',
+  generateSecretModalId: 'generate-secret-modal',
+  copySecret: '.copy-secret-to-clipboard',
+};

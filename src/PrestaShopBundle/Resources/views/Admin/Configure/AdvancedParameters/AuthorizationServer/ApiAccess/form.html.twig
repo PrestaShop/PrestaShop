@@ -23,31 +23,66 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
 {% form_theme apiAccessForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
-{% block api_access_form_block %}
-  {{ form_start(apiAccessForm) }}
+{% block session_alert %}
+  {{ parent() }}
 
-  <div class="card">
-    <h3 class="card-header">
-      {{ 'API Access'|trans({}, 'Admin.Advparameters.Feature') }}
-    </h3>
+  {# Display generated client secrets passed by session #}
+  {% if app.session.flashbag.peek('client_secret')|length() > 0 %}
+    {% for clientSecret in app.session.flashbag.get('client_secret') %}
+      <div class="alert alert-success d-print-none" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="material-icons">close</i></span>
+        </button>
+        <div class="alert-text">
+          {{ 'Client secret:'|trans({}, 'Admin.Advparameters.Feature') }} {{ clientSecret }}
+          <a href="#" class="copy-secret-to-clipboard" data-secret="{{ clientSecret|trim }}">
+            {{ 'Copy'|trans({}, 'Admin.Actions') }}
+            <i class="material-icons">content_copy</i>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
 
-    <div class="card-body">
-      <div class="form-wrapper">
-        {{ form_widget(apiAccessForm) }}
+{% block content %}
+  {% block api_access_form_block %}
+    {{ form_start(apiAccessForm) }}
+
+    <div class="card">
+      <h3 class="card-header">
+        {{ 'API access'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(apiAccessForm) }}
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <a href="{{ path('admin_api_accesses_index') }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+        <div class="float-right">
+          {% block form_submit_buttons %}
+            <button type="submit" class="btn btn-primary">
+              {{ 'Generate client secret and save'|trans({}, 'Admin.Advparameters.Feature') }}
+            </button>
+          {% endblock %}
+        </div>
       </div>
     </div>
 
-    <div class="card-footer">
-      <a href="{{ path('admin_api_accesses_index') }}" class="btn btn-outline-secondary">
-        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-      </a>
-      <button class="btn btn-primary float-right">
-        {{ 'Save'|trans({}, 'Admin.Actions') }}
-      </button>
-    </div>
-  </div>
+    {{ form_end(apiAccessForm) }}
+  {% endblock %}
+{% endblock %}
 
-  {{ form_end(apiAccessForm) }}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/api_access_form.bundle.js') }}"></script>
 {% endblock %}
