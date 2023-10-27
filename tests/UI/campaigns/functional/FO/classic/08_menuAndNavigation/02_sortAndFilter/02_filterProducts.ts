@@ -5,12 +5,14 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import categoryPageFO from '@pages/FO/category';
-import {homePage} from '@pages/FO/home';
+// Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
+
+// Import FO pages
+import categoryPageFO from '@pages/FO/category';
+import {homePage} from '@pages/FO/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,14 +21,12 @@ const baseContext: string = 'functional_FO_classic_menuAndNavigation_sortAndFilt
 
 /*
 Pre-condition:
-- Disable new product page
 - Get the number of active products
 - Change the number of products per page
 Scenario:
-- Filter products
+- Filter products by category, size, color, composition, price, brand, dimension, availability, paper type
 Post-condition:
 - Reset the number of products per page
-- Enable new product page
  */
 describe('FO - Menu and navigation : Filter products', async () => {
   let browserContext: BrowserContext;
@@ -210,7 +210,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     });
 
     it('should check the active filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters3', baseContext);
 
       const activeFilters = await categoryPageFO.getActiveFilters(page);
       expect(activeFilters).to.contains('Size: S')
@@ -260,7 +260,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     });
 
     it('should check the active filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters4', baseContext);
 
       const activeFilters = await categoryPageFO.getActiveFilters(page);
       expect(activeFilters).to.contains('Composition: Ceramic')
@@ -287,7 +287,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     });
 
     it('should check the active filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters4', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters5', baseContext);
 
       const activeFilters = await categoryPageFO.getActiveFilters(page);
       expect(activeFilters).to.contains('Price: €14.00 - €39.00')
@@ -316,7 +316,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     });
 
     it('should check the active filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters5', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters6', baseContext);
 
       const activeFilters = await categoryPageFO.getActiveFilters(page);
       expect(activeFilters).to.contains('Composition: Recycled cardboard')
@@ -330,7 +330,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       const numberOfProductsAfterFilter = await categoryPageFO.getNumberOfProducts(page);
       expect(productsNumber).to.be.greaterThan(numberOfProductsAfterFilter);
 
-      for (let i = 1; i <= productsNumber; i++) {
+      for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const price = await categoryPageFO.getProductPrice(page, i);
         expect(price).to.within(14, 39);
       }
@@ -339,28 +339,28 @@ describe('FO - Menu and navigation : Filter products', async () => {
 
   describe('Filter products list by Dimension', async () => {
     it('should clear all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters3', baseContext);
 
       const isActiveFilterNotVisible = await categoryPageFO.clearAllFilters(page);
       expect(isActiveFilterNotVisible).to.eq(true);
     });
 
     it('should check the number of products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts4', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts5', baseContext);
 
       const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
-      expect(productsNumberAfterClearFilter).to.be.equal(productsNumber);
+      expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
 
-    it('should filter products by Dimension \' 40x60cm -  60x90cm\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByBrand', baseContext);
+    it('should filter products by Dimension \'40x60cm -  60x90cm\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDimension', baseContext);
 
       await categoryPageFO.filterByCheckbox(page, 'attribute_group', 'Dimension-40x60cm', true);
-      await categoryPageFO.filterByCheckbox(page, 'attribute_group', 'Dimension-60x90cm', true);
+      await categoryPageFO.filterByCheckbox(page, 'attribute_group', 'Dimension-40x60cm-60x90cm', true);
     });
 
     it('should check the active filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters5', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters7', baseContext);
 
       const activeFilters = await categoryPageFO.getActiveFilters(page);
       expect(activeFilters).to.contains('Dimension: 40x60cm')
@@ -368,7 +368,9 @@ describe('FO - Menu and navigation : Filter products', async () => {
     });
 
     it('should check the products list', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList4', baseContext);
+
+      productsNumber = await categoryPageFO.getNumberOfProducts(page);
 
       for (let i = 1; i <= productsNumber; i++) {
         const productURL = await categoryPageFO.getProductHref(page, i);
@@ -377,7 +379,94 @@ describe('FO - Menu and navigation : Filter products', async () => {
     });
   });
 
-  /*// Post-condition : Reset product per page by the number of all products
+  describe('Filter products list by Availability', async () => {
+    it('should clear all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters6', baseContext);
+
+      const isActiveFilterNotVisible = await categoryPageFO.clearAllFilters(page);
+      expect(isActiveFilterNotVisible).to.eq(true);
+    });
+
+    it('should check the number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts6', baseContext);
+
+      const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
+      expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
+    });
+
+    it('should filter products by availability \'In Stock\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByAvailability', baseContext);
+
+      await categoryPageFO.filterByCheckbox(page, 'availability', '\'Availability-In+stock\'', true);
+    });
+
+    it('should check the active filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters8', baseContext);
+
+      const activeFilters = await categoryPageFO.getActiveFilters(page);
+      expect(activeFilters).to.contains('Availability: In stock');
+    });
+  });
+
+  describe('Filter products list by Paper Type', async () => {
+    it('should clear all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters4', baseContext);
+
+      const isActiveFilterNotVisible = await categoryPageFO.clearAllFilters(page);
+      expect(isActiveFilterNotVisible).to.eq(true);
+    });
+
+    it('should check the number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts7', baseContext);
+
+      const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
+      expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
+    });
+
+    it('should filter products by paper type \'Ruled - Plain - Squared\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByPaperType', baseContext);
+
+      await categoryPageFO.filterByCheckbox(page, 'attribute_group', '\'Paper+Type-Ruled\'', true);
+      await categoryPageFO.filterByCheckbox(page, 'attribute_group', '\'Paper+Type-Ruled-Plain\'', true);
+      await categoryPageFO.filterByCheckbox(page, 'attribute_group', '\'Paper+Type-Ruled-Plain-Squared\'', true);
+    });
+
+    it('should check the active filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters9', baseContext);
+
+      const activeFilters = await categoryPageFO.getActiveFilters(page);
+      expect(activeFilters).to.contains('Paper Type: Ruled')
+        .and.to.contains('Paper Type: Plain')
+        .and.to.contains('Paper Type: Squared');
+    });
+
+    it('should check the products list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList5', baseContext);
+
+      productsNumber = await categoryPageFO.getNumberOfProducts(page);
+
+      for (let i = 1; i <= productsNumber; i++) {
+        const productURL = await categoryPageFO.getProductHref(page, i);
+        expect(productURL).to.contain.oneOf(['paper_type-ruled', 'paper_type-plain', 'paper_type-squared']);
+      }
+    });
+
+    it('should clear all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters5', baseContext);
+
+      const isActiveFilterNotVisible = await categoryPageFO.clearAllFilters(page);
+      expect(isActiveFilterNotVisible).to.eq(true);
+    });
+
+    it('should check the number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts8', baseContext);
+
+      const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
+      expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
+    });
+  });
+
+  // Post-condition : Reset product per page by the number of all products
   describe('POST-TEST : Reset the number of products per page', async () => {
     it('should close the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFo', baseContext);
@@ -394,5 +483,5 @@ describe('FO - Menu and navigation : Filter products', async () => {
       const result = await productSettingsPage.setProductsDisplayedPerPage(page, 12);
       expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
-  });*/
+  });
 });
