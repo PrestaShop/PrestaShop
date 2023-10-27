@@ -505,19 +505,14 @@ class Category extends FOBasePage {
    */
   async filterByPrice(page: Page, minPrice: number, maxPrice: number, filterFrom: number, filterTo: number): Promise<void> {
     const sliderTrack = await page.locator(this.searchFiltersSlider);
-
     const sliderOffsetWidth = await sliderTrack.evaluate((el) => el.getBoundingClientRect().width);
+    const pxOneEuro = sliderOffsetWidth / (maxPrice - minPrice);
 
-    const unitiesForOneEuro = sliderOffsetWidth / (maxPrice - minPrice);
-
-    await sliderTrack.hover({
-      force: true,
-      position: {x: ((filterFrom - minPrice) * unitiesForOneEuro), y: 0},
-    });
+    await sliderTrack.hover({force: true, position: {x: ((filterFrom - minPrice) * pxOneEuro), y: 0}});
     await page.mouse.down();
     await page.mouse.up();
     await page.waitForTimeout(2000);
-    await sliderTrack.hover({force: true, position: {x: (filterTo - minPrice) * unitiesForOneEuro, y: 0}});
+    await sliderTrack.hover({force: true, position: {x: (filterTo - minPrice) * pxOneEuro, y: 0}});
     await page.mouse.down();
     await page.mouse.up();
     await page.waitForTimeout(2000);
