@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,55 +29,41 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler;
 
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NoResultException;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\AddApiAccessCommandHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\GenerateApiAccessSecretHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotGenerateSecretApiAccessException;
 use PrestaShop\PrestaShop\Core\Util\String\RandomString;
-use PrestaShopBundle\Entity\ApiAccess;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommandHandler]
-class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
+class GenerateApiAccessSecretHandler implements GenerateApiAccessSecretHandlerInterface
 {
     public function __construct(
         private readonly ApiAccessRepository $repository,
-        private readonly ValidatorInterface $validator,
         private readonly PasswordHasherInterface $passwordHasher
     ) {
     }
 
-    public function handle(AddApiAccessCommand $command): CreatedApiAccess
+    public function handle(GenerateApiAccessSecretCommand $command): string
     {
-        $apiAccess = new ApiAccess();
-        $apiAccess->setClientId($command->getApiClientId());
-        $apiAccess->setClientName($command->getClientName());
-        $secret = RandomString::generate();
-        $apiAccess->setClientSecret($this->passwordHasher->hash($secret));
-        $apiAccess->setEnabled($command->isEnabled());
-        $apiAccess->setDescription($command->getDescription());
-        $apiAccess->setScopes($command->getScopes());
-
-        $errors = $this->validator->validate($apiAccess);
-
-        if (count($errors) > 0) {
-            throw ApiAccessConstraintException::buildFromPropertyPath(
-                $errors->get(0)->getPropertyPath(),
-                $errors->get(0)->getMessage(),
-                $errors->get(0)->getMessageTemplate()
-            );
+        try {
+            $apiAccess = $this->repository->getById($command->getApiAccessId()->getValue());
+        } catch (NoResultException $e) {
+            throw new ApiAccessNotFoundException(sprintf('Could not find Api access with ID %s', $command->getApiAccessId()->getValue()), 0, $e);
         }
 
         try {
-            $apiAccessId = $this->repository->save($apiAccess);
-        } catch (ORMException $e) {
-            throw new CannotAddApiAccessException('Could not add Api access', 0, $e);
-        }
+            $secret = RandomString::generate();
+            $apiAccess->setClientSecret($this->passwordHasher->hash($secret));
+            $this->repository->save($apiAccess);
 
-        return new CreatedApiAccess($apiAccessId, $secret);
+            return $secret;
+        } catch (ORMException $e) {
+            throw new CannotGenerateSecretApiAccessException('Could not generate new token Api access', 0, $e);
+        }
     }
 }

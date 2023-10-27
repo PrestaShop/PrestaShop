@@ -38,3 +38,14 @@ services:
       - '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  prestashop.security.password_hasher.factory:
+    class: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory
+    arguments:
+      -
+        common: { 'algorithm': 'auto' }
+
+  Symfony\Component\PasswordHasher\PasswordHasherInterface:
+    factory: [ '@prestashop.security.password_hasher.factory', 'getPasswordHasher' ]
+    arguments:
+      - 'common'
