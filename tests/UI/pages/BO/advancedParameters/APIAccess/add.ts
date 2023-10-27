@@ -35,8 +35,10 @@ class AddNewAPIAccess extends BOBasePage {
 
     this.pageTitleCreate = `New API Access • ${global.INSTALL.SHOP_NAME}`;
     this.pageTitleEdit = (apiAccessName: string) => `Editing API Access "${apiAccessName}" • ${global.INSTALL.SHOP_NAME}`;
+    this.successfulCreationMessage = 'Client secret:';
 
     // Selectors
+    this.alertSuccessBlockParagraph = 'div.alert-success div.alert-text';
     this.formAPIAccess = 'form[name="api_access"]';
     this.clientNameInput = `${this.formAPIAccess} #api_access_client_name`;
     this.clientIdInput = `${this.formAPIAccess} #api_access_client_id`;

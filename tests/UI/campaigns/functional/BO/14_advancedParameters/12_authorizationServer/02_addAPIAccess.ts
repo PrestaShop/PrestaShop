@@ -81,7 +81,7 @@ describe('BO - Advanced Parameter - API Access : Add API Access', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
 
       const textResult = await addNewApiAccessPage.addAPIAccess(page, createAPIAccess);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulCreationMessage);
+      expect(textResult).to.contains(addNewApiAccessPage.successfulCreationMessage);
     });
 
     it('should return to the list', async function () {

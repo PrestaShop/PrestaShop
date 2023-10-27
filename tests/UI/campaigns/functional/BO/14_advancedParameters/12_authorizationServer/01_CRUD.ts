@@ -86,7 +86,7 @@ describe('BO - Advanced Parameter - API Access : CRUD', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
 
       const textResult = await addNewApiAccessPage.addAPIAccess(page, createAPIAccess);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulCreationMessage);
+      expect(textResult).to.contain(addNewApiAccessPage.successfulCreationMessage);
 
       // Go back to list to get number of elements because creation form redirects to edition form
       await dashboardPage.goToSubMenu(
