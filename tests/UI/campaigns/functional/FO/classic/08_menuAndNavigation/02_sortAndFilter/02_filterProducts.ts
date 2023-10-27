@@ -466,7 +466,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     });
   });
 
-  // Post-condition : Reset product per page by the number of all products
+  // Post-condition : Reset number of products per page
   describe('POST-TEST : Reset the number of products per page', async () => {
     it('should close the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFo', baseContext);

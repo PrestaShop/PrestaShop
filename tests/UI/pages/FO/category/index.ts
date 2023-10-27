@@ -77,6 +77,14 @@ class Category extends FOBasePage {
 
   private readonly searchFiltersDropdown: (facetType: string) => string;
 
+  private readonly searchFiltersSlider: string;
+
+  private readonly searchFilterPriceValues: string;
+
+  private readonly clearAllFiltersLink: string;
+
+  private readonly activeSearchFilters: string;
+
   private readonly wishlistModal: string;
 
   private readonly wishlistModalListItem: string;
@@ -139,6 +147,10 @@ class Category extends FOBasePage {
       + 'input[type="checkbox"]';
     this.searchFiltersRadio = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label input[type="radio"]`;
     this.searchFiltersDropdown = (facetType: string) => `${this.searchFilter(facetType)} .facet-dropdown`;
+    this.searchFiltersSlider = '.ui-slider-horizontal';
+    this.searchFilterPriceValues = '[id*=facet_label]';
+    this.clearAllFiltersLink = '#_desktop_search_filters_clear_all button.js-search-filters-clear-all';
+    this.activeSearchFilters = '#js-active-search-filters';
 
     // Wishlist
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
@@ -407,43 +419,92 @@ class Category extends FOBasePage {
     return page.$$eval(this.searchFiltersCheckbox(facetType), (all) => all.length !== 0);
   }
 
+  /**
+   * Filter by checkbox
+   * @param page {Page} Browser tab
+   * @param facetType {string} Type of filter
+   * @param checkboxName {string} Checkbox name
+   * @param toEnable {boolean} True if we need to enable
+   * @return {Promise<void>}
+   */
   async filterByCheckbox(page: Page, facetType: string, checkboxName: string, toEnable: boolean): Promise<void> {
     await page.setChecked(`${this.searchFiltersCheckbox(facetType)}[data-search-url*=${checkboxName}]`, toEnable, {force: true});
     await page.waitForTimeout(2000);
   }
 
+  /**
+   * Get active filters
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
   async getActiveFilters(page: Page): Promise<string> {
-    return this.getTextContent(page, '#js-active-search-filters');
+    return this.getTextContent(page, this.activeSearchFilters);
   }
 
+  /**
+   * Get product href
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row
+   * @return {Promise<string>}
+   */
   async getProductHref(page: Page, productRow: number): Promise<string> {
     return this.getAttributeContent(page, `${this.productArticle(productRow)} div.thumbnail-top a`, 'href');
   }
 
+  /**
+   * Get product price
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row
+   * @return {Promise<number>}
+   */
   async getProductPrice(page: Page, productRow: number): Promise<number> {
     return this.getNumberFromText(page, this.productPrice(productRow));
   }
 
+  /**
+   * Clear all filters
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
   async clearAllFilters(page: Page): Promise<boolean> {
-    await page.locator('#_desktop_search_filters_clear_all button.js-search-filters-clear-all').click();
+    await page.locator(this.clearAllFiltersLink).click();
 
-    return this.elementNotVisible(page, '#js-active-search-filters', 2000);
+    return this.elementNotVisible(page, this.activeSearchFilters, 2000);
   }
 
+  /**
+   * Get maximum price from slider
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
   async getMaximumPrice(page: Page): Promise<number> {
-    const test = await this.getTextContent(page, '[id*=facet_label]');
+    const test = await this.getTextContent(page, this.searchFilterPriceValues);
 
     return (parseInt(test.split('€')[2], 10));
   }
 
+  /**
+   * Get minimum price from slider
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
   async getMinimumPrice(page: Page): Promise<number> {
-    const test = await this.getTextContent(page, '[id*=facet_label]');
+    const test = await this.getTextContent(page, this.searchFilterPriceValues);
 
     return (parseInt(test.split('€')[1], 10));
   }
 
+  /**
+   * Filter by price
+   * @param page {Page} Browser tab
+   * @param minPrice {number} Minimum price in the slider
+   * @param maxPrice {number} Maximum price in the slider
+   * @param filterFrom {number} The minimum value to filter
+   * @param filterTo {number} The maximum value to filter
+   * @return {Promise<void>}
+   */
   async filterByPrice(page: Page, minPrice: number, maxPrice: number, filterFrom: number, filterTo: number): Promise<void> {
-    const sliderTrack = await page.locator('.ui-slider-horizontal');
+    const sliderTrack = await page.locator(this.searchFiltersSlider);
 
     const sliderOffsetWidth = await sliderTrack.evaluate((el) => el.getBoundingClientRect().width);
 
