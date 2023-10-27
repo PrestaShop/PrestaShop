@@ -50,7 +50,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-  /*  it('should go to \'Catalog > Products\' page', async function () {
+    it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -72,10 +72,10 @@ describe('FO - Menu and navigation : Filter products', async () => {
 
       numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfActiveProducts).to.within(0, numberOfProducts);
-    });*/
+    });
   });
 
- /* // Pre-condition : Change the product per page by the number of all products
+  // Pre-condition : Change the product per page by the number of all products
   describe('PRE-TEST : Change the number of products per page', async () => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
@@ -96,10 +96,10 @@ describe('FO - Menu and navigation : Filter products', async () => {
       const result = await productSettingsPage.setProductsDisplayedPerPage(page, numberOfActiveProducts);
       expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
-  });*/
+  });
 
   // Filter products by Categories, size, color, composition, property, availability, brand, price, dimension & paper type
- /* describe('Filter products list by Category', async () => {
+  describe('Filter products list by Category', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
@@ -274,33 +274,106 @@ describe('FO - Menu and navigation : Filter products', async () => {
       productsNumber = await categoryPageFO.getNumberOfProducts(page);
       expect(productsNumber).to.be.above(1);
     });
-  });*/
+  });
 
   describe('Filter products list by Price', async () => {
-    it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
-
-      // Click on view my shop
-      page = await productSettingsPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
-
-      const result = await homePage.isHomePage(page);
-      expect(result).to.eq(true);
-    });
-
-    it('should go to all products page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
-
-      await homePage.goToAllProductsPage(page);
-
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
-    });
-
     it('should filter products by price \'€14.00 - €20.00\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByPrice', baseContext);
 
-      await categoryPageFO.filterByPrice(page);
+      const maxPrice = await categoryPageFO.getMaximumPrice(page);
+      const minPrice = await categoryPageFO.getMinimumPrice(page);
+
+      await categoryPageFO.filterByPrice(page, minPrice, maxPrice, 14, 39);
+    });
+
+    it('should check the active filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters4', baseContext);
+
+      const activeFilters = await categoryPageFO.getActiveFilters(page);
+      expect(activeFilters).to.contains('Price: €14.00 - €39.00')
+        .and.to.contains('Composition: Ceramic')
+        .and.to.contains('Composition: Cotton')
+        .and.to.contains('Composition: Recycled cardboard');
+    });
+
+    it('should check filter products by price', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPrices', baseContext);
+
+      productsNumber = await categoryPageFO.getNumberOfProducts(page);
+
+      for (let i = 1; i <= productsNumber; i++) {
+        const price = await categoryPageFO.getProductPrice(page, i);
+        expect(price).to.within(14, 39);
+      }
+    });
+  });
+
+  describe('Filter products list by Brand', async () => {
+    it('should filter products by brand \'Graphic Corner\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByBrand', baseContext);
+
+      await categoryPageFO.filterByCheckbox(page, 'manufacturer', '\'Graphic+Corner\'', true);
+    });
+
+    it('should check the active filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters5', baseContext);
+
+      const activeFilters = await categoryPageFO.getActiveFilters(page);
+      expect(activeFilters).to.contains('Composition: Recycled cardboard')
+        .and.to.contains('Price: €14.00 - €39.00')
+        .and.to.contains('Brand: Graphic Corner');
+    });
+
+    it('should check filter products by brand', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBrands', baseContext);
+
+      const numberOfProductsAfterFilter = await categoryPageFO.getNumberOfProducts(page);
+      expect(productsNumber).to.be.greaterThan(numberOfProductsAfterFilter);
+
+      for (let i = 1; i <= productsNumber; i++) {
+        const price = await categoryPageFO.getProductPrice(page, i);
+        expect(price).to.within(14, 39);
+      }
+    });
+  });
+
+  describe('Filter products list by Dimension', async () => {
+    it('should clear all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters2', baseContext);
+
+      const isActiveFilterNotVisible = await categoryPageFO.clearAllFilters(page);
+      expect(isActiveFilterNotVisible).to.eq(true);
+    });
+
+    it('should check the number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts4', baseContext);
+
+      const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
+      expect(productsNumberAfterClearFilter).to.be.equal(productsNumber);
+    });
+
+    it('should filter products by Dimension \' 40x60cm -  60x90cm\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByBrand', baseContext);
+
+      await categoryPageFO.filterByCheckbox(page, 'attribute_group', 'Dimension-40x60cm', true);
+      await categoryPageFO.filterByCheckbox(page, 'attribute_group', 'Dimension-60x90cm', true);
+    });
+
+    it('should check the active filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters5', baseContext);
+
+      const activeFilters = await categoryPageFO.getActiveFilters(page);
+      expect(activeFilters).to.contains('Dimension: 40x60cm')
+        .and.to.contains('Dimension: 60x90cm');
+    });
+
+    it('should check the products list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList2', baseContext);
+
+      for (let i = 1; i <= productsNumber; i++) {
+        const productURL = await categoryPageFO.getProductHref(page, i);
+        expect(productURL).to.contain.oneOf(['dimension-40x60cm', 'dimension-60x90cm']);
+      }
     });
   });
 

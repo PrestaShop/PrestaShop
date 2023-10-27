@@ -114,7 +114,7 @@ class Category extends FOBasePage {
     this.productArticle = (number: number) => `${this.productList} .products div:nth-child(${number}) article`;
 
     this.productTitle = (number: number) => `${this.productArticle(number)} .product-title`;
-    this.productPrice = (number: number) => `${this.productArticle(number)} .product-price-and-shipping`;
+    this.productPrice = (number: number) => `${this.productArticle(number)} span.price`;
     this.productAttribute = (number: number, attribute: string) => `${this.productArticle(number)} .product-${attribute}`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
@@ -420,44 +420,46 @@ class Category extends FOBasePage {
     return this.getAttributeContent(page, `${this.productArticle(productRow)} div.thumbnail-top a`, 'href');
   }
 
+  async getProductPrice(page: Page, productRow: number): Promise<number> {
+    return this.getNumberFromText(page, this.productPrice(productRow));
+  }
+
   async clearAllFilters(page: Page): Promise<boolean> {
     await page.locator('#_desktop_search_filters_clear_all button.js-search-filters-clear-all').click();
 
     return this.elementNotVisible(page, '#js-active-search-filters', 2000);
   }
 
-  async filterByPrice(page: Page): Promise<void> {
+  async getMaximumPrice(page: Page): Promise<number> {
+    const test = await this.getTextContent(page, '[id*=facet_label]');
+
+    return (parseInt(test.split('€')[2], 10));
+  }
+
+  async getMinimumPrice(page: Page): Promise<number> {
+    const test = await this.getTextContent(page, '[id*=facet_label]');
+
+    return (parseInt(test.split('€')[1], 10));
+  }
+
+  async filterByPrice(page: Page, minPrice: number, maxPrice: number, filterFrom: number, filterTo: number): Promise<void> {
     const sliderTrack = await page.locator('.ui-slider-horizontal');
 
-    const sliderOffsetWidth = await sliderTrack.evaluate(el => {
-      return el.getBoundingClientRect().width;
+    const sliderOffsetWidth = await sliderTrack.evaluate((el) => el.getBoundingClientRect().width);
+
+    const unitiesForOneEuro = sliderOffsetWidth / (maxPrice - minPrice);
+
+    await sliderTrack.hover({
+      force: true,
+      position: {x: ((filterFrom - minPrice) * unitiesForOneEuro), y: 0},
     });
-
-    // Using the hover method to place the mouse cursor then moving it to the right
-    await sliderTrack.hover({force: true, position: {x: 18, y: 0}});
     await page.mouse.down();
     await page.mouse.up();
-    console.log('part 1 done');
-    await page.waitForTimeout(10000);
-    console.log(sliderOffsetWidth);
-    await sliderTrack.hover({force: true, position: {x: 180, y: 0}});
+    await page.waitForTimeout(2000);
+    await sliderTrack.hover({force: true, position: {x: (filterTo - minPrice) * unitiesForOneEuro, y: 0}});
     await page.mouse.down();
     await page.mouse.up();
-    await page.waitForTimeout(10000);
-/*    await page.mouse.move(0, 100);
-    await sliderTrack.hover({force: true, position: {x: sliderOffsetWidth, y: 50}});
-    await page.mouse.up();
-    console.log('part 2 done');
-    await page.waitForTimeout(10000);*/
-
-   /* const box = await page.locator('.ui-slider-horizontal').boundingBox();
-    console.log(box);
-    await sliderTrack.hover({force: true, position: {x: box.x + box.width / 2 - 100, y: box.y + box.height / 2}});
-  //  await page.mouse.down(box.x + box.width / 2, box.y + box.height / 2);
-    // Move 100px left.
-    await page.mouse.move(box.x + box.width / 2 - 100, box.y + box.height / 2, { steps: 10 });
-    await page.mouse.up();
-    await page.waitForTimeout(10000);*/
+    await page.waitForTimeout(2000);
   }
 
   /**
