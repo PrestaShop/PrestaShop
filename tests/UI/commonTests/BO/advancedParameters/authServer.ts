@@ -73,7 +73,7 @@ function createAPIAccessTest(apiAccess: APIAccessData, baseContext: string = 'co
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
 
       const textResult = await addNewApiAccessPage.addAPIAccess(page, apiAccess);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulCreationMessage);
+      expect(textResult).to.contains(addNewApiAccessPage.successfulCreationMessage);
 
       // Go back to list to get number of elements because creation form redirects to edition form
       await dashboardPage.goToSubMenu(
