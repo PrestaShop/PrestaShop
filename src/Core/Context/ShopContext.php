@@ -32,14 +32,22 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This context service gives access to all contextual data related to shop.
- *
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
  */
 class ShopContext
 {
     public function __construct(
         private readonly ShopConstraint $shopConstraint,
-        private readonly Shop $shop
+        protected int $id,
+        protected string $name,
+        protected int $shopGroupId,
+        protected int $categoryId,
+        protected string $themeName,
+        protected string $color,
+        protected string $physicalUri,
+        protected string $virtualUri,
+        protected string $domain,
+        protected string $domainSSL,
+        protected bool $active,
     ) {
     }
 
@@ -48,8 +56,58 @@ class ShopContext
         return $this->shopConstraint;
     }
 
-    public function getShop(): Shop
+    public function getId(): int
     {
-        return $this->shop;
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getShopGroupId(): int
+    {
+        return $this->shopGroupId;
+    }
+
+    public function getCategoryId(): int
+    {
+        return $this->categoryId;
+    }
+
+    public function getThemeName(): string
+    {
+        return $this->themeName;
+    }
+
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function getPhysicalUri(): string
+    {
+        return $this->physicalUri;
+    }
+
+    public function getVirtualUri(): string
+    {
+        return $this->virtualUri;
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
+    public function getDomainSSL(): string
+    {
+        return $this->domainSSL;
     }
 }

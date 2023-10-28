@@ -56,20 +56,18 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
         $legacyShop = $this->getLegacyShop();
 
         return new ShopContext(
-            $this->shopConstraint,
-            new Shop(
-                id: (int) $legacyShop->id,
-                name: $legacyShop->name,
-                shopGroupId: (int) $legacyShop->id_shop_group,
-                categoryId: (int) $legacyShop->id_category,
-                themeName: $legacyShop->theme_name,
-                color: $legacyShop->color,
-                physicalUri: $legacyShop->physical_uri,
-                virtualUri: $legacyShop->virtual_uri,
-                domain: $legacyShop->domain,
-                domainSSL: $legacyShop->domain_ssl,
-                active: (bool) $legacyShop->active
-            )
+            shopConstraint: $this->shopConstraint,
+            id: (int) $legacyShop->id,
+            name: $legacyShop->name,
+            shopGroupId: (int) $legacyShop->id_shop_group,
+            categoryId: (int) $legacyShop->id_category,
+            themeName: $legacyShop->theme_name,
+            color: $legacyShop->color,
+            physicalUri: $legacyShop->physical_uri,
+            virtualUri: $legacyShop->virtual_uri,
+            domain: $legacyShop->domain,
+            domainSSL: $legacyShop->domain_ssl,
+            active: (bool) $legacyShop->active
         );
     }
 
@@ -78,7 +76,7 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
         $this->assertArguments();
         // It is very important to start by setting the shop, because the ContextStateManager forcefully sets the Context shop to single shop when setShop
         // is called. If we set it first we can then correctly set the appropriate shop context based on the shop constraint
-        $this->contextStateManager->setShop(new LegacyShop($this->shopId));
+        $this->contextStateManager->setShop($this->getLegacyShop());
 
         // Now we properly set the context
         if ($this->shopConstraint->forAllShops()) {
