@@ -37,7 +37,8 @@ class EditableApiAccess
         private readonly string $clientName,
         private readonly bool $enabled,
         private readonly string $description,
-        private readonly array $scopes
+        private readonly array $scopes,
+        private readonly int $lifetime
     ) {
     }
 
@@ -72,5 +73,10 @@ class EditableApiAccess
     public function getScopes(): array
     {
         return $this->scopes;
+    }
+
+    public function getLifetime(): int
+    {
+        return $this->lifetime;
     }
 }

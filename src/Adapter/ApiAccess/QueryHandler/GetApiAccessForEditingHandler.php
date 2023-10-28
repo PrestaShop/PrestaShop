@@ -58,7 +58,8 @@ class GetApiAccessForEditingHandler implements GetApiAccessForEditingHandlerInte
             $apiAccess->getClientName(),
             $apiAccess->isEnabled(),
             $apiAccess->getDescription(),
-            $apiAccess->getScopes()
+            $apiAccess->getScopes(),
+            $apiAccess->getLifetime()
         );
     }
 }

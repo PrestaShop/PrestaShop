@@ -31,11 +31,13 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Positive;
 
 class ApiAccessType extends TranslatorAwareType
 {
@@ -91,6 +93,15 @@ class ApiAccessType extends TranslatorAwareType
                             ]
                         ),
                     ]),
+                ],
+            ])
+            ->add('lifetime', IntegerType::class, [
+                'label' => $this->trans('Lifetime', 'Admin.Global'),
+                'required' => false,
+                'empty_data' => '3600',
+                'constraints' => [
+                    new NotBlank(),
+                    new Positive(),
                 ],
             ])
             ->add('enabled', SwitchType::class, [

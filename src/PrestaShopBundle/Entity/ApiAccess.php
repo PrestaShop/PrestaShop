@@ -92,6 +92,15 @@ class ApiAccess
     #[Assert\Length(max: 21844)]
     private string $description;
 
+    /**
+     * Lifetime is in milliseconds. Default value is 3600 ms.
+     *
+     * @ORM\Column(name="lifetime", type="integer", options={"default": "3600"})
+     */
+    #[Assert\NotNull]
+    #[Assert\Positive]
+    private int $lifetime;
+
     public function getId(): int
     {
         return $this->id;
@@ -172,6 +181,18 @@ class ApiAccess
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLifetime(): int
+    {
+        return $this->lifetime;
+    }
+
+    public function setLifetime(int $lifetime): self
+    {
+        $this->lifetime = $lifetime;
 
         return $this;
     }
