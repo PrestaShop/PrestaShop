@@ -1247,7 +1247,7 @@ class CarrierCore extends ObjectModel
     public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
     {
         if (!Validate::isUnsignedId($id_tax_rules_group)) {
-            die(Tools::displayError('Tax rule ID is invalid.'));
+            die(Tools::displayError('Parameter "id_tax_rules_group" is invalid.'));
         }
 
         if (!$all_shops) {

@@ -295,7 +295,7 @@ abstract class ModuleGraphCore extends Module
             return Context::getContext()->getTranslator()->trans('No graph engine selected', [], 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
-            die(Tools::displayError('Invalid module name.'));
+            die(Tools::displayError('Invalid graph module name.'));
         }
         if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
             return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', [], 'Admin.Modules.Notification');

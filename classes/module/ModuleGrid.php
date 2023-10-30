@@ -105,7 +105,7 @@ abstract class ModuleGridCore extends Module
             return Context::getContext()->getTranslator()->trans('No grid engine selected', [], 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
-            die(Tools::displayError('Invalid module name.'));
+            die(Tools::displayError('Invalid grid module name.'));
         }
         if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
             return Context::getContext()->getTranslator()->trans('Grid engine selected is unavailable.', [], 'Admin.Modules.Notification');
