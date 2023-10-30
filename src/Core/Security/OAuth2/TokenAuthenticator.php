@@ -26,12 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Security;
+namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
-use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +49,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
-     * @var ResourceServerInterface
+     * @var AuthorisationServerInterface
      */
     private $authorizationServer;
 
@@ -59,7 +58,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     private $httpMessageFactory;
 
-    public function __construct(ResourceServerInterface $authorizationServer, HttpMessageFactoryInterface $httpMessageFactory)
+    public function __construct(AuthorisationServerInterface $authorizationServer, HttpMessageFactoryInterface $httpMessageFactory)
     {
         $this->authorizationServer = $authorizationServer;
         $this->httpMessageFactory = $httpMessageFactory;

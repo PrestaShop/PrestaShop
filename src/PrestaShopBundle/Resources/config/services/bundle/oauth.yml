@@ -4,12 +4,16 @@ services:
 
   PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
     arguments:
-      - '@security.user.provider.concrete.oauth2'
+      - '@prestashop.security.api-access.provider'
       - '@security.user_password_hasher'
 
   PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
 
-  PrestaShopBundle\Security\OAuth2\Repository\NullScopeRepository:
+  PrestaShopBundle\Security\OAuth2\GrantType\CustomClientCredentialsGrant:
+
+  PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository:
+    arguments:
+      - '@PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface'
 
   League\OAuth2\Server\Grant\ClientCredentialsGrant:
 
@@ -25,11 +29,11 @@ services:
     arguments:
       - '@PrestaShopBundle\Security\OAuth2\Repository\ClientRepository'
       - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
-      - '@PrestaShopBundle\Security\OAuth2\Repository\NullScopeRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository'
       - '@prestashop.api.private_key'
       - '%new_cookie_key%'
     calls:
-      - [ 'enableGrantType', [ '@League\OAuth2\Server\Grant\ClientCredentialsGrant' ] ]
+      - [ 'enableGrantType', [ '@PrestaShopBundle\Security\OAuth2\GrantType\CustomClientCredentialsGrant' ] ]
 
   League\OAuth2\Server\ResourceServer:
     arguments:

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,36 +29,21 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Security\OAuth2\Entity;
 
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\Traits\ClientTrait;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
-/**
- * This class is the Client entity managed by ClientRepository
- *
- * @experimental
- */
-class Client implements ClientEntityInterface
+class ScopeEntity implements ScopeEntityInterface
 {
-    use ClientTrait;
-    use EntityTrait;
-    protected ?int $lifetime;
-
-    public function __construct()
+    public function __construct(public readonly string $identifier)
     {
-        // Client Credential Grant allow only confidential clients (rfc6749 section 4.4)
-        $this->isConfidential = true;
     }
 
-    public function getLifetime(): ?int
+    public function getIdentifier()
     {
-        return $this->lifetime;
+        return $this->identifier;
     }
 
-    public function setLifetime(?int $lifetime): self
+    public function jsonSerialize(): mixed
     {
-        $this->lifetime = $lifetime;
-
-        return $this;
+        return $this->identifier;
     }
 }

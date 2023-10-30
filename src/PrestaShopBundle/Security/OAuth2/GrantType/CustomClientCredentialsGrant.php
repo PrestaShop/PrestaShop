@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,31 +27,26 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Security\OAuth2\Repository;
+namespace PrestaShopBundle\Security\OAuth2\GrantType;
 
+use DateInterval;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use PrestaShopBundle\Security\OAuth2\Entity\Client;
 
 /**
- * Repository class responsible for managing PrestaShop's Authorization Server scopes
- * Empty implementation for now because scopes are not used yet
- *
- * @experimental
+ * The default class does not allow to modify the lifetime of a token.
+ * This class allow to set a different lifetime for each token.
  */
-class NullScopeRepository implements ScopeRepositoryInterface
+class CustomClientCredentialsGrant extends ClientCredentialsGrant
 {
-    public function getScopeEntityByIdentifier($identifier): ?ScopeEntityInterface
+    protected function issueAccessToken(DateInterval $accessTokenTTL, ClientEntityInterface $client, $userIdentifier, array $scopes = [])
     {
-        return null;
-    }
+        /** @var Client $client */
+        if ($client->getLifetime() !== null) {
+            $accessTokenTTL = DateInterval::createFromDateString($client->getLifetime() . ' seconds');
+        }
 
-    public function finalizeScopes(
-        array $scopes,
-        $grantType,
-        ClientEntityInterface $clientEntity,
-        $userIdentifier = null
-    ): array {
-        return [];
+        return parent::issueAccessToken($accessTokenTTL, $client, $userIdentifier, $scopes);
     }
 }

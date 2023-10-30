@@ -24,40 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
-namespace PrestaShopBundle\Security\OAuth2\Entity;
-
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\Traits\ClientTrait;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * This class is the Client entity managed by ClientRepository
+ * Interface to implement when using/implementing an Authorization Server so the Resource Server
+ * can have a way to verify the access token
  *
  * @experimental
  */
-class Client implements ClientEntityInterface
+interface AuthorisationServerInterface
 {
-    use ClientTrait;
-    use EntityTrait;
-    protected ?int $lifetime;
+    public function isTokenValid(ServerRequestInterface $request): bool;
 
-    public function __construct()
-    {
-        // Client Credential Grant allow only confidential clients (rfc6749 section 4.4)
-        $this->isConfidential = true;
-    }
-
-    public function getLifetime(): ?int
-    {
-        return $this->lifetime;
-    }
-
-    public function setLifetime(?int $lifetime): self
-    {
-        $this->lifetime = $lifetime;
-
-        return $this;
-    }
+    public function getUser(ServerRequestInterface $request): ?UserInterface;
 }
