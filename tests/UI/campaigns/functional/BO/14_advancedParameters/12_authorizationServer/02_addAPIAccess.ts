@@ -82,6 +82,30 @@ describe('BO - Advanced Parameter - API Access : Add API Access', async () => {
 
       const textResult = await addNewApiAccessPage.addAPIAccess(page, createAPIAccess);
       expect(textResult).to.contains(addNewApiAccessPage.successfulCreationMessage);
+
+      const textMessage = await addNewApiAccessPage.getAlertInfoBlockParagraphContent(page);
+      expect(textMessage).to.contains(addNewApiAccessPage.apiAccessGeneratedMessage);
+    });
+
+    it('should copy client secret', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'copyClientSecret', baseContext);
+
+      await addNewApiAccessPage.copyClientSecret(page);
+
+      const clipboardContent = await addNewApiAccessPage.getClipboardText(page);
+      expect(clipboardContent.length).to.be.gt(0);
+
+      const clientSecret = await addNewApiAccessPage.getClientSecret(page);
+      expect(clientSecret.length).to.be.gt(0);
+
+      expect(clipboardContent).to.be.equal(clientSecret);
+    });
+
+    it('should reload page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'reloadPage', baseContext);
+
+      const hasAlertBlock = await addNewApiAccessPage.hasAlertBlock(page);
+      expect(hasAlertBlock).to.equal(false);
     });
 
     it('should return to the list', async function () {

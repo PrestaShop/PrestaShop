@@ -16,6 +16,12 @@ class AddNewAPIAccess extends BOBasePage {
 
   public readonly pageTitleEdit: (apiAccessName: string) => string;
 
+  public readonly apiAccessGeneratedMessage: string;
+
+  public readonly apiAccessRegeneratedMessage: string;
+
+  private readonly copyClientSecretLink: string;
+
   private readonly formAPIAccess: string;
 
   private readonly clientNameInput: string;
@@ -25,6 +31,10 @@ class AddNewAPIAccess extends BOBasePage {
   private readonly descriptionInput: string;
 
   private readonly saveButton: string;
+
+  private readonly generateClientSecret: string;
+
+  private readonly modalDialogConfirmButton: string;
 
   /**
    * @constructs
@@ -36,14 +46,23 @@ class AddNewAPIAccess extends BOBasePage {
     this.pageTitleCreate = `New API Access • ${global.INSTALL.SHOP_NAME}`;
     this.pageTitleEdit = (apiAccessName: string) => `Editing API Access "${apiAccessName}" • ${global.INSTALL.SHOP_NAME}`;
     this.successfulCreationMessage = 'Client secret:';
+    this.apiAccessGeneratedMessage = 'The API access and client secret have been generated successfully. '
+      + 'This secret value will only be displayed once. Don\'t forget to make a copy in a secure location.';
+    this.apiAccessRegeneratedMessage = 'Your new client secret has been generated successfully. '
+      + 'Your former client secret is now obsolete. '
+      + 'This secret value will only be displayed once. '
+      + 'Don\'t forget to make a copy in a secure location.';
 
     // Selectors
     this.alertSuccessBlockParagraph = 'div.alert-success div.alert-text';
+    this.copyClientSecretLink = `${this.alertSuccessBlockParagraph} a.copy-secret-to-clipboard`;
     this.formAPIAccess = 'form[name="api_access"]';
     this.clientNameInput = `${this.formAPIAccess} #api_access_client_name`;
     this.clientIdInput = `${this.formAPIAccess} #api_access_client_id`;
     this.descriptionInput = `${this.formAPIAccess} #api_access_description`;
     this.saveButton = `${this.formAPIAccess} .card-footer button`;
+    this.generateClientSecret = `${this.formAPIAccess} .card-footer .generate-client-secret`;
+    this.modalDialogConfirmButton = '#generate-secret-modal .modal-footer .btn-confirm-submit';
   }
 
   /*
@@ -64,6 +83,45 @@ class AddNewAPIAccess extends BOBasePage {
     await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Regenerate the client secret
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async regenerateClientSecret(page: Page): Promise<string> {
+    await page.locator(this.generateClientSecret).click();
+
+    await this.waitForSelectorAndClick(page, this.modalDialogConfirmButton, 2000);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Click on the Copy link
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async copyClientSecret(page: Page): Promise<void> {
+    await page.locator(this.copyClientSecretLink).click();
+  }
+
+  /**
+   * Returns the client secret
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getClientSecret(page: Page): Promise<string> {
+    const messageText = await this.getAlertSuccessBlockParagraphContent(page);
+
+    const regexResult: RegExpMatchArray|null = /Client secret: ([a-z0-9]+)/.exec(messageText);
+
+    if (regexResult === null) {
+      return '';
+    }
+
+    return regexResult[1];
   }
 }
 
