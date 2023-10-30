@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
@@ -36,7 +37,9 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
 {
     public function testFindEmployee(): void
     {
-        $employeeBuilder = new EmployeeContextBuilder();
+        $employeeBuilder = new EmployeeContextBuilder(
+            $this->createMock(EmployeeRepository::class)
+        );
         $listener = new EmployeeContextListener(
             $employeeBuilder,
             $this->mockLegacyContext(['id_employee' => 42])
@@ -50,7 +53,9 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
     public function testEmployeeNotFound(): void
     {
         $event = $this->createRequestEvent(new Request());
-        $employeeBuilder = new EmployeeContextBuilder();
+        $employeeBuilder = new EmployeeContextBuilder(
+            $this->createMock(EmployeeRepository::class)
+        );
         $listener = new EmployeeContextListener(
             $employeeBuilder,
             $this->mockLegacyContext(['id_employee' => null])

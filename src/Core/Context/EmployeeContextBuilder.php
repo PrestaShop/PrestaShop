@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use Employee as LegacyEmployee;
+use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 
 /**
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
@@ -36,12 +37,18 @@ use Employee as LegacyEmployee;
 class EmployeeContextBuilder
 {
     private ?int $employeeId = null;
+    private ?LegacyEmployee $legacyEmployee = null;
+
+    public function __construct(
+        private readonly EmployeeRepository $employeeRepository
+    ) {
+    }
 
     public function build(): EmployeeContext
     {
         $employee = null;
-        if ($this->employeeId) {
-            $legacyEmployee = new LegacyEmployee($this->employeeId);
+        $legacyEmployee = $this->getLegacyEmployee();
+        if ($legacyEmployee) {
             $employee = new Employee(
                 id: (int) $legacyEmployee->id,
                 profileId: (int) $legacyEmployee->id_profile,
@@ -66,5 +73,14 @@ class EmployeeContextBuilder
         $this->employeeId = $employeeId;
 
         return $this;
+    }
+
+    private function getLegacyEmployee(): ?LegacyEmployee
+    {
+        if (!$this->legacyEmployee && !empty($this->employeeId)) {
+            $this->legacyEmployee = $this->employeeRepository->get($this->employeeId);
+        }
+
+        return $this->legacyEmployee;
     }
 }
