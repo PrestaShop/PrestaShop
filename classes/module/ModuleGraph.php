@@ -261,10 +261,10 @@ abstract class ModuleGraphCore extends Module
     public function create($render, $type, $width, $height, $layers)
     {
         if (!Validate::isModuleName($render)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Invalid graph module name.'));
         }
         if (!Tools::file_exists_cache($file = _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
-            die(Tools::displayError());
+            die(Tools::displayError('Main graph module file does not exist.'));
         }
         require_once $file;
         $this->_render = new $render($type);
@@ -295,7 +295,7 @@ abstract class ModuleGraphCore extends Module
             return Context::getContext()->getTranslator()->trans('No graph engine selected', [], 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Invalid module name.'));
         }
         if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
             return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', [], 'Admin.Modules.Notification');

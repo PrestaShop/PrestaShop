@@ -612,8 +612,11 @@ class CarrierCore extends ObjectModel
      */
     public static function getDeliveredCountries($id_lang, $active_countries = false, $active_carriers = false, $contain_states = null)
     {
-        if (!Validate::isBool($active_countries) || !Validate::isBool($active_carriers)) {
-            die(Tools::displayError());
+        if (!Validate::isBool($active_countries)) {
+            die(Tools::displayError('Parameter "active_countries" is invalid.'));
+        }
+        if (!Validate::isBool($active_carriers)) {
+            die(Tools::displayError('Parameter "active_carriers" is invalid.'));
         }
 
         $states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -1244,7 +1247,7 @@ class CarrierCore extends ObjectModel
     public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
     {
         if (!Validate::isUnsignedId($id_tax_rules_group)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Tax rule ID is invalid.'));
         }
 
         if (!$all_shops) {

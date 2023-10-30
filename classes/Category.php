@@ -347,8 +347,11 @@ class CategoryCore extends ObjectModel
      */
     protected function recursiveDelete(&$toDelete, $idCategory)
     {
-        if (!is_array($toDelete) || !$idCategory) {
-            die(Tools::displayError());
+        if (!is_array($toDelete)) {
+            die(Tools::displayError('Parameter "toDelete" is invalid.'));
+        }
+        if (!$idCategory) {
+            die(Tools::displayError('Parameter "idCategory" is invalid.'));
         }
 
         $sql = new DbQuery();
@@ -611,7 +614,7 @@ class CategoryCore extends ObjectModel
     public static function getCategories($idLang = false, $active = true, $order = true, $sqlFilter = '', $orderBy = '', $limit = '')
     {
         if (!Validate::isBool($active)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "active" is invalid.'));
         }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
@@ -681,11 +684,11 @@ class CategoryCore extends ObjectModel
         $limit = ''
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
         }
 
         if (!Validate::isBool($active)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -756,11 +759,11 @@ class CategoryCore extends ObjectModel
         $limit = ''
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
         }
 
         if (!Validate::isBool($active)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -1131,7 +1134,7 @@ class CategoryCore extends ObjectModel
     public static function getChildren($idParent, $idLang, $active = true, $idShop = false)
     {
         if (!Validate::isBool($active)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         $cacheId = 'Category::getChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
@@ -1167,7 +1170,7 @@ class CategoryCore extends ObjectModel
     public static function hasChildren($idParent, $idLang, $active = true, $idShop = false)
     {
         if (!Validate::isBool($active)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         $cacheId = 'Category::hasChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;

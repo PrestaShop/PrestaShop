@@ -1000,7 +1000,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         /** @var ModuleGraph|false $graph */
         $graph = Module::getInstanceByName($module);
         if (false === $graph) {
-            $this->ajaxRender(Tools::displayError());
+            $this->ajaxRender(Tools::displayError('Graph module could not be loaded.'));
 
             return;
         }
@@ -1040,7 +1040,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         /** @var ModuleGrid|false $grid */
         $grid = Module::getInstanceByName($module);
         if (false === $grid) {
-            $this->ajaxRender(Tools::displayError());
+            $this->ajaxRender(Tools::displayError('Grid module could not be loaded.'));
 
             return;
         }

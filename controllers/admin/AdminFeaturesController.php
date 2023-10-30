@@ -396,7 +396,7 @@ class AdminFeaturesControllerCore extends AdminController
             $back = self::$currentIndex . '&token=' . $this->token;
         }
         if (!Validate::isCleanHtml($back)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Provided "back" parameter is invalid.'));
         }
 
         $helper->back_url = $back;

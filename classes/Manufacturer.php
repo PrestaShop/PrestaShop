@@ -148,7 +148,7 @@ class ManufacturerCore extends ObjectModel
     public function deleteSelection($selection)
     {
         if (!is_array($selection)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "selection" must be an array.'));
         }
 
         $result = true;
@@ -404,7 +404,7 @@ class ManufacturerCore extends ObjectModel
         }
 
         if (!Validate::isOrderBy($orderBy) || !Validate::isOrderWay($orderWay)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Invalid sorting parameters provided.'));
         }
 
         $groups = FrontController::getCurrentCustomerGroups();
