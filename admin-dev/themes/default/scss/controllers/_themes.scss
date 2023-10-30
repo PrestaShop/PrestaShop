@@ -1,7 +1,6 @@
 .theme-container {
   position: relative;
   width: 100%;
-  height: 200px;
   overflow: hidden;
   background-color: rgba(#4d576e, 0.3);
   border: solid 1px #ccc;
@@ -9,6 +8,7 @@
 
   .thumbnail {
     width: 100%;
+    margin-bottom: 0px;
   }
 
   .theme-title {
