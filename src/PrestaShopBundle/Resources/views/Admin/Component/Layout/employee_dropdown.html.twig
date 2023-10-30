@@ -61,7 +61,7 @@
           {% endif %}
         {% endfor %}
 
-        <a class="dropdown-item employee-link text-center" id="header_logout" href="{{ legacy_path('AdminLogin', {'logout' : 1})|escape('html_attr') }}">
+        <a class="dropdown-item employee-link text-center" id="header_logout" href="{{ legacy_path('AdminLogin', {'logout' : 1}) }}">
           <i class="material-icons d-lg-none">power_settings_new</i>
           <span>
             {{ 'Sign out'|trans({}, 'Admin.Navigation.Header') }}
