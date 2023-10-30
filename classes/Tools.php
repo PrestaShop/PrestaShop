@@ -2162,6 +2162,9 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
+        // Protect .git files or folders
+        fwrite($write_fd, "# Protect .git\nRewriteRule \.git - [F,L]\n");
+
         if (
             !$medias
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
