@@ -16,6 +16,11 @@
       <title>After validating an order</title>
       <description>This hook is called after validating an order by core</description>
     </hook>
+    <hook id="actionValidateOrderBefore">
+      <name>actionValidateOrderBefore</name>
+      <title>Before validating an order</title>
+      <description>This hook is called before validating an order by core</description>
+    </hook>
     <hook id="displayMaintenance">
       <name>displayMaintenance</name>
       <title>Maintenance Page</title>
