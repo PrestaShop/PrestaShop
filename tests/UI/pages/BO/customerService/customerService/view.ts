@@ -172,10 +172,10 @@ class ViewCustomer extends BOBasePage {
    */
   async forwardMessage(page: Page, messageData: MessageData): Promise<void> {
     await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employeeName);
+    await this.setValue(page, this.forwardModalCommentInput, messageData.message);
     if (await this.elementVisible(page, this.forwardModalEmailInput, 2000)) {
       await this.setValue(page, this.forwardModalEmailInput, messageData.emailAddress);
     }
-    await this.setValue(page, this.forwardModalCommentInput, messageData.message);
 
     await this.waitForSelectorAndClick(page, this.forwardModalSendButton);
   }
@@ -186,7 +186,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getYourAnswerFormTitle(page: Page): Promise<string> {
+  async getYourAnswerFormTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.yourAnswerFormTitle);
   }
 
@@ -195,7 +195,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getYourAnswerFormContent(page: Page): Promise<string> {
+  async getYourAnswerFormContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.yourAnswerFormTextarea);
   }
 
