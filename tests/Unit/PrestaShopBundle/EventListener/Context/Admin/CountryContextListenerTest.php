@@ -30,6 +30,7 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
@@ -41,6 +42,7 @@ class CountryContextListenerTest extends ContextEventListenerTestCase
         $countryContextBuilder = new CountryContextBuilder(
             $this->createMock(CountryRepository::class),
             $this->createMock(ContextStateManager::class),
+            $this->createMock(ConfigurationInterface::class),
         );
         $listener = new CountryContextListener(
             $countryContextBuilder,

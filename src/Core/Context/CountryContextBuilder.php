@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use Country as LegacyCountry;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
@@ -42,7 +43,8 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
 
     public function __construct(
         private readonly CountryRepository $countryRepository,
-        private readonly ContextStateManager $contextStateManager
+        private readonly ContextStateManager $contextStateManager,
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -50,22 +52,22 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
     {
         $this->assertArguments();
         $legacyCountry = $this->getLegacyCountry();
-        $country = new Country(
-            $legacyCountry->id,
-            $legacyCountry->id_zone,
-            $legacyCountry->id_currency,
-            $legacyCountry->iso_code,
-            $legacyCountry->call_prefix,
-            $legacyCountry->name,
-            $legacyCountry->contains_states,
-            $legacyCountry->need_identification_number,
-            $legacyCountry->need_zip_code,
-            $legacyCountry->zip_code_format,
-            $legacyCountry->display_tax_label,
-            $legacyCountry->active
-        );
+        // Temporary solution, this should be fetched from the LanguageContext when it's available
+        $languageId = $this->configuration->get('PS_LANG_DEFAULT');
 
-        return new CountryContext($country);
+        return new CountryContext(
+            id: $legacyCountry->id,
+            zoneId: $legacyCountry->id_zone,
+            currencyId: $legacyCountry->id_currency,
+            isoCode: $legacyCountry->iso_code,
+            callPrefix: $legacyCountry->call_prefix,
+            name: $legacyCountry->name[$languageId] ?? reset($legacyCountry->name),
+            containsStates: $legacyCountry->contains_states,
+            identificationNumberNeeded: $legacyCountry->need_identification_number,
+            zipCodeNeeded: $legacyCountry->need_zip_code,
+            zipCodeFormat: $legacyCountry->zip_code_format,
+            taxLabelDisplayed: $legacyCountry->display_tax_label,
+        );
     }
 
     public function buildLegacyContext(): void

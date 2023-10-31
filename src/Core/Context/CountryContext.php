@@ -34,12 +34,72 @@ namespace PrestaShop\PrestaShop\Core\Context;
 class CountryContext
 {
     public function __construct(
-        private readonly Country $country
+        protected int $id,
+        protected int $zoneId,
+        protected int $currencyId,
+        protected string $isoCode,
+        protected int $callPrefix,
+        protected string $name,
+        protected bool $containsStates,
+        protected bool $identificationNumberNeeded,
+        protected bool $zipCodeNeeded,
+        protected string $zipCodeFormat,
+        protected bool $taxLabelDisplayed,
     ) {
     }
 
-    public function getCountry(): Country
+    public function getId(): int
     {
-        return $this->country;
+        return $this->id;
+    }
+
+    public function getZoneId(): int
+    {
+        return $this->zoneId;
+    }
+
+    public function getCurrencyId(): int
+    {
+        return $this->currencyId;
+    }
+
+    public function getIsoCode(): string
+    {
+        return $this->isoCode;
+    }
+
+    public function getCallPrefix(): int
+    {
+        return $this->callPrefix;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function containsStates(): bool
+    {
+        return $this->containsStates;
+    }
+
+    public function isIdentificationNumberNeeded(): bool
+    {
+        return $this->identificationNumberNeeded;
+    }
+
+    public function isZipCodeNeeded(): bool
+    {
+        return $this->zipCodeNeeded;
+    }
+
+    public function getZipCodeFormat(): string
+    {
+        return $this->zipCodeFormat;
+    }
+
+    public function isTaxLabelDisplayed(): bool
+    {
+        return $this->taxLabelDisplayed;
     }
 }
