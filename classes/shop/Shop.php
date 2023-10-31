@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * @since 1.5.0
@@ -122,9 +123,9 @@ class ShopCore extends ObjectModel
     /**
      * There are 3 kinds of shop context : shop, group shop and general.
      */
-    public const CONTEXT_SHOP = 1;
-    public const CONTEXT_GROUP = 2;
-    public const CONTEXT_ALL = 4;
+    public const CONTEXT_SHOP = ShopConstraint::SHOP;
+    public const CONTEXT_GROUP = ShopConstraint::SHOP_GROUP;
+    public const CONTEXT_ALL = ShopConstraint::ALL_SHOPS;
 
     /**
      * Some data can be shared between shops, like customers or orders.

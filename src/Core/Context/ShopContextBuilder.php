@@ -80,11 +80,11 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
 
         // Now we properly set the context
         if ($this->shopConstraint->forAllShops()) {
-            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_ALL);
+            $this->contextStateManager->setShopContext(ShopConstraint::ALL_SHOPS);
         } elseif (!empty($this->shopConstraint->getShopGroupId())) {
-            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_GROUP, $this->shopConstraint->getShopGroupId()->getValue());
+            $this->contextStateManager->setShopContext(ShopConstraint::SHOP_GROUP, $this->shopConstraint->getShopGroupId()->getValue());
         } else {
-            $this->contextStateManager->setShopContext(LegacyShop::CONTEXT_SHOP, $this->shopConstraint->getShopId()->getValue());
+            $this->contextStateManager->setShopContext(ShopConstraint::SHOP, $this->shopConstraint->getShopId()->getValue());
         }
     }
 
