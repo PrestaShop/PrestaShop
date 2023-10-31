@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use Currency as LegacyCurrency;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
@@ -42,7 +43,8 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
 
     public function __construct(
         private readonly CurrencyRepository $currencyRepository,
-        private readonly ContextStateManager $contextStateManager
+        private readonly ContextStateManager $contextStateManager,
+        private readonly ConfigurationInterface $configuration
     ) {
     }
 
@@ -50,30 +52,26 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
     {
         $this->assertArguments();
         $legacyCurrency = $this->getLegacyCurrency();
-        $currency = new Currency(
+        // Temporary solution, this should be fetched from the LanguageContext when it's available
+        $languageId = $this->configuration->get('PS_LANG_DEFAULT');
+
+        $localizedNames = $legacyCurrency->getLocalizedNames();
+        $localizedPatterns = $legacyCurrency->getLocalizedPatterns();
+        $localizedSymbols = $legacyCurrency->getLocalizedSymbols();
+
+        return new CurrencyContext(
             $legacyCurrency->id,
-            $legacyCurrency->getName(),
+            $localizedNames[$languageId] ?? reset($localizedNames),
             $legacyCurrency->getLocalizedNames(),
             $legacyCurrency->iso_code,
-            $legacyCurrency->iso_code_num,
             $legacyCurrency->numeric_iso_code,
-            $legacyCurrency->getConversionRate(),
-            (bool) $legacyCurrency->deleted,
-            (bool) $legacyCurrency->unofficial,
-            (bool) $legacyCurrency->modified,
-            (bool) $legacyCurrency->active,
-            $legacyCurrency->getSign(),
-            $legacyCurrency->getSymbol(),
+            (string) $legacyCurrency->getConversionRate(),
+            $localizedSymbols[$languageId] ?? reset($localizedSymbols),
             $legacyCurrency->getLocalizedSymbols(),
-            $legacyCurrency->format,
-            $legacyCurrency->blank,
-            $legacyCurrency->decimals,
             $legacyCurrency->precision,
-            $legacyCurrency->pattern,
+            $localizedPatterns[$languageId] ?? reset($localizedPatterns),
             $legacyCurrency->getLocalizedPatterns()
         );
-
-        return new CurrencyContext($currency);
     }
 
     public function buildLegacyContext(): void

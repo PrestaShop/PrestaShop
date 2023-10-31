@@ -31,16 +31,18 @@ namespace Tests\Unit\PrestaShopBundle\EventListener\Context;
 use Context;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use ReflectionProperty;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Tests\Resources\classes\TestCookie;
+use Tests\Unit\Core\Configuration\MockConfigurationTrait;
 
 abstract class ContextEventListenerTestCase extends KernelTestCase
 {
+    use MockConfigurationTrait;
+
     /**
      * Since the listeners job is mostly to fill the builders's properties, that are private, this accessor method is convenient
      *
@@ -74,23 +76,6 @@ abstract class ContextEventListenerTestCase extends KernelTestCase
         ;
 
         return $legacyContext;
-    }
-
-    protected function mockConfiguration(array $configurationValues): ShopConfigurationInterface|MockObject
-    {
-        $configuration = $this->createMock(ShopConfigurationInterface::class);
-        $configuration
-            ->method('get')
-            ->will($this->returnCallback(function ($configurationName) use ($configurationValues) {
-                if (isset($configurationValues[$configurationName])) {
-                    return $configurationValues[$configurationName];
-                }
-
-                throw new \InvalidArgumentException('Unhandled configuration ' . $configurationName);
-            }))
-        ;
-
-        return $configuration;
     }
 
     protected function createRequestEvent(Request $request): RequestEvent
