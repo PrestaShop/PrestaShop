@@ -172,6 +172,21 @@ class CreateProduct extends BOBasePage {
   /*
   Methods
    */
+
+  async selectStores(page: Page, storeID: number): Promise<void> {
+    //await page.locator('#header-multishop a.product-shops-action').click();
+
+    await page.evaluate(
+      (selector: string) => (document.querySelector(selector) as HTMLElement).click(),
+      '#header-multishop a.product-shops-action',
+    );
+
+    const selectStoreFrame = await page.frame({name: 'modal-product-shops-iframe'});
+    await this.setChecked(selectStoreFrame, `#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i`, true);
+
+    await selectStoreFrame.locator('#product_shops_buttons_submit').click();
+  }
+
   /**
    * Go to a tab
    * @param page {Page} Browser tab
