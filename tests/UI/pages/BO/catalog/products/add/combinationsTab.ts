@@ -151,7 +151,7 @@ class CombinationsTab extends BOBasePage {
 
   private readonly editCombinationModalSaveButton: string;
 
-  private readonly editCombinationModalCancelButton: string;
+  private readonly editCombinationModalCloseButton: string;
 
   private readonly editCombinationCloseModal: string;
 
@@ -298,7 +298,7 @@ class CombinationsTab extends BOBasePage {
     this.editCombinationModalImpactOnPriceTExcInput = '#combination_form_price_impact_price_tax_excluded';
     this.editCombinationModalReferenceInput = '#combination_form_references_reference';
     this.editCombinationModalSaveButton = `${this.editCombinationModal} footer button.btn-primary`;
-    this.editCombinationModalCancelButton = `${this.editCombinationModal} footer button.btn-close`;
+    this.editCombinationModalCloseButton = `${this.editCombinationModal} footer button.btn-close`;
     this.editCombinationCloseModal = `${this.editCombinationEditModal} div.modal-prevent-close div.modal.show`;
     this.editCombinationModalDiscardButton = `${this.editCombinationCloseModal} button.btn-primary`;
     this.combinationStockMovementsDate = (row: number) => `#combination_form_stock_quantities_stock_movements_${row - 1}_`
@@ -547,6 +547,7 @@ class CombinationsTab extends BOBasePage {
    */
   async clickOnNextCombinationButton(page: Page): Promise<void> {
     await page.locator(this.nextCombinationButton).click();
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -556,6 +557,7 @@ class CombinationsTab extends BOBasePage {
    */
   async clickOnPreviousCombinationButton(page: Page): Promise<void> {
     await page.locator(this.previousCombinationButton).click();
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -650,7 +652,7 @@ class CombinationsTab extends BOBasePage {
     const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
     expect(combinationFrame).to.not.equal(null);
 
-    await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
+    await this.waitForSelectorAndClick(page, this.editCombinationModalCloseButton);
     if (await this.elementVisible(page, this.editCombinationModalDiscardButton, 2000)) {
       await this.waitForSelectorAndClick(page, this.editCombinationModalDiscardButton);
     }

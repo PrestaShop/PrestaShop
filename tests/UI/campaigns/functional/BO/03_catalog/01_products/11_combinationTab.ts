@@ -198,11 +198,8 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/33965
     it('should click on next combination button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNextButton', baseContext);
-
-      this.skip();
 
       await combinationsTab.clickOnNextCombinationButton(page);
 
@@ -212,8 +209,6 @@ describe('BO - Catalog - Products : Combination tab', async () => {
 
     it('should click on previous combination button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPreviousButton', baseContext);
-
-      this.skip();
 
       await combinationsTab.clickOnPreviousCombinationButton(page);
 
