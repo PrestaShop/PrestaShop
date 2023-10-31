@@ -1751,6 +1751,11 @@ parameters:
 			path: src/PrestaShopBundle/Twig/Extension/LocalizationExtension.php
 
 		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Twig/Layout/TemplateVariablesBuilder.php
+
+		-
 			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
 			path: src/PrestaShopBundle/Twig/LayoutExtension.php

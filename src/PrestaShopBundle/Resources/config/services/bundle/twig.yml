@@ -68,6 +68,13 @@ services:
     arguments:
       - '@prestashop.core.admin.multistore'
 
+  PrestaShopBundle\Twig\Layout\TemplateVariablesBuilder: ~
+  PrestaShopBundle\Twig\Layout\TemplateVariables:
+    lazy: true
+    factory: [ '@PrestaShopBundle\Twig\Layout\TemplateVariablesBuilder', 'build' ]
+
+  PrestaShopBundle\Twig\Layout\AssignSmartyVariables: ~
+
   # Deprecated since 9.0
   prestashop.twig.modules.loader:
     alias: PrestaShopBundle\Twig\Locator\ModuleTemplateLoader

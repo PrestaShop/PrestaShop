@@ -59,11 +59,11 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
             isoCode: $legacyCountry->iso_code,
             callPrefix: $legacyCountry->call_prefix,
             name: $legacyCountry->name[$this->languageContext->getId()] ?? reset($legacyCountry->name),
-            containsStates: $legacyCountry->contains_states,
-            identificationNumberNeeded: $legacyCountry->need_identification_number,
-            zipCodeNeeded: $legacyCountry->need_zip_code,
+            containsStates: (bool) $legacyCountry->contains_states,
+            identificationNumberNeeded: (bool) $legacyCountry->need_identification_number,
+            zipCodeNeeded: (bool) $legacyCountry->need_zip_code,
             zipCodeFormat: $legacyCountry->zip_code_format,
-            taxLabelDisplayed: $legacyCountry->display_tax_label,
+            taxLabelDisplayed: (bool) $legacyCountry->display_tax_label,
         );
     }
 
