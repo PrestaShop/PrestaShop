@@ -182,7 +182,7 @@ class CreateProduct extends BOBasePage {
     );
 
     const selectStoreFrame = await page.frame({name: 'modal-product-shops-iframe'});
-    await this.setChecked(selectStoreFrame, `#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i`, true);
+    await selectStoreFrame.setChecked(`#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i`, true);
 
     await selectStoreFrame.locator('#product_shops_buttons_submit').click();
   }

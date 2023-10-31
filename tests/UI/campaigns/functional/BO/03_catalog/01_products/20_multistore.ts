@@ -23,7 +23,6 @@ import ShopData from '@data/faker/shop';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import createProductsPage from "@pages/BO/catalog/products/add";
 
 const baseContext: string = 'functional_BO_catalog_products_multistore';
 
@@ -61,7 +60,7 @@ describe('BO - Catalog - Products : Multistore', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  /*describe('Create new store and set URL', async () => {
+  describe('Create new store and set URL', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -112,13 +111,9 @@ describe('BO - Catalog - Products : Multistore', async () => {
       const textResult = await addShopUrlPage.setVirtualUrl(page, createShopData.name);
       expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
     });
-  });*/
+  });
 
   describe('Check multistore', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
@@ -230,7 +225,7 @@ describe('BO - Catalog - Products : Multistore', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfter', baseContext);
 
       const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-     // expect(numberOfProductsAfterReset).to.equal(numberOfProducts - 1);
+      expect(numberOfProductsAfterReset).to.equal(numberOfProducts - 1);
     });
 
     it('should click on multistore header and select the created shop', async function () {
@@ -248,8 +243,8 @@ describe('BO - Catalog - Products : Multistore', async () => {
 
       await productsPage.goToProductPage(page, 1);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await createProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
     it('should click on \'Select stores\' button', async function () {
