@@ -547,6 +547,7 @@ class CombinationsTab extends BOBasePage {
    */
   async clickOnNextCombinationButton(page: Page): Promise<void> {
     await page.locator(this.nextCombinationButton).click();
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -556,6 +557,7 @@ class CombinationsTab extends BOBasePage {
    */
   async clickOnPreviousCombinationButton(page: Page): Promise<void> {
     await page.locator(this.previousCombinationButton).click();
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -650,7 +652,7 @@ class CombinationsTab extends BOBasePage {
     const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
     expect(combinationFrame).to.not.equal(null);
 
-    await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
+    await this.waitForSelectorAndClick(page, this.editCombinationModalCloseButton);
     if (await this.elementVisible(page, this.editCombinationModalDiscardButton, 2000)) {
       await this.waitForSelectorAndClick(page, this.editCombinationModalDiscardButton);
     }
