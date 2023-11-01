@@ -42,7 +42,7 @@ $(document).ready(function(){
 		$.ajax({
 	       type: 'POST',
 	       url: 'index.php',
-	       async: true,
+	       async: false,
 	       cache: false,
 	       dataType : "json",
 	       data: 'ajax=1&action=saveImportMatchs&tab=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').val() + '&newImportMatchs=' + newImportMatchs + matchFields,
@@ -66,7 +66,7 @@ $(document).ready(function(){
 		$.ajax({
 		       type: 'POST',
 		       url: 'index.php',
-		       async: true,
+		       async: false,
 		       cache: false,
 		       dataType : "json",
 		       data: 'ajax=1&action=loadImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToLoad,
@@ -91,7 +91,7 @@ $(document).ready(function(){
 		$.ajax({
 		       type: 'POST',
 		       url: 'index.php',
-		       async: true,
+		       async: false,
 		       cache: false,
 		       dataType : "json",
 		       data: 'ajax=1&action=deleteImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToDelete ,
