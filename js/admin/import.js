@@ -42,7 +42,7 @@ $(document).ready(function(){
 		$.ajax({
 	       type: 'POST',
 	       url: 'index.php',
-	       async: false,
+	       async: true,
 	       cache: false,
 	       dataType : "json",
 	       data: 'ajax=1&action=saveImportMatchs&tab=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').val() + '&newImportMatchs=' + newImportMatchs + matchFields,
@@ -66,7 +66,7 @@ $(document).ready(function(){
 		$.ajax({
 		       type: 'POST',
 		       url: 'index.php',
-		       async: false,
+		       async: true,
 		       cache: false,
 		       dataType : "json",
 		       data: 'ajax=1&action=loadImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToLoad,
@@ -75,7 +75,7 @@ $(document).ready(function(){
 					var matchs = jsonData.matchs.split('|')
 					$('input[name=skip]').val(jsonData.skip);
 					for (i=0;i<matchs.length;i++)
-						$('#type_value\\['+i+'\\]').val(matchs[i]).attr('selected',true);
+						$('#type_value\\['+i+'\\]').val(matchs[i]).attr('selected',true).trigger("chosen:updated");
 		       },
 		      error: function(XMLHttpRequest, textStatus, errorThrown)
 		       {
@@ -91,7 +91,7 @@ $(document).ready(function(){
 		$.ajax({
 		       type: 'POST',
 		       url: 'index.php',
-		       async: false,
+		       async: true,
 		       cache: false,
 		       dataType : "json",
 		       data: 'ajax=1&action=deleteImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToDelete ,
