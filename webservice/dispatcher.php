@@ -91,7 +91,7 @@ if (!class_exists($class_name)) {
 WebserviceRequest::$ws_current_classname = $class_name;
 $request = call_user_func([$class_name, 'getInstance']);
 
-$result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
+$result = $request->fetch($key, $method, (isset($_GET['url']) ?? null), $params, $bad_class_name, $input_xml);
 // display result
 if (ob_get_length() != 0) {
     header('Content-Type: application/javascript');
