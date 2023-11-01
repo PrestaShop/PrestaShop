@@ -1025,6 +1025,10 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                     return 'null';
                 }
 
+                if(gettype($columnValue) == "string") {
+                    $columnValue = str_replace("'", "''", $columnValue);
+                }
+
                 // We stringify values to avoid SQL syntax error, the float and integers will correctly casted in the DB anyway
                 // however string values and date time need to be quoted
                 return "'$columnValue'";
