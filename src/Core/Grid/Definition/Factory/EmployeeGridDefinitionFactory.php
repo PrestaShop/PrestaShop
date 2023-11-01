@@ -113,7 +113,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('profile'))
-                    ->setName($this->trans('Profile', [], 'Admin.Advparameters.Feature'))
+                    ->setName($this->trans('Role', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'profile_name',
                     ])

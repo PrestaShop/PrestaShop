@@ -65,7 +65,7 @@ class FeatureFlagController extends FrameworkBundleAdminController
                 $this->flashErrors($errors);
             }
 
-            $this->redirectToRoute('admin_feature_flags_index');
+            return $this->redirectToRoute('admin_feature_flags_index');
         }
 
         $betaFormHandler = $this->get('prestashop.admin.feature_flags.beta_form_handler');
@@ -86,14 +86,14 @@ class FeatureFlagController extends FrameworkBundleAdminController
                 $this->flashErrors($errors);
             }
 
-            $this->redirectToRoute('admin_feature_flags_index');
+            return $this->redirectToRoute('admin_feature_flags_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('New & Experimental Features', 'Admin.Advparameters.Feature'),
+            'layoutTitle' => $this->trans('New & experimental features', 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'stableFeatureFlagsForm' => $this->isFormEmpty($stableFeatureFlagsForm)

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
 use AppKernel;
+use Exception;
 use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -60,30 +61,50 @@ final class SymfonyCacheClearer implements CacheClearerInterface
         // If we reach here it means the clear lock file is locked, we register a shutdown function that will clear the cache once
         // the current process is over.
         register_shutdown_function(function () use ($kernel) {
-            $cacheDir = $kernel->getCacheDir();
-            if (!file_exists($cacheDir)) {
-                return;
+            try {
+                $cacheDir = $kernel->getCacheDir();
+                if (!file_exists($cacheDir)) {
+                    $kernel->unlocksCacheClear();
+
+                    return;
+                }
+
+                $environments = ['prod', 'dev'];
+                foreach ($environments as $environment) {
+                    try {
+                        $application = new Application($kernel);
+                        $application->setAutoExit(false);
+
+                        // Clear cache without warmup to be fast
+                        $input = new ArrayInput([
+                            'command' => 'cache:clear',
+                            '--no-warmup' => true,
+                            '--env' => $environment,
+                        ]);
+
+                        $output = new NullOutput();
+                        $application->doRun($input, $output);
+                    } catch (Exception) {
+                        // Do nothing but at least does not break the loop nor function
+                    }
+                }
+
+                // Warmup prod environment only (not needed for dev since many things are dynamic)
+                $application = new Application($kernel);
+                $application->setAutoExit(false);
+                $input = new ArrayInput([
+                    'command' => 'cache:warmup',
+                    '--no-optional-warmers' => true,
+                    '--env' => 'prod',
+                    '--no-debug' => true,
+                ]);
+
+                $output = new NullOutput();
+                $application->doRun($input, $output);
+            } finally {
+                Hook::exec('actionClearSf2Cache');
+                $kernel->unlocksCacheClear();
             }
-
-            $application = new Application($kernel);
-            $application->setAutoExit(false);
-
-            // Clear cache
-            $input = new ArrayInput([
-                'command' => 'cache:clear',
-                '--no-optional-warmers' => true,
-                '--env' => $kernel->getEnvironment(),
-            ]);
-
-            $output = new NullOutput();
-            $application->run($input, $output);
-
-            Hook::exec('actionClearSf2Cache');
-        });
-
-        // Unlock is registered in another separate function to make sure it will be called no matter what
-        register_shutdown_function(function () use ($kernel) {
-            $kernel->unlocksCacheClear();
         });
     }
 }

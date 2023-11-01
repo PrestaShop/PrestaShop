@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class MyWishlists extends FOBasePage {
+class MyWishlistsPage extends FOBasePage {
   public readonly pageTitle: string;
 
   private readonly headerTitle: string;
@@ -16,8 +16,8 @@ class MyWishlists extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on vouchers page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'My wishlists';
 
@@ -39,4 +39,5 @@ class MyWishlists extends FOBasePage {
   }
 }
 
-export default new MyWishlists();
+const myWishlistsPage = new MyWishlistsPage();
+export {myWishlistsPage, MyWishlistsPage};

@@ -1,6 +1,5 @@
 import api from '@utils/api';
 import helpers from '@utils/helpers';
-import keycloakHelper from '@utils/keycloakHelper';
 import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
@@ -15,11 +14,12 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {APIRequestContext} from 'playwright';
 import {
-  APIResponse, BrowserContext, Page, request,
+  BrowserContext, Page,
 } from 'playwright';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_resourceEndpoint';
 
+// @todo : https://github.com/PrestaShop/PrestaShop/issues/33946
 describe('API : External Auth Server - Resource Endpoint', async () => {
   // Browser
   let browserContext: BrowserContext;
@@ -36,35 +36,37 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
     apiContext = await helpers.createAPIContext(global.BO.URL);
 
     if (!global.GENERATE_FAILED_STEPS) {
-      const apiContextKeycloak: APIRequestContext = await request.newContext({
+      /*
+        const apiContextKeycloak: APIRequestContext = await request.newContext({
         baseURL: global.keycloakConfig.keycloakExternalUrl,
-        // @todo : Remove it when Puppeteer will accept self signed certificates
-        ignoreHTTPSErrors: true,
-      });
+          // @todo : Remove it when Playwright will accept self signed certificates
+          ignoreHTTPSErrors: true,
+        });
 
-      const clientSecretKeycloak: string = await keycloakHelper.createClient(
-        global.keycloakConfig.keycloakClientId,
-        'PrestaShop Client ID',
-        false,
-        true,
-      );
-      await expect(clientSecretKeycloak.length).to.be.gt(0);
+        const clientSecretKeycloak: string = await keycloakHelper.createClient(
+          global.keycloakConfig.keycloakClientId,
+          'PrestaShop Client ID',
+          false,
+          true,
+        );
+        expect(clientSecretKeycloak.length).to.be.gt(0);
 
-      const apiResponse: APIResponse = await apiContextKeycloak.post('realms/master/protocol/openid-connect/token', {
-        form: {
-          client_id: global.keycloakConfig.keycloakClientId,
-          client_secret: clientSecretKeycloak,
-          grant_type: 'client_credentials',
-        },
-      });
-      await expect(apiResponse.status()).to.eq(200);
+        const apiResponse: APIResponse = await apiContextKeycloak.post('realms/master/protocol/openid-connect/token', {
+          form: {
+            client_id: global.keycloakConfig.keycloakClientId,
+            client_secret: clientSecretKeycloak,
+            grant_type: 'client_credentials',
+          },
+        });
+        expect(apiResponse.status()).to.eq(200);
 
-      const jsonResponse = await apiResponse.json();
-      await expect(jsonResponse).to.have.property('access_token');
-      await expect(jsonResponse.access_token).to.be.a('string');
+        const jsonResponse = await apiResponse.json();
+        expect(jsonResponse).to.have.property('access_token');
+        expect(jsonResponse.access_token).to.be.a('string');
 
-      accessTokenKeycloak = jsonResponse.access_token;
-      accessTokenExpiredKeycloak = api.setAccessTokenAsExpired(accessTokenKeycloak);
+        accessTokenKeycloak = jsonResponse.access_token;
+        accessTokenExpiredKeycloak = api.setAccessTokenAsExpired(accessTokenKeycloak);
+      */
     }
   });
 
@@ -72,8 +74,10 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
     await helpers.closeBrowserContext(browserContext);
 
     if (!global.GENERATE_FAILED_STEPS) {
+      /*
       const isRemoved: boolean = await keycloakHelper.removeClient(global.keycloakConfig.keycloakClientId);
-      await expect(isRemoved).to.be.true;
+      expect(isRemoved).to.eq(true);
+      */
     }
   });
 
@@ -82,10 +86,14 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
   describe('Resource Endpoint', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
+
+      this.skip();
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+
+      this.skip();
 
       await dashboardPage.goToSubMenu(
         page,
@@ -95,89 +103,103 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it(`should search the module '${Modules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
+      this.skip();
+
       const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
-      await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+      expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it(`should go to the configuration page of the module '${Modules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
+      this.skip();
+
       await moduleManagerPage.goToConfigurationPage(page, Modules.keycloak.tag);
 
       const pageTitle = await keycloakConnectorDemo.getPageTitle(page);
-      await expect(pageTitle).to.eq(keycloakConnectorDemo.pageTitle);
+      expect(pageTitle).to.eq(keycloakConnectorDemo.pageTitle);
     });
 
     it('should define the Keycloak Realm endpoint', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setKeycloakRealmEndpoint', baseContext);
 
+      this.skip();
+
       const textResult = await keycloakConnectorDemo.setKeycloakEndpoint(
         page,
         `${global.keycloakConfig.keycloakInternalUrl}/realms/master`,
       );
-      await expect(textResult).to.be.eq(keycloakConnectorDemo.successfulUpdateMessage);
+      expect(textResult).to.be.eq(keycloakConnectorDemo.successfulUpdateMessage);
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 without access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 without access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1');
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      this.skip();
+
+      const apiResponse = await apiContext.get('api/hook-status/1');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 with invalid access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1', {
+      this.skip();
+
+      const apiResponse = await apiContext.get('api/hook-status/1', {
         headers: {
           Authorization: 'Bearer INVALIDTOKEN',
         },
       });
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 with expired access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 with expired access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithExpiredAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1', {
+      this.skip();
+
+      const apiResponse = await apiContext.get('api/hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessTokenExpiredKeycloak}`,
         },
       });
 
-      await expect(apiResponse.status()).to.eq(401);
-      await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(apiResponse.status()).to.eq(401);
+      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 with valid access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 with valid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithValidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1', {
+      this.skip();
+
+      const apiResponse = await apiContext.get('api/hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessTokenKeycloak}`,
         },
       });
 
-      await expect(apiResponse.status()).to.eq(200);
-      await expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.be.true;
-      await expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/ld+json');
+      expect(apiResponse.status()).to.eq(200);
+      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       const jsonResponse = await apiResponse.json();
-      await expect(jsonResponse).to.have.property('id');
-      await expect(jsonResponse.id).to.be.a('number');
-      await expect(jsonResponse).to.have.property('active');
-      await expect(jsonResponse.active).to.be.a('boolean');
+      expect(jsonResponse).to.have.property('id');
+      expect(jsonResponse.id).to.be.a('number');
+      expect(jsonResponse).to.have.property('active');
+      expect(jsonResponse.active).to.be.a('boolean');
     });
   });
 

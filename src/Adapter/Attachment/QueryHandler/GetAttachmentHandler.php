@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentHandlerInterface;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 /**
  * Provides path and original file name of attachment
  */
+#[AsQueryHandler]
 final class GetAttachmentHandler extends AbstractAttachmentHandler implements GetAttachmentHandlerInterface
 {
     /**

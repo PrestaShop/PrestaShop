@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Feature\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Edit feature with given data.
@@ -40,19 +41,19 @@ class EditFeatureCommand
     private $featureId;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
     private $localizedNames;
 
     /**
-     * @var int[]
+     * @var ShopId[]|null
      */
     private $associatedShopIds;
 
     /**
      * @param int $featureId
      */
-    public function __construct($featureId)
+    public function __construct(int $featureId)
     {
         $this->featureId = new FeatureId($featureId);
     }
@@ -60,7 +61,7 @@ class EditFeatureCommand
     /**
      * @return FeatureId
      */
-    public function getFeatureId()
+    public function getFeatureId(): FeatureId
     {
         return $this->featureId;
     }
@@ -68,7 +69,7 @@ class EditFeatureCommand
     /**
      * @return string[]|null
      */
-    public function getLocalizedNames()
+    public function getLocalizedNames(): ?array
     {
         return $this->localizedNames;
     }
@@ -78,10 +79,13 @@ class EditFeatureCommand
      *
      * @return EditFeatureCommand
      */
-    public function setLocalizedNames(array $localizedNames)
+    public function setLocalizedNames(array $localizedNames): self
     {
         if (empty($localizedNames)) {
-            throw new FeatureConstraintException('Feature name cannot be empty', FeatureConstraintException::EMPTY_NAME);
+            throw new FeatureConstraintException(
+                'Feature name cannot be empty',
+                FeatureConstraintException::INVALID_NAME
+            );
         }
 
         $this->localizedNames = $localizedNames;
@@ -90,9 +94,9 @@ class EditFeatureCommand
     }
 
     /**
-     * @return int[]|null
+     * @return ShopId[]|null
      */
-    public function getAssociatedShopIds()
+    public function getAssociatedShopIds(): ?array
     {
         return $this->associatedShopIds;
     }
@@ -102,9 +106,15 @@ class EditFeatureCommand
      *
      * @return EditFeatureCommand
      */
-    public function setAssociatedShopIds($associatedShopIds)
+    public function setAssociatedShopIds(array $associatedShopIds): self
     {
-        $this->associatedShopIds = $associatedShopIds;
+        if (empty($associatedShopIds)) {
+            throw new FeatureConstraintException('Shop association cannot be empty', FeatureConstraintException::INVALID_SHOP_ASSOCIATION);
+        }
+
+        $this->associatedShopIds = array_map(static function (int $shopId): ShopId {
+            return new ShopId($shopId);
+        }, $associatedShopIds);
 
         return $this;
     }

@@ -14,6 +14,10 @@ _customer_preferences:
   resource: "customer_preferences.yml"
   prefix: /customer-preferences/
 
+_customer_groups:
+  resource: "customer_groups.yml"
+  prefix: /customer-groups/
+
 _maintenance:
   resource: "maintenance.yml"
   prefix: /maintenance/
@@ -25,6 +29,10 @@ _seo_urls:
 _contacts:
   resource: "contacts.yml"
   prefix: /contacts/
+
+_stores:
+  resource: "stores.yml"
+  prefix: /stores/
 
 _order_states:
   resource: "order_states.yml"
@@ -38,6 +46,10 @@ _search_engines:
   resource: "search_engines.yml"
   prefix: /search-engines/
 
+_search_preferences:
+  resource: "search_preferences.yml"
+  prefix: /search/
+
 _title:
-  resource: "title.yml"
-  prefix: /title/
+  resource: "titles.yml"
+  prefix: /titles/

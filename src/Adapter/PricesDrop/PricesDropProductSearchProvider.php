@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrdersCollection;
 use Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -44,10 +44,16 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
      */
     private $translator;
 
+    /**
+     * @var SortOrdersCollection
+     */
+    private $sortOrdersCollection;
+
     public function __construct(
         TranslatorInterface $translator
     ) {
         $this->translator = $translator;
+        $this->sortOrdersCollection = new SortOrdersCollection($this->translator);
     }
 
     /**
@@ -91,21 +97,9 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
                 ->setProducts($products)
                 ->setTotalProductsCount($count);
 
+            // We use only default set of sort orders
             $result->setAvailableSortOrders(
-                [
-                    (new SortOrder('product', 'name', 'asc'))->setLabel(
-                        $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'name', 'desc'))->setLabel(
-                        $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'price', 'asc'))->setLabel(
-                        $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'price', 'desc'))->setLabel(
-                        $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
-                    ),
-                ]
+                $this->sortOrdersCollection->getDefaults()
             );
         }
 

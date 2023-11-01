@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -54,10 +53,10 @@ class ShowcaseCardController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')"
      * )
-     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return JsonResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function closeShowcaseCardAction(Request $request)
     {
         // check prerequisites

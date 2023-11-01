@@ -34,6 +34,7 @@ use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -45,6 +46,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements ChangeOrderCurrencyHandlerInterface
 {
     /**

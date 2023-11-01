@@ -10,7 +10,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import Products from '@data/demo/products';
-import foCartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
@@ -81,7 +81,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to first product page', async function () {
@@ -90,7 +90,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should add product to cart and go to cart page', async function () {
@@ -98,17 +98,17 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
 
       await foProductPage.addProductToTheCart(page);
 
-      const pageTitle = await foCartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foCartPage.pageTitle);
+      const pageTitle = await cartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await foCartPage.clickOnProceedToCheckout(page);
+      await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     it('should sign in by created customer', async function () {
@@ -117,14 +117,14 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnSignIn(page);
 
       const isCustomerConnected = await checkoutPage.customerLogin(page, customerData);
-      await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
     });
 
     it('should create address then continue to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
       const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
   });
 
@@ -135,7 +135,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddressesStep(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
-      await expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(1);
+      expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(1);
     });
 
     it('should edit the created address', async function () {
@@ -144,7 +144,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddress(page);
 
       const isStepAddressComplete = await checkoutPage.setAddress(page, editAddressData);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
   });
 
@@ -155,7 +155,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddressesStep(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
-      await expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(1);
+      expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(1);
     });
 
     it('should add new address', async function () {
@@ -164,7 +164,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnAddNewAddressButton(page);
 
       const isStepAddressComplete = await checkoutPage.setAddress(page, newAddressData);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
   });
 
@@ -175,7 +175,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddressesStep(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
-      await expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(2);
+      expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(2);
     });
 
     it('should click on \'Billing address differs from shipping address\' link', async function () {
@@ -184,7 +184,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnDifferentInvoiceAddressLink(page);
 
       const isInvoiceAddressBlockVisible = await checkoutPage.isInvoiceAddressBlockVisible(page);
-      await expect(isInvoiceAddressBlockVisible).to.be.true;
+      expect(isInvoiceAddressBlockVisible).to.eq(true);
     });
 
     it('should create new invoice address', async function () {
@@ -193,7 +193,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnAddNewInvoiceAddressButton(page);
 
       const isStepAddressComplete = await checkoutPage.setInvoiceAddress(page, newInvoiceAddressData);
-      await expect(isStepAddressComplete).to.be.true;
+      expect(isStepAddressComplete).to.eq(true);
     });
 
     it('should check the number of delivered addresses', async function () {
@@ -202,14 +202,14 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddressesStep(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
-      await expect(addressesNumber, 'The addresses number is not equal to 3!').to.equal(3);
+      expect(addressesNumber, 'The addresses number is not equal to 3!').to.equal(3);
     });
 
     it('should check the number of invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses2', baseContext);
 
       const addressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
-      await expect(addressesNumber).to.equal(3);
+      expect(addressesNumber).to.equal(3);
     });
   });
 
@@ -218,7 +218,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFirstAddress', baseContext);
 
       const textMessage = await checkoutPage.deleteAddress(page, 3);
-      await expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
+      expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
     });
 
     it('should check the number of delivered addresses', async function () {
@@ -227,14 +227,14 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddressesStep(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
-      await expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
+      expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
     });
 
     it('should check the number of invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses4', baseContext);
 
       const addressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
-      await expect(addressesNumber).to.equal(2);
+      expect(addressesNumber).to.equal(2);
     });
   });
 
@@ -246,7 +246,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.selectInvoiceAddress(page, 2);
 
       const isStepCompleted = await checkoutPage.clickOnContinueButtonFromAddressStep(page);
-      await expect(isStepCompleted).to.be.true;
+      expect(isStepCompleted).to.eq(true);
     });
 
     it('should check the number of delivered addresses', async function () {
@@ -255,14 +255,14 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddressesStep(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
-      await expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
+      expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
     });
 
     it('should check the number of invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses6', baseContext);
 
       const addressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
-      await expect(addressesNumber).to.equal(2);
+      expect(addressesNumber).to.equal(2);
     });
   });
 
@@ -274,7 +274,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.selectInvoiceAddress(page, 1);
 
       const isStepCompleted = await checkoutPage.clickOnContinueButtonFromAddressStep(page);
-      await expect(isStepCompleted).to.be.true;
+      expect(isStepCompleted).to.eq(true);
     });
 
     it('should click on edit address step and check that there is no invoice address', async function () {
@@ -283,7 +283,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await checkoutPage.clickOnEditAddressesStep(page);
 
       const isInvoiceAddressBlockVisible = await checkoutPage.isInvoiceAddressBlockVisible(page);
-      await expect(isInvoiceAddressBlockVisible).to.be.false;
+      expect(isInvoiceAddressBlockVisible).to.eq(false);
     });
   });
 
@@ -292,17 +292,17 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteTwoAddresses', baseContext);
 
       let textMessage = await checkoutPage.deleteAddress(page);
-      await expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
+      expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
 
       textMessage = await checkoutPage.deleteAddress(page);
-      await expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
+      expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
     });
 
     it('should check that the form for create address is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreateAddressForm', baseContext);
 
       const isFormVisible = await checkoutPage.isAddressFormVisible(page);
-      await expect(isFormVisible).to.be.true;
+      expect(isFormVisible).to.eq(true);
     });
   });
 

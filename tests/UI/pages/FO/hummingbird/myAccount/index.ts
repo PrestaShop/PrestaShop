@@ -12,9 +12,7 @@ class MyAccount extends MyAccountPage {
    * Setting up texts and selectors to use on my account page
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
 
     this.logoutFooterLink = '#my-account .account-menu .account-menu--signout';
   }

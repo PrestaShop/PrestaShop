@@ -4,15 +4,15 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
-import {deleteProductV2Test} from '@commonTests/BO/catalog/product';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
+import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import productsPage from '@pages/BO/catalog/productsV2';
-import createProductsPage from '@pages/BO/catalog/productsV2/add';
-import descriptionTab from '@pages/BO/catalog/productsV2/add/descriptionTab';
+import productsPage from '@pages/BO/catalog/products';
+import createProductsPage from '@pages/BO/catalog/products/add';
+import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
@@ -98,7 +98,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       await imageSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await imageSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
     });
 
     it('should enable WebP image format', async function () {
@@ -113,15 +113,15 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
       // JPEG/PNG should be checked
       const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
-      await expect(jpegChecked).to.be.true;
+      expect(jpegChecked).to.eq(true);
 
       // JPEG/PNG should be checked
       const jpegDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
-      await expect(jpegDisabled).to.be.true;
+      expect(jpegDisabled).to.eq(true);
 
       // WebP should be checked
       const webpChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
-      await expect(webpChecked).to.be.true;
+      expect(webpChecked).to.eq(true);
     });
   });
 
@@ -151,7 +151,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
           await categoryPage.goToBO(page);
 
           const pageTitle = await dashboardPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+          expect(pageTitle).to.contains(dashboardPage.pageTitle);
         });
       }
       it('should go to \'Catalog > Products\' page', async function () {
@@ -166,14 +166,14 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await productsPage.closeSfToolBar(page);
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       it('should click on \'New product\' button and check new product modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${arg.extOriginal}`, baseContext);
 
         const isModalVisible = await productsPage.clickOnNewProductButton(page);
-        await expect(isModalVisible).to.be.true;
+        expect(isModalVisible).to.eq(true);
       });
 
       it('should check the standard product description', async function () {
@@ -185,7 +185,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         );
 
         const productTypeDescription = await productsPage.getProductDescription(page);
-        await expect(productTypeDescription).to.contains(productsPage.standardProductDescription);
+        expect(productTypeDescription).to.contains(productsPage.standardProductDescription);
       });
 
       it('should choose \'Standard product\'', async function () {
@@ -194,7 +194,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await productsPage.selectProductType(page, arg.product.type);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
 
       it('should go to new product page', async function () {
@@ -203,7 +203,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await productsPage.clickOnAddNewProduct(page);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
 
       it('should create standard product', async function () {
@@ -212,18 +212,18 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await createProductsPage.closeSfToolBar(page);
 
         const createProductMessage = await createProductsPage.setProduct(page, arg.product);
-        await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+        expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
       });
 
       it('should check that the save button is changed to \'Save and publish\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkSaveButton${arg.extOriginal}`, baseContext);
 
         const saveButtonName = await createProductsPage.getSaveButtonName(page);
-        await expect(saveButtonName).to.equal('Save and publish');
+        expect(saveButtonName).to.equal('Save and publish');
 
         idProduct = await createProductsPage.getProductID(page);
         idProductImage = await descriptionTab.getProductIDImageCover(page);
-        await expect(idProduct).to.be.gt(0);
+        expect(idProduct).to.be.gt(0);
       });
 
       it('should check that images are generated', async function () {
@@ -241,31 +241,31 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         const pathImageOriginal: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}.jpg`;
 
         const fileExistsOriginal = await files.doesFileExist(pathImageOriginal);
-        await expect(fileExistsOriginal, `The file ${pathImageOriginal} doesn't exist!`).to.be.true;
+        expect(fileExistsOriginal, `The file ${pathImageOriginal} doesn't exist!`).to.eq(true);
 
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/32265
         if (arg.extOriginal !== 'webp') {
           const imageTypeOriginal = await files.getImageType(pathImageOriginal);
-          await expect(imageTypeOriginal).to.be.eq(arg.extOriginal);
+          expect(imageTypeOriginal).to.be.eq(arg.extOriginal);
         }
 
         // Check the Jpg file
         const pathImageJPG: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.jpg`;
 
         const fileExistsJPG = await files.doesFileExist(pathImageJPG);
-        await expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.be.true;
+        expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
         const imageTypeJPG = await files.getImageType(pathImageJPG);
-        await expect(imageTypeJPG).to.be.eq(arg.extGenerated);
+        expect(imageTypeJPG).to.be.eq(arg.extGenerated);
 
         // Check the WebP file
         const pathImageWEBP: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.webp`;
 
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
-        await expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.be.true;
+        expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
         const imageTypeWEBP = await files.getImageType(pathImageWEBP);
-        await expect(imageTypeWEBP).to.be.eq('webp');
+        expect(imageTypeWEBP).to.be.eq('webp');
       });
 
       it('should go to FO page', async function () {
@@ -275,7 +275,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to all products page', async function () {
@@ -284,7 +284,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await homePage.goToAllProductsPage(page);
 
         const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
-        await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+        expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
       });
 
       it(`should go to the second page and quick view the product '${arg.product.name}'`, async function () {
@@ -293,24 +293,24 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await categoryPage.goToNextPage(page);
 
         const nthProduct: number|null = await categoryPage.getNThChildFromIDProduct(page, idProduct);
-        await expect(nthProduct).to.be.not.null;
+        expect(nthProduct).to.not.eq(null);
 
         await categoryPage.quickViewProduct(page, nthProduct as number);
 
         const isModalVisible = await categoryPage.isQuickViewProductModalVisible(page);
-        await expect(isModalVisible).to.be.true;
+        expect(isModalVisible).to.eq(true);
       });
 
       it('should check that the main image of the quick view is a WebP', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${arg.extOriginal}`, baseContext);
 
         const quickViewImageMain = await categoryPage.getQuickViewImageMain(page);
-        await expect(quickViewImageMain).to.be.not.null;
+        expect(quickViewImageMain).to.not.eq(null);
 
         await files.downloadFile(quickViewImageMain as string, 'image.img');
 
         const quickViewImageMainType = await files.getImageType('image.img');
-        await expect(quickViewImageMainType).to.be.eq('webp');
+        expect(quickViewImageMainType).to.be.eq('webp');
 
         await files.deleteFile('image.img');
       });
@@ -332,7 +332,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       extension: 'webp',
     },
   ].forEach((arg: {product: ProductData, extension: string}) => {
-    deleteProductV2Test(arg.product, `${baseContext}_removeProduct${arg.extension}`);
+    deleteProductTest(arg.product, `${baseContext}_removeProduct${arg.extension}`);
   });
 
   // Post-condition: Disable Multiple image formats

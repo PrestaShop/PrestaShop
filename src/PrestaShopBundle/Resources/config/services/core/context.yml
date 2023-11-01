@@ -1,0 +1,20 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Context\CookieContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\CookieContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\CookieContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\EmployeeContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\ShopContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\ShopContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\ShopContextBuilder', 'build' ]

@@ -26,38 +26,46 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Admin controller to manage security pages.
+ * Security warning controller
  */
-class SecurityController extends FrameworkBundleAdminController
+class SecurityController extends PrestaShopAdminController
 {
-    public function compromisedAccessAction(Request $request)
+    public function __construct(
+        private readonly UserProvider $userProvider,
+        private readonly CsrfTokenManagerInterface $tokenManager,
+        private readonly ValidatorInterface $validator
+    ) {
+    }
+
+    public function compromisedAccessAction(Request $request): Response
     {
         $requestUri = urldecode($request->query->get('uri'));
         $url = new Assert\Url();
-        $violations = $this->get('validator')->validate($requestUri, [$url]);
+        $violations = $this->validator->validate($requestUri, [$url]);
         if ($violations->count()) {
             return $this->redirect('dashboard');
         }
 
         // getToken() actually generate a new token
-        $username = $this->get('prestashop.user_provider')->getUsername();
+        $username = $this->userProvider->getUsername();
 
-        $newToken = $this->get('security.csrf.token_manager')
+        $newToken = $this->tokenManager
             ->getToken($username)
             ->getValue();
 
         $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 
-        return $this->render(
-            '@PrestaShop/Admin/Security/compromised.html.twig',
-            [
-                'requestUri' => $newUri,
-            ]
-        );
+        return $this->render('@PrestaShop/Admin/Security/compromised.html.twig', [
+            'requestUri' => $newUri,
+        ]);
     }
 }

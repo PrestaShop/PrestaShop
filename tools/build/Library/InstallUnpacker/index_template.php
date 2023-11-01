@@ -25,9 +25,9 @@
  */
 set_time_limit(0);
 
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70205);
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.2.5');
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 81099);
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 80100);
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '8.1');
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 80199);
 define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.1');
 define('_PS_VERSION_', '%ps-version-placeholder%');
 

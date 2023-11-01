@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\CartRule\CartRuleSettings;
+
 /**
  * Class CartRuleCore.
  */
@@ -117,7 +119,7 @@ class CartRuleCore extends ObjectModel
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'date_from' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
             'date_to' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
-            'description' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65534],
+            'description' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => CartRuleSettings::DESCRIPTION_MAX_LENGTH],
             'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'quantity_per_user' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'priority' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
@@ -151,7 +153,7 @@ class CartRuleCore extends ObjectModel
                 'type' => self::TYPE_HTML,
                 'lang' => true,
                 'required' => true,
-                'size' => 254,
+                'size' => CartRuleSettings::NAME_MAX_LENGTH,
             ],
         ],
     ];
@@ -911,7 +913,7 @@ class CartRuleCore extends ObjectModel
                         $cart_rule = new CartRule((int) $otherCartRule['id_cart_rule'], $cart->id_lang);
                         // The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
                         if ($cart_rule->priority <= $this->priority) {
-                            return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart: %s', [$cart_rule->name], 'Shop.Notifications.Error');
+                            return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart: %s', [htmlspecialchars($cart_rule->name)], 'Shop.Notifications.Error');
                         } else {
                             // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
                             $cart->removeCartRule($cart_rule->id);
@@ -1286,9 +1288,9 @@ class CartRuleCore extends ObjectModel
                 foreach ($all_products as $product) {
                     $price = $product['price'];
                     if ($use_tax) {
-                        // since later on we won't be able to know the product the cart rule was applied to,
-                        // use average cart VAT for price_wt
-                        $price *= (1 + $context->cart->getAverageProductsTaxRate());
+                        $price = $product['price_wt'];
+                    } else {
+                        $price = $product['price'];
                     }
 
                     if ($price > 0 && ($minPrice === false || $minPrice > $price) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {

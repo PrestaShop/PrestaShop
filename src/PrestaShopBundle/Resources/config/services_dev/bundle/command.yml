@@ -12,7 +12,7 @@ services:
       - '%prestashop.core.grid.definition.service_ids%'
       - '%prestashop.hook.option_form_hook_names%'
       - '%prestashop.core.form.identifiable_object.form_types%'
-      - '%kernel.root_dir%/../install-dev/data/xml/hook.xml'
+      - '%kernel.project_dir%/install-dev/data/xml/hook.xml'
     tags:
       - 'console.command'
 
@@ -27,7 +27,7 @@ services:
       - '%prestashop.core.grid.definition.service_ids%'
       - '%prestashop.hook.option_form_hook_names%'
       - '%prestashop.core.form.identifiable_object.form_types%'
-      - '%kernel.root_dir%/../install-dev/upgrade/sql/'
+      - '%kernel.project_dir%/install-dev/upgrade/sql/'
     tags:
       - 'console.command'
 
@@ -48,6 +48,8 @@ services:
     arguments:
       - '@prestashop.core.provider.command_definition_provider'
       - '%prestashop.commands_and_queries%'
+      - '@api_platform.metadata.resource.name_collection_factory.attributes'
+      - '@api_platform.metadata.resource.metadata_collection_factory.attributes'
     tags:
       - 'console.command'
 

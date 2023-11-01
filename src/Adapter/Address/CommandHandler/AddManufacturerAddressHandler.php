@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\AddManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
@@ -37,6 +38,7 @@ use PrestaShopException;
 /**
  * Adds manufacturer address using legacy object model
  */
+#[AsCommandHandler]
 final class AddManufacturerAddressHandler extends AbstractAddressHandler implements AddManufacturerAddressHandlerInterface
 {
     /**

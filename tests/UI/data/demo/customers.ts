@@ -1,9 +1,10 @@
+import SocialTitles from '@data/demo/socialTitles';
 import CustomerData from '@data/faker/customer';
 
 export default {
   johnDoe: new CustomerData({
     id: 2,
-    socialTitle: 'Mr.',
+    socialTitle: SocialTitles.Mr.name,
     firstName: 'John',
     lastName: 'DOE',
     birthDate: new Date('1970-01-15'),

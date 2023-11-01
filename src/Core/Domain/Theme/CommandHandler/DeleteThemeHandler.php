@@ -27,12 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 
 /**
  * Class DeleteThemeHandler
  */
+#[AsCommandHandler]
 final class DeleteThemeHandler implements DeleteThemeHandlerInterface
 {
     /**

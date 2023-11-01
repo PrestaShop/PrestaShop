@@ -43,7 +43,7 @@ describe('BO - Design - Positions : Search for a hook', async () => {
     await positionsPage.closeSfToolBar(page);
 
     const pageTitle = await positionsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(positionsPage.pageTitle);
+    expect(pageTitle).to.contains(positionsPage.pageTitle);
   });
 
   const hooks: string[] = [
@@ -63,7 +63,7 @@ describe('BO - Design - Positions : Search for a hook', async () => {
       );
 
       const textResult = await positionsPage.searchHook(page, hook);
-      await expect(textResult).to.equal(hook);
+      expect(textResult).to.equal(hook);
     });
   });
 });

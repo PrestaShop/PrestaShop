@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CreditSlip\QueryHandler;
 
 use OrderSlip;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception\CreditSlipException;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception\CreditSlipNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query\GetCreditSlipIdsByDateRange;
@@ -37,6 +38,7 @@ use PrestaShopException;
 /**
  * Handles query which gets CreditSlipIds by provided date range
  */
+#[AsQueryHandler]
 final class GetCreditSlipIdsByDateRangeHandler implements GetCreditSlipIdsByDateRangeHandlerInterface
 {
     /**

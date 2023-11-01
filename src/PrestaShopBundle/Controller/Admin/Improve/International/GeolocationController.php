@@ -76,12 +76,12 @@ class GeolocationController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_geolocation_index')]
     public function processByIpAddressFormAction(Request $request)
     {
         return $this->processForm(
@@ -99,12 +99,12 @@ class GeolocationController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_geolocation_index')]
     public function processWhitelistFormAction(Request $request)
     {
         return $this->processForm(
@@ -122,12 +122,12 @@ class GeolocationController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_geolocation_index')]
     public function processOptionsFormAction(Request $request)
     {
         return $this->processForm(

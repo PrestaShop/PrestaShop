@@ -1,0 +1,37 @@
+admin_customer_groups_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::indexAction'
+    _legacy_controller: AdminGroups
+    # _legacy_link: AdminGroups
+
+admin_customer_groups_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer_groups
+    redirectRoute: admin_customer_groups_index
+    _legacy_controller: AdminGroups
+    # _legacy_link: AdminGenders:submitFiltergenders
+
+
+admin_customer_groups_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::createAction'
+    _legacy_controller: AdminGroups
+    # _legacy_link: AdminGenders:addgroup
+
+
+admin_customer_groups_edit:
+  path: /{groupId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::editAction'
+    _legacy_controller: AdminGroups
+    # _legacy_link: AdminGenders:updategroup
+  requirements:
+    groupId: \d+

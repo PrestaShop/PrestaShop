@@ -49,8 +49,8 @@ class AddBrand extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new • ';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitle = `New brand • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing brand';
 
     // Selectors
     this.nameInput = '#manufacturer_name';
@@ -139,7 +139,7 @@ class AddBrand extends BOBasePage {
   async addKeywords(page: Page, keywords: string[], id: number = 1): Promise<void> {
     /* eslint-disable no-await-in-loop, no-restricted-syntax */
     for (const keyword of keywords) {
-      await page.type(this.metaKeywordsInput(id), keyword);
+      await page.locator(this.metaKeywordsInput(id)).fill(keyword);
       await page.keyboard.press('Enter');
     }
     /* eslint-enable no-await-in-loop, no-restricted-syntax */

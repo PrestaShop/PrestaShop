@@ -63,7 +63,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     );
 
     const pageTitle = await cartRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    expect(pageTitle).to.contains(cartRulesPage.pageTitle);
   });
 
   it('should go to \'Catalog Price Rules\' tab', async function () {
@@ -74,7 +74,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     numberOfCatalogPriceRules = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
 
     const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+    expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
   });
 
   // 1 - Create 21 catalog price rules
@@ -93,17 +93,17 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
         await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
 
         const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
+        expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
       });
 
       it(`should create catalog price rule n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCatalogPriceRule${index}`, baseContext);
 
         const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, priceRuleData);
-        await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
+        expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
 
         const numberOfCatalogPriceRulesAfterCreation = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCatalogPriceRulesAfterCreation).to.be.at.most(numberOfCatalogPriceRules + index + 1);
+        expect(numberOfCatalogPriceRulesAfterCreation).to.be.at.most(numberOfCatalogPriceRules + index + 1);
       });
     });
   });
@@ -180,11 +180,11 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
         );
 
         const numberOfPriceRulesAfterFilter = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 21);
+        expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 21);
 
         for (let row = 1; row <= numberOfPriceRulesAfterFilter; row++) {
           const textColumn = await catalogPriceRulesPage.getTextColumn(page, row, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -192,7 +192,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
+        expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
       });
     });
 
@@ -230,7 +230,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
             row,
             test.args.filterBy,
           );
-          await expect(textColumn).to.contains(dateToCheck);
+          expect(textColumn).to.contains(dateToCheck);
         }
       });
 
@@ -238,7 +238,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
+        expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
       });
     });
   });
@@ -365,25 +365,25 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.isDate) {
           const expectedResult: string[] = await basicHelper.sortArrayDate(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -427,7 +427,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeletePriceRules', baseContext);
 
       const deleteTextResult = await catalogPriceRulesPage.bulkDeletePriceRules(page);
-      await expect(deleteTextResult).to.be.contains(catalogPriceRulesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(catalogPriceRulesPage.successfulMultiDeleteMessage);
     });
   });
 });

@@ -43,7 +43,7 @@ describe('Regression : Access to Module catalog is denied with neither left menu
       dashboardPage.modulesParentLink,
       dashboardPage.moduleCatalogueLink,
     );
-    await expect(isMenuTabVisible, 'The Menu tab is still visible').to.be.false;
+    expect(isMenuTabVisible, 'The Menu tab is still visible').to.eq(false);
   });
 
   it('should trigger a not found alert when accessing by legacy url', async function () {
@@ -52,7 +52,7 @@ describe('Regression : Access to Module catalog is denied with neither left menu
     await dashboardPage.navigateToPageWithInvalidToken(page, pageLegacyUrl);
 
     const alertText = await moduleCatalogPage.getAlertDangerBlockParagraphContent(page);
-    await expect(alertText).to.contain(moduleCatalogPage.pageNotFoundMessage);
+    expect(alertText).to.contain(moduleCatalogPage.pageNotFoundMessage);
   });
 
   it('should redirect to dashboard when accessing by symfony url', async function () {
@@ -61,6 +61,6 @@ describe('Regression : Access to Module catalog is denied with neither left menu
     await dashboardPage.navigateToPageWithInvalidToken(page, pageSymfonyUrl);
 
     const pageTitle = await dashboardPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    expect(pageTitle).to.contains(dashboardPage.pageTitle);
   });
 });

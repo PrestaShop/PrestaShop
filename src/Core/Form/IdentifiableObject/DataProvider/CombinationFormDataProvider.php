@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSup
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 /**
  * Provides the data that is used to prefill the Combination form

@@ -146,7 +146,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     private function appendTotalSpentQuery(QueryBuilder $queryBuilder)
     {
         $totalSpentQueryBuilder = $this->connection->createQueryBuilder()
-            ->select('SUM(total_paid_real / conversion_rate)')
+            ->select('SUM(total_paid_tax_incl / conversion_rate)')
             ->from($this->dbPrefix . 'orders', 'o')
             ->where('o.id_customer = c.id_customer')
             ->andWhere('o.id_shop IN (:context_shop_ids)')

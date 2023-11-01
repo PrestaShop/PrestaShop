@@ -31,9 +31,9 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrdersCollection;
 use ProductSale;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Tools;
 
 class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 {
@@ -42,10 +42,16 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
      */
     private $translator;
 
+    /**
+     * @var SortOrdersCollection
+     */
+    private $sortOrdersCollection;
+
     public function __construct(
         TranslatorInterface $translator
     ) {
         $this->translator = $translator;
+        $this->sortOrdersCollection = new SortOrdersCollection($this->translator);
     }
 
     /**
@@ -58,12 +64,11 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
-        $sortBySales = (new SortOrder('product', 'sales', 'desc'))->setLabel(
-            $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
-        );
-
-        if (!Tools::getValue('order', 0)) {
-            $query->setSortOrder($sortBySales);
+        // If provided sort order is unsupported random, we set a fallback
+        if ($query->getSortOrder()->isRandom()) {
+            $query->setSortOrder((new SortOrder('product', 'sales', 'desc'))->setLabel(
+                $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
+            ));
         }
 
         if (!$products = ProductSale::getBestSales(
@@ -85,22 +90,15 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
                 ->setProducts($products)
                 ->setTotalProductsCount($count);
 
+            // We use default set of sort orders + option to sort by sales
             $result->setAvailableSortOrders(
+                array_merge(
                 [
-                    $sortBySales,
-                    (new SortOrder('product', 'name', 'asc'))->setLabel(
-                        $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
+                    (new SortOrder('product', 'sales', 'desc'))->setLabel(
+                        $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
                     ),
-                    (new SortOrder('product', 'name', 'desc'))->setLabel(
-                        $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'price', 'asc'))->setLabel(
-                        $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'price', 'desc'))->setLabel(
-                        $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
-                    ),
-                ]
+                ],
+                $this->sortOrdersCollection->getDefaults())
             );
         }
 

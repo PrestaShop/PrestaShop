@@ -54,14 +54,14 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     );
 
     const pageTitle = await shoppingCartsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+    expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
   });
 
   it('should reset all filters and get number of shopping carts', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
     numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfShoppingCarts).to.be.above(0);
+    expect(numberOfShoppingCarts).to.be.above(0);
   });
 
   it('should search the non ordered shopping carts and delete them if exist', async function () {
@@ -70,18 +70,18 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
 
     const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-    await expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
+    expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
 
     numberOfShoppingCarts -= numberOfShoppingCartsAfterFilter;
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
       const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
-      await expect(textColumn).to.contains('Non ordered');
+      expect(textColumn).to.contains('Non ordered');
     }
 
     if (numberOfShoppingCartsAfterFilter > 0) {
       const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-      await expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
     }
   });
 
@@ -89,7 +89,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts', baseContext);
 
     const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+    expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
   });
 
   it('should change pagination to 300 items per page', async function () {
@@ -101,7 +101,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
       paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
     }
 
-    await expect(paginationNumber).to.equal('1');
+    expect(paginationNumber).to.equal('1');
   });
 
   const tests = [
@@ -164,15 +164,15 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
       );
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
+      expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
 
       for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
         const textColumn = await shoppingCartsPage.getTextColumn(page, row, test.args.filterBy);
 
         if (test.args.filterBy === 'id_guest') {
-          await expect(textColumn).to.equal(test.args.filterValue === '1' ? 'Yes' : 'No');
+          expect(textColumn).to.equal(test.args.filterValue === '1' ? 'Yes' : 'No');
         } else {
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       }
     });
@@ -181,7 +181,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
       const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+      expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
     });
   });
 
@@ -193,11 +193,11 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
 
     // Check number of element
     const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-    await expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
+    expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
       const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'date');
-      await expect(textColumn).to.contains(todayDate);
+      expect(textColumn).to.contains(todayDate);
     }
   });
 
@@ -205,6 +205,6 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     await testContext.addContextItem(this, 'testIdentifier', 'resetAfterFilterDate', baseContext);
 
     const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+    expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
   });
 });

@@ -37,7 +37,7 @@ class Positions extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Positions';
+    this.pageTitle = `Module positions • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.searchInput = '#hook-search';

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -112,7 +111,7 @@ class TranslatorLanguageLoader
                 ->in($directory);
 
             foreach ($finder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+                [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
                 $translator->addResource($format, $file, $locale, $domain);
                 if ($withDB) {
                     if ($type !== 'theme') {
@@ -160,7 +159,7 @@ class TranslatorLanguageLoader
             ->in($translationDir);
 
         foreach ($modulesCatalogueFinder as $file) {
-            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
             $translator->addResource($format, $file, $locale, $domain);
             if ($withDB) {
                 $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);

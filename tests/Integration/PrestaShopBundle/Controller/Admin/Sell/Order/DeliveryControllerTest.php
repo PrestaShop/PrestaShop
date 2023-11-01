@@ -59,7 +59,6 @@ class DeliveryControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::bootKernel();
 
         // Enable debug mode
         $configurationMock = $this->getMockBuilder(Configuration::class)
@@ -76,8 +75,8 @@ class DeliveryControllerTest extends WebTestCase
         $configurationMock->method('get')
             ->will($this->returnValueMap($values));
 
-        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->client = self::createClient();
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');
         $this->session = self::$kernel->getContainer()->get('session');

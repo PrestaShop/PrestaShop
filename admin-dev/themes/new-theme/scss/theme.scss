@@ -49,7 +49,6 @@
 @import "components/layout/light_display";
 @import "components/layout/main_header";
 @import "components/layout/nav_bar";
-@import "components/layout/non_responsive";
 @import "components/material_choice_tree";
 @import "components/modal";
 @import "components/modulescards";
@@ -70,6 +69,7 @@
 @import "components/toggable_field";
 @import "components/translatable_input";
 @import "components/unavailable-feature";
+@import "components/typeahead_product_collection_type";
 
 // Pages specifics SCSS files
 @import "pages/invoices";
@@ -89,6 +89,7 @@
 @import "pages/payment";
 @import "pages/translation_page";
 @import "pages/product_preferences";
+@import "pages/authorization_server";
 
 // Main Layout
 @import "pages/modules";
@@ -188,4 +189,9 @@ table.table {
       padding-left: 0;
     }
   }
+}
+
+.scroll-300 {
+  max-height: 300px;
+  overflow-y: auto;
 }

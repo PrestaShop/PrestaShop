@@ -21,7 +21,7 @@ class AddEmployee extends EmployeeBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Add new •';
+    this.pageTitleCreate = `New employee • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.passwordInput = '#employee_password';

@@ -112,6 +112,7 @@ class MonitoringController extends FrameworkBundleAdminController
             'productWithoutPriceGrid' => $this->presentGrid($productWithoutPriceGrid),
             'showcaseCardName' => ShowcaseCard::MONITORING_CARD,
             'isShowcaseCardClosed' => $isShowcaseCardClosed,
+            'layoutTitle' => $this->trans('Monitoring', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -181,11 +182,7 @@ class MonitoringController extends FrameworkBundleAdminController
      */
     private function getBulkProductsFromRequest(Request $request, array $gridIdentifiers): array
     {
-        $productIds = $request->request->get(sprintf('%s_%s', $gridIdentifiers['grid_id'], 'monitoring_products_bulk'));
-
-        if (!is_array($productIds)) {
-            return [];
-        }
+        $productIds = $request->request->all(sprintf('%s_%s', $gridIdentifiers['grid_id'], 'monitoring_products_bulk'));
 
         foreach ($productIds as $i => $productId) {
             $productIds[$i] = (int) $productId;

@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Access;
 use Address;
 use AddressFormat;
+use AdminKernel;
 use Alias;
 use AppKernel;
 use Attachment;
@@ -106,15 +107,10 @@ use SpecificPrice;
 use State;
 use Stock;
 use StockAvailable;
-use StockMvt;
 use StockMvtReason;
 use StockMvtWS;
 use Store;
 use Supplier;
-use SupplyOrder;
-use SupplyOrderDetail;
-use SupplyOrderHistory;
-use SupplyOrderState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tab;
 use Tag;
@@ -125,7 +121,6 @@ use TaxRulesGroup;
 use Tests\Integration\Utility\ContextMocker;
 use Tests\Resources\DatabaseDump;
 use Tests\Resources\ResourceResetter;
-use WarehouseProductLocation;
 use WebserviceKey;
 use Zone;
 
@@ -169,7 +164,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     {
         require_once __DIR__ . '/../../bootstrap.php';
 
-        self::$kernel = new AppKernel('test', true);
+        self::$kernel = new AdminKernel('test', true);
         self::$kernel->boot();
 
         global $kernel;
@@ -185,29 +180,12 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * This hook can be used to flag a feature for database hard reset
      *
-     * @deprecated since 8.0.0 and will be removed in next major.
-     *
-     * @BeforeFeature @reset-database-before-feature
-     */
-    public static function cleanDatabaseHardPrepareFeature()
-    {
-        @trigger_error(
-            'The @reset-database-before-feature tag is deprecated because there is a more optimized alternative use the @restore-all-tables-before-feature tag instead ',
-            E_USER_DEPRECATED
-        );
-
-        self::restoreTestDB();
-        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
-    }
-
-    /**
-     * This hook can be used to flag a feature for database hard reset
-     *
      * @BeforeFeature @restore-all-tables-before-feature
      */
     public static function restoreAllTablesBeforeFeature()
     {
         DatabaseDump::restoreAllTables();
+        SharedStorage::getStorage()->clean();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -219,6 +197,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function restoreAllTablesAfterFeature()
     {
         DatabaseDump::restoreAllTables();
+        SharedStorage::getStorage()->clean();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -707,14 +686,8 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         ShopUrl::resetStaticCache();
         Stock::resetStaticCache();
         StockAvailable::resetStaticCache();
-        StockMvt::resetStaticCache();
         StockMvtReason::resetStaticCache();
         StockMvtWS::resetStaticCache();
-        SupplyOrder::resetStaticCache();
-        SupplyOrderDetail::resetStaticCache();
-        SupplyOrderHistory::resetStaticCache();
-        SupplyOrderState::resetStaticCache();
-        WarehouseProductLocation::resetStaticCache();
         Tax::resetStaticCache();
         TaxRule::resetStaticCache();
         TaxRulesGroup::resetStaticCache();

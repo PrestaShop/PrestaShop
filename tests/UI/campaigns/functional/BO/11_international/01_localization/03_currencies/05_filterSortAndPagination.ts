@@ -58,7 +58,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
     await localizationPage.closeSfToolBar(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to \'Currencies\' page', async function () {
@@ -67,14 +67,14 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
     await localizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 
   const currencies: CurrencyData[] = [Currencies.mad, Currencies.all, Currencies.chileanPeso, Currencies.dzd, Currencies.tnd,
@@ -90,7 +90,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
         await currenciesPage.goToAddNewCurrencyPage(page);
 
         const pageTitle = await addCurrencyPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+        expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
       });
 
       it('should create currency', async function () {
@@ -98,11 +98,11 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
 
         // Create and check successful message
         const textResult = await addCurrencyPage.addOfficialCurrency(page, currency);
-        await expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+        expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
 
         // Check number of currencies after creation
         const numberOfCurrenciesAfterCreation = await currenciesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1 + index);
+        expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1 + index);
       });
     });
   });
@@ -169,22 +169,22 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
         );
         if (test.args.filterBy === 'active') {
           const currencyStatus = await currenciesPage.getStatus(page, 1);
-          await expect(currencyStatus).to.be.equal(test.args.filterValue === '1');
+          expect(currencyStatus).to.be.equal(test.args.filterValue === '1');
         } else {
           const currency = await currenciesPage.getTextColumnFromTableCurrency(page, 1, test.args.filterBy);
-          await expect(currency).to.contains(test.args.filterValue);
+          expect(currency).to.contains(test.args.filterValue);
         }
 
         // Check number of currencies
         const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCurrenciesAfterFilter).to.be.most(numberOfCurrencies + 10);
+        expect(numberOfCurrenciesAfterFilter).to.be.most(numberOfCurrencies + 10);
       });
 
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter${index}`, baseContext);
 
         const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 10);
+        expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 10);
       });
     });
   });
@@ -266,17 +266,17 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -292,21 +292,21 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
         await currenciesPage.filterTable(page, 'input', 'name', currency.name);
 
         const currencyName = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'name');
-        await expect(currencyName).to.contains(currency.name);
+        expect(currencyName).to.contains(currency.name);
       });
 
       it('should delete currency', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCurrency${index}`, baseContext);
 
         const result = await currenciesPage.deleteCurrency(page, 1);
-        await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+        expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
       });
 
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete${index}`, baseContext);
 
         const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 10 - index - 1);
+        expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 10 - index - 1);
       });
     });
   });

@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
@@ -161,7 +160,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
 
         return array_map(static function (string $id): ImageId {
             return new ImageId((int) $id);
-        }, $qb->execute()->fetchAll(FetchMode::COLUMN));
+        }, $qb->executeQuery()->fetchFirstColumn());
     }
 
     /**
@@ -198,7 +197,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('productId', $productId->getValue())
             ->setParameter('shopId', $shopId->getValue())
         ;
-        $result = $qb->execute()->fetchAssociative();
+        $result = $qb->executeQuery()->fetchAssociative();
 
         if (empty($result['id_image'])) {
             return null;
@@ -238,7 +237,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->orderBy('i.position', 'asc')
         ;
 
-        $results = $qb->execute()->fetchAll();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (empty($results)) {
             return [];
@@ -311,7 +310,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
                 ->from($this->dbPrefix . 'image_shop')
                 ->where('id_image = :imageId')
                 ->setParameter('imageId', $imageId->getValue())
-                ->execute()
+                ->executeQuery()
                 ->fetchAllAssociative()
         );
     }
@@ -350,7 +349,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
 
         return array_map(static function (array $shop): ShopId {
             return new ShopId((int) $shop['id_shop']);
-        }, $qb->execute()->fetchAllAssociative());
+        }, $qb->executeQuery()->fetchAllAssociative());
     }
 
     public function create(ProductId $productId, ShopConstraint $shopConstraint): Image
@@ -453,8 +452,8 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->where('id_image = :imageId')
             ->andWhere('cover = 1')
             ->setParameter('imageId', $imageId->getValue())
-            ->execute()
-            ->fetchAll()
+            ->executeQuery()
+            ->fetchAllAssociative()
         ;
 
         return array_map(
@@ -479,8 +478,8 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('productId', $productId->getValue())
             ->addOrderBy('i.id_shop', 'ASC')
             ->addOrderBy('i.id_image', 'ASC')
-            ->execute()
-            ->fetchAll()
+            ->executeQuery()
+            ->fetchAllAssociative()
         ;
 
         $productImagesByShop = [];
@@ -517,7 +516,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->andWhere('id_shop = :shopId')
             ->setParameter('shopId', $shopId->getValue())
             ->andWhere('cover = 1')
-            ->execute()
+            ->executeQuery()
             ->fetchOne()
             ;
 
@@ -532,7 +531,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->where('id_product = :productId')
             ->setParameter('productId', $productId->getValue())
             ->andWhere('cover = 1')
-            ->execute()
+            ->executeQuery()
             ->fetchOne()
         ;
 
@@ -555,7 +554,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('imageId', (int) $image->id)
             ->setParameter('shopId', $shopId->getValue())
             ->setParameter('cover', $image->cover ? 1 : null)
-            ->execute()
+            ->executeStatement()
         ;
     }
 
@@ -573,8 +572,8 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->andWhere('is.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
             ->addOrderBy('i.position', 'ASC')
-            ->execute()
-            ->fetchAll()
+            ->executeQuery()
+            ->fetchAllAssociative()
         ;
 
         foreach ($results as $image) {
@@ -601,7 +600,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
                 ->setParameter('imageId', (int) $image['id_image'])
                 ->andWhere($this->dbPrefix . 'image_shop' . '.id_shop = :shopId')
                 ->setParameter('shopId', (int) $image['id_shop'])
-                ->execute()
+                ->executeStatement()
             ;
 
             if ($coverIdGlobal === null) {
@@ -611,7 +610,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
                     ->setParameter('cover', $newValue)
                     ->andWhere('id_image = :imageId')
                     ->setParameter('imageId', (int) $image['id_image'])
-                    ->execute()
+                    ->executeStatement()
                 ;
             }
         }
@@ -704,7 +703,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->orderBy('i.cover', 'DESC')
             ->setMaxResults(1)
             ->setParameter('productAttribute', $combinationId->getValue());
-        $data = $qb->execute()->fetchOne();
+        $data = $qb->executeQuery()->fetchOne();
         if ($data > 0) {
             return new ImageId((int) $data);
         }

@@ -1,11 +1,27 @@
-# @todo: legacy links can be uncommented when page is fully migrated.
 admin_features_index:
   path: /
-  methods: [ GET, POST ]
+  methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::indexAction
     _legacy_controller: AdminFeatures
-    # _legacy_link: AdminFeatures
+    _legacy_link: AdminFeatures
+
+admin_features_horizontal_index:
+  path: /horizontal
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\HorizontalFeatureController::indexAction
+    _legacy_controller: AdminFeatures
+
+admin_features_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminTracking:submitFilterfeature
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory
+    redirectRoute: admin_features_index
 
 admin_features_add:
   path: /new
@@ -13,7 +29,7 @@ admin_features_add:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::createAction
     _legacy_controller: AdminFeatures
-    # _legacy_link: AdminFeatures:addfeature
+    _legacy_link: AdminFeatures:addfeature
 
 admin_features_edit:
   path: /{featureId}/edit
@@ -21,8 +37,120 @@ admin_features_edit:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::editAction
     _legacy_controller: AdminFeatures
-    # _legacy_link: AdminFeatures:updatefeature
+    _legacy_link: AdminFeatures:updatefeature
     _legacy_parameters:
       id_feature: featureId
   requirements:
     featureId: \d+
+
+admin_features_export:
+  path: /export
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::exportAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminThemes:exportfeature
+
+admin_features_update_position:
+  path: /update-position
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::updatePositionAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:updateFeaturesPositions
+    position_definition: prestashop.core.grid.feature.position_definition
+    redirect_route: admin_features_index
+
+admin_features_delete:
+  path: /{featureId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::deleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+
+admin_features_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::bulkDeleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+
+admin_feature_values_index:
+  path: /{featureId}/values
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::indexAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:viewfeature
+    _legacy_parameters:
+      id_feature: featureId
+  requirements:
+    featureId: \d+
+
+admin_feature_values_search:
+  path: /{featureId}/values
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory
+    redirectRoute: admin_feature_values_index
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures
+    redirectQueryParamsToKeep:
+      - 'featureId'
+  requirements:
+    featureId: \d+
+
+admin_feature_values_add:
+  path: /new-value
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::createAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:addfeature_value
+
+admin_feature_values_edit:
+  path: /{featureId}/values/{featureValueId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::editAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:updatefeature_value
+    _legacy_parameters:
+      id_feature: featureId
+      id_feature_value: featureValueId
+    redirectQueryParamsToKeep:
+      - 'featureId'
+
+admin_feature_values_export:
+  path: /{featureId}/values/export
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::exportAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+
+admin_feature_values_delete:
+  path: /{featureId}/values/{featureValueId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::deleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+    featureValueId: \d+
+
+admin_feature_values_bulk_delete:
+  path: /{featureId}/values/bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::bulkDeleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+    featureValueId: \d+

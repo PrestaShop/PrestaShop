@@ -27,10 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
 use PrestaShopBundle\Form\Exception\DataProviderException;
@@ -85,12 +85,12 @@ class AdministrationController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_administration')]
     public function processGeneralFormAction(Request $request)
     {
         return $this->processForm(
@@ -107,12 +107,12 @@ class AdministrationController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_administration')]
     public function processUploadQuotaFormAction(Request $request)
     {
         return $this->processForm(
@@ -130,12 +130,12 @@ class AdministrationController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration"
      * )
-     * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_administration')]
     public function processNotificationsFormAction(Request $request)
     {
         return $this->processForm(
@@ -244,7 +244,7 @@ class AdministrationController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     [
                         $this->getFieldLabel($error->getFieldName()),
-                        GeneralDataProvider::MAX_COOKIE_VALUE,
+                        CookieOptions::MAX_COOKIE_VALUE,
                     ]
                 );
             case FormDataProvider::ERROR_COOKIE_SAMESITE_NONE:
@@ -259,7 +259,7 @@ class AdministrationController extends FrameworkBundleAdminController
             'Admin.Notifications.Error',
             [
                 $this->getFieldLabel($error->getFieldName()),
-                GeneralDataProvider::MAX_COOKIE_VALUE,
+                CookieOptions::MAX_COOKIE_VALUE,
             ]
         );
     }

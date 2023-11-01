@@ -5,18 +5,19 @@ import FOBasePage from '@pages/FO/FObasePage';
  * @class
  * @extends FOBasePage
  */
-class AboutUs extends FOBasePage {
+class AboutUsPage extends FOBasePage {
   public readonly pageTitle: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on about us page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'About us';
   }
 }
 
-export default new AboutUs();
+const aboutUsPage = new AboutUsPage();
+export {aboutUsPage, AboutUsPage};

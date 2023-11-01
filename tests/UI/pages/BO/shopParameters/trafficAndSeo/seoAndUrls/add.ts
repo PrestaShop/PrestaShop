@@ -12,6 +12,8 @@ import type {Page} from 'playwright';
 class AddSeoUrl extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly editPageTitle: string;
+
   private readonly pageTitleLangButton: string;
 
   private readonly pageTitleLangSpan: (lang: string) => string;
@@ -39,7 +41,8 @@ class AddSeoUrl extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'SEO & URLs • ';
+    this.pageTitle = `New page configuration • ${global.INSTALL.SHOP_NAME}`;
+    this.editPageTitle = 'Editing configuration for';
 
     // Selectors
     this.pageTitleLangButton = '#meta_page_title_dropdown';
@@ -99,7 +102,7 @@ class AddSeoUrl extends BOBasePage {
    */
   async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
     for (let i = 0; i < keywords.length; i++) {
-      await page.type(this.metaKeywordsInput(idLang), keywords[i]);
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keywords[i]);
       await page.keyboard.press('Enter');
     }
   }

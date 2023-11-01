@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 
 /**
  * Defines Feature ID with its constraints.
@@ -41,17 +41,16 @@ class FeatureId
     /**
      * @param int $featureId
      */
-    public function __construct($featureId)
+    public function __construct(int $featureId)
     {
-        $this->assertIntegerIsGreaterThanZero($featureId);
-
+        $this->assertIsGreaterThanZero($featureId);
         $this->featureId = $featureId;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->featureId;
     }
@@ -59,12 +58,15 @@ class FeatureId
     /**
      * @param int $featureId
      *
-     * @throws InvalidFeatureIdException
+     * @throws FeatureConstraintException
      */
-    private function assertIntegerIsGreaterThanZero($featureId): void
+    private function assertIsGreaterThanZero(int $featureId): void
     {
-        if (!is_int($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf('Invalid feature id %s supplied. Feature id must be positive integer.', var_export($featureId, true)));
+        if (0 >= $featureId) {
+            throw new FeatureConstraintException(
+                sprintf('Invalid feature id %d. It must be greater than zero.', $featureId),
+                FeatureConstraintException::INVALID_ID
+            );
         }
     }
 }

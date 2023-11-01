@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler\AddApiAccessHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler\EditApiAccessHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler\DeleteApiAccessHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiAccess\CommandHandler\GenerateApiAccessSecretHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiAccess\QueryHandler\GetApiAccessForEditingHandler:

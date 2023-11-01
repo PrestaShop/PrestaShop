@@ -33,6 +33,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfFeatures: number = 0;
+  let sortColumnName: string = 'id_feature';
 
   // PRE-condition : Create 19 features
   const creationTests: number[] = new Array(19).fill(0, 0, 19);
@@ -68,7 +69,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await attributesPage.closeSfToolBar(page);
 
       const pageTitle = await attributesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(attributesPage.pageTitle);
+      expect(pageTitle).to.contains(attributesPage.pageTitle);
     });
 
     it('should go to Features page', async function () {
@@ -77,38 +78,38 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await attributesPage.goToFeaturesPage(page);
 
       const pageTitle = await featuresPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featuresPage.pageTitle);
+      expect(pageTitle).to.contains(featuresPage.pageTitle);
 
       numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfFeatures).to.be.above(0);
+      expect(numberOfFeatures).to.be.above(0);
     });
 
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await featuresPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.equal(1);
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await featuresPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.equal(2);
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await featuresPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.equal(1);
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await featuresPage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.equal(1);
     });
   });
 
@@ -117,32 +118,32 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_feature', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_feature', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'b!name', sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'b!name', sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionAsc', sortBy: 'a!position', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionDesc', sortBy: 'a!position', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_feature', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_feature', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -151,11 +152,11 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await featuresPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await featuresPage.getAllRowsColumnContent(page, test.args.sortBy, sortColumnName);
 
         await featuresPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await featuresPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await featuresPage.getAllRowsColumnContent(page, test.args.sortBy, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -163,20 +164,23 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
+
+        // Previous Sort Column
+        sortColumnName = test.args.sortBy;
       });
     });
   });

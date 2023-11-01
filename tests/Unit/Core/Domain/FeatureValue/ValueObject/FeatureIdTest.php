@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Domain\FeatureValue\ValueObject;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 class FeatureIdTest extends TestCase
@@ -37,7 +37,7 @@ class FeatureIdTest extends TestCase
     /**
      * @dataProvider getValidInput
      */
-    public function testValidInput($featureValueId): void
+    public function testValidInput(int $featureValueId): void
     {
         $vo = new FeatureId($featureValueId);
         $this->assertEquals($featureValueId, $vo->getValue());
@@ -45,8 +45,8 @@ class FeatureIdTest extends TestCase
 
     public function getValidInput(): iterable
     {
-        yield [0];
-        yield [42];
+        yield [1000];
+        yield [1];
     }
 
     /**
@@ -54,15 +54,14 @@ class FeatureIdTest extends TestCase
      */
     public function testInvalidInput($featureValueId): void
     {
-        $this->expectException(InvalidFeatureIdException::class);
+        $this->expectException(FeatureConstraintException::class);
+        $this->expectExceptionCode(FeatureConstraintException::INVALID_ID);
         new FeatureId($featureValueId);
     }
 
     public function getInvalidInput(): iterable
     {
+        yield [0];
         yield [-1];
-        yield [1.1];
-        yield ['a'];
-        yield ['+'];
     }
 }

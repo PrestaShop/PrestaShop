@@ -8,10 +8,6 @@ services:
       - !php/const _PS_MODE_DEV_
     decorates: prestashop.core.admin.page_preference_interface
 
-  prestashop.adapter.admin.page_preference:
-    alias: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
-    deprecated: ~
-
   prestashop.adapter.legacy_db:
     public: true
     class: 'Db'

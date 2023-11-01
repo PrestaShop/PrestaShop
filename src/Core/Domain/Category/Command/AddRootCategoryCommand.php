@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AddRootCategoryCommand adds new root category.
@@ -82,6 +83,16 @@ class AddRootCategoryCommand
      * @var int[]
      */
     private $associatedShopIds;
+
+    /**
+     * @var UploadedFile|null
+     */
+    private $coverImage;
+
+    /**
+     * @var UploadedFile|null
+     */
+    private $thumbnailImage;
 
     /**
      * @param string[] $name
@@ -314,5 +325,37 @@ class AddRootCategoryCommand
         $this->associatedShopIds = $associatedShopIds;
 
         return $this;
+    }
+
+    /**
+     * @return UploadedFile|null
+     */
+    public function getCoverImage(): ?UploadedFile
+    {
+        return $this->coverImage;
+    }
+
+    /**
+     * @param UploadedFile|null $coverImage
+     */
+    public function setCoverImage(?UploadedFile $coverImage): void
+    {
+        $this->coverImage = $coverImage;
+    }
+
+    /**
+     * @return UploadedFile|null
+     */
+    public function getThumbnailImage(): ?UploadedFile
+    {
+        return $this->thumbnailImage;
+    }
+
+    /**
+     * @param UploadedFile|null $thumbnailImage
+     */
+    public function setThumbnailImage(?UploadedFile $thumbnailImage): void
+    {
+        $this->thumbnailImage = $thumbnailImage;
     }
 }

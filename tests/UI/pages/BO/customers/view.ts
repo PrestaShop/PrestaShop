@@ -8,19 +8,25 @@ import type {Frame, Page} from 'playwright';
  * @extends BOBasePage
  */
 class ViewCustomer extends BOBasePage {
-  public readonly pageTitle: string;
+  public readonly pageTitle: (customerName: string) => string;
 
   public readonly updateSuccessfulMessage: string;
 
-  private readonly personnalInformationDiv: string;
+  private readonly personalInformationDiv: string;
 
-  private readonly personnalInformationEditButton: string;
+  private readonly personalInformationEditButton: string;
+
+  private readonly transformCustomerAccountButton: string;
 
   private readonly ordersDiv: string;
 
   private readonly ordersViewButton: (row: number) => string;
 
   private readonly cartsDiv: string;
+
+  private readonly cartsTableRow: (row: number) => string;
+
+  private readonly cartsTableColumn: (row: number, column: string) => string;
 
   private readonly cartsViewButton: (row: number) => string;
 
@@ -36,11 +42,15 @@ class ViewCustomer extends BOBasePage {
 
   private readonly vouchersDiv: string;
 
-  private readonly voucherEditButton: string;
+  private readonly voucherEditButton: (row: number) => string;
 
-  private readonly voucherToggleDropdown: string;
+  private readonly voucherToggleDropdown: (row: number) => string;
 
   private readonly voucherDeleteButton: string;
+
+  private readonly voucherDeleteConfirmButton: string;
+
+  private readonly voucherDeleteModal: string;
 
   private readonly lastEmailsDiv: string;
 
@@ -65,13 +75,14 @@ class ViewCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Information about customer';
+    this.pageTitle = (customerName: string) => `Customer ${customerName} • ${global.INSTALL.SHOP_NAME}`;
     this.updateSuccessfulMessage = 'Update successful';
 
     // Selectors
     // Personnel information
-    this.personnalInformationDiv = '.customer-personal-informations-card';
-    this.personnalInformationEditButton = `${this.personnalInformationDiv} a.edit-link`;
+    this.personalInformationDiv = '.customer-personal-informations-card';
+    this.personalInformationEditButton = `${this.personalInformationDiv} a.edit-link`;
+    this.transformCustomerAccountButton = '#transfer_guest_account_transfer_guest_account';
 
     // Orders
     this.ordersDiv = '.customer-orders-card';
@@ -80,6 +91,8 @@ class ViewCustomer extends BOBasePage {
     // Carts
     this.cartsDiv = '.customer-carts-card';
     this.cartsViewButton = (row: number) => `${this.cartsDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
+    this.cartsTableRow = (row: number) => `.customer-carts-card tr:nth-child(${row})`;
+    this.cartsTableColumn = (row: number, column: string) => `${this.cartsTableRow(row)} td.column-${column}`;
 
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
@@ -94,9 +107,11 @@ class ViewCustomer extends BOBasePage {
 
     // Vouchers
     this.vouchersDiv = '.customer-discounts-card';
-    this.voucherEditButton = `${this.vouchersDiv} a.grid-edit-row-link`;
-    this.voucherToggleDropdown = `${this.vouchersDiv} a[data-toggle='dropdown']`;
-    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu a.grid-delete-row-link`;
+    this.voucherEditButton = (row: number) => `${this.vouchersDiv} tr:nth-child(${row}) a.grid-edit-row-link`;
+    this.voucherToggleDropdown = (row: number) => `${this.vouchersDiv} tr:nth-child(${row}) a[data-toggle='dropdown']`;
+    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu button.grid-delete-row-link`;
+    this.voucherDeleteModal = '#customer_discount-grid-confirm-modal';
+    this.voucherDeleteConfirmButton = `${this.voucherDeleteModal} button.btn-confirm-submit`;
 
     // Last emails
     this.lastEmailsDiv = '.customer-sent-emails-card';
@@ -128,7 +143,7 @@ class ViewCustomer extends BOBasePage {
    * @param cardTitle {string} Value of card title to get number of elements
    * @returns {Promise<string>}
    */
-  getNumberOfElementFromTitle(page: Frame|Page, cardTitle: string): Promise<string> {
+  async getNumberOfElementFromTitle(page: Frame | Page, cardTitle: string): Promise<string> {
     let selector: string;
 
     switch (cardTitle) {
@@ -174,8 +189,8 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page|Frame} Browser tab
    * @returns {Promise<string>}
    */
-  getPersonalInformationTitle(page: Page|Frame): Promise<string> {
-    return this.getTextContent(page, this.personnalInformationDiv);
+  async getPersonalInformationTitle(page: Page | Frame): Promise<string> {
+    return this.getTextContent(page, this.personalInformationDiv);
   }
 
   /**
@@ -184,12 +199,12 @@ class ViewCustomer extends BOBasePage {
    * @param element {string} Value of element to get text content
    * @returns {Promise<string>}
    */
-  getTextFromElement(page: Page, element: string): Promise<string> {
+  async getTextFromElement(page: Page, element: string): Promise<string> {
     let selector: string;
 
     switch (element) {
       case 'Personal information':
-        selector = this.personnalInformationDiv;
+        selector = this.personalInformationDiv;
         break;
       case 'Orders':
         selector = this.ordersDiv;
@@ -235,8 +250,19 @@ class ViewCustomer extends BOBasePage {
    * @param row {number} Row number in table Last connections
    * @returns {Promise<string>}
    */
-  getTextColumnFromTableLastConnections(page: Page, column: string, row: number = 1): Promise<string> {
+  async getTextColumnFromTableLastConnections(page: Page, column: string, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.lastConnectionTableColumn(row, column));
+  }
+
+  /**
+   * Get text column from carts table
+   * @param page {Page} Browser tab
+   * @param column {string} Column name in table carts
+   * @param row {number} Row number in table carts
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromTableCarts(page: Page, column: string, row: number = 1): Promise<string> {
+    return this.getTextContent(page, this.cartsTableColumn(row, column));
   }
 
   /**
@@ -244,7 +270,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Frame|Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPrivateNoteBlockVisible(page: Frame|Page): Promise<boolean> {
+  async isPrivateNoteBlockVisible(page: Frame | Page): Promise<boolean> {
     return this.elementVisible(page, this.privateNoteDiv, 1000);
   }
 
@@ -267,7 +293,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditCustomerPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.personnalInformationEditButton);
+    await this.clickAndWaitForURL(page, this.personalInformationEditButton);
   }
 
   /**
@@ -290,6 +316,9 @@ class ViewCustomer extends BOBasePage {
       case 'Addresses':
         selector = this.addressesEditButton;
         break;
+      case 'Vouchers':
+        selector = this.voucherEditButton;
+        break;
       default:
         throw new Error(`${cardTitle} was not found`);
     }
@@ -298,12 +327,47 @@ class ViewCustomer extends BOBasePage {
   }
 
   /**
+   * Delete voucher
+   * @param page {Page} Browser tab
+   * @param row {number} Row in vouchers table
+   * @returns {Promise<string>}
+   */
+  async deleteVoucher(page: Page, row: number) {
+    await page.locator(this.voucherToggleDropdown(row)).click();
+    await page.locator(this.voucherDeleteButton).click();
+    await this.waitForVisibleSelector(page, this.voucherDeleteModal);
+    await page.locator(this.voucherDeleteConfirmButton).click();
+
+    return this.getTextContent(page, `${this.alertSuccessBlock}[role='alert']`);
+  }
+
+  /**
    * Get customer ID
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getCustomerID(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.personnalInformationDiv);
+    return this.getNumberFromText(page, this.personalInformationDiv);
+  }
+
+  /**
+   * Click on transform to customer account
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnTransformToCustomerAccount(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.transformCustomerAccountButton);
+
+    return this.getTextContent(page, `${this.alertSuccessBlock}[role='alert']`);
+  }
+
+  /**
+   * Is transform to customer account button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isTransformToCustomerAccountButtonVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.transformCustomerAccountButton, 1000);
   }
 }
 

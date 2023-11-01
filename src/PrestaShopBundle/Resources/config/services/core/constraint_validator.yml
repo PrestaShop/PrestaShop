@@ -68,3 +68,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueStateIsoCodeValidator'
     tags:
       - { name: validator.constraint_validator }
+
+  PrestaShop\PrestaShop\Core\ConstraintValidator\InstalledApiResourceScopeValidator:
+    autowire: true
+    autoconfigure: true

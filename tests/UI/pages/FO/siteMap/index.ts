@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class SiteMap extends FOBasePage {
+class SiteMapPage extends FOBasePage {
   public readonly pageTitle: string;
 
   private readonly categoryNameSelect: (id: number) => string;
@@ -24,8 +24,8 @@ class SiteMap extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on site map page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Sitemap';
 
@@ -99,4 +99,5 @@ class SiteMap extends FOBasePage {
   }
 }
 
-export default new SiteMap();
+const siteMapPage = new SiteMapPage();
+export {siteMapPage, SiteMapPage};

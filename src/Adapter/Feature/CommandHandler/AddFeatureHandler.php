@@ -26,41 +26,39 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
-use Feature;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\AddFeatureHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
  * Handles adding of features using legacy logic.
  */
-final class AddFeatureHandler extends AbstractObjectModelHandler implements AddFeatureHandlerInterface
+#[AsCommandHandler]
+class AddFeatureHandler extends AbstractObjectModelHandler implements AddFeatureHandlerInterface
 {
+    /**
+     * @var FeatureRepository
+     */
+    private $featureRepository;
+
+    public function __construct(
+        FeatureRepository $featureRepository
+    ) {
+        $this->featureRepository = $featureRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function handle(AddFeatureCommand $command)
+    public function handle(AddFeatureCommand $command): FeatureId
     {
-        $feature = new Feature();
-
-        $feature->name = $command->getLocalizedNames();
-
-        if (false === $feature->validateFields(false)) {
-            throw new FeatureConstraintException('Invalid feature data');
-        }
-
-        if (false === $feature->validateFieldsLang(false)) {
-            throw new FeatureConstraintException('Invalid feature data', FeatureConstraintException::INVALID_NAME);
-        }
-
-        if (false === $feature->add()) {
-            throw new CannotAddFeatureException('Unable to create new feature');
-        }
-
-        $this->associateWithShops($feature, $command->getShopAssociation());
+        $feature = $this->featureRepository->create(
+            $command->getLocalizedNames(),
+            $command->getAssociatedShopIds()
+        );
 
         return new FeatureId((int) $feature->id);
     }

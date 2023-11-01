@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Security\Permission;
+
 /**
  * Class TabCore.
  */
@@ -149,7 +151,7 @@ class TabCore extends ObjectModel
         }
 
         /* Right management */
-        $slug = 'ROLE_MOD_TAB_' . strtoupper(self::getClassNameById($idTab));
+        $slug = Permission::PREFIX_TAB . strtoupper(self::getClassNameById($idTab));
 
         foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
             /*
@@ -183,7 +185,7 @@ class TabCore extends ObjectModel
     public function delete()
     {
         if (parent::delete()) {
-            $slug = 'ROLE_MOD_TAB_' . strtoupper($this->class_name);
+            $slug = Permission::PREFIX_TAB . strtoupper($this->class_name);
 
             foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $slug . '_' . $action . '"');
@@ -351,7 +353,7 @@ class TabCore extends ObjectModel
      */
     public static function getIdFromClassName($className)
     {
-        $className = self::getClassName($className);
+        $className = strtolower($className);
         if (empty(self::$_getIdFromClassName)) {
             self::$_getIdFromClassName = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `' . _DB_PREFIX_ . 'tab`', true, false);
@@ -364,29 +366,6 @@ class TabCore extends ObjectModel
         }
 
         return isset(self::$_getIdFromClassName[$className]) ? (int) self::$_getIdFromClassName[$className] : false;
-    }
-
-    /**
-     * @deprecated 1.7.0, to be removed in 1.7.1. Upgrade module to 1.7.
-     */
-    private static function getClassName($className)
-    {
-        $legacyClassNames = [
-            'AdminTools',
-            'AdminPriceRule',
-            'AdminAdmin',
-            'AdminParentStats',
-            'AdminMarketing',
-            'AdminCarrierWizard',
-            'AdminTabs',
-        ];
-
-        if (in_array($className, $legacyClassNames)) {
-            @trigger_error($className . ' is a deprecated tab since version 1.7.0 and "Default" will be removed in 1.7.1.. Upgrade module using the docs: http://build.prestashop.com/news/how-we-reorganized-main-menu-prestashop-1.7/.', E_USER_DEPRECATED);
-            $className = 'DEFAULT';
-        }
-
-        return strtolower($className);
     }
 
     /**
@@ -695,43 +674,5 @@ class TabCore extends ObjectModel
     public static function getClassNameById($idTab)
     {
         return Db::getInstance()->getValue('SELECT class_name FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab = ' . (int) $idTab);
-    }
-
-    public static function getTabModulesList($idTab)
-    {
-        $modulesList = ['default_list' => [], 'slider_list' => []];
-
-        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, Tools::CACHE_LIFETIME_SECONDS)) {
-            Tools::refreshFile(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
-        }
-
-        $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
-
-        $className = null;
-        $displayType = 'default_list';
-        if ($xmlTabModulesList) {
-            foreach ($xmlTabModulesList->tab as $tab) {
-                foreach ($tab->attributes() as $key => $value) {
-                    if ($key == 'class_name') {
-                        $className = (string) $value;
-                    }
-                }
-
-                if (Tab::getIdFromClassName((string) $className) == $idTab) {
-                    foreach ($tab->attributes() as $key => $value) {
-                        if ($key == 'display_type') {
-                            $displayType = (string) $value;
-                        }
-                    }
-
-                    foreach ($tab->children() as $module) {
-                        $modulesList[$displayType][(int) $module['position']] = (string) $module['name'];
-                    }
-                    ksort($modulesList[$displayType]);
-                }
-            }
-        }
-
-        return $modulesList;
     }
 }

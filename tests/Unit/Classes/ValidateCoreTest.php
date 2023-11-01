@@ -40,16 +40,6 @@ class ValidateCoreTest extends TestCase
     }
 
     /**
-     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
-     *
-     * @return void
-     */
-    public function testIsAnything()
-    {
-        $this->assertTrue(Validate::isAnything());
-    }
-
-    /**
      * @dataProvider isEmailDataProvider
      */
     public function testIsEmail($expected, $input)
@@ -259,7 +249,7 @@ class ValidateCoreTest extends TestCase
             [false, 'john.doe@prestashop'],
             [true, 'john.doe@сайт.рф'],
             [true, 'john.doe@xn--80aswg.xn--p1ai'],
-            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not cyrillic mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
             [false, 123456789],

@@ -53,7 +53,7 @@ describe('CLDR : Reset symbol / format settings', async () => {
     await localizationPage.closeSfToolBar(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to Currencies Tab', async function () {
@@ -62,14 +62,14 @@ describe('CLDR : Reset symbol / format settings', async () => {
     await localizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter0', baseContext);
 
     numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 
   it(`should filter by iso code of currency '${Currencies.euro.isoCode}'`, async function () {
@@ -80,11 +80,11 @@ describe('CLDR : Reset symbol / format settings', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(Currencies.euro.isoCode);
   });
 
   it(`should edit the currency '${Currencies.euro.isoCode}'`, async function () {
@@ -93,21 +93,21 @@ describe('CLDR : Reset symbol / format settings', async () => {
     await currenciesPage.goToEditCurrencyPage(page, 1);
 
     const pageTitle = await addCurrencyPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(Currencies.euro.name));
   });
 
   it('should have multiples currencies formats', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMultipleFormats', baseContext);
 
     const numberCurrencyFormats = await addCurrencyPage.getNumberOfElementInGrid(page);
-    await expect(numberCurrencyFormats).to.be.gt(0);
+    expect(numberCurrencyFormats).to.be.gt(0);
   });
 
   it('should edit the first currency format and open a modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editCurrencyFormat', baseContext);
 
     const isModalVisible = await addCurrencyPage.editCurrencyFormat(page, 1);
-    await expect(isModalVisible).to.be.true;
+    expect(isModalVisible).to.eq(true);
   });
 
   it(`should update the symbol by ${customSymbol}`, async function () {
@@ -117,17 +117,17 @@ describe('CLDR : Reset symbol / format settings', async () => {
     await addCurrencyPage.saveCurrencyFormat(page);
 
     const exampleFormat = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
-    await expect(exampleFormat).to.startWith(customSymbol);
+    expect(exampleFormat).to.startWith(customSymbol);
   });
 
   it('should update the currency', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'saveCurrency', baseContext);
 
     const result = await addCurrencyPage.saveCurrencyForm(page);
-    await expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
+    expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
 
     const symbolCurrency = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'symbol');
-    await expect(symbolCurrency).to.be.eq(customSymbol);
+    expect(symbolCurrency).to.be.eq(customSymbol);
   });
 
   it(`should edit the currency '${Currencies.euro.isoCode}'`, async function () {
@@ -136,33 +136,33 @@ describe('CLDR : Reset symbol / format settings', async () => {
     await currenciesPage.goToEditCurrencyPage(page, 1);
 
     const pageTitle = await addCurrencyPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(Currencies.euro.name));
   });
 
   it('should reset the currency format', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat', baseContext);
 
     const growlMessage = await addCurrencyPage.resetCurrencyFormat(page, 1);
-    await expect(growlMessage).to.be.eq(addCurrencyPage.resetCurrencyFormatMessage);
+    expect(growlMessage).to.be.eq(addCurrencyPage.resetCurrencyFormatMessage);
 
     const exampleFormat = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
-    await expect(exampleFormat).to.startWith(Currencies.euro.symbol);
+    expect(exampleFormat).to.startWith(Currencies.euro.symbol);
   });
 
   it('should update the currency', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetCurrency', baseContext);
 
     const result = await addCurrencyPage.saveCurrencyForm(page);
-    await expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
+    expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
 
     const symbolCurrency = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'symbol');
-    await expect(symbolCurrency).to.be.eq(Currencies.euro.symbol);
+    expect(symbolCurrency).to.be.eq(Currencies.euro.symbol);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter1', baseContext);
 
     numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 });

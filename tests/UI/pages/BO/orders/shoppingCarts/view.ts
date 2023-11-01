@@ -8,7 +8,7 @@ import type {Frame, Page} from 'playwright';
  * @extends BOBasePage
  */
 class ViewShoppingCarts extends BOBasePage {
-  public readonly pageTitle: string;
+  public readonly pageTitle: (cardID: string) => string;
 
   private readonly cartSubtitle: string;
 
@@ -45,7 +45,7 @@ class ViewShoppingCarts extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'View';
+    this.pageTitle = (cartID: string) => `Cart #${cartID} • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.cartSubtitle = '#box-kpi-cart div.subtitle';
@@ -67,7 +67,7 @@ class ViewShoppingCarts extends BOBasePage {
     this.cartSummaryTable = `${this.cartSummaryBlockBody} .table`;
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
     this.cartSummaryTableRow = (row: number) => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
-    this.cartSummaryTableColumn = (row:number, column: number) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
+    this.cartSummaryTableColumn = (row: number, column: number) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
   }
 
   /*
@@ -116,7 +116,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async getTextColumn(page: Frame|Page, columnName: string, row: number = 1): Promise<string> {
+  async getTextColumn(page: Frame|Page, columnName: string, row: number = 1): Promise<string | null> {
     let columnSelector;
 
     switch (columnName) {

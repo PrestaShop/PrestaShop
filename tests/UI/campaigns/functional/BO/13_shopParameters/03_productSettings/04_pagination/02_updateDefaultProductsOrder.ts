@@ -53,7 +53,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
     await productSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -110,7 +110,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
           test.args.orderMethod,
         );
 
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
@@ -119,7 +119,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
         page = await productSettingsPage.viewMyShop(page);
 
         const isHomePage = await homePageFO.isHomePage(page);
-        await expect(isHomePage, 'Home page was not opened').to.be.true;
+        expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should go to all products page', async function () {
@@ -129,7 +129,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
         await homePageFO.goToAllProductsPage(page);
 
         const isCategoryPage = await categoryPageFO.isCategoryPage(page);
-        await expect(isCategoryPage, 'Home category page was not opened');
+        expect(isCategoryPage, 'Home category page was not opened');
       });
 
       it(
@@ -138,7 +138,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
           await testContext.addContextItem(this, 'testIdentifier', `checkProductsOrder${index + 1}`, baseContext);
 
           const defaultProductOrder = await categoryPageFO.getSortByValue(page);
-          await expect(defaultProductOrder, 'Default products order is incorrect').to.contains(test.args.textOnSelect);
+          expect(defaultProductOrder, 'Default products order is incorrect').to.contains(test.args.textOnSelect);
         },
       );
 
@@ -148,7 +148,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
         page = await homePageFO.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     });
   });

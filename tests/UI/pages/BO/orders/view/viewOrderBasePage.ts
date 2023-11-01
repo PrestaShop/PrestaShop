@@ -169,7 +169,7 @@ class ViewOrderBasePage extends BOBasePage {
 
     if (status !== actualStatus) {
       await this.selectByVisibleText(page, this.orderStatusesSelect, status);
-      await this.clickAndWaitForLoadState(page, this.updateStatusButton);
+      await this.clickAndWaitForURL(page, this.updateStatusButton);
       return this.getOrderStatus(page);
     }
 
@@ -190,7 +190,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async viewInvoice(page: Page): Promise<string|null> {
+  async viewInvoice(page: Page): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.viewInvoiceButton);
   }
 
@@ -226,7 +226,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async viewDeliverySlip(page: Page): Promise<string|null> {
+  async viewDeliverySlip(page: Page): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.viewDeliverySlipButton);
   }
 
@@ -235,8 +235,26 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isReturnProductsButtonVisible(page: Page): Promise<boolean> {
+  async isReturnProductsButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.returnProductsButton, 2000);
+  }
+
+  /**
+   * Is return product button disabled
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isReturnProductsButtonDisabled(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.returnProductsButton}[disabled]`, 2000);
+  }
+
+  /**
+   * Click on return product button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnReturnProductsButton(page: Page): Promise<void> {
+    await page.locator(this.returnProductsButton).click();
   }
 }
 

@@ -19,7 +19,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
-          - 8.0.x
+          - 8.1.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
 
@@ -39,7 +39,7 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer self-update --2.2
+          composer self-update --stable
           composer install --prefer-dist
 
       - name: Execute script for updating modules

@@ -30,36 +30,79 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Feature;
+use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValidator;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
 /**
  * Methods to access data storage for FeatureValue
  */
-class FeatureRepository extends AbstractObjectModelRepository
+class FeatureRepository extends AbstractMultiShopObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
-     * @var string
-     */
-    protected $dbPrefix;
-
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
     public function __construct(
-        Connection $connection,
-        string $dbPrefix
+        protected readonly Connection $connection,
+        protected readonly string $dbPrefix,
+        protected readonly FeatureValidator $featureValidator
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
+    }
+
+    public function get(FeatureId $featureId): Feature
+    {
+        /** @var Feature $feature */
+        $feature = $this->getObjectModel(
+            $featureId->getValue(),
+            Feature::class,
+            FeatureNotFoundException::class
+        );
+
+        return $feature;
+    }
+
+    /**
+     * @param array<int, string> $localizedNames
+     * @param ShopId[] $associatedShopIds
+     *
+     * @return Feature
+     */
+    public function create(
+        array $localizedNames,
+        array $associatedShopIds
+    ): Feature {
+        $feature = new Feature();
+        $feature->name = $localizedNames;
+
+        $this->featureValidator->validate($feature);
+        $this->addObjectModelToShops($feature, $associatedShopIds, CannotAddFeatureException::class);
+
+        return $feature;
+    }
+
+    /**
+     * @param Feature $feature
+     *
+     * @return void
+     *
+     * @throws CoreException
+     */
+    public function update(Feature $feature): void
+    {
+        $this->featureValidator->validate($feature);
+        $this->updateObjectModel($feature, CannotEditFeatureException::class);
+    }
+
+    public function delete(FeatureId $featureId): void
+    {
+        $this->deleteObjectModel($this->get($featureId), CannotDeleteFeatureException::class);
     }
 
     /**
@@ -78,6 +121,43 @@ class FeatureRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param FeatureId $featureId
+     * @param LanguageId $languageId
+     *
+     * @return string
+     *
+     * @throws FeatureNotFoundException
+     */
+    public function getFeatureName(FeatureId $featureId, LanguageId $languageId): string
+    {
+        $featureIdValue = $featureId->getValue();
+        $result = $this->connection->createQueryBuilder()
+            ->select('fl.name')
+            ->from($this->dbPrefix . 'feature', 'f')
+            ->innerJoin(
+                'f',
+                $this->dbPrefix . 'feature_lang',
+                'fl',
+                'f.id_feature = fl.id_feature'
+            )
+            ->andWhere('f.id_feature = :featureId')
+            ->andWhere('fl.id_lang = :languageId')
+            ->setParameters([
+                'featureId' => $featureIdValue,
+                'languageId' => $languageId->getValue(),
+            ])
+            ->executeQuery()
+            ->fetchAssociative()
+        ;
+
+        if (!isset($result['name'])) {
+            throw new FeatureNotFoundException(sprintf('Feature with id "%d" name was not found', $featureIdValue));
+        }
+
+        return $result['name'];
+    }
+
+    /**
      * @param int|null $limit
      * @param int|null $offset
      * @param array|null $filters
@@ -88,11 +168,11 @@ class FeatureRepository extends AbstractObjectModelRepository
     {
         $qb = $this->getFeaturesQueryBuilder($filters)
             ->select('f.*, fl.*')
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
             ->setMaxResults($limit)
         ;
 
-        $results = $qb->execute()->fetchAll();
+        $results = $qb->executeQuery()->fetchAllAssociative();
         $localizedNames = [];
         $featuresById = [];
         foreach ($results as $result) {
@@ -117,18 +197,55 @@ class FeatureRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param array|null $filters
+     * @param ShopConstraint $shopConstraint
      *
-     * @return int
+     * @return ShopId[]
      */
-    public function getFeaturesCount(?array $filters = []): int
+    public function getShopIdsByConstraint(ShopConstraint $shopConstraint): array
     {
-        $qb = $this->getFeaturesQueryBuilder($filters)
-            ->select('COUNT(f.id_feature_value) AS total_feature_values')
-            ->addGroupBy('f.id_feature_value')
+        if ($shopConstraint->getShopGroupId()) {
+            return $this->getAssociatedShopIdsFromGroup($shopConstraint->getShopGroupId());
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return array_map(static function (array $result): ShopId {
+                return new ShopId((int) $result['id_shop']);
+            }, $this->connection->createQueryBuilder()
+                ->select('id_shop')
+                ->from($this->dbPrefix . 'feature_shop', 'fs')
+                ->executeQuery()
+                ->fetchAllAssociative()
+            );
+        }
+
+        return [$shopConstraint->getShopId()];
+    }
+
+    /**
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIdsFromGroup(ShopGroupId $shopGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('fs.id_shop')
+            ->from($this->dbPrefix . 'feature_shop', 'fs')
+            ->innerJoin(
+                'fs',
+                $this->dbPrefix . 'shop',
+                's',
+                's.id_shop = fs.id_shop'
+            )
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->groupBy('id_shop')
         ;
 
-        return (int) $qb->execute()->fetch()['total_feature_values'];
+        return array_map(static function (array $result): ShopId {
+            return new ShopId((int) $result['id_shop']);
+        }, $qb->executeQuery()->fetchAllAssociative());
     }
 
     /**

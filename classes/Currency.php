@@ -1096,20 +1096,6 @@ class CurrencyCore extends ObjectModel
      * Get conversion rate.
      *
      * @return int|string
-     *
-     * @deprecated 1.7.2.0, use Currency::getConversionRate() instead
-     */
-    public function getConversationRate()
-    {
-        Tools::displayAsDeprecated('Use Currency::getConversionRate() instead');
-
-        return $this->getConversionRate();
-    }
-
-    /**
-     * Get conversion rate.
-     *
-     * @return int|string
      */
     public function getConversionRate()
     {

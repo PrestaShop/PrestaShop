@@ -75,7 +75,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getName()
     {
-        return $this->trans('Credit Slips', [], 'Admin.Navigation.Menu');
+        return $this->trans('Credit slips', [], 'Admin.Navigation.Menu');
     }
 
     /**

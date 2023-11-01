@@ -26,7 +26,6 @@
  */
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
@@ -78,7 +77,7 @@ class ProductCore extends ObjectModel
     public $description_short;
 
     /**
-     * @deprecated since 1.7.8
+     * @deprecated since 1.7.8 and will be removed in future version.
      * @see StockAvailable::$quantity instead
      *
      * @var int Quantity available
@@ -274,15 +273,15 @@ class ProductCore extends ObjectModel
     public $id_color_default = 0;
 
     /**
-     * @deprecated since 1.7.8
-     * The advanced stock management feature is not maintained anymore
+     * @deprecated since 1.7.8 and will be removed in future version.
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
      *
      * @var bool Tells if the product uses the advanced stock management
      */
     public $advanced_stock_management = false;
 
     /**
-     * @deprecated since 1.7.8
+     * @deprecated since 1.7.8 and will be removed in future version.
      * @see StockAvailable::$out_of_stock instead
      *
      * @var int
@@ -293,12 +292,12 @@ class ProductCore extends ObjectModel
     public $out_of_stock = OutOfStockType::OUT_OF_STOCK_DEFAULT;
 
     /**
-     * @deprecated since 1.7.8
-     * This property was only relevant to advanced stock management and that feature is not maintained anymore
+     * @deprecated since 1.7.8 and will be removed in future version.
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
      *
      * @var bool|null
      */
-    public $depends_on_stock;
+    public $depends_on_stock = false;
 
     /**
      * @var bool
@@ -371,12 +370,26 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     /**
+     * @var bool|null
+     */
+    public $customization_required;
+    /**
+     * @var int|null
+     */
+    public $pack_quantity;
+
+    /**
      * For now default value remains undefined, to keep compatibility with page v1 and former products.
      * But once the v2 is merged the default value should be ProductType::TYPE_STANDARD
      *
      * @var string
      */
     public $product_type = ProductType::TYPE_UNDEFINED;
+
+    /**
+     * @var int
+     */
+    public $id_product;
 
     /**
      * @var int|null
@@ -826,17 +839,6 @@ class ProductCore extends ObjectModel
         $return = parent::update($null_values);
         $this->setGroupReduction();
         $this->updateUnitRatio();
-
-        // Sync stock Reference, EAN13, MPN and UPC
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id)) {
-            Db::getInstance()->update('stock', [
-                'reference' => pSQL($this->reference),
-                'ean13' => pSQL($this->ean13),
-                'isbn' => pSQL($this->isbn),
-                'upc' => pSQL($this->upc),
-                'mpn' => pSQL($this->mpn),
-            ], 'id_product = ' . (int) $this->id . ' AND id_product_attribute = 0');
-        }
 
         Hook::exec('actionProductSave', ['id_product' => (int) $this->id, 'product' => $this]);
         Hook::exec('actionProductUpdate', ['id_product' => (int) $this->id, 'product' => $this]);
@@ -1289,33 +1291,6 @@ class ProductCore extends ObjectModel
      */
     public function delete()
     {
-        /*
-         * @since 1.5.0
-         * It is NOT possible to delete a product if there are currently:
-         * - physical stock for this product
-         * - supply order(s) for this product
-         */
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->advanced_stock_management) {
-            $stock_manager = StockManagerFactory::getManager();
-            $physical_quantity = $stock_manager->getProductPhysicalQuantities($this->id, 0);
-            $real_quantity = $stock_manager->getProductRealQuantities($this->id, 0);
-            if ($physical_quantity > 0) {
-                return false;
-            }
-            if ($real_quantity > $physical_quantity) {
-                return false;
-            }
-
-            $warehouse_product_locations = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
-            foreach ($warehouse_product_locations as $warehouse_product_location) {
-                $warehouse_product_location->delete();
-            }
-
-            $stocks = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
-            foreach ($stocks as $stock) {
-                $stock->delete();
-            }
-        }
         $result = parent::delete();
 
         // Removes the product from StockAvailable, for the current shop
@@ -1796,7 +1771,6 @@ class ProductCore extends ObjectModel
      * The supplier_reference params now set the supplier reference of the default supplier of the product if possible
      *
      * @deprecated since 1.5.0
-     * @see StockManager if you want to manage real stock
      * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
      * @see ProductSupplier for manage supplier reference(s)
      *
@@ -2339,19 +2313,7 @@ class ProductCore extends ObjectModel
             $this->cache_default_attribute = $id_default_attribute;
         }
 
-        // Sync stock Reference, EAN13, ISBN, MPN and UPC for this attribute
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id)) {
-            Db::getInstance()->update('stock', [
-                'reference' => pSQL($reference),
-                'ean13' => pSQL($ean13),
-                'isbn' => pSQL($isbn),
-                'upc' => pSQL($upc),
-                'mpn' => pSQL($mpn),
-            ], 'id_product = ' . $this->id . ' AND id_product_attribute = ' . (int) $id_product_attribute);
-        }
-
         Hook::exec('actionProductAttributeUpdate', ['id_product_attribute' => (int) $id_product_attribute]);
-        Tools::clearColorListCache($this->id);
 
         return true;
     }
@@ -2467,38 +2429,7 @@ class ProductCore extends ObjectModel
             $combination->setImages($id_images);
         }
 
-        Tools::clearColorListCache($this->id);
-
-        if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-            $warehouse_location_entity = new WarehouseProductLocation();
-            $warehouse_location_entity->id_product = $this->id;
-            $warehouse_location_entity->id_product_attribute = (int) $combination->id;
-            $warehouse_location_entity->id_warehouse = (int) Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
-            $warehouse_location_entity->location = pSQL('');
-            $warehouse_location_entity->save();
-        }
-
         return (int) $combination->id;
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * @return bool
-     */
-    public function updateQuantityProductWithAttributeQuantity()
-    {
-        Tools::displayAsDeprecated();
-
-        return Db::getInstance()->execute('
-        UPDATE `' . _DB_PREFIX_ . 'product`
-        SET `quantity` = IFNULL(
-        (
-            SELECT SUM(`quantity`)
-            FROM `' . _DB_PREFIX_ . 'product_attribute`
-            WHERE `id_product` = ' . (int) $this->id . '
-        ), \'0\')
-        WHERE `id_product` = ' . (int) $this->id);
     }
 
     /**
@@ -2517,7 +2448,6 @@ class ProductCore extends ObjectModel
             $result &= $combination->delete();
         }
         SpecificPriceRule::applyAllRules([(int) $this->id]);
-        Tools::clearColorListCache($this->id);
 
         return $result;
     }
@@ -4315,7 +4245,7 @@ class ProductCore extends ObjectModel
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param CartCore|null $cart
-     * @param int|null $idCustomization Product customization id (optional)
+     * @param int|bool|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
@@ -4910,7 +4840,7 @@ class ProductCore extends ObjectModel
             Tools::displayParameterAsDeprecated('context');
         }
         $sql = new DbQuery();
-        $sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
+        $sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, p.`customizable`');
         $sql->from('product', 'p');
         $sql->join(Shop::addSqlAssociation('product', 'p'));
         $sql->leftJoin(
@@ -5562,8 +5492,8 @@ class ProductCore extends ObjectModel
      */
     public static function defineProductImage($row, $id_lang)
     {
-        if (isset($row['id_image']) && $row['id_image']) {
-            return $row['id_product'] . '-' . $row['id_image'];
+        if (!empty($row['id_image'])) {
+            return $row['id_image'];
         }
 
         return Language::getIsoById((int) $id_lang) . '-default';
@@ -5619,17 +5549,6 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack' . $row['id_product_pack'];
         }
 
-        if (!isset($row['cover_image_id'])) {
-            $cover = static::getCover($row['id_product']);
-            if (isset($cover['id_image'])) {
-                $row['cover_image_id'] = $cover['id_image'];
-            }
-        }
-
-        if (isset($row['cover_image_id'])) {
-            $cache_key .= '-cover' . (int) $row['cover_image_id'];
-        }
-
         if (isset(self::$productPropertiesCache[$cache_key])) {
             return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
@@ -5643,11 +5562,6 @@ class ProductCore extends ObjectModel
             $row['manufacturer_name'] = Manufacturer::getNameById((int) $row['id_manufacturer']);
         } else {
             $row['manufacturer_name'] = null;
-        }
-
-        $row['attribute_price'] = 0;
-        if ($id_product_attribute) {
-            $row['attribute_price'] = (float) Combination::getPrice($id_product_attribute);
         }
 
         if (isset($row['quantity_wanted'])) {
@@ -5770,7 +5684,8 @@ class ProductCore extends ObjectModel
             (int) $row['id_product'],
             0,
             isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
-            $context->cart
+            $context->cart,
+            false
         );
 
         $row['quantity_all_versions'] = $row['quantity'];
@@ -5781,7 +5696,8 @@ class ProductCore extends ObjectModel
                 (int) $row['id_product'],
                 $id_product_attribute,
                 isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
-                $context->cart
+                $context->cart,
+                false
             );
 
             $row['available_date'] = Product::getAvailableDate(
@@ -5789,9 +5705,6 @@ class ProductCore extends ObjectModel
                 $id_product_attribute
             );
         }
-
-        $row['id_image'] = Product::defineProductImage($row, $id_lang);
-        $row['features'] = Product::getFrontFeaturesStatic((int) $id_lang, $row['id_product']);
 
         /*
          * Loading of files attached to product. This is using cache_has_attachments property which needs to be managed
@@ -6078,6 +5991,9 @@ class ProductCore extends ObjectModel
             return false;
         }
 
+        // Load cart object to get delivery address ID
+        $cart = new Cart((int) $id_cart);
+
         if ($id_customization === 0) {
             // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
             $product_customizations = (int) Db::getInstance()->getValue('
@@ -6097,7 +6013,7 @@ class ProductCore extends ObjectModel
         }
 
         if (!$result = Db::getInstance()->executeS('
-            SELECT cd.`id_customization`, c.`id_address_delivery`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`,
+            SELECT cd.`id_customization`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`,
                 cd.`type`, cd.`index`, cd.`value`, cd.`id_module`, cfl.`name`
             FROM `' . _DB_PREFIX_ . 'customized_data` cd
             NATURAL JOIN `' . _DB_PREFIX_ . 'customization` c
@@ -6118,11 +6034,11 @@ class ProductCore extends ObjectModel
                 // When a module saves a customization programmatically, it should add its ID in the `id_module` column
                 $row['value'] = Hook::exec('displayCustomization', ['customization' => $row], (int) $row['id_module']);
             }
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $cart->id_address_delivery][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
         }
 
         if (!$result = Db::getInstance()->executeS(
-            'SELECT `id_product`, `id_product_attribute`, `id_customization`, `id_address_delivery`, `quantity`, `quantity_refunded`, `quantity_returned`
+            'SELECT `id_product`, `id_product_attribute`, `id_customization`, `quantity`, `quantity_refunded`, `quantity_returned`
             FROM `' . _DB_PREFIX_ . 'customization`
             WHERE `id_cart` = ' . (int) $id_cart .
             ((int) $id_customization ? ' AND `id_customization` = ' . (int) $id_customization : '') .
@@ -6132,21 +6048,31 @@ class ProductCore extends ObjectModel
         }
 
         foreach ($result as $row) {
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity'] = (int) $row['quantity'];
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity_refunded'] = (int) $row['quantity_refunded'];
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity_returned'] = (int) $row['quantity_returned'];
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['id_customization'] = (int) $row['id_customization'];
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $cart->id_address_delivery][(int) $row['id_customization']]['quantity'] = (int) $row['quantity'];
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $cart->id_address_delivery][(int) $row['id_customization']]['quantity_refunded'] = (int) $row['quantity_refunded'];
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $cart->id_address_delivery][(int) $row['id_customization']]['quantity_returned'] = (int) $row['quantity_returned'];
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $cart->id_address_delivery][(int) $row['id_customization']]['id_customization'] = (int) $row['id_customization'];
         }
 
         return $customized_datas;
     }
 
     /**
+     * @deprecated since 9.0.0, the customization price impact is already included in Product::getPriceStatic.
+     *
      * @param array $products
      * @param array $customized_datas
      */
     public static function addCustomizationPrice(&$products, &$customized_datas)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. The customization price impact is already included in Product::getPriceStatic.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (!$customized_datas) {
             return;
         }
@@ -6202,6 +6128,8 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * @deprecated since 9.0.0, the customization price impact is already included in Product::getPriceStatic.
+     *
      * Add customization price for a single product
      *
      * @param array $product Product data
@@ -6209,6 +6137,14 @@ class ProductCore extends ObjectModel
      */
     public static function addProductCustomizationPrice(&$product, &$customized_datas)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. The customization price impact is already included in Product::getPriceStatic.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (!$customized_datas) {
             return;
         }
@@ -6725,100 +6661,6 @@ class ProductCore extends ObjectModel
         }
 
         return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * Add a stock movement for current product.
-     *
-     * Since 1.5, this method only permit to add/remove available quantities of the current product in the current shop
-     *
-     * @see StockManager if you want to manage real stock
-     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-     * @deprecated since 1.5.0
-     *
-     * @param int $quantity
-     * @param int $id_reason StockMvtReason identifier - useless
-     * @param int|null $id_product_attribute Attribute identifier
-     * @param int|null $id_order Order identifier - DEPRECATED
-     * @param int|null $id_employee Employee identifier - DEPRECATED
-     *
-     * @return bool
-     */
-    public function addStockMvt($quantity, $id_reason, $id_product_attribute = null, $id_order = null, $id_employee = null)
-    {
-        if (!$this->id || !$id_reason) {
-            return false;
-        }
-
-        if ($id_product_attribute == null) {
-            $id_product_attribute = 0;
-        }
-
-        $reason = new StockMvtReason((int) $id_reason);
-        if (!Validate::isLoadedObject($reason)) {
-            return false;
-        }
-
-        $quantity = abs((int) $quantity) * $reason->sign;
-
-        return StockAvailable::updateQuantity($this->id, $id_product_attribute, $quantity);
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * @param int $id_lang Language identifier
-     *
-     * @return array
-     */
-    public function getStockMvts($id_lang)
-    {
-        Tools::displayAsDeprecated();
-
-        return Db::getInstance()->executeS('
-            SELECT sm.id_stock_mvt, sm.date_add, sm.quantity, sm.id_order,
-            CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason
-            FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
-            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-                sm.id_product = pl.id_product
-                AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'stock_mvt_reason_lang` mrl ON (
-                sm.id_stock_mvt_reason = mrl.id_stock_mvt_reason
-                AND mrl.id_lang = ' . (int) $id_lang . '
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON (
-                e.id_employee = sm.id_employee
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (
-                pac.id_product_attribute = sm.id_product_attribute
-            )
-            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (
-                al.id_attribute = pac.id_attribute
-                AND al.id_lang = ' . (int) $id_lang . '
-            )
-            WHERE sm.id_product=' . (int) $this->id . '
-            GROUP BY sm.id_stock_mvt
-        ');
-    }
-
-    /**
-     * @param int $id_product Product identifier
-     *
-     * @return array
-     */
-    public static function getUrlRewriteInformations($id_product)
-    {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT pl.`id_lang`, pl.`link_rewrite`, p.`ean13`, cl.`link_rewrite` AS category_rewrite
-            FROM `' . _DB_PREFIX_ . 'product` p
-            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product`' . Shop::addSqlRestrictionOnLang('pl') . ')
-            ' . Shop::addSqlAssociation('product', 'p') . '
-            LEFT JOIN `' . _DB_PREFIX_ . 'lang` l ON (pl.`id_lang` = l.`id_lang`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (cl.`id_category` = product_shop.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`' . Shop::addSqlRestrictionOnLang('cl') . ')
-            WHERE p.`id_product` = ' . (int) $id_product . '
-            AND l.`active` = 1
-        ');
     }
 
     /**
@@ -7639,11 +7481,11 @@ class ProductCore extends ObjectModel
         $attributes = Product::getAttributesParams($this->id, $id_product_attribute);
         $anchor = '#';
         $sep = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
-        foreach ($attributes as &$a) {
-            foreach ($a as &$b) {
-                $b = str_replace($sep, '_', Tools::str2url((string) $b));
-            }
-            $anchor .= '/' . ($with_id && isset($a['id_attribute']) && $a['id_attribute'] ? (int) $a['id_attribute'] . $sep : '') . $a['group'] . $sep . $a['name'];
+        $replace = $sep === '_' ? '-' : '_';
+        foreach ($attributes as &$attr) {
+            $group = str_replace($sep, $replace, Tools::str2url((string) $attr['group']));
+            $name = str_replace($sep, $replace, Tools::str2url((string) $attr['name']));
+            $anchor .= '/' . ($with_id ? (int) $attr['id_attribute'] . $sep : '') . $group . $sep . $name;
         }
 
         return $anchor;
@@ -7745,28 +7587,21 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product Product identifier
      * @param int $id_product_attribute Attribute identifier
-     * @param int $id_warehouse Warehouse identifier
+     * @param int $id_warehouse Warehouse identifier - not used anymore
      * @param int|null $id_shop Shop identifier
      *
      * @return int real_quantity
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0 - use StockAvailable::getQuantityAvailableByProduct directly
      */
     public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = 0, $id_shop = null)
     {
-        static $manager = null;
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && null === $manager) {
-            $manager = StockManagerFactory::getManager();
-        }
-
-        if (
-            Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-            && Product::usesAdvancedStockManagement($id_product)
-            && StockAvailable::dependsOnStock($id_product, $id_shop)
-        ) {
-            return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
-        } else {
-            return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
-        }
+        return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
     }
 
     /**
@@ -7777,16 +7612,17 @@ class ProductCore extends ObjectModel
      * @param int $id_product Product identifier
      *
      * @return bool
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public static function usesAdvancedStockManagement($id_product)
     {
-        $query = new DbQuery();
-        $query->select('product_shop.advanced_stock_management');
-        $query->from('product', 'p');
-        $query->join(Shop::addSqlAssociation('product', 'p'));
-        $query->where('p.id_product = ' . (int) $id_product);
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        return (bool) Db::getInstance()->getValue($query);
+        return false;
     }
 
     /**
@@ -7837,12 +7673,24 @@ class ProductCore extends ObjectModel
         // Default product quantity is available quantity to sell in current shop
         $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
         $this->out_of_stock = StockAvailable::outOfStock($this->id);
-        $this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
         $this->location = StockAvailable::getLocation($this->id) ?: '';
+    }
 
-        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
-            $this->advanced_stock_management = $this->useAdvancedStockManagement();
-        }
+    /**
+     * Get the default category id according to the shop.
+     *
+     * @return int
+     */
+    public function getDefaultCategory(): int
+    {
+        $defaultCategory = Db::getInstance()->getValue(
+            'SELECT product_shop.`id_category_default`
+            FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            WHERE p.`id_product` = ' . (int) $this->id
+        );
+
+        return (int) ($defaultCategory ?? Context::getContext()->shop->id_category);
     }
 
     /**
@@ -7852,11 +7700,12 @@ class ProductCore extends ObjectModel
      */
     public function useAdvancedStockManagement()
     {
-        return (bool) Db::getInstance()->getValue(
-            'SELECT `advanced_stock_management`
-            FROM ' . _DB_PREFIX_ . 'product_shop
-            WHERE id_product=' . (int) $this->id . Shop::addSqlRestriction()
-        );
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return false;
     }
 
     /**
@@ -7866,42 +7715,12 @@ class ProductCore extends ObjectModel
      */
     public function setAdvancedStockManagement($value)
     {
-        $this->advanced_stock_management = (bool) $value;
-        if (
-            Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP
-            && Context::getContext()->shop->getContextShopGroup()->share_stock == 1
-        ) {
-            Db::getInstance()->execute(
-                '
-                UPDATE `' . _DB_PREFIX_ . 'product_shop`
-                SET `advanced_stock_management`=' . (int) $value . '
-                WHERE id_product=' . (int) $this->id . Shop::addSqlRestriction()
-            );
-        } else {
-            $this->setFieldsToUpdate(['advanced_stock_management' => true]);
-            $this->save();
-        }
-    }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-    /**
-     * Get the default category according to the shop.
-     *
-     * @return array{id_category_default: int}|int
-     */
-    public function getDefaultCategory()
-    {
-        $default_category = Db::getInstance()->getValue(
-            'SELECT product_shop.`id_category_default`
-            FROM `' . _DB_PREFIX_ . 'product` p
-            ' . Shop::addSqlAssociation('product', 'p') . '
-            WHERE p.`id_product` = ' . (int) $this->id
-        );
-
-        if (!$default_category) {
-            return ['id_category_default' => Context::getContext()->shop->id_category];
-        } else {
-            return (int) $default_category;
-        }
+        return;
     }
 
     /**
@@ -8168,28 +7987,6 @@ class ProductCore extends ObjectModel
                 WHERE sa.id_product_attribute = pa.id_product_attribute AND pa.id_product=' . (int) $this->id . ' AND pac.id_attribute=' . (int) $id_attribute . '
             )'
         );
-    }
-
-    /**
-     * @deprecated since 8.1 and will be removed in next major version.
-     *
-     * @param int $id_product Product identifier
-     * @param bool $full
-     *
-     * @return string
-     */
-    public static function getColorsListCacheId($id_product, $full = true)
-    {
-        $cache_id = 'productlist_colors';
-        if ($id_product) {
-            $cache_id .= '|' . (int) $id_product;
-        }
-
-        if ($full) {
-            $cache_id .= '|' . (int) Context::getContext()->shop->id . '|' . (int) Context::getContext()->cookie->id_lang;
-        }
-
-        return $cache_id;
     }
 
     /**

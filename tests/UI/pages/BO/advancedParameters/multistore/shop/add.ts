@@ -57,6 +57,7 @@ class AddShop extends BOBasePage {
 
     await this.setValue(page, this.nameInput, shopData.name);
     await this.selectByVisibleText(page, this.shopGroupSelect, shopData.shopGroup);
+    await this.setValue(page, this.colorInput, shopData.color);
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
     await Promise.all([

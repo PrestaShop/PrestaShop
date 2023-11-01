@@ -43,7 +43,7 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
     await files.downloadFile(Modules.keycloak.releaseZip, 'module.zip');
 
     const found = await files.doesFileExist('module.zip');
-    await expect(found).to.be.true;
+    expect(found).to.eq(true);
   });
 
   it('should go to \'Modules > Module Manager\' page', async function () {
@@ -57,34 +57,34 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should upload the module '${Modules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uploadModule', baseContext);
 
     const successMessage = await moduleManagerPage.uploadModule(page, 'module.zip');
-    await expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
+    expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
   });
 
   it('should close upload module modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
     const isModalVisible = await moduleManagerPage.closeUploadModuleModal(page);
-    await expect(isModalVisible).to.be.true;
+    expect(isModalVisible).to.eq(true);
   });
 
   it(`should search the module '${Modules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
-    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+    expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
   it(`should uninstall the module '${Modules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.keycloak, 'uninstall');
-    await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.keycloak.tag));
+    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.keycloak.tag));
   });
 });

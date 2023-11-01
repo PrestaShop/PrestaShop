@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
+use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
+use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use Tests\Integration\Behaviour\Features\Context\Util\DataComparator;
 use Tests\Integration\Behaviour\Features\Context\Util\DataTransfer;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -82,31 +84,45 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         $groupProvider = CommonFeatureContext::getContainer()->get('prestashop.adapter.group.provider.default_groups_provider');
         $defaultGroups = $groupProvider->getGroups();
 
+        // Check if all required fields were provided
         $mandatoryFields = [
             'firstName',
             'lastName',
             'email',
-            'password',
         ];
-
         foreach ($mandatoryFields as $mandatoryField) {
             if (!array_key_exists($mandatoryField, $data)) {
                 throw new Exception(sprintf('Mandatory property %s for customer has not been provided', $mandatoryField));
             }
+        }
+        if (!array_key_exists('password', $data) && empty($data['isGuest'])) {
+            throw new Exception('Password must be provided, if creating a registered customer');
+        }
+
+        // Apply minor differences for guests
+        if (!empty($data['isGuest'])) {
+            $password = (new PasswordGenerator(new OpenSSL()))->generatePassword(16, 'RANDOM');
+            $defaultGroupId = $defaultGroups->getGuestsGroup()->getId();
+            $groupIds = [$defaultGroups->getGuestsGroup()->getId()];
+        } else {
+            $password = $data['password'];
+            $defaultGroupId = $data['defaultGroupId'] ?? $defaultGroups->getCustomersGroup()->getId();
+            $groupIds = $data['groupIds'] ?? [$defaultGroups->getCustomersGroup()->getId()];
         }
 
         $command = new AddCustomerCommand(
             $data['firstName'],
             $data['lastName'],
             $data['email'],
-            $data['password'],
-            isset($data['defaultGroupId']) ? $data['defaultGroupId'] : $defaultGroups->getCustomersGroup()->getId(),
-            isset($data['groupIds']) ? $data['groupIds'] : [$defaultGroups->getCustomersGroup()->getId()],
+            $password,
+            $defaultGroupId,
+            $groupIds,
             (isset($data['shopId']) ? $data['shopId'] : 0),
             (isset($data['genderId']) ? $data['genderId'] : null),
             (isset($data['isEnabled']) ? $data['isEnabled'] : true),
             (isset($data['isPartnerOffersSubscribed']) ? $data['isPartnerOffersSubscribed'] : false),
-            (isset($data['birthday']) ? $data['birthday'] : null)
+            (isset($data['birthday']) ? $data['birthday'] : null),
+            (isset($data['isGuest']) ? $data['isGuest'] : false)
         );
 
         /** @var CustomerId $id */
@@ -172,6 +188,23 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         // Clear static cache or same cached groups will always be returned
         Customer::resetStaticCache();
+    }
+
+    /**
+     * @When /^I attempt to edit customer "(.+)" and I change the following properties:$/
+     */
+    public function attemptToEditCustomerUsingCommand(string $customerReference, TableNode $table): void
+    {
+        try {
+            $this->editCustomerUsingCommand($customerReference, $table);
+            throw new NoExceptionAlthoughExpectedException();
+        } catch (\Exception $e) {
+            if ($e instanceof NoExceptionAlthoughExpectedException) {
+                throw $e;
+            }
+
+            $this->latestResult = $e;
+        }
     }
 
     /**
@@ -360,6 +393,9 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
             $data['riskId'] = SharedStorage::getStorage()->get($data['riskId']);
         } else {
             $data['riskId'] = 0;
+        }
+        if (array_key_exists('isGuest', $data)) {
+            $data['isGuest'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['isGuest']);
         }
 
         return $data;

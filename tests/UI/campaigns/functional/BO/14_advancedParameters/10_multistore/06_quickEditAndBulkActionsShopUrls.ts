@@ -4,10 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import generalPage from '@pages/BO/shopParameters/general';
 import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
@@ -32,7 +32,10 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfShopUrls: number = 0;
-  const ShopUrlData:ShopData = new ShopData({name: 'ToDelete', shopGroup: '', categoryRoot: ''});
+  const ShopUrlData: ShopData = new ShopData({name: 'ToDelete', shopGroup: '', categoryRoot: ''});
+
+  // Pre-condition: Enable multistore
+  setMultiStoreStatus(true, `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -44,37 +47,12 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  // 1 : Enable multi store
-  describe('Enable \'Multistore\'', async () => {
-    it('should go to \'Shop Parameters > General\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.shopParametersGeneralLink,
-      );
-
-      await generalPage.closeSfToolBar(page);
-
-      const pageTitle = await generalPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(generalPage.pageTitle);
-    });
-
-    it('should enable \'Multistore\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableMultiStore', baseContext);
-
-      const result = await generalPage.setMultiStoreStatus(page, true);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
-    });
-  });
-
   // 2 : Go to multistore page
   describe('Go to \'Multistore\' page', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
     it('should go to \'Advanced parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
@@ -85,7 +63,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       );
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
     it('should go to shop Urls page', async function () {
@@ -94,14 +72,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await multiStorePage.goToShopURLPage(page, 1);
 
       const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
     it('should reset filter and get the number of shop urls', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       numberOfShopUrls = await shopUrlPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopUrls).to.be.above(0);
+      expect(numberOfShopUrls).to.be.above(0);
     });
   });
 
@@ -113,14 +91,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await shopUrlPage.goToAddNewUrl(page);
 
       const pageTitle = await addShopUrlPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
     });
 
     it('should create shop URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
-      const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
-      await expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
+      const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData.name);
+      expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
     });
   });
 
@@ -135,7 +113,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
 
       for (let i = 1; i <= numberOfShopUrlsAfterFilter; i++) {
         const textColumn = await shopUrlPage.getTextColumn(page, i, 'url');
-        await expect(textColumn).to.contains(ShopUrlData.name);
+        expect(textColumn).to.contains(ShopUrlData.name);
       }
     });
 
@@ -155,7 +133,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
           column: '5', columnName: 'Is it the mail URL', action: 'enable', enabledValue: true,
         },
       },
-    ].forEach((test: {args: {column: string, columnName: string, action: string, enabledValue: boolean}}, index: number) => {
+    ].forEach((test: { args: { column: string, columnName: string, action: string, enabledValue: boolean } }, index: number) => {
       it(`should ${test.args.action} the column '${test.args.columnName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}_${index}`, baseContext);
 
@@ -165,14 +143,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
           const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
 
           if (test.args.columnName === 'Enabled') {
-            await expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
+            expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
           } else {
-            await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
+            expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
           }
         }
 
         const carrierStatus = await shopUrlPage.getStatus(page, 1, test.args.column);
-        await expect(carrierStatus).to.be.equal(test.args.enabledValue);
+        expect(carrierStatus).to.be.equal(test.args.enabledValue);
       });
     });
 
@@ -180,7 +158,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
 
       const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
+      expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
     });
 
     it('should set the default URL as the main URL', async function () {
@@ -190,11 +168,11 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
 
       if (isActionPerformed) {
         const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
-        await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
+        expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
       }
 
       const carrierStatus = await shopUrlPage.getStatus(page, 1, '5');
-      await expect(carrierStatus).to.be.equal(true);
+      expect(carrierStatus).to.be.equal(true);
     });
   });
 
@@ -209,21 +187,21 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
 
       for (let i = 1; i <= numberOfShopUrlsAfterFilter; i++) {
         const textColumn = await shopUrlPage.getTextColumn(page, i, 'url');
-        await expect(textColumn).to.contains(ShopUrlData.name);
+        expect(textColumn).to.contains(ShopUrlData.name);
       }
     });
 
     [
       {args: {status: 'disable', enable: false}},
       {args: {status: 'enable', enable: true}},
-    ].forEach((test: {args: {status: string, enable: boolean}}) => {
+    ].forEach((test: { args: { status: string, enable: boolean } }) => {
       it(`should ${test.args.status} shop url with Bulk Actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.status}ShopUrl`, baseContext);
 
         await shopUrlPage.bulkSetStatus(page, test.args.enable);
 
         const textResult = await shopUrlPage.getAlertSuccessBlockContent(page);
-        await expect(textResult, 'Status is not updated!').to.contains(shopUrlPage.successUpdateMessage);
+        expect(textResult, 'Status is not updated!').to.contains(shopUrlPage.successUpdateMessage);
       });
     });
 
@@ -231,7 +209,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkActions', baseContext);
 
       const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
+      expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
     });
   });
 
@@ -243,32 +221,10 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
       await shopUrlPage.filterTable(page, 'input', 'url', ShopUrlData.name);
 
       const textResult = await shopUrlPage.deleteShopURL(page, 1);
-      await expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
+      expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
     });
   });
 
-  // 7 : Disable multi store
-  describe('Disable \'Multistore\'', async () => {
-    it('should go to \'Shop parameters > General\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.shopParametersGeneralLink,
-      );
-
-      await generalPage.closeSfToolBar(page);
-
-      const pageTitle = await generalPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(generalPage.pageTitle);
-    });
-
-    it('should disable \'Multistore\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
-
-      const result = await generalPage.setMultiStoreStatus(page, false);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
-    });
-  });
+  // Post-condition : Disable multi store
+  setMultiStoreStatus(false, `${baseContext}_postTest`);
 });

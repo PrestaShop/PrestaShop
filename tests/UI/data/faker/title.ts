@@ -34,7 +34,7 @@ export default class TitleData {
 
     // Title name should contain at most 20 characters
     /** @type {string} Name of the title */
-    this.name = titleToCreate.name || (faker.random.word()).substring(0, 19).trim();
+    this.name = titleToCreate.name || (faker.lorem.word()).substring(0, 19).trim();
 
     /** @type {string} French name of the title */
     this.frName = titleToCreate.frName || this.name;

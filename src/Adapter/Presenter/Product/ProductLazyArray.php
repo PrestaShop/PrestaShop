@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Combination;
+use Context;
 use DateTime;
 use Language;
 use Link;
@@ -365,17 +367,36 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns all product features, not grouped yet for performance reasons.
+     *
      * @arrayAccess
      *
-     * @return array|null
+     * @return array
+     */
+    public function getFeatures()
+    {
+        /*
+         * If features were not loaded yet, we will ask for them if needed - usually on product page.
+         * However, if really hunting performance and you know you will need features in listing for bunch of products,
+         * fetch them with one query (in more performant way) and pass them here when constructing this object.
+         */
+        if (!isset($this->product['features'])) {
+            $this->product['features'] = Product::getFrontFeaturesStatic((int) $this->language->id, $this->product['id_product']);
+        }
+
+        return $this->product['features'];
+    }
+
+    /**
+     * Returns all product feature values nicely grouped by feature name.
+     *
+     * @arrayAccess
+     *
+     * @return array
      */
     public function getGroupedFeatures()
     {
-        if ($this->product['features']) {
-            return $this->buildGroupedFeatures($this->product['features']);
-        }
-
-        return null;
+        return $this->buildGroupedFeatures($this->getFeatures());
     }
 
     /**
@@ -621,18 +642,6 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * The "Add to cart" button should be shown for products available for order.
-     *
-     * @param array $product
-     *
-     * @return bool
-     */
-    private function shouldShowAddToCartButton(array $product): bool
-    {
-        return (bool) $product['available_for_order'];
-    }
-
-    /**
      * @param array $product
      *
      * @return bool
@@ -682,7 +691,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     private function fillImages(array $product, Language $language): void
     {
-        // Get all product images, including potential cover
+        // Get all product images assigned to this product.
         $productImages = $this->imageRetriever->getAllProductImages(
             $product,
             $language
@@ -691,37 +700,34 @@ class ProductLazyArray extends AbstractLazyArray
         // Get filtered product images matching the specified id_product_attribute
         $this->product['images'] = $this->filterImagesForCombination($productImages, $product['id_product_attribute']);
 
-        // Get default image for selected combination (used for product page, cart details, ...)
+        /*
+         * Get default image for the current product/combination.
+         * This image is usually used on places where we 100% need to show the image of the combination (cart, order confirmation).
+         * It's always the first image associated to that product/combination.
+         */
         $this->product['default_image'] = reset($this->product['images']);
-        foreach ($this->product['images'] as $image) {
-            // If one of the image is a cover it is used as such
-            if (isset($image['cover']) && null !== $image['cover']) {
-                $this->product['default_image'] = $image;
 
-                break;
-            }
-        }
+        /*
+         * Now let's define product's cover - the image used in listings.
+         *
+         * For products without combinations, it's simple. It's always the cover.
+         *
+         * For products with combinations, we can configure it. Two options:
+         * 1) Always use the cover, even if it's not assigned to the combination (for example some general image with color palette).
+         * 2) Use first image assigned to the combination passed to the presenter.
+         * This setting is controlled by PS_USE_COMBINATION_IMAGE_IN_LISTING property.
+         */
+        if (empty($product['id_product_attribute']) || !$this->configuration->get('PS_USE_COMBINATION_IMAGE_IN_LISTING')) {
+            foreach ($productImages as $image) {
+                if (isset($image['cover']) && $image['cover'] !== null) {
+                    $this->product['cover'] = $image;
 
-        // Get generic product image, used for product listing
-        if (isset($product['cover_image_id'])) {
-            // First try to find cover in product images
-            foreach ($productImages as $productImage) {
-                if ($productImage['id_image'] == $product['cover_image_id']) {
-                    $this->product['cover'] = $productImage;
                     break;
                 }
             }
-
-            // If the cover is not associated to the product images it is fetched manually
-            if (!isset($this->product['cover'])) {
-                $coverImage = $this->imageRetriever->getImage(new Product($product['id_product'], false, $language->getId()), $product['cover_image_id']);
-                $this->product['cover'] = array_merge($coverImage, [
-                    'legend' => $coverImage['legend'],
-                ]);
-            }
         }
 
-        // If no cover fallback on default image
+        // In other cases or if cover was not found, we use the first image
         if (!isset($this->product['cover'])) {
             $this->product['cover'] = $this->product['default_image'];
         }
@@ -776,8 +782,8 @@ class ProductLazyArray extends AbstractLazyArray
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
             // TODO: add percent sign according to locale preferences
-            $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
-            $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
+            $this->product['discount_percentage'] = Context::getContext()->getCurrentLocale()->formatNumber($presNegativeReduction) . '%';
+            $this->product['discount_percentage_absolute'] = Context::getContext()->getCurrentLocale()->formatNumber($presAbsoluteReduction) . '%';
             if ($settings->include_taxes) {
                 $regular_price = $product['price_without_reduction'];
             } else {
@@ -823,6 +829,16 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
+        // Disable because of catalog mode enabled in Prestashop settings
+        if ($this->settings->catalog_mode) {
+            return false;
+        }
+
+        // Disable because of "Available for order" checkbox unchecked in product settings
+        if ((bool) $product['available_for_order'] === false) {
+            return false;
+        }
+
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
             $shouldEnable = false;
 
@@ -838,8 +854,7 @@ class ProductLazyArray extends AbstractLazyArray
             $shouldEnable = true;
         }
 
-        $shouldEnable = $shouldEnable && $this->shouldShowAddToCartButton($product);
-
+        // Disable because of stock management
         if ($settings->stock_management_enabled
             && !$product['allow_oosp']
             && ($product['quantity'] <= 0
@@ -1030,6 +1045,26 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns extra price associated with current combination, if provided
+     *
+     * @arrayAccess
+     *
+     * @return float
+     */
+    public function getAttributePrice()
+    {
+        if (!isset($this->product['attribute_price'])) {
+            if (!empty($this->product['id_product_attribute'])) {
+                $this->product['attribute_price'] = (float) Combination::getPrice($this->product['id_product_attribute']);
+            } else {
+                $this->product['attribute_price'] = 0;
+            }
+        }
+
+        return (float) $this->product['attribute_price'];
+    }
+
+    /**
      * @param string $key
      *
      * @return string
@@ -1059,7 +1094,6 @@ class ProductLazyArray extends AbstractLazyArray
             'active',
             'add_to_cart_url',
             'additional_shipping_cost',
-            'advanced_stock_management',
             'allow_oosp',
             'attachments',
             'attribute_price',

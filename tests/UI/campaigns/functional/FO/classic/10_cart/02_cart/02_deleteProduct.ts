@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage as foHomePage, homePage} from '@pages/FO/home';
 
 import {expect} from 'chai';
@@ -31,7 +31,7 @@ describe('FO - cart : Delete product', async () => {
     await homePage.changeLanguage(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should add the first product to cart and proceed to checkout', async function () {
@@ -41,7 +41,7 @@ describe('FO - cart : Delete product', async () => {
     await homePage.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.eq(cartPage.pageTitle);
+    expect(pageTitle).to.eq(cartPage.pageTitle);
   });
 
   it('should set the quantity 0 in the input', async function () {
@@ -50,7 +50,7 @@ describe('FO - cart : Delete product', async () => {
     await cartPage.editProductQuantity(page, 1, 0);
 
     const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-    await expect(notificationsNumber).to.be.eq(0);
+    expect(notificationsNumber).to.be.eq(0);
   });
 
   it('should go to home page', async function () {
@@ -59,7 +59,7 @@ describe('FO - cart : Delete product', async () => {
     await cartPage.goToHomePage(page);
 
     const result = await foHomePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should add the first product to cart and proceed to checkout', async function () {
@@ -69,7 +69,7 @@ describe('FO - cart : Delete product', async () => {
     await homePage.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.eq(cartPage.pageTitle);
+    expect(pageTitle).to.eq(cartPage.pageTitle);
   });
 
   it('should delete the product', async function () {
@@ -78,6 +78,6 @@ describe('FO - cart : Delete product', async () => {
     await cartPage.deleteProduct(page, 1);
 
     const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-    await expect(notificationNumber).to.be.equal(0);
+    expect(notificationNumber).to.be.equal(0);
   });
 });

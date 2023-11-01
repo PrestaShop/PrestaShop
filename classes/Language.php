@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
-use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Countries;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
@@ -130,14 +130,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     protected $webserviceParameters = [
         'objectNodeName' => 'language',
         'objectsNodeName' => 'languages',
-    ];
-
-    protected $translationsFilesAndVars = [
-        'fields' => '_FIELDS',
-        'errors' => '_ERRORS',
-        'admin' => '_LANGADM',
-        'pdf' => '_LANGPDF',
-        'tabs' => 'tabs',
     ];
 
     public static function resetStaticCache()
@@ -1513,22 +1505,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return Language::countActiveLanguages($id_shop) > 1;
     }
 
-    public static function getLanguagePackListContent($iso, $tar)
-    {
-        $key = 'Language::getLanguagePackListContent_' . $iso;
-        if (!Cache::isStored($key)) {
-            if (!$tar instanceof \Archive_Tar) {
-                return false;
-            }
-            $result = $tar->listContent();
-            Cache::store($key, $result);
-
-            return $result;
-        }
-
-        return Cache::retrieve($key);
-    }
-
     /**
      * Updates multilanguage tables in all languages using DataLang
      *
@@ -1796,7 +1772,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private function getCountries(string $locale): array
     {
         Locale::setDefault($locale);
-        $countries = Intl::getRegionBundle()->getCountryNames();
+        $countries = Countries::getNames();
         $countries = array_change_key_case($countries, CASE_LOWER);
 
         return $countries;

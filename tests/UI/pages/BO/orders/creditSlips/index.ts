@@ -75,8 +75,8 @@ class CreditSlips extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Credit Slips •';
-    this.pageTitleFR = 'Avoirs •';
+    this.pageTitle = `Credit slips • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleFR = `Avoirs • ${global.INSTALL.SHOP_NAME}`;
     this.errorMessageWhenGenerateFileByDate = 'No order slips were found for this period.';
     this.successfulUpdateMessage = 'Update successful';
 
@@ -175,8 +175,8 @@ class CreditSlips extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterCreditSlipsByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.creditSlipsFilterColumnInput('date_issued_from'), dateFrom);
-    await page.type(this.creditSlipsFilterColumnInput('date_issued_to'), dateTo);
+    await page.locator(this.creditSlipsFilterColumnInput('date_issued_from')).fill(dateFrom);
+    await page.locator(this.creditSlipsFilterColumnInput('date_issued_to')).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }

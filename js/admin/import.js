@@ -26,9 +26,9 @@
 var importCancelRequest = false;
 var importContinueRequest = false;
 
-$(document).ready(function(){
+$(function(){
 
-	$('#saveImportMatchs').unbind('click').click(function(){
+	$('#saveImportMatchs').off('click').on('click', function(){
 
 	var newImportMatchs = $('#newImportMatchs').val();
 	if (newImportMatchs == '')
@@ -60,7 +60,7 @@ $(document).ready(function(){
 	}
 	});
 
-	$('#loadImportMatchs').unbind('click').click(function(){
+	$('#loadImportMatchs').off('click').on('click', function(){
 
 		var idToLoad = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
@@ -85,7 +85,7 @@ $(document).ready(function(){
 		   });
 	});
 
-	$('#deleteImportMatchs').unbind('click').click(function(){
+	$('#deleteImportMatchs').off('click').on('click', function(){
 
 		var idToDelete = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
@@ -109,7 +109,7 @@ $(document).ready(function(){
 
 	});
 
-	$('#import_stop_button').unbind('click').click(function(){
+	$('#import_stop_button').off('click').on('click', function(){
 		if (importContinueRequest) {
 			$('#importProgress').modal('hide');
 			importContinueRequest = false;
@@ -124,7 +124,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#import_continue_button').unbind('click').click(function(){
+	$('#import_continue_button').off('click').on('click', function(){
 		$('#import_continue_button').hide();
 		importContinueRequest = false;
 		$('#import_progress_div').show();

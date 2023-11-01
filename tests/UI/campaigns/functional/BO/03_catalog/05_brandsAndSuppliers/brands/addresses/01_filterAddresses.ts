@@ -51,14 +51,14 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
     await brandsPage.closeSfToolBar(page);
 
     const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all filters and get number of addresses in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
     numberOfAddresses = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfAddresses).to.be.above(0);
+    expect(numberOfAddresses).to.be.above(0);
   });
 
   // 1 : Filter addresses table
@@ -141,11 +141,11 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
         );
 
         const numberOfAddressesAfterFilter = await brandsPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
+        expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
 
         for (let i = 1; i <= numberOfAddressesAfterFilter; i++) {
           const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, i, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -153,7 +153,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-        await expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
+        expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
       });
     });
   });

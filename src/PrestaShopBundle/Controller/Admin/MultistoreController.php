@@ -50,12 +50,12 @@ class MultistoreController extends FrameworkBundleAdminController
     /**
      * @var MultistoreFeature
      */
-    public $multistoreFeature;
+    public $multiStoreFeature;
 
     /**
      * @var Context
      */
-    public $multistoreContext;
+    public $multiStoreContext;
 
     /**
      * @var EntityManager
@@ -76,7 +76,7 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     public function header(bool $lockedToAllShopContext): Response
     {
-        if (!$this->multistoreFeature->isUsed()) {
+        if (!$this->multiStoreFeature->isUsed()) {
             return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
                 'isMultistoreUsed' => false,
             ]);
@@ -140,7 +140,7 @@ class MultistoreController extends FrameworkBundleAdminController
         $shopGroups = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         $shopCustomizationChecker = $this->get('prestashop.multistore.customized_configuration_checker');
 
-        if ($this->multistoreContext->isAllShopContext()) {
+        if ($this->multiStoreContext->isAllShopContext()) {
             $dropdownData = $this->allShopDropdown($shopCustomizationChecker, $shopGroups, $configurationKey);
         } else {
             $dropdownData = $this->groupShopDropdown($shopCustomizationChecker, $shopGroups, $configurationKey);
@@ -173,7 +173,7 @@ class MultistoreController extends FrameworkBundleAdminController
                 $groupList[] = $group;
             }
             if (
-                $group->getId() === $this->multistoreContext->getContextShopGroup()->id
+                $group->getId() === $this->multiStoreContext->getContextShopGroup()->id
                 && !$shouldDisplayDropdown
             ) {
                 foreach ($group->getShops() as $shop) {
@@ -245,10 +245,10 @@ class MultistoreController extends FrameworkBundleAdminController
         // group shop is only included if we are in all shop context or in group context when this group is the current context
         if (count($group->getShops()) > 0
             && (
-                $this->multistoreContext->isAllShopContext()
+                $this->multiStoreContext->isAllShopContext()
                 || (
-                    $this->multistoreContext->isGroupShopContext()
-                    && $group->getId() === $this->multistoreContext->getContextShopGroup()->id
+                    $this->multiStoreContext->isGroupShopContext()
+                    && $group->getId() === $this->multiStoreContext->getContextShopGroup()->id
                 )
             )
         ) {
@@ -267,15 +267,15 @@ class MultistoreController extends FrameworkBundleAdminController
     private function renderHeader(string $headerTemplate, array $templateVars): Response
     {
         $colorBrightnessCalculator = $this->get(ColorBrightnessCalculator::class);
-        $isAllShopContext = $this->multistoreContext->isAllShopContext();
-        $isShopContext = $this->multistoreContext->isShopContext();
+        $isAllShopContext = $this->multiStoreContext->isAllShopContext();
+        $isShopContext = $this->multiStoreContext->isShopContext();
         $colorConfigLink = false;
 
         if ($isShopContext) {
-            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->multistoreContext->getContextShopID()]);
+            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->multiStoreContext->getContextShopID()]);
             $colorConfigLink = $this->getAdminLink('AdminShop', ['shop_id' => $currentContext->getId(), 'updateshop' => true]);
         } elseif (!$isAllShopContext) {
-            $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
+            $shopGroupLegacy = $this->multiStoreContext->getContextShopGroup();
             $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneBy(['id' => $shopGroupLegacy->id]);
             $colorConfigLink = $this->getAdminLink('AdminShopGroup', ['id_shop_group' => $currentContext->getId(), 'updateshop_group' => true]);
         } else {
@@ -286,14 +286,14 @@ class MultistoreController extends FrameworkBundleAdminController
         }
 
         return $this->render($headerTemplate, array_merge([
-            'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
+            'isMultistoreUsed' => $this->multiStoreFeature->isUsed(),
             'currentContext' => $currentContext,
             'groupList' => [],
             'isShopContext' => $isShopContext,
             'link' => $this->getContext()->link,
             'isTitleDark' => empty($currentContext->getColor()) ? true : $colorBrightnessCalculator->isBright($currentContext->getColor()),
             'isAllShopContext' => $isAllShopContext,
-            'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
+            'isGroupContext' => $this->multiStoreContext->isGroupShopContext(),
             'lockedToAllShopContext' => false,
             'colorConfigLink' => !$isAllShopContext && empty($currentContext->getColor()) ? $colorConfigLink : false,
         ], $templateVars));

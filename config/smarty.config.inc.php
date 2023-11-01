@@ -24,6 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
@@ -82,48 +86,53 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
 }
 
 // PrestaShop & Smarty functions
-smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
-smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
-smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
-
-smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
-smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
-smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
-smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
-smartyRegisterFunction($smarty, 'modifier', 'end', 'smarty_endWithoutReference');
 smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
+smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
+smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
+smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
+smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
+smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
+smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
+smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
+smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
 
 // Native PHP functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
 smartyRegisterFunction($smarty, 'modifier', 'addslashes', 'addslashes');
 smartyRegisterFunction($smarty, 'modifier', 'date', 'date');
+smartyRegisterFunction($smarty, 'modifier', 'end', 'smarty_endWithoutReference');
 smartyRegisterFunction($smarty, 'modifier', 'explode', 'explode');
 smartyRegisterFunction($smarty, 'modifier', 'floatval', 'floatval');
 smartyRegisterFunction($smarty, 'modifier', 'htmlentities', 'htmlentities');
-smartyRegisterFunction($smarty, 'modifier', 'htmlspecialchars', 'htmlspecialchars');
-smartyRegisterFunction($smarty, 'modifier', 'implode', 'implode');
-smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
 smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
 smartyRegisterFunction($smarty, 'modifier', 'json_decode', 'json_decode');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
-smartyRegisterFunction($smarty, 'modifier', 'lcfirst', 'lcfirst');
-smartyRegisterFunction($smarty, 'modifier', 'md5', 'md5');
 smartyRegisterFunction($smarty, 'modifier', 'mt_rand', 'mt_rand');
-smartyRegisterFunction($smarty, 'modifier', 'nl2br', 'nl2br');
-smartyRegisterFunction($smarty, 'modifier', 'print_r', 'print_r');
 smartyRegisterFunction($smarty, 'modifier', 'rand', 'rand');
-smartyRegisterFunction($smarty, 'modifier', 'sizeof', 'sizeof');
-smartyRegisterFunction($smarty, 'modifier', 'str_replace', 'str_replace');
-smartyRegisterFunction($smarty, 'modifier', 'stripslashes', 'stripslashes');
 smartyRegisterFunction($smarty, 'modifier', 'strtolower', 'strtolower');
+smartyRegisterFunction($smarty, 'modifier', 'str_replace', 'str_replace');
 smartyRegisterFunction($smarty, 'modifier', 'strval', 'strval');
-smartyRegisterFunction($smarty, 'modifier', 'substr', 'substr');
 smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
 smartyRegisterFunction($smarty, 'modifier', 'ucfirst', 'ucfirst');
 smartyRegisterFunction($smarty, 'modifier', 'urlencode', 'urlencode');
+smartyRegisterFunction($smarty, 'modifier', 'htmlspecialchars', 'htmlspecialchars');
+smartyRegisterFunction($smarty, 'modifier', 'implode', 'implode');
+smartyRegisterFunction($smarty, 'modifier', 'explode', 'explode');
+smartyRegisterFunction($smarty, 'modifier', 'print_r', 'print_r');
 smartyRegisterFunction($smarty, 'modifier', 'var_dump', 'var_dump');
+smartyRegisterFunction($smarty, 'modifier', 'lcfirst', 'lcfirst');
+smartyRegisterFunction($smarty, 'modifier', 'nl2br', 'nl2br');
+smartyRegisterFunction($smarty, 'modifier', 'sizeof', 'sizeof');
+smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
+smartyRegisterFunction($smarty, 'modifier', 'substr', 'substr');
+smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
+smartyRegisterFunction($smarty, 'modifier', 'date', 'date');
+smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
+smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
+smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
+smartyRegisterFunction($smarty, 'modifier', 'stripslashes', 'stripslashes');
+smartyRegisterFunction($smarty, 'modifier', 'md5', 'md5');
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
@@ -206,7 +215,7 @@ function smartyCleanHtml($data)
     }
 }
 
-function smartyClassname($classname)
+function smartyClassname(string $classname)
 {
     $classname = Tools::replaceAccentedChars(strtolower($classname));
     $classname = preg_replace(['/[^A-Za-z0-9-_]/', '/-{3,}/', '/-+$/'], ['-', '-', ''], $classname);
@@ -235,4 +244,25 @@ function smartyClassnames(array $classnames)
 function smarty_endWithoutReference($arrayValue)
 {
     return end($arrayValue);
+}
+
+function renderTemplate(array $params) {
+    $twigTemplate = $params['twig_template'];
+    unset($params['twig_template']);
+    $smartyTemplate = $params['smarty_template'];
+    unset($params['smarty_template']);
+
+    if (
+        SymfonyContainer::getInstance()
+            ->get(FeatureFlagStateCheckerInterface::class)
+            ->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)
+    ) {
+        /** @var Twig\Environment $twig */
+        $twig = SymfonyContainer::getInstance()->get('twig');
+        return $twig->render($twigTemplate, $params);
+    } else {
+        global $smarty;
+        $smarty->display($smartyTemplate);
+    }
+
 }

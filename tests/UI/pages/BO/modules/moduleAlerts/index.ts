@@ -9,7 +9,7 @@ class ModuleAlerts extends ModuleManager {
   constructor() {
     super();
 
-    this.pageTitle = `Module notifications • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = `Module alerts • ${global.INSTALL.SHOP_NAME}`;
   }
 }
 

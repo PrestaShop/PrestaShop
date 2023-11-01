@@ -16,6 +16,8 @@ class Statuses extends BOBasePage {
 
   private readonly newOrderReturnStatusLink: string;
 
+  private readonly gridPanel: (tableName: string) => string;
+
   private readonly gridForm: (tableName: string) => string;
 
   private readonly gridTableHeaderTitle: (tableName: string) => string;
@@ -52,23 +54,21 @@ class Statuses extends BOBasePage {
 
   private readonly tableColumnActionsDeleteLink: (tableName: string, row: number) => string;
 
-  private readonly tableColumnValidIcon: (row: number, column: string) => string;
+  private readonly tableColumnActionsStatus: (tableName: string, row: number, column: string) => string;
 
-  private readonly tableColumnNotValidIcon: (row: number, column: string) => string;
+  private readonly tableColumnActionsStatusToggleInput: (tableName: string, row: number, column: string) => string;
 
-  private readonly deleteModalButtonYes: string;
+  private readonly confirmDeleteModal: (tableName: string) => string;
 
-  private readonly paginationActiveLabel: (tableName: string) => string;
+  private readonly confirmDeleteButton: (tableName: string) => string;
 
-  private readonly paginationDiv: (tableName: string) => string;
+  private readonly paginationLimitSelect: (tableName: string) => string;
 
-  private readonly paginationDropdownButton: (tableName: string) => string;
-
-  private readonly paginationItems: (tableName: string, number: number) => string;
-
-  private readonly paginationPreviousLink: (tableName: string) => string;
+  private readonly paginationLabel: (tableName: string) => string;
 
   private readonly paginationNextLink: (tableName: string) => string;
+
+  private readonly paginationPreviousLink: (tableName: string) => string;
 
   private readonly tableHead: (tableName: string) => string;
 
@@ -76,15 +76,11 @@ class Statuses extends BOBasePage {
 
   private readonly sortColumnSpanButton: (tableName: string, column: number) => string;
 
-  private readonly bulkActionBlock: string;
+  private readonly deleteSelectionButton: (tableName: string) => string;
 
-  private readonly bulkActionMenuButton: (tableName: string) => string;
+  private readonly selectAllLabel: (tableName: string) => string;
 
-  private readonly bulkActionDropdownMenu: string;
-
-  private readonly selectAllLink: string;
-
-  private readonly bulkDeleteLink: string;
+  private readonly bulkActionsToggleButton: (tableName: string) => string;
 
   /**
    * @constructs
@@ -94,26 +90,27 @@ class Statuses extends BOBasePage {
     super();
 
     this.pageTitle = 'Statuses •';
-    this.successfulUpdateStatusMessage = 'The status has been updated successfully.';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header selectors
-    this.newOrderStatusLink = '#page-header-desc-order_return_state-new_order_state';
-    this.newOrderReturnStatusLink = '#page-header-desc-order_return_state-new_order_return_state';
+    this.newOrderStatusLink = '#page-header-desc-configuration-add[title=\'Add new order status\']';
+    this.newOrderReturnStatusLink = '#page-header-desc-configuration-add_return_state[title=\'Add new return status\']';
 
     // Form selectors
-    this.gridForm = (tableName: string) => `#form-${tableName}_state`;
+    this.gridPanel = (tableName: string) => `#${tableName}_states_grid_panel`;
+    this.gridForm = (tableName: string) => `#${tableName}_states_filter_form`;
     this.gridTableHeaderTitle = (tableName: string) => `${this.gridForm(tableName)} .panel-heading`;
-    this.gridTableNumberOfTitlesSpan = (tableName: string) => `${this.gridTableHeaderTitle(tableName)} span.badge`;
+    this.gridTableNumberOfTitlesSpan = (tableName: string) => `${this.gridPanel(tableName)} h3.card-header-title`;
 
     // Table selectors
-    this.gridTable = (tableName: string) => `#table-${tableName}_state`;
+    this.gridTable = (tableName: string) => `#${tableName}_states_grid_table`;
 
     // Filter selectors
-    this.filterRow = (tableName: string) => `${this.gridTable(tableName)} tr.filter`;
-    this.filterColumn = (tableName: string, filterBy: string) => `${this.filterRow(tableName)}
-    [name='${tableName}_stateFilter_${filterBy}']`;
-    this.filterSearchButton = (tableName: string) => `#submitFilterButton${tableName}_state`;
-    this.filterResetButton = (tableName: string) => `button[name='submitReset${tableName}_state']`;
+    this.filterRow = (tableName: string) => `${this.gridTable(tableName)} tr.column-filters`;
+    this.filterColumn = (tableName: string, filterBy: string) => `${this.filterRow(tableName)} `
+      + `#${tableName}_states_${filterBy}`;
+    this.filterSearchButton = (tableName: string) => `${this.gridTable(tableName)} .grid-search-button`;
+    this.filterResetButton = (tableName: string) => `${this.gridTable(tableName)} .grid-reset-button`;
 
     // Table body selectors
     this.tableBody = (tableName: string) => `${this.gridTable(tableName)} tbody`;
@@ -129,32 +126,30 @@ class Statuses extends BOBasePage {
     this.tableColumnActions = (tableName: string, row: number) => `${this.tableBodyColumns(tableName, row)}`
       + ' .btn-group-action';
     this.tableColumnActionsEditLink = (tableName: string, row: number) => `${this.tableColumnActions(tableName, row)}`
-      + ' a.edit';
+      + ' a.grid-edit-row-link';
     this.tableColumnActionsToggleButton = (tableName: string, row: number) => `${this.tableColumnActions(tableName, row)}`
       + ' button.dropdown-toggle';
     this.tableColumnActionsDropdownMenu = (tableName: string, row: number) => `${this.tableColumnActions(tableName, row)}`
-      + ' .dropdown-menu';
-    this.tableColumnActionsDeleteLink = (tableName: string, row: number) => `${this.tableColumnActionsDropdownMenu(
-      tableName, row)} a.delete`;
-    this.tableColumnValidIcon = (row: number, column: string) => `${this.tableColumn('order', row, column)
-    } a.action-enabled`;
-    this.tableColumnNotValidIcon = (row: number, column: string) => `${this.tableColumn('order', row, column)
-    } a.action-disabled`;
+      + ' a[data-toggle=\'dropdown\']';
+    this.tableColumnActionsDeleteLink = (tableName: string, row: number) => `${this.tableColumnActions(
+      tableName, row)} a.grid-delete-row-link`;
+    this.tableColumnActionsStatus = (tableName: string, row: number, column: string) => `${
+      this.tableColumn(tableName, row, column)} .ps-switch`;
+    this.tableColumnActionsStatusToggleInput = (tableName: string, row: number, column: string) => `${
+      this.tableColumnActionsStatus(tableName, row, column)} input`;
 
     // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
+    this.confirmDeleteModal = (tableName: string) => `#${tableName}_states-grid-confirm-modal`;
+    this.confirmDeleteButton = (tableName: string) => `${this.confirmDeleteModal(tableName)} button.btn-confirm-submit`;
 
     // Growl message
     this.growlMessageBlock = '.growl-message';
 
     // Pagination selectors
-    this.paginationActiveLabel = (tableName: string) => `${this.gridForm(tableName)} ul.pagination.pull-right li.active a`;
-    this.paginationDiv = (tableName: string) => `${this.gridForm(tableName)} .pagination`;
-    this.paginationDropdownButton = (tableName: string) => `${this.paginationDiv(tableName)} .dropdown-toggle`;
-    this.paginationItems = (tableName: string, number: number) => `${this.gridForm(tableName)}
-    .dropdown-menu a[data-items='${number}']`;
-    this.paginationPreviousLink = (tableName: string) => `${this.gridForm(tableName)} .icon-angle-left`;
-    this.paginationNextLink = (tableName: string) => `${this.gridForm(tableName)} .icon-angle-right`;
+    this.paginationLimitSelect = (tableName: string) => `${this.gridPanel(tableName)} #paginator_select_page_limit`;
+    this.paginationLabel = (tableName: string) => `${this.gridPanel(tableName)} .col-form-label`;
+    this.paginationNextLink = (tableName: string) => `${this.gridPanel(tableName)} [data-role=next-page-link]`;
+    this.paginationPreviousLink = (tableName: string) => `${this.gridPanel(tableName)} [data-role='previous-page-link']`;
 
     // Sort Selectors
     this.tableHead = (tableName: string) => `${this.gridTable(tableName)} thead`;
@@ -162,11 +157,10 @@ class Statuses extends BOBasePage {
     this.sortColumnSpanButton = (tableName: string, column: number) => `${this.sortColumnDiv(tableName, column)} span.ps-sort`;
 
     // Bulk actions selectors
-    this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = (tableName: string) => `#bulk_action_menu_${tableName}_state`;
-    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
-    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.deleteSelectionButton = (tableName: string) => `${this.gridPanel(tableName)} #${
+      tableName}_states_grid_bulk_action_delete_selection`;
+    this.selectAllLabel = (tableName: string) => `${this.gridPanel(tableName)} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = (tableName: string) => `${this.gridPanel(tableName)} button.js-bulk-actions-btn`;
   }
 
   /* Header methods */
@@ -194,7 +188,7 @@ class Statuses extends BOBasePage {
   /**
    * Get Number of element in grid of statuses/return statuses table
    * @param page {Page} Browser tab
-   * @param tableName {string} Table name to get number of elements
+   * @param tableName {string} Table name
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page: Page, tableName: string): Promise<number> {
@@ -204,7 +198,7 @@ class Statuses extends BOBasePage {
   /**
    * Reset all filters
    * @param page {Page} Browser tab
-   * @param tableName {string} Table name to reset filter
+   * @param tableName {string} Table name to reset and get number of lines
    * @return {Promise<void>}
    */
   async resetFilter(page: Page, tableName: string): Promise<void> {
@@ -245,6 +239,7 @@ class Statuses extends BOBasePage {
 
       case 'select':
         await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No');
+        await page.click(this.filterSearchButton(tableName));
         break;
 
       default:
@@ -287,18 +282,22 @@ class Statuses extends BOBasePage {
    * @return {Promise<string>}
    */
   async deleteOrderStatus(page: Page, tableName: string, row: number): Promise<string> {
+    // Add listener to dialog to accept deletion
+    await this.dialogListener(page, true);
+    // Click on dropDown
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(tableName, row)),
-      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(tableName, row)),
+      page.click(this.tableColumnActionsDropdownMenu(tableName, row)),
+      this.waitForVisibleSelector(page, `${this.tableColumnActionsDropdownMenu(tableName, row)}[aria-expanded='true']`),
     ]);
 
+    // Click on delete and wait for modal
     await page.click(this.tableColumnActionsDeleteLink(tableName, row));
-
+    await this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`);
     // Confirm delete action
-    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton(tableName));
 
     // Get successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
@@ -309,7 +308,7 @@ class Statuses extends BOBasePage {
    * @return {Promise<string>}
    */
   getPaginationLabel(page: Page, tableName: string): Promise<string> {
-    return this.getTextContent(page, this.paginationActiveLabel(tableName));
+    return this.getTextContent(page, this.paginationLabel(tableName));
   }
 
   /**
@@ -320,8 +319,7 @@ class Statuses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, tableName: string, number: number): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.paginationDropdownButton(tableName));
-    await page.click(this.paginationItems(tableName, number));
+    await this.selectByVisibleText(page, this.paginationLimitSelect(tableName), number.toString());
 
     return this.getPaginationLabel(page, tableName);
   }
@@ -380,9 +378,15 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async sortTable(page: Page, tableName: string, sortBy: string, columnID: number, sortDirection: string): Promise<void> {
-    const sortColumnButton: string = `${this.sortColumnDiv(tableName, columnID)} i.icon-caret-${sortDirection}`;
+    const sortColumnDiv = `${this.sortColumnDiv(tableName, columnID)} [data-sort-direction='${sortDirection}']`;
 
-    await this.clickAndWaitForURL(page, sortColumnButton);
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForLoadState(page, this.sortColumnSpanButton(tableName, columnID));
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /* Bulk actions methods */
@@ -393,11 +397,10 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async bulkSelectRows(page: Page, tableName: string): Promise<void> {
-    await page.click(this.bulkActionMenuButton(tableName));
-
+    // Click on Select All
     await Promise.all([
-      page.click(this.selectAllLink),
-      this.waitForHiddenSelector(page, this.selectAllLink),
+      page.$eval(this.selectAllLabel(tableName), (el: HTMLElement) => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
   }
 
@@ -408,49 +411,55 @@ class Statuses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async bulkDeleteOrderStatuses(page: Page, tableName: string): Promise<string> {
-    await this.dialogListener(page, true);
     // Select all rows
     await this.bulkSelectRows(page, tableName);
 
     // Click on Button Bulk actions
-    await page.click(this.bulkActionMenuButton(tableName));
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton(tableName)),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}[aria-expanded='true']`),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteSelectionButton(tableName)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
+    ]);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton(tableName));
 
-    // Click on delete
-    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Get Value of column Displayed
    * @param page {Page} Browser tab
+   * @param tableName {string} Table name to sort
    * @param row {number} Row on table
    * @param columnName {string} Column name to get status
    * @returns {Promise<boolean>}
    */
-  getStatus(page: Page, row: number, columnName: string): Promise<boolean> {
-    return this.elementVisible(page, this.tableColumnValidIcon(row, columnName), 100);
+  async getStatus(page: Page, tableName: string, row: number, columnName: string): Promise<boolean> {
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.tableColumnActionsStatusToggleInput(tableName, row, columnName)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
    * Quick edit toggle column value
    * @param page {Page} Browser tab
+   * @param tableName {string} Table name to sort
    * @param row {number} Row on table
    * @param columnName {string} column name on table
    * @param valueWanted {boolean} True if we need to enable status
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page: Page, row: number, columnName: string, valueWanted: boolean = true): Promise<boolean> {
-    const columnSelector = this.tableColumn('order', row, columnName);
-
-    await this.waitForVisibleSelector(page, columnSelector, 2000);
-
-    if (await this.getStatus(page, row, columnName) !== valueWanted) {
-      await page.click(columnSelector);
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.tableColumnValidIcon(row, columnName) : this.tableColumnNotValidIcon(row, columnName)),
-      );
-
+  async setStatus(page: Page, tableName: string, row: number, columnName: string, valueWanted: boolean = true): Promise<boolean> {
+    if (await this.getStatus(page, tableName, row, columnName) !== valueWanted) {
+      await this.clickAndWaitForLoadState(page, this.tableColumnActionsStatus(tableName, row, columnName));
       return true;
     }
 

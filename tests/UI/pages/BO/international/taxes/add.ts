@@ -37,8 +37,8 @@ class AddTax extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Taxes •';
-    this.pageTitleEdit = 'Edit: ';
+    this.pageTitleCreate = `New tax • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing tax';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors

@@ -67,17 +67,16 @@ class PositionsControllerTest extends WebTestCase
         Module::clearStaticCache();
 
         parent::setUp();
-        self::bootKernel();
 
+        $this->client = self::createClient();
         /** @var ModuleManager */
-        $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+        $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);
         if (!$moduleManager->isInstalled('ps_emailsubscription')) {
             $moduleManager->install('ps_emailsubscription');
         }
 
         $this->moduleId = Module::getModuleIdByName('ps_emailsubscription');
         $this->hookId = Hook::getIdByName('displayFooterBefore');
-        $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
         $this->session = self::$kernel->getContainer()->get('session');
     }

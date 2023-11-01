@@ -58,7 +58,6 @@ class OrderPreferencesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'generalForm' => $generalForm->createView(),
             'giftOptionsForm' => $giftOptionsForm->createView(),
-            'isMultishippingEnabled' => $this->getConfiguration()->getBoolean('PS_ALLOW_MULTISHIPPING'),
             'isAtcpShipWrapEnabled' => $this->getConfiguration()->getBoolean('PS_ATCP_SHIPWRAP'),
         ]);
     }

@@ -26,7 +26,7 @@
 {extends file="helpers/list/list_header.tpl"}
 {block name=leadin}
 	<script type="text/javascript">
-		$(document).ready(function() {
+		$(function() {
 			$(location.hash).click();
 		});
 	</script>

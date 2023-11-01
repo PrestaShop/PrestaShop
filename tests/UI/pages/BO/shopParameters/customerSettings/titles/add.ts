@@ -14,13 +14,13 @@ import type {Page} from 'playwright';
 class AddTitle extends BOBasePage {
   public readonly pageTitleCreate: string;
 
-  public readonly pageTitleEdit: string;
+  public readonly pageTitleEdit: (titleName: string) => string;
 
   private readonly genderForm: string;
 
   private readonly nameInput: (idLang: number) => string;
 
-  private readonly genderInput: (type: string) => string;
+  private readonly genderInput: (type: number) => string;
 
   private readonly imageInput: string;
 
@@ -34,7 +34,7 @@ class AddTitle extends BOBasePage {
 
   private readonly dropdownMenu: string;
 
-  private readonly dropdownMenuItemLink: (idLang: number) => string;
+  private readonly dropdownMenuItemLink: (lang: string) => string;
 
   /**
    * @constructs
@@ -43,23 +43,22 @@ class AddTitle extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Titles > Add new •';
-    this.pageTitleEdit = 'Titles > Edit:';
+    this.pageTitleCreate = `Titles • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (titleName: string) => `Edit: ${titleName} • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
-    this.genderForm = '#gender_form';
-    this.nameInput = (idLang: number) => `#name_${idLang}`;
-    this.genderInput = (type: string) => `#type_${type}`;
-    this.imageInput = '#image-name';
-    this.imageWidthInput = '#img_width';
-    this.imageHeightInput = '#img_height';
-    this.saveButton = '#gender_form_submit_btn';
-    this.alertSuccessBlockParagraph = '.alert-success';
+    this.genderForm = 'form[name="title"]';
+    this.nameInput = (idLang: number) => `#title_name_${idLang}`;
+    this.genderInput = (type: number) => `#title_gender_type_${type}`;
+    this.imageInput = '#title_image';
+    this.imageWidthInput = '#title_img_width';
+    this.imageHeightInput = '#title_img_height';
+    this.saveButton = `${this.genderForm} #save-button`;
 
     // Language selectors
-    this.dropdownButton = `${this.genderForm} button.dropdown-toggle`;
-    this.dropdownMenu = `${this.genderForm} ul.dropdown-menu`;
-    this.dropdownMenuItemLink = (idLang: number) => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
+    this.dropdownButton = `${this.genderForm} button.dropdown-toggle.js-locale-btn`;
+    this.dropdownMenu = `${this.genderForm} div.dropdown-menu`;
+    this.dropdownMenuItemLink = (lang: string) => `${this.dropdownMenu} span.dropdown-item[data-locale="${lang}"]`;
   }
 
   /*
@@ -69,18 +68,18 @@ class AddTitle extends BOBasePage {
   /**
    * Change language in form
    * @param page {Page} Browser tab
-   * @param idLang {number} Id language to select
+   * @param lang {string} Language to select
    * @return {Promise<void>}
    */
-  async changeLanguage(page: Page, idLang: number): Promise<void> {
+  async changeLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
       page.click(this.dropdownButton),
-      this.waitForVisibleSelector(page, this.dropdownMenuItemLink(idLang)),
+      this.waitForVisibleSelector(page, this.dropdownMenuItemLink(lang)),
     ]);
 
     await Promise.all([
-      page.click(this.dropdownMenuItemLink(idLang)),
-      this.waitForHiddenSelector(page, this.dropdownMenuItemLink(idLang)),
+      page.click(this.dropdownMenuItemLink(lang)),
+      this.waitForHiddenSelector(page, this.dropdownMenuItemLink(lang)),
     ]);
   }
 
@@ -91,13 +90,15 @@ class AddTitle extends BOBasePage {
    * @return {Promise<string>}
    */
   async createEditTitle(page: Page, titleData: TitleData): Promise<string> {
-    await this.changeLanguage(page, 1);
+    const genders: string[] = ['Male', 'Female', 'Neutral'];
+
+    await this.changeLanguage(page, 'en');
     await this.setValue(page, this.nameInput(1), titleData.name);
 
-    await this.changeLanguage(page, 2);
+    await this.changeLanguage(page, 'fr');
     await this.setValue(page, this.nameInput(2), titleData.frName);
 
-    await page.click(this.genderInput(titleData.gender.toLowerCase()));
+    await page.click(this.genderInput(genders.indexOf(titleData.gender)));
 
     // Upload image
     await this.uploadFile(page, this.imageInput, titleData.imageName);

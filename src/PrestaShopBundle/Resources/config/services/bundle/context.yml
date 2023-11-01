@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShopBundle\EventListener\Context\Admin\EmployeeContextListener:
+    tags:
+      - { name: kernel.event_listener, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
+    tags:
+      - { name: kernel.event_listener, method: onKernelRequest }

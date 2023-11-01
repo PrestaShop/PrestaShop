@@ -4,18 +4,14 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
+import seoTab from '@pages/BO/catalog/products/add/seoTab';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 
@@ -33,10 +29,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
 
   const productName: string = 'TESTURLÉ';
   const productNameWithoutAccent: string = 'TESTURLE';
-  const productData: ProductData = new ProductData({name: productName, type: 'Standard product'});
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
+  const productData: ProductData = new ProductData({name: productName, type: 'standard'});
 
   // before and after functions
   before(async function () {
@@ -65,16 +58,41 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should create a product that the name contains accented characters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAccentedCharsProduct', baseContext);
+    it('should click on \'New product\' button and check new product modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      await productsPage.goToAddProductPage(page);
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+    });
 
-      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    it('should choose \'Standard product\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+      await productsPage.selectProductType(page, productData.type);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await productsPage.clickOnAddNewProduct(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create standard product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+      await addProductPage.closeSfToolBar(page);
+
+      const createProductMessage = await addProductPage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
     });
 
     const tests = [
@@ -93,14 +111,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         );
 
         const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+        expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
       });
 
       it(`should ${test.args.action} accented URL`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AccentedUrl`, baseContext);
 
         const result = await seoAndUrlsPage.enableDisableAccentedURL(page, test.args.enable);
-        await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+        expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -113,25 +131,25 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         );
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfter${test.args.action}`, baseContext);
 
-        await productsPage.resetFilterCategory(page);
+        await productsPage.resetFilter(page);
 
         const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProducts).to.be.above(0);
+        expect(numberOfProducts).to.be.above(0);
       });
 
       it('should filter by the created product name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterProductTo${test.args.action}`, baseContext);
 
-        await productsPage.filterProducts(page, 'name', productName);
+        await productsPage.filterProducts(page, 'product_name', productName);
 
-        const textColumn = await productsPage.getProductNameFromList(page, 1);
-        await expect(textColumn).to.contains(productName);
+        const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
+        expect(textColumn).to.contains(productName);
       });
 
       it('should go to the created product page and reset the friendly url', async function () {
@@ -140,9 +158,13 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         await productsPage.goToProductPage(page, 1);
 
         const pageTitle = await addProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addProductPage.pageTitle);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
 
-        await addProductPage.resetURL(page);
+        await addProductPage.goToTab(page, 'seo');
+        await seoTab.clickOnGenerateUrlFromNameButton(page);
+
+        const updateProductMessage = await addProductPage.saveProduct(page);
+        expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
       });
 
       it('should check the product URL', async function () {
@@ -152,7 +174,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         page = await addProductPage.previewProduct(page);
 
         const url = await foHomePage.getCurrentURL(page);
-        await expect(url).to.contains(test.args.productNameInURL.toLowerCase());
+        expect(url).to.contains(test.args.productNameInURL.toLowerCase());
       });
 
       it('should go back to BO', async function () {
@@ -162,7 +184,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         page = await foHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await addProductPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addProductPage.pageTitle);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
       });
     });
 
@@ -170,17 +192,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const testResult = await addProductPage.deleteProduct(page);
-      await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      expect(testResult).to.equal(productsPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      expect(numberOfProducts).to.be.above(0);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -12,7 +12,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import productPage from '@pages/FO/product';
 import {homePage} from '@pages/FO/home';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
@@ -56,7 +56,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
     await orderSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -98,21 +98,36 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       );
 
       const result = await orderSettingsPage.setTermsOfService(page, test.args.enable, test.args.pageName);
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should check terms of service checkbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop_${index}`, baseContext);
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
       // Change FO language
       await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
+    });
+
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
+
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
-      // Proceed to checkout the shopping cart
+
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(index + 1);
+    });
+
+    it('should proceed to checkout and go to deliveryStep', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `proceedToCheckout${index}`, baseContext);
+
       await cartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
@@ -124,15 +139,23 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
+    });
+
+    it('should check terms of service checkbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
 
       // Check terms of service checkbox existence
       const isVisible = await checkoutPage.isConditionToApproveCheckboxVisible(page);
-      await expect(isVisible).to.be.equal(test.args.enable);
+      expect(isVisible).to.be.equal(test.args.enable);
     });
 
     if (test.args.enable) {
@@ -140,7 +163,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
         await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfServicePage${index}`, baseContext);
 
         const pageName = await checkoutPage.getTermsOfServicePageTitle(page);
-        await expect(pageName).to.contains(test.args.title);
+        expect(pageName).to.contains(test.args.title);
       });
     }
 
@@ -150,7 +173,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       page = await checkoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
   });
 });

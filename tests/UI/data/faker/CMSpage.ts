@@ -36,7 +36,7 @@ export default class CMSPageData {
     this.id = pageToCreate.id || 0;
 
     /** @type {string} Title of the page */
-    this.title = pageToCreate.title || faker.random.word();
+    this.title = pageToCreate.title || faker.lorem.word();
 
     /** @type {string} Meta title of the page */
     this.metaTitle = pageToCreate.metaTitle || faker.lorem.word();

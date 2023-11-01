@@ -42,14 +42,14 @@ function enableEcoTaxTest(baseContext: string = 'commonTests-enableEcoTaxTest'):
       await taxesPage.closeSfToolBar(page);
 
       const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
+      expect(pageTitle).to.contains(taxesPage.pageTitle);
     });
 
     it('should enable ecotax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableEcoTax', baseContext);
 
       const textResult = await taxesPage.enableEcoTax(page, true);
-      await expect(textResult).to.be.equal('Update successful');
+      expect(textResult).to.be.equal('Update successful');
     });
   });
 }
@@ -81,14 +81,14 @@ function disableEcoTaxTest(baseContext: string = 'commonTests-disableEcoTaxTest'
       await taxesPage.closeSfToolBar(page);
 
       const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
+      expect(pageTitle).to.contains(taxesPage.pageTitle);
     });
 
     it('should disable Ecotax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableEcoTax', baseContext);
 
       const textResult = await taxesPage.enableEcoTax(page, false);
-      await expect(textResult).to.be.equal('Update successful');
+      expect(textResult).to.be.equal('Update successful');
     });
   });
 }

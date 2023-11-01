@@ -23,13 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 
-{$module_name = $module_name|escape:'html':'UTF-8'}
-{capture}{'/&module_name='|cat:$module_name|cat:'/'}{/capture}
 {if isset($display_multishop_checkbox) && $display_multishop_checkbox}
-<div class="bootstrap panel">
-	<h3><i class="icon-cogs"></i> {l s='Configuration' d='Admin.Global'}</h3>
-	<input type="checkbox" name="activateModule" value="1"{if $module->isEnabledForShopContext()} checked="checked"{/if}
-		onclick="location.href = '{$current_url|regex_replace:$smarty.capture.default:''}&amp;module_name={$module_name}&amp;enable=' + ($(this).prop('checked') ? '1' : '0');" />
-	{l s='Activate module for this shop context: %s.' sprintf=[$shop_context] d='Admin.Modules.Notification'}
+<div class="bootstrap form-horizontal panel">
+	<div class="panel-heading"><i class="icon-cogs"></i> {l s='Configuration' d='Admin.Global'}</div>
+  <div class="form-wrapper">
+    <div class="form-group">
+      <label class="control-label col-lg-4">
+        {l s='Activate module for this shop context: %s.' sprintf=[$shop_context] d='Admin.Modules.Notification' html=true}
+      </label>
+      <div class="col-lg-8">
+        <span class="switch prestashop-switch fixed-width-lg">
+          <input type="radio" name="activateModule" id="module_shop_enabled_on" value="1"{if $module->isEnabledForShopContext()} checked="checked"{/if} onclick="location.href = '{$multishop_enable_url}'">
+          <label for="module_shop_enabled_on">Yes</label>
+          <input type="radio" name="activateModule" id="module_shop_enabled_off" value="0"{if !$module->isEnabledForShopContext()} checked="checked"{/if} onclick="location.href = '{$multishop_disable_url}'">
+          <label for="module_shop_enabled_off">No</label>
+          <a class="slide-button btn"></a>
+        </span>
+      </div>
+    </div>
+  </div>
 </div>
 {/if}

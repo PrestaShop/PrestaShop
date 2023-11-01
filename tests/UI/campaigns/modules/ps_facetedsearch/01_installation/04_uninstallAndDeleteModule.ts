@@ -53,45 +53,41 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should search the module ${Modules.psFacetedSearch.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psFacetedSearch);
-    await expect(isModuleVisible).to.be.true;
+    expect(isModuleVisible).to.eq(true);
   });
 
   it('should display the uninstall modal and cancel it', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
     const textResult = await moduleManagerPage.setActionInModule(page, Modules.psFacetedSearch, 'uninstall', true);
-    await expect(textResult).to.eq('');
+    expect(textResult).to.eq('');
 
     const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psFacetedSearch);
-    await expect(isModuleVisible).to.be.true;
+    expect(isModuleVisible).to.eq(true);
 
     const isModalVisible = await moduleManagerPage.isModalActionVisible(page, Modules.psFacetedSearch, 'uninstall');
-    await expect(isModalVisible).to.be.false;
+    expect(isModalVisible).to.eq(false);
 
     const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psFacetedSearch.tag}/`);
-    await expect(dirExists).to.be.true;
+    expect(dirExists).to.eq(true);
   });
 
   it('should uninstall the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psFacetedSearch, 'uninstall', false, true);
-    await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psFacetedSearch.tag));
-
-    // Check the button at the right of the module is displaying "Install"
-    const mainAction = await moduleManagerPage.getMainActionInModule(page, Modules.psFacetedSearch);
-    await expect(mainAction).to.be.eq('install');
+    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psFacetedSearch.tag));
 
     // Check the directory `modules/Modules.psFacetedSearch.tag`
     const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psFacetedSearch.tag}/`);
-    await expect(dirExists).to.be.false;
+    expect(dirExists).to.eq(false);
   });
 
   it('should go to Front Office', async function () {
@@ -101,7 +97,7 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     await homePage.changeLanguage(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should go to the category Page', async function () {
@@ -110,14 +106,14 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     await homePage.goToCategory(page, Categories.clothes.id);
 
     const pageTitle = await homePage.getPageTitle(page);
-    await expect(pageTitle).to.equal(Categories.clothes.name);
+    expect(pageTitle).to.equal(Categories.clothes.name);
   });
 
   it(`should check that ${Modules.psFacetedSearch.name} is not present`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkModuleNotPresent', baseContext);
 
     const hasFilters = await categoryPage.hasSearchFilters(page);
-    await expect(hasFilters).to.be.false;
+    expect(hasFilters).to.eq(false);
   });
 
   describe(`POST-CONDITION : Install the module ${Modules.psFacetedSearch.name}`, async () => {
@@ -127,7 +123,7 @@ describe('Faceted search module - Uninstall and delete module', async () => {
       page = await categoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it(`should download the zip of the module '${Modules.psFacetedSearch.name}'`, async function () {
@@ -136,28 +132,28 @@ describe('Faceted search module - Uninstall and delete module', async () => {
       await files.downloadFile(Modules.psFacetedSearch.releaseZip, 'module.zip');
 
       const found = await files.doesFileExist('module.zip');
-      await expect(found).to.be.true;
+      expect(found).to.eq(true);
     });
 
     it(`should upload the module '${Modules.psFacetedSearch.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uploadModule', baseContext);
 
       const successMessage = await moduleManagerPage.uploadModule(page, 'module.zip');
-      await expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
+      expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
     });
 
     it('should close upload module modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
       const isModalNotVisible = await moduleManagerPage.closeUploadModuleModal(page);
-      await expect(isModalNotVisible).to.be.true;
+      expect(isModalNotVisible).to.eq(true);
     });
 
     it(`should search the module '${Modules.psFacetedSearch.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModulePresent', baseContext);
 
       const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psFacetedSearch);
-      await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+      expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
   });
 });

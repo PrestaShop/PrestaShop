@@ -1,0 +1,50 @@
+.view-authorized-application-card {
+  .card-body {
+    .row {
+      .text-right {
+        font-weight: $font-weight-semibold;
+      }
+    }
+  }
+}
+
+#api_access_grid_panel {
+  #api_access_grid_table {
+    .column-headers {
+      th[data-column-id="active"] {
+        text-align: center;
+      }
+    }
+  }
+}
+
+.accordion-form {
+  .card-body {
+    padding: 0 0.625rem;
+  }
+}
+
+.switch-scope {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .switch-widget {
+    .input-container {
+      min-width: 300px;
+
+      .ps-switch {
+        label {
+          right: 0;
+          padding-right: 2.8rem;
+          padding-left: 0;
+          text-align: right;
+        }
+
+        .slide-button {
+          right: 0;
+        }
+      }
+    }
+  }
+}

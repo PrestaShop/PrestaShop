@@ -21,55 +21,47 @@ services:
 
   prestashop.adapter.language.command_handler.add_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\AddLanguageHandler'
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
       - '@prestashop.adapter.file.robots_text_file_generator'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand'
 
   prestashop.adapter.language.command_handler.edit_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\EditLanguageHandler'
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand'
 
   prestashop.adapter.language.query_handler.get_language_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Language\QueryHandler\GetLanguageForEditingHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing'
+    autoconfigure: true
 
   prestashop.adapter.language.command_handler.toggle_language_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\ToggleLanguageStatusHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.file.robots_text_file_generator'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand'
 
   prestashop.adapter.language.command_handler.bulk_toggle_languages_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkToggleLanguagesStatusHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.file.robots_text_file_generator'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand'
 
   prestashop.adapter.language.command_handler.bulk_delete_languages_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkDeleteLanguagesHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.file.robots_text_file_generator'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand'
 
   prestashop.adapter.language.command_handler.delete_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\DeleteLanguageHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.file.robots_text_file_generator'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand'
+
+  PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider:
+    autowire: true
+    public: false
+    arguments:
+      $context: '@prestashop.adapter.legacy.context'

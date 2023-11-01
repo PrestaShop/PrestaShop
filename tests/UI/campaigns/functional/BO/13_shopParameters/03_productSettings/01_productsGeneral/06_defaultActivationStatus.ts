@@ -4,13 +4,8 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
@@ -30,9 +25,6 @@ Check that a new product is offline by default
 describe('BO - Shop Parameters - Product Settings : Enable/Disable default activation status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -66,7 +58,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         await productSettingsPage.closeSfToolBar(page);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} default activation status`, async function () {
@@ -78,7 +70,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         );
 
         const result = await productSettingsPage.setDefaultActivationStatus(page, test.args.enable);
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -91,20 +83,32 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         );
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
-      it('should go to create product page and check the new product online status', async function () {
+      it('should click on \'New product\' button and check new product modal', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${index}`, baseContext);
+
+        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.equal(true);
+      });
+
+      it('should select product type and create new product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
+
+        await productsPage.selectProductType(page, 'standard');
+        await productsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await addProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
+      });
+
+      it('should check the new product online status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
 
-        await productsPage.goToAddProductPage(page);
-
-        const online = await addProductPage.getOnlineButtonStatus(page);
-        await expect(online).to.be.equal(test.args.enable);
+        const online = await addProductPage.getProductStatus(page);
+        expect(online).to.be.equal(test.args.enable);
       });
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

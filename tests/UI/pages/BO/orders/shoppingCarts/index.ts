@@ -95,7 +95,7 @@ class ShoppingCarts extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Shopping Carts •';
+    this.pageTitle = `Shopping Carts • ${global.INSTALL.SHOP_NAME}`;
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Selectors
@@ -276,8 +276,8 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.filterDateFromColumn, dateFrom);
-    await page.type(this.filterDateToColumn, dateTo);
+    await page.locator(this.filterDateFromColumn).fill(dateFrom);
+    await page.locator(this.filterDateToColumn).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }

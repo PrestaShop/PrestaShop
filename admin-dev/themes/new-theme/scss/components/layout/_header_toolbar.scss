@@ -44,6 +44,7 @@
 
   // page title
   .title {
+    flex: 1;
     float: left;
     padding: 0.3125rem;
     padding-left: 0;
@@ -68,8 +69,16 @@
   }
   // toolbar buttons
   .toolbar-icons {
-    @include media-breakpoint-down(sm) {
-      display: none;
+    &:not(.toolbar-icons--persistent) {
+      @include media-breakpoint-down(sm) {
+        display: none;
+
+        > .wrapper {
+          .btn-help {
+            display: none;
+          }
+        }
+      }
     }
 
     > .wrapper {
@@ -79,11 +88,8 @@
 
       @include media-breakpoint-down(sm) {
         justify-content: flex-start;
-      }
 
-      @include media-breakpoint-down(sm) {
-        #recommended-modules-button,
-        .btn-help {
+        #recommended-modules-button {
           display: none;
         }
       }

@@ -29,7 +29,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\DeleteAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
@@ -37,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -70,6 +73,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'showcaseCardName' => ShowcaseCard::ATTRIBUTES_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'layoutTitle' => $this->trans('Attributes', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -79,12 +83,37 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *     message="You do not have permission to create this."
      * )
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request): Response
     {
-        //@todo: implement in antoher pr
-        return $this->redirectToRoute('admin_attribute_groups_index');
+        $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
+        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
+
+        $attributeGroupForm = $attributeGroupFormBuilder->getForm();
+        $attributeGroupForm->handleRequest($request);
+
+        try {
+            $handlerResult = $attributeFormHandler->handle($attributeGroupForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attribute_groups_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/create.html.twig',
+            [
+                'layoutTitle' => $this->trans('New attribute', 'Admin.Navigation.Menu'),
+                'attributeGroupForm' => $attributeGroupForm->createView(),
+            ]
+        );
     }
 
     /**
@@ -95,12 +124,44 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *
      * @param int $attributeGroupId
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction(int $attributeGroupId)
+    public function editAction(Request $request, int $attributeGroupId): Response
     {
-        //@todo: implement in antoher pr
-        return $this->redirectToRoute('admin_attribute_groups_index');
+        $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
+        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
+
+        $attributeGroupForm = $attributeGroupFormBuilder->getFormFor($attributeGroupId);
+
+        $attributeGroupForm->handleRequest($request);
+
+        try {
+            $handlerResult = $attributeFormHandler->handleFor($attributeGroupId, $attributeGroupForm);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attribute_groups_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $formData = $attributeGroupForm->getData();
+        $attributeGroupName = $formData['name'][$this->getContextLangId()] ?? reset($formData['name']);
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/edit.html.twig',
+            [
+                'layoutTitle' => $this->trans(
+                    'Editing attribute %name%',
+                    'Admin.Navigation.Menu',
+                    ['%name%' => $attributeGroupName]
+                ),
+                'attributeGroupForm' => $attributeGroupForm->createView(),
+                'attributeGroupId' => $attributeGroupId,
+            ]
+        );
     }
 
     /**
@@ -110,14 +171,36 @@ class AttributeGroupController extends FrameworkBundleAdminController
      * )
 
      *
-     * @param int $attributeGroupId
+     * @param AttributeGroupFilters $filters
      *
-     * @return RedirectResponse
+     * @return CsvResponse
      */
-    public function exportAction(int $attributeGroupId)
+    public function exportAction(AttributeGroupFilters $filters): CsvResponse
     {
-        //@todo: implement in antoher pr
-        return $this->redirectToRoute('admin_attribute_groups_index');
+        $filters = new AttributeGroupFilters(['limit' => null] + $filters->all());
+        $attributeGroupGridFactory = $this->get('prestashop.core.grid.factory.attribute_group');
+        $attributeGroupGrid = $attributeGroupGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_attribute_group' => $this->trans('ID', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'position' => $this->trans('Position', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($attributeGroupGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_attribute_group' => $record['id_attribute_group'],
+                'name' => $record['name'],
+                'position' => $record['position'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('attribute_group_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
@@ -216,11 +299,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
      */
     private function getAttributeGroupIdsFromRequest(Request $request)
     {
-        $attributeGroupIds = $request->request->get('attribute_group_bulk');
-
-        if (!is_array($attributeGroupIds)) {
-            return [];
-        }
+        $attributeGroupIds = $request->request->all('attribute_group_bulk');
 
         foreach ($attributeGroupIds as $i => $attributeGroupId) {
             $attributeGroupIds[$i] = (int) $attributeGroupId;
@@ -240,6 +319,23 @@ class AttributeGroupController extends FrameworkBundleAdminController
             AttributeGroupNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
+            ),
+            AttributeGroupConstraintException::class => [
+                AttributeGroupConstraintException::EMPTY_NAME => $this->trans(
+                    'The field %field_name% is required at least in your default language.',
+                    'Admin.Notifications.Error',
+                    ['%field_name%' => $this->trans('Name', 'Admin.Global')]
+                ),
+                AttributeGroupConstraintException::INVALID_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
+                ),
+            ],
+
+            CannotAddAttributeGroupException::class => $this->trans(
+                'An error occurred while creating the attribute.',
+                'Admin.Catalog.Notification'
             ),
             DeleteAttributeGroupException::class => [
                 DeleteAttributeGroupException::FAILED_DELETE => $this->trans(

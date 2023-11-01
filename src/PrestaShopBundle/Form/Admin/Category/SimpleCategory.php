@@ -32,6 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @deprecated since 8.1 and will be removed in next major.
@@ -47,10 +48,10 @@ class SimpleCategory extends CommonAbstractType
     /**
      * Constructor.
      *
-     * @param object $translator
+     * @param TranslatorInterface $translator
      * @param object $categoryDataProvider
      */
-    public function __construct($translator, $categoryDataProvider)
+    public function __construct(TranslatorInterface $translator, $categoryDataProvider)
     {
         $this->translator = $translator;
         $this->formatValidList($categoryDataProvider->getNestedCategories());
@@ -94,10 +95,7 @@ class SimpleCategory extends CommonAbstractType
             ->add('id_parent', ChoiceType::class, [
                 'choices' => $this->categories,
                 'required' => true,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
                 'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature'),
             ]);
     }

@@ -28,8 +28,10 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -84,7 +86,6 @@ class SupplierController extends FrameworkBundleAdminController
             $this->get(Tools::class),
             $this->get('prestashop.adapter.data_provider.product'),
             $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
             $this->get('prestashop.adapter.shop.context'),
@@ -102,10 +103,11 @@ class SupplierController extends FrameworkBundleAdminController
                 continue;
             }
 
-            $simpleSubForm->add('supplier_combination_' . $idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
-                'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
+            $simpleSubForm->add('supplier_combination_' . $idSupplier, CollectionType::class, [
+                'entry_type' => ProductSupplierCombination::class,
                 'entry_options' => [
                     'id_supplier' => $idSupplier,
+                    'id_currency' => $this->getContext()->currency->id,
                 ],
                 'prototype' => true,
                 'allow_add' => true,

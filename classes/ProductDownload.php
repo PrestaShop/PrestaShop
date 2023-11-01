@@ -249,16 +249,12 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return text link.
      *
-     * @param bool $admin specific to backend (optional)
      * @param string|false $hash hash code in table order detail (optional)
      *
      * @return string Html all the code for print a link to the file
      */
-    public function getTextLink($admin = true, $hash = false)
+    public function getTextLink($hash = false)
     {
-        if ($admin) {
-            return 'get-file-admin.php?file=' . $this->filename;
-        }
         $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
 
         return Context::getContext()->link->getPageLink('get-file&key=' . $key);
@@ -268,14 +264,13 @@ class ProductDownloadCore extends ObjectModel
      * Return html link.
      *
      * @param string|bool $class CSS selector
-     * @param bool $admin specific to backend
      * @param string|bool $hash hash code in table order detail
      *
      * @return string Html all the code for print a link to the file
      */
-    public function getHtmlLink($class = false, $admin = true, $hash = false)
+    public function getHtmlLink($class = false, $hash = false)
     {
-        $link = $this->getTextLink($admin, $hash);
+        $link = $this->getTextLink($hash);
         $html = '<a href="' . $link . '" title=""';
         if ($class) {
             $html .= ' class="' . $class . '"';

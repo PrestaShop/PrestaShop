@@ -174,7 +174,7 @@ class CartOld extends Cart
                 $virtual_context->shop = new Shop((int) $product['id_shop']);
             }
 
-            $id_address = $this->getProductAddressId($product);
+            $id_address = $this->getProductAddressId();
 
             // The $null variable below is not used,
             // but it is necessary to pass it to getProductPrice because
@@ -257,7 +257,7 @@ class CartOld extends Cart
 
             $package = [
                 'id_carrier' => $id_carrier,
-                'id_address' => $this->getDeliveryAddressId($products),
+                'id_address' => $this->id_address_delivery,
                 'products' => $products,
             ];
 

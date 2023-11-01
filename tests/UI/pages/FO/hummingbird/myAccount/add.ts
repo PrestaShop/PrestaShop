@@ -12,9 +12,7 @@ class CreateAccount extends CreateAccountPage {
    * Setting up texts and selectors to use on create account page
    */
   constructor() {
-    super();
-
-    this.theme = 'hummingbird';
+    super('hummingbird');
 
     this.pageHeaderTitle = '#wrapper .page-header h1';
   }

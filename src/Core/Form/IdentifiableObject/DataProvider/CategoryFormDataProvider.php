@@ -27,9 +27,11 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provides data for category add/edit category forms
@@ -57,21 +59,37 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $groupDataProvider;
 
     /**
+     * @var CategoryProvider
+     */
+    private $categoryProvider;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $router;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param int $contextShopId
      * @param int $contextShopRootCategoryId
      * @param GroupDataProvider $groupDataProvider
+     * @param CategoryProvider $categoryProvider
+     * @param UrlGeneratorInterface $router
      */
     public function __construct(
         CommandBusInterface $queryBus,
         $contextShopId,
         $contextShopRootCategoryId,
-        GroupDataProvider $groupDataProvider
+        GroupDataProvider $groupDataProvider,
+        CategoryProvider $categoryProvider,
+        UrlGeneratorInterface $router
     ) {
         $this->queryBus = $queryBus;
         $this->contextShopId = $contextShopId;
         $this->contextShopRootCategoryId = $contextShopRootCategoryId;
         $this->groupDataProvider = $groupDataProvider;
+        $this->categoryProvider = $categoryProvider;
+        $this->router = $router;
     }
 
     /**
@@ -81,6 +99,31 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     {
         /** @var EditableCategory $editableCategory */
         $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
+
+        $coverImages = $thumbnailImages = [];
+        $categoryId = (int) $categoryId;
+        $categoryUrl = $this->categoryProvider->getUrl($categoryId, '{friendly-url}');
+        $coverImage = $editableCategory->getCoverImage();
+        if ($coverImage) {
+            $coverImages[] = [
+                'size' => $coverImage['size'],
+                'image_path' => $coverImage['path'],
+                'delete_path' => $this->router->generate(
+                    'admin_categories_delete_cover_image',
+                    [
+                        'categoryId' => $categoryId,
+                    ]
+                ),
+            ];
+        }
+        $thumbnailImage = $editableCategory->getThumbnailImage();
+        if ($thumbnailImage) {
+            $thumbnailImages[] =
+                [
+                    'image_path' => $thumbnailImage['path'],
+                    'size' => $thumbnailImage['size'],
+                ];
+        }
 
         return [
             'name' => $editableCategory->getName(),
@@ -94,6 +137,9 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'link_rewrite' => $editableCategory->getLinkRewrite(),
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),
+            'cover_image' => $coverImages,
+            'thumbnail_image' => $thumbnailImages,
+            'seo_preview' => $categoryUrl,
         ];
     }
 
@@ -109,6 +155,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'group_association' => $allGroupIds,
             'shop_association' => $this->contextShopId,
             'active' => true,
+            'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}'),
         ];
     }
 }

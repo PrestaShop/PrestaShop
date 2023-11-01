@@ -94,7 +94,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->uninstall(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -103,7 +103,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->enable(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->enable(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -112,26 +112,8 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->disable(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->disable(self::UNINSTALLED_MODULE_NAME);
-    }
-
-    public function testEnableMobile(): void
-    {
-        $this->assertTrue($this->moduleManager->enableMobile(self::INSTALLED_MODULE_NAME));
-
-        $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
-        $this->moduleManager->enableMobile(self::UNINSTALLED_MODULE_NAME);
-    }
-
-    public function testDisableMobile(): void
-    {
-        $this->assertTrue($this->moduleManager->disableMobile(self::INSTALLED_MODULE_NAME));
-
-        $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
-        $this->moduleManager->disableMobile(self::UNINSTALLED_MODULE_NAME);
     }
 
     public function testUpgrade(): void
@@ -140,7 +122,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->upgrade(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -153,7 +135,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE_NAME, true));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->reset(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -217,8 +199,6 @@ class ModuleManagerTest extends TestCase
         $module->method('onUninstall')->willReturn(true);
         $module->method('onEnable')->willReturn(true);
         $module->method('onDisable')->willReturn(true);
-        $module->method('onMobileEnable')->willReturn(true);
-        $module->method('onMobileDisable')->willReturn(true);
         $module->method('onUpgrade')->willReturn(true);
         $module->method('onReset')->willReturn(true);
         $module->method('onPostInstall')->willReturn(true);

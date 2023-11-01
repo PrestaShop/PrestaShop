@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use ImageType;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierLogoImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\DeleteSupplierLogoImageHandlerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -36,6 +37,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Handles command which deletes supplier cover image using legacy object model
  */
+#[AsCommandHandler]
 class DeleteSupplierLogoImageHandler implements DeleteSupplierLogoImageHandlerInterface
 {
     /**

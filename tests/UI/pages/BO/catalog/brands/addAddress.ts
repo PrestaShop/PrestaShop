@@ -43,7 +43,7 @@ class AddBrandAddress extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new address • ';
+    this.pageTitle = `New brand address • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.brandSelect = 'select#manufacturer_address_id_manufacturer';

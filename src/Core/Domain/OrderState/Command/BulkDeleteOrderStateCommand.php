@@ -39,7 +39,7 @@ class BulkDeleteOrderStateCommand
     /**
      * @var OrderStateId[]
      */
-    private $orderStateIds;
+    private $orderStateIds = [];
 
     /**
      * @param int[] $orderStateIds

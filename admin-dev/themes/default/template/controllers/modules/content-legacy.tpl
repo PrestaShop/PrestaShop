@@ -25,41 +25,4 @@
 
 {if isset($module_content)}
 	{$module_content}
-{else}
-
-	{if isset($smarty.get.addnewmodule) && ($context_mode == Context::MODE_HOST)}
-
-		<div class="defaultForm form-horizontal">
-				<div class="panel" id="">
-					<div class="panel-heading">
-						<i class="icon-picture"></i> {l s='Add a new module'}
-					</div>
-
-					<div class="form-wrapper">
-						<div class="form-group">
-							<p>{l s='To add a new module, simply connect to your PrestaShop Addons account and all your purchases will be automatically imported.'}</p>
-						</div>
-					</div><!-- /.form-wrapper -->
-
-					<div class="panel-footer">
-						<a href="{$link->getAdminLink('AdminModules', true)|escape:'html':'UTF-8'}" class="btn btn-default">
-							<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
-						</a>
-						<a href="#" data-toggle="modal" data-target="#modal_addons_connect" class="btn btn-default pull-right">
-							<i class="process-icon-next"></i> {l s='Next' d='Admin.Global'}
-						</a>
-					</div>
-				</div>
-
-				<div class="alert alert-info">
-					<h4>{l s='Can I add my own modules?'}</h4>
-					<p>{l s='Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.'}</p>
-				</div>
-
-		</div>
-
-	{elseif !isset($smarty.get.configure)}
-		{include file='controllers/modules/js.tpl'}
-		{include file='controllers/modules/page.tpl'}
-	{/if}
 {/if}

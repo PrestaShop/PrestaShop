@@ -50,14 +50,14 @@ function setWebserviceStatus(status: boolean, baseContext: string = 'commonTests
       await webservicePage.closeSfToolBar(page);
 
       const pageTitle = await webservicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(webservicePage.pageTitle);
+      expect(pageTitle).to.contains(webservicePage.pageTitle);
     });
 
     it(`should ${status ? 'enable' : 'disable'} the webservice`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setWebserviceStatus', baseContext);
 
       const textResult = await webservicePage.setWebserviceStatus(page, status);
-      await expect(textResult).to.contains(webservicePage.successfulUpdateMessage);
+      expect(textResult).to.contains(webservicePage.successfulUpdateMessage);
     });
   });
 }
@@ -100,14 +100,14 @@ function addWebserviceKey(
       await webservicePage.closeSfToolBar(page);
 
       const pageTitle = await webservicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(webservicePage.pageTitle);
+      expect(pageTitle).to.contains(webservicePage.pageTitle);
     });
 
     it('should reset all filters and get number of webservices', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
       numberOfWebserviceKeys = await webservicePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfWebserviceKeys).to.be.eq(0);
+      expect(numberOfWebserviceKeys).to.be.eq(0);
     });
 
     it('should go to add new webservice key page', async function () {
@@ -116,17 +116,17 @@ function addWebserviceKey(
       await webservicePage.goToAddNewWebserviceKeyPage(page);
 
       const pageTitle = await addWebservicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
+      expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
     });
 
     it('should create webservice key and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createWebserviceKey', baseContext);
 
       const textResult = await addWebservicePage.createEditWebservice(page, webserviceData);
-      await expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
+      expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
 
       const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
-      await expect(numberOfWebserviceKeysAfterCreation).to.be.eq(1);
+      expect(numberOfWebserviceKeysAfterCreation).to.be.eq(1);
     });
   });
 }
@@ -159,14 +159,14 @@ function removeWebserviceKey(keyDescription: string, baseContext: string = 'comm
       await webservicePage.closeSfToolBar(page);
 
       const pageTitle = await webservicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(webservicePage.pageTitle);
+      expect(pageTitle).to.contains(webservicePage.pageTitle);
     });
 
     it('should reset all filters and get number of webservices', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
       numberOfWebserviceKeys = await webservicePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfWebserviceKeys).to.be.eq(1);
+      expect(numberOfWebserviceKeys).to.be.eq(1);
     });
 
     it('should filter list by key description', async function () {
@@ -180,21 +180,21 @@ function removeWebserviceKey(keyDescription: string, baseContext: string = 'comm
       );
 
       const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
-      await expect(key).to.contains(keyDescription);
+      expect(key).to.contains(keyDescription);
     });
 
     it('should delete webservice key', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteWebserviceKey', baseContext);
 
       const textResult = await webservicePage.deleteWebserviceKey(page, 1);
-      await expect(textResult).to.equal(webservicePage.successfulDeleteMessage);
+      expect(textResult).to.equal(webservicePage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of webservice keys', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfWebserviceKeyAfterDelete = await webservicePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfWebserviceKeyAfterDelete).to.be.equal(0);
+      expect(numberOfWebserviceKeyAfterDelete).to.be.equal(0);
     });
   });
 }

@@ -2,7 +2,7 @@ import Countries from '@data/demo/countries';
 import CountryData from '@data/faker/country';
 import BrandAddressCreator from '@data/types/brandAddress';
 
-import {faker} from '@faker-js/faker';
+import {fakerFR as faker} from '@faker-js/faker';
 
 const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 
@@ -47,31 +47,31 @@ export default class BrandAddressData {
     this.brandName = brandAddressToCreate.brandName || '--';
 
     /** @type {string} Linked address firstname */
-    this.firstName = brandAddressToCreate.firstName || faker.name.firstName();
+    this.firstName = brandAddressToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Linked address lastname */
-    this.lastName = brandAddressToCreate.lastName || faker.name.lastName();
+    this.lastName = brandAddressToCreate.lastName || faker.person.lastName();
 
     /** @type {string} Address first line */
-    this.address = brandAddressToCreate.address || faker.address.streetAddress();
+    this.address = brandAddressToCreate.address || faker.location.streetAddress();
 
     /** @type {string} Address second line */
-    this.secondaryAddress = brandAddressToCreate.secondaryAddress || faker.address.secondaryAddress();
+    this.secondaryAddress = brandAddressToCreate.secondaryAddress || faker.location.secondaryAddress();
 
     /** @type {string} Address postal code (default to this format #####) */
-    this.postalCode = brandAddressToCreate.postalCode || faker.address.zipCode();
+    this.postalCode = brandAddressToCreate.postalCode || faker.location.zipCode();
 
     /** @type {string} Address city name */
-    this.city = brandAddressToCreate.city || faker.address.city();
+    this.city = brandAddressToCreate.city || faker.location.city();
 
     /** @type {string} Address country name */
     this.country = brandAddressToCreate.country || faker.helpers.arrayElement(countriesNames);
 
     /** @type {string} Home phone number linked to the address */
-    this.homePhone = brandAddressToCreate.homePhone || faker.phone.number('01########');
+    this.homePhone = brandAddressToCreate.homePhone || faker.phone.number();
 
     /** @type {string} Mobile phone number linked to the address */
-    this.mobilePhone = brandAddressToCreate.mobilePhone || faker.phone.number('06########');
+    this.mobilePhone = brandAddressToCreate.mobilePhone || faker.phone.number();
 
     /** @type {string} Other information to add on address */
     this.other = brandAddressToCreate.other || '';

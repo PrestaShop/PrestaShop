@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\BulkDeleteCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\BulkDeleteCartRuleException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 /**
  * Deletes cart rules in bulk action using legacy object model
  */
+#[AsCommandHandler]
 final class BulkDeleteCartRuleHandler extends AbstractCartRuleHandler implements BulkDeleteCartRuleHandlerInterface
 {
     /**

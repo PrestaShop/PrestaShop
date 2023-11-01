@@ -63,7 +63,7 @@ class CombinationItemType extends TranslatorAwareType
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var int
@@ -74,12 +74,12 @@ class CombinationItemType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         Currency $defaultCurrency,
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         int $contextShopId
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->contextShopId = $contextShopId;
     }
 
@@ -88,7 +88,7 @@ class CombinationItemType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($this->multistoreFeature->isActive()) {
+        if ($this->multiStoreFeature->isActive()) {
             $deleteItemMessage = $this->trans('Delete selected item from current store?', 'Admin.Notifications.Warning');
         } else {
             $deleteItemMessage = $this->trans('Delete selected item?', 'Admin.Notifications.Warning');
@@ -126,7 +126,7 @@ class CombinationItemType extends TranslatorAwareType
             ],
         ];
 
-        if ($this->multistoreFeature->isActive()) {
+        if ($this->multiStoreFeature->isActive()) {
             $actionButtons['delete_for_all_shops'] = [
                 'type' => IconButtonType::class,
                 'options' => [

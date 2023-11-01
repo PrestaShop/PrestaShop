@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -65,12 +65,12 @@ class AccessDeniedListener
     }
 
     /**
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
-        if (!$event->isMasterRequest()
-            || !$event->getException() instanceof AccessDeniedException
+        if (!$event->isMainRequest()
+            || !$event->getThrowable() instanceof AccessDeniedException
             || !$securityConfigurations = $event->getRequest()->attributes->get('_security')
         ) {
             return;

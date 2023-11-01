@@ -27,7 +27,7 @@
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.addressesInformation|length }}</span>
+    <span class="badge badge-primary rounded">{{ customerAddressGrid.data.records_total }}</span>
 
     <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right" 
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
@@ -39,9 +39,15 @@
     {% if customerAddressGrid.data.records_total > 0 %}
       {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerAddressGrid} %}
     {% else %}
-      <p class="text-muted text-center mb-0">
-        {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-      </p>
+      <div class="text-center">
+        <p class="text-muted mb-2">
+          {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+        </p> 
+        <a class="btn btn-primary" href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}">
+          <i class="material-icons">add_circle</i>
+          {{ 'Create address'|trans({}, 'Admin.Global') }}
+        </a>
+      </div>
     {% endif %}
   </div>
 </div>

@@ -30,11 +30,19 @@ namespace Tests\Integration\Adapter\SqlManager\QueryHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\DatabaseDump;
 
 class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
 {
+    /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
     /**
      * @var CommandBusInterface
      */
@@ -63,7 +71,39 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
     {
         self::bootKernel();
 
+        $this->queryBus = self::$container->get('prestashop.core.query_bus');
         $this->commandBus = self::$container->get('prestashop.core.command_bus');
+    }
+
+    public function testSensitiveDataAreHidden(): void
+    {
+        /** @var SqlRequestId $sqlRequestId */
+        $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT e.email, e.lastname, e.firstname, e.passwd FROM ps_employee e;'));
+        $query = new GetSqlRequestExecutionResult($sqlRequestId->getValue());
+        /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+        $sqlRequestExecutionResult = $this->queryBus->handle($query);
+        self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['passwd']);
+
+        /** @var SqlRequestId $sqlRequestId */
+        $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT e.email, e.lastname, e.firstname, e.passwd as "MyStrongPassword" FROM ps_employee e;'));
+        $query = new GetSqlRequestExecutionResult($sqlRequestId->getValue());
+        /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+        $sqlRequestExecutionResult = $this->queryBus->handle($query);
+        self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+
+        /** @var SqlRequestId $sqlRequestId */
+        $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT e.email, e.lastname, e.firstname, e.passwd as  `MyStrongPassword` FROM ps_employee e;'));
+        $query = new GetSqlRequestExecutionResult($sqlRequestId->getValue());
+        /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+        $sqlRequestExecutionResult = $this->queryBus->handle($query);
+        self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+
+        /** @var SqlRequestId $sqlRequestId */
+        $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT e.email, e.lastname, e.firstname, LOWER(LOWER(e.passwd)) as MyStrongPassword FROM ps_employee e;'));
+        $query = new GetSqlRequestExecutionResult($sqlRequestId->getValue());
+        /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+        $sqlRequestExecutionResult = $this->queryBus->handle($query);
+        self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
     }
 
     public function testUnauthorizedFunctionInSelect(): void

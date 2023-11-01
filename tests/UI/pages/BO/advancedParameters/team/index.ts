@@ -16,7 +16,7 @@ class Employees extends BOBasePage {
 
   private readonly addNewEmployeeLink: string;
 
-  private readonly profilesTab: string;
+  private readonly rolesTab: string;
 
   private readonly permissionsTab: string;
 
@@ -90,7 +90,7 @@ class Employees extends BOBasePage {
     // Selectors
     // Header links
     this.addNewEmployeeLink = '#page-header-desc-configuration-add[title=\'Add new employee\']';
-    this.profilesTab = '#subtab-AdminProfiles';
+    this.rolesTab = '#subtab-AdminProfiles';
     this.permissionsTab = '#subtab-AdminAccess';
 
     // List of employees
@@ -138,15 +138,6 @@ class Employees extends BOBasePage {
   /*
   Methods
    */
-  /**
-   * Go to Permissions tab
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async goToPermissionsTab(page: Page): Promise<boolean> {
-    await this.clickAndWaitForURL(page, this.permissionsTab);
-    return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
-  }
 
   // Header methods
   /**
@@ -160,12 +151,22 @@ class Employees extends BOBasePage {
 
   // Tab methods
   /**
-   * Go to Profiles page
+   * Go to roles page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToProfilesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.profilesTab);
+  async goToRolesPage(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, this.rolesTab);
+  }
+
+  /**
+   * Go to Permissions tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToPermissionsTab(page: Page): Promise<boolean> {
+    await this.clickAndWaitForURL(page, this.permissionsTab);
+    return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
   }
 
   // Columns methods
@@ -331,9 +332,10 @@ class Employees extends BOBasePage {
    * Enable / disable employees by Bulk Actions
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to bulk enable status, false if not
+   * @param getValidationMessage {boolean} True if we need to return validation message, false if error message
    * @returns {Promise<string>}
    */
-  async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
+  async bulkSetStatus(page: Page, enable: boolean = true, getValidationMessage: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
@@ -348,15 +350,19 @@ class Employees extends BOBasePage {
     await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     await this.elementNotVisible(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton, 2000);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    if (getValidationMessage) {
+      return this.getAlertSuccessBlockParagraphContent(page);
+    }
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
    * Delete all employees with Bulk Actions
    * @param page {Page} Browser tab
+   * @param getValidationMessage {boolean} True if we need to return validation message, false if error message
    * @returns {Promise<string>}
    */
-  async deleteBulkActions(page: Page): Promise<string> {
+  async deleteBulkActions(page: Page, getValidationMessage: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
@@ -375,7 +381,10 @@ class Employees extends BOBasePage {
     ]);
     await this.confirmDeleteEmployees(page);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    if (getValidationMessage) {
+      return this.getAlertSuccessBlockParagraphContent(page);
+    }
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   // Sort methods

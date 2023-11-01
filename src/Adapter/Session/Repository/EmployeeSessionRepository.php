@@ -144,7 +144,7 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
                 ->where('date_upd <= :dateUpdated')
                 ->setParameter('dateUpdated', $date->format('Y-m-d H:i:s'));
 
-            $qb->execute();
+            $qb->executeStatement();
         } catch (CoreException $e) {
             throw new CannotClearEmployeeSessionException();
         }

@@ -30,12 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateProductCombinationsHandlerInterface;
 
 /**
  * Handles @see GenerateProductCombinationsCommand using legacy object model
  */
+#[AsCommandHandler]
 final class GenerateProductCombinationsHandler implements GenerateProductCombinationsHandlerInterface
 {
     /**

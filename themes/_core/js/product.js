@@ -361,7 +361,7 @@ function showError($container, textError) {
   $container.replaceWith($error);
 }
 
-$(document).ready(() => {
+$(() => {
   const $productActions = $(prestashop.selectors.product.actions);
 
   // Listen on all form elements + those who have a data-product-attribute

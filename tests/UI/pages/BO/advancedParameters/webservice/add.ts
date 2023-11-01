@@ -34,8 +34,8 @@ class AddWebserviceKey extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Webservice •';
-    this.pageTitleEdit = 'Webservice •';
+    this.pageTitleCreate = `New webservice key • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing webservice key';
 
     // Selectors
     this.webserviceKeyInput = '#webservice_key_key';

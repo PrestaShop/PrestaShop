@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
-use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
@@ -43,7 +42,7 @@ class StockManager implements StockInterface
      * Gets available stock for a given product / combination / shop.
      *
      * @param object $product
-     * @param null $id_product_attribute
+     * @param int|null $id_product_attribute
      * @param int|null $id_shop
      *
      * @return StockAvailable
@@ -84,10 +83,17 @@ class StockManager implements StockInterface
      * Returns True if Stocks are managed by a module (or by legacy ASM).
      *
      * @return bool True if Stocks are managed by a module (or by legacy ASM)
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public function isAsmGloballyActivated()
     {
-        return (bool) (new ConfigurationAdapter())->get('PS_ADVANCED_STOCK_MANAGEMENT');
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return false;
     }
 
     /**
@@ -103,18 +109,26 @@ class StockManager implements StockInterface
     {
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
 
-        $updatePhysicalQuantityQuery = '
-            UPDATE {table_prefix}stock_available sa
+        $updatePhysicalQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
+
+        if ($idOrder) {
+            $updatePhysicalQuantityQuery .= '
+                INNER JOIN (
+                    SELECT product_id
+                    FROM {table_prefix}order_detail
+                    WHERE id_order = ' . (int) $idOrder . '
+                ) od 
+                ON sa.id_product = od.product_id
+            ';
+        }
+
+        $updatePhysicalQuantityQuery .= '
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
             WHERE sa.id_shop = ' . (int) $shopId . '
         ';
 
         if ($idProduct) {
             $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
-        }
-
-        if ($idOrder) {
-            $updatePhysicalQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = ' . (int) $idOrder . ')';
         }
 
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
@@ -133,8 +147,20 @@ class StockManager implements StockInterface
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
-        $updateReservedQuantityQuery = '
-            UPDATE {table_prefix}stock_available sa
+        $updateReservedQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
+
+        if ($idOrder) {
+            $updateReservedQuantityQuery .= '
+                INNER JOIN (
+                    SELECT product_id
+                    FROM {table_prefix}order_detail
+                    WHERE id_order = :order_id
+                ) od2
+                ON sa.id_product = od2.product_id
+            ';
+        }
+
+        $updateReservedQuantityQuery .= '
             SET sa.reserved_quantity = (
                 SELECT SUM(od.product_quantity - od.product_quantity_refunded)
                 FROM {table_prefix}orders o
@@ -166,7 +192,6 @@ class StockManager implements StockInterface
         }
 
         if ($idOrder) {
-            $updateReservedQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = :order_id)';
             $strParams[':order_id'] = (int) $idOrder;
         }
 
@@ -211,7 +236,7 @@ class StockManager implements StockInterface
      * @param int $productId
      * @param int $shopId Optional : gets context if null @see Context::getContext()
      *
-     * @return bool : depends on stock @see $depends_on_stock
+     * @return bool True if product is orderable when out of stock
      */
     public function outOfStock($productId, $shopId = null)
     {

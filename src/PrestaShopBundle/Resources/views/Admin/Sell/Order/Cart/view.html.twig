@@ -22,13 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% block cart_kpis %}
     {{ render(controller(
-      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      'PrestaShopBundle\\Controller\\Admin\\CommonController:renderKpiRowAction',
       { 'kpiRow': cartKpi }
     )) }}
   {% endblock %}

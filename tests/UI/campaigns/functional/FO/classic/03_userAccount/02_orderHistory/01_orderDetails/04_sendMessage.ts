@@ -11,14 +11,14 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
 import orderDetails from '@pages/FO/myAccount/orderDetails';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
 // Import data
@@ -69,7 +69,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -78,7 +78,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foHomePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -87,7 +87,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should create an order', async function () {
@@ -104,18 +104,18 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should sign out from FO', async function () {
@@ -124,7 +124,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await orderConfirmationPage.logout(page);
 
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 
@@ -143,24 +143,24 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should update order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
-      await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+      expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
     });
 
     it('disconnect from BO', async function () {
@@ -175,7 +175,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foHomePage.goToFo(page);
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -184,7 +184,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
     });
 
     it('Should sign in FO', async function () {
@@ -193,7 +193,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to order history page', async function () {
@@ -202,17 +202,17 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foHomePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('Go to order details ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page);
+      await orderHistoryPage.goToDetailsPage(page);
 
       const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
-      await expect(successMessageText).to.equal(orderDetails.successMessageText);
+      expect(successMessageText).to.equal(orderDetails.successMessageText);
     });
   });
 
@@ -231,42 +231,42 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
     it('should check customer name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-      await expect(email).to.contain(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
+      expect(email).to.contain(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
     });
 
     it('should check customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-      await expect(email).to.contain(Customers.johnDoe.email);
+      expect(email).to.contain(Customers.johnDoe.email);
     });
 
     it('should check message type', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessageType', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'cl!id_contact');
-      await expect(email).to.contain('--');
+      expect(email).to.contain('--');
     });
 
     it('should check message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'message');
-      await expect(email).to.contain(messageSend);
+      expect(email).to.contain(messageSend);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
       const textResult = await customerServicePage.deleteMessage(page, 1);
-      await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
 });

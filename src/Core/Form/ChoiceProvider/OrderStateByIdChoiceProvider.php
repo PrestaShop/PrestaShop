@@ -41,7 +41,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
     /**
      * @var int language ID
      */
-    private $languageId;
+    private $langId;
 
     /**
      * @var OrderStateDataProviderInterface
@@ -59,18 +59,18 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
     private $translator;
 
     /**
-     * @param int $languageId language ID
+     * @param int $langId language ID
      * @param OrderStateDataProviderInterface $orderStateDataProvider
      * @param ColorBrightnessCalculator $colorBrightnessCalculator
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        $languageId,
+        $langId,
         OrderStateDataProviderInterface $orderStateDataProvider,
         ColorBrightnessCalculator $colorBrightnessCalculator,
         TranslatorInterface $translator
     ) {
-        $this->languageId = $languageId;
+        $this->langId = $langId;
         $this->orderStateDataProvider = $orderStateDataProvider;
         $this->colorBrightnessCalculator = $colorBrightnessCalculator;
         $this->translator = $translator;
@@ -85,7 +85,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
      */
     public function getChoices(array $options = [])
     {
-        $orderStates = $this->orderStateDataProvider->getOrderStates($this->languageId);
+        $orderStates = $this->orderStateDataProvider->getOrderStates($this->langId);
         $choices = [];
 
         foreach ($orderStates as $orderState) {
@@ -106,7 +106,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
      */
     public function getChoicesAttributes()
     {
-        $orderStates = $this->orderStateDataProvider->getOrderStates($this->languageId);
+        $orderStates = $this->orderStateDataProvider->getOrderStates($this->langId);
         $attrs = [];
 
         foreach ($orderStates as $orderState) {

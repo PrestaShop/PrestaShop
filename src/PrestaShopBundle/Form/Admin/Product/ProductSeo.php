@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -35,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -50,11 +50,7 @@ class ProductSeo extends CommonAbstractType
      */
     public $context;
     /**
-     * @var array<int|Language>
-     */
-    private $locales;
-    /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     private $router;
     /**
@@ -69,11 +65,10 @@ class ProductSeo extends CommonAbstractType
      * @param LegacyContext $legacyContext
      * @param Router $router
      */
-    public function __construct($translator, $legacyContext, $router)
+    public function __construct(TranslatorInterface $translator, LegacyContext $legacyContext, UrlGeneratorInterface $router)
     {
         $this->translator = $translator;
         $this->context = $legacyContext;
-        $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
     }
 
@@ -84,6 +79,7 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $locales = $this->context->getLanguages();
         $remoteUrls = [
             RedirectType::TYPE_PRODUCT_PERMANENT => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY',
             RedirectType::TYPE_PRODUCT_TEMPORARY => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY',
@@ -105,7 +101,7 @@ class ProductSeo extends CommonAbstractType
                     ],
                     'required' => false,
                 ],
-                'locales' => $this->locales,
+                'locales' => $this->context->getLanguages(),
                 'hideTabs' => true,
                 'label' => $this->translator->trans('Meta title', [], 'Admin.Catalog.Feature'),
                 'label_attr' => [
@@ -130,7 +126,7 @@ class ProductSeo extends CommonAbstractType
                         ],
                         'required' => false,
                     ],
-                    'locales' => $this->locales,
+                    'locales' => $locales,
                     'hideTabs' => true,
                     'label' => $this->translator->trans('Meta description', [], 'Admin.Catalog.Feature'),
                     'label_attr' => [
@@ -151,7 +147,7 @@ class ProductSeo extends CommonAbstractType
                             'class' => 'serp-watched-url',
                         ],
                     ],
-                    'locales' => $this->locales,
+                    'locales' => $locales,
                     'hideTabs' => true,
                     'label' => $this->translator->trans('Friendly URL', [], 'Admin.Catalog.Feature'),
                 ]

@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -62,7 +62,7 @@ class ProductQuantity extends CommonAbstractType
      */
     public $locales;
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     private $router;
     /**
@@ -74,13 +74,13 @@ class ProductQuantity extends CommonAbstractType
      * Constructor.
      *
      * @param TranslatorInterface $translator
-     * @param Router $router
+     * @param UrlGeneratorInterface $router
      * @param LegacyContext $legacyContext
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
-        Router $router,
+        UrlGeneratorInterface $router,
         LegacyContext $legacyContext,
         ConfigurationInterface $configuration
     ) {
@@ -120,41 +120,8 @@ class ProductQuantity extends CommonAbstractType
                 ]
             )
             ->add(
-                'advanced_stock_management',
-                FormType\CheckboxType::class,
-                [
-                    'required' => false,
-                    'label' => $this->translator->trans(
-                        'I want to use the advanced stock management system for this product.',
-                        [],
-                        'Admin.Catalog.Feature'
-                    ),
-                ]
-            )
-            ->add(
                 'pack_stock_type',
                 FormType\ChoiceType::class
-            )//see eventListener for details
-            ->add(
-                'depends_on_stock',
-                FormType\ChoiceType::class,
-                [
-                    'choices' => [
-                        $this->translator->trans(
-                            'The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ',
-                            [],
-                            'Admin.Catalog.Feature'
-                        ) => 1,
-                        $this->translator->trans(
-                            'I want to specify available quantities manually.',
-                            [],
-                            'Admin.Catalog.Feature'
-                        ) => 0,
-                    ],
-                    'expanded' => true,
-                    'required' => true,
-                    'multiple' => false,
-                ]
             );
 
         if ($is_stock_management) {

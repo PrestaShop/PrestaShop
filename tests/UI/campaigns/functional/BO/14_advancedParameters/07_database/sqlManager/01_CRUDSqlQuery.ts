@@ -56,7 +56,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
     await sqlManagerPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
@@ -65,7 +65,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
     numberOfSQLQuery = await sqlManagerPage.resetAndGetNumberOfLines(page);
 
     if (numberOfSQLQuery !== 0) {
-      await expect(numberOfSQLQuery).to.be.above(0);
+      expect(numberOfSQLQuery).to.be.above(0);
     }
   });
 
@@ -76,14 +76,14 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.goToNewSQLQueryPage(page);
 
       const pageTitle = await addSqlQueryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+      expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
     });
 
     it('should create new SQL query', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewSQLQuery', baseContext);
 
       const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
-      await expect(textResult).to.equal(addSqlQueryPage.successfulCreationMessage);
+      expect(textResult).to.equal(addSqlQueryPage.successfulCreationMessage);
     });
   });
 
@@ -95,7 +95,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(sqlQueryName).to.contains(sqlQueryData.name);
+      expect(sqlQueryName).to.contains(sqlQueryData.name);
     });
 
     it('should click on view button', async function () {
@@ -104,7 +104,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.goToViewSQLQueryPage(page, 1);
 
       const pageTitle = await viewQueryManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewQueryManagerPage.pageTitle);
+      expect(pageTitle).to.contains(viewQueryManagerPage.pageTitle);
     });
 
     it('should check sql query result number', async function () {
@@ -135,7 +135,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       );
 
       const pageTitle = await sqlManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+      expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
@@ -145,7 +145,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(sqlQueryName).to.contains(sqlQueryData.name);
+      expect(sqlQueryName).to.contains(sqlQueryData.name);
     });
 
     it('should go to edit \'SQL Query\' page', async function () {
@@ -154,17 +154,17 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.goToEditSQLQueryPage(page, 1);
 
       const pageTitle = await addSqlQueryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+      expect(pageTitle).to.contains(addSqlQueryPage.editPageTitle);
     });
 
     it('should update SQL query', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateSQLQuery', baseContext);
 
       const textResult = await addSqlQueryPage.createEditSQLQuery(page, editSqlQueryData);
-      await expect(textResult).to.equal(addSqlQueryPage.successfulUpdateMessage);
+      expect(textResult).to.equal(addSqlQueryPage.successfulUpdateMessage);
 
       const numberOfSQLQueryAfterUpdate = await sqlManagerPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSQLQueryAfterUpdate).to.be.equal(numberOfSQLQuery + 1);
+      expect(numberOfSQLQueryAfterUpdate).to.be.equal(numberOfSQLQuery + 1);
     });
   });
 
@@ -176,7 +176,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.filterSQLQuery(page, 'name', editSqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(sqlQueryName).to.contains(editSqlQueryData.name);
+      expect(sqlQueryName).to.contains(editSqlQueryData.name);
     });
 
     it('should click on view button', async function () {
@@ -185,7 +185,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.goToViewSQLQueryPage(page, 1);
 
       const pageTitle = await viewQueryManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewQueryManagerPage.pageTitle);
+      expect(pageTitle).to.contains(viewQueryManagerPage.pageTitle);
     });
 
     it('should check sql query result number', async function () {
@@ -216,7 +216,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       );
 
       const pageTitle = await sqlManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+      expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
@@ -226,17 +226,17 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.filterSQLQuery(page, 'name', editSqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(sqlQueryName).to.contains(editSqlQueryData.name);
+      expect(sqlQueryName).to.contains(editSqlQueryData.name);
     });
 
     it('should delete SQL query', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSQLQuery', baseContext);
 
       const textResult = await sqlManagerPage.deleteSQLQuery(page, 1);
-      await expect(textResult).to.equal(sqlManagerPage.successfulDeleteMessage);
+      expect(textResult).to.equal(sqlManagerPage.successfulDeleteMessage);
 
       const numberOfSQLQueryAfterDelete = await sqlManagerPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSQLQueryAfterDelete).to.be.equal(numberOfSQLQuery);
+      expect(numberOfSQLQueryAfterDelete).to.be.equal(numberOfSQLQuery);
     });
   });
 });

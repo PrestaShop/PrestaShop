@@ -26,7 +26,8 @@
 
 namespace PrestaShopBundle\Security\Voter;
 
-use Access;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -36,21 +37,55 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class PageVoter extends Voter
 {
-    public const CREATE = 'create';
+    /**
+     * @deprecated since 9.0
+     */
+    public const CREATE = Permission::CREATE;
 
-    public const UPDATE = 'update';
+    /**
+     * @deprecated since 9.0
+     */
+    public const UPDATE = Permission::UPDATE;
 
-    public const DELETE = 'delete';
+    /**
+     * @deprecated since 9.0
+     */
+    public const DELETE = Permission::DELETE;
 
-    public const READ = 'read';
+    /**
+     * @deprecated since 9.0
+     */
+    public const READ = Permission::READ;
 
-    public const LEVEL_DELETE = 4;
+    /**
+     * @deprecated since 9.0
+     */
+    public const LEVEL_DELETE = Permission::LEVEL_DELETE;
 
-    public const LEVEL_UPDATE = 2;
+    /**
+     * @deprecated since 9.0
+     */
+    public const LEVEL_UPDATE = Permission::LEVEL_UPDATE;
 
-    public const LEVEL_CREATE = 3;
+    /**
+     * @deprecated since 9.0
+     */
+    public const LEVEL_CREATE = Permission::LEVEL_CREATE;
 
-    public const LEVEL_READ = 1;
+    /**
+     * @deprecated since 9.0
+     */
+    public const LEVEL_READ = Permission::LEVEL_READ;
+
+    /**
+     * @var AccessCheckerInterface
+     */
+    private $accessChecker;
+
+    public function __construct(AccessCheckerInterface $accessChecker)
+    {
+        $this->accessChecker = $accessChecker;
+    }
 
     /**
      * Indicates if this voter should pronounce on this attribute and subject.
@@ -60,9 +95,14 @@ class PageVoter extends Voter
      *
      * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
-        return in_array($attribute, [self::CREATE, self::UPDATE, self::DELETE, self::READ]);
+        return in_array($attribute, [
+            Permission::CREATE,
+            Permission::UPDATE,
+            Permission::DELETE,
+            Permission::READ,
+        ], true);
     }
 
     /**
@@ -72,29 +112,14 @@ class PageVoter extends Voter
      *
      * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         /** @var Employee $user */
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
-        $action = $this->buildAction($subject, $attribute);
+        $action = $this->buildAction((string) $subject, (string) $attribute);
 
-        return $this->can($action, $employeeProfileId);
-    }
-
-    /**
-     * Checks if the provided user profile is allowed to perform the requested action.
-     *
-     * @param string $action
-     * @param int $employeeProfileId
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
-    protected function can($action, $employeeProfileId)
-    {
-        return Access::isGranted('ROLE_MOD_TAB_' . strtoupper($action), $employeeProfileId);
+        return $this->accessChecker->isEmployeeGranted($action, (int) $employeeProfileId);
     }
 
     /**
@@ -105,12 +130,12 @@ class PageVoter extends Voter
      *
      * @return string
      */
-    private function buildAction($subject, $attribute)
+    private function buildAction(string $subject, string $attribute): string
     {
         $action = $subject;
 
         // add underscore to join if needed
-        if (substr($action, -1) !== '_') {
+        if (!str_ends_with($action, '_')) {
             $action .= '_';
         }
 

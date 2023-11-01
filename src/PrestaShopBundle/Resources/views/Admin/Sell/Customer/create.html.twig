@@ -22,10 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Creating a new Customer'|trans({}, 'Admin.Orderscustomers.Feature') %}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
@@ -36,4 +32,11 @@
   {{ parent() }}
 
   <script src="{{ asset('themes/new-theme/public/customer_form.bundle.js') }}"></script>
+  <script>
+    var data = {
+      defaultGroups: {{ defaultGroups|json_encode() }},
+      customerGroupId: {{ customerGroupId }},
+      guestGroupId: {{ guestGroupId }},
+    }
+  </script>
 {% endblock %}

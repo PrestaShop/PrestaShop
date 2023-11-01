@@ -173,7 +173,7 @@ class HeaderConfigurator implements ConfiguratorInterface
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
 
-        $controllerConfiguration->templateVars['bo_query'] = Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query')));
+        $controllerConfiguration->templateVars['bo_query'] = Tools::safeOutput(Tools::getValue('bo_query'));
         $controllerConfiguration->templateVars['collapse_menu'] = isset($this->cookie->collapse_menu) ? (int) $this->cookie->collapse_menu : 0;
         $controllerConfiguration->templateVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->getUser()->getData()->default_tab));
         $controllerConfiguration->templateVars['employee'] = $controllerConfiguration->getUser()->getData();
@@ -283,7 +283,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || !$tab['enabled']
-                || ($tab['class_name'] == 'AdminStock' && $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminStock'
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
 

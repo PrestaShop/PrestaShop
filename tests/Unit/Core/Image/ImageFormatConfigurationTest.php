@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Classes;
+namespace Tests\Unit\Core\Image;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -38,7 +38,7 @@ class ImageFormatConfigurationTest extends TestCase
     /**
      * Checks if format list given from configuration will be properly processed
      *
-     * @dataProvider getGenerationFormatsProvider
+     * @dataProvider dataProviderGetGenerationFormats
      *
      * @param string $confData
      * @param array $expectedResult
@@ -120,7 +120,7 @@ class ImageFormatConfigurationTest extends TestCase
     /**
      * @return array[]
      */
-    public function getGenerationFormatsProvider(): array
+    public function dataProviderGetGenerationFormats(): array
     {
         // @todo - remove this in 9.0.0 or after the test is aware of the feature flag
         return [

@@ -1,11 +1,7 @@
+# This file will be removed in next version, do not add any service here
 services:
-  _defaults:
-    public: true
-
+  # Deprecated in 9.0.0
   validator.unique.tinymce_max_length_validator:
-    class: PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator
-    arguments:
-      - "@prestashop.adapter.validate"
-      - "@translator"
-    tags:
-      - { name: validator.constraint_validator, alias: tinymce_max_length_validator }
+    alias: PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator
+    deprecated: ~
+    public: true

@@ -40,8 +40,8 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Finder\TranslationFinder;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -391,7 +391,7 @@ class ThemeManager implements AddonManagerInterface
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
-        foreach ($modules as $key => $moduleName) {
+        foreach ($modules as $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)
                 && !$moduleManager->install($moduleName)
             ) {
@@ -459,7 +459,7 @@ class ThemeManager implements AddonManagerInterface
     private function installFromZip($source)
     {
         /** @var Finder $finderClass */
-        $finderClass = get_class($this->finder);
+        $finderClass = $this->finder::class;
         $this->finder = $finderClass::create();
 
         $sandboxPath = $this->getSandboxPath();

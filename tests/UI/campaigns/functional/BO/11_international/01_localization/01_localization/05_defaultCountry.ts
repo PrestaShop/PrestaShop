@@ -61,14 +61,14 @@ describe('BO - International - Localization : Update default country', async () 
         );
 
         const pageTitle = await localizationPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(localizationPage.pageTitle);
+        expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       it(`should set default country to '${country}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCountry${index}`, baseContext);
 
         const textResult = await localizationPage.setDefaultCountry(page, country);
-        await expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+        expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to addresses page', async function () {
@@ -81,7 +81,7 @@ describe('BO - International - Localization : Update default country', async () 
         );
 
         const pageTitle = await addressesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addressesPage.pageTitle);
+        expect(pageTitle).to.contains(addressesPage.pageTitle);
       });
 
       it('should go to add new address page', async function () {
@@ -90,14 +90,14 @@ describe('BO - International - Localization : Update default country', async () 
         await addressesPage.goToAddNewAddressPage(page);
 
         const pageTitle = await addAddressPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
       });
 
       it('should check default country', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkSelectedCountry${index}`, baseContext);
 
         const selectedCountry = await addAddressPage.getSelectedCountry(page);
-        await expect(selectedCountry).to.equal(country);
+        expect(selectedCountry).to.equal(country);
       });
     });
   });

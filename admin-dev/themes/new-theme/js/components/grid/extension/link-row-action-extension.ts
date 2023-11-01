@@ -86,17 +86,17 @@ export default class LinkRowActionExtension {
             $parentCell,
           );
           let isDragging = false;
-          clickableCells.addClass('cursor-pointer').mousedown(() => {
-            $(window).mousemove(() => {
+          clickableCells.addClass('cursor-pointer').on('mousedown', () => {
+            $(window).on('mousemove', () => {
               isDragging = true;
-              $(window).unbind('mousemove');
+              $(window).off('mousemove');
             });
           });
 
-          clickableCells.mouseup(() => {
+          clickableCells.on('mouseup', () => {
             const wasDragging = isDragging;
             isDragging = false;
-            $(window).unbind('mousemove');
+            $(window).off('mousemove');
 
             if (!wasDragging) {
               const confirmMessage = $rowAction.data('confirm-message');

@@ -13,6 +13,10 @@ import type {Page} from 'playwright';
 class AddCurrency extends LocalizationBasePage {
   public readonly pageTitle: string;
 
+  public readonly pageTitleEdit: (currency: string) => string;
+
+  public readonly editCurrencyPage: string;
+
   public readonly resetCurrencyFormatMessage: string;
 
   private readonly currencySelect: string;
@@ -66,7 +70,9 @@ class AddCurrency extends LocalizationBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Currencies • ';
+    this.pageTitle = `New currency • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (currency: string) => `Editing currency ${currency} • ${global.INSTALL.SHOP_NAME}`;
+    this.editCurrencyPage = 'Editing currency';
     this.resetCurrencyFormatMessage = 'Your symbol and format customizations have been successfully reset for this language.';
 
     // Selectors

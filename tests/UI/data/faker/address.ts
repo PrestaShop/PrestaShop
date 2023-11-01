@@ -4,7 +4,7 @@ import type CountryData from '@data/faker/country';
 import type StateData from '@data/faker/state';
 import type AddressCreator from '@data/types/address';
 
-import {faker} from '@faker-js/faker';
+import {fakerFR as faker} from '@faker-js/faker';
 
 const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 const statesNames: string[] = Object.values(States).map((state: StateData) => state.name);
@@ -60,19 +60,25 @@ export default class AddressData {
     this.name = addressToCreate.name || faker.word.noun();
 
     /** @type {string} Customer firstname */
-    this.firstName = addressToCreate.firstName || faker.name.firstName();
+    this.firstName = addressToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Customer lastname */
-    this.lastName = addressToCreate.lastName || faker.name.lastName();
+    this.lastName = addressToCreate.lastName || faker.person.lastName();
 
     /** @type {string} Related customer email */
-    this.email = addressToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
+    this.email = addressToCreate.email || faker.internet.email(
+      {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        provider: 'prestashop.com',
+      },
+    );
 
     /** @type {string} Tax identification number of the customer */
     this.dni = addressToCreate.dni || '';
 
     /** @type {string} Address alias or name */
-    this.alias = addressToCreate.alias || faker.address.streetAddress();
+    this.alias = addressToCreate.alias || faker.location.streetAddress().substring(0, 30);
 
     /** @type {string} Company name if it's a company address */
     this.company = (addressToCreate.company || faker.company.name()).substring(0, 63);
@@ -81,16 +87,16 @@ export default class AddressData {
     this.vatNumber = addressToCreate.vatNumber || '';
 
     /** @type {string} Address first line */
-    this.address = addressToCreate.address || faker.address.streetAddress();
+    this.address = addressToCreate.address || faker.location.streetAddress();
 
     /** @type {string} Address second line */
-    this.secondAddress = addressToCreate.secondAddress || faker.address.secondaryAddress();
+    this.secondAddress = addressToCreate.secondAddress || faker.location.secondaryAddress();
 
     /** @type {string} Address postal code (default to this format #####) */
-    this.postalCode = addressToCreate.postalCode || faker.address.zipCode('#####');
+    this.postalCode = addressToCreate.postalCode || faker.location.zipCode('#####');
 
     /** @type {string} Address city name */
-    this.city = addressToCreate.city || faker.address.city();
+    this.city = addressToCreate.city || faker.location.city();
 
     /** @type {string} Address country name */
     this.country = addressToCreate.country || faker.helpers.arrayElement(countriesNames);
@@ -99,7 +105,7 @@ export default class AddressData {
     this.state = addressToCreate.state || faker.helpers.arrayElement(statesNames);
 
     /** @type {string} Phone number */
-    this.phone = addressToCreate.phone || faker.phone.number('01########');
+    this.phone = addressToCreate.phone || faker.phone.number();
 
     /** @type {string} Other information to add on address */
     this.other = addressToCreate.other || '';

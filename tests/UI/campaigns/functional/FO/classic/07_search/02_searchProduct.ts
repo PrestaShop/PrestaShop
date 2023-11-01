@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import Products from '@data/demo/products';
@@ -42,17 +42,17 @@ describe('FO - Search Page : Search a product and validate', async () => {
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should check autocomplete', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocomplete', baseContext);
 
     const numResults = await homePage.countAutocompleteSearchResult(page, Products.demo_8.name);
-    await expect(numResults).equal(3);
+    expect(numResults).equal(3);
 
     const results = await homePage.getAutocompleteSearchResult(page, Products.demo_8.name);
-    await expect(results).contains('notebook');
+    expect(results).contains('notebook');
   });
 
   it('should choose product on the autocomplete list', async function () {
@@ -61,10 +61,10 @@ describe('FO - Search Page : Search a product and validate', async () => {
     await homePage.clickAutocompleteSearchResult(page, Products.demo_8.name, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(Products.demo_8.name);
+    expect(pageTitle).to.contains(Products.demo_8.name);
 
     const inputValue = await homePage.getSearchValue(page);
-    await expect(inputValue).is.empty;
+    expect(inputValue).to.have.lengthOf(0);
   });
 
   it('should click on logo link and go to home page', async function () {
@@ -73,7 +73,7 @@ describe('FO - Search Page : Search a product and validate', async () => {
     await homePage.clickOnHeaderLink(page, 'Logo');
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should click on Enter in autocomplete list', async function () {
@@ -82,9 +82,9 @@ describe('FO - Search Page : Search a product and validate', async () => {
     await homePage.searchProduct(page, Products.demo_8.name);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
 
     const inputValue = await searchResultsPage.getSearchValue(page);
-    await expect(inputValue).is.equal(Products.demo_8.name);
+    expect(inputValue).is.equal(Products.demo_8.name);
   });
 });

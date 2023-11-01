@@ -64,7 +64,7 @@
 	</form>
 </div>
 <script type="text/javascript">
-	$(document).ready(function() {
+	$(function() {
 		if ($("form#calendar_form .datepicker").length > 0)
 			$("form#calendar_form .datepicker").datepicker({
 				prevText: '',

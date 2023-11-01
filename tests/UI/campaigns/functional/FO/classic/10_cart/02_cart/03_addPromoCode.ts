@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 
 // Import commonTests
@@ -53,7 +53,7 @@ describe('FO - cart : Add promo code', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
@@ -63,7 +63,7 @@ describe('FO - cart : Add promo code', async () => {
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(cartPage.pageTitle);
+      expect(pageTitle).to.eq(cartPage.pageTitle);
     });
 
     it('should add the promo code and check the total', async function () {
@@ -72,21 +72,21 @@ describe('FO - cart : Add promo code', async () => {
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
       const isVisible = await cartPage.isCartRuleNameVisible(page);
-      await expect(isVisible).to.be.true;
+      expect(isVisible).to.eq(true);
     });
 
     it('should check the cart rule name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleName', baseContext);
 
       const cartRuleName = await cartPage.getCartRuleName(page);
-      await expect(cartRuleName).to.equal(newCartRuleData.name);
+      expect(cartRuleName).to.equal(newCartRuleData.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
       const totalBeforeDiscount = await cartPage.getDiscountValue(page);
-      await expect(totalBeforeDiscount).to.eq(-newCartRuleData.discountAmount!.value);
+      expect(totalBeforeDiscount).to.eq(-newCartRuleData.discountAmount!.value);
     });
 
     it('should set the same promo code and check the error message', async function () {
@@ -95,10 +95,10 @@ describe('FO - cart : Add promo code', async () => {
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
       const isVisible = await cartPage.isCartRuleNameVisible(page, 2);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
 
       const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-      await expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyInYourCartErrorText);
+      expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyInYourCartErrorText);
     });
 
     it('should set a not existing promo code and check the error message', async function () {
@@ -107,10 +107,10 @@ describe('FO - cart : Add promo code', async () => {
       await cartPage.addPromoCode(page, 'reduction', false);
 
       const isVisible = await cartPage.isCartRuleNameVisible(page, 2);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
 
       const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-      await expect(voucherErrorText).to.equal(cartPage.cartRuleNotExistingErrorText);
+      expect(voucherErrorText).to.equal(cartPage.cartRuleNotExistingErrorText);
     });
 
     it('should leave the promo code input blanc and check the error message', async function () {
@@ -119,7 +119,7 @@ describe('FO - cart : Add promo code', async () => {
       await cartPage.addPromoCode(page, '', false);
 
       const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-      await expect(voucherErrorText).to.equal(cartPage.cartRuleMustEnterVoucherErrorText);
+      expect(voucherErrorText).to.equal(cartPage.cartRuleMustEnterVoucherErrorText);
     });
   });
 

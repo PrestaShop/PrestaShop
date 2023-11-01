@@ -98,10 +98,9 @@ class AdminProductsController extends AdminProductsControllerCore
             'Attachments' => $this->l('Attachments'),
             'Quantities' => $this->l('Quantities'),
             'Suppliers' => $this->l('Suppliers'),
-            'Warehouses' => $this->l('Warehouses'),
         ];
 
-        $this->available_tabs = ['Quantities' => 6, 'Warehouses' => 14];
+        $this->available_tabs = ['Quantities' => 6];
         if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
             $this->available_tabs = array_merge($this->available_tabs, [
                 'Informations' => 0,

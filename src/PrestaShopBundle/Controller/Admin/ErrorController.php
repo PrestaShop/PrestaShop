@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Manages Error pages (e.g. 500)
  */
-class ErrorController extends FrameworkBundleAdminController
+class ErrorController extends PrestaShopAdminController
 {
     /**
      * Enables debug mode from error page (500 for example)
@@ -47,9 +47,9 @@ class ErrorController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function enableDebugModeAction(Request $request)
+    public function enableDebugModeAction(Request $request): RedirectResponse
     {
-        $this->getCommandBus()->handle(new SwitchDebugModeCommand(true));
+        $this->dispatchCommand(new SwitchDebugModeCommand(true));
 
         return $this->redirect(
             $request->request->get('_redirect_url')

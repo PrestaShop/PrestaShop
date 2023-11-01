@@ -39,7 +39,7 @@ import FiltersSubmitButtonEnablerExtension
 
 const {$} = window;
 
-$(document).ready(() => {
+$(() => {
   const grid = new Grid('language');
 
   grid.addExtension(new ReloadListActionExtension());

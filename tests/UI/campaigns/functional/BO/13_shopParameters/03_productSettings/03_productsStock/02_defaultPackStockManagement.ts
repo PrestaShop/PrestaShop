@@ -4,13 +4,8 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
@@ -19,10 +14,10 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -38,10 +33,10 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstProductData: ProductData = new ProductData({type: 'Standard product', quantity: 40, reference: 'demo_test1'});
-  const secondProductData: ProductData = new ProductData({type: 'Standard product', quantity: 30, reference: 'demo_test2'});
+  const firstProductData: ProductData = new ProductData({type: 'standard', quantity: 40, reference: 'demo_test1'});
+  const secondProductData: ProductData = new ProductData({type: 'standard', quantity: 30, reference: 'demo_test2'});
   const productPackData: ProductData = new ProductData({
-    type: 'Pack of products',
+    type: 'pack',
     quantity: 15,
     pack: [
       {
@@ -54,9 +49,6 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       },
     ],
   });
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -90,16 +82,32 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         await productsPage.closeSfToolBar(page);
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
+      });
+
+      it('should click on \'New product\' button and check new product modal', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${index}`, baseContext);
+
+        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.equal(true);
+      });
+
+      it('should select product type and click on add new product button', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `selectProductType${index}`, baseContext);
+
+        await productsPage.selectProductType(page, test.args.productToCreate.type);
+
+        await productsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await addProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
       });
 
       it('should go to create product page and create a product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
-        await productsPage.goToAddProductPage(page);
-
-        const validationMessage = await addProductPage.createEditBasicProduct(page, test.args.productToCreate);
-        await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+        const validationMessage = await addProductPage.setProduct(page, test.args.productToCreate);
+        expect(validationMessage).to.equal(addProductPage.successfulUpdateMessage);
       });
     });
   });
@@ -143,14 +151,14 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           );
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
 
         it(`should choose the Default pack stock management '${test.args.option}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `stockManagementOption${index}`, baseContext);
 
           const result = await productSettingsPage.setDefaultPackStockManagement(page, test.args.option);
-          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
@@ -160,7 +168,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await foHomePage.changeLanguage(page, 'en');
 
           const isFoHomePage = await foHomePage.isHomePage(page);
-          await expect(isFoHomePage, 'Fail to open FO home page').to.be.true;
+          expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to login page', async function () {
@@ -169,7 +177,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await foHomePage.goToLoginPage(page);
 
           const pageTitle = await foLoginPage.getPageTitle(page);
-          await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+          expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
         });
 
         it('should sign in with default customer', async function () {
@@ -178,7 +186,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await foLoginPage.customerLogin(page, Customers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+          expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should create an order', async function () {
@@ -199,18 +207,18 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
 
           // Address step - Go to delivery step
           const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-          await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+          expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
           // Delivery step - Go to payment step
           const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-          await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+          expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
           // Payment step - Choose payment step
           await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
@@ -219,7 +227,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await orderConfirmationPage.logout(page);
 
           const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+          expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
         it('should go back to BO', async function () {
@@ -228,7 +236,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           page = await foProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
 
         it('should go to \'Catalog > Products\' page', async function () {
@@ -241,37 +249,37 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           );
 
           const pageTitle = await productsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productsPage.pageTitle);
+          expect(pageTitle).to.contains(productsPage.pageTitle);
         });
 
         it('should search for the pack of products and check the quantity', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `filterPackProductByName${index}`, baseContext);
 
           await productsPage.resetFilter(page);
-          await productsPage.filterProducts(page, 'name', productPackData.name);
+          await productsPage.filterProducts(page, 'product_name', productPackData.name);
 
-          const packQuantity = await productsPage.getProductQuantityFromList(page, 1);
-          await expect(packQuantity).to.equal(test.args.packQuantity);
+          const packQuantity = await productsPage.getTextColumn(page, 'quantity', 1);
+          expect(packQuantity).to.equal(test.args.packQuantity);
         });
 
         it('should search for the first product in the pack and check the quantity', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `filterFirstProductByName${index}`, baseContext);
 
           await productsPage.resetFilter(page);
-          await productsPage.filterProducts(page, 'name', firstProductData.name);
+          await productsPage.filterProducts(page, 'product_name', firstProductData.name);
 
-          const packQuantity = await productsPage.getProductQuantityFromList(page, 1);
-          await expect(packQuantity).to.equal(test.args.firstProductQuantity);
+          const packQuantity = await productsPage.getTextColumn(page, 'quantity', 1);
+          expect(packQuantity).to.equal(test.args.firstProductQuantity);
         });
 
         it('should search for the second product in the pack and check the quantity', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `filterSecondProductByName${index}`, baseContext);
 
           await productsPage.resetFilter(page);
-          await productsPage.filterProducts(page, 'name', secondProductData.name);
+          await productsPage.filterProducts(page, 'product_name', secondProductData.name);
 
-          const packQuantity = await productsPage.getProductQuantityFromList(page, 1);
-          await expect(packQuantity).to.equal(test.args.secondProductQuantity);
+          const packQuantity = await productsPage.getTextColumn(page, 'quantity', 1);
+          expect(packQuantity).to.equal(test.args.secondProductQuantity);
         });
       });
     });
@@ -288,7 +296,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       );
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     const tests = [
@@ -301,21 +309,21 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
 
         await productsPage.resetFilter(page);
-        await productsPage.filterProducts(page, 'name', test.args.productToCreate.name);
+        await productsPage.filterProducts(page, 'product_name', test.args.productToCreate.name);
 
-        const deleteTextResult = await productsPage.deleteProduct(page, test.args.productToCreate);
-        await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+        const isModalVisible = await productsPage.clickOnDeleteProductButton(page);
+        expect(isModalVisible).to.be.equal(true);
+
+        const textMessage = await productsPage.clickOnConfirmDialogButton(page);
+        expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilters${index}`, baseContext);
 
         const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProducts).to.be.above(0);
+        expect(numberOfProducts).to.be.above(0);
       });
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

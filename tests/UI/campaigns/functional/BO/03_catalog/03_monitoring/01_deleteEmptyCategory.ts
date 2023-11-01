@@ -64,14 +64,14 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
     await categoriesPage.closeSfToolBar(page);
 
     const pageTitle = await categoriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+    expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCategories).to.be.above(0);
+    expect(numberOfCategories).to.be.above(0);
   });
 
   describe('Create empty category in BO', async () => {
@@ -81,17 +81,17 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
       await categoriesPage.goToAddNewCategoryPage(page);
 
       const pageTitle = await addCategoryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
     });
 
     it('should create category and check the categories number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCategory', baseContext);
 
       const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
-      await expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
+      expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
 
       const numberOfCategoriesAfterCreation = await categoriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
+      expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
   });
 
@@ -106,10 +106,10 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
       );
 
       const pageTitle = await monitoringPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+      expect(pageTitle).to.contains(monitoringPage.pageTitle);
 
       numberOfEmptyCategories = await monitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
-      await expect(numberOfEmptyCategories).to.be.at.least(1);
+      expect(numberOfEmptyCategories).to.be.at.least(1);
     });
 
     it(`should filter categories by Name ${createCategoryData.name}`, async function () {
@@ -124,14 +124,14 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
       );
 
       const textColumn = await monitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
-      await expect(textColumn).to.contains(createCategoryData.name);
+      expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should reset filter in empty categories grid', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetInMonitoringPage', baseContext);
 
       numberOfEmptyCategories = await monitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
-      await expect(numberOfEmptyCategories).to.be.at.least(1);
+      expect(numberOfEmptyCategories).to.be.at.least(1);
     });
   });
 
@@ -148,24 +148,24 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
       );
 
       const textColumn = await monitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
-      await expect(textColumn).to.contains(createCategoryData.name);
+      expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should delete category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCategory', baseContext);
 
       const textResult = await monitoringPage.deleteCategoryInGrid(page, 'empty_category', 1, 1);
-      await expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
+      expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
     it('should reset filter check number of categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfCategoriesAfterDelete = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfCategories);
+      expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfCategories);
     });
   });
 });

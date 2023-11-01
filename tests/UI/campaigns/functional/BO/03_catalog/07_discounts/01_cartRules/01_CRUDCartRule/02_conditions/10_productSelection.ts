@@ -13,11 +13,11 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
 import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -79,7 +79,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -88,14 +88,14 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
 
     it('should view my shop', async function () {
@@ -105,7 +105,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
 
@@ -116,7 +116,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.eq(loginPage.pageTitle);
+      expect(pageTitle).to.eq(loginPage.pageTitle);
     });
 
     it('should login', async function () {
@@ -125,7 +125,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await loginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
     });
 
     it(`should search for the product '${Products.demo_8.name}' and go to product page`, async function () {
@@ -135,7 +135,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(Products.demo_8.name);
+      expect(pageTitle).to.contains(Products.demo_8.name);
     });
 
     it('should add the product to cart and click on continue shopping', async function () {
@@ -145,7 +145,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await productPage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add the first product to the cart by quick view', async function () {
@@ -154,7 +154,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await homePage.addProductToCartByQuickView(page, 1);
 
       const isNotVisible = await homePage.continueShopping(page);
-      await expect(isNotVisible).to.be.true;
+      expect(isNotVisible).to.eq(true);
     });
 
     it('should add the second product to the cart by quick view', async function () {
@@ -165,7 +165,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       // Check number of products in cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.eq(3);
+      expect(notificationsNumber).to.eq(3);
     });
 
     it('should add the promo code and check the cart rule name', async function () {
@@ -174,7 +174,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
       const cartRuleName = await cartPage.getCartRuleName(page, 1);
-      await expect(cartRuleName).to.eq(newCartRuleData.name);
+      expect(cartRuleName).to.eq(newCartRuleData.name);
     });
 
     it('should check the discount value', async function () {
@@ -185,7 +185,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
-      await expect(discountValue).to.eq(-discount.toFixed(2));
+      expect(discountValue).to.eq(-discount.toFixed(2));
     });
 
     it('should delete the second product from the cart', async function () {
@@ -194,7 +194,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await cartPage.deleteProduct(page, 2);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.eq(2);
+      expect(notificationNumber).to.eq(2);
     });
 
     it('should check the discount value', async function () {
@@ -205,7 +205,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
-      await expect(discountValue).to.eq(-discount.toFixed(2));
+      expect(discountValue).to.eq(-discount.toFixed(2));
     });
 
     it(`should delete the product '${Products.demo_8.name}' from the cart`, async function () {
@@ -214,14 +214,14 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.eq(1);
+      expect(notificationNumber).to.eq(1);
     });
 
     it('should check that no discount is applied to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
 
       const isVisible = await cartPage.isCartRuleNameVisible(page);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
     });
 
     it('should delete the last product from the cart', async function () {
@@ -230,7 +230,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.eq(0);
+      expect(notificationNumber).to.eq(0);
     });
   });
 

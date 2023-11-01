@@ -1457,12 +1457,12 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * For a given {product, warehouse}, gets the carrier available.
+     * For a given product, gets the carrier available.
      *
      * @since 1.5.0
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight
-     * @param int|null $id_warehouse Warehouse ID
+     * @param int|null $id_warehouse Warehouse ID - not used anymore
      * @param int|null $id_address_delivery Delivery Address ID
      * @param int|null$id_shop Shop ID
      * @param CartCore|null $cart Cart object
@@ -1472,7 +1472,7 @@ class CarrierCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = [])
+    public static function getAvailableCarrierList(Product $product, $id_warehouse = 0, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = [])
     {
         static $ps_country_default = null;
 
@@ -1537,13 +1537,6 @@ class CarrierCore extends ObjectModel
             }//no linked carrier are available for this zone
         }
 
-        // The product is not directly linked with a carrier
-        // Get all the carriers linked to a warehouse
-        if ($id_warehouse) {
-            $warehouse = new Warehouse($id_warehouse);
-            $warehouse_carrier_list = $warehouse->getCarriers();
-        }
-
         $available_carrier_list = [];
         $cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_' . (int) $id_zone . '-' . (int) $cart->id;
         if (!Cache::isStored($cache_id)) {
@@ -1565,10 +1558,6 @@ class CarrierCore extends ObjectModel
             $carrier_list = array_intersect($available_carrier_list, $carrier_list);
         } else {
             $carrier_list = $available_carrier_list;
-        }
-
-        if (isset($warehouse_carrier_list)) {
-            $carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);
         }
 
         $cart_quantity = 0;

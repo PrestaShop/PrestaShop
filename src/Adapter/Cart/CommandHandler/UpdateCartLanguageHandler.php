@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -39,6 +40,7 @@ use PrestaShopException;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateCartLanguageHandler extends AbstractCartHandler implements UpdateCartLanguageHandlerInterface
 {
     /**

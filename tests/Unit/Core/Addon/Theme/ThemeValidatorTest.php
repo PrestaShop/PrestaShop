@@ -91,6 +91,12 @@ class ThemeValidatorTest extends TestCase
         $themeDir = __DIR__ . '/../../../../Resources/themes/minimal-' . $name . '-theme/';
         $themeConfigFile = $themeDir . 'config/theme.yml';
 
+        try {
+            $themeConfigContent = file_get_contents($themeConfigFile);
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException(sprintf('Unable to read theme config file %s', $themeConfigFile));
+        }
+
         $config = (new Parser())->parse(file_get_contents($themeConfigFile));
         $config['directory'] = $themeDir;
         $config['physical_uri'] = '/';

@@ -43,6 +43,8 @@ class ViewCustomer extends BOBasePage {
 
   private readonly forwardModalSendButton: string;
 
+  private readonly forwardModalEmailInput: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on view customer service page
@@ -67,6 +69,7 @@ class ViewCustomer extends BOBasePage {
     this.ordersAndMessagesBlock = '#orders-and-messages-block';
     this.forwardMessageModal = '#myModal';
     this.forwardModalEmployeeIDSelect = `${this.forwardMessageModal} select[name='id_employee_forward']`;
+    this.forwardModalEmailInput = '#message_forward_email input[type=email]';
     this.forwardModalCommentInput = `${this.forwardMessageModal} textarea[name='message_forward']`;
     this.forwardModalSendButton = `${this.forwardMessageModal} div.modal-footer button.btn.btn-primary`;
   }
@@ -170,6 +173,9 @@ class ViewCustomer extends BOBasePage {
   async forwardMessage(page: Page, messageData: MessageData): Promise<void> {
     await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employeeName);
     await this.setValue(page, this.forwardModalCommentInput, messageData.message);
+    if (await this.elementVisible(page, this.forwardModalEmailInput, 2000)) {
+      await this.setValue(page, this.forwardModalEmailInput, messageData.emailAddress);
+    }
 
     await this.waitForSelectorAndClick(page, this.forwardModalSendButton);
   }
@@ -180,7 +186,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getYourAnswerFormTitle(page: Page): Promise<string> {
+  async getYourAnswerFormTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.yourAnswerFormTitle);
   }
 
@@ -189,7 +195,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getYourAnswerFormContent(page: Page): Promise<string> {
+  async getYourAnswerFormContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.yourAnswerFormTextarea);
   }
 

@@ -35,9 +35,9 @@ class AddOrderMessage extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new';
-    this.pageTitleEdit = 'Edit:';
-    this.pageTitleView = 'View';
+    this.pageTitle = `New order message • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing message';
+    this.pageTitleView = 'Customer thread';
 
     // Selectors
     this.nameLangButton = '#order_message_name_dropdown';

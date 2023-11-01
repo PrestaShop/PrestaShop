@@ -104,7 +104,7 @@ class DiscountControllerCore extends FrontController
      *
      * @return mixed
      */
-    protected function getCombinableVoucherTranslation($voucher)
+    protected function getCombinableVoucherTranslation(array $voucher)
     {
         if ($voucher['cart_rule_restriction']) {
             $combinableVoucherTranslation = $this->trans('No', [], 'Shop.Theme.Global');
@@ -116,13 +116,15 @@ class DiscountControllerCore extends FrontController
     }
 
     /**
+     * Formats a value of a voucher with fixed reduction
+     *
      * @param bool $hasTaxIncluded
      * @param float $amount
      * @param int $currencyId
      *
      * @return string
      */
-    protected function formatReductionAmount($hasTaxIncluded, $amount, $currencyId)
+    protected function formatReductionAmount(bool $hasTaxIncluded, float $amount, int $currencyId)
     {
         if ($hasTaxIncluded) {
             $taxTranslation = $this->trans('Tax included', [], 'Shop.Theme.Checkout');
@@ -137,32 +139,36 @@ class DiscountControllerCore extends FrontController
     }
 
     /**
+     * Formats a value of a voucher with percentage reduction
+     *
      * @param float $percentage
      *
      * @return string
      */
-    protected function formatReductionInPercentage($percentage)
+    protected function formatReductionInPercentage(float $percentage)
     {
-        return sprintf('%s%%', $percentage);
+        return sprintf('%s%%', $this->context->getCurrentLocale()->formatNumber($percentage));
     }
 
     /**
+     * Formats all reductions and benefits of a voucher. (One voucher can provide a discount and gift at the same time.)
+     *
      * @param array $voucher
      *
      * @return array
      */
-    protected function accumulateCartRuleValue($voucher)
+    protected function accumulateCartRuleValue(array $voucher)
     {
         $cartRuleValue = [];
 
         if ($voucher['reduction_percent'] > 0) {
-            $cartRuleValue[] = $this->formatReductionInPercentage($voucher['reduction_percent']);
+            $cartRuleValue[] = $this->formatReductionInPercentage((float) $voucher['reduction_percent']);
         }
 
         if ($voucher['reduction_amount'] > 0) {
             $cartRuleValue[] = $this->formatReductionAmount(
-                $voucher['reduction_tax'],
-                $voucher['reduction_amount'],
+                (bool) $voucher['reduction_tax'],
+                (float) $voucher['reduction_amount'],
                 $voucher['reduction_currency']
             );
         }
@@ -182,6 +188,8 @@ class DiscountControllerCore extends FrontController
     }
 
     /**
+     * Prepares a single row of voucher table to show it to customer.
+     *
      * @param array $voucher
      *
      * @return array
@@ -201,8 +209,11 @@ class DiscountControllerCore extends FrontController
 
         $voucher['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
 
+        // Get all benefits of this voucher into array (discount, gift, free shipping etc.)
         $cartRuleValues = $this->accumulateCartRuleValue($voucher);
 
+        // And combine them into a string
+        // If for some magical reason the voucher has no benefit (should not be achievable in BO), we display a dash
         if (0 === count($cartRuleValues)) {
             $voucher['value'] = '-';
         } else {

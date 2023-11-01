@@ -52,11 +52,11 @@ function confirm_modal(
       + '</div>'
       + '</div>',
   );
-  confirmModal.find('#confirm-modal-left-button').click(() => {
+  confirmModal.find('#confirm-modal-left-button').on('click', () => {
     leftButtonCallback();
     confirmModal.modal('hide');
   });
-  confirmModal.find('#confirm-modal-right-button').click(() => {
+  confirmModal.find('#confirm-modal-right-button').on('click', () => {
     rightButtonCallback();
     confirmModal.modal('hide');
   });
@@ -85,7 +85,7 @@ function error_modal(heading, msg) {
       + '</div>'
       + '</div>',
   );
-  errorModal.find('#error_modal_right_button').click(() => {
+  errorModal.find('#error_modal_right_button').on('click', () => {
     errorModal.modal('hide');
   });
   errorModal.modal('show');
@@ -110,7 +110,7 @@ function scroll_if_anchor(href) {
     }
   }
 }
-$(document).ready(() => {
+$(() => {
   const $mainMenu = $('.main-menu');
   const $navBar = $('.nav-bar');
   const $body = $('body');
@@ -135,10 +135,13 @@ $(document).ready(() => {
 
   $('.nav-bar')
     .find('.link-levelone')
-    .hover(
+    .on(
+      'mouseenter',
       function () {
         $(this).addClass('-hover');
       },
+    ).on(
+      'mouseleave',
       function () {
         $(this).removeClass('-hover');
       },
@@ -335,7 +338,6 @@ $(document).ready(() => {
       .removeClass('collapse')
       .addClass('submenu');
     $('.shop-list-title').remove();
-    $('.js-non-responsive').hide();
     $('.mobile-layer')
       .addClass('d-none')
       .removeClass('expanded');
@@ -378,7 +380,7 @@ $(document).ready(() => {
   });
 
   let timer;
-  $(window).scroll(() => {
+  $(window).on('scroll', () => {
     if (timer) {
       window.clearTimeout(timer);
     }
@@ -395,7 +397,7 @@ $(document).ready(() => {
       .focus();
   });
 
-  $('.page-sidebar-closed').click(() => {
+  $('.page-sidebar-closed').on('click', () => {
     $('.searchtab').removeClass('search-expanded');
   });
 
@@ -426,7 +428,7 @@ $(document).ready(() => {
   });
 
   // search with nav sidebar opened
-  $('.page-sidebar').click(() => {
+  $('.page-sidebar').on('click', () => {
     $('#header_search .form-group').removeClass('focus-search');
   });
 
@@ -453,30 +455,11 @@ $(document).ready(() => {
     $('#bo_query').focus();
   });
 
-  // reset form
-  /* global header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset */
-  $('.reset_ready').click(function () {
-    const href = $(this).attr('href');
-    confirm_modal(
-      header_confirm_reset,
-      body_confirm_reset,
-      left_button_confirm_reset,
-      right_button_confirm_reset,
-      () => {
-        window.location.href = `${href}&keep_data=1`;
-      },
-      () => {
-        window.location.href = `${href}&keep_data=0`;
-      },
-    );
-    return false;
-  });
-
   // scroll_if_anchor(window.location.hash);
   $('body').on('click', 'a.anchor', scroll_if_anchor);
 
   // manage curency status switcher
-  $('#currencyStatus input').change(function () {
+  $('#currencyStatus input').on('change', function () {
     const parentZone = $(this)
       .parent()
       .parent()
@@ -493,7 +476,7 @@ $(document).ready(() => {
     }
   });
 
-  $('#currencyCronjobLiveExchangeRate input').change(function () {
+  $('#currencyCronjobLiveExchangeRate input').on('change', function () {
     let enable = 0;
     const parentZone = $(this)
       .parent()

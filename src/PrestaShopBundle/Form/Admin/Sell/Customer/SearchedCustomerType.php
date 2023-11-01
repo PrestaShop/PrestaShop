@@ -32,9 +32,6 @@ use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-/**
- * @todo: EntitySearchType component could be improved to avoid coupling form type with dataset
- */
 class SearchedCustomerType extends CommonAbstractType
 {
     /**
@@ -45,11 +42,9 @@ class SearchedCustomerType extends CommonAbstractType
         $builder
             ->add('id_customer', HiddenType::class, [
                 'label' => false,
-                'block_prefix' => 'searched_customer_id_customer',
             ])
             ->add('fullname_and_email', TextPreviewType::class, [
                 'label' => false,
-                'block_prefix' => 'searched_customer_fullname_and_email',
             ])
         ;
     }

@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
 
 /**
  * Handles @see DeleteProductCommand using legacy object model
  */
+#[AsCommandHandler]
 class DeleteProductHandler implements DeleteProductHandlerInterface
 {
     /**

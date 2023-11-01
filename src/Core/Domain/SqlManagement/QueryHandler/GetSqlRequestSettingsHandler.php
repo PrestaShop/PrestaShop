@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 /**
  * Class GetSqlRequestSettingsHandler handles query to get SqlRequest settings.
  */
+#[AsQueryHandler]
 final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandlerInterface
 {
     /**

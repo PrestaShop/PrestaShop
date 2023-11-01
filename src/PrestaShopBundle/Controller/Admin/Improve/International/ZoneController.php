@@ -136,6 +136,7 @@ class ZoneController extends FrameworkBundleAdminController
             'zoneForm' => $zoneForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New zone', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -189,6 +190,13 @@ class ZoneController extends FrameworkBundleAdminController
             'zoneForm' => $zoneForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing zone %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $editableZone->getName(),
+                ]
+            ),
         ]);
     }
 
@@ -201,12 +209,11 @@ class ZoneController extends FrameworkBundleAdminController
      *     message="You need permission to delete this."
      * )
      *
-     * @DemoRestricted(redirectRoute="admin_zones_index")
-     *
      * @param int $zoneId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
     public function deleteAction(int $zoneId): RedirectResponse
     {
         try {
@@ -230,14 +237,11 @@ class ZoneController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @DemoRestricted(
-     *     redirectRoute="admin_zones_index"
-     * )
-     *
      * @param int $zoneId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
     public function toggleStatusAction(int $zoneId): RedirectResponse
     {
         try {
@@ -257,12 +261,12 @@ class ZoneController extends FrameworkBundleAdminController
      * Deletes zones in bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_zones_index")
-     * @DemoRestricted(redirectRoute="admin_zones_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $zoneIds = $this->getBulkZonesFromRequest($request);
@@ -288,13 +292,13 @@ class ZoneController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_zones_index",
      * )
-     * @DemoRestricted(redirectRoute="admin_zones_index")
      *
      * @param string $status
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
     public function bulkToggleStatus(string $status, Request $request): RedirectResponse
     {
         $status = $status === 'enable';
@@ -367,11 +371,7 @@ class ZoneController extends FrameworkBundleAdminController
      */
     private function getBulkZonesFromRequest(Request $request): array
     {
-        $zoneIds = $request->request->get('zone_bulk');
-
-        if (!is_array($zoneIds)) {
-            return [];
-        }
+        $zoneIds = $request->request->all('zone_bulk');
 
         return array_map('intval', $zoneIds);
     }

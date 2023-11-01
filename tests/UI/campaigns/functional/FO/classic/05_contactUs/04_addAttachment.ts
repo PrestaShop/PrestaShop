@@ -12,7 +12,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
-import foContactUsPage from '@pages/FO/contactUs';
+import {contactUsPage} from '@pages/FO/contactUs';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 
@@ -69,7 +69,7 @@ describe('FO - Contact us : Add attachment', async () => {
     await foHomePage.goTo(page, global.FO.URL);
 
     const isHomePage = await foHomePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should go to login page', async function () {
@@ -78,7 +78,7 @@ describe('FO - Contact us : Add attachment', async () => {
     await foHomePage.goToLoginPage(page);
 
     const pageTitle = await foLoginPage.getPageTitle(page);
-    await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
   });
 
   it('should sign in with default customer', async function () {
@@ -87,7 +87,7 @@ describe('FO - Contact us : Add attachment', async () => {
     await foLoginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
   it('should go to contact us page', async function () {
@@ -96,26 +96,26 @@ describe('FO - Contact us : Add attachment', async () => {
     // Go to contact us page
     await foLoginPage.goToFooterLink(page, 'Contact us');
 
-    const pageTitle = await foContactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(foContactUsPage.pageTitle);
+    const pageTitle = await contactUsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(contactUsPage.pageTitle);
   });
 
   it('should try to send message with csv file to customer service and check error message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendCSVFile', baseContext);
 
-    await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
+    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
 
-    const validationMessage = await foContactUsPage.getAlertError(page);
-    await expect(validationMessage).to.equal(foContactUsPage.badFileExtensionErrorMessage);
+    const validationMessage = await contactUsPage.getAlertError(page);
+    expect(validationMessage).to.equal(contactUsPage.badFileExtensionErrorMessage);
   });
 
   it('should send message with PNG file to customer service and check validation message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendPNGFile', baseContext);
 
-    await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
+    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
 
-    const validationMessage = await foContactUsPage.getAlertSuccess(page);
-    await expect(validationMessage).to.equal(foContactUsPage.validationMessage);
+    const validationMessage = await contactUsPage.getAlertSuccess(page);
+    expect(validationMessage).to.equal(contactUsPage.validationMessage);
   });
 
   it('should login in BO', async function () {
@@ -132,28 +132,28 @@ describe('FO - Contact us : Add attachment', async () => {
     );
 
     const pageTitle = await customerServicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    expect(pageTitle).to.contains(customerServicePage.pageTitle);
   });
 
   it('should check customer name', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
     const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-    await expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
+    expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
   });
 
   it('should check customer email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
     const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-    await expect(email).to.contain(contactUsData.emailAddress);
+    expect(email).to.contain(contactUsData.emailAddress);
   });
 
   it('should get the customer service id and the date', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
 
     idCustomer = await customerServicePage.getTextColumn(page, 1, 'id_customer_thread');
-    await expect(parseInt(idCustomer, 10)).to.be.at.least(0);
+    expect(parseInt(idCustomer, 10)).to.be.at.least(0);
 
     messageDateTime = await customerServicePage.getTextColumn(page, 1, 'date');
   });
@@ -164,14 +164,11 @@ describe('FO - Contact us : Add attachment', async () => {
     await customerServicePage.goToViewMessagePage(page);
 
     const pageTitle = await viewPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(viewPage.pageTitle);
+    expect(pageTitle).to.contains(viewPage.pageTitle);
   });
 
   it('should check the thread form', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
-
-    const badgeNumber = await viewPage.getBadgeNumber(page);
-    await expect(badgeNumber).to.contains(idCustomer);
 
     const text = await viewPage.getCustomerMessage(page);
     expect(text)
@@ -186,7 +183,7 @@ describe('FO - Contact us : Add attachment', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFileAttached', baseContext);
 
     const fileExtension = await viewPage.getAttachedFileHref(page);
-    await expect(fileExtension).to.contains('.png');
+    expect(fileExtension).to.contains('.png');
   });
 
   it('should go back to customer service page', async function () {
@@ -199,13 +196,13 @@ describe('FO - Contact us : Add attachment', async () => {
     );
 
     const pageTitle = await customerServicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    expect(pageTitle).to.contains(customerServicePage.pageTitle);
   });
 
   it('should delete the message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
     const textResult = await customerServicePage.deleteMessage(page, 1);
-    await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+    expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
   });
 });

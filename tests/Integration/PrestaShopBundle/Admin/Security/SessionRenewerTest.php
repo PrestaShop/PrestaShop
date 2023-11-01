@@ -63,11 +63,11 @@ class SessionRenewerTest extends KernelTestCase
     {
         $this->session->start();
         $originalSessionId = $this->session->getId();
-        $tokenValue = $this->sessionTokenManager->getToken('foo')->getValue();
+        $token = $this->sessionTokenManager->getToken('foo');
         self::assertEquals($originalSessionId, $this->session->getId());
-        self::assertEquals($tokenValue, $this->sessionTokenManager->getToken('foo')->getValue());
+        self::assertTrue($this->sessionTokenManager->isTokenValid($token));
         $this->sessionRenewer->renew();
         self::assertNotEquals($originalSessionId, $this->session->getId());
-        self::assertNotEquals($tokenValue, $this->sessionTokenManager->getToken('foo')->getValue());
+        self::assertFalse($this->sessionTokenManager->isTokenValid($token));
     }
 }

@@ -1,4 +1,9 @@
+includes:
+	- phpstan-baseline.neon
+	- phpstan-disallowed-calls.neon
+	- phpstan-tmp-legacy-layout-baseline.neon
 parameters:
+  phpVersion: 80100
   level: 5
   bootstrapFiles:
     - .github/workflows/phpstan/autoload.php
@@ -73,16 +78,4 @@ parameters:
     - PaymentModuleCore::DEBUG_MODE
     - _PS_API_IN_USE_
     - _PS_ALLOW_MULTI_STATEMENTS_QUERIES_
-  disallowedNamespaces:
-        -
-            class: 'Symfony\Component\Translation\TranslatorInterface'
-            message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
-            disallowIn:
-                - src/*
-  disallowedMethodCalls:
-        -
-            method: 'PrestaShopBundle\Form\Admin\Type\CommonAbstractType::getConfiguration()'
-            message: 'Use dependency injection instead'
-            disallowIn:
-                - src/*
-
+    - _PS_DISPLAY_ONLY_ERRORS_

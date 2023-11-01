@@ -6,18 +6,19 @@ import FOBasePage from '@pages/FO/FObasePage';
  * @class
  * @extends FOBasePage
  */
-class LegalNotice extends FOBasePage {
+class LegalNoticePage extends FOBasePage {
   public readonly pageTitle: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on legal notice page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Legal Notice';
   }
 }
 
-export default new LegalNotice();
+const legalNoticePage = new LegalNoticePage();
+export {legalNoticePage, LegalNoticePage};

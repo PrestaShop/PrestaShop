@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\BulkEnableSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
@@ -37,6 +38,7 @@ use Supplier;
 /**
  * Class BulkEnableSupplierHandler is responsible for enabling multiple suppliers.
  */
+#[AsCommandHandler]
 final class BulkEnableSupplierHandler implements BulkEnableSupplierHandlerInterface
 {
     /**

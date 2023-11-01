@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 /**
  * Class PagesLayoutCustomizer customizes pages layout for shop's Front Office theme.
  */
-final class ThemePageLayoutsCustomizer implements ThemePageLayoutsCustomizerInterface
+class ThemePageLayoutsCustomizer implements ThemePageLayoutsCustomizerInterface
 {
     /**
      * @var Theme

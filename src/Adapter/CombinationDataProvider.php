@@ -30,7 +30,7 @@ use Combination;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\FormHelper;
 use Product;
 use Tax;
 
@@ -64,28 +64,6 @@ class CombinationDataProvider
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
         $this->locale = $locale;
-    }
-
-    /**
-     * Get a combination values.
-     *
-     * @deprecated since 1.7.3.1 really slow, use getFormCombinations instead.
-     *
-     * @param int $combinationId The id_product_attribute
-     *
-     * @return array combinations
-     */
-    public function getFormCombination($combinationId)
-    {
-        $product = new Product((new Combination($combinationId))->id_product);
-
-        return $this->completeCombination(
-            $product->getAttributeCombinationsById(
-                $combinationId,
-                $this->context->getContext()->language->id
-            ),
-            $product
-        );
     }
 
     /**
@@ -167,13 +145,13 @@ class CombinationDataProvider
         $finalPrice = $productPrice
             ->plus($ecotax)
             ->plus($combinationImpactTaxExcluded)
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+            ->toPrecision(FormHelper::DEFAULT_PRICE_PRECISION);
 
         $ecotaxIncluded = $combinationEcotaxIncluded->equalsZero() ? $productEcotaxIncluded : $combinationEcotaxIncluded;
         $finalPriceIncluded = $productPriceIncluded
             ->plus($ecotaxIncluded)
             ->plus($combinationImpactTaxIncluded)
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+            ->toPrecision(FormHelper::DEFAULT_PRICE_PRECISION);
 
         return [
             'id_product_attribute' => $combination['id_product_attribute'],
@@ -184,13 +162,13 @@ class CombinationDataProvider
             'attribute_mpn' => $combination['mpn'],
             'attribute_wholesale_price' => $combination['wholesale_price'],
             'attribute_price_impact' => $attribute_price_impact,
-            'attribute_price' => $combinationImpactTaxExcluded->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
+            'attribute_price' => $combinationImpactTaxExcluded->toPrecision(FormHelper::DEFAULT_PRICE_PRECISION),
             'attribute_price_display' => $this->locale->formatPrice((string) $combinationImpactTaxExcluded, $this->context->getContext()->currency->iso_code),
             'final_price' => $finalPrice,
             'final_price_tax_included' => $finalPriceIncluded,
             'attribute_priceTI' => '',
             // The value is displayed with tax included
-            'product_ecotax' => $productEcotaxIncluded->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
+            'product_ecotax' => $productEcotaxIncluded->toPrecision(FormHelper::DEFAULT_PRICE_PRECISION),
             'attribute_ecotax' => $combination['ecotax_tax_included'],
             'attribute_weight_impact' => $attribute_weight_impact,
             'attribute_weight' => $combination['weight'],

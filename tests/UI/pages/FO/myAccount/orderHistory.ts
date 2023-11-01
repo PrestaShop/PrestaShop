@@ -52,8 +52,8 @@ class OrderHistoryPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on order history page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Order history';
 
@@ -259,4 +259,5 @@ class OrderHistoryPage extends FOBasePage {
   }
 }
 
-export default new OrderHistoryPage();
+const orderHistoryPage = new OrderHistoryPage();
+export {orderHistoryPage, OrderHistoryPage};

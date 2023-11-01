@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
+use Cache;
 use Cart;
 use CartRule;
 use Configuration;
@@ -308,18 +309,19 @@ class CartPresenter implements PresenterInterface
 
     /**
      * @param Cart $cart
-     * @param bool $shouldSeparateGifts
-     *
-     * @return array
      *
      * @throws \Exception
      */
-    public function present($cart, $shouldSeparateGifts = false)
+    public function present($cart, bool $shouldSeparateGifts = false): array
     {
+        $cache_id = 'presentedCart_' . (int) $shouldSeparateGifts . $cart->id;
+        if (Cache::isStored($cache_id)) {
+            return Cache::retrieve($cache_id);
+        }
+
         if (!is_a($cart, 'Cart')) {
             throw new \Exception('CartPresenter can only present instance of Cart');
         }
-
         if ($shouldSeparateGifts) {
             $rawProducts = $cart->getProductsWithSeparatedGifts();
         } else {
@@ -490,6 +492,8 @@ class CartPresenter implements PresenterInterface
         Hook::exec('actionPresentCart',
             ['presentedCart' => &$result]
         );
+
+        Cache::store($cache_id, $result);
 
         return $result;
     }
@@ -674,7 +678,7 @@ class CartPresenter implements PresenterInterface
         }
 
         foreach ($matches['attribute'] as $attribute) {
-            list($key, $value) = explode(':', $attribute);
+            [$key, $value] = explode(':', $attribute);
             $attributesArray[trim($key)] = ltrim($value);
         }
 

@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @deprecated since 8.1 and will be removed in next major.
@@ -40,18 +42,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductCustomField extends CommonAbstractType
 {
     private $translator;
-    private $locales;
+    /**
+     * @var object|LegacyContext
+     */
+    private $legacyContext;
 
     /**
      * Constructor.
      *
-     * @param object $translator
-     * @param object $legacyContext
+     * @param TranslatorInterface $translator
+     * @param LegacyContext $legacyContext
      */
-    public function __construct($translator, $legacyContext)
+    public function __construct(TranslatorInterface $translator, LegacyContext $legacyContext)
     {
         $this->translator = $translator;
-        $this->locales = $legacyContext->getLanguages();
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -74,7 +79,7 @@ class ProductCustomField extends CommonAbstractType
                     new Assert\NotBlank(),
                     new Assert\Length(['min' => 2]),
                 ]],
-                'locales' => $this->locales,
+                'locales' => $this->legacyContext->getLanguages(),
                 'hideTabs' => true,
                 'label' => $this->translator->trans('Label', [], 'Admin.Global'),
             ])

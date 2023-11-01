@@ -2,9 +2,6 @@ name: Lint
 on:
   push:
   pull_request:
-    # Do not run when only tests are updated
-    paths-ignore:
-      - 'tests/UI/**'
 
 permissions:
   contents: read
@@ -23,14 +20,11 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Setup NPM
-        run: npm install -g npm@7
-
       - name: BackOffice Theme `new-theme`
-        run: cd ./admin-dev/themes/new-theme && npm install && npm run scss-lint
+        run: cd ./admin-dev/themes/new-theme && npm ci && npm run scss-lint
 
       - name: BackOffice Theme `default`
-        run: cd ./admin-dev/themes/default && npm install && npm run scss-lint
+        run: cd ./admin-dev/themes/default && npm ci && npm run scss-lint
 
   eslint:
     name: ESLint
@@ -43,9 +37,6 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Setup NPM
-        run: npm install -g npm@7
-
       - name: Validate npm config
         run: >-
             (cd admin-dev/themes/default && npm ci)
@@ -53,10 +44,10 @@ jobs:
             && (cd themes && npm ci)
 
       - name: BackOffice Theme `default`
-        run: cd ./admin-dev/themes/default && npm install && npm run lint
+        run: cd ./admin-dev/themes/default && npm ci && npm run lint
 
       - name: BackOffice Theme `new-theme`
-        run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
+        run: cd ./admin-dev/themes/new-theme && npm ci && npm run lint
 
   yamllint_sf:
     name: YAML Lint (Symfony Check)

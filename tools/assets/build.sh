@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###
-# This script rebuilds all the static assets, running npm install as needed
+# This script rebuilds all the static assets, running npm install-clean as needed
 #
 
 #http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -25,7 +25,7 @@ function build {
     rm -rf node_modules
   fi
 
-  npm install
+  npm ci
   npm run build
   popd
 }
@@ -49,10 +49,7 @@ build_asset() {
       build "$PROJECT_PATH/themes/classic/_dev"
     ;;
     all)
-      build_asset admin-default
-      build_asset admin-new-theme
-      build_asset front-core
-      build_asset front-classic
+      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic
     ;;
     *)
       echo "Unknown asset to build $1"
@@ -66,4 +63,5 @@ else
   build_asset all
 fi
 
+wait
 echo "All done!"

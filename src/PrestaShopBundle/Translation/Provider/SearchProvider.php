@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -87,7 +88,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     {
         try {
             $defaultCatalogue = parent::getDefaultCatalogue($empty);
-        } catch (FileNotFoundException $e) {
+        } catch (TranslationFilesNotFoundException $e) {
             $defaultCatalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty);
             $defaultCatalogue = $this->filterCatalogue($defaultCatalogue);
         }

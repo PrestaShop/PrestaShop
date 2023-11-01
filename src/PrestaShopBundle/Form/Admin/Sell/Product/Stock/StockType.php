@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
+use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -80,28 +80,21 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('packed_products', EntitySearchInputType::class, [
+            ->add('packed_products', ProductSearchType::class, [
+                'include_combinations' => true,
                 'label' => $this->trans('Pack of products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+                'limit' => 0,
                 'entry_type' => PackedProductType::class,
-                'entry_options' => [
-                    'block_prefix' => 'packed',
+                'filters' => [
+                    'filteredTypes' => [ProductType::TYPE_PACK],
                 ],
-                'remote_url' => $this->router->generate('admin_products_search_combinations_for_association', [
-                    'languageCode' => $this->employeeIsoCode,
-                    'filters' => [
-                        'filteredTypes' => [ProductType::TYPE_PACK],
-                    ],
-                    'query' => '__QUERY__',
-                ]),
                 'attr' => [
                     'class' => 'product_packed_products',
                     'data-reference-label' => $this->trans('Ref: %s', 'Admin.Catalog.Feature'),
                 ],
                 'min_length' => 3,
                 'filtered_identities' => $options['product_id'] > 0 ? [$options['product_id'] . '_0'] : [],
-                'identifier_field' => 'unique_identifier',
-                'placeholder' => $this->trans('Search combination', 'Admin.Catalog.Help'),
             ])
             ->add('quantities', QuantityType::class, [
                 'product_id' => $options['product_id'],

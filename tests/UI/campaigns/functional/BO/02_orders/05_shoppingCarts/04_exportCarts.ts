@@ -52,7 +52,7 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
     );
 
     const pageTitle = await shoppingCartsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+    expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
   });
 
   it('should change the items number to 300 per page', async function () {
@@ -68,7 +68,7 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
     filePath = await shoppingCartsPage.exportDataToCsv(page);
 
     const doesFileExist = await files.doesFileExist(filePath, 5000);
-    await expect(doesFileExist, 'Export of data has failed').to.be.true;
+    expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
   it('should check existence of carts data in csv file', async function () {
@@ -81,7 +81,7 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
     for (let row = 1; row <= numberOfOrders; row++) {
       const cartInCsvFormat = await shoppingCartsPage.getCartInCsvFormat(page, row);
       const textExist = await files.isTextInFile(filePath, cartInCsvFormat, true, true);
-      await expect(textExist, `${cartInCsvFormat} was not found in the file`).to.be.true;
+      expect(textExist, `${cartInCsvFormat} was not found in the file`).to.eq(true);
     }
   });
 

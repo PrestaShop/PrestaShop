@@ -70,13 +70,16 @@ export default class PositionExtension {
     grid
       .getContainer()
       .find('.js-drag-handle')
-      .hover(
-        function hover() {
+      .on(
+        'mouseenter',
+        function () {
           $(this)
             .closest('tr')
             .addClass('hover');
         },
-        function stopHover() {
+      ).on(
+        'mouseleave',
+        function () {
           $(this)
             .closest('tr')
             .removeClass('hover');

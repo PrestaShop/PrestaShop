@@ -53,7 +53,7 @@
       </div>
     {% endif %}
 
-    {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') and bulkActions is defined %}
+    {% if level > constant('PrestaShop\\PrestaShop\\Core\\Security\\Permission::LEVEL_UPDATE') and bulkActions is defined %}
       <div class="col-md-4 module-top-menu-item disabled">
         <h3>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</h3>
         {% include '@PrestaShop/Admin/Module/Includes/dropdown_bulk.html.twig' %}

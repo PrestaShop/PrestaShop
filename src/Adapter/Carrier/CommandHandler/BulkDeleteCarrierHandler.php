@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkDeleteCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\BulkDeleteCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotDeleteCarrierException;
@@ -38,6 +39,7 @@ use PrestaShopException;
 /**
  * Bulk deletes carriers
  */
+#[AsCommandHandler]
 class BulkDeleteCarrierHandler extends AbstractCarrierHandler implements BulkDeleteCarrierHandlerInterface
 {
     /**

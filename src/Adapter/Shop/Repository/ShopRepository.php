@@ -84,7 +84,7 @@ class ShopRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'shop', 's')
             ->where('s.id_shop = :shopId')
             ->setParameter('shopId', $shopId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 

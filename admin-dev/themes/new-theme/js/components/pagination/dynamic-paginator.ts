@@ -190,7 +190,7 @@ export default class DynamicPaginator {
     });
     this.$paginationContainer
       .find(this.selectorsMap.jumpToPageInput)
-      .keypress((e) => {
+      .on('keypress', (e) => {
         if (e.which === 13) {
           e.preventDefault();
           const input = <HTMLInputElement>e.currentTarget;

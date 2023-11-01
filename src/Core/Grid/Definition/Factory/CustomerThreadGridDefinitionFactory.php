@@ -101,7 +101,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Customer thread', [], 'Admin.Global');
+        return $this->trans('Customer threads', [], 'Admin.Global');
     }
 
     /**

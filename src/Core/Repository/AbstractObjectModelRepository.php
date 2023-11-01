@@ -94,7 +94,7 @@ abstract class AbstractObjectModelRepository
         try {
             if (!$objectModel->add()) {
                 throw new $exceptionClass(
-                    sprintf('Failed to add %s', get_class($objectModel)),
+                    sprintf('Failed to add %s', $objectModel::class),
                     $errorCode
                 );
             }
@@ -104,7 +104,7 @@ abstract class AbstractObjectModelRepository
             throw new CoreException(
                 sprintf(
                     'Error occurred when trying to add %s [%s]',
-                    get_class($objectModel),
+                    $objectModel::class,
                     $e->getMessage()
                 ),
                 0,
@@ -129,7 +129,7 @@ abstract class AbstractObjectModelRepository
         try {
             if (!$objectModel->update()) {
                 throw new $exceptionClass(
-                    sprintf('Failed to update %s #%d', get_class($objectModel), $objectModel->id),
+                    sprintf('Failed to update %s #%d', $objectModel::class, $objectModel->id),
                     $errorCode
                 );
             }
@@ -137,7 +137,7 @@ abstract class AbstractObjectModelRepository
             throw new CoreException(
                 sprintf(
                     'Error occurred when trying to update %s #%d [%s]',
-                    get_class($objectModel),
+                    $objectModel::class,
                     $objectModel->id,
                     $e->getMessage()
                 ),
@@ -179,7 +179,7 @@ abstract class AbstractObjectModelRepository
         try {
             if (!$objectModel->delete()) {
                 throw new $exceptionClass(
-                    sprintf('Failed to delete %s #%d', get_class($objectModel), $objectModel->id),
+                    sprintf('Failed to delete %s #%d', $objectModel::class, $objectModel->id),
                     $errorCode
                 );
             }
@@ -187,7 +187,7 @@ abstract class AbstractObjectModelRepository
             throw new CoreException(
                 sprintf(
                     'Error occurred when trying to delete %s #%d [%s]',
-                    get_class($objectModel),
+                    $objectModel::class,
                     $objectModel->id,
                     $e->getMessage()
                 ),
@@ -209,7 +209,7 @@ abstract class AbstractObjectModelRepository
         try {
             if (!$objectModel->softDelete()) {
                 throw new $exceptionClass(
-                    sprintf('Failed to soft delete %s #%d', get_class($objectModel), $objectModel->id),
+                    sprintf('Failed to soft delete %s #%d', $objectModel::class, $objectModel->id),
                     $errorCode
                 );
             }
@@ -217,7 +217,7 @@ abstract class AbstractObjectModelRepository
             throw new CoreException(
                 sprintf(
                     'Error occurred when trying to soft delete %s #%d [%s]',
-                    get_class($objectModel),
+                    $objectModel::class,
                     $objectModel->id,
                     $e->getMessage()
                 ),

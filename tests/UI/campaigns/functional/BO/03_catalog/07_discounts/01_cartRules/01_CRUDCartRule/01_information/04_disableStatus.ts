@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
@@ -72,7 +72,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -81,14 +81,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule2', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, disabledCartRule);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
   });
 
@@ -101,7 +101,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to the first product page', async function () {
@@ -110,7 +110,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -119,21 +119,21 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should verify the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotal', baseContext);
 
       const priceATI = await cartPage.getATIPrice(page);
-      await expect(priceATI).to.equal(Products.demo_1.finalPrice);
+      expect(priceATI).to.equal(Products.demo_1.finalPrice);
     });
 
     it('should check that the cart rule name is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isPromoCodeVisible', baseContext);
 
       const isVisible = await cartPage.isCartRuleNameVisible(page);
-      await expect(isVisible).to.be.false;
+      expect(isVisible).to.eq(false);
     });
 
     it('should remove product from shopping cart', async function () {
@@ -142,7 +142,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.be.equal(0);
+      expect(notificationNumber).to.be.equal(0);
     });
   });
 
@@ -154,14 +154,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should delete cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
       const deleteTextResult = await cartRulesPage.deleteCartRule(page);
-      await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulDeleteMessage);
+      expect(deleteTextResult).to.be.contains(cartRulesPage.successfulDeleteMessage);
     });
   });
 });

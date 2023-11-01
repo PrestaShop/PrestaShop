@@ -58,11 +58,11 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleR
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -155,6 +155,7 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
             'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
             'currencyForm' => $currencyForm->createView(),
+            'layoutTitle' => $this->trans('New currency', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -194,6 +195,13 @@ class CurrencyController extends FrameworkBundleAdminController
         $templateVars = [
             'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
             'currencyForm' => $currencyForm->createView(),
+            'layoutTitle' => $this->trans(
+                'Editing currency %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $currencyForm->getData()['names'][$this->getContextLangId()],
+                ]
+            ),
         ];
         try {
             $languageData = $this->getLanguagesData($currencyForm->getData()['iso_code']);
@@ -260,12 +268,12 @@ class CurrencyController extends FrameworkBundleAdminController
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param int $currencyId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function deleteAction($currencyId)
     {
         try {
@@ -287,10 +295,10 @@ class CurrencyController extends FrameworkBundleAdminController
      * @param string $currencyIsoCode
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return JsonResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function getReferenceDataAction($currencyIsoCode)
     {
         try {
@@ -338,10 +346,10 @@ class CurrencyController extends FrameworkBundleAdminController
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function toggleStatusAction($currencyId)
     {
         try {
@@ -368,10 +376,10 @@ class CurrencyController extends FrameworkBundleAdminController
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function refreshExchangeRatesAction()
     {
         try {
@@ -405,7 +413,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
         $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
 
-        if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
+        if (!in_array($authLevel, [Permission::LEVEL_UPDATE, Permission::LEVEL_DELETE])) {
             return $this->json([
                 'status' => false,
                 'message' => $this->trans(
@@ -477,13 +485,13 @@ class CurrencyController extends FrameworkBundleAdminController
      * Toggles currencies status in bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param Request $request
      * @param string $status
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function bulkToggleStatusAction(Request $request, $status)
     {
         $currenciesIds = $this->getBulkCurrenciesFromRequest($request);
@@ -510,12 +518,12 @@ class CurrencyController extends FrameworkBundleAdminController
      * Deletes currencies in bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
-     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function bulkDeleteAction(Request $request)
     {
         $currenciesIds = $this->getBulkCurrenciesFromRequest($request);
@@ -661,11 +669,7 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     private function getBulkCurrenciesFromRequest(Request $request)
     {
-        $currenciesIds = $request->request->get('currency_currency_bulk');
-
-        if (!is_array($currenciesIds)) {
-            return [];
-        }
+        $currenciesIds = $request->request->all('currency_currency_bulk');
 
         foreach ($currenciesIds as $i => $currencyId) {
             $currenciesIds[$i] = (int) $currencyId;

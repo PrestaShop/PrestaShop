@@ -112,7 +112,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('categoryIds', $categoryIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (!$results) {
             return [];
@@ -178,7 +178,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('duplicateNames', $duplicateNames, Connection::PARAM_STR_ARRAY)
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         $categoryIds = [];
         foreach ($results as $result) {
@@ -207,7 +207,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $category = $categoryQb->execute()->fetchAssociative();
+        $category = $categoryQb->executeQuery()->fetchAssociative();
 
         if (empty($category)) {
             throw new CategoryNotFoundException($categoryId, 'Cannot find breadcrumb because category does not exist');
@@ -231,7 +231,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if ($results) {
             $parentNames = array_column($results, 'name');
@@ -282,7 +282,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ;
         }
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         $categoryIds = [];
         foreach ($results as $result) {
@@ -325,7 +325,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('cp.id_category IN (:categories)')
             ->setParameter('categories', $categoryIds, Connection::PARAM_INT_ARRAY)
             ->groupBy('cp.id_category')
-            ->execute()->fetchAllAssociative()
+            ->executeQuery()->fetchAllAssociative()
         ;
 
         // Prepare new rows for each category if the max position was not found it's the first product associated
@@ -367,7 +367,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('cp.id_category IN (:categories)')
             ->setParameter('productId', $productId->getValue())
             ->setParameter('categories', $categoryIds, Connection::PARAM_INT_ARRAY)
-            ->execute()->fetchAllAssociative()
+            ->executeQuery()->fetchAllAssociative()
         ;
 
         $this->connection
@@ -377,7 +377,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('id_category IN (:categories)')
             ->setParameter('productId', $productId->getValue())
             ->setParameter('categories', $categoryIds, Connection::PARAM_INT_ARRAY)
-            ->execute()
+            ->executeQuery()
         ;
 
         // Decrement positions for each category impacted
@@ -403,7 +403,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->select('s.id_category')
             ->where('s.id_shop = :shopId')
             ->setParameter('shopId', $shopId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -446,7 +446,7 @@ class CategoryRepository extends AbstractObjectModelRepository
                 'productId' => $productId->getValue(),
                 'shopId' => $shopId->getValue(),
             ])
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -484,7 +484,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->groupBy('cl.name')
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         $names = [];
         foreach ($results as $result) {

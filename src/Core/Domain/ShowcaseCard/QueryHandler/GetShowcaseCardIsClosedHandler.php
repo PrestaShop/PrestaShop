@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ConfigurationMap;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\ShowcaseCardException;
@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed
 /**
  * Finds out if a showcase card has been closed
  */
+#[AsQueryHandler]
 final class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHandlerInterface
 {
     /**

@@ -91,7 +91,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var LegacyContext
@@ -145,18 +145,18 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
 
     /**
      * @param ControllerConfiguration $controllerConfiguration
-     * @param FeatureInterface $multistoreFeature
+     * @param FeatureInterface $multiStoreFeature
      * @param LegacyContext $legacyContext
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         ControllerConfiguration $controllerConfiguration,
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         LegacyContext $legacyContext,
         HookDispatcherInterface $hookDispatcher
     ) {
         $this->controllerConfiguration = $controllerConfiguration;
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->legacyContext = $legacyContext;
         $this->hookDispatcher = $hookDispatcher;
     }
@@ -176,24 +176,24 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         }
 
         if ($this->getContext()->language->is_rtl) {
-            $this->addJS(_PS_JS_DIR_ . 'rtl.js');
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/' . $this->getContext()->language->iso_code . '.css');
+            $this->addJS(_PS_JS_DIR_ . 'rtl.js?v=' . _PS_VERSION_);
+            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/' . $this->getContext()->language->iso_code . '.css?v=' . _PS_VERSION_);
         }
 
         if ($isNewTheme) {
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/theme.css', 'all', 1);
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/main.bundle.js');
+            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/theme.css?v=' . _PS_VERSION_, 'all', 1);
+            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/main.bundle.js?v=' . _PS_VERSION_);
 
             // the multistore dropdown should be called only once, and only if multistore is used
-            if ($this->multistoreFeature->isUsed()) {
-                $this->addJs(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/multistore_dropdown.bundle.js');
+            if ($this->multiStoreFeature->isUsed()) {
+                $this->addJs(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/multistore_dropdown.bundle.js?v=' . _PS_VERSION_);
             }
             $this->addJqueryPlugin(['chosen', 'fancybox']);
         } else {
             //Bootstrap
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/theme.css', 'all', 0);
+            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/theme.css?v=' . _PS_VERSION_, 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/vendor/titatoggle-min.css', 'all', 0);
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/theme.css', 'all', 0);
+            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
 
             // add Jquery 3 and its migration script
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.5.1.min.js');
@@ -211,16 +211,16 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
             $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/modernizr.min.js');
             $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/modernizr-loads.js');
             $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/moment-with-langs.min.js');
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/bundle.js');
+            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/bundle.js?v=' . _PS_VERSION_);
 
             $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
 
             if (!$this->controllerConfiguration->liteDisplay) {
-                $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/help.js');
+                $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/help.js?v=' . _PS_VERSION_);
             }
 
             if (!Tools::getValue('submitFormAjax')) {
-                $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js');
+                $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js?v=' . _PS_VERSION_);
             }
 
             // Specific Admin Theme
@@ -229,9 +229,9 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
 
         $this->addJS([
             _PS_JS_DIR_ . 'admin.js?v=' . _PS_VERSION_, // TODO: SEE IF REMOVABLE
-            __PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/cldr.bundle.js',
+            __PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/cldr.bundle.js?v=' . _PS_VERSION_,
             _PS_JS_DIR_ . 'tools.js?v=' . _PS_VERSION_,
-            __PS_BASE_URI__ . $adminWebpath . '/public/bundle.js',
+            __PS_BASE_URI__ . $adminWebpath . '/public/bundle.js?v=' . _PS_VERSION_,
         ]);
 
         Media::addJsDef([

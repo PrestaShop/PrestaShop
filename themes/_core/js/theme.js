@@ -45,7 +45,7 @@ import initEmailFields from './email-idn';
 window.$ = $;
 window.jQuery = $;
 
-$(document).ready(() => {
+$(() => {
   psShowHide();
   initEmailFields('input[type="email"]');
 });

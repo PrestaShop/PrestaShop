@@ -17,3 +17,17 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Feature\GroupFeature'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\AddCustomerGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator:
+    public: false
+    autowire: true

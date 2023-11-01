@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\RefreshExchangeRatesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class RefreshExchangeRatesHandler implements RefreshExchangeRatesHandlerInterface
 {
     /**

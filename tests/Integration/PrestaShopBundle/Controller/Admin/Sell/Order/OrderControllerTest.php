@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,7 +42,7 @@ class OrderControllerTest extends WebTestCase
     use ContextMockerTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
     /**
@@ -58,7 +58,6 @@ class OrderControllerTest extends WebTestCase
     {
         parent::setUp();
         self::mockContext();
-        self::bootKernel();
 
         // Enable debug mode (for data)
         $configurationMock = $this->getMockBuilder(Configuration::class)
@@ -72,15 +71,14 @@ class OrderControllerTest extends WebTestCase
                 ['_PS_MODE_DEMO_', null, null, true],
             ]));
 
-        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->client = self::createClient();
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');
     }
 
     public function testSearchProductsWithContent(): void
     {
-        $token = $this->tokenManager->getToken('form');
         $this->client->request(
             'GET',
             $this->router->generate(
@@ -89,7 +87,6 @@ class OrderControllerTest extends WebTestCase
                     'search_phrase' => 'Brown bear',
                     'currency_id' => 1,
                     'order_id' => 1,
-                    '_token' => $token->getValue(),
                 ]
             )
         );
@@ -107,7 +104,6 @@ class OrderControllerTest extends WebTestCase
 
     public function testSearchProductsEmptyPhrase(): void
     {
-        $token = $this->tokenManager->getToken('form');
         $this->client->request(
             'GET',
             $this->router->generate(
@@ -116,7 +112,6 @@ class OrderControllerTest extends WebTestCase
                     'search_phrase' => '',
                     'currency_id' => 1,
                     'order_id' => 1,
-                    '_token' => $token->getValue(),
                 ]
             )
         );

@@ -25,7 +25,7 @@
 
 var fees_is_hide = false;
 
-$(document).ready(function() {
+$(function() {
 	carriersRangeInputs.watchCarriersRangeInputChange();
 	bind_inputs();
 	initCarrierWizard();
@@ -33,15 +33,15 @@ $(document).ready(function() {
 		is_freeClick($('input[name="is_free"]:checked'));
 	displayRangeType();
 
-	$('#attachement_fileselectbutton').click(function(e) {
+	$('#attachement_fileselectbutton').on('click', function(e) {
 		$('#carrier_logo_input').trigger('click');
 	});
 
-	$('#attachement_filename').click(function(e) {
+	$('#attachement_filename').on('click', function(e) {
 		$('#carrier_logo_input').trigger('click');
 	});
 
-	$('#carrier_logo_input').change(function(e) {
+	$('#carrier_logo_input').on('change', function(e) {
 		var name  = '';
 		if ($(this)[0].files !== undefined)
 		{
@@ -60,7 +60,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#carrier_logo_remove').click(function(e) {
+	$('#carrier_logo_remove').on('click', function(e) {
 		$('#attachement_filename').val('');
 	});
 
@@ -70,12 +70,12 @@ $(document).ready(function() {
 		$('#shipping_handling_on').prop('disabled', true).prop('checked', false);
 	}
 
-	$('#is_free_on').click(function(e) {
+	$('#is_free_on').on('click', function(e) {
 		$('#shipping_handling_off').prop('checked', true).prop('disabled', true);
 		$('#shipping_handling_on').prop('disabled', true).prop('checked', false);
 	});
 
-	$('#is_free_off').click(function(e) {
+	$('#is_free_off').on('click', function(e) {
 		if ($('#shipping_handling_off').prop('disabled') === true)
 		{
 			$('#shipping_handling_off').prop('disabled', false).prop('checked', false);
@@ -302,7 +302,7 @@ function validateSteps(fromStep, toStep)
 				if (datas.has_error)
 				{
 					is_ok = false;
-					$('div.input-group input').focus(function () {
+					$('div.input-group input').on('focus', function () {
 						$(this).closest('div.input-group').removeClass('has-error');
 					});
 					displayError(datas.errors, fromStep);
@@ -334,7 +334,7 @@ function displayError(errors, step_number)
 
 function bind_inputs()
 {
-	$('input').focus(function () {
+	$('input').on('focus', function () {
 		$(this).closest('div.input-group').removeClass('has-error');
 		$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 		$('.wizard_error').fadeOut('fast', function () { $(this).remove()});
@@ -376,7 +376,7 @@ function bind_inputs()
 		return false;
 	});
 
-	$('tr.range_sup td input:text, tr.range_inf td input:text').keypress(function (evn) {
+	$('tr.range_sup td input:text, tr.range_inf td input:text').on('keypress', function (evn) {
 		index = $(this).closest('td').index();
 		if (evn.keyCode == 13)
 		{
@@ -388,7 +388,7 @@ function bind_inputs()
 		}
 	});
 
-	$('tr.fees_all td input:text').keypress(function (evn) {
+	$('tr.fees_all td input:text').on('keypress', function (evn) {
 		index = $(this).parent('td').index();
 		if (evn.keyCode == 13)
 			return false;

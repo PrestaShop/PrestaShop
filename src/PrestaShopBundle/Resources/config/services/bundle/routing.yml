@@ -12,13 +12,13 @@ services:
       - '@router'
       - '@prestashop.bundle.routing.converter.cache_provider'
 
-  prestashop.bundle.routing.converter.legacy_parameters_converter:
-    class: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
-    public: true
+  PrestaShopBundle\Routing\Converter\LegacyParametersConverter:
+    public: false
 
-  prestashop.bundle.routing.converter.router_provider:
-    alias: PrestaShopBundle\Routing\Converter\RouterProvider
-    deprecated: ~
+  prestashop.bundle.routing.converter.legacy_parameters_converter:
+    alias: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
+    public: true
+    deprecated: '%alias_id% service alias is deprecated and will be removed in 10.0.'
 
   PrestaShopBundle\Routing\Converter\RouterProvider:
     autowire: true
@@ -26,7 +26,7 @@ services:
   PrestaShopBundle\Routing\Converter\LegacyRouteFactory:
     autowire: true
     arguments:
-      - '@PrestaShopBundle\Entity\Repository\FeatureFlagRepository'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
 
   # We set this alias so that we can override it in test environment (to avoid memory limit crashes)
   prestashop.bundle.routing.converter.cache:
@@ -35,7 +35,7 @@ services:
   prestashop.bundle.routing.converter.cache_provider:
     class: 'PrestaShopBundle\Routing\Converter\CacheProvider'
     arguments:
-      - '@prestashop.bundle.routing.converter.router_provider'
+      - '@PrestaShopBundle\Routing\Converter\RouterProvider'
       - '@prestashop.bundle.routing.converter.cache'
       - '@prestashop.bundle.routing.converter.routing_cache_key_generator'
 

@@ -55,7 +55,7 @@ class CartControllerCore extends FrontController
      *
      * @param string $canonicalURL
      */
-    public function canonicalRedirection($canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = '')
     {
     }
 
@@ -75,7 +75,7 @@ class CartControllerCore extends FrontController
         $this->id_product = (int) Tools::getValue('id_product', null);
         $this->id_product_attribute = (int) Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
         $this->customization_id = (int) Tools::getValue('id_customization');
-        $this->qty = abs(Tools::getValue('qty', 1));
+        $this->qty = abs((int) Tools::getValue('qty', 1));
         $this->id_address_delivery = (int) Tools::getValue('id_address_delivery');
         $this->preview = ('1' === Tools::getValue('preview'));
 
@@ -92,6 +92,8 @@ class CartControllerCore extends FrontController
     }
 
     /**
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -336,8 +338,7 @@ class CartControllerCore extends FrontController
         if ($this->context->cart->deleteProduct(
             $this->id_product,
             $this->id_product_attribute,
-            $this->customization_id,
-            $this->id_address_delivery
+            $this->customization_id
         )) {
             Hook::exec('actionObjectProductInCartDeleteAfter', $data);
 
@@ -474,10 +475,6 @@ class CartControllerCore extends FrontController
         if (!$this->errors) {
             // Add cart if no cart found
             if (!$this->context->cart->id) {
-                if (Context::getContext()->cookie->id_guest) {
-                    $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                    $this->context->cart->mobile_theme = $guest->mobile_theme;
-                }
                 $this->context->cart->add();
                 if (Validate::isLoadedObject($this->context->cart)) {
                     $this->context->cookie->id_cart = (int) $this->context->cart->id;
@@ -499,7 +496,7 @@ class CartControllerCore extends FrontController
                 $this->id_product_attribute,
                 $this->customization_id,
                 Tools::getValue('op', 'up'),
-                $this->id_address_delivery,
+                0,
                 null,
                 true,
                 true
@@ -553,7 +550,7 @@ class CartControllerCore extends FrontController
      *
      * @return bool
      */
-    public function productInCartMatchesCriteria($productInCart)
+    public function productInCartMatchesCriteria(array $productInCart)
     {
         return (
             !isset($this->id_product_attribute) ||
@@ -564,6 +561,12 @@ class CartControllerCore extends FrontController
         ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
     }
 
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
@@ -590,7 +593,7 @@ class CartControllerCore extends FrontController
      *
      * @return bool
      */
-    protected function shouldAvailabilityErrorBeRaised($product, $qtyToCheck)
+    protected function shouldAvailabilityErrorBeRaised(Product $product, int $qtyToCheck)
     {
         if (($this->id_product_attribute)) {
             return !Product::isAvailableWhenOutOfStock($product->out_of_stock)
@@ -615,7 +618,7 @@ class CartControllerCore extends FrontController
             $this->id_product_attribute,
             null,
             $this->context->cart,
-            $this->customization_id
+            false
         );
 
         return $productQuantityAvailableAfterCartItemsHaveBeenRemovedFromStock < 0;

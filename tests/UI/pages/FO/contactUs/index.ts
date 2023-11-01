@@ -11,7 +11,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class ContactUs extends FOBasePage {
+class ContactUsPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly validationMessage: string;
@@ -44,8 +44,8 @@ class ContactUs extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on contact us page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Contact us';
     this.validationMessage = 'Your message has been successfully sent to our team.';
@@ -139,4 +139,5 @@ class ContactUs extends FOBasePage {
   }
 }
 
-export default new ContactUs();
+const contactUsPage = new ContactUsPage();
+export {contactUsPage, ContactUsPage};

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\BulkDeleteOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\BulkDeleteOrderStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\BulkDeleteOrderStateException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
 /**
  * Handles command which deletes OrderStatees in bulk action
  */
+#[AsCommandHandler]
 class BulkDeleteOrderStateHandler extends AbstractOrderStateHandler implements BulkDeleteOrderStateHandlerInterface
 {
     /**

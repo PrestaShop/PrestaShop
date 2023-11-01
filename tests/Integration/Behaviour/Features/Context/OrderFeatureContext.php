@@ -26,7 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use AppKernel;
+use AdminKernel;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
@@ -36,10 +36,12 @@ use OrderCartRule;
 use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
 use Tests\Integration\Utility\PaymentModuleFake;
+use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
+    use ExtendedTestCaseMethodsTrait;
 
     /**
      * @var Order[]
@@ -62,7 +64,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         // need to boot kernel for usage in $paymentModule->validateOrder()
         global $kernel;
         $previousKernel = $kernel;
-        $kernel = new AppKernel('test', true);
+        $kernel = new AdminKernel('test', true);
         $kernel->boot();
 
         // need to update secret_key in order to get payment working
@@ -204,7 +206,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         foreach ($taxDetailsData as $taxDetailsIndex => $expectedTaxDetails) {
             $productsTaxDetails = $orderProductsTaxDetails[$taxDetailsIndex];
             foreach ($expectedTaxDetails as $taxField => $taxValue) {
-                Assert::assertEquals(
+                $this->assertEqualsWithEpsilon(
                     (float) $taxValue,
                     (float) $productsTaxDetails[$taxField],
                     sprintf(

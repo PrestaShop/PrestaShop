@@ -28,10 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
@@ -39,8 +40,19 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
 {
+    /**
+     * @var CategoryImageUploader
+     */
+    private $categoryImageUploader;
+
+    public function __construct(CategoryImageUploader $categoryImageUploader)
+    {
+        $this->categoryImageUploader = $categoryImageUploader;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -52,7 +64,15 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
     {
         $category = $this->createCategoryFromCommand($command);
 
-        return new CategoryId((int) $category->id);
+        $categoryId = new CategoryId((int) $category->id);
+
+        $this->categoryImageUploader->uploadImages(
+            $categoryId,
+            $command->getCoverImage(),
+            $command->getThumbnailImage()
+        );
+
+        return $categoryId;
     }
 
     /**
@@ -61,7 +81,8 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      * @return Category
      *
      * @throws CannotAddCategoryException
-     * @throws CategoryConstraintException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {

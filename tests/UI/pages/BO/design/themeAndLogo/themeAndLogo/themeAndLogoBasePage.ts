@@ -135,4 +135,4 @@ export default class themeAndLogoBasePage extends BOBasePage {
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
-};
+}

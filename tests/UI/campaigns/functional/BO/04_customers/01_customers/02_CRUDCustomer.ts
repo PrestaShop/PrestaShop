@@ -32,6 +32,9 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
   const createCustomerData: CustomerData = new CustomerData();
   const editCustomerData: CustomerData = new CustomerData({enabled: false});
 
+  const createCustomerName: string = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
+  const editCustomerName: string = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,14 +60,14 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomers).to.be.above(0);
+    expect(numberOfCustomers).to.be.above(0);
   });
 
   // 1 : Create customer and go to FO to check sign in is OK
@@ -75,17 +78,17 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.goToAddNewCustomerPage(page);
 
       const pageTitle = await addCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
     });
 
     it('should create customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
       const textResult = await addCustomerPage.createEditCustomer(page, createCustomerData);
-      await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+      expect(textResult).to.equal(customersPage.successfulCreationMessage);
 
       const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
+      expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
     });
   });
 
@@ -100,7 +103,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should sign in by new customer', async function () {
@@ -110,7 +113,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await foLoginPage.customerLogin(page, createCustomerData);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
+      expect(isCustomerConnected).to.eq(true);
     });
 
     it('should logout', async function () {
@@ -120,7 +123,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await foHomePage.logout(page);
 
       const isCustomerConnected = await foHomePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should go back to BO', async function () {
@@ -130,7 +133,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
   });
 
@@ -143,7 +146,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.filterCustomers(page, 'input', 'email', createCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textEmail).to.contains(createCustomerData.email);
+      expect(textEmail).to.contains(createCustomerData.email);
     });
 
     it('should click on view customer', async function () {
@@ -152,22 +155,22 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
     });
 
     it('should check customer personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCustomerInfo', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(page);
-      await expect(cardHeaderText).to.contains(createCustomerData.firstName);
-      await expect(cardHeaderText).to.contains(createCustomerData.lastName);
-      await expect(cardHeaderText).to.contains(createCustomerData.email);
+      expect(cardHeaderText).to.contains(createCustomerData.firstName);
+      expect(cardHeaderText).to.contains(createCustomerData.lastName);
+      expect(cardHeaderText).to.contains(createCustomerData.email);
 
       const numOrders = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Orders');
-      await expect(parseInt(numOrders, 10)).equal(0);
+      expect(parseInt(numOrders, 10)).equal(0);
 
       const numCarts = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Carts');
-      await expect(parseInt(numCarts, 10)).equal(0);
+      expect(parseInt(numCarts, 10)).equal(0);
     });
   });
 
@@ -183,7 +186,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       );
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it(`should filter list by email '${createCustomerData.email}'`, async function () {
@@ -193,7 +196,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.filterCustomers(page, 'input', 'email', createCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textEmail).to.contains(createCustomerData.email);
+      expect(textEmail).to.contains(createCustomerData.email);
     });
 
     it('should go to edit customer page', async function () {
@@ -202,17 +205,17 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.goToEditCustomerPage(page, 1);
 
       const pageTitle = await addCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCustomerPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addCustomerPage.pageTitleEdit);
     });
 
     it('should update customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCustomer', baseContext);
 
       const textResult = await addCustomerPage.createEditCustomer(page, editCustomerData);
-      await expect(textResult).to.equal(customersPage.successfulUpdateMessage);
+      expect(textResult).to.equal(customersPage.successfulUpdateMessage);
 
       const numberOfCustomersAfterUpdate = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterUpdate).to.be.equal(numberOfCustomers + 1);
+      expect(numberOfCustomersAfterUpdate).to.be.equal(numberOfCustomers + 1);
     });
   });
 
@@ -227,7 +230,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should check sign in by edited account', async function () {
@@ -238,10 +241,10 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await foLoginPage.customerLogin(page, editCustomerData);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.false;
+      expect(isCustomerConnected).to.eq(false);
 
       const loginError = await foLoginPage.getLoginError(page);
-      await expect(loginError).to.contains(foLoginPage.disabledAccountErrorText);
+      expect(loginError).to.contains(foLoginPage.disabledAccountErrorText);
     });
 
     it('should go back to BO', async function () {
@@ -251,7 +254,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
   });
 
@@ -264,7 +267,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textEmail).to.contains(editCustomerData.email);
+      expect(textEmail).to.contains(editCustomerData.email);
     });
 
     it('should click on view customer', async function () {
@@ -273,22 +276,22 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      expect(pageTitle).to.contains(viewCustomerPage.pageTitle(editCustomerName));
     });
 
     it('should check customer personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCustomerInfo', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(page);
-      await expect(cardHeaderText).to.contains(editCustomerData.firstName);
-      await expect(cardHeaderText).to.contains(editCustomerData.lastName);
-      await expect(cardHeaderText).to.contains(editCustomerData.email);
+      expect(cardHeaderText).to.contains(editCustomerData.firstName);
+      expect(cardHeaderText).to.contains(editCustomerData.lastName);
+      expect(cardHeaderText).to.contains(editCustomerData.email);
 
       const numOrders = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Orders');
-      await expect(parseInt(numOrders, 10)).equal(0);
+      expect(parseInt(numOrders, 10)).equal(0);
 
       const numCarts = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Carts');
-      await expect(parseInt(numCarts, 10)).equal(0);
+      expect(parseInt(numCarts, 10)).equal(0);
     });
   });
 
@@ -304,7 +307,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       );
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
     it(`should filter list by email '${editCustomerData.email}'`, async function () {
@@ -314,24 +317,24 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textEmail).to.contains(editCustomerData.email);
+      expect(textEmail).to.contains(editCustomerData.email);
     });
 
     it('should delete customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
 
       const textResult = await customersPage.deleteCustomer(page, 1);
-      await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
+      expect(textResult).to.equal(customersPage.successfulDeleteMessage);
 
       const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
+      expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+      expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
 });

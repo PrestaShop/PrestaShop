@@ -373,10 +373,9 @@ class CustomerAddressType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'autocomplete' => true,
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
                 ],
             ])->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
@@ -390,10 +389,9 @@ class CustomerAddressType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'js-address-state-select',
                 ],
+                'autocomplete' => true,
                 'attr' => [
                     'visible' => $showStates,
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
                 ],
             ])->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),

@@ -40,6 +40,11 @@
     font-size: 1.188rem;
     line-height: inherit;
     color: $white;
+
+    &.close-btn {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
   }
 
   &.mobile-nav {
@@ -73,6 +78,7 @@
     .logo-container {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 0.875rem;
       border-bottom: 1px solid $gray-dark-text;
 

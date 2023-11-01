@@ -73,6 +73,22 @@ $(() => {
   customerAddressesGrid.addExtension(new SortingExtension());
   customerAddressesGrid.addExtension(new LinkRowActionExtension());
 
+  const customerOrdersGrid = new Grid('customer_order');
+  customerOrdersGrid.addExtension(new SortingExtension());
+  customerOrdersGrid.addExtension(new SubmitRowActionExtension());
+  customerOrdersGrid.addExtension(new LinkRowActionExtension());
+
+  const customerCartsGrid = new Grid('customer_cart');
+  customerCartsGrid.addExtension(new SortingExtension());
+  customerCartsGrid.addExtension(new SubmitRowActionExtension());
+  customerCartsGrid.addExtension(new LinkRowActionExtension());
+
+  const customerBoughtProductsGrid = new Grid('customer_bought_product');
+  customerBoughtProductsGrid.addExtension(new SortingExtension());
+
+  const customerViewedProductsGrid = new Grid('customer_viewed_product');
+  customerViewedProductsGrid.addExtension(new SortingExtension());
+
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 

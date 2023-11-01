@@ -58,7 +58,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
@@ -66,7 +66,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
 
     numberOfSQLQueries = await sqlManagerPage.resetAndGetNumberOfLines(page);
     if (numberOfSQLQueries !== 0) {
-      await expect(numberOfSQLQueries).to.be.above(0);
+      expect(numberOfSQLQueries).to.be.above(0);
     }
   });
 
@@ -77,14 +77,14 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
       await sqlManagerPage.goToNewSQLQueryPage(page);
 
       const pageTitle = await addSqlQueryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+      expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
     });
 
     it('should create new SQL query', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewSQLQuery', baseContext);
 
       const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
-      await expect(textResult).to.equal(addSqlQueryPage.successfulCreationMessage);
+      expect(textResult).to.equal(addSqlQueryPage.successfulCreationMessage);
     });
   });
 
@@ -95,7 +95,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
       filePath = await sqlManagerPage.exportSqlResultDataToCsv(page);
 
       const doesFileExist = await files.doesFileExist(filePath, 5000);
-      await expect(doesFileExist, 'Export of data has failed').to.be.true;
+      expect(doesFileExist, 'Export of data has failed').to.eq(true);
     });
 
     it('should check existence of query result data in csv file', async function () {
@@ -105,7 +105,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
 
       for (let row = 1; row <= numberOfQuery; row++) {
         const textExist = await files.isTextInFile(filePath, fileContent, true, true);
-        await expect(textExist, `${fileContent} was not found in the file`).to.be.true;
+        expect(textExist, `${fileContent} was not found in the file`).to.eq(true);
       }
     });
   });
@@ -118,17 +118,17 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
       await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(sqlQueryName).to.contains(sqlQueryData.name);
+      expect(sqlQueryName).to.contains(sqlQueryData.name);
     });
 
     it('should delete SQL query', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSQLQuery', baseContext);
 
       const textResult = await sqlManagerPage.deleteSQLQuery(page, 1);
-      await expect(textResult).to.equal(sqlManagerPage.successfulDeleteMessage);
+      expect(textResult).to.equal(sqlManagerPage.successfulDeleteMessage);
 
       const numberOfSQLQueriesAfterDelete = await sqlManagerPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSQLQueriesAfterDelete).to.be.equal(numberOfSQLQueries);
+      expect(numberOfSQLQueriesAfterDelete).to.be.equal(numberOfSQLQueries);
     });
   });
 });

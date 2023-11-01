@@ -19,9 +19,19 @@ type ProductCreator = {
   category?: string
   type?: string
   status?: boolean
+  applyChangesToAllStores?: boolean
   summary?: string
   description?: string
   reference?: string
+  mpn?: string | null
+  upc?: string | null
+  ean13?: string | null
+  isbn?: string | null
+  features?: ProductFeatures[]
+  files?: ProductFiles[]
+  displayCondition?: boolean
+  condition?: string
+  customizations?: ProductCustomizations[]
   quantity?: number
   tax?: number
   price?: number
@@ -45,14 +55,35 @@ type ProductCreator = {
   downloadFile?: boolean
   fileName?: string
   allowedDownload?: number
-  weight?: number
+  expirationDate?: string | null
+  numberOfDays?: number | null
+  packageDimensionWeight?: number
+  packageDimensionDepth?: number
+  packageDimensionHeight?: number
+  packageDimensionWidth?: number
+  deliveryTime?: string
   combinations?: ProductCombination[]
+  metaTitle?: string | null
+  metaDescription?: string | null
+  friendlyUrl?: string | null
 };
 
 type ProductCombination = {
   name: string
   price: number
 };
+
+type ProductFeatures = {
+  featureName: string,
+  preDefinedValue?: string,
+  customizedValue?: string,
+}
+
+type ProductFiles = {
+  fileName: string,
+  description: string,
+  file: string,
+}
 
 type ProductCombinationOptions = {
   reference: string
@@ -69,28 +100,34 @@ type ProductCombinationBulk = {
 
 type ProductCombinationBulkRetailPrice = {
   costPriceToEnable: boolean
-  costPrice: number
+  costPrice?: number
   impactOnPriceTIncToEnable: boolean
-  impactOnPriceTInc: number
+  impactOnPriceTInc?: number
   impactOnWeightToEnable: boolean
-  impactOnWeight: number
+  impactOnWeight?: number
 }
 
 type ProductCombinationBulkSpecificReferences = {
   referenceToEnable: boolean
-  reference: string
+  reference?: string
 }
 
 type ProductCombinationBulkStock = {
   quantityToEnable: boolean
-  quantity: number
+  quantity?: number
   minimalQuantityToEnable: boolean
-  minimalQuantity: number
+  minimalQuantity?: number
   stockLocationToEnable: boolean
-  stockLocation: string
+  stockLocation?: string
 };
 
 type ProductCustomization = {
+  label: string
+  type: string
+  required: boolean
+};
+
+type ProductCustomizations = {
   label: string
   type: string
   required: boolean
@@ -122,10 +159,15 @@ type ProductFilterMinMax = {
 }
 
 type ProductHeaderSummary = {
+  imageUrl: string
   reference: string
   quantity: string
   priceTaxIncl: string
   priceTaxExc: string
+  mpn: string
+  upc: string
+  ean_13: string
+  isbn: string
 };
 
 type ProductInformations = {
@@ -163,7 +205,7 @@ type ProductReviewCreator = {
 };
 
 type ProductSpecificPrice = {
-  attributes: string | null
+  attributes: number | null
   discount: number
   startingAt: number
   reductionType: string
@@ -199,4 +241,7 @@ export {
   ProductReviewCreator,
   ProductSpecificPrice,
   ProductStockMovement,
+  ProductFeatures,
+  ProductFiles,
+  ProductCustomizations,
 };

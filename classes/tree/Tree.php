@@ -304,13 +304,13 @@ class TreeCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
-        ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+                    $this->getContext()->controller->getTemplatePath()
+                ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
                 $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
-        ) . $this->getTemplateDirectory() . $template)) {
+                    $this->getContext()->controller->getTemplatePath()
+                ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
@@ -319,11 +319,11 @@ class TreeCore
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                . $this->getTemplateDirectory() . $template)) {
+            . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    . $this->getTemplateDirectory() . $template;
+                . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template)) {
+            . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template;
         } else {
@@ -441,7 +441,7 @@ class TreeCore
                         'title' => $this->getTitle(),
                         'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
                     ]
-            );
+                );
             $template->assign('header', $headerTemplate->fetch());
         }
 
@@ -495,9 +495,19 @@ class TreeCore
         return $this->getToolbar()->render();
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     public function useInput()
     {
-        return isset($this->_input_type);
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return false;
     }
 
     public function useToolbar()

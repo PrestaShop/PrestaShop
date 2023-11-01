@@ -81,6 +81,7 @@ class LanguageController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'enableSidebar' => true,
         ]);
     }
 
@@ -141,6 +142,7 @@ class LanguageController extends FrameworkBundleAdminController
             'languageForm' => $languageForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New language', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -200,6 +202,13 @@ class LanguageController extends FrameworkBundleAdminController
             'editableLanguage' => $editableLanguage,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing language %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $editableLanguage->getName(),
+                ]
+            ),
         ]);
     }
 
@@ -207,12 +216,12 @@ class LanguageController extends FrameworkBundleAdminController
      * Deletes language
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param int $languageId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function deleteAction($languageId)
     {
         try {
@@ -230,12 +239,12 @@ class LanguageController extends FrameworkBundleAdminController
      * Deletes languages in bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function bulkDeleteAction(Request $request)
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);
@@ -258,12 +267,12 @@ class LanguageController extends FrameworkBundleAdminController
      * Toggles language status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param int $languageId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function toggleStatusAction($languageId)
     {
         try {
@@ -290,13 +299,13 @@ class LanguageController extends FrameworkBundleAdminController
      * Toggles languages status in bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param Request $request
      * @param string $status
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function bulkToggleStatusAction(Request $request, $status)
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);
@@ -421,11 +430,7 @@ class LanguageController extends FrameworkBundleAdminController
      */
     private function getBulkLanguagesFromRequest(Request $request)
     {
-        $languageIds = $request->request->get('language_language_bulk');
-
-        if (!is_array($languageIds)) {
-            return [];
-        }
+        $languageIds = $request->request->all('language_language_bulk');
 
         foreach ($languageIds as $i => $languageId) {
             $languageIds[$i] = (int) $languageId;

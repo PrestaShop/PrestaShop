@@ -13,7 +13,7 @@ import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
@@ -76,7 +76,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await invoicesPage.closeSfToolBar(page);
 
           const pageTitle = await invoicesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+          expect(pageTitle).to.contains(invoicesPage.pageTitle);
         });
 
         it(`should ${test.args.action} product image`, async function () {
@@ -85,7 +85,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await invoicesPage.enableProductImage(page, test.args.enable);
 
           const textMessage = await invoicesPage.saveInvoiceOptions(page);
-          await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+          expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
         });
       });
 
@@ -99,7 +99,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await homePage.changeLanguage(page, 'en');
 
           const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to login page', async function () {
@@ -108,7 +108,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await homePage.goToLoginPage(page);
 
           const pageTitle = await foLoginPage.getPageTitle(page);
-          await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+          expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
         });
 
         it('should sign in with default customer', async function () {
@@ -117,7 +117,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await foLoginPage.customerLogin(page, Customers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+          expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should add product to cart', async function () {
@@ -131,7 +131,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await productPage.addProductToTheCart(page);
 
           const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-          await expect(notificationsNumber).to.be.equal(1);
+          expect(notificationsNumber).to.be.equal(1);
         });
 
         it('should go to delivery step', async function () {
@@ -142,7 +142,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
 
           // Address step - Go to delivery step
           const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-          await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+          expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it('should go to payment step', async function () {
@@ -150,7 +150,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
 
           // Delivery step - Go to payment step
           const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-          await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+          expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it('should choose payment method and confirm the order', async function () {
@@ -161,7 +161,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
 
           // Check the confirmation message
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
@@ -170,7 +170,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await orderConfirmationPage.logout(page);
 
           const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+          expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
         it('should go back to BO', async function () {
@@ -180,7 +180,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
           const pageTitle = await invoicesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+          expect(pageTitle).to.contains(invoicesPage.pageTitle);
         });
       });
 
@@ -195,7 +195,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           );
 
           const pageTitle = await ordersPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(ordersPage.pageTitle);
+          expect(pageTitle).to.contains(ordersPage.pageTitle);
         });
 
         it('should go to the created order page', async function () {
@@ -204,14 +204,14 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await ordersPage.goToOrder(page, 1);
 
           const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+          expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
         });
 
         it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
           const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-          await expect(result).to.equal(OrderStatuses.shipped.name);
+          expect(result).to.equal(OrderStatuses.shipped.name);
         });
 
         it('should download the invoice', async function () {
@@ -219,17 +219,17 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
 
           // Download invoice
           filePath = await orderPageTabListBlock.downloadInvoice(page);
-          await expect(filePath).to.not.be.null;
+          expect(filePath).to.not.eq(null);
 
           const exist = await files.doesFileExist(filePath);
-          await expect(exist).to.be.true;
+          expect(exist).to.eq(true);
         });
 
         it('should check the product images in the PDF File', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImages${index}`, baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
-          await expect(imageNumber).to.be.equal(test.args.imageNumber);
+          expect(imageNumber).to.be.equal(test.args.imageNumber);
 
           await files.deleteFile(filePath);
         });

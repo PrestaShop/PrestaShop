@@ -52,7 +52,7 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   it('should go to \'Groups\' page', async function () {
@@ -61,14 +61,14 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
     await customerSettingsPage.goToGroupsPage(page);
 
     const pageTitle = await groupsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(groupsPage.pageTitle);
+    expect(pageTitle).to.contains(groupsPage.pageTitle);
   });
 
   it('should reset all filters and get number of groups in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfGroups).to.be.above(0);
+    expect(numberOfGroups).to.be.above(0);
   });
 
   describe('Create group in BO', async () => {
@@ -78,17 +78,17 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
       await groupsPage.goToNewGroupPage(page);
 
       const pageTitle = await addGroupPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
     });
 
     it('should create group and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createGroup', baseContext);
 
       const textResult = await addGroupPage.createEditGroup(page, createGroupData);
-      await expect(textResult).to.contains(groupsPage.successfulCreationMessage);
+      expect(textResult).to.contains(groupsPage.successfulCreationMessage);
 
       const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + 1);
+      expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + 1);
     });
   });
 
@@ -100,7 +100,7 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
       await groupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
 
       const textEmail = await groupsPage.getTextColumn(page, 1, 'b!name');
-      await expect(textEmail).to.contains(createGroupData.name);
+      expect(textEmail).to.contains(createGroupData.name);
     });
 
     it('should go to edit group page', async function () {
@@ -109,17 +109,17 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
       await groupsPage.gotoEditGroupPage(page, 1);
 
       const pageTitle = await addGroupPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
     });
 
     it('should update group', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateGroup', baseContext);
 
       const textResult = await addGroupPage.createEditGroup(page, editGroupData);
-      await expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
+      expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
 
       const numberOfGroupsAfterUpdate = await groupsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfGroupsAfterUpdate).to.be.equal(numberOfGroups + 1);
+      expect(numberOfGroupsAfterUpdate).to.be.equal(numberOfGroups + 1);
     });
   });
 
@@ -131,21 +131,21 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
       await groupsPage.filterTable(page, 'input', 'b!name', editGroupData.name);
 
       const textEmail = await groupsPage.getTextColumn(page, 1, 'b!name');
-      await expect(textEmail).to.contains(editGroupData.name);
+      expect(textEmail).to.contains(editGroupData.name);
     });
 
     it('should delete group', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteGroup', baseContext);
 
       const textResult = await groupsPage.deleteGroup(page, 1);
-      await expect(textResult).to.contains(groupsPage.successfulDeleteMessage);
+      expect(textResult).to.contains(groupsPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfGroupsAfterDelete = await groupsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfGroupsAfterDelete).to.be.equal(numberOfGroups);
+      expect(numberOfGroupsAfterDelete).to.be.equal(numberOfGroups);
     });
   });
 });

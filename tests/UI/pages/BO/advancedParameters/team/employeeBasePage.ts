@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 export default class EmployeeBasePage extends BOBasePage {
-  public readonly pageTitleEdit: string;
+  public readonly pageTitleEdit: (firstName: string, lastName: string) => string;
 
   protected readonly firstNameInput: string;
 
@@ -37,7 +37,8 @@ export default class EmployeeBasePage extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitleEdit = (firstName: string, lastName: string) => `Editing ${firstName} ${lastName}'s profile • `
+      + `${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.firstNameInput = '#employee_firstname';
@@ -79,4 +80,4 @@ export default class EmployeeBasePage extends BOBasePage {
   async cancel(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.cancelButton);
   }
-};
+}

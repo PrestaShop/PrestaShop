@@ -32,10 +32,16 @@ if (!defined('_PS_MODE_DEV_')) {
 if (!defined('_PS_DISPLAY_COMPATIBILITY_WARNING_')) {
     define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
 }
+if (!defined('_PS_DISPLAY_ONLY_ERRORS_')) {
+    define('_PS_DISPLAY_ONLY_ERRORS_', false);
+}
 if (_PS_MODE_DEV_ === true) {
     $errorReportingLevel = E_ALL | E_STRICT;
     if (_PS_DISPLAY_COMPATIBILITY_WARNING_ === false) {
         $errorReportingLevel = $errorReportingLevel & ~E_DEPRECATED & ~E_USER_DEPRECATED;
+    }
+    if (_PS_DISPLAY_ONLY_ERRORS_ !== false) {
+        $errorReportingLevel = $errorReportingLevel & ~E_WARNING & ~E_NOTICE;
     }
     @ini_set('display_errors', 'on');
     @error_reporting($errorReportingLevel);
@@ -56,6 +62,9 @@ if (!defined('_PS_SMARTY_CACHING_TYPE_')) {
 }
 if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
+}
+if (!defined('_PS_API_FORCE_TLS_VERSION_')) {
+    define('_PS_API_FORCE_TLS_VERSION_', true);
 }
 
 if (!defined('_PS_DO_NOT_LOAD_CONFIGURATION_')) {

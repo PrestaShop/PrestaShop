@@ -81,10 +81,6 @@ runs:
           tests/**/package-lock.json
           themes/**/package-lock.json
 
-    - name: Setup NPM
-      shell: bash
-      run: npm i -g npm@${{ inputs.npm-version }}
-
     - name: Get Composer Cache Directory
       shell: bash
       id: composer-cache

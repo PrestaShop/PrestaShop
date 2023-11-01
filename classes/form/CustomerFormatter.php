@@ -182,7 +182,8 @@ class CustomerFormatterCore implements FormFormatterInterface
                         'Shop.Forms.Labels'
                     )
                 )
-                ->setRequired($this->password_is_required);
+                ->setRequired($this->password_is_required)
+                ->setAutocompleteAttribute('new-password');
         }
 
         if ($this->ask_for_new_password) {
@@ -195,7 +196,8 @@ class CustomerFormatterCore implements FormFormatterInterface
                         [],
                         'Shop.Forms.Labels'
                     )
-                );
+                )
+                ->setAutocompleteAttribute('new-password');
         }
 
         if ($this->ask_for_birthdate) {

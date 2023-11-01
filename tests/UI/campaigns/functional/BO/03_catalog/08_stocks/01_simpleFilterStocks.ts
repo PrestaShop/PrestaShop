@@ -49,14 +49,14 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
     await stocksPage.closeSfToolBar(page);
 
     const pageTitle = await stocksPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(stocksPage.pageTitle);
+    expect(pageTitle).to.contains(stocksPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
 
     numberOfProducts = await stocksPage.getTotalNumberOfProducts(page);
-    await expect(numberOfProducts).to.be.above(0);
+    expect(numberOfProducts).to.be.above(0);
   });
 
   // Filter products by name, reference, supplier
@@ -72,11 +72,11 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
         await stocksPage.simpleFilter(page, test.args.filterValue);
 
         const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
-        await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
+        expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
           const textColumn = await stocksPage.getTextColumnFromTableStocks(page, i, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -84,7 +84,7 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
-        await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+        expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });
   });

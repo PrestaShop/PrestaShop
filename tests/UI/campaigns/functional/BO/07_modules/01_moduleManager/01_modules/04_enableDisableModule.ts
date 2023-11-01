@@ -46,24 +46,10 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   [
-    {
-      args: {
-        title: 'disable mobile',
-        action: 'disableMobile',
-        message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag),
-      },
-    },
-    {
-      args: {
-        title: 'enable mobile',
-        action: 'enableMobile',
-        message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag),
-      },
-    },
     {
       args: {
         title: 'disable the module',
@@ -76,7 +62,7 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action, baseContext);
 
       const successMessage = await moduleManagerPage.setActionInModule(page, Modules.availableQuantities, test.args.action);
-      await expect(successMessage).to.eq(test.args.message);
+      expect(successMessage).to.eq(test.args.message);
     });
   });
 
@@ -84,14 +70,14 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.availableQuantities);
-    await expect(isModuleVisible).to.be.true;
+    expect(isModuleVisible).to.eq(true);
   });
 
   it('should enable the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableModule', baseContext);
 
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.availableQuantities, 'enable');
-    await expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.availableQuantities.tag));
+    expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.availableQuantities.tag));
   });
 
   it('should show all modules', async function () {
@@ -100,6 +86,6 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
     await moduleManagerPage.filterByStatus(page, 'all-Modules');
 
     const blocksNumber = await moduleManagerPage.getNumberOfBlocks(page);
-    await expect(blocksNumber).greaterThan(2);
+    expect(blocksNumber).greaterThan(2);
   });
 });

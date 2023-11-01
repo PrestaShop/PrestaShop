@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 use Address;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
@@ -43,6 +44,7 @@ use PrestaShopException;
 /**
  * Handles update of customer address
  */
+#[AsCommandHandler]
 final class EditCustomerAddressHandler extends AbstractAddressHandler implements EditCustomerAddressHandlerInterface
 {
     /**

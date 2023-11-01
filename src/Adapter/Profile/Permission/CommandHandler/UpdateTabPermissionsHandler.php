@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler;
 
 use Access;
 use Exception;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\CommandHandler\UpdateTabPermissionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\PermissionUpdateException;
@@ -40,6 +41,7 @@ use Profile;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerInterface
 {
     /**

@@ -57,7 +57,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
     await productSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -75,7 +75,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
       );
 
       const result = await productSettingsPage.changeCatalogModeStatus(page, test.args.enable);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
     if (test.args.enable) {
@@ -104,7 +104,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
           );
 
           const result = await productSettingsPage.setShowPricesStatus(page, showPrices.args.enable);
-          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
         });
 
         it('should check product prices in the home page', async function () {
@@ -114,7 +114,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
           await homePage.changeLanguage(page, 'en');
 
           const isPriceVisible = await homePage.isPriceVisible(page, 1);
-          await expect(isPriceVisible).to.equal(showPrices.args.enable);
+          expect(isPriceVisible).to.equal(showPrices.args.enable);
         });
 
         it('should go to the first product page', async function () {
@@ -123,17 +123,17 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
           await homePage.goToProductPage(page, 1);
 
           const pageTitle = await productPage.getPageTitle(page);
-          await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+          expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
         });
 
         it('should check the existence of product price and add to cart button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkPrice&AddToCartButton${index}`, baseContext);
 
           let isVisible = await productPage.isPriceDisplayed(page);
-          await expect(isVisible).to.equal(showPrices.args.isPriceExist);
+          expect(isVisible).to.equal(showPrices.args.isPriceExist);
 
           isVisible = await productPage.isAddToCartButtonDisplayed(page);
-          await expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
+          expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
         });
 
         it('should close the page and go back to BO', async function () {
@@ -142,7 +142,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
           page = await productPage.closePage(browserContext, page, 0);
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
       });
     } else {
@@ -158,7 +158,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         await homePage.changeLanguage(page, 'en');
 
         const isPriceVisible = await homePage.isPriceVisible(page, 1);
-        await expect(isPriceVisible).to.be.true;
+        expect(isPriceVisible).to.eq(true);
       });
 
       it('should go to the first product page', async function () {
@@ -167,7 +167,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should check the existence of product price and add to cart button', async function () {
@@ -179,10 +179,10 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         );
 
         let isVisible = await productPage.isPriceDisplayed(page);
-        await expect(isVisible).to.be.true;
+        expect(isVisible).to.eq(true);
 
         isVisible = await productPage.isAddToCartButtonDisplayed(page);
-        await expect(isVisible).to.be.true;
+        expect(isVisible).to.eq(true);
       });
 
       it('should close the page and go back to BO', async function () {
@@ -191,7 +191,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         page = await productPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     }
   });

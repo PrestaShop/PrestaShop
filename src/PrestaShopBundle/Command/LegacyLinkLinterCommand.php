@@ -48,6 +48,86 @@ class LegacyLinkLinterCommand extends Command
      */
     private $adminRouteProvider;
 
+    /**
+     * The _legacy_link configuration is not relevant for these routes, no need to apply the linter on them
+     */
+    private const ROUTE_WHITE_LIST = [
+        'admin_common_notifications_ack',
+        'admin_common_pagination',
+        'admin_common_sidebar',
+        'admin_common_reset_search',
+        'admin_common_reset_search_by_filter_id',
+        'admin_product_new',
+        'admin_product_form',
+        'admin_product_virtual_save_action',
+        'admin_product_virtual_remove_file_action',
+        'admin_product_virtual_download_file_action',
+        'admin_product_virtual_remove_action',
+        'admin_product_attachement_add_action',
+        'admin_product_image_upload',
+        'admin_product_image_positions',
+        'admin_product_image_form',
+        'admin_product_image_delete',
+        'admin_get_product_combinations',
+        'admin_product_catalog',
+        'admin_product_catalog_filters',
+        'admin_product_list',
+        'admin_product_bulk_action',
+        'admin_product_unit_action',
+        'admin_product_mass_edit_action',
+        'admin_product_export_action',
+        'admin_security_compromised',
+        'admin_attribute_get_all',
+        'admin_delete_attribute',
+        'admin_delete_all_attributes',
+        'admin_get_form_images_combination',
+        'admin_category_simple_add_form',
+        'admin_get_ajax_categories',
+        'admin_combination_generate_form',
+        'admin_feature_get_feature_values',
+        'admin_specific_price_list',
+        'admin_get_specific_price_update_form',
+        'admin_specific_price_add',
+        'admin_specific_price_update',
+        'admin_delete_specific_price',
+        'admin_supplier_refresh_product_supplier_combination_form',
+        'admin_warehouse_refresh_product_warehouse_combination_form',
+        'admin_products_combinations',
+        'admin_products_combinations_ids',
+        'admin_products_combinations_update_combination_from_listing',
+        'admin_products_combinations_edit_combination',
+        'admin_products_combinations_bulk_combination_form',
+        'admin_products_combinations_bulk_edit_combination',
+        'admin_products_combinations_delete_combination',
+        'admin_products_combinations_bulk_delete',
+        'admin_products_attribute_groups',
+        'admin_all_attribute_groups',
+        'admin_products_combinations_generate',
+        'admin_products_specific_prices_list',
+        'admin_products_specific_prices_create',
+        'admin_products_specific_prices_edit',
+        'admin_products_specific_prices_delete',
+        'admin_products_light_list',
+        'admin_products_search',
+        'admin_products_reset_grid_search',
+        'admin_products_grid_category_filter',
+        'admin_products_grid_shop_previews',
+        'admin_products_download_virtual_product_file',
+        'admin_products_delete_from_shop_group',
+        'admin_products_delete_from_shop',
+        'admin_products_enable_for_all_shops',
+        'admin_products_enable_for_shop_group',
+        'admin_products_disable_for_all_shops',
+        'admin_products_disable_for_shop_group',
+        'admin_products_search_associations',
+        'admin_products_search_combinations',
+        'admin_products_search_product_combinations',
+        'admin_products_quantity',
+        'admin_categories_get_categories_tree',
+        'admin_catalog_price_rules_list_for_product',
+        'admin_features_horizontal_index',
+    ];
+
     public function __construct(LegacyLinkLinter $legacyLinkLinter, AdminRouteProvider $adminRouteProvider)
     {
         parent::__construct();
@@ -99,7 +179,7 @@ class LegacyLinkLinterCommand extends Command
         $unconfiguredRoutes = [];
 
         foreach ($routes as $routeName => $route) {
-            if (true === $this->legacyLinkLinter->lint('_legacy_link', $route)) {
+            if (in_array($routeName, self::ROUTE_WHITE_LIST) || true === $this->legacyLinkLinter->lint('_legacy_link', $route)) {
                 continue;
             }
             $unconfiguredRoutes[] = $routeName;

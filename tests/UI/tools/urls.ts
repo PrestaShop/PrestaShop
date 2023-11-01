@@ -9,8 +9,8 @@ import {Page} from 'playwright';
 const loginBO = async function (page: Page): Promise<void> {
   const currentUrl: string = page.url();
 
-  await page.type('#email', global.BO.EMAIL);
-  await page.type('#passwd', global.BO.PASSWD);
+  await page.locator('#email').fill(global.BO.EMAIL);
+  await page.locator('#passwd').fill(global.BO.PASSWD);
 
   await Promise.all([
     page.click('#submit_login'),
@@ -34,8 +34,8 @@ const loginBO = async function (page: Page): Promise<void> {
 const loginFO = async function (page: Page): Promise<void> {
   const currentUrl: string = page.url();
 
-  await page.type('#login-form input[name=email]', Customers.johnDoe.email);
-  await page.type('#login-form input[name=password]', Customers.johnDoe.password);
+  await page.locator('#login-form input[name=email]').fill(Customers.johnDoe.email);
+  await page.locator('#login-form input[name=password]').fill(Customers.johnDoe.password);
 
   await Promise.all([
     page.click('#submit-login'),

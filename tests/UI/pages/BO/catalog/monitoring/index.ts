@@ -32,8 +32,6 @@ class Monitoring extends BOBasePage {
 
   private readonly tableRow: (table: string, row: number) => string;
 
-  private readonly tableEmptyRow: (table: string) => string;
-
   private readonly tableColumn: (table: string, row: number, column: string) => string;
 
   private readonly enableColumn: (table: string, row: number) => string;
@@ -109,7 +107,6 @@ class Monitoring extends BOBasePage {
     // Table
     this.tableBody = (table: string) => `${this.gridTable(table)} tbody`;
     this.tableRow = (table: string, row: number) => `${this.tableBody(table)} tr:nth-child(${row})`;
-    this.tableEmptyRow = (table: string) => `${this.tableBody(table)} tr.empty_row`;
     this.tableColumn = (table: string, row: number, column: string) => `${this.tableRow(table, row)} td.column-${column}`;
 
     // Enable column
@@ -297,7 +294,7 @@ class Monitoring extends BOBasePage {
    * @param deletionModePosition {number} value of mode position to delete
    * @return {Promise<string>}
    */
-  async deleteCategoryInGrid(page: Page, tableName: string, row: number, deletionModePosition: number) {
+  async deleteCategoryInGrid(page: Page, tableName: string, row: number, deletionModePosition: number): Promise<string> {
     await this.dialogListener(page, true);
     await this.openDropdownMenu(page, tableName, row);
     await Promise.all([

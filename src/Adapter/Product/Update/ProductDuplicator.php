@@ -465,7 +465,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                     ->where('cp.id_category = :categoryId')
                     ->setParameter('categoryId', $categoryId)
                     ->addOrderBy('position', 'DESC')
-                    ->execute()
+                    ->executeQuery()
                     ->fetchOne()
                 ;
             }
@@ -654,7 +654,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 ->from($this->dbPrefix . 'feature_value')
                 ->select('id_feature_value')
                 ->addOrderBy('id_feature_value', 'DESC')
-                ->execute()
+                ->executeQuery()
                 ->fetchOne()
             ;
 
@@ -748,7 +748,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             ->from($this->dbPrefix . 'customization_field')
             ->select('id_customization_field')
             ->addOrderBy('id_customization_field', 'DESC')
-            ->execute()
+            ->executeQuery()
             ->fetchOne()
         ;
 
@@ -1025,6 +1025,10 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                     return 'null';
                 }
 
+                if(gettype($columnValue) == "string") {
+                    $columnValue = str_replace("'", "''", $columnValue);
+                }
+
                 // We stringify values to avoid SQL syntax error, the float and integers will correctly casted in the DB anyway
                 // however string values and date time need to be quoted
                 return "'$columnValue'";
@@ -1087,12 +1091,12 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $arrayType = is_int(reset($value)) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY;
                 $qb
                     ->andWhere("$column IN (:$column)")
-                    ->setParameter(":$column", $value, $arrayType)
+                    ->setParameter($column, $value, $arrayType)
                 ;
             } else {
                 $qb
                     ->andWhere("$column = :$column")
-                    ->setParameter(":$column", $value)
+                    ->setParameter($column, $value)
                 ;
             }
         }
@@ -1102,7 +1106,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         }
 
         try {
-            $rows = $qb->execute()->fetchAllAssociative();
+            $rows = $qb->executeQuery()->fetchAllAssociative();
         } catch (Exception $e) {
             throw new CannotDuplicateProductException(
                 sprintf('Cannot select rows from table %s', $this->dbPrefix . $table),

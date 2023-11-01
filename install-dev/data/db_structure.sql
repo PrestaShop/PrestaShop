@@ -756,7 +756,7 @@ CREATE TABLE `PREFIX_customized_data` (
   `id_customization` int(10) unsigned NOT NULL,
   `type` tinyint(1) NOT NULL,
   `index` int(3) NOT NULL,
-  `value` varchar(255) NOT NULL,
+  `value` varchar(1024) NOT NULL,
   `id_module` int(10) NOT NULL DEFAULT '0',
   `price` decimal(20, 6) NOT NULL DEFAULT '0',
   `weight` decimal(20, 6) NOT NULL DEFAULT '0',
@@ -1269,7 +1269,8 @@ CREATE TABLE `PREFIX_orders` (
   KEY `id_shop_group` (`id_shop_group`),
   KEY (`current_state`),
   KEY `id_shop` (`id_shop`),
-  INDEX `date_add`(`date_add`)
+  INDEX `date_add`(`date_add`),
+  INDEX `invoice_date`(`invoice_date`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Order tax detail */

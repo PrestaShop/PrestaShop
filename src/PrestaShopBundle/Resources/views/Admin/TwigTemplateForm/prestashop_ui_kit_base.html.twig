@@ -732,11 +732,7 @@
         <div class="popover-error-list">
           <ul>
             {%- for error in errors -%}
-              <li class="text-danger"> {{
-                error.messagePluralization is null
-                ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-                }}
+              <li class="text-danger"> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
               </li>
             {% endfor %}
           </ul>
@@ -756,7 +752,7 @@
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|transchoice(errors|length, {}, 'Admin.Global') }}</u>
+          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|trans({'%count%': errors|length}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
@@ -774,11 +770,7 @@
       <div class="d-inline-block">
         {% for error in errors %}
           <div class="text-danger">
-            <p> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
+            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
             </p>
           </div>
         {%- endfor -%}
@@ -795,11 +787,7 @@
       </button>
       <div class="alert-text">
         {% for error in errors %}
-            <p> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
+            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
             </p>
         {%- endfor -%}
       </div>
@@ -1466,8 +1454,8 @@
         {% if child.vars.label_tab is defined %}
           {{ form_label(child, child.vars.label_tab) }}
         {% endif %}
-        {{ form_widget(child) }}
         {{ form_errors(child) }}
+        {{ form_widget(child) }}
       </div>
       {% set firstRenderedChild = false %}
       {% endif %}
@@ -1477,12 +1465,15 @@
 {% endblock %}
 
 {%- block accordion_widget -%}
-  <div class="accordion accordion-form" id="{{ form.vars.id }}">
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' accordion accordion-form')|trim,
+  }) -%}
+  <div {{ block('widget_attributes') }}>
     {% set firstChild = true %}
     {% for child in form %}
       {% if child.vars.compound %}
       {% set hasError = child.vars.valid != true %}
-      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) %}
+      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) or expand_all %}
       <div class="card">
         <div class="card-header" id="{{ child.vars.id }}_accordion_header">
           <h2 class="mb-0">
@@ -1493,7 +1484,10 @@
               data-target="#{{ child.vars.id }}_accordion"
               aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}"
               aria-controls="{{ child.vars.id }}_accordion">
-              {{ child.vars.label }}
+              <span class="accordion-form-button-label">{{ child.vars.label }}</span>
+              {% if child.vars.label_subtitle is defined %}
+                <span class="accordion-form-button-sub-label">{{ child.vars.label_subtitle }}</span>
+              {% endif %}
               <i class="material-icons"></i>
             </button>
           </h2>
@@ -1527,7 +1521,8 @@
       <div class="{% if use_button_groups %}btn-group {% endif %}group-{{ group }}">
         {# Render inline actions #}
         {% set inlineButtonsLimit = form.vars.inline_buttons_limit %}
-        {% for action in form.children %}
+        {% for button in buttons %}
+          {% set action = attribute(form, button) %}
           {% if inlineButtonsLimit is same as(null) or loop.index <= inlineButtonsLimit %}
             {# Remove labels from inline elements if they are not forced #}
             {% if form.vars.use_inline_labels %}
@@ -1540,7 +1535,7 @@
         {% endfor %}
 
         {# Render remaining actions in dropdown #}
-        {% if inlineButtonsLimit is not same as(null) and form.children|length > inlineButtonsLimit %}
+        {% if inlineButtonsLimit is not same as(null) and buttons|length > inlineButtonsLimit %}
           <a id="{{ form.vars.id }}_dropdown" class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
              data-toggle="dropdown"
              aria-haspopup="true"
@@ -1548,7 +1543,9 @@
           >
           </a>
           <div class="dropdown-menu">
-            {% for action in form.children|slice(inlineButtonsLimit) %}
+            {% set remainingButtons = buttons|slice(inlineButtonsLimit) %}
+            {% for button in remainingButtons %}
+              {% set action = attribute(form, button) %}
               {{ form_widget(action, {'attr': {
                 'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
               }}) }}
@@ -1624,3 +1621,45 @@
     {% endfor -%}
   </div>
 {%- endblock -%}
+
+{% block image_with_preview_widget %}
+  {% if data is defined and data is not empty %}
+    <div>
+      {% for preview_image in data %}
+{#        Checking for is defined because they file might come from submitted form when thera are too many thumbnails and an errro#}
+{#        in that case data will be a file based on symfony and not a image array formatted for this form#}
+        {% if preview_image.image_path is defined %}
+          {% if can_be_deleted %}
+            <figure class="figure">
+              <img src="{{ preview_image.image_path }}" class="figure-img img-fluid img-thumbnail">
+              <figcaption class="figure-caption">
+                {% if show_size %}
+                  <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ preview_image.size }}</p>
+                {% endif %}
+                <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
+                        data-form-submit-url="{{ preview_image.delete_path }}"
+                        data-form-csrf-token="{{ csrf_token(csrf_delete_token_id) }}"
+                >
+                  <i class="material-icons">
+                    delete_forever
+                  </i>
+                  {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                </button>
+              </figcaption>
+            </figure>
+          {% else %}
+            {% for preview_image in data %}
+              <figure class="figure">
+                <img src="{{ preview_image.image_path }}" class="figure-img img-fluid img-thumbnail">
+                {% if show_size %}
+                  <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ preview_image.size }}</figcaption>
+                {% endif %}
+              </figure>
+            {% endfor %}
+          {% endif %}
+      {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  {{ block('file_widget') }}
+{% endblock image_with_preview_widget %}

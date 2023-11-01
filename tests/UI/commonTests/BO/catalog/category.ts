@@ -54,14 +54,14 @@ function bulkDeleteCategoriesTest(
       await categoriesPage.closeSfToolBar(page);
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
     it('should reset filter and get number of categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
       numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategories).to.be.above(0);
+      expect(numberOfCategories).to.be.above(0);
     });
 
     it('should filter list by Name \'category\'', async function () {
@@ -70,21 +70,21 @@ function bulkDeleteCategoriesTest(
       await categoriesPage.filterCategories(page, 'input', categoryData.filterBy, categoryData.value);
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, categoryData.filterBy);
-      await expect(textColumn).to.contains(categoryData.value);
+      expect(textColumn).to.contains(categoryData.value);
     });
 
     it('should delete categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await categoriesPage.deleteCategoriesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(categoriesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(categoriesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
       const numberOfCategoriesAfterReset = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategoriesAfterReset).to.be.below(numberOfCategories);
+      expect(numberOfCategoriesAfterReset).to.be.below(numberOfCategories);
     });
   });
 }

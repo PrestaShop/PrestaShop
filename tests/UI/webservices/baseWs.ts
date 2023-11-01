@@ -2,12 +2,56 @@ import type {APIRequestContext, APIResponse} from 'playwright';
 
 export default class BaseWS {
   /**
+   * Returns a blank XML tree of the chosen resource
+   * @param apiContext {APIRequestContext}
+   * @param url {string}
+   * @param authorization {string}
+   */
+  protected static getBlank(
+    apiContext: APIRequestContext,
+    url: string,
+    authorization: string,
+  ): Promise<APIResponse> {
+    return apiContext.get(`${url}`, {
+      headers: {
+        Authorization: authorization,
+      },
+      params: {
+        schema: 'blank',
+        display: 'full',
+      },
+    });
+  }
+
+  /**
+   * Returns a blank XML tree of the chosen resource, with the format that is expected for each value and specific indicators
+   * @param apiContext {APIRequestContext}
+   * @param url {string}
+   * @param authorization {string}
+   */
+  protected static getSynopsis(
+    apiContext: APIRequestContext,
+    url: string,
+    authorization: string,
+  ): Promise<APIResponse> {
+    return apiContext.get(`${url}`, {
+      headers: {
+        Authorization: authorization,
+      },
+      params: {
+        schema: 'synopsis',
+        display: 'full',
+      },
+    });
+  }
+
+  /**
    * Get all element
    * @param apiContext {APIRequestContext}
    * @param url {string}
    * @param authorization {string}
    */
-  protected static getAll(
+  protected static async getAll(
     apiContext: APIRequestContext,
     url: string,
     authorization: string,
@@ -17,7 +61,7 @@ export default class BaseWS {
         Authorization: authorization,
       },
     });
-  };
+  }
 
   /**
    * Get element by id
@@ -37,7 +81,7 @@ export default class BaseWS {
         Authorization: authorization,
       },
     });
-  };
+  }
 
   /**
    * Add new element
@@ -58,7 +102,7 @@ export default class BaseWS {
       },
       data,
     });
-  };
+  }
 
   /**
    * Update an element
@@ -81,7 +125,7 @@ export default class BaseWS {
       },
       data,
     });
-  };
+  }
 
   /**
    * Delete an element
@@ -101,5 +145,5 @@ export default class BaseWS {
         Authorization: authorization,
       },
     });
-  };
+  }
 }

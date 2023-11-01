@@ -24,5 +24,49 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-require dirname(__FILE__).'/config/config.inc.php';
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\ErrorHandler\Debug;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+// Set front dir constant to use after
+if (!defined('_PS_FRONT_DIR_')) {
+    define('_PS_FRONT_DIR_', dirname(__FILE__));
+}
+
+// Include some configurations & composer autoload
+require_once _PS_FRONT_DIR_ . '/config/config.inc.php';
+require_once _PS_FRONT_DIR_ . '/vendor/autoload.php';
+
+// Load .env file from the root of project if present
+(new Dotenv(false))->loadEnv(_PS_FRONT_DIR_ . '/.env');
+
+// If we want to use new container access in front (Warning: Experimental feature from now!)
+if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
+    // Activate Symfony's debug if we need it
+    if (_PS_MODE_DEV_) {
+        Debug::enable();
+    }
+
+    // Starting Kernel
+    $kernel = new FrontKernel(_PS_ENV_, _PS_MODE_DEV_);
+    $request = Request::createFromGlobals();
+
+    // Try to handle request
+    try {
+        $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+        $response->send();
+        define('FRONT_LEGACY_CONTEXT', false);
+        $kernel->terminate($request, $response);
+    } catch (NotFoundHttpException|Exception $exception) {
+        // correct Apache charset (except if it's too late)
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=utf-8');
+        }
+    }
+}
+
+// Prepare and trigger LEGACY front dispatcher
+define('FRONT_LEGACY_CONTEXT', true);
 Dispatcher::getInstance()->dispatch();

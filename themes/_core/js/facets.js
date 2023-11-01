@@ -69,7 +69,7 @@ function makeQuery(url) {
   });
 }
 
-$(document).ready(() => {
+$(() => {
   prestashop.on('updateFacets', (param) => {
     makeQuery(param);
   });

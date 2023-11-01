@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Interface HookDispatcherInterface defines contract for hook dispatcher

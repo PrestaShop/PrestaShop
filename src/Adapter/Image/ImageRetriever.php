@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Category;
-use Configuration;
 use Image;
 use ImageManager;
 use ImageType;
@@ -149,7 +148,7 @@ class ImageRetriever
 
     /**
      * @param Product|Store|Category|Manufacturer|Supplier $object
-     * @param int $id_image
+     * @param int|string $id_image Identifier of the image
      *
      * @return array|null
      *
@@ -162,7 +161,7 @@ class ImageRetriever
         }
 
         // Resolve functions we will use to get image links from Link class
-        if (get_class($object) === 'Product') {
+        if ($object::class === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
             // Product images are the only exception in path structure, they are placed in folder
@@ -171,15 +170,15 @@ class ImageRetriever
                 rtrim(_PS_PRODUCT_IMG_DIR_, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
             ]);
-        } elseif (get_class($object) === 'Store') {
+        } elseif ($object::class === 'Store') {
             $type = 'stores';
             $getImageURL = 'getStoreImageLink';
             $imageFolderPath = rtrim(_PS_STORE_IMG_DIR_, DIRECTORY_SEPARATOR);
-        } elseif (get_class($object) === 'Manufacturer') {
+        } elseif ($object::class === 'Manufacturer') {
             $type = 'manufacturers';
             $getImageURL = 'getManufacturerImageLink';
             $imageFolderPath = rtrim(_PS_MANU_IMG_DIR_, DIRECTORY_SEPARATOR);
-        } elseif (get_class($object) === 'Supplier') {
+        } elseif ($object::class === 'Supplier') {
             $type = 'suppliers';
             $getImageURL = 'getSupplierImageLink';
             $imageFolderPath = rtrim(_PS_SUPP_IMG_DIR_, DIRECTORY_SEPARATOR);
@@ -191,9 +190,11 @@ class ImageRetriever
 
         $urls = [];
 
-        // Should we generate all sizes also in double the resolution?
-        // Obsolete solution, will be removed
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
+        // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
+        $originalImagePath = implode(DIRECTORY_SEPARATOR, [
+            $imageFolderPath,
+            $id_image . '.jpg',
+        ]);
 
         /*
          * Let's resolve which formats we will use for image generation.
@@ -230,15 +231,12 @@ class ImageRetriever
             ]);
 
             foreach ($configuredImageFormats as $imageFormat) {
-                // Generate the thumbnail and optionally a high DPI version
+                // Generate the thumbnail
                 $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
-                if ($generateHighDpiImages) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
-                }
 
                 // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
-                if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
+                if ($object::class === 'Manufacturer' || $object::class === 'Supplier') {
                     $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
                 // Products, categories and stores pass both rewrite and ID
                 } else {
@@ -288,23 +286,15 @@ class ImageRetriever
     /**
      * @param string $originalImagePath
      * @param string $imageFolderPath
-     * @param int $idImage
+     * @param int|string $idImage
      * @param array $imageTypeData
      * @param string $imageFormat
-     * @param bool $hdpi
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int|string $idImage, array $imageTypeData, string $imageFormat)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
-
-        if ($hdpi) {
-            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $imageFormat);
-            $imageTypeData['width'] *= 2;
-            $imageTypeData['height'] *= 2;
-        }
-
         $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
             $fileName,

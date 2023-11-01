@@ -52,9 +52,9 @@ export default class OrderData {
     /** @type {number} */
     this.id = valueToCreate.id || 0;
     /** @type {string} */
-    this.reference = valueToCreate.reference || faker.random.alpha({
+    this.reference = valueToCreate.reference || faker.string.alpha({
       casing: 'upper',
-      count: 9,
+      length: 9,
     });
 
     /** @type {boolean} */

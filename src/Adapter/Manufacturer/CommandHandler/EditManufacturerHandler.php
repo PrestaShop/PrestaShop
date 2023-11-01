@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\EditManufacturerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
@@ -36,6 +37,7 @@ use PrestaShopException;
 /**
  * Handles command which edits manufacturer using legacy object model
  */
+#[AsCommandHandler]
 final class EditManufacturerHandler extends AbstractManufacturerHandler implements EditManufacturerHandlerInterface
 {
     /**

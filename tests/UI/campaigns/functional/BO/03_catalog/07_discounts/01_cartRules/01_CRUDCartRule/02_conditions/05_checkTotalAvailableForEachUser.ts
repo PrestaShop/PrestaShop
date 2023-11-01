@@ -13,7 +13,7 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
@@ -80,7 +80,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -89,14 +89,14 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
 
     it('should view my shop', async function () {
@@ -107,7 +107,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
 
@@ -123,7 +123,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -132,7 +132,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
         await productPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(1);
+        expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should set the promo code', async function () {
@@ -149,7 +149,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
             - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent!);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
-          await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
+          expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
         it('should proceed to checkout', async function () {
@@ -159,7 +159,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await cartPage.clickOnProceedToCheckout(page);
 
           const isCheckout = await checkoutPage.isCheckoutPage(page);
-          await expect(isCheckout).to.be.true;
+          expect(isCheckout).to.eq(true);
         });
 
         it('should sign in by default customer', async function () {
@@ -168,21 +168,21 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await checkoutPage.clickOnSignIn(page);
 
           const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-          await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+          expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should go to delivery address step', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
           const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-          await expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.be.true;
+          expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.eq(true);
         });
 
         it('should choose the shipping method', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'shippingMethodStep', baseContext);
 
           const isPaymentStep = await checkoutPage.goToPaymentStep(page);
-          await expect(isPaymentStep, 'Payment Step bloc is not displayed').to.be.true;
+          expect(isPaymentStep, 'Payment Step bloc is not displayed').to.eq(true);
         });
 
         it('should choose the payment type and confirm the order', async function () {
@@ -192,7 +192,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
 
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
           // Check the confirmation message
-          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should go to home page', async function () {
@@ -201,7 +201,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await homePage.clickOnHeaderLink(page, 'Logo');
 
           const pageTitle = await homePage.getPageTitle(page);
-          await expect(pageTitle).to.equal(homePage.pageTitle);
+          expect(pageTitle).to.equal(homePage.pageTitle);
         });
       }
       if (test.args.testIdentifier === 'cartRuleNotAccepted') {
@@ -209,7 +209,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
 
           const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-          await expect(voucherErrorText).to.equal(cartPage.cartRuleLimitUsageErrorText);
+          expect(voucherErrorText).to.equal(cartPage.cartRuleLimitUsageErrorText);
         });
 
         it('should sign out', async function () {
@@ -219,7 +219,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await loginPage.clickOnHeaderLink(page, 'Logo');
 
           const isCustomerConnected = await homePage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+          expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
         });
       }
 
@@ -231,7 +231,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
             - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent!);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
-          await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
+          expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
         it('should delete the last product from the cart', async function () {
@@ -240,7 +240,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await cartPage.deleteProduct(page, 1);
 
           const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-          await expect(notificationNumber).to.eq(0);
+          expect(notificationNumber).to.eq(0);
         });
       }
     });

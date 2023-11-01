@@ -93,7 +93,7 @@ class Pages extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Pages';
+    this.pageTitle = `Pages • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header link
@@ -431,7 +431,7 @@ class Pages extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page: Page, tableName: string, sortBy: string, sortDirection : string = 'asc'): Promise<void> {
+  async sortTable(page: Page, tableName: string, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(tableName, sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(tableName, sortBy);
 

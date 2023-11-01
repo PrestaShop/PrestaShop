@@ -52,7 +52,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
   });
 
   const tests = [
@@ -77,7 +77,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayAttributes`, baseContext);
 
       const result = await seoAndUrlsPage.setStatusAttributesInProductMetaTitle(page, test.args.enable);
-      await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+      expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
     });
 
     it('should go to FO', async function () {
@@ -89,7 +89,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to the first product page and check the title', async function () {
@@ -99,7 +99,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(test.args.metaTitle);
+      expect(pageTitle).to.equal(test.args.metaTitle);
     });
 
     it('should go back to BO', async function () {
@@ -109,7 +109,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+      expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
     });
   });
 });

@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\FeatureValue\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update\ProductFeatureValueUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeatureValuesFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\CommandHandler\RemoveAllFeatureValuesFromProductHandlerInterface;
 
 /**
  * Handles @see RemoveAllFeatureValuesFromProductCommand using legacy object model
  */
+#[AsCommandHandler]
 class RemoveAllFeatureValuesFromProductHandler implements RemoveAllFeatureValuesFromProductHandlerInterface
 {
     /**

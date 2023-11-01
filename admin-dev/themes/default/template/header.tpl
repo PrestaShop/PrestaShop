@@ -78,7 +78,6 @@
 		var default_language = '{$default_language|intval}';
 		var admin_notification_get_link = adminNotificationGetLink = '{$link->getAdminLink("AdminCommon")|addslashes}';
 		var admin_notification_push_link = adminNotificationPushLink ='{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
-		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 		var update_success_msg = '{l|escape s='Successful update' js=1 d='Admin.Notifications.Success'}';
 		var search_product_msg = '{l|escape s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
 	</script>
@@ -239,7 +238,7 @@
 
       {if isset($maintenance_mode) && $maintenance_mode == true}
         {capture name="title"}
-          <p class="text-left text-nowrap">
+          <p class="text-left">
             <strong>{l s='Your store is in maintenance mode.' d='Admin.Navigation.Notification'}</strong>
           </p>
           <p class="text-left">

@@ -76,10 +76,10 @@ export default class ProductPartialUpdater {
    */
   private watch(): void {
     // Avoid submitting form when pressing Enter
-    this.$productForm.keypress((e) => e.which !== 13);
+    this.$productForm.on('keypress', (e) => e.which !== 13);
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
-    this.$productForm.submit(() => this.updatePartialForm());
+    this.$productForm.on('submit', () => this.updatePartialForm());
     // 'dp.change' event allows tracking datepicker input changes
     this.$productForm.on('keyup change dp.change',
       // listen for all inputs except combination filters

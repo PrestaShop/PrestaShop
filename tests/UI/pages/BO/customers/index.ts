@@ -18,6 +18,8 @@ class Customers extends BOBasePage {
 
   private readonly customerGridTitle: string;
 
+  private readonly customersEmptyTable: string;
+
   private readonly customersListForm: string;
 
   private readonly customersListTableRow: (row: number) => string;
@@ -95,7 +97,7 @@ class Customers extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Manage your Customers • ';
+    this.pageTitle = `Customers • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
@@ -106,6 +108,7 @@ class Customers extends BOBasePage {
     this.customerGridPanel = '#customer_grid_panel';
     this.customerGridTitle = `${this.customerGridPanel} h3.card-header-title`;
     this.customersListForm = '#customer_grid';
+    this.customersEmptyTable = `${this.customersListForm} tbody div.grid-table-empty`;
     this.customersListTableRow = (row: number) => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row: number, column: string) => `${this.customersListTableRow(row)} td.column-${column}`;
     this.customersListToggleColumn = (row: number, column: string) => `${this.customersListTableColumn(row, column)} .ps-switch`;
@@ -242,8 +245,8 @@ class Customers extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterCustomersByRegistration(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.customerFilterColumnInput('date_add_from'), dateFrom);
-    await page.type(this.customerFilterColumnInput('date_add_to'), dateTo);
+    await page.locator(this.customerFilterColumnInput('date_add_from')).fill(dateFrom);
+    await page.locator(this.customerFilterColumnInput('date_add_to')).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
@@ -305,7 +308,8 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable, false to disable
    * @return {Promise<string|null|false>} Return message if action performed, false otherwise
    */
-  async setToggleColumnValue(page: Page, row: number, column: string, valueWanted: boolean = true): Promise<string|null|false> {
+  async setToggleColumnValue(page: Page, row: number, column: string, valueWanted: boolean = true):
+    Promise<string | null | false> {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
       // Click and wait for message
       const [message] = await Promise.all([
@@ -327,7 +331,7 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable customer
    * @return {Promise<boolean>}
    */
-  setCustomerStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string|null|false> {
+  setCustomerStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string | null | false> {
     return this.setToggleColumnValue(page, row, 'active', valueWanted);
   }
 
@@ -338,7 +342,7 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable newsletter status
    * @return {Promise<boolean>}
    */
-  setNewsletterStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string|null|false> {
+  setNewsletterStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string | null | false> {
     return this.setToggleColumnValue(page, row, 'newsletter', valueWanted);
   }
 
@@ -349,7 +353,7 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable partner offers status
    * @return {Promise<boolean>}
    */
-  setPartnerOffersStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string|null|false> {
+  setPartnerOffersStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string | null | false> {
     return this.setToggleColumnValue(page, row, 'optin', valueWanted);
   }
 
@@ -572,7 +576,7 @@ class Customers extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string|null>}
    */
-  async exportDataToCsv(page: Page): Promise<string|null> {
+  async exportDataToCsv(page: Page): Promise<string | null> {
     await Promise.all([
       page.click(this.customerGridActionsButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
@@ -654,6 +658,15 @@ class Customers extends BOBasePage {
     await this.scrollTo(page, this.paginationPreviousLink);
     await this.clickAndWaitForURL(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Get text when customers table is empty
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getTextWhenTableIsEmpty(page: Page): Promise<string> {
+    return this.getTextContent(page, this.customersEmptyTable, true);
   }
 }
 

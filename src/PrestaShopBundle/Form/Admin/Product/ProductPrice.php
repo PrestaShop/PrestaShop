@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -129,7 +130,7 @@ class ProductPrice extends CommonAbstractType
         $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
         $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();
         $this->currency = $legacyContext->getContext()->currency;
-        $this->tax_rules = $this->formatDataChoicesList(
+        $this->tax_rules = FormHelper::formatDataChoicesList(
             $taxDataProvider->getTaxRulesGroups(true),
             'id_tax_rules_group'
         );
@@ -148,7 +149,7 @@ class ProductPrice extends CommonAbstractType
             [
                 'required' => false,
                 'label' => $this->translator->trans('Retail price (tax excl.)', [], 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'currency' => $this->currency->iso_code,
                 'constraints' => [
                     new Assert\NotBlank(),
@@ -192,10 +193,7 @@ class ProductPrice extends CommonAbstractType
                             'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
                         ];
                     },
-                    'attr' => [
-                        'data-toggle' => 'select2',
-                        'data-minimumResultsForSearch' => '7',
-                    ],
+                    'autocomplete' => true,
                     'label' => $this->translator->trans('Tax rule', [], 'Admin.Catalog.Feature'),
                 ]
             )

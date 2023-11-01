@@ -21,7 +21,7 @@ export default class InvoiceData {
    */
   constructor(invoiceOptions: InvoiceCreator = {}) {
     /** @type {number} Invoice number to set on form */
-    this.invoiceNumber = invoiceOptions.invoiceNumber || faker.datatype.number({min: 100, max: 200}).toString();
+    this.invoiceNumber = invoiceOptions.invoiceNumber || faker.number.int({min: 100, max: 200}).toString();
 
     /** @type {string} legal free text to add to invoice */
     this.legalFreeText = invoiceOptions.legalFreeText || faker.lorem.sentence().substring(0, 10);

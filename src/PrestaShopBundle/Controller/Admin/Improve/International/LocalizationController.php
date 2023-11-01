@@ -82,12 +82,12 @@ class LocalizationController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_localization_index')]
     public function processConfigurationFormAction(Request $request)
     {
         return $this->processForm(
@@ -104,12 +104,12 @@ class LocalizationController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_localization_index')]
     public function processLocalUnitsFormAction(Request $request)
     {
         return $this->processForm(
@@ -126,12 +126,12 @@ class LocalizationController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_localization_index')]
     public function processAdvancedFormAction(Request $request)
     {
         return $this->processForm(
@@ -183,12 +183,12 @@ class LocalizationController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_localization_index')]
     public function importPackAction(Request $request)
     {
         $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);

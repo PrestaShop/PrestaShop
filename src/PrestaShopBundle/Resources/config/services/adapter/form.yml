@@ -7,9 +7,6 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
-  prestashop.adapter.form.choice_provider.shop_tree_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
-
   prestashop.adapter.form.choice_provider.category_tree_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider'
     arguments:
@@ -17,14 +14,20 @@ services:
       - '@=service("prestashop.adapter.data_provider.category").getRootCategory().id'
       - false
 
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider:
+
   prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
+    alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
+    deprecated: ~
+
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider:
+    autowire: true
+    arguments:
+      $contextLangId: '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
   prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+    alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
+    deprecated: ~
 
   prestashop.adapter.form.choice_provider.risk_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\RiskByIdChoiceProvider'
@@ -68,13 +71,6 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
-  prestashop.adapter.form.choice_provider.features_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository'
-      - '@prestashop.adapter.legacy.context'
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
-
   prestashop.adapter.form.choice_provider.feature_values_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider'
     arguments:
@@ -101,3 +97,20 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider:
+    public: false
+    autowire: true
+
+  # deprecated
+  prestashop.adapter.form.choice_provider.shop_tree_choice_provider:
+    alias: PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider
+    deprecated: ~
+
+  prestashop.adapter.form.choice_provider.features_choice_provider:
+    alias: PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider
+    deprecated: ~

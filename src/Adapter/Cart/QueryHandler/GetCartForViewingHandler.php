@@ -35,6 +35,7 @@ use Gender;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
@@ -48,6 +49,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsQueryHandler]
 final class GetCartForViewingHandler implements GetCartForViewingHandlerInterface
 {
     /**
@@ -220,7 +222,6 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'reference' => $product['reference'],
                 'supplier_reference' => $product['supplier_reference'],
                 'stock_quantity' => $product['qty_in_stock'],
-                'customization_quantity' => $product['customizationQuantityTotal'],
                 'cart_quantity' => $product['cart_quantity'],
                 'total_price' => $product['product_total'],
                 'unit_price' => $product['product_price'],
@@ -230,23 +231,9 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'image' => isset($image['id_image']) ? $this->imageManager->getThumbnailForListing($image['id_image']) : '',
             ];
 
-            if (isset($product['customizationQuantityTotal'])) {
-                $formattedProduct['cart_quantity'] =
-                    $product['cart_quantity'] - $product['customizationQuantityTotal'];
-            }
-
             $productCustomization = [];
 
             if ($product['customizedDatas']) {
-                $formattedProduct['unit_price'] = $product['price_wt'];
-                $formattedProduct['unit_price_formatted'] = $this->locale->formatPrice($product['price_wt'], $currency->iso_code);
-                $formattedProduct['total_price'] = $product['total_customization_wt'];
-                $formattedProduct['total_price_formatted'] = $this->locale->formatPrice(
-                    $product['total_customization_wt'],
-                    $currency->iso_code
-                );
-                $formattedProduct['quantity'] = $product['customizationQuantityTotal'];
-
                 foreach ($product['customizedDatas'] as $customizationPerAddress) {
                     foreach ($customizationPerAddress as $customization) {
                         if (((int) $customization['id_customization'] !== (int) $product['id_customization']) &&

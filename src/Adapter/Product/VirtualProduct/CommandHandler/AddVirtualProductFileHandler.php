@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
@@ -40,6 +41,7 @@ use ProductDownload as VirtualProductFile;
  *
  * Legacy object ProductDownload is referred as VirtualProductFile in Core
  */
+#[AsCommandHandler]
 final class AddVirtualProductFileHandler implements AddVirtualProductFileHandlerInterface
 {
     /**

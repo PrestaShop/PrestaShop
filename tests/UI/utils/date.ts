@@ -12,10 +12,16 @@ export default {
       case 'past':
         baseDate.setFullYear(baseDate.getFullYear() - 1);
         break;
-      case 'future':
-        baseDate.setFullYear(baseDate.getFullYear() + 1);
+      case 'yesterday':
+        baseDate.setDate(baseDate.getDate() - 1);
         break;
       case 'today':
+        break;
+      case 'tomorrow':
+        baseDate.setDate(baseDate.getDate() + 1);
+        break;
+      case 'future':
+        baseDate.setFullYear(baseDate.getFullYear() + 1);
         break;
 
       default:

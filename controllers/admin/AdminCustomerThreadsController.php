@@ -510,6 +510,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if (isset($_GET['filename'])) {

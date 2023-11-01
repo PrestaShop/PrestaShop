@@ -266,6 +266,11 @@
       <title>Successful customer account update</title>
       <description>This hook is called when a customer updates its account successfully</description>
     </hook>
+    <hook id="actionSubmitAccountBefore">
+      <name>actionSubmitAccountBefore</name>
+      <title>Before customer account creation</title>
+      <description>This hook is called before a customer account creation</description>
+    </hook>
     <hook id="displayCustomerAccount">
       <name>displayCustomerAccount</name>
       <title>Customer account displayed in Front Office</title>
@@ -2146,10 +2151,30 @@
       <title>Order Return Presenter</title>
       <description>This hook is called before an order return is presented</description>
     </hook>
+    <hook id="actionPresentSupplier">
+      <name>actionPresentSupplier</name>
+      <title>Supplier Presenter</title>
+      <description>This hook is called before a supplier is presented</description>
+    </hook>
+    <hook id="actionPresentManufacturer">
+      <name>actionPresentManufacturer</name>
+      <title>Manufacturer Presenter</title>
+      <description>This hook is called before a manufacturer is presented</description>
+    </hook>
     <hook id="actionPresentProduct">
       <name>actionPresentProduct</name>
       <title>Product Presenter</title>
       <description>This hook is called before a product is presented</description>
+    </hook>
+    <hook id="actionPresentStore">
+      <name>actionPresentStore</name>
+      <title>Store Presenter</title>
+      <description>This hook is called before a store is presented</description>
+    </hook>
+    <hook id="actionPresentCategory">
+      <name>actionPresentCategory</name>
+      <title>Category Presenter</title>
+      <description>This hook is called before a category is presented</description>
     </hook>
     <hook id="actionAdminAdminPreferencesControllerPostProcessBefore">
       <name>actionAdminAdminPreferencesControllerPostProcessBefore</name>
@@ -3609,16 +3634,6 @@
       <title>Before a module is disabled</title>
       <description>This hook is called just before a module is disabled</description>
     </hook>
-    <hook id="actionBeforeEnableMobileModule">
-      <name>actionBeforeEnableMobileModule</name>
-      <title>Before a module is enabled for mobile</title>
-      <description>This hook is called just before a module is enabled for mobile</description>
-    </hook>
-    <hook id="actionBeforeDisableMobileModule">
-      <name>actionBeforeDisableMobileModule</name>
-      <title>Before a module is disabled for mobile</title>
-      <description>This hook is called just before a module is disabled for mobile</description>
-    </hook>
     <hook id="actionBeforeResetModule">
       <name>actionBeforeResetModule</name>
       <title>Before a module is reset</title>
@@ -3643,6 +3658,11 @@
       <name>actionGetAlternativeSearchPanels</name>
       <title>Additional search panel</title>
       <description>This hook allows to add an additional search panel for external providers in PrestaShop back office</description>
+    </hook>
+    <hook id="actionCartGetPackageShippingCost">
+      <name>actionCartGetPackageShippingCost</name>
+      <title>After getting package shipping cost value</title>
+      <description>This hook is called in order to allow to modify package shipping cost</description>
     </hook>
     <hook id="actionCreateProductFormBuilderModifier">
       <name>actionCreateProductFormBuilderModifier</name>
@@ -4493,6 +4513,11 @@
       <name>actionCustomerThreadGridPresenterModifier</name>
       <title>Modify customer thread grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for customer thread grid</description>
+    </hook>
+    <hook id="actionUpdateCartAddress">
+      <name>actionUpdateCartAddress</name>
+      <title>Triggers after changing address on the cart</title>
+      <description>This hook is called after address is changed on the cart</description>
     </hook>
     <hook id="actionAdminMenuTabsModifier">
       <name>actionAdminMenuTabsModifier</name>

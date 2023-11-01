@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
@@ -88,7 +88,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await zonesPage.closeSfToolBar(page);
 
       const pageTitle = await zonesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(zonesPage.pageTitle);
+      expect(pageTitle).to.contains(zonesPage.pageTitle);
     });
 
     it('should go to \'Countries\' page', async function () {
@@ -97,14 +97,14 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await zonesPage.goToSubTabCountries(page);
 
       const pageTitle = await countriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(countriesPage.pageTitle);
+      expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
 
     it('should reset all filters and get number of countries in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
       const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountries).to.be.above(0);
+      expect(numberOfCountries).to.be.above(0);
     });
 
     it(`should search for the country '${Countries.unitedStates.name}'`, async function () {
@@ -113,10 +113,10 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await countriesPage.filterTable(page, 'input', 'b!name', Countries.unitedStates.name);
 
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCountriesAfterFilter).to.be.equal(1);
+      expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
       const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      await expect(textColumn).to.equal(Countries.unitedStates.name);
+      expect(textColumn).to.equal(Countries.unitedStates.name);
     });
 
     it('should enable the country', async function () {
@@ -125,7 +125,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await countriesPage.setCountryStatus(page, 1, true);
 
       const currentStatus = await countriesPage.getCountryStatus(page, 1);
-      await expect(currentStatus).to.be.true;
+      expect(currentStatus).to.eq(true);
     });
 
     it('should reset filter', async function () {
@@ -134,7 +134,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await countriesPage.resetFilter(page);
 
       const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountriesAfterReset).to.be.at.least(1);
+      expect(numberOfCountriesAfterReset).to.be.at.least(1);
     });
   });
 
@@ -149,7 +149,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -158,14 +158,14 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, cartRule);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
   });
 
@@ -177,7 +177,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to the third product page', async function () {
@@ -186,7 +186,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await foHomePage.goToProductPage(page, 3);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -195,7 +195,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should set the promo code and verify the error message', async function () {
@@ -204,7 +204,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await cartPage.addPromoCode(page, cartRule.code);
 
       const chooseDeliveryAddressNotification = await cartPage.getAlertWarningForPromoCode(page);
-      await expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningText);
+      expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningText);
     });
 
     it('should proceed to checkout', async function () {
@@ -214,7 +214,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckout = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckout).to.be.true;
+      expect(isCheckout).to.eq(true);
     });
 
     it('should sign in by the default customer', async function () {
@@ -223,7 +223,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await checkoutPage.clickOnSignIn(page);
 
       const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should choose the delivery address', async function () {
@@ -232,7 +232,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await checkoutPage.chooseDeliveryAddress(page, 2);
 
       const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-      await expect(isDeliveryStep, 'Delivery Step block is not displayed').to.be.true;
+      expect(isDeliveryStep, 'Delivery Step block is not displayed').to.eq(true);
     });
 
     it('should set the promo code', async function () {
@@ -241,21 +241,21 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await checkoutPage.addPromoCode(page, cartRule.code);
 
       const cartRuleName = await checkoutPage.getCartRuleName(page, 1);
-      await expect(cartRuleName).to.equal(cartRule.name);
+      expect(cartRuleName).to.equal(cartRule.name);
     });
 
     it('should check the total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
       const totalAfterDiscount = await checkoutPage.getATIPrice(page);
-      await expect(totalAfterDiscount).to.eq(Products.demo_6.price - cartRule.discountAmount!.value + Carriers.myCarrier.price);
+      expect(totalAfterDiscount).to.eq(Products.demo_6.price - cartRule.discountAmount!.value + Carriers.myCarrier.price);
     });
 
     it('should remove the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
       const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
-      await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
+      expect(isDeleteIconNotVisible, 'The discount is not removed').to.eq(true);
     });
 
     it('should go to Home page', async function () {
@@ -264,7 +264,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await foHomePage.clickOnHeaderLink(page, 'Logo');
 
       const pageTitle = await foHomePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foHomePage.pageTitle);
+      expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
     it('should go to cart page and remove product', async function () {
@@ -274,7 +274,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.be.equal(0);
+      expect(notificationNumber).to.be.equal(0);
     });
   });
 

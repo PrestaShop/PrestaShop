@@ -11,7 +11,6 @@ type CategoryCreator = {
   groupAccess?: GroupData
   coverImage?: string
   thumbnailImage?: string
-  metaImage?: string
 };
 
 type CategoryFilter = {

@@ -82,6 +82,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhrase
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
@@ -232,7 +233,7 @@ class OrderController extends FrameworkBundleAdminController
     public function createAction(Request $request)
     {
         /** @var ShopContext $shopContextChecker */
-        $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
+        $shopContextChecker = $this->get('prestashop.adapter.shop.context');
 
         if (!$shopContextChecker->isSingleShopContext()) {
             $this->addFlash('error', $this->trans(
@@ -249,7 +250,7 @@ class OrderController extends FrameworkBundleAdminController
                 'shop_id' => $shopContextChecker->getContextShopID(),
             ]
         );
-        $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
+        $currencies = $this->get(CurrencyByIdChoiceProvider::class)->getChoices();
 
         $configuration = $this->getConfiguration();
 
@@ -263,6 +264,7 @@ class OrderController extends FrameworkBundleAdminController
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
             'stockManagementEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
             'isB2BEnabled' => (bool) $configuration->get('PS_B2B_ENABLE'),
+            'layoutTitle' => $this->trans('New order', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -477,7 +479,7 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
         ]);
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $currencyDataProvider = $this->get('prestashop.adapter.data_provider.currency');
         //@todo: Fix me. Should not rely on legacy object model - Currency
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
@@ -774,7 +776,7 @@ class OrderController extends FrameworkBundleAdminController
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $currencyDataProvider = $this->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $addedGridRows = '';
@@ -1042,7 +1044,7 @@ class OrderController extends FrameworkBundleAdminController
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $currencyDataProvider = $this->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
@@ -1270,16 +1272,13 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"}
-     * )
      *
      * @param Request $request
      * @param int $orderId
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'])]
     public function sendMessageAction(Request $request, int $orderId): Response
     {
         $orderMessageForm = $this->createForm(OrderMessageType::class);
@@ -1575,7 +1574,7 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $currencyDataProvider = $this->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');

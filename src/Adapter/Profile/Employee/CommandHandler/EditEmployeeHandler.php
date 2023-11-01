@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\EditEmployeeHandlerInterface;
@@ -44,6 +45,7 @@ use Shop;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditEmployeeHandlerInterface
 {
     /**

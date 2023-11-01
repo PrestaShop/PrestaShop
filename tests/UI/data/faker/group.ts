@@ -30,7 +30,7 @@ export default class GroupData {
     this.id = groupToCreate.id || 0;
 
     /** @type {string} Name of the group */
-    this.name = groupToCreate.name || faker.name.jobType();
+    this.name = groupToCreate.name || faker.person.jobType();
 
     /** @type {string} French name of the group */
     this.frName = groupToCreate.frName || this.name;

@@ -35,7 +35,7 @@ describe('FO - User Account : LogOut', async () => {
     await homePage.goTo(page, global.FO.URL);
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should logIn', async function () {
@@ -45,10 +45,10 @@ describe('FO - User Account : LogOut', async () => {
     await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+    expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
     const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    expect(result).to.eq(true);
   });
 
   it('should go to my account page', async function () {
@@ -57,7 +57,7 @@ describe('FO - User Account : LogOut', async () => {
     await homePage.goToMyAccountPage(page);
 
     const pageTitle = await myAccountPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+    expect(pageTitle).to.equal(myAccountPage.pageTitle);
   });
 
   it('should logOut with link in the footer', async function () {
@@ -66,6 +66,6 @@ describe('FO - User Account : LogOut', async () => {
     await myAccountPage.logout(page);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+    expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
   });
 });

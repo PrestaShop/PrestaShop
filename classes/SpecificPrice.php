@@ -23,9 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
-
 class SpecificPriceCore extends ObjectModel
 {
     public const ORDER_DEFAULT_FROM_QUANTITY = 1;
@@ -268,7 +265,7 @@ class SpecificPriceCore extends ObjectModel
         }
         $priority = 'id_customer;' . $priority;
 
-        return preg_split('/;/', $priority);
+        return explode(';', $priority);
     }
 
     /**
@@ -577,37 +574,6 @@ class SpecificPriceCore extends ObjectModel
         }
 
         return self::$_specificPriceCache[$key];
-    }
-
-    /**
-     * @deprecated since 8.0 and will be removed in next major version.
-     * @see SpecificPricePriorityUpdater::updateDefaultPriorities()
-     *
-     * @param array $priorities
-     *
-     * @return bool
-     */
-    public static function setPriorities($priorities)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.0. Use %s instead.',
-                __METHOD__,
-                SpecificPricePriorityUpdater::class . '::updateDefaultPriorities()'
-            ),
-            E_USER_DEPRECATED
-        );
-
-        $value = '';
-        if (is_array($priorities)) {
-            foreach ($priorities as $priority) {
-                $value .= pSQL($priority) . ';';
-            }
-        }
-
-        SpecificPrice::deletePriorities();
-
-        return Configuration::updateValue('PS_SPECIFIC_PRICE_PRIORITIES', rtrim($value, ';'));
     }
 
     /**

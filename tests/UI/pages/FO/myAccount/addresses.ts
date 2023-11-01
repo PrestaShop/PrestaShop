@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Addresses extends FOBasePage {
+class AddressesPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly addressPageTitle: string;
@@ -35,8 +35,8 @@ class Addresses extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on addresses page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Addresses';
     this.addressPageTitle = 'Address';
@@ -119,4 +119,5 @@ class Addresses extends FOBasePage {
   }
 }
 
-export default new Addresses();
+const addressesPage = new AddressesPage();
+export {addressesPage, AddressesPage};

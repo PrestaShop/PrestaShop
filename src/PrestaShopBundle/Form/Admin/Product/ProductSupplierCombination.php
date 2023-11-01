@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,19 +41,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductSupplierCombination extends CommonAbstractType
 {
-    private $contextLegacy;
-    private $currencyAdapter;
+    /**
+     * @var CurrencyDataProviderInterface
+     */
+    private $currencyDataProvider;
 
     /**
-     * Constructor.
-     *
-     * @param object $contextLegacy
-     * @param object $currencyAdapter
+     * @param CurrencyDataProviderInterface $currencyDataProvider
      */
-    public function __construct($contextLegacy, $currencyAdapter)
+    public function __construct(CurrencyDataProviderInterface $currencyDataProvider)
     {
-        $this->contextLegacy = $contextLegacy->getContext();
-        $this->currencyAdapter = $currencyAdapter;
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
@@ -85,7 +85,7 @@ class ProductSupplierCombination extends CommonAbstractType
                 'product_price_currency',
                 FormType\ChoiceType::class,
                 [
-                    'choices' => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
+                    'choices' => FormHelper::formatDataChoicesList($this->currencyDataProvider->getCurrencies(), 'id_currency'),
                     'required' => true,
                     'attr' => [
                         'class' => 'custom-select',
@@ -100,7 +100,7 @@ class ProductSupplierCombination extends CommonAbstractType
         $builder->setData([
             'product_price' => 0,
             'supplier_id' => $options['id_supplier'],
-            'product_price_currency' => $this->contextLegacy->currency->id,
+            'product_price_currency' => $options['id_currency'],
         ]);
     }
 
@@ -112,6 +112,8 @@ class ProductSupplierCombination extends CommonAbstractType
         $resolver->setDefaults([
             'id_supplier' => null,
         ]);
+
+        $resolver->setRequired('id_currency');
     }
 
     /**

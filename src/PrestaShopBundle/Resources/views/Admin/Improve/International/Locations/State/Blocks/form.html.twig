@@ -30,7 +30,7 @@
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">public</i>
-      {{ 'States'|trans({}, 'Admin.International.Feature') }}
+      {{ 'State'|trans({}, 'Admin.International.Feature') }}
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
@@ -41,7 +41,7 @@
       <a href="{{ path('admin_states_index') }}" class="btn btn-outline-secondary">
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
-      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      <button class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
     </div>
   </div>
 {{ form_end(stateForm) }}

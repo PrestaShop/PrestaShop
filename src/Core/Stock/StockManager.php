@@ -143,7 +143,7 @@ class StockManager
      * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
      *
      * @param Product $product The product to update its stockAvailable
-     * @param int $id_product_attribute The declinaison to update (null if not)
+     * @param int|null $id_product_attribute The declinaison to update (null if not)
      * @param int $delta_quantity The quantity change (positive or negative)
      * @param int|null $id_shop Optional
      * @param bool $add_movement Optional
@@ -398,10 +398,6 @@ class StockManager
 
                 if (!empty($params['id_stock_mvt_reason'])) {
                     $stockMvt->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
-                }
-
-                if (!empty($params['id_supply_order'])) {
-                    $stockMvt->setIdSupplyOrder((int) $params['id_supply_order']);
                 }
 
                 $stockMvt->setSign($deltaQuantity >= 1 ? 1 : -1);

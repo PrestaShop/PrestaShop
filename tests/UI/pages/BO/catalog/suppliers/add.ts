@@ -71,8 +71,8 @@ class AddSupplier extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new • ';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitle = `New supplier • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing supplier';
 
     // Selectors
     this.nameInput = '#supplier_name';
@@ -188,7 +188,7 @@ class AddSupplier extends BOBasePage {
   async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
     /* eslint-disable no-restricted-syntax */
     for (const keyword of keywords) {
-      await page.type(this.metaKeywordsInput(idLang), keyword);
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keyword);
       await page.keyboard.press('Enter');
     }
     /* eslint-enable no-restricted-syntax */

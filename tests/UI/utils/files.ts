@@ -1,12 +1,13 @@
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+
 import ImportData from '@data/faker/import';
 
 import {createObjectCsvWriter} from 'csv-writer';
-import fs from 'fs';
 import imgGen from 'js-image-generator';
-import path from 'path';
 import {getDocument, OPS, PDFDocumentProxy} from 'pdfjs-dist/legacy/build/pdf.js';
 import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
-import https from 'https';
 import {RawImageData} from 'jpeg-js';
 
 /**

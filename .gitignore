@@ -134,6 +134,10 @@ themes/*-chunk.js.map
 
 # Config
 
+/.env
+/.env.local
+/.env.local.php
+/.env.*.local
 config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
@@ -214,3 +218,8 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
+
+# DotEnv files
+/.env.local
+/.env.local.php
+/.env.*.local

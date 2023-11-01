@@ -11,7 +11,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Cart extends FOBasePage {
+class CartPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly cartRuleAlreadyUsedErrorText: string;
@@ -110,8 +110,8 @@ class Cart extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on cart page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
@@ -451,4 +451,5 @@ class Cart extends FOBasePage {
   }
 }
 
-export default new Cart();
+const cartPage = new CartPage();
+export {cartPage, CartPage};

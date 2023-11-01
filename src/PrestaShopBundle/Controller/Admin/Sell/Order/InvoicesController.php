@@ -29,9 +29,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller responsible of "Sell > Orders > Invoices" page.
@@ -43,12 +43,11 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @Template("@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @return array Template parameters
+     * @return Response Template parameters
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -56,14 +55,14 @@ class InvoicesController extends FrameworkBundleAdminController
         $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
         $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig', [
             'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'generateByDateForm' => $byDateForm->createView(),
             'generateByStatusForm' => $byStatusForm->createView(),
             'invoiceOptionsForm' => $optionsForm->createView(),
-        ];
+        ]);
     }
 
     /**

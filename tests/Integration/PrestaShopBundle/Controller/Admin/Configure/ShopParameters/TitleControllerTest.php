@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -52,7 +51,6 @@ class TitleControllerTest extends WebTestCase
     {
         parent::setUp();
         self::mockContext();
-        self::bootKernel();
 
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');

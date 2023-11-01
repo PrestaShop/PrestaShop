@@ -13,7 +13,6 @@ defaults:
 
 env:
   NODE_VERSION: '16'
-  NPM_VERSION: '7'
 
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -40,11 +39,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup NPM
-        run: npm install -g npm@${{ env.NPM_VERSION }}
-
       - name: Install dependencies in UI tests directory
-        run: npm install
+        run: npm ci
 
       - name: Check eslint errors
         run: npm run lint
@@ -68,11 +64,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup NPM
-        run: npm install -g npm@${{ env.NPM_VERSION }}
-
       - name: Install dependencies in UI tests directory
-        run: npm install
+        run: npm ci
 
       - name: Check TypeScript errors
         run: npm run check:typescript
@@ -96,11 +89,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup NPM
-        run: npm install -g npm@${{ env.NPM_VERSION }}
-
       - name: Install dependencies in UI tests directory
-        run: npm install
+        run: npm ci
+
+      - name: Install browsers
+        run: npx playwright install --with-deps
 
       - name: Generate mocha reports with failed steps
         run: GENERATE_FAILED_STEPS=true npm run test:all

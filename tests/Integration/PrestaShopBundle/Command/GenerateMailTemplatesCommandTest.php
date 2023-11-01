@@ -207,9 +207,4 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         return $outputFolder;
     }
-
-    protected function tearDown(): void
-    {
-        self::$kernel->shutdown();
-    }
 }

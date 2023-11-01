@@ -93,7 +93,7 @@ class Taxes extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Taxes •';
+    this.pageTitle = `Taxes • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors

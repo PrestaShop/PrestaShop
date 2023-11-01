@@ -15,7 +15,7 @@ class Stats extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Stats •';
+    this.pageTitle = `Stats • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
   }

@@ -12,7 +12,7 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
@@ -83,7 +83,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -92,14 +92,14 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
 
     it('should view my shop', async function () {
@@ -109,7 +109,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
 
@@ -120,7 +120,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await foHomePage.goToProductPage(page, 3);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -129,7 +129,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should add the promo code and check the error message', async function () {
@@ -138,7 +138,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
       const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-      await expect(alertMessage).to.equal(cartPage.cartRuleChooseCarrierAlertMessageText);
+      expect(alertMessage).to.equal(cartPage.cartRuleChooseCarrierAlertMessageText);
     });
 
     it('should proceed to checkout', async function () {
@@ -147,7 +147,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckout = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckout).to.be.true;
+      expect(isCheckout).to.eq(true);
     });
 
     it('should sign in by default customer', async function () {
@@ -156,14 +156,14 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await checkoutPage.clickOnSignIn(page);
 
       const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
       const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-      await expect(isDeliveryStep, 'Delivery Step block is not displayed').to.be.true;
+      expect(isDeliveryStep, 'Delivery Step block is not displayed').to.eq(true);
     });
 
     it('should set the promo code and choose the wrong shipping method', async function () {
@@ -173,7 +173,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await checkoutPage.addPromoCode(page, newCartRuleData.code);
 
       const errorShippingMessage = await checkoutPage.getCartRuleErrorMessage(page);
-      await expect(errorShippingMessage).to.equal(cartPage.cartRuleCannotUseVoucherAlertMessageText);
+      expect(errorShippingMessage).to.equal(cartPage.cartRuleCannotUseVoucherAlertMessageText);
     });
 
     it('should choose the restricted shipping method and continue', async function () {
@@ -184,7 +184,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await checkoutPage.chooseShippingMethodAndAddComment(page, Carriers.myCarrier.id);
 
       const priceATI = await checkoutPage.getATIPrice(page);
-      await expect(priceATI.toFixed(2))
+      expect(priceATI.toFixed(2))
         .to.equal((Products.demo_6.combinations[0].price + Carriers.myCarrier.priceTTC).toFixed(2));
     });
 
@@ -197,7 +197,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
         - newCartRuleData.discountAmount!.value + Carriers.myCarrier.priceTTC;
 
       const priceATI = await checkoutPage.getATIPrice(page);
-      await expect(priceATI.toFixed(2)).to.equal(totalAfterDiscount.toFixed(2));
+      expect(priceATI.toFixed(2)).to.equal(totalAfterDiscount.toFixed(2));
     });
 
     it('should go to Home page', async function () {
@@ -206,7 +206,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await foHomePage.clickOnHeaderLink(page, 'Logo');
 
       const pageTitle = await foHomePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foHomePage.pageTitle);
+      expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
     it('should go to cart page and delete the product', async function () {
@@ -217,7 +217,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.be.equal(0);
+      expect(notificationNumber).to.be.equal(0);
     });
   });
 

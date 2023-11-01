@@ -34,12 +34,16 @@ use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResu
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use ReflectionClass;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,8 +103,6 @@ class CommonController extends FrameworkBundleAdminController
      * {% render controller('PrestaShopBundle\\Controller\\Admin\\CommonController::paginationAction',
      *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters}) %}
      *
-     * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
-     *
      * @param Request $request
      * @param int $limit
      * @param int $offset
@@ -108,9 +110,9 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $view full|quicknav To change default template used to render the content
      * @param string $prefix Indicates the params prefix (eg: ?limit=10&offset=20 -> ?scope[limit]=10&scope[offset]=20)
      *
-     * @return array|Response
+     * @return Response
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $prefix = '')
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $prefix = ''): Response
     {
         $offsetParam = empty($prefix) ? 'offset' : sprintf('%s[offset]', $prefix);
         $limitParam = empty($prefix) ? 'limit' : sprintf('%s[limit]', $prefix);
@@ -125,7 +127,7 @@ class CommonController extends FrameworkBundleAdminController
         // urls from route
         $callerParameters = $request->attributes->get('caller_parameters', []);
         foreach ($callerParameters as $k => $v) {
-            if (strpos($k, '_') === 0) {
+            if (str_starts_with($k, '_')) {
                 unset($callerParameters[$k]);
             }
         }
@@ -196,7 +198,7 @@ class CommonController extends FrameworkBundleAdminController
             return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
 
-        return $vars;
+        return $this->render('@PrestaShop/Admin/Common/pagination.html.twig', $vars);
     }
 
     /**
@@ -247,7 +249,7 @@ class CommonController extends FrameworkBundleAdminController
     public function resetSearchAction($controller = '', $action = '', $filterId = '')
     {
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
-        $employeeId = $this->getUser()->getId();
+        $employeeId = $this->getUser() instanceof Employee ? $this->getUser()->getId() : 0;
         $shopId = $this->getContext()->shop->id;
 
         // for compatibility when $controller and $action are used
@@ -353,5 +355,35 @@ class CommonController extends FrameworkBundleAdminController
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updatePositionAction(Request $request): RedirectResponse
+    {
+        $positionsData = [
+            'positions' => $request->request->get('positions'),
+        ];
+
+        /** @var PositionDefinitionInterface $positionDefinition */
+        $positionDefinition = $this->get($request->attributes->get('position_definition'));
+        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
+
+        try {
+            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+            $updater = $this->get(GridPositionUpdaterInterface::class);
+            $updater->update($positionUpdate);
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+        } catch (PositionUpdateException $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute($request->attributes->get('redirect_route'));
     }
 }

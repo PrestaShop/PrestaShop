@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class AccountIdentity extends FOBasePage {
+class AccountIdentityPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly successfulUpdateMessage: string;
@@ -20,9 +20,25 @@ class AccountIdentity extends FOBasePage {
 
   public readonly minimumScoreAlertMessage: string;
 
+  public readonly noRepeatMessage: string;
+
+  public readonly noCommonWordsMessage: string;
+
+  public readonly noRepeatedWordsMessage: string;
+
+  public readonly commonUsedPasswordMessage: string;
+
+  public readonly changeCommonPasswordMessage: string;
+
+  public readonly veryCommonPasswordMessage: string;
+
+  public readonly repeatGuessMessage: string;
+
+  public readonly top10CommonPasswordMessage: string;
+
   private readonly createAccountForm: string;
 
-  private readonly genderRadioButton: (id: number) => string;
+  private readonly genderRadioButton: (theme: string, id: number) => string;
 
   private readonly firstNameInput: string;
 
@@ -30,11 +46,11 @@ class AccountIdentity extends FOBasePage {
 
   private readonly newEmailInput: string;
 
-  private readonly invalidEmailAlertDanger: string;
+  private readonly invalidEmailAlertDanger: (theme: string) => string;
 
   private readonly passwordInput: string;
 
-  private readonly invalidPasswordAlertDanger: string;
+  private readonly invalidPasswordAlertDanger: (theme: string) => string;
 
   private readonly invalidNewPasswordAlertDanger: string;
 
@@ -54,8 +70,8 @@ class AccountIdentity extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on identity page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Identity';
     this.successfulUpdateMessage = 'Information successfully updated.';
@@ -63,16 +79,27 @@ class AccountIdentity extends FOBasePage {
     this.invalidEmailAlertMessage = 'Invalid email/password combination';
     this.invalidNumberOfCharacters = 'Password must be between 8 and 72 characters long';
     this.minimumScoreAlertMessage = 'The minimum score must be: Strong';
+    this.noRepeatMessage = 'Repeats like "abcabcabc" are only slightly harder to guess than "abc" Add another word or two.';
+    this.noCommonWordsMessage = 'Uncommon words are better.';
+    this.noRepeatedWordsMessage = 'Avoid repeated words and characters';
+    this.commonUsedPasswordMessage = 'This is similar to a commonly used password';
+    this.changeCommonPasswordMessage = `Add another word or two. ${this.noCommonWordsMessage}`;
+    this.veryCommonPasswordMessage = 'This is a very common password';
+    this.repeatGuessMessage = 'Repeats like "aaa" are easy to guess';
+    this.top10CommonPasswordMessage = 'This is a top-10 common password';
 
     // Selectors
     this.createAccountForm = '#customer-form';
-    this.genderRadioButton = (id: number) => `${this.createAccountForm} label[for='field-id_gender-${id}']`;
+    this.genderRadioButton = (theme: string, id: number) => `${this.createAccountForm} label[for='field-id_gender${
+      theme === 'hummingbird' ? '_' : '-'}${id}']`;
     this.firstNameInput = `${this.createAccountForm} #field-firstname`;
     this.lastNameInput = `${this.createAccountForm} #field-lastname`;
     this.newEmailInput = `${this.createAccountForm} #field-email`;
-    this.invalidEmailAlertDanger = `${this.createAccountForm} div:nth-child(4) li.alert-danger`;
+    this.invalidEmailAlertDanger = (theme: string) => `${this.createAccountForm} div:nth-child(4) ${
+      theme === 'hummingbird' ? 'div' : 'li'}.alert-danger`;
     this.passwordInput = `${this.createAccountForm} #field-password`;
-    this.invalidPasswordAlertDanger = `${this.createAccountForm} div.field-password-policy li.alert-danger`;
+    this.invalidPasswordAlertDanger = (theme: string) => `${this.createAccountForm} div.field-password-policy ${
+      theme === 'hummingbird' ? 'div' : 'li'}.alert-danger`;
     this.invalidNewPasswordAlertDanger = `${this.createAccountForm} div:nth-child(6) div.help-block`;
     this.newPasswordInput = `${this.createAccountForm} #field-new_password`;
     this.birthdateInput = `${this.createAccountForm} #field-birthday`;
@@ -93,7 +120,7 @@ class AccountIdentity extends FOBasePage {
    * @returns {Promise<string>}
    */
   async editAccount(page: Page, oldPassword: string, customer: any): Promise<string> {
-    await page.$eval(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2), (el: HTMLElement) => el.click());
+    await page.$eval(this.genderRadioButton(this.theme, customer.socialTitle === 'Mr.' ? 1 : 2), (el: HTMLElement) => el.click());
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
     await this.setValue(page, this.newEmailInput, customer.email);
@@ -121,8 +148,8 @@ class AccountIdentity extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getInvalidEmailAlert(page:Page):Promise<string> {
-    return this.getTextContent(page, this.invalidEmailAlertDanger);
+  async getInvalidEmailAlert(page:Page):Promise<string> {
+    return this.getTextContent(page, this.invalidEmailAlertDanger(this.theme));
   }
 
   /**
@@ -131,7 +158,7 @@ class AccountIdentity extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getInvalidPasswordAlert(page:Page):Promise<string> {
-    return this.getTextContent(page, this.invalidPasswordAlertDanger);
+    return this.getTextContent(page, this.invalidPasswordAlertDanger(this.theme));
   }
 
   /**
@@ -164,4 +191,5 @@ class AccountIdentity extends FOBasePage {
   }
 }
 
-export default new AccountIdentity();
+const accountIdentityPage = new AccountIdentityPage();
+export {accountIdentityPage, AccountIdentityPage};

@@ -25,10 +25,6 @@ _product_suppliers:
   resource: "suppliers.yml"
   prefix: /suppliers/
 
-_product_warehouses:
-  resource: "warehouses.yml"
-  prefix: /warehouses/
-
 # Product List
 admin_product_catalog:
   path: /{offset}/{limit}/{orderBy}/{sortOrder}

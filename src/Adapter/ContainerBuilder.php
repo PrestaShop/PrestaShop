@@ -50,6 +50,8 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Build the Container for PrestaShop Legacy.
+ *
+ * @deprecated since 9.0. Please use SymfonyContainer instead.
  */
 class ContainerBuilder
 {
@@ -125,7 +127,7 @@ class ContainerBuilder
     {
         $this->containerName = $containerName;
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
-        $this->dumpFile = $this->environment->getCacheDir() . $this->containerClassName . '.php';
+        $this->dumpFile = $this->environment->getCacheDir() . DIRECTORY_SEPARATOR . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->environment->isDebug());
 
         //These methods load required files like autoload or annotation metadata so we need to load
@@ -243,13 +245,9 @@ class ContainerBuilder
      */
     private function loadModulesAutoloader(ContainerInterface $container)
     {
-        if (!$container->hasParameter('kernel.active_modules')) {
-            return;
-        }
-
-        $activeModules = $container->getParameter('kernel.active_modules');
-        /** @var array<string> $activeModules */
-        foreach ($activeModules as $module) {
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        /** @var array<string> $installedModules */
+        foreach ($installedModules as $module) {
             $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {

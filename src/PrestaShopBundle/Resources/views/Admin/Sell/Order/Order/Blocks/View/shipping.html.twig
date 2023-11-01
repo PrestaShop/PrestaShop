@@ -24,18 +24,6 @@
  *#}
 
 {% if not orderForViewing.virtual %}
-
-    {% if orderForViewing.shipping.giftMessage %}
-      <div>
-        <label>
-          {{ 'Gift message:'|trans({}, 'Admin.Global') }}
-        </label>
-        <div id="gift-message">
-           {{ orderForViewing.shipping.giftMessage }}
-        </div>
-      </div>
-    {% endif %}
-
     <table class="table" id="shipping-grid-table">
     <thead>
       <tr>

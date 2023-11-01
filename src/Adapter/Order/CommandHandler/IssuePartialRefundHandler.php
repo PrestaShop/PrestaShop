@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
@@ -45,6 +46,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implements IssuePartialRefundHandlerInterface
 {
     /**

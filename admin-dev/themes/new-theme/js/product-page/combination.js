@@ -1,7 +1,7 @@
 const {$} = window;
 
 export default function () {
-  $(document).ready(() => {
+  $(() => {
     const $jsCombinationsList = $('.js-combinations-list');
 
     // If we are not on the product page, return
@@ -23,7 +23,7 @@ export default function () {
       }
     });
 
-    $('#create-combinations').click((event) => {
+    $('#create-combinations').on('click', (event) => {
       event.preventDefault();
       window.form.send(false, false, generate);
     });
@@ -49,16 +49,21 @@ export default function () {
       refreshDefaultImage();
     });
 
-    $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te').keyup(function () {
-      const self = $(this);
-      const price = window.priceCalculation.normalizePrice(self.val());
+    $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te')
+      .on('keyup', function () {
+        const self = $(this);
+        const price = window.priceCalculation.normalizePrice(self.val());
 
-      if (self.attr('id') === 'product_combination_bulk_impact_on_price_ti') {
-        $('#product_combination_bulk_impact_on_price_te').val(window.priceCalculation.removeCurrentTax(price)).change();
-      } else {
-        $('#product_combination_bulk_impact_on_price_ti').val(window.priceCalculation.addCurrentTax(price)).change();
-      }
-    });
+        if (self.attr('id') === 'product_combination_bulk_impact_on_price_ti') {
+          $('#product_combination_bulk_impact_on_price_te')
+            .val(window.priceCalculation.removeCurrentTax(price))
+            .change();
+        } else {
+          $('#product_combination_bulk_impact_on_price_ti')
+            .val(window.priceCalculation.addCurrentTax(price))
+            .change();
+        }
+      });
 
     const getCombinations = (combinationsImages) => {
       const $jsCombinationsBulkForm = $('#combinations-bulk-form');
@@ -206,7 +211,6 @@ export default function () {
         $('#create-combinations, #submit, .btn-submit').removeAttr('disabled');
         activateCombinationsBulk();
         window.supplierCombinations.refresh();
-        window.warehouseCombinations.refresh();
       },
     });
   };

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\QueryHandler;
 
 use Language;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryHandler\GetLanguageForEditingHandlerInterface;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetLanguageForEditingHandler implements GetLanguageForEditingHandlerInterface
 {
     /**

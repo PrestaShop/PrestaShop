@@ -14,7 +14,7 @@ Before begin working on tests, make sure you have installed
 git clone https://github.com/PrestaShop/PrestaShop/
 # Install dependencies in UI folder
 cd tests/UI/
-npm install
+npm ci
 ```
 
 ## Available command line parameters
@@ -119,7 +119,7 @@ To specify which test to run, you can add the **`TEST_PATH`** parameter in the b
 ```bash
 # To run the **Filter Products** test from sanity campaign
 TEST_PATH="sanity/03_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run test:specific
-# To run all **Products BO** tests 
+# To run all **Products BO** tests
 TEST_PATH="sanity/03_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run test:specific
 ```
 
@@ -137,7 +137,7 @@ You **must** disable the Security Token before running this script ! Add this li
 
 ```bash
 SetEnv _TOKEN_ disabled
-``` 
+```
 
 #### With default values
 
@@ -163,7 +163,7 @@ To install `jsdoc-to-markdown` :
 
 ```shell
 cd tests/UI
-npm install
+npm ci
 ```
 
 ### Generate documentation

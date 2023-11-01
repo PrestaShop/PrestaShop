@@ -39,6 +39,11 @@ class FormFieldCore
      */
     private $autocomplete = '';
 
+    /**
+     * @var string|null
+     */
+    public $moduleName = null;
+
     public function toArray()
     {
         return [

@@ -20,10 +20,13 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.1.x
           - 8.0.x
           - 1.7.8.x
         include:
           - BRANCH: develop
+            node: 16
+          - BRANCH: 8.1.x
             node: 16
           - BRANCH: 8.0.x
             node: 16
@@ -57,9 +60,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup NPM
-        run: npm install -g npm@7
-
       - name: Create Release directory
         run: mkdir -p ${{ env.RELEASE_DIR }}
 
@@ -70,11 +70,14 @@ jobs:
         run: today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$GH_BRANCH-$i; done
         working-directory: ${{ env.RELEASE_DIR }}
 
-      - uses: google-github-actions/setup-gcloud@v0
-        name: Setup Cloud Sdk
+      - name: Auth Cloud Sdk
+        uses: google-github-actions/auth@v0
         with:
-          service_account_key: ${{ env.GC_SERVICE_KEY }}
+          credentials_json: ${{ env.GC_SERVICE_KEY }}
           project_id: ${{ env.GC_PROJECT_ID }}
+
+      - name: Setup Cloud Sdk
+        uses: google-github-actions/setup-gcloud@v0
 
       - name: Upload to Google Cloud Storage (GCS)
         run: gsutil cp -r "${{ env.RELEASE_DIR }}/**" gs://prestashop-core-nightly

@@ -39,6 +39,7 @@ use Message;
 use Module;
 use PaymentModule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
@@ -49,6 +50,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler implements AddOrderFromBackOfficeHandlerInterface
 {
     /**

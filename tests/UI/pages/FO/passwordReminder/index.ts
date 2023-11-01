@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class PasswordReminder extends FOBasePage {
+class PasswordReminderPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly errorMessage: string;
@@ -18,7 +18,7 @@ class PasswordReminder extends FOBasePage {
 
   private readonly sendResetLinkButton: string;
 
-  private readonly emailAddressText: string;
+  protected emailAddressText: string;
 
   private readonly newPasswordInput: string;
 
@@ -26,16 +26,16 @@ class PasswordReminder extends FOBasePage {
 
   private readonly submitButton: string;
 
-  private readonly sendResetLinkSuccessAlert: string;
+  protected sendResetLinkSuccessAlert: string;
 
-  private readonly errorMessageAlert: string;
+  protected errorMessageAlert: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on password reminder page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Forgot your password';
     this.errorMessage = 'You can regenerate your password only every 360 minute(s)';
@@ -123,4 +123,5 @@ class PasswordReminder extends FOBasePage {
   }
 }
 
-export default new PasswordReminder();
+const passwordReminderPage = new PasswordReminderPage();
+export {passwordReminderPage, PasswordReminderPage};

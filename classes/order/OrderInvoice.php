@@ -60,6 +60,9 @@ class OrderInvoiceCore extends ObjectModel
     public $total_products_wt;
 
     /** @var float */
+    public $total_shipping;
+
+    /** @var float */
     public $total_shipping_tax_excl;
 
     /** @var float */
@@ -88,6 +91,9 @@ class OrderInvoiceCore extends ObjectModel
 
     /** @var Order|null */
     private $order;
+
+    /** @var bool|null */
+    public $is_delivery;
 
     /**
      * @see ObjectModel::$definition
@@ -242,9 +248,6 @@ class OrderInvoiceCore extends ObjectModel
             $row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
             $row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
 
-            if ($customized_datas) {
-                Product::addProductCustomizationPrice($row, $customized_datas);
-            }
             /* Stock product */
             $result_array[(int) $row['id_order_detail']] = $row;
         }
@@ -257,8 +260,6 @@ class OrderInvoiceCore extends ObjectModel
         $product['customizedDatas'] = null;
         if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']])) {
             $product['customizedDatas'] = $customized_datas[$product['product_id']][$product['product_attribute_id']];
-        } else {
-            $product['customizationQuantityTotal'] = 0;
         }
     }
 
@@ -269,13 +270,8 @@ class OrderInvoiceCore extends ObjectModel
      */
     protected function setProductCurrentStock(&$product)
     {
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-            && (int) $product['advanced_stock_management'] == 1
-            && (int) $product['id_warehouse'] > 0) {
-            $product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], null, true);
-        } else {
-            $product['current_stock'] = '--';
-        }
+        $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct((int) $product['product_id'], (int) $product['product_attribute_id'], (int) $product['id_shop']);
+        $product['location'] = StockAvailable::getLocation((int) $product['product_id'], (int) $product['product_attribute_id'], (int) $product['id_shop']);
     }
 
     /**

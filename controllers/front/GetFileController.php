@@ -160,6 +160,11 @@ class GetFileControllerCore extends FrontController
     /** @var bool */
     protected $display_footer = false;
 
+    /**
+     * Initialize the controller.
+     *
+     * @see FrontController::init()
+     */
     public function init()
     {
         if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file')) {
@@ -331,7 +336,7 @@ class GetFileControllerCore extends FrontController
      *
      * @param string $msg
      */
-    protected function displayCustomError($msg)
+    protected function displayCustomError(string $msg)
     {
         $translations = [
             'Invalid key.' => $this->trans('Invalid key.', [], 'Shop.Notifications.Error'),

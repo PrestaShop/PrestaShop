@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 	// Initialize events
 	$("#login_form").validate({
 		rules: {

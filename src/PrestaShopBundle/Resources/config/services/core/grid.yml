@@ -16,8 +16,15 @@ services:
   prestashop.core.grid.query.doctrine_query_parser:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'
 
+  PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface: '@PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
+
   prestashop.core.query.doctrine_search_criteria_applicator:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
+    deprecated: ~
 
   # Grid position updater
   PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory:
@@ -31,10 +38,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface: '@PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory'
 
-  prestashop.core.grid.position.position_update_factory:
-    alias: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory'
-    deprecated: ~
-
   prestashop.core.grid.position.update_handler.doctrine_position_update_handler:
     class: 'PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler\DoctrinePositionUpdateHandler'
     arguments:
@@ -47,10 +50,6 @@ services:
       - '@prestashop.core.grid.position.update_handler.doctrine_position_update_handler'
 
   PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface: '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater'
-
-  prestashop.core.grid.position.doctrine_grid_position_updater:
-    alias: PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater
-    deprecated: ~
 
   prestashop.core.grid.query.filter.doctrine_filter_applicator:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'

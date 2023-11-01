@@ -61,7 +61,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await invoicesPage.closeSfToolBar(page);
 
       const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
 
     it(`should update the invoice prefix to ${invoiceData.prefix}`, async function () {
@@ -70,7 +70,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await invoicesPage.changePrefix(page, invoiceData.prefix);
 
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
     });
   });
 
@@ -85,7 +85,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -95,14 +95,14 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'UpdateStatusForUpdatedPrefix', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it(`should check that the invoice file name contain the prefix '${invoiceData.prefix}'`, async function () {
@@ -125,7 +125,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
 
     it(`should change the invoice prefix to '${defaultPrefix}'`, async function () {
@@ -134,7 +134,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await invoicesPage.changePrefix(page, defaultPrefix);
 
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
     });
   });
 
@@ -149,7 +149,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -158,7 +158,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should check that the invoice file name contain the default prefix ${defaultPrefix}`, async function () {

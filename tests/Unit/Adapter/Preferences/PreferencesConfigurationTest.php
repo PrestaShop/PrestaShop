@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Preferences;
 
-use Cookie;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 
 class PreferencesConfigurationTest extends TestCase
 {
@@ -63,7 +63,6 @@ class PreferencesConfigurationTest extends TestCase
                 [
                     ['PS_PRICE_ROUND_MODE', null, null, 'test'],
                     ['PS_ROUND_TYPE', null, null, 'test'],
-                    ['PS_SHOP_ACTIVITY', null, null, 'test'],
                 ]
             );
 
@@ -97,7 +96,6 @@ class PreferencesConfigurationTest extends TestCase
                 'display_manufacturers' => true,
                 'display_best_sellers' => false,
                 'multishop_feature_active' => true,
-                'shop_activity' => 'test',
             ],
             $result
         );
@@ -123,7 +121,7 @@ class PreferencesConfigurationTest extends TestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                    ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
 
@@ -149,7 +147,6 @@ class PreferencesConfigurationTest extends TestCase
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
                     'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
                 ]
             )
         );
@@ -161,7 +158,7 @@ class PreferencesConfigurationTest extends TestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                    ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
         $this->mockConfiguration
@@ -179,7 +176,6 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_MULTISHOP_FEATURE_ACTIVE', true],
                     ['PS_PRICE_ROUND_MODE', 'test'],
                     ['PS_ROUND_TYPE', 'test'],
-                    ['PS_SHOP_ACTIVITY', 'test'],
                 ]
             );
 
@@ -205,7 +201,6 @@ class PreferencesConfigurationTest extends TestCase
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
                     'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
                 ]
             )
         );

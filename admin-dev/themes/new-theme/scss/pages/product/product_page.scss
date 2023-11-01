@@ -1575,7 +1575,7 @@ $product-page-padding-bottom: 80px !default;
     max-width: 377px;
   }
 
-  .combination-reference {
+  .product-reference {
     margin-left: 0.5rem;
   }
 
@@ -1712,17 +1712,6 @@ $product-page-padding-bottom: 80px !default;
 #modal-specific-price-form {
   .modal-dialog {
     max-width: 810px;
-  }
-}
-
-#specific_price_customer_list {
-  .entity-item.disabled {
-    cursor: not-allowed;
-    background-color: #eceeef;
-
-    .material-icons {
-      cursor: not-allowed;
-    }
   }
 }
 
@@ -1966,30 +1955,6 @@ $product-page-padding-bottom: 80px !default;
           background-color: #f4fcfd;
         }
       }
-    }
-  }
-}
-
-// Typeahead custo
-.twitter-typeahead {
-  .tt-menu {
-    width: 100%;
-    max-height: 19.5rem;
-    padding: 0.3125rem 0;
-    overflow: auto;
-    background: $white;
-    border: 1px solid $gray-medium;
-  }
-
-  .tt-suggestion {
-    padding: 0.3125rem 0.625rem;
-    color: $gray-medium;
-    cursor: pointer;
-
-    &:hover,
-    &.tt-cursor {
-      color: $white;
-      background-color: $primary-hover;
     }
   }
 }
@@ -2250,46 +2215,7 @@ $product-page-padding-bottom: 80px !default;
 #related-product,
 #id-product-redirected,
 .redirect-option-widget {
-  // list of added related products
-  .typeahead-list {
-    li {
-      @extend .p-1;
-      @extend .mt-1;
-      @extend .d-flex;
-      @extend .align-items-center;
-      border: 1px solid $gray-light;
-
-      // thumbnail
-      > .media-left {
-        img {
-          max-width: 50px;
-          max-height: 50px;
-        }
-      }
-
-      // text
-      > .media-body {
-        .label {
-          @extend .mx-1;
-        }
-
-        // delete button
-        i.delete {
-          float: right;
-          color: $medium-gray;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-  .autocomplete-search {
-    .search-suggestion {
-      img {
-        width: 50px;
-      }
-    }
-  }
+  @import "../../components/typeahead_product_collection_type";
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {

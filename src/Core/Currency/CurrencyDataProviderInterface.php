@@ -118,4 +118,6 @@ interface CurrencyDataProviderInterface
      * Get Default currency Iso code.
      */
     public function getDefaultCurrencyIsoCode();
+
+    public function getDefaultCurrencySymbol(): string;
 }

@@ -73,7 +73,7 @@ class OrderMessages extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Order Messages •';
+    this.pageTitle = `Order messages • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors header
     this.newOrderMessageLink = '#page-header-desc-configuration-add';

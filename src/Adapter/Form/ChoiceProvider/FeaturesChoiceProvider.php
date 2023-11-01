@@ -30,33 +30,16 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 class FeaturesChoiceProvider implements FormChoiceProviderInterface
 {
-    /**
-     * @var FeatureRepository
-     */
-    private $featureRepository;
-
-    /**
-     * @var int
-     */
-    private $contextLanguageId;
-
-    /**
-     * @var int
-     */
-    private $defaultLanguageId;
-
     public function __construct(
-        FeatureRepository $featureRepository,
-        LegacyContext $legacyContext,
-        int $defaultLanguageId
+        protected readonly FeatureRepository $featureRepository,
+        protected readonly LegacyContext $legacyContext,
+        protected readonly ConfigurationInterface $configuration
     ) {
-        $this->featureRepository = $featureRepository;
-        $this->contextLanguageId = (int) $legacyContext->getLanguage()->getId();
-        $this->defaultLanguageId = $defaultLanguageId;
     }
 
     /**
@@ -64,13 +47,15 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $features = $this->featureRepository->getFeatures();
+        $defaultLangId = (int) $this->configuration->get('PS_LANG_DEFAULT');
+        $contextLangId = (int) $this->legacyContext->getLanguage()->getId();
+
         $choices = [];
-        foreach ($features as $feature) {
-            if (!empty($feature['localized_names'][$this->contextLanguageId])) {
-                $featureName = $feature['localized_names'][$this->contextLanguageId];
+        foreach ($this->featureRepository->getFeatures() as $feature) {
+            if (!empty($feature['localized_names'][$contextLangId])) {
+                $featureName = $feature['localized_names'][$contextLangId];
             } else {
-                $featureName = $feature['localized_names'][$this->defaultLanguageId];
+                $featureName = $feature['localized_names'][$defaultLangId];
             }
             $choices[$featureName] = $feature['id_feature'];
         }

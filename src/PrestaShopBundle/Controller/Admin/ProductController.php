@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -43,13 +41,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Product\ProductCsvExporter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Attribute;
 use PrestaShopBundle\Entity\Repository\AttributeRepository;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
@@ -62,14 +61,11 @@ use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
-use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
 use PrestaShopBundle\Service\Hook\HookFinder;
 use Product;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
@@ -110,7 +106,6 @@ class ProductController extends FrameworkBundleAdminController
      * URL example: /product/catalog/40/20/id_product/asc
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
-     * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      *
      * @param Request $request
      * @param int $limit The size of the listing
@@ -118,7 +113,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      *
-     * @return array|Template|RedirectResponse|Response
+     * @return Response
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
@@ -230,7 +225,7 @@ class ProductController extends FrameworkBundleAdminController
         $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
 
         // Template vars injection
-        return array_merge(
+        return $this->render('@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig', array_merge(
             $cleanFilterParameters,
             [
                 'limit' => $limit,
@@ -256,17 +251,15 @@ class ProductController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
                 'permission_error' => $permissionError,
-                'layoutTitle' => $this->trans('Products', 'Admin.Global'),
+                'layoutTitle' => $this->trans('Products', 'Admin.Navigation.Menu'),
             ]
-        );
+        ));
     }
 
     /**
      * Get only the list of products to display on the main Admin Product page.
      * The full page that shows products list will subcall this action (from catalogAction).
      * URL example: /product/list/html/40/20/id_product/asc.
-     *
-     * @Template("@PrestaShop/Admin/Product/CatalogPage/Lists/list.html.twig")
      *
      * @param Request $request
      * @param int $limit The size of the listing
@@ -275,7 +268,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $sortOrder To order product list
      * @param string $view full|quicknav To change default template used to render the content
      *
-     * @return array|Template|Response
+     * @return Response
      */
     public function listAction(
         Request $request,
@@ -284,8 +277,8 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'asc',
         $view = 'full'
-    ) {
-        if (!$this->isGranted(PageVoter::READ, self::PRODUCT_OBJECT)) {
+    ): Response {
+        if (!$this->isGranted(Permission::READ, self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -370,7 +363,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
-        return $vars;
+        return $this->render('@PrestaShop/Admin/Product/CatalogPage/Lists/list.html.twig', $vars);
     }
 
     /**
@@ -383,7 +376,7 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = [];
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_product_new'),
-            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'desc' => $this->trans('Add new product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
         ];
@@ -402,7 +395,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function newAction()
     {
-        if (!$this->isGranted(PageVoter::CREATE, self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted(Permission::CREATE, self::PRODUCT_OBJECT)) {
             $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
             $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
 
@@ -441,16 +434,14 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Product form.
      *
-     * @Template("@PrestaShop/Admin/Product/ProductPage/product.html.twig")
-     *
      * @param int $id The product ID
      * @param Request $request
      *
-     * @return array|Response Template vars
+     * @return Response Template vars
      *
      * @throws Exception
      */
-    public function formAction($id, Request $request)
+    public function formAction($id, Request $request): Response
     {
         if ($this->shouldRedirectToV2()) {
             return $this->redirectToRoute('admin_products_edit', ['productId' => $id]);
@@ -458,7 +449,7 @@ class ProductController extends FrameworkBundleAdminController
 
         gc_disable();
 
-        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
+        foreach ([Permission::READ, Permission::UPDATE, Permission::CREATE] as $permission) {
             if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
                 return $this->redirect('admin_dashboard');
             }
@@ -568,14 +559,7 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductController->processSpecificPricePriorities();
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
-                        // For now, each attribute set the same value.
-                        $adminProductWrapper->processDependsOnStock(
-                            $product,
-                            ($_POST['depends_on_stock'] == '1'),
-                            $combinationValues['id_product_attribute']
-                        );
                     }
-                    $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
                     // If there is no combination, then quantity and location are managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
@@ -591,8 +575,6 @@ class ProductController extends FrameworkBundleAdminController
                         ->processProductCustomization($product, $_POST['custom_fields']);
 
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
-
-                    $adminProductController->processWarehouses();
 
                     $response = new JsonResponse();
                     $response->setData([
@@ -623,12 +605,6 @@ class ProductController extends FrameworkBundleAdminController
             throw $e;
         }
 
-        /** @var StockInterface $stockManager */
-        $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
-
-        /** @var WarehouseDataProvider $warehouseProvider */
-        $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
-
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isGroupShopContext()) {
             return $this->render('@Product/ProductPage/disabled_form_alert.html.twig', ['showContentHeader' => false]);
@@ -657,7 +633,7 @@ class ProductController extends FrameworkBundleAdminController
             ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
             ->present();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Product/ProductPage/product.html.twig', [
             'form' => $form->createView(),
             'formCombinations' => $formBulkCombinations->createView(),
             'categories' => $this->get('prestashop.adapter.data_provider.category')->getCategoriesWithBreadCrumb(),
@@ -665,8 +641,6 @@ class ProductController extends FrameworkBundleAdminController
             'ids_product_attribute' => (isset($formData['step3']['id_product_attributes']) ? implode(',', $formData['step3']['id_product_attributes']) : ''),
             'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
             'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
-            'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
-            'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->getConfiguration()->getBoolean('PS_COMBINATION_FEATURE_ACTIVE'),
             'showContentHeader' => false,
@@ -680,11 +654,11 @@ class ProductController extends FrameworkBundleAdminController
             'attribute_groups' => $attributeGroups,
             'max_upload_size' => LegacyTools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT),
+            'editable' => $this->isGranted(Permission::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
-            'layoutTitle' => $this->trans('Product', 'Admin.Global'),
+            'layoutTitle' => $this->trans('Product', 'Admin.Navigation.Menu'),
             'isCreationMode' => (int) $product->state === Product::STATE_TEMP,
-        ];
+        ]);
     }
 
     /**
@@ -764,7 +738,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        $productIdList = $request->request->get('bulk_action_selected_products');
+        $productIdList = $request->request->all('bulk_action_selected_products');
         /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
@@ -931,7 +905,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function massEditAction(Request $request, $action)
     {
-        if (!$this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted(Permission::UPDATE, self::PRODUCT_OBJECT)) {
             $errorMessage = $this->trans(
                 'You do not have permission to edit this.',
                 'Admin.Notifications.Error'
@@ -962,8 +936,8 @@ class ProductController extends FrameworkBundleAdminController
                     /* Change position_ordering to position */
                     $routerParams['orderBy'] = 'position';
 
-                    $productIdList = $request->request->get('mass_edit_action_sorted_products');
-                    $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
+                    $productIdList = $request->request->all('mass_edit_action_sorted_products');
+                    $productPositionList = $request->request->all('mass_edit_action_sorted_positions');
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,
                         'product_list_position' => $productPositionList,
@@ -1279,72 +1253,6 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 1.7.5.0, to be removed in 1.8 rely on CommonController::renderFieldAction
-     *
-     * @throws \OutOfBoundsException
-     * @throws LogicException
-     * @throws \PrestaShopException
-     */
-    public function renderFieldAction($productId, $step, $fieldName)
-    {
-        @trigger_error(
-            'This function is deprecated, use CommonController::renderFieldAction instead.',
-            E_USER_DEPRECATED
-        );
-
-        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($productId);
-        $modelMapper = new AdminModelAdapter(
-            $product,
-            $this->get('prestashop.adapter.legacy.context'),
-            $this->get(AdminProductWrapper::class),
-            $this->get(Tools::class),
-            $productAdapter,
-            $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
-            $this->get('prestashop.adapter.data_provider.feature'),
-            $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax'),
-            $this->get('prestashop.adapter.legacy.configuration'),
-            $this->get('router')
-        );
-        $form = $this->createFormBuilder($modelMapper->getFormData($product));
-        switch ($step) {
-            case 'step1':
-                $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
-
-                break;
-            case 'step2':
-                $form->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice');
-
-                break;
-            case 'step3':
-                $form->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity');
-
-                break;
-            case 'step4':
-                $form->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping');
-
-                break;
-            case 'step5':
-                $form->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo');
-
-                break;
-            case 'step6':
-                $form->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
-
-                break;
-            case 'default':
-        }
-
-        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
-            'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
-            'formId' => $step . '_' . $fieldName . '_rendered',
-        ]);
-    }
-
-    /**
      * @return array
      */
     private function getErrorMessages(): array
@@ -1379,6 +1287,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function shouldRedirectToV2(): bool
     {
-        return $this->get(FeatureFlagRepository::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+        return $this->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 }

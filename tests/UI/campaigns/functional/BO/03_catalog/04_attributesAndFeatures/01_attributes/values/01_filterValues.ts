@@ -53,7 +53,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
     await attributesPage.closeSfToolBar(page);
 
     const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
   it('should filter attributes table by name \'Color\'', async function () {
@@ -62,7 +62,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
     await attributesPage.filterTable(page, 'b!name', Attributes.color.name);
 
     const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
-    await expect(textColumn).to.contains(Attributes.color.name);
+    expect(textColumn).to.contains(Attributes.color.name);
   });
 
   it('should view attribute', async function () {
@@ -71,14 +71,14 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
     await attributesPage.viewAttribute(page, 1);
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.color.name}`);
+    expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.color.name}`);
   });
 
   it('should reset all filters and get number of values in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfValues = await viewAttributePage.resetAndGetNumberOfLines(page);
-    await expect(numberOfValues).to.be.above(0);
+    expect(numberOfValues).to.be.above(0);
   });
 
   describe('Filter values table', async () => {
@@ -128,14 +128,14 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
         );
 
         const numberOfValuesAfterFilter = await viewAttributePage.getNumberOfElementInGrid(page);
-        await expect(numberOfValuesAfterFilter).to.be.at.most(numberOfValues);
+        expect(numberOfValuesAfterFilter).to.be.at.most(numberOfValues);
 
         const textColumn = await viewAttributePage.getTextColumn(page, 1, test.args.filterBy);
 
         if (typeof test.args.filterValue === 'number') {
-          await expect(textColumn).to.contains(test.args.filterValue + 1);
+          expect(textColumn).to.contains(test.args.filterValue + 1);
         } else {
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -143,7 +143,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfValuesAfterReset = await viewAttributePage.resetAndGetNumberOfLines(page);
-        await expect(numberOfValuesAfterReset).to.equal(numberOfValues);
+        expect(numberOfValuesAfterReset).to.equal(numberOfValues);
       });
     });
   });

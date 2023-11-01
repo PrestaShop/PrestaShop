@@ -20,7 +20,7 @@ export default {
     await loginPage.successLogin(page, email, password);
 
     const pageTitle = await dashboardPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    expect(pageTitle).to.contains(dashboardPage.pageTitle);
   },
 
   async logoutBO(mochaContext: Context, page: Page): Promise<void> {
@@ -29,6 +29,6 @@ export default {
     await dashboardPage.logoutBO(page);
 
     const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(loginPage.pageTitle);
+    expect(pageTitle).to.contains(loginPage.pageTitle);
   },
 };

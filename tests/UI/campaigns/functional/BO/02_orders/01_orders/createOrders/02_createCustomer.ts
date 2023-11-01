@@ -55,7 +55,7 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     );
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should go to create order page', async function () {
@@ -64,14 +64,14 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     await ordersPage.goToCreateOrderPage(page);
 
     const pageTitle = await addOrderPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+    expect(pageTitle).to.contains(addOrderPage.pageTitle);
   });
 
   it('should create customer and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
     const customerName = await addOrderPage.addNewCustomer(page, customerData);
-    await expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
+    expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
   });
 
   it('should search for the new customer and check result', async function () {
@@ -80,7 +80,7 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     await addOrderPage.searchCustomer(page, customerData.email);
 
     const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-    await expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
+    expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
   });
 
   // Post-condition: Delete created customer

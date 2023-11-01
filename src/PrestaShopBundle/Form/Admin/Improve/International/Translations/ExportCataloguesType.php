@@ -28,9 +28,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
+use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
 use PrestaShopBundle\Form\Admin\Type\RadioWithChoiceChildrenType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -80,16 +80,7 @@ class ExportCataloguesType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('iso_code', ChoiceType::class, [
-                'label' => $this->trans(
-                    'Language',
-                    'Admin.Global'
-                ),
-                'choices' => $this->getLocaleChoices(),
-                'choice_translation_domain' => false,
-            ]);
-
+        $builder->add('iso_code', LocaleChoiceType::class);
         $builder->add('core_selectors', RadioWithChoiceChildrenType::class, [
             'radio_name' => 'core_type',
             'radio_label' => $this->trans('PrestaShop translations', 'Admin.International.Feature'),

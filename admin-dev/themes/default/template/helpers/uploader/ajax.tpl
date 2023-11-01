@@ -115,7 +115,7 @@
 			{if isset($drop_zone)}dropZone: {$drop_zone},{/if}
 			start: function (e) {
 				{$id|escape:'html':'UTF-8'}_upload_button.start();
-				$('#{$id|escape:'html':'UTF-8'}-upload-button').unbind('click'); //Important as we bind it for every elements in add function
+				$('#{$id|escape:'html':'UTF-8'}-upload-button').off('click'); //Important as we bind it for every elements in add function
 			},
 			fail: function (e, data) {
 				$('#{$id|escape:'html':'UTF-8'}-errors').html(data.errorThrown.message).parent().show();
@@ -160,7 +160,7 @@
 				if ({$id|escape:'html':'UTF-8'}_total_files == 0)
 				{
 					{$id|escape:'html':'UTF-8'}_upload_button.stop();
-					$('#{$id|escape:'html':'UTF-8'}-upload-button').unbind('click');
+					$('#{$id|escape:'html':'UTF-8'}-upload-button').off('click');
 					$('#{$id|escape:'html':'UTF-8'}-files-list').parent().hide();
 				}
 		}).on('fileuploadadd', function(e, data) {
@@ -188,7 +188,7 @@
 			});
 
 			$('#{$id|escape:'html':'UTF-8'}-files-list').parent().show();
-			$('#{$id|escape:'html':'UTF-8'}-upload-button').show().bind('click', function () {
+			$('#{$id|escape:'html':'UTF-8'}-upload-button').show().on('click', function () {
 				if (data.files != null)
 					data.submit();
 			});

@@ -55,7 +55,7 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
     await sqlManagerPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
   it('should go to \'DB Backup\' page', async function () {
@@ -64,7 +64,7 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
     await sqlManagerPage.goToDbBackupPage(page);
 
     const pageTitle = await dbBackupPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dbBackupPage.pageTitle);
+    expect(pageTitle).to.contains(dbBackupPage.pageTitle);
   });
 
   describe('Generate new backup', async () => {
@@ -72,17 +72,17 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfDbBackups', baseContext);
 
       numberOfBackups = await dbBackupPage.getNumberOfElementInGrid(page);
-      await expect(numberOfBackups).to.equal(0);
+      expect(numberOfBackups).to.equal(0);
     });
 
     it('should generate new db backup', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateNewDbBackup', baseContext);
 
       const result = await dbBackupPage.createDbDbBackup(page);
-      await expect(result).to.equal(dbBackupPage.successfulBackupCreationMessage);
+      expect(result).to.equal(dbBackupPage.successfulBackupCreationMessage);
 
       const numberOfBackupsAfterCreation = await dbBackupPage.getNumberOfElementInGrid(page);
-      await expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1);
+      expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1);
     });
   });
 
@@ -93,7 +93,7 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
       filePath = await dbBackupPage.downloadDbBackup(page);
 
       const found = await files.doesFileExist(filePath);
-      await expect(found, 'Download backup file failed').to.be.true;
+      expect(found, 'Download backup file failed').to.eq(true);
     });
   });
 
@@ -102,10 +102,10 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
       await testContext.addContextItem(this, 'testIdentifier', 'deleteDbBackup', baseContext);
 
       const result = await dbBackupPage.deleteBackup(page, 1);
-      await expect(result).to.be.equal(dbBackupPage.successfulDeleteMessage);
+      expect(result).to.be.equal(dbBackupPage.successfulDeleteMessage);
 
       const numberOfBackupsAfterDelete = await dbBackupPage.getNumberOfElementInGrid(page);
-      await expect(numberOfBackupsAfterDelete).to.equal(numberOfBackups);
+      expect(numberOfBackupsAfterDelete).to.equal(numberOfBackups);
     });
   });
 });

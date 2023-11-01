@@ -182,7 +182,7 @@ class SecurityController extends FrameworkBundleAdminController
             [
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('Employee Sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
@@ -212,7 +212,7 @@ class SecurityController extends FrameworkBundleAdminController
             [
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('Customer Sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
@@ -323,7 +323,7 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function bulkDeleteCustomerSessionAction(Request $request): RedirectResponse
     {
-        $sessionIds = $request->request->get('security_session_customer_bulk');
+        $sessionIds = $request->request->all('security_session_customer_bulk');
 
         try {
             $deleteSessionsCommand = new BulkDeleteCustomerSessionsCommand($sessionIds);
@@ -349,7 +349,7 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function bulkDeleteEmployeeSessionAction(Request $request): RedirectResponse
     {
-        $sessionIds = $request->request->get('security_session_employee_bulk');
+        $sessionIds = $request->request->all('security_session_employee_bulk');
 
         try {
             $deleteSessionsCommand = new BulkDeleteEmployeeSessionsCommand($sessionIds);

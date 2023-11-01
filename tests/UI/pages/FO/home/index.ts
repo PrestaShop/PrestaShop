@@ -139,12 +139,20 @@ class HomePage extends FOBasePage {
 
   public readonly alreadyUsedEmailMessage: string;
 
+  public readonly productHummingbird: (number: number) => string;
+
+  public readonly productImgHummingbird: (number: number) => string;
+
+  public readonly quickviewButtonHummingbird: (number: number) => string;
+
+  public readonly blockCartModalCloseButtonHummingbird: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on home page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = global.INSTALL.SHOP_NAME;
     this.successAddToCartMessage = 'Product successfully added to your shopping cart';
@@ -222,6 +230,13 @@ class HomePage extends FOBasePage {
     // Newsletter subscription messages
     this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
     this.alreadyUsedEmailMessage = 'This email address is already registered.';
+
+    // Hummingbird
+    this.productHummingbird = (number: number) => `#content .products div:nth-child(${number})`;
+    this.productImgHummingbird = (number: number) => `${this.productHummingbird(number)} img`;
+    this.quickviewButtonHummingbird = (number: number) => `${this.productHummingbird(number)} .product-miniature__quickview `
+      + 'button';
+    this.blockCartModalCloseButtonHummingbird = `${this.blockCartModalDiv} button.btn-close`;
   }
 
   /**
@@ -434,6 +449,14 @@ class HomePage extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
+    if (this.theme === 'hummingbird') {
+      await page.hover(this.productImgHummingbird(id));
+      await this.waitForVisibleSelector(page, this.quickviewButtonHummingbird(id));
+      await page.click(this.quickviewButtonHummingbird(id));
+
+      return;
+    }
+
     await page.hover(this.productImg(id));
     let displayed: boolean = false;
 
@@ -467,7 +490,7 @@ class HomePage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isQuickViewProductModalVisible(page: Page): Promise<boolean> {
+  async isQuickViewProductModalVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.quickViewModalDiv, 2000);
   }
 
@@ -678,7 +701,11 @@ class HomePage extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeBlockCartModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
+    if (this.theme === 'hummingbird') {
+      await this.waitForSelectorAndClick(page, this.blockCartModalCloseButtonHummingbird);
+    } else {
+      await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
+    }
 
     return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
