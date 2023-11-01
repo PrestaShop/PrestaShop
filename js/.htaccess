@@ -11,7 +11,7 @@
 <IfModule !mod_authz_core.c>
     Order deny,allow
     Deny from all
-    <Files ~ "(?i)^.*\.(css|js|gif|png)$">
+    <Files ~ "(?i)^.*\.(css|js|gif|png|jpg|svg|html|map|eot|ttf|woff)$">
         Allow from all
     </Files>
     <Files ~ "(?i)^.*(jquery\.noConflict\.php|retro-compat\.js\.php)$">
@@ -22,7 +22,7 @@
 # Apache 2.4
 <IfModule mod_authz_core.c>
     Require all denied
-    <Files ~ "(?i)^.*\.(css|js|gif|png)$">
+    <Files ~ "(?i)^.*\.(css|js|gif|png|jpg|svg|html|map|eot|ttf|woff)$">
         Require all granted
     </Files>
     <Files ~ "(?i)^.*(jquery\.noConflict\.php|retro-compat\.js\.php)$">
