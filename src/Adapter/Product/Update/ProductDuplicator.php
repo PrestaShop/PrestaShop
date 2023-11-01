@@ -1025,7 +1025,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                     return 'null';
                 }
 
-                if(gettype($columnValue) == "string") {
+                if (gettype($columnValue) == 'string') {
                     $columnValue = str_replace("'", "''", $columnValue);
                 }
 
