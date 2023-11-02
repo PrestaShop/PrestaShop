@@ -77,6 +77,8 @@ class Category extends FOBasePage {
 
   private readonly searchFiltersDropdown: (facetType: string) => string;
 
+  private readonly closeOneFilter: (row: number) => string;
+
   private readonly searchFiltersSlider: string;
 
   private readonly searchFilterPriceValues: string;
@@ -151,6 +153,7 @@ class Category extends FOBasePage {
     this.searchFilterPriceValues = '[id*=facet_label]';
     this.clearAllFiltersLink = '#_desktop_search_filters_clear_all button.js-search-filters-clear-all';
     this.activeSearchFilters = '#js-active-search-filters';
+    this.closeOneFilter = (row: number) => `#js-active-search-filters ul li:nth-child(${row}) a i`;
 
     // Wishlist
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
@@ -469,6 +472,25 @@ class Category extends FOBasePage {
   async clearAllFilters(page: Page): Promise<boolean> {
     await page.locator(this.clearAllFiltersLink).click();
 
+    return this.elementNotVisible(page, this.activeSearchFilters, 2000);
+  }
+
+  /**
+   * Close filter
+   * @param page {Page} Browser tab
+   * @param row {number} Row of the filter
+   * @return {Promise<void>}
+   */
+  async closeFilter(page: Page, row: number): Promise<void> {
+    await page.locator(this.closeOneFilter(row)).click();
+  }
+
+  /**
+   * Is active filter not visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isActiveFilterNotVisible(page: Page): Promise<boolean> {
     return this.elementNotVisible(page, this.activeSearchFilters, 2000);
   }
 
