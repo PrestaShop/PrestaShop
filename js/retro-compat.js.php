@@ -110,7 +110,7 @@ $plugins = array(
     array('new_file' => 'admin/tinymce.inc.js', 'name' => 'tinymce'),
 );
 
-$file = $_GET['file'];
+$file = ($_GET['file'] ?? null);
 if (!array_key_exists($file, $plugins)) {
     //check if file is a real prestashop native JS
     die('file_not_found');
