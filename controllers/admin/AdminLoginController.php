@@ -53,7 +53,7 @@ class AdminLoginControllerCore extends AdminController
 
     public function setMedia($isNewTheme = false)
     {
-        $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
+        $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.7.1.min.js');
         $this->addjqueryPlugin('validate');
         $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
         if ($this->context->language->is_rtl) {

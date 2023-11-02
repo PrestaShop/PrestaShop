@@ -62,7 +62,7 @@
 
 	function populateStates(id_country, id_state)
 	{
-		if ($("#country option:selected").size() > 1)
+		if ($("#country option:selected").length > 1)
 		{
 			$("#zipcode-label").hide();
 			$("#zipcode").hide();
