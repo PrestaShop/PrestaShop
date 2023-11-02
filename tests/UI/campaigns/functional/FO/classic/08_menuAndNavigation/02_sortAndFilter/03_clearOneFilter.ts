@@ -103,7 +103,7 @@ describe('FO - Menu and navigation : Clear one filter', async () => {
     });
 
     it('should check the active filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters4', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters1', baseContext);
 
       const activeFilters = await categoryPageFO.getActiveFilters(page);
       expect(activeFilters).to.contains('Composition: Ceramic');
@@ -126,7 +126,7 @@ describe('FO - Menu and navigation : Clear one filter', async () => {
     });
 
     it('should check the number of products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts6', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts1', baseContext);
 
       const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
@@ -141,14 +141,14 @@ describe('FO - Menu and navigation : Clear one filter', async () => {
     });
 
     it('should check the active filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters8', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters2', baseContext);
 
       const activeFilters = await categoryPageFO.getActiveFilters(page);
       expect(activeFilters).to.contains('Availability: In stock');
     });
 
     it('should close the active filter', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeActiveFilter', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'closeActiveFilter2', baseContext);
 
       await categoryPageFO.closeFilter(page, 1);
 
@@ -157,7 +157,7 @@ describe('FO - Menu and navigation : Clear one filter', async () => {
     });
 
     it('should check the number of products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts6', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts2', baseContext);
 
       const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
