@@ -249,7 +249,6 @@ describe('BO - Catalog - Products : Multistore', async () => {
 
       console.log('test');
       await createProductPage.selectStores(page, 1);
-      page = await createProductPage.closePage(browserContext, page, 0);
     });
 
     it('should update product name and click on apply changes to all stores', async function () {

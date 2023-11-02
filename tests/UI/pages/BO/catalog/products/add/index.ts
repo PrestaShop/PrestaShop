@@ -174,8 +174,7 @@ class CreateProduct extends BOBasePage {
    */
 
   async selectStores(page: Page, storeID: number): Promise<void> {
-    await this.waitForVisibleSelector(page, '#header-multishop a.product-shops-action');
-    await this.waitForSelectorAndClick(page, '#header-multishop a.product-shops-action svg');
+    await this.waitForSelectorAndClick(page, '#header-multishop a.product-shops-action');
 
     /*await page.evaluate(
       (selector: string) => (document.querySelector(selector) as HTMLElement).click(),
