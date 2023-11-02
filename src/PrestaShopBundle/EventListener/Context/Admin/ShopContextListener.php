@@ -153,7 +153,7 @@ class ShopContextListener
     }
 
     /**
-     * Update cookie value and redirect to current utl to refresh the context.
+     * Update cookie value and redirect to current url to refresh the context.
      *
      * @param RequestEvent $requestEvent
      */

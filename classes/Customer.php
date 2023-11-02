@@ -323,11 +323,6 @@ class CustomerCore extends ObjectModel
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
 
-        // This must only be done in the BO, when this is done in the FO the customer group is deleted
-        if ((isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') || defined('_PS_ADMIN_DIR_')) {
-            $this->updateGroup($this->groupBox);
-        }
-
         if ($this->deleted) {
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
             foreach ($addresses as $address) {
