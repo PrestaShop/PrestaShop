@@ -1408,7 +1408,7 @@ class ToolsCore
     }
 
     /**
-    * Reuse the StringModifier for performance reasons.
+     * Reuse the StringModifier for performance reasons.
      *
      * @return StringModifier
      */
