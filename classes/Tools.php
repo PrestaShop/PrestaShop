@@ -1417,6 +1417,7 @@ class ToolsCore
         if(!isset(self::$_string_modifier)) {
             self::$_string_modifier = new StringModifier();
         }
+
         return self::$_string_modifier;
     }
     
