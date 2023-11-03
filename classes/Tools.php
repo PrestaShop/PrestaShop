@@ -58,6 +58,7 @@ class ToolsCore
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
+    protected static $_string_modifier;
     protected static $_user_plateform;
     protected static $_user_browser;
     protected static $request;
@@ -1391,7 +1392,7 @@ class ToolsCore
             $allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
         }
 
-        return (new StringModifier())->str2url((string) $str, $allow_accented_chars);
+        return (self::getStringModifier())->str2url((string) $str, $allow_accented_chars);
     }
 
     /**
@@ -1403,9 +1404,22 @@ class ToolsCore
      */
     public static function replaceAccentedChars($str)
     {
-        return (new StringModifier())->replaceAccentedChars($str);
+        return (self::getStringModifier())->replaceAccentedChars($str);
     }
 
+    /**
+    * Reuse the StringModifier for performance reasons.
+    *
+    * @return StringModifier
+    */
+    private static function getStringModifier()
+    {
+        if(!isset(self::$_string_modifier)) {
+            self::$_string_modifier = new StringModifier();
+        }
+        return self::$_string_modifier;
+    }
+    
     /**
      * Truncate strings.
      *
