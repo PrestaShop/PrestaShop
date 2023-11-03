@@ -591,7 +591,7 @@ export default class BOBasePage extends CommonPage {
     this.alertInfoBlock = `${this.alertBlock}.alert-info`;
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
     this.alertDangerBlockParagraph = `${this.alertDangerBlock} div.alert-text p`;
-    this.alertInfoBlockParagraph = `${this.alertInfoBlock} p.alert-text`;
+    this.alertInfoBlockParagraph = `${this.alertInfoBlock} div.alert-text, ${this.alertInfoBlock} p.alert-text`;
 
     // Modal dialog
     this.confirmationModal = '#confirmation_modal.show';
@@ -1039,6 +1039,15 @@ export default class BOBasePage extends CommonPage {
     }
 
     await this.waitForHiddenSelector(page, this.growlMessageBlock);
+  }
+
+  /**
+   * Return if an alert block is visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasAlertBlock(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.alertBlock, 1000);
   }
 
   /**

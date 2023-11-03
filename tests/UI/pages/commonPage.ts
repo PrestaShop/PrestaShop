@@ -57,6 +57,15 @@ export default class CommonPage {
   }
 
   /**
+   * Returns the content of the clipboard
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getClipboardText(page: Page): Promise<string> {
+    return page.evaluate((): Promise<string> => navigator.clipboard.readText());
+  }
+
+  /**
    * Wait for selector to have a state
    * @param page {Page} Browser tab
    * @param selector {string} selector to wait
