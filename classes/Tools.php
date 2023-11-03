@@ -1420,7 +1420,7 @@ class ToolsCore
 
         return self::$_string_modifier;
     }
-    
+
     /**
      * Truncate strings.
      *
