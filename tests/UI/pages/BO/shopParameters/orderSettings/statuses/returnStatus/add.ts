@@ -50,7 +50,7 @@ class AddOrderReturnStatus extends BOBasePage {
     await this.setValue(page, this.nameInput, orderReturnStatusData.name);
 
     // Set color
-    await this.setColorValue(page, this.colorInput, orderReturnStatusData.color);
+    await this.setInputValue(page, this.colorInput, orderReturnStatusData.color);
 
     // Save order return status
     await this.clickAndWaitForURL(page, this.saveButton);
