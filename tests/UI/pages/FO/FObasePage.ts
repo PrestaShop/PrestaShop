@@ -15,6 +15,8 @@ export default class FOBasePage extends CommonPage {
 
   private readonly desktopLogoLink: string;
 
+  private readonly breadCrumb: string;
+
   private readonly breadCrumbLink: (link: string) => string;
 
   private readonly cartProductsCount: string;
@@ -111,7 +113,7 @@ export default class FOBasePage extends CommonPage {
 
   private readonly wrapperDiv: (position: number) => string;
 
-  private readonly wrapperTitle: (position:number) => string;
+  private readonly wrapperTitle: (position: number) => string;
 
   private readonly wrapperSubmenu: (position: number) => string;
 
@@ -153,6 +155,7 @@ export default class FOBasePage extends CommonPage {
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
+    this.breadCrumb = '#wrapper div nav.breadcrumb';
     this.breadCrumbLink = (link) => `#wrapper nav.breadcrumb a[href*=${link}]`;
     this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
@@ -271,13 +274,25 @@ export default class FOBasePage extends CommonPage {
   }
 
   /**
+   * Get breadcrumb text
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getBreadcrumbText(page: Page): Promise<string> {
+    return this.getTextContent(page, this.breadCrumb);
+  }
+
+  /**
    * Click on bread crumb link
    * @param page {Page} Browser tab
    * @param link {string} Link to click on
    * @returns {Promise<void>}
    */
   async clickOnBreadCrumbLink(page: Page, link: string): Promise<void> {
-    await this.clickAndWaitForURL(page, this.breadCrumbLink(link));
+    const currentUrl: string = page.url();
+
+    await page.locator(this.breadCrumbLink(link)).first().click();
+    await page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'});
   }
 
   /**
@@ -561,7 +576,7 @@ export default class FOBasePage extends CommonPage {
    * @param productName {string} Product name to search
    * @returns {Promise<boolean>}
    */
-  async hasAutocompleteSearchResult(page: Page, productName:string): Promise<boolean> {
+  async hasAutocompleteSearchResult(page: Page, productName: string): Promise<boolean> {
     await this.setValue(page, this.searchInput, productName);
     return this.isAutocompleteSearchResultVisible(page);
   }
@@ -596,7 +611,7 @@ export default class FOBasePage extends CommonPage {
    * @param productName {string} Product name to search
    * @returns {Promise<void>}
    */
-  async searchProduct(page: Page, productName: string): Promise<void > {
+  async searchProduct(page: Page, productName: string): Promise<void> {
     const currentUrl: string = page.url();
 
     await this.setValue(page, this.theme === 'hummingbird' ? this.hSearchInput : this.searchInput, productName);
