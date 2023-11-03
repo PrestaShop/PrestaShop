@@ -11,7 +11,7 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 import type ProductData from '@data/faker/product';
 import type {ProductHeaderSummary} from '@data/types/product';
 
-import type {Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
 
 /**
  * Create Product V2 page, contains functions that can be used on the page
@@ -181,8 +181,8 @@ class CreateProduct extends BOBasePage {
       '#header-multishop a.product-shops-action',
     );*/
 
-    const selectStoreFrame = await page.frame({name: 'modal-product-shops-iframe'});
-    await selectStoreFrame.locator(`#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i`).click();
+    const selectStoreFrame = page.frame({name: 'modal-product-shops-iframe'}) as Frame;
+    await selectStoreFrame.locator(`#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i +div`).click();
 
     await selectStoreFrame.locator('#product_shops_buttons_submit').click();
   }
