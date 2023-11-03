@@ -60,7 +60,7 @@ describe('BO - Catalog - Products : Multistore', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
- /* describe('Create new store and set URL', async () => {
+  describe('Create new store and set URL', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -111,13 +111,9 @@ describe('BO - Catalog - Products : Multistore', async () => {
       const textResult = await addShopUrlPage.setVirtualUrl(page, createShopData.name);
       expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
     });
-  });*/
+  });
 
   describe('Check multistore', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
@@ -247,7 +243,6 @@ describe('BO - Catalog - Products : Multistore', async () => {
     it('should click on \'Select stores\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSelectStoresButton', baseContext);
 
-      console.log('test');
       await createProductPage.selectStores(page, 1);
     });
 

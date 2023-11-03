@@ -176,12 +176,7 @@ class CreateProduct extends BOBasePage {
   async selectStores(page: Page, storeID: number): Promise<void> {
     await this.waitForSelectorAndClick(page, '#header-multishop a.product-shops-action');
 
-    /*await page.evaluate(
-      (selector: string) => (document.querySelector(selector) as HTMLElement).click(),
-      '#header-multishop a.product-shops-action',
-    );*/
-
-    const selectStoreFrame = page.frame({name: 'modal-product-shops-iframe'}) as Frame;
+    const selectStoreFrame = await page.frame({name: 'modal-product-shops-iframe'}) as Frame;
     await selectStoreFrame.locator(`#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i +div`).click();
 
     await selectStoreFrame.locator('#product_shops_buttons_submit').click();
