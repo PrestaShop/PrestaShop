@@ -251,7 +251,7 @@ export default class CommonPage {
    * @param value {string} Value to set on the input
    * @return {Promise<void>}
    */
-  async setColorValue(page: Page, selector: string, value: string): Promise<void> {
+  async setInputValue(page: Page, selector: string, value: string): Promise<void> {
     await this.clearInput(page, selector);
 
     // eslint-disable-next-line no-param-reassign
