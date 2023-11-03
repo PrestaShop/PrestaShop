@@ -29,6 +29,8 @@ export default class CategoryData {
 
   public readonly thumbnailImage: string|null;
 
+  public readonly children: CategoryData[];
+
   /**
    * Constructor for class CategoryData
    * @param categoryToCreate {CategoryCreator} Could be used to force the value of some members
@@ -64,5 +66,8 @@ export default class CategoryData {
 
     /** @type {string|null} Category thumbnail of the category */
     this.thumbnailImage = categoryToCreate.thumbnailImage || null;
+
+    /** @type {CategoryData[]} Category thumbnail of the category */
+    this.children = categoryToCreate.children || [];
   }
 }
