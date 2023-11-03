@@ -1414,7 +1414,7 @@ class ToolsCore
     */
     private static function getStringModifier()
     {
-        if(!isset(self::$_string_modifier)) {
+        if (!isset(self::$_string_modifier)) {
             self::$_string_modifier = new StringModifier();
         }
 
