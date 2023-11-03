@@ -156,7 +156,7 @@ export default class FOBasePage extends CommonPage {
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
     this.breadCrumb = '#wrapper div nav.breadcrumb';
-    this.breadCrumbLink = (link) => `#wrapper nav.breadcrumb a[href*=${link}]`;
+    this.breadCrumbLink = (link) => `${this.breadCrumb} a[href*=${link}]`;
     this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
