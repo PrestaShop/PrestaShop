@@ -15,6 +15,8 @@ export default class APIAccessData {
 
   public readonly description: string;
 
+  public readonly tokenLifetime: number;
+
   /**
    * Constructor for class APIAccessData
    * @param apiAccessToCreate {APIAccessCreator} Could be used to force the value of some members
@@ -29,7 +31,10 @@ export default class APIAccessData {
     /** @type {string} API Access ID */
     this.clientId = apiAccessToCreate.clientId || faker.string.uuid();
 
-    /** @type {string} Customer firstname */
+    /** @type {string} Description */
     this.description = apiAccessToCreate.description || faker.lorem.sentence();
+
+    /** @type {string} Token Lifetime */
+    this.tokenLifetime = apiAccessToCreate.tokenLifetime || 3600;
   }
 }
