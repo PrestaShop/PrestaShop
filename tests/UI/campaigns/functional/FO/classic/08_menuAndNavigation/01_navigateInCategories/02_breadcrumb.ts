@@ -14,12 +14,7 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_navigateInCategories_breadcrumb';
 
-/*
-Go to FO
-Check all categories and subcategories links in header
- */
-
-describe('FO - Menu and Navigation : Check categories and subcategories links in header', async () => {
+describe('FO - Menu and Navigation : Breadcrumb', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
