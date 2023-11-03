@@ -210,7 +210,7 @@ class StateCore extends ObjectModel
     public static function getStatesByIdCountry($idCountry, $active = false, $orderBy = null, $sort = 'ASC')
     {
         if (empty($idCountry)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Country ID is invalid.'));
         }
 
         $available_sort = ['DESC', 'ASC', 'asc', 'desc'];
@@ -241,7 +241,7 @@ class StateCore extends ObjectModel
     public static function getIdZone($idState)
     {
         if (!Validate::isUnsignedId($idState)) {
-            die(Tools::displayError());
+            die(Tools::displayError('State ID is invalid.'));
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(

@@ -1621,7 +1621,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    die(Tools::displayError('Provided "back" parameter is invalid.'));
                 }
                 if (!$this->lite_display) {
                     $this->page_header_toolbar_btn['back'] = [
@@ -1694,7 +1694,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    die(Tools::displayError('Provided "back" parameter is invalid.'));
                 }
                 if (!$this->lite_display) {
                     $this->toolbar_btn['cancel'] = [
@@ -1711,7 +1711,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    die(Tools::displayError('Provided "back" parameter is invalid.'));
                 }
                 if (!$this->lite_display) {
                     $this->toolbar_btn['back'] = [
@@ -2497,7 +2497,7 @@ class AdminControllerCore extends Controller
                 $back = self::$currentIndex . '&token=' . $this->token;
             }
             if (!Validate::isCleanHtml($back)) {
-                die(Tools::displayError());
+                die(Tools::displayError('Provided "back" parameter is invalid.'));
             }
 
             $helper->back_url = $back;

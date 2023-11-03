@@ -342,7 +342,7 @@ class AdminRequestSqlControllerCore extends AdminController
         $id = Tools::getValue($this->identifier);
         $export_dir = _PS_ADMIN_DIR_ . '/export/';
         if (!Validate::isFileName($id)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Invalid filename for export.'));
         }
         $file = 'request_sql_' . $id . '.csv';
         if ($csv = fopen($export_dir . $file, 'wb')) {

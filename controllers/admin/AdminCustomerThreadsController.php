@@ -549,8 +549,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
             }
         }
 
-        if (!$extension || !Validate::isFileName($filename)) {
-            die(Tools::displayError());
+        if (!$extension) {
+            die(Tools::displayError('Invalid file extension.'));
+        }
+
+        if (!Validate::isFileName($filename)) {
+            die(Tools::displayError('Invalid filename.'));
         }
 
         if (ob_get_level() && ob_get_length() > 0) {

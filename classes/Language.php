@@ -700,7 +700,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public function deleteSelection($selection)
     {
         if (!is_array($selection)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "selection" must be an array.'));
         }
 
         $result = true;
