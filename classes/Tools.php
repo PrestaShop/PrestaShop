@@ -1409,9 +1409,9 @@ class ToolsCore
 
     /**
     * Reuse the StringModifier for performance reasons.
-    *
-    * @return StringModifier
-    */
+     *
+     * @return StringModifier
+     */
     private static function getStringModifier()
     {
         if (!isset(self::$_string_modifier)) {
