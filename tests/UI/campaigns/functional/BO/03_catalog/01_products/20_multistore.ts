@@ -29,7 +29,6 @@ const baseContext: string = 'functional_BO_catalog_products_multistore';
 describe('BO - Catalog - Products : Multistore', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfProducts: number;
   const createShopData: ShopData = new ShopData({name: 'newShop', shopGroup: 'Default', categoryRoot: 'Home'});
 
   // Data to create standard product
