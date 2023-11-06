@@ -33,8 +33,6 @@ class CreateProduct extends BOBasePage {
 
   private readonly submitStoreButton: string;
 
-  private readonly modalProductShops: string;
-
   private readonly storeCheckbox: (storeID: number) => string;
 
   private readonly productImageUrl: string;
@@ -128,7 +126,6 @@ class CreateProduct extends BOBasePage {
     this.selectStoresLink = '#header-multishop a.product-shops-action';
     this.storeCheckbox = (storeID: number) => `#product_shops div.shop-selector li:nth-child(${storeID}) label input +i +div`;
     this.submitStoreButton = '#product_shops_buttons_submit';
-    this.modalProductShops = '#modal-product-shops';
 
     // Header selectors
     this.productActiveSwitchButton = '#product_header_active.ps-switch';
@@ -200,17 +197,6 @@ class CreateProduct extends BOBasePage {
     await selectStoreFrame.locator(this.storeCheckbox(storeID + 1)).click();
 
     await selectStoreFrame.locator(this.submitStoreButton).click();
-  }
-
-  /**
-   * Is stores iframe not visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async isStoresIframeNotVisible(page: Page): Promise<boolean> {
-    const selectStoreFrame = await page.frame({name: 'modal-product-shops-iframe'}) as Frame;
-
-    return this.elementNotVisible(selectStoreFrame, this.submitStoreButton, 1000);
   }
 
   /**

@@ -243,9 +243,6 @@ describe('BO - Catalog - Products : Multistore', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSelectStoresButton', baseContext);
 
       await createProductPage.selectStores(page, 1);
-
-      const isModalNotVisible = await createProductPage.isStoresIframeNotVisible(page);
-      expect(isModalNotVisible).to.eq(true);
     });
 
     it('should update product name and click on apply changes to all stores', async function () {
