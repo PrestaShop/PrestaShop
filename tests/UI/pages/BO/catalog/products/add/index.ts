@@ -29,6 +29,12 @@ class CreateProduct extends BOBasePage {
 
   public readonly errorMessageWhenSummaryTooLong: (number: number) => string;
 
+  private readonly selectStoresLink: string;
+
+  private readonly submitStoreButton: string;
+
+  private readonly storeCheckbox: (storeID: number) => string;
+
   private readonly productImageUrl: string;
 
   private readonly productName: string;
@@ -116,6 +122,11 @@ class CreateProduct extends BOBasePage {
     this.errorMessage = 'Unable to update settings.';
     this.errorMessageWhenSummaryTooLong = (number: number) => `This field cannot be longer than ${number} characters.`;
 
+    // Multistore selectors
+    this.selectStoresLink = '#header-multishop a.product-shops-action';
+    this.storeCheckbox = (storeID: number) => `#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i +div`;
+    this.submitStoreButton = '#product_shops_buttons_submit';
+
     // Header selectors
     this.productActiveSwitchButton = '#product_header_active.ps-switch';
     this.modifyAllShopsNameSwitchButton = '#product_header_modify_all_shops_name +i';
@@ -173,13 +184,19 @@ class CreateProduct extends BOBasePage {
   Methods
    */
 
+  /**
+   * Select stores
+   * @param page {Page} Browser tab
+   * @param storeID {number} Store ID to select
+   * @returns {Promise<void>}
+   */
   async selectStores(page: Page, storeID: number): Promise<void> {
-    await this.waitForSelectorAndClick(page, '#header-multishop a.product-shops-action');
+    await this.waitForSelectorAndClick(page, this.selectStoresLink);
 
     const selectStoreFrame = await page.frame({name: 'modal-product-shops-iframe'}) as Frame;
-    await selectStoreFrame.locator(`#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i +div`).click();
+    await selectStoreFrame.locator(this.storeCheckbox(storeID + 1)).click();
 
-    await selectStoreFrame.locator('#product_shops_buttons_submit').click();
+    await selectStoreFrame.locator(this.submitStoreButton).click();
   }
 
   /**
