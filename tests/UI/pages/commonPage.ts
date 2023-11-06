@@ -91,7 +91,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
-  async waitForHiddenSelector(page: Page, selector: string, timeout: number = 10000): Promise<void> {
+  async waitForHiddenSelector(page: Frame|Page, selector: string, timeout: number = 10000): Promise<void> {
     await this.waitForSelector(page, selector, 'hidden', timeout);
   }
 
@@ -166,12 +166,12 @@ export default class CommonPage {
 
   /**
    * Is element not visible
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param selector {string} Element to check
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<boolean>} True if not visible, false if visible
    */
-  async elementNotVisible(page: Page, selector: string, timeout: number = 10): Promise<boolean> {
+  async elementNotVisible(page: Frame|Page, selector: string, timeout: number = 10): Promise<boolean> {
     try {
       await this.waitForHiddenSelector(page, selector, timeout);
       return true;

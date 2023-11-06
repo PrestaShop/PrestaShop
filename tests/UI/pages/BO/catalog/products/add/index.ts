@@ -208,7 +208,9 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isStoresIframeNotVisible(page: Page): Promise<boolean> {
-    return this.elementNotVisible(page, this.modalProductShops, 1000);
+    const selectStoreFrame = await page.frame({name: 'modal-product-shops-iframe'}) as Frame;
+
+    return this.elementNotVisible(selectStoreFrame, this.submitStoreButton, 1000);
   }
 
   /**
