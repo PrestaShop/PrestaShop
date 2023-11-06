@@ -39,7 +39,7 @@
   var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
 </script>
 
-{% include "@AdminNewTheme/public/preload.html.twig" ignore missing with { 'admin_dir': '/admin-dev/themes/new-theme/public/' } %}
+{% include "@AdminNewTheme/public/preload.html.twig" %}
 
 {# Many modules register on this hook to add their assets, they use addCss and/or addJs methods to do that
 (even if this is supposed to be a display hook). These methods must be executed before we loop through the

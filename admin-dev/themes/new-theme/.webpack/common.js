@@ -448,7 +448,7 @@ module.exports = {
       extensions: ['woff2'],
       filter: /preload/,
       // eslint-disable-next-line
-      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{{ admin_dir }}')),
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="([^"]+)"/g, 'href="{{ asset(\'themes/new-theme/public/$1\') }}"')),
     }),
     new CssoWebpackPlugin({
       forceMediaMerge: true,
