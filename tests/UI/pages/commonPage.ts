@@ -267,7 +267,7 @@ export default class CommonPage {
   async clearInput(page: Frame|Page, selector: string): Promise<void> {
     await this.waitForVisibleSelector(page, selector);
     // eslint-disable-next-line no-param-reassign
-    await page.$eval(selector, (el: HTMLInputElement) => { el.value = ''; });
+    await page.locator(selector).evaluate((el: HTMLInputElement) => { el.value = ''; });
   }
 
   /**
