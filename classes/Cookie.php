@@ -228,7 +228,7 @@ class CookieCore
     public function __set($key, $value)
     {
         if (is_array($value)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Cookie value can\'t be an array.'));
         }
         if (preg_match('/¤|\|/', $key . $value)) {
             throw new Exception('Forbidden chars in cookie');

@@ -184,7 +184,7 @@ class CountryCore extends ObjectModel
     public static function getByIso($isoCode, $active = false)
     {
         if (!Validate::isLanguageIsoCode($isoCode)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Given iso code (' . $isoCode . ') is not valid.'));
         }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
@@ -211,7 +211,7 @@ class CountryCore extends ObjectModel
     public static function getIdZone($idCountry)
     {
         if (!Validate::isUnsignedId($idCountry)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Country ID is invalid.'));
         }
 
         if (isset(self::$_idZones[$idCountry])) {
@@ -362,8 +362,11 @@ class CountryCore extends ObjectModel
      */
     public static function getCountriesByZoneId($idZone, $idLang)
     {
-        if (empty($idZone) || empty($idLang)) {
-            die(Tools::displayError());
+        if (empty($idZone)) {
+            die(Tools::displayError('Zone ID is invalid.'));
+        }
+        if (empty($idLang)) {
+            die(Tools::displayError('Lang ID is invalid.'));
         }
 
         $sql = ' SELECT DISTINCT c.*, cl.*

@@ -132,7 +132,7 @@ class PrestaShopBackupCore
         }
 
         if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
-            die(Tools::displayError());
+            die(Tools::displayError('Invalid backup file.'));
         }
 
         return $backupfile;

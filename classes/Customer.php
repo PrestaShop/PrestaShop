@@ -828,7 +828,7 @@ class CustomerCore extends ObjectModel
     public static function checkPassword($idCustomer, $passwordHash)
     {
         if (!Validate::isUnsignedId($idCustomer)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Customer ID is invalid.'));
         }
 
         // Check that customers password hasn't changed since last login

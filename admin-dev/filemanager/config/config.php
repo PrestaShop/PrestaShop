@@ -39,7 +39,7 @@ $products_accesses = Profile::getProfileAccess(Context::getContext()->employee->
 $cms_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminCmsContent'));
 
 if (!$products_accesses['edit'] && !$cms_accesses['edit']) {
-    die(Tools::displayError());
+    die(Tools::displayError('Access forbidden.'));
 }
 //------------------------------------------------------------------------------
 // DON'T COPY THIS VARIABLES IN FOLDERS config.php FILES

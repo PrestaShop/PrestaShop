@@ -4149,7 +4149,7 @@ class AdminImportControllerCore extends AdminController
         if ($this->access('edit')) {
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'import_match` WHERE `id_import_match` = '
                 . (int) Tools::getValue('idImportMatchs'), false);
-            die;
+            die('1');
         }
     }
 

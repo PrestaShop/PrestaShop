@@ -367,7 +367,7 @@ class ImageCore extends ObjectModel
     public static function deleteCover($idProduct)
     {
         if (!Validate::isUnsignedId($idProduct)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Product ID is invalid.'));
         }
 
         if (file_exists(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg')) {
