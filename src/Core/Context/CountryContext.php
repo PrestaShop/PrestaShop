@@ -28,32 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-
 /**
- * This context service gives access to all contextual data related to shop.
+ * This context service gives access to all contextual data related to country.
  */
-class ShopContext
+class CountryContext
 {
     public function __construct(
-        private readonly ShopConstraint $shopConstraint,
         protected int $id,
+        protected int $zoneId,
+        protected int $currencyId,
+        protected string $isoCode,
+        protected int $callPrefix,
         protected string $name,
-        protected int $shopGroupId,
-        protected int $categoryId,
-        protected string $themeName,
-        protected string $color,
-        protected string $physicalUri,
-        protected string $virtualUri,
-        protected string $domain,
-        protected string $domainSSL,
-        protected bool $active,
+        protected bool $containsStates,
+        protected bool $identificationNumberNeeded,
+        protected bool $zipCodeNeeded,
+        protected string $zipCodeFormat,
+        protected bool $taxLabelDisplayed,
     ) {
-    }
-
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
     }
 
     public function getId(): int
@@ -61,53 +53,53 @@ class ShopContext
         return $this->id;
     }
 
+    public function getZoneId(): int
+    {
+        return $this->zoneId;
+    }
+
+    public function getCurrencyId(): int
+    {
+        return $this->currencyId;
+    }
+
+    public function getIsoCode(): string
+    {
+        return $this->isoCode;
+    }
+
+    public function getCallPrefix(): int
+    {
+        return $this->callPrefix;
+    }
+
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function getShopGroupId(): int
+    public function containsStates(): bool
     {
-        return $this->shopGroupId;
+        return $this->containsStates;
     }
 
-    public function getCategoryId(): int
+    public function isIdentificationNumberNeeded(): bool
     {
-        return $this->categoryId;
+        return $this->identificationNumberNeeded;
     }
 
-    public function getThemeName(): string
+    public function isZipCodeNeeded(): bool
     {
-        return $this->themeName;
+        return $this->zipCodeNeeded;
     }
 
-    public function getColor(): string
+    public function getZipCodeFormat(): string
     {
-        return $this->color;
+        return $this->zipCodeFormat;
     }
 
-    public function isActive(): bool
+    public function isTaxLabelDisplayed(): bool
     {
-        return $this->active;
-    }
-
-    public function getPhysicalUri(): string
-    {
-        return $this->physicalUri;
-    }
-
-    public function getVirtualUri(): string
-    {
-        return $this->virtualUri;
-    }
-
-    public function getDomain(): string
-    {
-        return $this->domain;
-    }
-
-    public function getDomainSSL(): string
-    {
-        return $this->domainSSL;
+        return $this->taxLabelDisplayed;
     }
 }

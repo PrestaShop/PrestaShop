@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component;
 
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Context\Employee;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Model\EmployeeInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/employee_dropdown.html.twig')]
@@ -45,7 +45,7 @@ class EmployeeDropdown
     ) {
     }
 
-    public function getEmployee(): ?EmployeeInterface
+    public function getEmployee(): ?Employee
     {
         return $this->employeeContext->getEmployee();
     }

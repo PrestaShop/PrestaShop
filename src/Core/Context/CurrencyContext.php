@@ -26,28 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Model;
+namespace PrestaShop\PrestaShop\Core\Context;
+
+use PrestaShop\Decimal\DecimalNumber;
 
 /**
- * Basic DTO class that implements ShopInterface
- *
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
+ * This context service gives access to all contextual data related to currency.
  */
-class Shop implements ShopInterface
+class CurrencyContext
 {
+    private DecimalNumber $conversionRate;
+
     public function __construct(
         protected int $id,
         protected string $name,
-        protected int $shopGroupId,
-        protected int $categoryId,
-        protected string $themeName,
-        protected string $color,
-        protected string $physicalUri,
-        protected string $virtualUri,
-        protected string $domain,
-        protected string $domainSSL,
-        protected bool $active,
+        protected array $localizedNames,
+        protected string $isoCode,
+        protected string $numericIsoCode,
+        string $conversionRate,
+        protected string $symbol,
+        protected array $localizedSymbols,
+        protected int $precision,
+        protected string $pattern,
+        protected array $localizedPatterns
     ) {
+        $this->conversionRate = new DecimalNumber($conversionRate);
     }
 
     public function getId(): int
@@ -60,48 +63,48 @@ class Shop implements ShopInterface
         return $this->name;
     }
 
-    public function getShopGroupId(): int
+    public function getLocalizedNames(): array
     {
-        return $this->shopGroupId;
+        return $this->localizedNames;
     }
 
-    public function getCategoryId(): int
+    public function getIsoCode(): string
     {
-        return $this->categoryId;
+        return $this->isoCode;
     }
 
-    public function getThemeName(): string
+    public function getNumericIsoCode(): string
     {
-        return $this->themeName;
+        return $this->numericIsoCode;
     }
 
-    public function getColor(): string
+    public function getConversionRate(): DecimalNumber
     {
-        return $this->color;
+        return $this->conversionRate;
     }
 
-    public function isActive(): bool
+    public function getSymbol(): string
     {
-        return $this->active;
+        return $this->symbol;
     }
 
-    public function getPhysicalUri(): string
+    public function getLocalizedSymbols(): array
     {
-        return $this->physicalUri;
+        return $this->localizedSymbols;
     }
 
-    public function getVirtualUri(): string
+    public function getPrecision(): int
     {
-        return $this->virtualUri;
+        return $this->precision;
     }
 
-    public function getDomain(): string
+    public function getPattern(): string
     {
-        return $this->domain;
+        return $this->pattern;
     }
 
-    public function getDomainSSL(): string
+    public function getLocalizedPatterns(): array
     {
-        return $this->domainSSL;
+        return $this->localizedPatterns;
     }
 }

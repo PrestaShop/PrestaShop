@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Model;
+namespace PrestaShop\PrestaShop\Core\Context;
 
 /**
- * Basic DTO class that implements EmployeeInterface
+ * Immutable DTO Class representing the employee accessible via the EmployeeContext
  *
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
  */
-class Employee implements EmployeeInterface
+class Employee
 {
     public function __construct(
         protected int $id,

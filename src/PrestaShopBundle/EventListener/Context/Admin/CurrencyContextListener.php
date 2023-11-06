@@ -26,32 +26,26 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Model;
+namespace PrestaShopBundle\EventListener\Context\Admin;
 
-/**
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
- */
-interface ShopInterface
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+
+class CurrencyContextListener
 {
-    public function getId(): int;
+    public function __construct(
+        private readonly CurrencyContextBuilder $currencyContextBuilder,
+        private readonly ConfigurationInterface $configuration,
+    ) {
+    }
 
-    public function getName(): string;
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
 
-    public function getShopGroupId(): int;
-
-    public function getCategoryId(): int;
-
-    public function getThemeName(): string;
-
-    public function getColor(): string;
-
-    public function isActive(): bool;
-
-    public function getPhysicalUri(): string;
-
-    public function getVirtualUri(): string;
-
-    public function getDomain(): string;
-
-    public function getDomainSSL(): string;
+        $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
+    }
 }

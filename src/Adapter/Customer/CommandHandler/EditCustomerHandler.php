@@ -112,6 +112,10 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         if (false === $customer->update()) {
             throw new CustomerException('Failed to update customer');
         }
+
+        if (null !== $command->getGroupIds()) {
+            $customer->updateGroup($command->getGroupIds());
+        }
     }
 
     /**
@@ -155,10 +159,6 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         if (null !== $command->isPartnerOffersSubscribed()) {
             $customer->optin = $command->isPartnerOffersSubscribed();
-        }
-
-        if (null !== $command->getGroupIds()) {
-            $customer->groupBox = $command->getGroupIds();
         }
 
         if (null !== $command->getDefaultGroupId()) {

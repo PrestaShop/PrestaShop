@@ -26,35 +26,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener;
+namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Employee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
-/**
- * This subscriber gets context from the legacy context and adds it the request attributes
- * so you can directly fetch the ShopConstraint on the controller arguments.
- */
-class ShopConstraintListener
+class EmployeeRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var Context
-     */
-    private $context;
-
-    public function __construct(Context $context)
+    public function get(int $employeeId): Employee
     {
-        $this->context = $context;
-    }
+        /** @var Employee $employee */
+        $employee = $this->getObjectModel($employeeId, Employee::class, EmployeeNotFoundException::class);
 
-    public function onKernelRequest(RequestEvent $event): void
-    {
-        if (!$event->isMainRequest()) {
-            return;
-        }
-
-        $shopConstraint = $this->context->getShopConstraint();
-
-        $event->getRequest()->attributes->set('shopConstraint', $shopConstraint);
+        return $employee;
     }
 }

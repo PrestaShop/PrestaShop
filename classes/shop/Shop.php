@@ -26,12 +26,12 @@
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Model\ShopInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * @since 1.5.0
  */
-class ShopCore extends ObjectModel implements ShopInterface
+class ShopCore extends ObjectModel
 {
     /** @var int ID of shop group */
     public $id_shop_group;
@@ -123,9 +123,9 @@ class ShopCore extends ObjectModel implements ShopInterface
     /**
      * There are 3 kinds of shop context : shop, group shop and general.
      */
-    public const CONTEXT_SHOP = 1;
-    public const CONTEXT_GROUP = 2;
-    public const CONTEXT_ALL = 4;
+    public const CONTEXT_SHOP = ShopConstraint::SHOP;
+    public const CONTEXT_GROUP = ShopConstraint::SHOP_GROUP;
+    public const CONTEXT_ALL = ShopConstraint::ALL_SHOPS;
 
     /**
      * Some data can be shared between shops, like customers or orders.
@@ -1365,64 +1365,5 @@ class ShopCore extends ObjectModel implements ShopInterface
         $result = Db::getInstance()->executeS($sql);
 
         return $result;
-    }
-
-    /*
-     * Interface methods
-     */
-
-    public function getId(): int
-    {
-        return (int) $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getShopGroupId(): int
-    {
-        return (int) $this->id_shop_group;
-    }
-
-    public function getCategoryId(): int
-    {
-        return (int) $this->id_category;
-    }
-
-    public function getThemeName(): string
-    {
-        return $this->theme_name;
-    }
-
-    public function getColor(): string
-    {
-        return $this->color;
-    }
-
-    public function isActive(): bool
-    {
-        return (bool) $this->active;
-    }
-
-    public function getPhysicalUri(): string
-    {
-        return $this->physical_uri;
-    }
-
-    public function getVirtualUri(): string
-    {
-        return $this->virtual_uri;
-    }
-
-    public function getDomain(): string
-    {
-        return $this->domain;
-    }
-
-    public function getDomainSSL(): string
-    {
-        return $this->domain_ssl;
     }
 }

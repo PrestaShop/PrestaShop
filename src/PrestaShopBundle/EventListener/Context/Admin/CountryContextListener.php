@@ -26,34 +26,26 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Model;
+namespace PrestaShopBundle\EventListener\Context\Admin;
 
-/**
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/33
- */
-interface EmployeeInterface
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+
+class CountryContextListener
 {
-    public function getId(): int;
+    public function __construct(
+        private readonly CountryContextBuilder $countryContextBuilder,
+        private readonly ConfigurationInterface $configuration
+    ) {
+    }
 
-    public function getProfileId(): int;
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
 
-    public function getLanguageId(): int;
-
-    public function getFirstName(): string;
-
-    public function getLastName(): string;
-
-    public function getEmail(): string;
-
-    public function getPassword(): string;
-
-    public function getImageUrl(): string;
-
-    public function getDefaultTabId(): int;
-
-    public function getDefaultShopId(): int;
-
-    public function getAssociatedShopIds(): array;
-
-    public function getAssociatedShopGroupIds(): array;
+        $this->countryContextBuilder->setCountryId((int) $this->configuration->get('PS_COUNTRY_DEFAULT'));
+    }
 }
