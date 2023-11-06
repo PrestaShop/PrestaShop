@@ -75,7 +75,7 @@ $(document).ready(function(){
 					var matchs = jsonData.matchs.split('|')
 					$('input[name=skip]').val(jsonData.skip);
 					for (i=0;i<matchs.length;i++)
-						$('#type_value\\['+i+'\\]').val(matchs[i]).attr('selected',true);
+						$('#type_value\\['+i+'\\]').val(matchs[i]).attr('selected',true).trigger("chosen:updated");
 		       },
 		      error: function(XMLHttpRequest, textStatus, errorThrown)
 		       {
