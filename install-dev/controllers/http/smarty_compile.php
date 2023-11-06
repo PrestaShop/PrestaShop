@@ -23,7 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-define('_PS_DO_NOT_LOAD_CONFIGURATION_', true);
+if (!defined('_PS_DO_NOT_LOAD_CONFIGURATION_')) {
+    define('_PS_DO_NOT_LOAD_CONFIGURATION_', true);
+}
+
 if (Tools::getValue('bo')) {
     if (!is_dir(_PS_ROOT_DIR_ . '/admin/')) {
         exit;
