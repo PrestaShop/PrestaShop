@@ -137,7 +137,7 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
         $status = file_put_contents($file, preg_replace(self::PATTERN, $replacement, $content));
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($file);
+            @opcache_invalidate($file);
         }
 
         return $status !== false;

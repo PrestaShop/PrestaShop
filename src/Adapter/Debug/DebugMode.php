@@ -128,7 +128,7 @@ class DebugMode
         }
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($filename);
+            @opcache_invalidate($filename);
         }
 
         return self::DEBUG_MODE_SUCCEEDED;
@@ -157,7 +157,7 @@ class DebugMode
         }
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($customFileName);
+            @opcache_invalidate($customFileName);
         }
 
         return self::DEBUG_MODE_SUCCEEDED;
