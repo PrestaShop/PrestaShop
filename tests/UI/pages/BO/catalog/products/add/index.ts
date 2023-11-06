@@ -124,7 +124,7 @@ class CreateProduct extends BOBasePage {
 
     // Multistore selectors
     this.selectStoresLink = '#header-multishop a.product-shops-action';
-    this.storeCheckbox = (storeID: number) => `#product_shops div.shop-selector li:nth-child(${storeID + 1}) label input +i +div`;
+    this.storeCheckbox = (storeID: number) => `#product_shops div.shop-selector li:nth-child(${storeID}) label input +i +div`;
     this.submitStoreButton = '#product_shops_buttons_submit';
 
     // Header selectors
