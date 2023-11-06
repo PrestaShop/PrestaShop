@@ -27,6 +27,10 @@ class OrderConfirmation extends FOBasePage {
 
   private readonly giftWrappingRow: string;
 
+  private readonly orderDetailsTable: string;
+
+  private readonly paymentMethodRow: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on order confirmation page
@@ -45,6 +49,8 @@ class OrderConfirmation extends FOBasePage {
     this.customerSupportLink = '#content-hook_payment_return a';
     this.orderConfirmationTable = 'div.order-confirmation-table';
     this.giftWrappingRow = `${this.orderConfirmationTable} tr:nth-child(3)`;
+    this.orderDetailsTable = 'div#order-details';
+    this.paymentMethodRow = `${this.orderDetailsTable} li:nth-child(2)`;
   }
 
   /*
@@ -55,7 +61,7 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {boolean}
    */
-  isFinalSummaryVisible(page: Page): Promise<boolean> {
+  async isFinalSummaryVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.orderSummaryContent, 2000);
   }
 
@@ -64,7 +70,7 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getOrderConfirmationCardTitle(page: Page): Promise<string> {
+  async getOrderConfirmationCardTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.orderConfirmationCardTitleH3);
   }
 
@@ -86,6 +92,17 @@ class OrderConfirmation extends FOBasePage {
    */
   async goToContactUsPage(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.customerSupportLink);
+  }
+
+  /**
+   * Return the payment method
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPaymentMethod(page: Page): Promise<string> {
+    const text = await this.getTextContent(page, this.paymentMethodRow);
+
+    return (text.split(':'))[1].trim();
   }
 
   /**
