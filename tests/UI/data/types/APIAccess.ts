@@ -3,6 +3,7 @@ type APIAccessCreator = {
   clientName?: string
   clientId?: string
   description?: string
+  tokenLifetime?: number
 };
 
 export default APIAccessCreator;

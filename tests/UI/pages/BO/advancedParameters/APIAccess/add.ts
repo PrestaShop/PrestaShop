@@ -30,6 +30,8 @@ class AddNewAPIAccess extends BOBasePage {
 
   private readonly descriptionInput: string;
 
+  private readonly tokenLifetimeInput: string;
+
   private readonly saveButton: string;
 
   private readonly generateClientSecret: string;
@@ -60,6 +62,7 @@ class AddNewAPIAccess extends BOBasePage {
     this.clientNameInput = `${this.formAPIAccess} #api_access_client_name`;
     this.clientIdInput = `${this.formAPIAccess} #api_access_client_id`;
     this.descriptionInput = `${this.formAPIAccess} #api_access_description`;
+    this.tokenLifetimeInput = `${this.formAPIAccess} #api_access_lifetime`;
     this.saveButton = `${this.formAPIAccess} .card-footer button`;
     this.generateClientSecret = `${this.formAPIAccess} .card-footer .generate-client-secret`;
     this.modalDialogConfirmButton = '#generate-secret-modal .modal-footer .btn-confirm-submit';
@@ -79,10 +82,25 @@ class AddNewAPIAccess extends BOBasePage {
     await this.setValue(page, this.clientNameInput, apiAccessData.clientName);
     await this.setValue(page, this.clientIdInput, apiAccessData.clientId);
     await this.setValue(page, this.descriptionInput, apiAccessData.description);
+    await this.setValue(page, this.tokenLifetimeInput, apiAccessData.tokenLifetime);
     // Save
     await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Return input value
+   * @param page {Page}
+   * @param inputName {string}
+   */
+  async getValue(page: Page, inputName: string): Promise<string> {
+    switch (inputName) {
+      case 'tokenLifetime':
+        return this.getAttributeContent(page, this.tokenLifetimeInput, 'value');
+      default:
+        throw new Error(`Input ${inputName} was not found`);
+    }
   }
 
   /**

@@ -34,6 +34,7 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
     clientName: 'API Access UVW',
     clientId: 'api-access-uvw',
     description: 'Description DEF',
+    tokenLifetime: 5,
   });
 
   // Pre-condition: Enable experimental feature : Authorization server
@@ -84,6 +85,13 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
 
       const textResult = await addNewApiAccessPage.addAPIAccess(page, editAPIAccess);
       expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
+    });
+
+    it('should check information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInformations', baseContext);
+
+      const tokenLifetime = await addNewApiAccessPage.getValue(page, 'tokenLifetime');
+      expect(tokenLifetime).to.be.equal(editAPIAccess.tokenLifetime.toString());
     });
 
     it('should regenerate the client secret', async function () {
