@@ -239,10 +239,13 @@ describe('BO - Catalog - Products : Multistore', async () => {
       expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
-    it('should click on \'Select stores\' button', async function () {
+    it('should click on \'Select stores\' button and select the default store', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSelectStoresButton', baseContext);
 
       await createProductPage.selectStores(page, 1);
+
+      const isModalNotVisible = await createProductPage.isStoresIframeNotVisible(page);
+      expect(isModalNotVisible).to.eq(true);
     });
 
     it('should update product name and click on apply changes to all stores', async function () {
