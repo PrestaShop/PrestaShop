@@ -63,6 +63,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
+            'ps_environment_type' => $this->configuration->getAlpha('PS_ENVIRONMENT_TYPE'),
         ];
     }
 
@@ -104,6 +105,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
+        $this->configuration->set('PS_ENVIRONMENT_TYPE', $configuration['ps_environment_type']);
 
         return [];
     }
@@ -141,7 +143,8 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $configuration['display_suppliers'],
             $configuration['display_manufacturers'],
             $configuration['display_best_sellers'],
-            $configuration['multishop_feature_active']
+            $configuration['multishop_feature_active'],
+            $configuration['ps_environment_type']
         );
     }
 }

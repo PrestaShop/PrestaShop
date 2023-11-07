@@ -513,6 +513,7 @@ class FrontControllerCore extends Controller
             'static_token' => Tools::getToken(false),
             'token' => Tools::getToken(),
             'debug' => _PS_MODE_DEV_,
+            'environment' => $this->getTemplateVarCurrentEnv(),
         ];
 
         // An array [module_name => module_output] will be returned
@@ -536,6 +537,19 @@ class FrontControllerCore extends Controller
         Media::addJsDef([
             'prestashop' => $this->buildFrontEndObject($templateVars),
         ]);
+    }
+
+    public function getTemplateVarCurrentEnv(): array
+    {
+        $currentEnv = $this->context->getCurrentEnvironmentType();
+
+        return [
+            'id' => $currentEnv->getId(),
+            'name' => $currentEnv->getName(),
+            'description' => $currentEnv->getDescription(),
+            'is_production' => $currentEnv->isProduction(),
+            'color_code' => $currentEnv->getColorCode(),
+        ];
     }
 
     /**

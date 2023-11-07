@@ -1872,6 +1872,8 @@ class AdminControllerCore extends Controller
      */
     public function display()
     {
+        $currentEnv = $this->context->getCurrentEnvironmentType();
+
         $this->context->smarty->assign([
             'display_header' => $this->display_header,
             'display_header_javascript' => $this->display_header_javascript,
@@ -1880,6 +1882,13 @@ class AdminControllerCore extends Controller
             'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
                 'action' => 'toggleMenu',
             ]),
+            'current_env' => [
+                'id' => $currentEnv->getId(),
+                'name' => $currentEnv->getName(),
+                'description' => $currentEnv->getDescription(),
+                'is_production' => $currentEnv->isProduction(),
+                'color_code' => $currentEnv->getColorCode(),
+            ],
         ]);
 
         // Use page title from meta_title if it has been set else from the breadcrumbs array

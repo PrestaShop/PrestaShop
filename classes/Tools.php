@@ -2364,10 +2364,11 @@ FileETag none
 
     /**
      * @param bool $executeHook
+     * @param bool $indexOnlyProdEnv index only production environment
      *
      * @return bool
      */
-    public static function generateRobotsFile($executeHook = false)
+    public static function generateRobotsFile($executeHook = false, bool $indexOnlyProdEnv = false)
     {
         $robots_file = _PS_ROOT_DIR_ . '/robots.txt';
 
@@ -2396,6 +2397,17 @@ FileETag none
 
         // User-Agent
         fwrite($write_fd, "User-agent: *\n");
+
+        if ($indexOnlyProdEnv) {
+            $currentEnv = Context::getContext()->getCurrentEnvironmentType();
+
+            if (!$currentEnv->isProduction()) {
+                fwrite($write_fd, 'Disallow: /' . PHP_EOL);
+                fclose($write_fd);
+
+                return true;
+            }
+        }
 
         // Allow Directives
         if (count($robots_content['Allow'])) {

@@ -53,6 +53,30 @@
         </div>
       {/if}
 
+      <div class="component hide-mobile-sm"" id="header-environment-type-container">
+        <a class="link environment-type"
+           id="environment-type"
+           data-toggle="pstooltip"
+           data-placement="bottom"
+           data-html="true"
+           data-current-env-id="{$current_env.id}"
+           title="
+            <p class=&quot;text-left&quot;><strong>
+              {if $current_env.is_production}
+                {l|escape s='Your store is in production mode.' d='Admin.Navigation.Notification'}
+              {else}
+                {l|escape s='Your store is in no-production mode.' d='Admin.Navigation.Notification'}
+              {/if}
+            </strong></p>
+            <p class=&quot;text-left&quot;>{$current_env.description}</p>"
+           href="#"
+           style="color: {$current_env.color_code}"
+        >
+          <i class="material-icons">build</i>
+          <span>{$current_env.name}</span>
+        </a>
+      </div>
+
       {if isset($maintenance_mode) && $maintenance_mode == true}
         {capture name="title"}
           <p class="text-left">

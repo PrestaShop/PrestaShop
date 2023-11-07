@@ -28,6 +28,9 @@ use Detection\MobileDetect;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Environment\EnvironmentFinder;
+use PrestaShop\PrestaShop\Core\Environment\EnvironmentTypeInterface;
+use PrestaShop\PrestaShop\Core\Environment\Type\Unknown;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -502,5 +505,17 @@ class ContextCore
         }
 
         return $this->priceComputingPrecision;
+    }
+
+    public function getCurrentEnvironmentType(): EnvironmentTypeInterface
+    {
+        $envFinder = new EnvironmentFinder($this->getTranslator());
+        $currentEnvTypeId = (string) Configuration::get('PS_ENVIRONMENT_TYPE');
+
+        try {
+            return $envFinder->findById($currentEnvTypeId);
+        } catch (Exception $exception) {
+            return new Unknown($this->getTranslator());
+        }
     }
 }

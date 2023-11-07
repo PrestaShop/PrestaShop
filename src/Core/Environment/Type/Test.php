@@ -24,23 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\File;
+declare(strict_types=1);
 
-use Tools;
+namespace PrestaShop\PrestaShop\Core\Environment\Type;
 
-/**
- * Class RobotsTextFileGenerator is responsible for generating robots txt file.
- */
-class RobotsTextFileGenerator
+use PrestaShop\PrestaShop\Core\Environment\EnvironmentTypeAbstract;
+
+class Test extends EnvironmentTypeAbstract
 {
     /**
-     * Generates the robots.txt file.
-     * @param bool $indexOnlyProdEnv index only production environment
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function generateFile(bool $indexOnlyProdEnv = false)
+    public function getColorCode(): ?string
     {
-        return Tools::generateRobotsFile(true, $indexOnlyProdEnv);
+        return '#7c8596';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): ?string
+    {
+        return $this->translator->trans('Test');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDescription(): ?string
+    {
+        return $this->translator->trans('Used for tests purposes');
     }
 }

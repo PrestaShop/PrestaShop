@@ -24,23 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\File;
+declare(strict_types=1);
 
-use Tools;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
-/**
- * Class RobotsTextFileGenerator is responsible for generating robots txt file.
- */
-class RobotsTextFileGenerator
+class EnvironmentNotFoundException extends \Exception
 {
-    /**
-     * Generates the robots.txt file.
-     * @param bool $indexOnlyProdEnv index only production environment
-     *
-     * @return bool
-     */
-    public function generateFile(bool $indexOnlyProdEnv = false)
-    {
-        return Tools::generateRobotsFile(true, $indexOnlyProdEnv);
-    }
 }

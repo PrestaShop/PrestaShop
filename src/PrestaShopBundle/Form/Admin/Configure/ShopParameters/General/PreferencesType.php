@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\EnvironmentTypeChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -100,6 +102,17 @@ class PreferencesType extends TranslatorAwareType
         $configuration = $this->configuration;
         $isSslEnabled = (bool) $configuration->get('PS_SSL_ENABLED');
 
+        $builder->add(
+            'ps_environment_type', ChoiceType::class, [
+                'placeholder' => false,
+                'choices' => $this->getEnvironmentTypesChoice(),
+                'label' => $this->trans('Environment type', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'Your shop\'s behavior may change depending on the type of environment you choose.',
+                    'Admin.Shopparameters.Help'
+                ),
+            ]);
+
         if ($this->requestStack->getCurrentRequest()->isSecure()) {
             $builder->add('enable_ssl', SwitchType::class, [
                 'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
@@ -135,9 +148,9 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('allow_html_iframes', SwitchType::class, [
                 'label' => $this->trans(
-                        'Allow iframes on HTML fields',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Allow iframes on HTML fields',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Allow iframes on text fields like product description. We recommend that you leave this option disabled.',
                     'Admin.Shopparameters.Help'
@@ -145,9 +158,9 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('use_htmlpurifier', SwitchType::class, [
                 'label' => $this->trans(
-                        'Use HTMLPurifier Library',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Use HTMLPurifier Library',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Clean the HTML content on text fields. We recommend that you leave this option enabled.',
                     'Admin.Shopparameters.Help'
@@ -247,5 +260,13 @@ class PreferencesType extends TranslatorAwareType
         }
 
         return $this->isAllShopContext;
+    }
+
+    protected function getEnvironmentTypesChoice(): array
+    {
+        $serviceLocator = SymfonyContainer::getInstance();
+        $environmentTypeChoiceProvider = $serviceLocator->get(EnvironmentTypeChoiceProvider::class);
+
+        return $environmentTypeChoiceProvider->getChoices();
     }
 }

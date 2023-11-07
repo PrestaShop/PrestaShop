@@ -24,23 +24,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\File;
+declare(strict_types=1);
 
-use Tools;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-/**
- * Class RobotsTextFileGenerator is responsible for generating robots txt file.
- */
-class RobotsTextFileGenerator
+use PrestaShop\PrestaShop\Core\Environment\EnvironmentFinderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+
+final class EnvironmentTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * Generates the robots.txt file.
-     * @param bool $indexOnlyProdEnv index only production environment
-     *
-     * @return bool
+     * @var EnvironmentFinderInterface
      */
-    public function generateFile(bool $indexOnlyProdEnv = false)
+    private EnvironmentFinderInterface $environmentFinder;
+
+    /**
+     * @param EnvironmentFinderInterface $environmentFinder
+     */
+    public function __construct(EnvironmentFinderInterface $environmentFinder)
     {
-        return Tools::generateRobotsFile(true, $indexOnlyProdEnv);
+        $this->environmentFinder = $environmentFinder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        $choices = [];
+
+        foreach ($this->environmentFinder->findAll() as $environmentType)
+        {
+            $description = $environmentType->getDescription();
+            $label = $environmentType->getName() . ($description ? ' ('.$description.') ' : '');
+            $choices[$label] = $environmentType->getId();
+        }
+
+        return $choices;
     }
 }

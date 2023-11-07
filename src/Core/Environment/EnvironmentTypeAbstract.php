@@ -24,23 +24,63 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\File;
+declare(strict_types=1);
 
-use Tools;
+namespace PrestaShop\PrestaShop\Core\Environment;
 
-/**
- * Class RobotsTextFileGenerator is responsible for generating robots txt file.
- */
-class RobotsTextFileGenerator
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+abstract class EnvironmentTypeAbstract implements EnvironmentTypeInterface
 {
+    public const DEFAULT_COLOR = '#f1f1f1';
+
     /**
-     * Generates the robots.txt file.
-     * @param bool $indexOnlyProdEnv index only production environment
-     *
-     * @return bool
+     * @var TranslatorInterface
      */
-    public function generateFile(bool $indexOnlyProdEnv = false)
+    protected TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
-        return Tools::generateRobotsFile(true, $indexOnlyProdEnv);
+        $this->translator = $translator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    final public function getId(): string
+    {
+        return (new \ReflectionClass($this))->getShortName();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): ?string
+    {
+        return $this->getId();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDescription(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getColorCode(): ?string
+    {
+        return static::DEFAULT_COLOR;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isProduction(): bool
+    {
+        return false;
     }
 }

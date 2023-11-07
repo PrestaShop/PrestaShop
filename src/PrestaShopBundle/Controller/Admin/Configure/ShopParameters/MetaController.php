@@ -386,7 +386,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $rootDir = $this->getConfiguration()->get('_PS_ROOT_DIR_');
 
-        if (!$robotsTextFileGenerator->generateFile()) {
+        if (!$robotsTextFileGenerator->generateFile(true)) {
             $this->addFlash(
                 'error',
                 $this->trans(
@@ -486,6 +486,7 @@ class MetaController extends FrameworkBundleAdminController
                 'indexPageId' => $metaDataProvider->getIdByPage('index'),
                 'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
                 'showcaseCardIsClosed' => $showcaseCardIsClosed,
+                'isProductionEnv' => $context->getCurrentEnvironmentType()->isProduction(),
             ]
         );
     }
