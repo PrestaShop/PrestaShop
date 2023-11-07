@@ -78,8 +78,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     private function prepareProductForTemplate(array $rawProduct)
     {
         // Enrich data of product
-        $product = (new ProductAssembler($this->context))
-            ->assembleProduct($rawProduct);
+        $product = (new ProductAssembler($this->context))->assembleProduct($rawProduct);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();
@@ -104,8 +103,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function prepareMultipleProductsForTemplate(array $products)
     {
         // Enrich data set of products
-        $products = (new ProductAssembler($this->context))
-            ->assembleProducts($products);
+        $products = (new ProductAssembler($this->context))->assembleProducts($products);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();

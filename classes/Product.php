@@ -3051,10 +3051,8 @@ class ProductCore extends ObjectModel
         foreach ($result as $row) {
             $products_ids[] = $row['id_product'];
         }
-        // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
-        Product::cacheFrontFeatures($products_ids, $id_lang);
 
-        return Product::getProductsProperties((int) $id_lang, $result);
+        return $result;
     }
 
     /**
@@ -3175,7 +3173,7 @@ class ProductCore extends ObjectModel
 
             $row['id_product_attribute'] = (int) $result['id_product_attribute'];
 
-            return Product::getProductProperties($id_lang, $row);
+            return $row;
         } else {
             return false;
         }
@@ -3327,7 +3325,7 @@ class ProductCore extends ObjectModel
             $result = array_slice($result, (int) (($page_number - 1) * $nb_products), (int) $nb_products);
         }
 
-        return Product::getProductsProperties($id_lang, $result);
+        return $result;
     }
 
     /**
@@ -4619,7 +4617,7 @@ class ProductCore extends ObjectModel
             }
         }
 
-        return $this->getProductsProperties($id_lang, $result);
+        return $result;
     }
 
     /**
@@ -5510,8 +5508,12 @@ class ProductCore extends ObjectModel
             'context' => $context,
         ]);
 
-        if (!$row['id_product']) {
-            return false;
+        if (empty($row['id_product'])) {
+            if (!empty($row['id'])) {
+                $row['id_product'] = $row['id'];
+            } else {
+                return false;
+            }
         }
 
         if ($context == null) {

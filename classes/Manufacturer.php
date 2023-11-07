@@ -503,7 +503,7 @@ class ManufacturerCore extends ObjectModel
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**

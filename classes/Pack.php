@@ -405,19 +405,13 @@ class PackCore extends Product
             $line = Product::getTaxesInformations($line);
         }
 
-        if (!$full) {
-            return $result;
-        }
-
-        $array_result = [];
-        foreach ($result as $prow) {
-            if (!Pack::isPack($prow['id_product'])) {
-                $prow['id_product_attribute'] = (int) $prow['id_product_attribute_item'];
-                $array_result[] = Product::getProductProperties($id_lang, $prow);
+        foreach ($result as $k => $v) {
+            if (!Pack::isPack($v['id_product'])) {
+                $result[$k]['id_product_attribute'] = (int) $v['id_product_attribute_item'];
             }
         }
 
-        return $array_result;
+        return $result;
     }
 
     public static function getPacksTable($id_product, $id_lang, $full = false, $limit = null)
@@ -462,7 +456,7 @@ class PackCore extends Product
         $array_result = [];
         foreach ($result as $row) {
             if (!Pack::isPacked($row['id_product'])) {
-                $array_result[] = Product::getProductProperties($id_lang, $row);
+                $array_result[] = $row;
             }
         }
 

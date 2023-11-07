@@ -471,13 +471,7 @@ class SearchCore
 				WHERE p.`id_product` ' . $product_pool;
         $total = $db->getValue($sql, false);
 
-        if (!$result) {
-            $result_properties = false;
-        } else {
-            $result_properties = Product::getProductsProperties((int) $id_lang, $result);
-        }
-
-        return ['total' => $total, 'result' => $result_properties];
+        return ['total' => $total, 'result' => $result];
     }
 
     /**
@@ -1031,7 +1025,7 @@ class SearchCore
             return false;
         }
 
-        return Product::getProductsProperties((int) $id_lang, $result);
+        return $result;
     }
 
     /**
