@@ -1693,6 +1693,16 @@ class ProductCore extends ObjectModel
      */
     public function isNew()
     {
+        return static::isNewStatic((int) $this->id);
+    }
+
+    /**
+     * @param int $idProduct
+     *
+     * @return bool
+     */
+    public static function isNewStatic($idProduct)
+    {
         $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
         if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
             $nbDaysNewProduct = 20;
@@ -1701,7 +1711,7 @@ class ProductCore extends ObjectModel
         $query = 'SELECT COUNT(p.id_product)
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
-            WHERE p.id_product = ' . (int) $this->id . '
+            WHERE p.id_product = ' . (int) $idProduct . '
             AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
 
         return (bool) Db::getInstance()->getValue($query, false);
@@ -5508,6 +5518,7 @@ class ProductCore extends ObjectModel
             'context' => $context,
         ]);
 
+        // Fallback on product ID, to be migrated to presenter in the future, like in other objects
         if (empty($row['id_product'])) {
             if (!empty($row['id'])) {
                 $row['id_product'] = $row['id'];
@@ -5518,6 +5529,20 @@ class ProductCore extends ObjectModel
 
         if ($context == null) {
             $context = Context::getContext();
+        }
+
+        // Warmup several product properties for this request, it will avoid running some useless SQL requests.
+        // Warmup Pack::isPack method, if we have cached pack property.
+        if (isset($row['cache_is_pack'])) {
+            Pack::$cacheIsPack[(int) $row['id_product']] = (int) $row['cache_is_pack'];
+        }
+
+        // Warmup Product::getIdTaxRulesGroupByIdProduct, if we have this property.
+        if (isset($row['id_tax_rules_group'])) {
+            Cache::store(
+                'product_id_tax_rules_group_' . (int) $row['id_product'] . '_' . (int) $context->shop->id,
+                (int) $row['id_tax_rules_group']
+            );
         }
 
         $id_product_attribute = $row['id_product_attribute'] = (!empty($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null);
@@ -5549,25 +5574,6 @@ class ProductCore extends ObjectModel
 
         if (isset(self::$productPropertiesCache[$cache_key])) {
             return array_merge($row, self::$productPropertiesCache[$cache_key]);
-        }
-
-        // Datas
-        $row['category'] = Category::getLinkRewrite((int) $row['id_category_default'], (int) $id_lang);
-        $row['category_name'] = Db::getInstance()->getValue('SELECT name FROM ' . _DB_PREFIX_ . 'category_lang WHERE id_shop = ' . (int) $context->shop->id . ' AND id_lang = ' . (int) $id_lang . ' AND id_category = ' . (int) $row['id_category_default']);
-        $row['link'] = $context->link->getProductLink((int) $row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
-
-        // Get manufacturer name if missing
-        if (empty($row['manufacturer_name'])) {
-            // Assign empty value
-            $row['manufacturer_name'] = null;
-
-            // If we have manufacturer ID, we wil try to load it's name and assign it
-            if (!empty($row['id_manufacturer'])) {
-                $manufacturerName = Manufacturer::getNameById((int) $row['id_manufacturer']);
-                if (!empty($manufacturerName)) {
-                    $row['manufacturer_name'] = $manufacturerName;
-                }
-            }
         }
 
         if (isset($row['quantity_wanted'])) {
@@ -5711,20 +5717,6 @@ class ProductCore extends ObjectModel
                 $id_product_attribute
             );
         }
-
-        /*
-         * Loading of files attached to product. This is using cache_has_attachments property which needs to be managed
-         * every time a file is changed. It can sometimes lead to database inconsistency.
-         *
-         * It would be better to lazy load it in ProductLazyArray so we can just always take the live data
-         * if needed and would not need to take care about cache_has_attachments.
-         */
-        $row['attachments'] = [];
-        if (!isset($row['cache_has_attachments']) || $row['cache_has_attachments']) {
-            $row['attachments'] = Product::getAttachmentsStatic((int) $id_lang, $row['id_product']);
-        }
-
-        $row['virtual'] = ((!isset($row['is_virtual']) || $row['is_virtual']) ? 1 : 0);
 
         // Pack management
         $row['pack'] = (!isset($row['cache_is_pack']) ? Pack::isPack($row['id_product']) : (int) $row['cache_is_pack']);

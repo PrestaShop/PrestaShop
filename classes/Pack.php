@@ -86,6 +86,8 @@ class PackCore extends Product
         }
 
         if (!array_key_exists($id_product, self::$cacheIsPack)) {
+            // This is not very efficient, isn't an entry in pack table a proof that it's a pack?
+            // Moreover, we already have cache_is_pack column, product_type is just a duplicate.
             $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'pack` WHERE id_product_pack = ' . (int) $id_product);
             $productType = Db::getInstance()->getValue('SELECT product_type FROM `' . _DB_PREFIX_ . 'product` WHERE id_product = ' . (int) $id_product);
             self::$cacheIsPack[$id_product] = ($result > 0) || $productType === ProductType::TYPE_PACK;
