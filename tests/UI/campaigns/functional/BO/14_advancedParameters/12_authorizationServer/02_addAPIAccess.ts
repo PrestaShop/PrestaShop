@@ -28,6 +28,10 @@ describe('BO - Advanced Parameter - API Access : Add API Access', async () => {
     clientName: 'API Access XYZ',
     clientId: 'api-access-xyz',
     description: 'Description ABC',
+    scopes: [
+      'hook_write',
+      'api_access_read',
+    ],
   });
 
   // Pre-condition: Enable experimental feature : Authorization server

@@ -32,6 +32,12 @@ class AddNewAPIAccess extends BOBasePage {
 
   private readonly tokenLifetimeInput: string;
 
+  private readonly scopeGroup: (group:string) => string;
+
+  private readonly scopeStatus: (scope: string) => string;
+
+  private readonly scopeStatusInput: (scope: string) => string;
+
   private readonly saveButton: string;
 
   private readonly generateClientSecret: string;
@@ -63,6 +69,9 @@ class AddNewAPIAccess extends BOBasePage {
     this.clientIdInput = `${this.formAPIAccess} #api_access_client_id`;
     this.descriptionInput = `${this.formAPIAccess} #api_access_description`;
     this.tokenLifetimeInput = `${this.formAPIAccess} #api_access_lifetime`;
+    this.scopeGroup = (group:string) => `#api_access_scopes_${group}_accordion div.switch-scope`;
+    this.scopeStatus = (scope: string) => `${this.formAPIAccess} div[data-scope=${scope}] div.switch-widget .ps-switch`;
+    this.scopeStatusInput = (scope: string) => `${this.scopeStatus(scope)} input`;
     this.saveButton = `${this.formAPIAccess} .card-footer button`;
     this.generateClientSecret = `${this.formAPIAccess} .card-footer .generate-client-secret`;
     this.modalDialogConfirmButton = '#generate-secret-modal .modal-footer .btn-confirm-submit';
@@ -83,10 +92,76 @@ class AddNewAPIAccess extends BOBasePage {
     await this.setValue(page, this.clientIdInput, apiAccessData.clientId);
     await this.setValue(page, this.descriptionInput, apiAccessData.description);
     await this.setValue(page, this.tokenLifetimeInput, apiAccessData.tokenLifetime);
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const scope of apiAccessData.scopes) {
+      await this.setAPIScopeChecked(page, scope, true);
+    }
+
     // Save
     await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Returns the list of scopes from a group
+   * @param page {Page} Browser tab
+   * @param group {string} Scopes Group
+   */
+  async getApiScopes(page: Page, group: string): Promise<string[]> {
+    return page.locator(this.scopeGroup(group))
+      .evaluateAll(
+        (all: HTMLElement[]) => all
+          .map((el) => el.getAttribute('data-scope'))
+          .filter((attr): attr is string => attr !== null),
+      );
+  }
+
+  /**
+   * Returns if a specific API Scope is disabled
+   * @param page {Page} Browser tab
+   * @param scope {string} Scope
+   * @return {Promise<boolean>}
+   */
+  async isAPIScopeDisabled(page: Page, scope: string): Promise<boolean> {
+    return this.isDisabled(page, `${this.scopeStatusInput(scope)}`);
+  }
+
+  /**
+   * Returns if a specific API Scope is checked
+   * @param page {Page} Browser tab
+   * @param scope {string} Scope
+   * @return {Promise<boolean>}
+   */
+  async isAPIScopeChecked(page: Page, scope: string): Promise<boolean> {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(page, `${this.scopeStatusInput(scope)}:checked`, 'value');
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
+  }
+
+  /**
+   * Check/Uncheck a specific API Scope
+   * @param page {Page} Browser tab
+   * @param scope {string} Scope
+   * @param valueWanted {boolean} True if we need to enable status, false if not
+   * @return {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async setAPIScopeChecked(page: Page, scope: string, valueWanted: boolean = true): Promise<boolean> {
+    if (await this.isAPIScopeChecked(page, scope) !== valueWanted) {
+      await page.locator(this.scopeStatus(scope)).click();
+
+      await this.waitForVisibleSelector(
+        page,
+        `${this.scopeStatusInput(scope)}[value='${valueWanted ? 1 : 0}']:checked`,
+      );
+
+      return true;
+    }
+
+    return false;
   }
 
   /**

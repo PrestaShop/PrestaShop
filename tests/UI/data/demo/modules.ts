@@ -5,6 +5,10 @@ export default {
     tag: 'blockwishlist',
     name: 'Wishlist',
   }),
+  psApiResources: new ModuleData({
+    tag: 'ps_apiresources',
+    name: 'PrestaShop API Resources',
+  }),
   psCashOnDelivery: new ModuleData({
     tag: 'ps_cashondelivery',
     name: 'Cash on delivery (COD)',

@@ -32,6 +32,8 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SwitchScopeType extends TranslatorAwareType
@@ -61,5 +63,15 @@ class SwitchScopeType extends TranslatorAwareType
                 'class' => 'switch-scope',
             ],
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+
+        $view->vars['attr']['data-scope'] = $view->vars['value']['scope'];
     }
 }
