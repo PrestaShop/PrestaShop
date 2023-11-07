@@ -160,9 +160,7 @@ describe('BO - Catalog - Products : Multistore', async () => {
       const pageTitle = await productsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
-  });
 
-  describe('Create new product', async () => {
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
@@ -187,10 +185,64 @@ describe('BO - Catalog - Products : Multistore', async () => {
       await expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
     });
 
-    it('should click on \'Select stores\' button', async function () {
+    it('should go back to catalog page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToCatalogPage', baseContext);
+
+      await createProductPage.goToCatalogPage(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should click on multistore header and select the default shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectDefaultShop', baseContext);
+
+      await productsPage.clickOnMultiStoreHeader(page);
+      await productsPage.chooseShop(page, 1);
+
+      const shopName = await productsPage.getShopName(page);
+      expect(shopName).to.eq(global.INSTALL.SHOP_NAME);
+    });
+
+    it('should search for the created product and check that the product is not visible in the list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchCreatedProduct', baseContext);
+
+      await productsPage.filterProducts(page, 'product_name', newProductData.name, 'input');
+
+      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      expect(numberOfProductsAfterFilter).to.eq(0);
+    });
+
+    it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfter', baseContext);
+
+      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProductsAfterReset).to.be.gt(0);
+    });
+
+    it('should click on multistore header and select the created shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectCreatedShop', baseContext);
+
+      await productsPage.clickOnMultiStoreHeader(page);
+      await productsPage.chooseShop(page, 2);
+
+      const shopName = await productsPage.getShopName(page);
+      expect(shopName).to.eq(createShopData.name);
+    });
+
+    it('should go to the created product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedProductPage', baseContext);
+
+      await productsPage.goToProductPage(page, 1);
+
+      const pageTitle = await createProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(createProductPage.pageTitle);
+    });
+
+    it('should click on \'Select stores\' button and select the default store', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSelectStoresButton', baseContext);
 
-      // @toDo https://github.com/PrestaShop/PrestaShop/issues/34197
+      await createProductPage.selectStores(page, 1);
     });
 
     it('should update product name and click on apply changes to all stores', async function () {
@@ -228,21 +280,8 @@ describe('BO - Catalog - Products : Multistore', async () => {
     it('should check the updated product name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductName', baseContext);
 
-      this.skip();
-
       const productName = await productsPage.getTextColumn(page, 'product_name', 1);
       expect(productName).to.eq(editProductData.name);
-    });
-
-    it('should select the created shop and delete product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnMultistoreHeader3', baseContext);
-
-      // To delete when https://github.com/PrestaShop/PrestaShop/issues/34197 is fixed
-      await productsPage.clickOnMultiStoreHeader(page);
-      await productsPage.chooseShop(page, 2);
-
-      const shopName = await productsPage.getShopName(page);
-      expect(shopName).to.eq(createShopData.name);
     });
 
     it('should delete product', async function () {
