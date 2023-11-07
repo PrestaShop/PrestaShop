@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization;
 
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
+
 /**
  * Locale entity interface.
  *
@@ -34,13 +36,22 @@ namespace PrestaShop\PrestaShop\Core\Localization;
 interface LocaleInterface
 {
     /**
+     * Get this locale's code (simplified IETF tag syntax)
+     * Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     * eg: fr-FR, en-US.
+     *
+     * @return string
+     */
+    public function getCode(): string;
+
+    /**
      * Format a number according to locale rules.
      *
      * @param int|float|string $number The number to be formatted
      *
      * @return string The formatted number
      */
-    public function formatNumber($number);
+    public function formatNumber(int|float|string $number): string;
 
     /**
      * Format a number as a price.
@@ -50,5 +61,21 @@ interface LocaleInterface
      *
      * @return string The formatted price
      */
-    public function formatPrice($number, $currencyCode);
+    public function formatPrice(int|float|string $number, string $currencyCode): string;
+
+    /**
+     * Get price specification by currency code.
+     *
+     * @param string $currencyCode Currency of the price
+     *
+     * @return NumberInterface
+     */
+    public function getPriceSpecification(string $currencyCode): NumberInterface;
+
+    /**
+     * Get number specification
+     *
+     * @return NumberInterface
+     */
+    public function getNumberSpecification(): NumberInterface;
 }
