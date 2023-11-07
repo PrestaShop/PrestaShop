@@ -4,6 +4,7 @@ type APIAccessCreator = {
   clientId?: string
   description?: string
   tokenLifetime?: number
+  scopes?: string[]
 };
 
 export default APIAccessCreator;

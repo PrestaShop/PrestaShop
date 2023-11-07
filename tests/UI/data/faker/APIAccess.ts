@@ -17,6 +17,8 @@ export default class APIAccessData {
 
   public readonly tokenLifetime: number;
 
+  public readonly scopes: string[];
+
   /**
    * Constructor for class APIAccessData
    * @param apiAccessToCreate {APIAccessCreator} Could be used to force the value of some members
@@ -36,5 +38,8 @@ export default class APIAccessData {
 
     /** @type {string} Token Lifetime */
     this.tokenLifetime = apiAccessToCreate.tokenLifetime || 3600;
+
+    /** @type {string[]} Scopes */
+    this.scopes = apiAccessToCreate.scopes || [];
   }
 }

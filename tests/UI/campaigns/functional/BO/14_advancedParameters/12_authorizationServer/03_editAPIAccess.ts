@@ -35,6 +35,10 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
     clientId: 'api-access-uvw',
     description: 'Description DEF',
     tokenLifetime: 5,
+    scopes: [
+      'hook_write',
+      'api_access_read',
+    ],
   });
 
   // Pre-condition: Enable experimental feature : Authorization server
@@ -92,6 +96,12 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
 
       const tokenLifetime = await addNewApiAccessPage.getValue(page, 'tokenLifetime');
       expect(tokenLifetime).to.be.equal(editAPIAccess.tokenLifetime.toString());
+
+      const hasScopeHookRead = await addNewApiAccessPage.isAPIScopeChecked(page, 'hook_read');
+      expect(hasScopeHookRead).to.be.equal(false);
+
+      const hasScopeHookWrite = await addNewApiAccessPage.isAPIScopeChecked(page, 'hook_write');
+      expect(hasScopeHookWrite).to.be.equal(true);
     });
 
     it('should regenerate the client secret', async function () {
