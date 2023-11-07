@@ -232,7 +232,7 @@ class AdminReturnControllerCore extends AdminController
                     if (($id_order_return = (int) (Tools::getValue('id_order_return'))) && Validate::isUnsignedId($id_order_return)) {
                         $orderReturn = new OrderReturn($id_order_return);
                         if (!Validate::isLoadedObject($orderReturn)) {
-                            die(Tools::displayError());
+                            die(Tools::displayError(sprintf('Order return with ID "%s" could not be loaded.', $id_order_return)));
                         }
                         if ((int) ($orderReturn->countProduct()) > 1) {
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) (Tools::getValue('id_customization', 0)))) {

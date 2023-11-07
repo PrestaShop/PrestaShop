@@ -301,7 +301,7 @@ class SupplierCore extends ObjectModel
         }
 
         if (!Validate::isOrderBy($orderBy) || !Validate::isOrderWay($orderWay)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Invalid sorting parameters provided.'));
         }
 
         $sqlGroups = '';

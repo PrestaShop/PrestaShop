@@ -1456,7 +1456,7 @@ class CartCore extends ObjectModel
         }
 
         if (!Validate::isLoadedObject($product)) {
-            die(Tools::displayError());
+            die(Tools::displayError(sprintf('Product with ID "%s" could not be loaded.', $id_product)));
         }
 
         if (isset(self::$_nbProducts[$this->id])) {
@@ -1892,7 +1892,7 @@ class CartCore extends ObjectModel
     {
         $cart = new Cart($id_cart);
         if (!Validate::isLoadedObject($cart)) {
-            die(Tools::displayError());
+            die(Tools::displayError(sprintf('Cart with ID "%s" could not be loaded.', $id_cart)));
         }
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;

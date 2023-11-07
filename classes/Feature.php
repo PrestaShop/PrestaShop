@@ -155,7 +155,7 @@ class FeatureCore extends ObjectModel
         foreach ($fields as $field) {
             foreach (array_keys($field) as $key) {
                 if (!Validate::isTableOrIdentifier($key)) {
-                    die(Tools::displayError());
+                    die(Tools::displayError('Invalid column name in feature_lang table.'));
                 }
             }
 
