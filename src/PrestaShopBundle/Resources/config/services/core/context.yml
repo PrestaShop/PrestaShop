@@ -15,6 +15,11 @@ services:
     lazy: true
     factory: [ '@PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder', 'build' ]
 
+  PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\LanguageContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder', 'build' ]
+
   PrestaShop\PrestaShop\Core\Context\ShopContextBuilder: ~
   PrestaShop\PrestaShop\Core\Context\ShopContext:
     lazy: true
