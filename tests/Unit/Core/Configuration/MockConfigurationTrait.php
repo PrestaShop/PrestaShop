@@ -37,19 +37,22 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
  */
 trait MockConfigurationTrait
 {
-    protected function mockConfiguration(array $configurationValues): ShopConfigurationInterface|MockObject
+    protected function mockConfiguration(array $configurationValues = []): ShopConfigurationInterface|MockObject
     {
         $configuration = $this->createMock(ShopConfigurationInterface::class);
-        $configuration
-            ->method('get')
-            ->will($this->returnCallback(function ($configurationName) use ($configurationValues) {
-                if (isset($configurationValues[$configurationName])) {
-                    return $configurationValues[$configurationName];
-                }
 
-                throw new \InvalidArgumentException('Unhandled configuration ' . $configurationName);
-            }))
-        ;
+        if (!empty($configurationValues)) {
+            $configuration
+                ->method('get')
+                ->will($this->returnCallback(function ($configurationName) use ($configurationValues) {
+                    if (isset($configurationValues[$configurationName])) {
+                        return $configurationValues[$configurationName];
+                    }
+
+                    throw new \InvalidArgumentException('Unhandled configuration ' . $configurationName);
+                }))
+            ;
+        }
 
         return $configuration;
     }
