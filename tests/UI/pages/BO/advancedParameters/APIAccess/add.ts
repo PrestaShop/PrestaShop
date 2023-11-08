@@ -70,7 +70,7 @@ class AddNewAPIAccess extends BOBasePage {
     this.descriptionInput = `${this.formAPIAccess} #api_access_description`;
     this.tokenLifetimeInput = `${this.formAPIAccess} #api_access_lifetime`;
     this.scopeGroup = (group:string) => `#api_access_scopes_${group}_accordion div.switch-scope`;
-    this.scopeStatus = (scope: string) => `${this.formAPIAccess} div[data-scope=${scope}] div.switch-widget .ps-switch`;
+    this.scopeStatus = (scope: string) => `${this.formAPIAccess} div[data-scope="${scope}"] div.switch-widget span.ps-switch`;
     this.scopeStatusInput = (scope: string) => `${this.scopeStatus(scope)} input`;
     this.saveButton = `${this.formAPIAccess} .card-footer button`;
     this.generateClientSecret = `${this.formAPIAccess} .card-footer .generate-client-secret`;
