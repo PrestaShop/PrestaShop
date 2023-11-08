@@ -114,6 +114,8 @@ class AddCartRule extends BOBasePage {
 
   private readonly actionsTabLink: string;
 
+  private readonly titleOfExcludeDiscountedProduct: string;
+
   private readonly freeShippingToggle: (toggle: string) => string;
 
   private readonly applyDiscountRadioButton: (toggle: string) => string;
@@ -245,6 +247,7 @@ class AddCartRule extends BOBasePage {
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
+    this.titleOfExcludeDiscountedProduct = '#apply_discount_to_product_special label span[data-original-title]';
     this.freeShippingToggle = (toggle: string) => `${this.cartRuleForm} #free_shipping_${toggle}`;
 
     // Discount percent selectors
@@ -280,6 +283,15 @@ class AddCartRule extends BOBasePage {
   }
 
   /* Methods */
+  /**
+   * Get generate button name
+   * @param page {Frame|Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getGenerateButtonName(page: Page): Promise<string> {
+    return this.getTextContent(page, this.generateButton);
+  }
+
   /**
    * Fill form in information tab
    * @param page {Frame|Page} Browser tab
@@ -475,6 +487,17 @@ class AddCartRule extends BOBasePage {
         `${cartRuleData.freeGiftProduct.name} - €${cartRuleData.freeGiftProduct.price}`,
       );
     }
+  }
+
+  /**
+   * Get title of exclude discounted product
+   * @param page
+   */
+  async getTitleOfExcludeDiscountedProduct(page: Page): Promise<string> {
+    // Go to actions tab
+    await page.click(this.actionsTabLink);
+
+    return this.getAttributeContent(page, this.titleOfExcludeDiscountedProduct, 'data-original-title');
   }
 
   /**

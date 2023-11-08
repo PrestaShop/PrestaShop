@@ -247,6 +247,16 @@ class ModuleManager extends BOBasePage {
   }
 
   /**
+   * Get module name
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Tag of the Module
+   * @return {Promise<string>}
+   */
+  async getModuleName(page: Page, module: ModuleData): Promise<string> {
+    return this.getAttributeContent(page, `${this.moduleBlock(module.tag)} [data-original-title]`, 'data-original-title');
+  }
+
+  /**
    * Is bulk actions button disabled
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
