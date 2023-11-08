@@ -614,11 +614,11 @@ class Category extends FOBasePage {
   async addToWishList(page: Page, idxProduct: number): Promise<string> {
     if (!(await this.isAddedToWishlist(page, idxProduct))) {
       // Click on the heart
-      await page.click(this.productAddToWishlist(idxProduct));
+      await page.locator(this.productAddToWishlist(idxProduct)).click();
       // Wait for the modal
       await this.elementVisible(page, this.wishlistModal, 3000);
       // Click on the first wishlist
-      await page.click(this.wishlistModalListItem);
+      await page.locator(this.wishlistModalListItem).click();
       // Wait for the toast
       await this.elementVisible(page, this.wishlistToast, 3000);
 
