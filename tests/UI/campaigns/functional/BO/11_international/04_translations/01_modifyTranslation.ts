@@ -108,7 +108,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -139,7 +139,7 @@ describe('BO - International - Translation : Modify translation', async () => {
 
   describe('Case 2 - Front office translations', async () => {
     it('should go to \'International > Translations\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -152,7 +152,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it(`should choose the translation 'Front office' and the language '${Languages.french.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation2', baseContext);
 
       await translationsPage.modifyTranslation(page, 'Front office Translations', 'classic', Languages.french.name);
 
@@ -202,7 +202,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should go to \'International > Translations\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage3', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -216,7 +216,7 @@ describe('BO - International - Translation : Modify translation', async () => {
 
     it(`should choose the translation 'Front office with hummingbird theme' and the language '${Languages.english.name}'`,
       async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation3', baseContext);
 
         await translationsPage.modifyTranslation(page, 'Front office Translations', 'hummingbird', Languages.english.name);
 
@@ -274,7 +274,7 @@ describe('BO - International - Translation : Modify translation', async () => {
 
   describe('Case 4 - Installed modules translations', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
       // Close tab and init other page objects with new current tab
       page = await homePage.closePage(browserContext, page, 0);
@@ -284,7 +284,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should go to \'International > Translations\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage4', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -297,7 +297,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it(`should choose the translation 'Installed modules' and the language '${Languages.english.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation4', baseContext);
 
       await translationsPage.modifyTranslation(
         page,
@@ -312,7 +312,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should search \'Contact form\' expression and modify the english translation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'translateExpression3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'translateExpression4', baseContext);
 
       await translationsPage.searchTranslation(page, 'Contact form');
 
@@ -351,7 +351,7 @@ describe('BO - International - Translation : Modify translation', async () => {
 
   describe('Case 5 - Email translations', async () => {
     it('should go to \'International > Translations\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage5', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -364,7 +364,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it(`should choose the translation 'Email translations' and the language '${Languages.english.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation5', baseContext);
 
       await translationsPage.modifyTranslation(
         page,
@@ -380,7 +380,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should search \'Welcome!\' expression and modify the english translation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'translateExpression3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'translateExpression5', baseContext);
 
       await translationsPage.searchTranslation(page, 'Welcome!');
 
@@ -448,7 +448,7 @@ describe('BO - International - Translation : Modify translation', async () => {
 
   describe('Case 6 - Other translations', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo3', baseContext);
 
       // Close tab and init other page objects with new current tab
       page = await homePage.closePage(browserContext, page, 0);
@@ -458,7 +458,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should go to \'International > Translations\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage6', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -471,7 +471,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it(`should choose the translation 'Other' and the language '${Languages.english.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation6', baseContext);
 
       await translationsPage.modifyTranslation(page, 'Other translations', 'classic', Languages.english.name);
 
@@ -480,7 +480,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should search an expression and modify the english translation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'translateExpression3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'translateExpression6', baseContext);
 
       await translationsPage.searchTranslation(page, 'If enabled, the voucher will not apply to products already on sale.');
 
@@ -499,7 +499,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
 
     it('should go to new cart rule page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
 
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
