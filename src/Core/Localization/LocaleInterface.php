@@ -36,6 +36,13 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 interface LocaleInterface
 {
     /**
+     * Latin numbering system is the "occidental" numbering system. Number digits are 0123456789.
+     * This is the default numbering system in PrestaShop, even for arabian or asian languages, until we
+     * provide a way to configure this in admin.
+     */
+    public const NUMBERING_SYSTEM_LATIN = 'latn';
+
+    /**
      * Get this locale's code (simplified IETF tag syntax)
      * Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      * eg: fr-FR, en-US.

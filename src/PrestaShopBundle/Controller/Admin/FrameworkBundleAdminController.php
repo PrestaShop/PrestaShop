@@ -30,8 +30,8 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use Psr\Container\ContainerInterface;
@@ -220,9 +220,9 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
     /**
      * Get the locale based on the context
      *
-     * @return Locale
+     * @return LocaleInterface
      */
-    protected function getContextLocale(): Locale
+    protected function getContextLocale(): LocaleInterface
     {
         $locale = $this->getContext()->getCurrentLocale();
         if (null !== $locale) {

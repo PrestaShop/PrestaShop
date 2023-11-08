@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
-use Employee;
 use PHPUnit\Framework\MockObject\MockObject;
-use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
+use PrestaShop\PrestaShop\Core\Context\Employee;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
@@ -39,9 +39,7 @@ use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCa
 
 class LanguageContextListenerTest extends ContextEventListenerTestCase
 {
-    private const CONTEXT_EMPLOYEE_LANGUAGE_ID = 42;
-    private const COOKIE_EMPLOYEE_LANGUAGE_ID = 51;
-    private const COOKIE_EMPLOYEE_ID = 69;
+    private const EMPLOYEE_CONTEXT_LANGUAGE_ID = 42;
     private const DEFAULT_CONFIGURATION_LANGUAGE_ID = 99;
 
     public function testContextEmployeeLanguage(): void
@@ -52,34 +50,13 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         );
         $listener = new LanguageContextListener(
             $languageContextBuilder,
-            $this->mockLegacyContext([], [
-                'employee' => $this->mockEmployee(self::CONTEXT_EMPLOYEE_LANGUAGE_ID),
-            ]),
-            $this->mockEmployeeRepository(),
+            $this->mockEmployeeContext(self::EMPLOYEE_CONTEXT_LANGUAGE_ID),
             $this->mockConfiguration(),
         );
 
         $event = $this->createRequestEvent(new Request());
         $listener->onKernelRequest($event);
-        $this->assertEquals(self::CONTEXT_EMPLOYEE_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
-    }
-
-    public function testCookieEmployeeLanguage(): void
-    {
-        $languageContextBuilder = new LanguageContextBuilder(
-            $this->createMock(LanguageRepositoryInterface::class),
-            $this->createMock(Repository::class),
-        );
-        $listener = new LanguageContextListener(
-            $languageContextBuilder,
-            $this->mockLegacyContext(['id_employee' => self::COOKIE_EMPLOYEE_ID]),
-            $this->mockEmployeeRepository($this->mockEmployee(self::COOKIE_EMPLOYEE_LANGUAGE_ID), self::COOKIE_EMPLOYEE_ID),
-            $this->mockConfiguration(),
-        );
-
-        $event = $this->createRequestEvent(new Request());
-        $listener->onKernelRequest($event);
-        $this->assertEquals(self::COOKIE_EMPLOYEE_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
+        $this->assertEquals(self::EMPLOYEE_CONTEXT_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
     }
 
     public function testDefaultConfigurationLanguage(): void
@@ -90,8 +67,7 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         );
         $listener = new LanguageContextListener(
             $languageContextBuilder,
-            $this->mockLegacyContext(),
-            $this->mockEmployeeRepository(),
+            $this->mockEmployeeContext(null),
             $this->mockConfiguration(['PS_LANG_DEFAULT' => self::DEFAULT_CONFIGURATION_LANGUAGE_ID]),
         );
 
@@ -100,29 +76,27 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $this->assertEquals(self::DEFAULT_CONFIGURATION_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
     }
 
-    private function mockEmployee(int $languageId): Employee|MockObject
+    private function mockEmployeeContext(?int $languageId): EmployeeContext|MockObject
     {
-        $employee = $this->createMock(Employee::class);
-        $employee->id_lang = $languageId;
-        $employee
-            ->method('isLoggedBack')
-            ->willReturn(true)
-        ;
+        $employeeContext = $this->createMock(EmployeeContext::class);
 
-        return $employee;
-    }
-
-    private function mockEmployeeRepository(?Employee $employee = null, ?int $expectedEmployeeId = null): EmployeeRepository|MockObject
-    {
-        $repository = $this->createMock(EmployeeRepository::class);
-        if ($employee) {
-            $repository
-                ->method('get')
-                ->with($expectedEmployeeId)
+        if ($languageId) {
+            $employee = $this->createMock(Employee::class);
+            $employee
+                ->method('getLanguageId')
+                ->willReturn($languageId)
+            ;
+            $employeeContext
+                ->method('getEmployee')
                 ->willReturn($employee)
+            ;
+        } else {
+            $employeeContext
+                ->method('getEmployee')
+                ->willReturn(null)
             ;
         }
 
-        return $repository;
+        return $employeeContext;
     }
 }
