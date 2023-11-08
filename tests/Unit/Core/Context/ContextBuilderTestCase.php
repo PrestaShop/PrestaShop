@@ -26,31 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace Tests\Unit\Core\Context;
 
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
-use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
-use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
 
-class CountryContextListenerTest extends ContextEventListenerTestCase
+abstract class ContextBuilderTestCase extends TestCase
 {
-    public function testKernelRequest(): void
+    protected function mockLanguageContext(int $languageId): LanguageContext|MockObject
     {
-        $countryContextBuilder = new CountryContextBuilder(
-            $this->createMock(CountryRepository::class),
-            $this->createMock(ContextStateManager::class),
-            $this->createMock(LanguageContext::class),
-        );
-        $listener = new CountryContextListener(
-            $countryContextBuilder,
-            $this->mockConfiguration(['PS_COUNTRY_DEFAULT' => 42]),
-        );
+        $languageContext = $this->createMock(LanguageContext::class);
+        $languageContext
+            ->method('getId')
+            ->willReturn($languageId)
+        ;
 
-        $event = $this->createRequestEvent(new Request());
-        $listener->onKernelRequest($event);
-        $this->assertEquals(42, $this->getPrivateField($countryContextBuilder, 'countryId'));
+        return $languageContext;
     }
 }

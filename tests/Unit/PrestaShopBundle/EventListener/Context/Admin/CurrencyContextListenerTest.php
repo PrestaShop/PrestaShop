@@ -30,8 +30,8 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
 
@@ -42,7 +42,7 @@ class CurrencyContextListenerTest extends ContextEventListenerTestCase
         $currencyContextBuilder = new CurrencyContextBuilder(
             $this->createMock(CurrencyRepository::class),
             $this->createMock(ContextStateManager::class),
-            $this->createMock(ConfigurationInterface::class)
+            $this->createMock(LanguageContext::class)
         );
         $listener = new CurrencyContextListener(
             $currencyContextBuilder,
