@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface;
+use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
@@ -45,6 +46,8 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
  */
 class LegacyContextListener
 {
+    use ExternalApiTrait;
+
     /**
      * @param iterable|LegacyContextBuilderInterface[] $legacyBuilders
      */
@@ -55,7 +58,7 @@ class LegacyContextListener
 
     public function onKernelController(ControllerEvent $event): void
     {
-        if (!$event->isMainRequest()) {
+        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
             return;
         }
 

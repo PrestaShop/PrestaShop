@@ -51,16 +51,16 @@ class ShopCore extends ObjectModel
     public $active = true;
     public $deleted;
 
-    /** @var string Physical uri of main url (read only) */
+    /** @var ?string Physical uri of main url (read only) */
     public $physical_uri;
 
-    /** @var string Virtual uri of main url (read only) */
+    /** @var ?string Virtual uri of main url (read only) */
     public $virtual_uri;
 
-    /** @var string Domain of main url (read only) */
+    /** @var ?string Domain of main url (read only) */
     public $domain;
 
-    /** @var string Domain SSL of main url (read only) */
+    /** @var ?string Domain SSL of main url (read only) */
     public $domain_ssl;
 
     /** @var ShopGroup|null Shop group object */

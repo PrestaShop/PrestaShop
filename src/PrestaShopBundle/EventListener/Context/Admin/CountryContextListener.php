@@ -30,10 +30,13 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
+use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class CountryContextListener
 {
+    use ExternalApiTrait;
+
     public function __construct(
         private readonly CountryContextBuilder $countryContextBuilder,
         private readonly ConfigurationInterface $configuration
@@ -42,7 +45,7 @@ class CountryContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest()) {
+        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
             return;
         }
 
