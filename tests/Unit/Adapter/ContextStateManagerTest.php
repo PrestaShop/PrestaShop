@@ -31,8 +31,10 @@ use Country;
 use Currency;
 use Customer;
 use Language;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use Tests\TestCase\ContextStateTestCase;
 
 class ContextStateManagerTest extends ContextStateTestCase
@@ -199,6 +201,35 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals('test42', $context->getTranslator()->getLocale());
     }
 
+    public function testLocalizationLocaleState()
+    {
+        $context = $this->createContextMock([
+            'currentLocale' => $this->createLocalizationLocaleMock('fr-FR'),
+        ]);
+        $this->assertEquals('fr-FR', $context->currentLocale->getCode());
+        $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setCurrentLocale($this->createLocalizationLocaleMock('en-US'));
+        $this->assertEquals('en-US', $context->currentLocale->getCode());
+        $this->assertEquals('en-US', $context->getCurrentLocale()->getCode());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setCurrentLocale($this->createLocalizationLocaleMock('en-GB'));
+        $this->assertEquals('en-GB', $context->currentLocale->getCode());
+        $this->assertEquals('en-GB', $context->getCurrentLocale()->getCode());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals('fr-FR', $context->currentLocale->getCode());
+        $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
     public function testNullField()
     {
         $context = $this->createContextMock([
@@ -233,6 +264,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             'currency' => $this->createContextFieldMock(Currency::class, 42),
             'customer' => $this->createContextFieldMock(Customer::class, 42),
             'language' => $this->createContextFieldMock(Language::class, 42),
+            'currentLocale' => $this->createLocalizationLocaleMock('fr-FR'),
             'controller' => $this->createLegacyControllerContextMock('AdminProductsController'),
         ]);
         $this->assertEquals(42, $context->cart->id);
@@ -240,6 +272,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('fr-FR', $context->currentLocale->getCode());
+        $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());
         $this->assertEquals('AdminProductsController', $context->controller->controller_name);
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
@@ -251,6 +285,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCurrency($this->createContextFieldMock(Currency::class, 51))
             ->setCustomer($this->createContextFieldMock(Customer::class, 51))
             ->setLanguage($this->createContextFieldMock(Language::class, 51))
+            ->setCurrentLocale($this->createLocalizationLocaleMock('en-US'))
             ->setController($this->createLegacyControllerContextMock('AdminCartsController'));
 
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
@@ -261,6 +296,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->currency->id);
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(51, $context->language->id);
+        $this->assertEquals('en-US', $context->currentLocale->getCode());
+        $this->assertEquals('en-US', $context->getCurrentLocale()->getCode());
         $this->assertEquals('AdminCartsController', $context->controller->controller_name);
 
         $contextStateManager->restorePreviousContext();
@@ -270,6 +307,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('fr-FR', $context->currentLocale->getCode());
+        $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());
         $this->assertEquals('AdminProductsController', $context->controller->controller_name);
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
@@ -337,6 +376,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             'customer' => $this->createContextFieldMock(Customer::class, 42),
             'language' => $this->createContextFieldMock(Language::class, 42),
             'controller' => $this->createLegacyControllerContextMock('AdminProductsController'),
+            'currentLocale' => $this->createLocalizationLocaleMock('fr-FR'),
         ]);
         $this->assertEquals(42, $context->cart->id);
         $this->assertEquals(42, $context->country->id);
@@ -344,6 +384,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
         $this->assertEquals('AdminProductsController', $context->controller->controller_name);
+        $this->assertEquals('fr-FR', $context->currentLocale->getCode());
+        $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
         $this->assertNull($contextStateManager->getContextFieldsStack());
@@ -353,6 +395,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCurrency($this->createContextFieldMock(Currency::class, 51))
             ->setCustomer($this->createContextFieldMock(Customer::class, 51))
             ->setController($this->createLegacyControllerContextMock('AdminCartsController'))
+            ->setCurrentLocale($this->createLocalizationLocaleMock('en-US'))
         ;
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
@@ -363,6 +406,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
         $this->assertEquals('AdminCartsController', $context->controller->controller_name);
+        $this->assertEquals('en-US', $context->currentLocale->getCode());
+        $this->assertEquals('en-US', $context->getCurrentLocale()->getCode());
 
         $contextStateManager->saveCurrentContext();
         $this->assertCount(2, $contextStateManager->getContextFieldsStack());
@@ -371,6 +416,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCart($this->createContextFieldMock(Cart::class, 69))
             ->setCurrency($this->createContextFieldMock(Currency::class, 69))
             ->setController($this->createLegacyControllerContextMock('AdminImagesController'))
+            ->setCurrentLocale($this->createLocalizationLocaleMock('en-GB'))
         ;
 
         $this->assertEquals(69, $context->cart->id);
@@ -379,6 +425,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
         $this->assertEquals('AdminImagesController', $context->controller->controller_name);
+        $this->assertEquals('en-GB', $context->currentLocale->getCode());
+        $this->assertEquals('en-GB', $context->getCurrentLocale()->getCode());
         $this->assertCount(2, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -389,6 +437,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
         $this->assertEquals('AdminCartsController', $context->controller->controller_name);
+        $this->assertEquals('en-US', $context->currentLocale->getCode());
+        $this->assertEquals('en-US', $context->getCurrentLocale()->getCode());
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
@@ -400,6 +450,8 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
         $this->assertEquals('AdminProductsController', $context->controller->controller_name);
+        $this->assertEquals('fr-FR', $context->currentLocale->getCode());
+        $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 
@@ -494,5 +546,16 @@ class ContextStateManagerTest extends ContextStateTestCase
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
         $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
+    private function createLocalizationLocaleMock(string $code): LocaleInterface|MockObject
+    {
+        $locale = $this->createMock(LocaleInterface::class);
+        $locale
+            ->method('getCode')
+            ->willReturn($code)
+        ;
+
+        return $locale;
     }
 }

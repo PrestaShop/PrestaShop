@@ -77,6 +77,14 @@ abstract class ContextStateTestCase extends TestCase
             if ($fieldName === 'language' && $contextValue instanceof Language) {
                 $contextMock->getTranslator()->setLocale('test' . $contextValue->id);
             }
+            if ($fieldName === 'currentLocale') {
+                $contextMock
+                    ->method('getCurrentLocale')
+                    ->willReturnCallback(static function () use ($contextMock) {
+                        return $contextMock->currentLocale;
+                    })
+                ;
+            }
         }
         LegacyContext::setInstanceForTesting($contextMock);
 
