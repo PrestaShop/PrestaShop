@@ -612,16 +612,21 @@ class Category extends FOBasePage {
    * @returns Promise<string>
    */
   async addToWishList(page: Page, idxProduct: number): Promise<string> {
-    // Click on the heart
-    await page.click(this.productAddToWishlist(idxProduct));
-    // Wait for the modal
-    await this.elementVisible(page, this.wishlistModal, 2000);
-    // Click on the first wishlist
-    await page.click(this.wishlistModalListItem);
-    // Wait for the toast
-    await this.elementVisible(page, this.wishlistToast, 2000);
+    if (!(await this.isAddedToWishlist(page, idxProduct))) {
+      // Click on the heart
+      await page.click(this.productAddToWishlist(idxProduct));
+      // Wait for the modal
+      await this.elementVisible(page, this.wishlistModal, 3000);
+      // Click on the first wishlist
+      await page.click(this.wishlistModalListItem);
+      // Wait for the toast
+      await this.elementVisible(page, this.wishlistToast, 3000);
 
-    return this.getTextContent(page, this.wishlistToast);
+      return this.getTextContent(page, this.wishlistToast);
+    }
+
+    // Already added
+    return this.messageAddedToWishlist;
   }
 
   /**
