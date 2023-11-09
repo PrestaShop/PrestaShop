@@ -146,7 +146,7 @@ describe('BO _ Shop Parameters - Customer Settings : Filter, sort and pagination
       {
         args:
           {
-            testIdentifier: 'sortByIdDesc', sortBy: 'id_gender', sortDirection: 'asc', isFloat: true,
+            testIdentifier: 'sortByIdAsc', sortBy: 'id_gender', sortDirection: 'asc', isFloat: true,
           },
       },
     ].forEach((test: { args: { testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean } }) => {
