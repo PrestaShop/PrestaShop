@@ -77,6 +77,14 @@ class Groups extends BOBasePage {
 
   private readonly sortColumnDiv: (column: string, direction: string) => string;
 
+  private readonly visitorsGroupSelect: string;
+
+  private readonly guestsGroupSelect: string;
+
+  private readonly customersGroupSelect: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on groups page
@@ -141,6 +149,12 @@ class Groups extends BOBasePage {
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = (column: string, direction: string) => `${this.tableHead} a.${direction}-sort-column-${column}-link`;
+
+    // Default groups options selectors
+    this.visitorsGroupSelect = '#PS_UNIDENTIFIED_GROUP';
+    this.guestsGroupSelect = '#PS_GUEST_GROUP';
+    this.customersGroupSelect = '#PS_CUSTOMER_GROUP';
+    this.saveButton = '#group_fieldset_general div.panel-footer button[type="submit"]';
   }
 
   /* Header methods */
@@ -371,6 +385,45 @@ class Groups extends BOBasePage {
    */
   async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     await this.clickAndWaitForURL(page, `${this.sortColumnDiv(sortBy, sortDirection)} i`);
+  }
+
+  /* Default groups options selectors */
+  /**
+   * Get group selected option
+   * @param page {Page} Browser tab
+   * @param group {string} Group to get selected value
+   * @return {Promise<string>}
+   */
+  async getGroupSelectedValue(page: Page, group: string): Promise<string> {
+    switch (group) {
+      case 'visitors':
+        return this.getTextContent(page, `${this.visitorsGroupSelect} option[selected]`, false);
+      case 'guests':
+        return this.getTextContent(page, `${this.guestsGroupSelect} option[selected]`, false);
+      case 'customers':
+        return this.getTextContent(page, `${this.customersGroupSelect} option[selected]`, false);
+      default:
+        throw new Error(`Group ${group} was not found`);
+    }
+  }
+
+  /**
+   * Get group dropdown list
+   * @param page {Page} Browser tab
+   * @param group {string} Group to get dropdown list
+   * @return {Promise<string>}
+   */
+  async getGroupDropDownList(page: Page, group: string): Promise<string> {
+    switch (group) {
+      case 'visitors':
+        return this.getTextContent(page, this.visitorsGroupSelect);
+      case 'guests':
+        return this.getTextContent(page, this.guestsGroupSelect);
+      case 'customers':
+        return this.getTextContent(page, this.customersGroupSelect);
+      default:
+        throw new Error(`Group ${group} was not found`);
+    }
   }
 }
 
