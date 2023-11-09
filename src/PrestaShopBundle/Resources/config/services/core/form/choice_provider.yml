@@ -24,6 +24,8 @@ services:
     arguments:
       $combinationFeature: '@PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature'
 
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider:
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider:
     arguments:
       - '@prestashop.core.admin.timezone.repository'

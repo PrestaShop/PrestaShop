@@ -24,43 +24,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+namespace PrestaShopBundle\Form\Admin\Type\Material;
+
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class PaymentPreferencesFormDataProvider is responsible for handling "Improve > Payment > Preferences" form data.
+ * Extension of material multiple choice table type that puts header in card-table div and body in card-body
+ * Also adds new parameter table_icon which adds specified icon in card-header before the title,
  */
-final class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
+class MaterialMultipleChoiceTableCardType extends MaterialMultipleChoiceTableType
 {
     /**
-     * @var DataConfigurationInterface
+     * {@inheritdoc}
      */
-    private $paymentModuleConfiguration;
-
-    /**
-     * @param DataConfigurationInterface $paymentModuleConfiguration
-     */
-    public function __construct(
-        DataConfigurationInterface $paymentModuleConfiguration
-    ) {
-        $this->paymentModuleConfiguration = $paymentModuleConfiguration;
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+        $view->vars['table_icon'] = $options['table_icon'];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return $this->paymentModuleConfiguration->getConfiguration();
+        parent::configureOptions($resolver);
+        $resolver->setDefault('table_icon', false);
+        $resolver->setAllowedTypes('table_icon', ['bool', 'string']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function getBlockPrefix()
     {
-        return $this->paymentModuleConfiguration->updateConfiguration($data);
+        return 'material_multiple_choice_table_card';
     }
 }

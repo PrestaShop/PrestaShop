@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInte
  */
 final class PaymentModulePreferencesConfiguration implements DataConfigurationInterface
 {
+    public const CUSTOMER_CURRENCY = -1;
+    public const SHOP_DEFAULT_CURRENCY = -2;
+
     /**
      * @var PaymentModuleListProviderInterface
      */

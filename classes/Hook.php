@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Core\Payment\PaymentModulePreferencesConfiguration;
 
 class HookCore extends ObjectModel
 {
@@ -1186,7 +1187,9 @@ class HookCore extends ObjectModel
                             WHERE mcr.`id_module` = m.`id_module`
                             AND `id_currency` IN (' . (int) $context->currency->id . ', -1, -2)
                             LIMIT 1
-                        ) IN (' . (int) $context->currency->id . ', -1, -2))'
+                        ) IN (' . (int) $context->currency->id . ', '
+                    . PaymentModulePreferencesConfiguration::CUSTOMER_CURRENCY . ', '
+                    . PaymentModulePreferencesConfiguration::SHOP_DEFAULT_CURRENCY . '))'
                 );
             }
             if (Validate::isLoadedObject($context->cart)) {
