@@ -369,11 +369,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             // Assign template vars related to the category + execute hooks related to the category
             $this->assignCategory();
+
             // Assign template vars related to the price and tax
             $this->assignPriceAndTax();
 
             // Assign attributes combinations to the template
             $this->assignAttributesCombinations();
+
+            // Add notification about this product being in cart
+            $this->addCartQuantityNotification();
 
             // Pack management
             $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
@@ -558,6 +562,43 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_title' => $this->getTemplateVarPage()['meta']['title'],
             'is_quick_view' => $this->isQuickView(),
         ]));
+    }
+
+    /**
+     * Displays information, if the customer has this product in cart already.
+     */
+    protected function addCartQuantityNotification()
+    {
+        if ((bool) Configuration::get('PS_DISPLAY_AMOUNT_IN_CART') !== true) {
+            return;
+        }
+
+        // Get quantity of this product in cart, it will return an array with
+        // quantity of this single product and also quantity in packs
+        $quantities = $this->context->cart->getProductQuantityInAllVariants(
+            $this->id_product
+        );
+
+        // Render nice notifications so the user knows what is happening
+        if ($quantities['standalone_quantity'] > 0 && $quantities['pack_quantity'] > 0) {
+            $this->info[] = $this->trans(
+                'Your cart contains %1s of these products and another %2s of these are included in packs in your cart.',
+                [$quantities['standalone_quantity'], $quantities['pack_quantity']],
+                'Shop.Theme.Catalog'
+            );
+        } elseif ($quantities['standalone_quantity'] > 0) {
+            $this->info[] = $this->trans(
+                'Your cart contains %1s of these products.',
+                [$quantities['standalone_quantity']],
+                'Shop.Theme.Catalog'
+            );
+        } elseif ($quantities['pack_quantity'] > 0) {
+            $this->info[] = $this->trans(
+                '%1s of these products are included in packs in your cart.',
+                [$quantities['pack_quantity']],
+                'Shop.Theme.Catalog'
+            );
+        }
     }
 
     /**

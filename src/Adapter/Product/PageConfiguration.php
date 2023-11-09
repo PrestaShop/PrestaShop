@@ -56,6 +56,7 @@ class PageConfiguration implements DataConfigurationInterface
             'use_combination_image_in_listing' => $this->configuration->getBoolean('PS_USE_COMBINATION_IMAGE_IN_LISTING'),
             'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'),
             'display_discount_price' => $this->configuration->getBoolean('PS_DISPLAY_DISCOUNT_PRICE'),
+            'display_amount_in_cart' => $this->configuration->getBoolean('PS_DISPLAY_AMOUNT_IN_CART'),
         ];
     }
 
@@ -72,6 +73,7 @@ class PageConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_USE_COMBINATION_IMAGE_IN_LISTING', (int) $config['use_combination_image_in_listing']);
             $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $config['attribute_anchor_separator']);
             $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (int) $config['display_discount_price']);
+            $this->configuration->set('PS_DISPLAY_AMOUNT_IN_CART', (int) $config['display_amount_in_cart']);
         }
 
         return $errors;
@@ -89,6 +91,7 @@ class PageConfiguration implements DataConfigurationInterface
             'use_combination_image_in_listing',
             'attribute_anchor_separator',
             'display_discount_price',
+            'display_amount_in_cart',
         ]);
 
         $resolver->resolve($config);
