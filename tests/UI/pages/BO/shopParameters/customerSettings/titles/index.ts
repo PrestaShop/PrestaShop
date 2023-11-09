@@ -64,6 +64,20 @@ class Titles extends BOBasePage {
 
   private readonly deleteSelectionButton: string;
 
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on titles page
@@ -119,6 +133,17 @@ class Titles extends BOBasePage {
     // Bulk actions selectors
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.deleteSelectionButton = `${this.gridPanel} #title_grid_bulk_action_delete_selection`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridPanel} thead`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} div.pagination-block li.next`;
+    this.paginationPreviousLink = `${this.gridPanel} div.pagination-block li.previous`;
   }
 
   /* Header methods */
@@ -223,6 +248,24 @@ class Titles extends BOBasePage {
   }
 
   /**
+   * Get content from all rows
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get text value
+   * @return {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, column);
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
    * Go to edit title page
    * @param page {Page} Browser tab
    * @param row {number} Row on table
@@ -280,6 +323,76 @@ class Titles extends BOBasePage {
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 

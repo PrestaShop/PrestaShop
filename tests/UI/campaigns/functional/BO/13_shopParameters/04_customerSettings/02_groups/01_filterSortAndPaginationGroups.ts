@@ -71,6 +71,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     expect(numberOfGroups).to.be.above(0);
   });
 
+  // 1 - Filter
   describe('Filter groups', async () => {
     const tests = [
       {
@@ -155,6 +156,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     });
   });
 
+  // 2 - Sort
   describe('Sort groups', async () => {
     [
       {
@@ -260,12 +262,11 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     });
   });
 
+  // 3 - Create 19 groups
   describe('Create 18 groups', async () => {
     const creationTests: number[] = new Array(18).fill(0, 0, 18);
     creationTests.forEach((value: number, index: number) => {
-      const groupToCreate: GroupData = new GroupData({
-        name: `toSortAndPaginate${index}`,
-      });
+      const groupToCreate: GroupData = new GroupData({name: `toSortAndPaginate${index}`});
 
       it('should go to add new group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewGroupPage${index}`, baseContext);
@@ -288,6 +289,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     });
   });
 
+  // 4 - Pagination
   describe('Pagination groups', async () => {
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
@@ -318,6 +320,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     });
   });
 
+  // 5 - Bulk delete
   describe('Bulk delete groups', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
