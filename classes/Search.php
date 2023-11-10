@@ -349,7 +349,7 @@ class SearchCore
         $sqlScore = '';
         if (!empty($scoreArray) && is_array($scoreArray)) {
             $sqlScore = ',( ' .
-                'SELECT 0 - SUM(weight) ' .
+                'SELECT SUM(weight) ' .
                 'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
                 'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
                 'WHERE sw.id_lang = ' . (int) $id_lang . ' ' .
