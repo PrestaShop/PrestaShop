@@ -18,9 +18,9 @@ import TitleData from '@data/faker/title';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_shopParameters_customerSettings_titles_bulkDeleteTitles';
+const baseContext: string = 'functional_BO_shopParameters_customerSettings_titles_bulkActions';
 
-describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async () => {
+describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfTitles: number = 0;
