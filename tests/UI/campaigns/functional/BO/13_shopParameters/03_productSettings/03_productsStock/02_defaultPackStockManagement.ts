@@ -23,6 +23,7 @@ import {searchResultsPage} from '@pages/FO/searchResults';
 import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -189,29 +190,55 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
-        it('should create an order', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
+        it('should go to home page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToHomePage${index}`, baseContext);
 
           // Go to home page
           await foLoginPage.goToHomePage(page);
 
+          const isFoHomePage = await foHomePage.isHomePage(page);
+          expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
+        });
+
+        it('should go to first product page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
+
           // search for the created pack and add go to product page
           await foHomePage.searchProduct(page, productPackData.name);
           await searchResultsPage.goToProductPage(page, 1);
+
+          const pageTitle = await foProductPage.getPageTitle(page);
+          expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        });
+
+        it('should add product to cart and proceed to checkout', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
           // Add the created product to the cart
           await foProductPage.addProductToTheCart(page);
 
           // Proceed to checkout the shopping cart
           await cartPage.clickOnProceedToCheckout(page);
+        });
+
+        it('should go to delivery step', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
           // Address step - Go to delivery step
           const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
           expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
+        });
+
+        it('should go to payment step', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
           // Delivery step - Go to payment step
           const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
           expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
+        });
+
+        it('should confirm the order', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `confirmTheOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
           await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
