@@ -189,9 +189,6 @@ class CartCore extends ObjectModel
     public const BOTH_WITHOUT_SHIPPING = 4;
     public const ONLY_SHIPPING = 5;
     public const ONLY_WRAPPING = 6;
-
-    /** @deprecated since 1.7 **/
-    public const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
     public const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
     private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
@@ -1940,7 +1937,6 @@ class CartCore extends ObjectModel
      *                  - Cart::BOTH_WITHOUT_SHIPPING
      *                  - Cart::ONLY_SHIPPING
      *                  - Cart::ONLY_WRAPPING
-     *                  - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
      *                  - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
      * @param array $products
      * @param int $id_carrier
@@ -1961,11 +1957,6 @@ class CartCore extends ObjectModel
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
-        }
-
-        // deprecated type
-        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
-            $type = Cart::ONLY_PRODUCTS;
         }
 
         // check type

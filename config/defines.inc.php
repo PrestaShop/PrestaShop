@@ -162,8 +162,6 @@ define('_PS_LANG_IMG_DIR_', _PS_IMG_DIR_.'l/');
 define('_PS_MANU_IMG_DIR_', _PS_IMG_DIR_.'m/');
 define('_PS_ORDER_STATE_IMG_DIR_', _PS_IMG_DIR_.'os/');
 define('_PS_PRODUCT_IMG_DIR_', _PS_IMG_DIR_ . 'p/');
-// @deprecated since 1.7.8.1 version use _PS_PRODUCT_IMG_DIR_ instead
-define('_PS_PROD_IMG_DIR_', _PS_PRODUCT_IMG_DIR_);
 define('_PS_PROFILE_IMG_DIR_', _PS_IMG_DIR_.'pr/');
 define('_PS_SHIP_IMG_DIR_', _PS_IMG_DIR_.'s/');
 define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');

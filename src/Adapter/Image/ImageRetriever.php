@@ -51,15 +51,6 @@ class ImageRetriever
      */
     private $link;
 
-    /**
-     * @deprecated since 8.1.2, it was originally introduced in 8.1.0, but ended up no longer needed - will be removed in 9.0
-     *
-     * @var bool
-     *
-     * @phpstan-ignore-next-line
-     */
-    private $isMultipleImageFormatFeatureActive = false;
-
     public function __construct(Link $link)
     {
         $this->link = $link;

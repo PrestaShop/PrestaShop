@@ -129,16 +129,6 @@ require_once __DIR__ . '/defines_uri.inc.php';
 global $_MODULES;
 $_MODULES = array();
 
-/**
- * @deprecated since 1.7.7
- */
-define('_PS_PRICE_DISPLAY_PRECISION_', 2);
-
-/**
- * @deprecated since 1.7.7
- */
-define('_PS_PRICE_COMPUTE_PRECISION_', 2);
-
 /* Load all languages */
 Language::loadLanguages();
 

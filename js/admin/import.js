@@ -45,7 +45,7 @@ $(function(){
 	       async: false,
 	       cache: false,
 	       dataType : "json",
-	       data: 'ajax=1&action=saveImportMatchs&tab=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').val() + '&newImportMatchs=' + newImportMatchs + matchFields,
+	       data: 'ajax=1&action=saveImportMatchs&controller=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').val() + '&newImportMatchs=' + newImportMatchs + matchFields,
 	       success: function(jsonData)
 	       {
 				$('#valueImportMatchs').append('<option id="'+jsonData.id+'" value="'+matchFields+'" selected="selected">'+newImportMatchs+'</option>');
@@ -69,7 +69,7 @@ $(function(){
 		       async: false,
 		       cache: false,
 		       dataType : "json",
-		       data: 'ajax=1&action=loadImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToLoad,
+		       data: 'ajax=1&action=loadImportMatchs&controller=AdminImport&token=' + token + '&idImportMatchs=' + idToLoad,
 		       success: function(jsonData)
 		       {
 					var matchs = jsonData.matchs.split('|')
@@ -94,7 +94,7 @@ $(function(){
 		       async: false,
 		       cache: false,
 		       dataType : "json",
-		       data: 'ajax=1&action=deleteImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToDelete ,
+		       data: 'ajax=1&action=deleteImportMatchs&controller=AdminImport&token=' + token + '&idImportMatchs=' + idToDelete ,
 		       success: function(jsonData)
 		       {
 					$('select#valueImportMatchs option[id=\''+idToDelete+'\']').remove();
@@ -186,7 +186,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
     var startingTime = new Date().getTime();
     $.ajax({
        type: 'POST',
-       url: 'index.php?ajax=1&action=import&tab=AdminImport&offset='+offset+'&limit='+limit+'&token='+token+(validateOnly?'&validateOnly=1':'')+((moreStep>0)?'&moreStep='+moreStep:''),
+       url: 'index.php?ajax=1&action=import&controller=AdminImport&offset='+offset+'&limit='+limit+'&token='+token+(validateOnly?'&validateOnly=1':'')+((moreStep>0)?'&moreStep='+moreStep:''),
        cache: false,
        dataType: "json",
        data: data,

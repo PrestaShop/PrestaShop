@@ -32,7 +32,7 @@
     $.ajax({
 	url: "index.php",
 	cache: false,
-	data: "ajax=1&tab=AdminStates&token={getAdminToken tab='AdminStates'}&action=states&id_country="+$('#PS_SHOP_COUNTRY_ID').val() + "&id_state=" + $('#PS_SHOP_STATE_ID').val(),
+	data: "ajax=1&controller=AdminStates&token={getAdminToken tab='AdminStates'}&action=states&id_country="+$('#PS_SHOP_COUNTRY_ID').val() + "&id_state=" + $('#PS_SHOP_STATE_ID').val(),
 	success: function(html)
 	{
 	    if (html == 'false')

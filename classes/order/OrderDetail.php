@@ -69,7 +69,7 @@ class OrderDetailCore extends ObjectModel
      *
      * @var float Without taxes, includes ecotax
      */
-    public $product_price;
+    public $product_price = 0;
 
     /** @var float */
     public $original_product_price;
@@ -148,7 +148,7 @@ class OrderDetailCore extends ObjectModel
      *
      * @deprecated Order Detail Tax is saved in order_detail_tax table now
      */
-    public $tax_name;
+    public $tax_name = 'deprecated';
 
     /**
      * @var float
@@ -592,7 +592,6 @@ class OrderDetailCore extends ObjectModel
             $this->tax_calculator = $tax_manager->getTaxCalculator();
             $this->tax_computation_method = (int) $this->tax_calculator->computation_method;
             $this->tax_rate = (float) $this->tax_calculator->getTotalRate();
-            $this->tax_name = $this->tax_calculator->getTaxesName();
         }
 
         $this->ecotax_tax_rate = 0;

@@ -48,17 +48,6 @@ if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
     Configuration::updateValue('PS_UPGRADE_CLEAR_CACHE', 0);
 }
 
-// For retrocompatibility with "tab" parameter
-if (!isset($_GET['controller']) && isset($_GET['tab'])) {
-    $_GET['controller'] = strtolower($_GET['tab']);
-}
-if (!isset($_POST['controller']) && isset($_POST['tab'])) {
-    $_POST['controller'] = strtolower($_POST['tab']);
-}
-if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
-    $_REQUEST['controller'] = strtolower($_REQUEST['tab']);
-}
-
 // Enable APC for autoloading to improve performance.
 // You should change the ApcClassLoader first argument to a unique prefix
 // in order to prevent cache key conflicts with other applications
