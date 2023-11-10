@@ -14,6 +14,8 @@ class Home extends HomePage {
 
   private readonly wishlistModalTitle: string;
 
+  private readonly addToCartIcon: (number: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on home page
@@ -23,6 +25,7 @@ class Home extends HomePage {
 
     // Products list
     this.productArticle = (number: number) => `#content section.featured-products div.container div article:nth-child(${number})`;
+    this.addToCartIcon = (number: number) => `${this.productArticle(number)} button[data-button-action='add-to-cart']`;
     this.productAddToWishlist = (number: number) => `${this.productArticle(number)} button.wishlist-button-add`;
     // Wishlist modal
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
@@ -42,6 +45,16 @@ class Home extends HomePage {
     await this.elementVisible(page, this.wishlistModal, 2000);
 
     return this.getTextContent(page, this.wishlistModalTitle);
+  }
+
+  /**
+   * Is add to cart button visible
+   * @param page {Page} Browser tab
+   * @param id {number} Id of product
+   * @returns Promise<boolean>
+   */
+  async isAddToCartButtonVisible(page: Page, id: number = 1): Promise<boolean> {
+    return this.elementVisible(page, this.addToCartIcon(id), 1000);
   }
 }
 
