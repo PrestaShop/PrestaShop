@@ -35,7 +35,7 @@ class HomePage extends FOBasePage {
 
   private readonly productsBlockDiv: (blockId: number) => string;
 
-  private readonly productArticle: (number: number) => string;
+  public productArticle: (number: number) => string;
 
   private readonly productImg: (number: number) => string;
 

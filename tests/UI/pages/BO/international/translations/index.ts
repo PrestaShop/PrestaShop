@@ -20,6 +20,14 @@ class Translations extends BOBasePage {
 
   private readonly selectYourThemeSelect: string;
 
+  private readonly selectYourModuleSelect: string;
+
+  private readonly searchYourModuleInput: string;
+
+  private readonly searchModuleResult: string;
+
+  private readonly selectTypeOfEmailSelect: string;
+
   private readonly selectYourLanguageSelect: string;
 
   private readonly modifyTranslationsButton: string;
@@ -44,11 +52,17 @@ class Translations extends BOBasePage {
 
   private readonly searchLanguageResult: string;
 
+  private readonly languageToUpdateResult: string;
+
   private readonly addUpdateLanguageButton: string;
 
   private readonly exportLanguageSelect: string;
 
   private readonly prestashopTranslationRadio: string;
+
+  private readonly installedModuleTranslationRadio: string;
+
+  private readonly modulesListSelect: string;
 
   private readonly prestashopTranslationTypeCheckbox: (position: number) => string;
 
@@ -74,11 +88,15 @@ class Translations extends BOBasePage {
     // Modify translation form
     this.typeOfTranslationSelect = '#form_translation_type';
     this.selectYourThemeSelect = '#form_theme';
+    this.selectYourModuleSelect = '#select2-form_module-container';
+    this.searchYourModuleInput = 'span.select2-search.select2-search--dropdown input';
+    this.searchModuleResult = '.select2-results__option.select2-results__option--highlighted';
+    this.selectTypeOfEmailSelect = '#form_email_content_type';
     this.selectYourLanguageSelect = '#form_language';
     this.modifyTranslationsButton = 'form[action*=\'translations/modify\'] button';
     this.searchInput = '#search input';
     this.searchButton = '#search button';
-    this.translationTextarea = 'textarea.form-control';
+    this.translationTextarea = 'div:nth-child(2) > textarea.form-control';
     this.saveTranslationButton = '#app button[type=\'submit\']';
     this.resetTranslationButton = '#app  button[class*=\'btn-outline-secondary\']';
     this.growlMessage = '#growls-default div.growl-message';
@@ -88,6 +106,7 @@ class Translations extends BOBasePage {
     this.languageToAddSelect = '#select2-form_iso_localization_pack-container';
     this.searchLanguageInput = 'span.select2-search.select2-search--dropdown input';
     this.searchLanguageResult = 'li.select2-results__option--highlighted';
+    this.languageToUpdateResult = '#select2-form_iso_localization_pack-results li[aria-label="Update a language"]';
     this.addUpdateLanguageButton = `${this.addUpdateLanguageForm} .card-footer button`;
 
     // Export language form
@@ -96,6 +115,8 @@ class Translations extends BOBasePage {
     // Prestashop translation
     this.prestashopTranslationRadio = '#form_core_selectors_core_type';
     this.prestashopTranslationTypeCheckbox = (position: number) => `#form_core_selectors_selected_value_${position}`;
+    this.installedModuleTranslationRadio = '#form_modules_selectors_modules_type + i';
+    this.modulesListSelect = '#form_modules_selectors_selected_value';
 
     // Theme translation
     this.themeTranslationRadio = '#form_themes_selectors_themes_type';
@@ -113,11 +134,27 @@ class Translations extends BOBasePage {
    * @param translation {string} Value to choose on translation select
    * @param theme {string} Value of theme to choose on theme select
    * @param language {string} Value of language to select on language select
+   * @param module {string} Value of module to select on module select
+   * @param emailType {string} Value of email type to select on email type select
    * @returns {Promise<void>}
    */
-  async modifyTranslation(page: Page, translation: string, theme: string, language: string): Promise<void> {
+  async modifyTranslation(page: Page, translation: string, theme: string, language: string, module: string = '',
+    emailType: string = ''): Promise<void> {
     await this.selectByVisibleText(page, this.typeOfTranslationSelect, translation);
-    await this.selectByVisibleText(page, this.selectYourThemeSelect, theme);
+
+    if (await this.elementVisible(page, this.selectYourThemeSelect, 2000)) {
+      await this.selectByVisibleText(page, this.selectYourThemeSelect, theme);
+    }
+
+    if (await this.elementVisible(page, this.selectYourModuleSelect, 2000)) {
+      await page.locator(this.selectYourModuleSelect).click();
+      await this.setValue(page, this.searchYourModuleInput, module);
+      await page.locator(this.searchModuleResult).click();
+    }
+
+    if (await this.elementVisible(page, this.selectTypeOfEmailSelect, 1000)) {
+      await this.selectByVisibleText(page, this.selectTypeOfEmailSelect, emailType);
+    }
     await this.selectByVisibleText(page, this.selectYourLanguageSelect, language);
     await this.clickAndWaitForURL(page, this.modifyTranslationsButton);
   }
@@ -176,6 +213,15 @@ class Translations extends BOBasePage {
   }
 
   /**
+   * Get languages from update result
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getLanguagesFromUpdateResult(page: Page): Promise<string> {
+    return this.getTextContent(page, this.languageToUpdateResult);
+  }
+
+  /**
    * Select export language
    * @param page {Page} Browser tab
    * @param language {string} language to export
@@ -192,9 +238,9 @@ class Translations extends BOBasePage {
    * @param types {Array<string>} Array of strings of what to export
    * @returns {Promise<string|null>}
    */
-  async exportPrestashopTranslations(page: Page, language: string, types: string[] = ['Other']): Promise<string|null> {
+  async exportPrestashopTranslations(page: Page, language: string, types: string[] = ['Other']): Promise<string | null> {
     await this.selectExportLanguage(page, language);
-    await page.click(this.prestashopTranslationRadio);
+    await page.locator(this.prestashopTranslationRadio).click();
 
     for (let i = 0; i < types.length; i++) {
       let selector;
@@ -222,6 +268,56 @@ class Translations extends BOBasePage {
 
       await this.setHiddenCheckboxValue(page, selector, true);
     }
+
+    return this.clickAndWaitForDownload(page, this.exportLanguageButton);
+  }
+
+  /**
+   * Uncheck selected options
+   * @param page {Page} Browser type
+   * @param types {Array<string>} Array of strings of what to uncheck
+   * @returns {Promise<void>}
+   */
+  async uncheckSelectedOptions(page: Page, types: string[] = ['Other']): Promise<void> {
+    for (let i = 0; i < types.length; i++) {
+      let selector;
+
+      switch (types[i]) {
+        case 'Back office':
+          selector = this.prestashopTranslationTypeCheckbox(0);
+          break;
+
+        case 'Front office':
+          selector = this.prestashopTranslationTypeCheckbox(1);
+          break;
+
+        case 'Email':
+          selector = this.prestashopTranslationTypeCheckbox(2);
+          break;
+
+        case 'Other':
+          selector = this.prestashopTranslationTypeCheckbox(3);
+          break;
+
+        default:
+          throw new Error(`${types[i]} was not found as a translation option`);
+      }
+
+      await this.setHiddenCheckboxValue(page, selector, false);
+    }
+  }
+
+  /**
+   * Export installed module translations
+   * @param page {Page} Browser type
+   * @param language {string} language to export
+   * @param module {string} Module to select
+   * @returns {Promise<string|null>}
+   */
+  async exportInstalledModuleTranslations(page: Page, language: string, module: string): Promise<string | null> {
+    await this.selectExportLanguage(page, language);
+    await page.locator(this.installedModuleTranslationRadio).click();
+    await this.selectByVisibleText(page, this.modulesListSelect, module);
 
     return this.clickAndWaitForDownload(page, this.exportLanguageButton);
   }
