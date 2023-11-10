@@ -35,7 +35,7 @@ trait PrestaShopTranslatorTrait
     public static $regexClassicParams = '/%\w+%/';
 
     /**
-     * Translates the given message.
+     * Translates the given message. First argument is not typed to avoid "Declaration must be compatible with Symfony\Component\Translation\Translator::trans".
      *
      * @param string $key The message id (may also be an object that can be cast to string)
      * @param array $parameters An array of parameters for the message
@@ -46,7 +46,7 @@ trait PrestaShopTranslatorTrait
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function trans(string $key, array $parameters = [], ?string $domain = null, ?string $locale = null): string
+    public function trans($key, array $parameters = [], string $domain = null, string $locale = null): string
     {
         $isSprintf = !empty($parameters) && $this->isSprintfString($key);
 
