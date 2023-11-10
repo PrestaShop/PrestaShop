@@ -610,15 +610,8 @@ class CarrierCore extends ObjectModel
      *
      * @return array Countries to which can be delivered
      */
-    public static function getDeliveredCountries($id_lang, $active_countries = false, $active_carriers = false, $contain_states = null)
+    public static function getDeliveredCountries(int $id_lang, bool $active_countries = false, bool $active_carriers = false, $contain_states = null)
     {
-        if (!Validate::isBool($active_countries)) {
-            die(Tools::displayError('Parameter "active_countries" is invalid.'));
-        }
-        if (!Validate::isBool($active_carriers)) {
-            die(Tools::displayError('Parameter "active_carriers" is invalid.'));
-        }
-
         $states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT s.*
             FROM `' . _DB_PREFIX_ . 'state` s
