@@ -17,6 +17,37 @@ cd tests/UI/
 npm ci
 ```
 
+## How to run tests locally (linux distribution)
+
+We must first install the dependencies necessary for the execution of the tests.
+
+```bash
+# Install dependencies in UI folder
+cd tests/UI/
+npm ci
+npx playwright install --with-deps
+```
+Subsequently, we can use the envFile to define the test environment variables,
+to do this we copy the .env.ci file renaming it .env, and we edit the values we want.
+Another option is to pass the variables directly via command line.
+The list of parameters is visible in the section [Available command line parameters](#available-command-line-parameters)
+
+```bash
+cp .env.ci .env
+```
+
+We can then launch our tests.
+
+```bash
+npm run test:all
+```
+
+We can launch a particular scenario, for this we can see the list in the script part of the package.json.
+
+```bash
+npm run test:functional:BO:orders
+```
+
 ## Available command line parameters
 
 ### PrestaShop parameters
