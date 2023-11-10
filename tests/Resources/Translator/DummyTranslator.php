@@ -58,12 +58,12 @@ class DummyTranslator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    public function trans(string $key, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         return str_replace(
             array_keys($parameters),
             array_values($parameters),
-            $id
+            $key
         );
     }
 }

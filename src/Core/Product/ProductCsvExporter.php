@@ -108,7 +108,7 @@ final class ProductCsvExporter implements ProductExporterInterface
      *
      * @throws InvalidArgumentException
      */
-    private function trans($key, $domain)
+    private function trans(string $key, string $domain): string
     {
         return $this->translator->trans($key, [], $domain);
     }

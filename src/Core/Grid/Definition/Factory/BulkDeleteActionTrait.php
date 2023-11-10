@@ -70,11 +70,11 @@ trait BulkDeleteActionTrait
     /**
      * Shortcut method to translate text.
      *
-     * @param string $id
-     * @param array $options
+     * @param string $key
+     * @param array $parameters
      * @param string $domain
      *
      * @return string
      */
-    abstract protected function trans($id, array $options, $domain);
+    abstract protected function trans(string $key, array $parameters, string $domain);
 }

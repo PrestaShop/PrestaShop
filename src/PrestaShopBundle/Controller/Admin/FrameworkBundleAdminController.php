@@ -303,7 +303,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
      *
      * @return string
      */
-    protected function trans($key, $domain, array $parameters = [])
+    protected function trans(string $key, string $domain, array $parameters = []): string
     {
         return $this->container->get('translator')->trans($key, $parameters, $domain);
     }

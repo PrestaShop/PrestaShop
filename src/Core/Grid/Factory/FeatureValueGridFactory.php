@@ -220,8 +220,8 @@ class FeatureValueGridFactory extends GridFactory
         ]));
     }
 
-    protected function trans($id, array $options, $domain): string
+    protected function trans(string $key, array $parameters, string $domain): string
     {
-        return $this->translator->trans($id, $options, $domain);
+        return $this->translator->trans($key, $parameters, $domain);
     }
 }

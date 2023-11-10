@@ -368,14 +368,14 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     }
 
     /**
-     * @param string $message
-     * @param array $params
+     * @param string $key
+     * @param array $parameters
      * @param string $domain
      *
      * @return string
      */
-    protected function trans(string $message, array $params, string $domain): string
+    protected function trans(string $key, array $parameters, string $domain): string
     {
-        return Context::getContext()->getTranslator()->trans($message, $params, $domain);
+        return Context::getContext()->getTranslator()->trans($key, $parameters, $domain);
     }
 }

@@ -103,13 +103,13 @@ class ProductTypeChoiceProvider implements FormChoiceProviderInterface, FormChoi
     }
 
     /**
-     * @param string $id
+     * @param string $key
      * @param string $domain
      *
      * @return string
      */
-    private function trans(string $id, string $domain): string
+    private function trans(string $key, string $domain): string
     {
-        return $this->translator->trans($id, [], $domain);
+        return $this->translator->trans($key, [], $domain);
     }
 }

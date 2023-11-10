@@ -51,14 +51,14 @@ trait TranslatorAwareTrait
     /**
      * Shortcut method to translate text.
      *
-     * @param string $id
-     * @param array $options
+     * @param string $key
+     * @param array $parameters
      * @param string $domain
      *
      * @return string
      */
-    protected function trans($id, array $options, $domain)
+    protected function trans(string $key, array $parameters, string $domain): string
     {
-        return $this->translator->trans($id, $options, $domain);
+        return $this->translator->trans($key, $parameters, $domain);
     }
 }

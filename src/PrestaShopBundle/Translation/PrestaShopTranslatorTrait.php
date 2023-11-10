@@ -37,7 +37,7 @@ trait PrestaShopTranslatorTrait
     /**
      * Translates the given message.
      *
-     * @param string $id The message id (may also be an object that can be cast to string)
+     * @param string $key The message id (may also be an object that can be cast to string)
      * @param array $parameters An array of parameters for the message
      * @param string|null $domain The domain for the message or null to use the default
      * @param string|null $locale The locale or null to use the default
@@ -46,19 +46,19 @@ trait PrestaShopTranslatorTrait
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    public function trans(string $key, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
-        $isSprintf = !empty($parameters) && $this->isSprintfString($id);
+        $isSprintf = !empty($parameters) && $this->isSprintfString($key);
 
         if (empty($locale)) {
             $locale = null;
         }
 
-        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $locale)) {
-            return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
+        if ($this->shouldFallbackToLegacyModuleTranslation($key, $domain, $locale)) {
+            return $this->translateUsingLegacySystem($key, $parameters, $domain, $locale);
         }
 
-        $translated = parent::trans($id, $isSprintf ? [] : $parameters, $this->normalizeDomain($domain), $locale);
+        $translated = parent::trans($key, $isSprintf ? [] : $parameters, $this->normalizeDomain($domain), $locale);
 
         if ($isSprintf) {
             $translated = vsprintf($translated, $parameters);

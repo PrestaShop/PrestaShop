@@ -159,14 +159,14 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
     /**
      * Translate message.
      *
-     * @param string $message
+     * @param string $key
      * @param string $domain
-     * @param array $params
+     * @param array $parameters
      *
      * @return string
      */
-    private function trans($message, $domain, array $params = [])
+    private function trans(string $key, string $domain, array $parameters = []): string
     {
-        return $this->translator->trans($message, $params, $domain);
+        return $this->translator->trans($key, $parameters, $domain);
     }
 }

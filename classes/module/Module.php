@@ -3344,9 +3344,9 @@ abstract class ModuleCore implements ModuleInterface
         return Context::getContext()->getTranslator();
     }
 
-    protected function trans($id, array $parameters = [], $domain = null, $locale = null)
+    protected function trans(string $key, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
-        return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
+        return $this->getTranslator()->trans($key, $parameters, $domain, $locale);
     }
 
     /**

@@ -77,5 +77,5 @@ trait DeleteActionTrait
     /**
      * Shortcut method to translate text.
      */
-    abstract protected function trans($id, array $options, $domain);
+    abstract protected function trans(string $key, array $parameters, string $domain);
 }

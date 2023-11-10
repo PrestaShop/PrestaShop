@@ -355,9 +355,9 @@ abstract class ControllerCore
         }
     }
 
-    protected function trans($id, array $parameters = [], $domain = null, $locale = null)
+    protected function trans(string $key, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
-        return $this->translator->trans($id, $parameters, $domain, $locale);
+        return $this->translator->trans($key, $parameters, $domain, $locale);
     }
 
     /**

@@ -82,13 +82,13 @@ final class CategoryFieldsProvider implements EntityFieldsProviderInterface
     /**
      * A shorter name method for translations.
      *
-     * @param string $id translation ID
+     * @param string $key translation ID
      * @param string $domain translation domain
      *
      * @return string
      */
-    private function trans($id, $domain = 'Admin.Advparameters.Feature')
+    private function trans(string $key, string $domain = 'Admin.Advparameters.Feature'): string
     {
-        return $this->translator->trans($id, [], $domain);
+        return $this->translator->trans($key, [], $domain);
     }
 }

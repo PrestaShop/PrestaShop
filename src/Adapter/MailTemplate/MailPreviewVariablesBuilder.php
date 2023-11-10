@@ -148,16 +148,16 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
-     * @param string $id
+     * @param string $key
      * @param array $parameters
      * @param string|null $domain
-     * @param string|null $local
+     * @param string|null $locale
      *
      * @return string
      */
-    protected function trans($id, $parameters = [], $domain = null, $local = null)
+    protected function trans(string $key, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
-        return $this->translator->trans($id, $parameters, $domain, $local);
+        return $this->translator->trans($key, $parameters, $domain, $locale);
     }
 
     /**
