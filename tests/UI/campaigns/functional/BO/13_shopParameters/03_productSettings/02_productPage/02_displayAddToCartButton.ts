@@ -23,7 +23,7 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(baseContext);
+  installHummingbird(`${baseContext}-preTest`);
 
   // before and after functions
   before(async function () {
@@ -102,5 +102,5 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(baseContext);
+  uninstallHummingbird(`${baseContext}-postTest`);
 });
