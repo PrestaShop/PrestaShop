@@ -38,6 +38,7 @@
     <tax id="29" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="30" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="31" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="32" name="DPH CZ 12%" rate="12"/>
     <taxRulesGroup name="CZ Základní sazba (21%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>
@@ -99,6 +100,37 @@
       <taxRule iso_code_country="fi" id_tax="2"/>
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="gb" id_tax="2"/>
+    </taxRulesGroup>
+    <taxRulesGroup name="CZ Snížená sazba (12%)">
+      <taxRule iso_code_country="be" id_tax="32"/>
+      <taxRule iso_code_country="bg" id_tax="32"/>
+      <taxRule iso_code_country="cz" id_tax="32"/>
+      <taxRule iso_code_country="dk" id_tax="32"/>
+      <taxRule iso_code_country="de" id_tax="32"/>
+      <taxRule iso_code_country="ee" id_tax="32"/>
+      <taxRule iso_code_country="gr" id_tax="32"/>
+      <taxRule iso_code_country="hr" id_tax="32"/>
+      <taxRule iso_code_country="es" id_tax="32"/>
+      <taxRule iso_code_country="fr" id_tax="32"/>
+      <taxRule iso_code_country="mc" id_tax="32"/>
+      <taxRule iso_code_country="ie" id_tax="32"/>
+      <taxRule iso_code_country="it" id_tax="32"/>
+      <taxRule iso_code_country="cy" id_tax="32"/>
+      <taxRule iso_code_country="lv" id_tax="32"/>
+      <taxRule iso_code_country="lt" id_tax="32"/>
+      <taxRule iso_code_country="lu" id_tax="32"/>
+      <taxRule iso_code_country="hu" id_tax="32"/>
+      <taxRule iso_code_country="mt" id_tax="32"/>
+      <taxRule iso_code_country="nl" id_tax="32"/>
+      <taxRule iso_code_country="at" id_tax="32"/>
+      <taxRule iso_code_country="pl" id_tax="32"/>
+      <taxRule iso_code_country="pt" id_tax="32"/>
+      <taxRule iso_code_country="ro" id_tax="32"/>
+      <taxRule iso_code_country="si" id_tax="32"/>
+      <taxRule iso_code_country="sk" id_tax="32"/>
+      <taxRule iso_code_country="fi" id_tax="32"/>
+      <taxRule iso_code_country="se" id_tax="32"/>
+      <taxRule iso_code_country="gb" id_tax="32"/>
     </taxRulesGroup>
     <taxRulesGroup name="CZ Snížená sazba (10%)">
       <taxRule iso_code_country="be" id_tax="3"/>
