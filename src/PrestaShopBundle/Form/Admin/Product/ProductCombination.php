@@ -179,7 +179,6 @@ class ProductCombination extends CommonAbstractType
                 'default_empty_data' => 1,
                 'label' => $this->translator->trans('Min. quantity for sale', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\NotBlank(),
                     new Assert\Positive(),
                     new Assert\Type(['type' => 'numeric']),
                 ],
