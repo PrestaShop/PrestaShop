@@ -186,6 +186,10 @@ class ProductQuantity extends CommonAbstractType
                         new Assert\NotBlank(),
                         new Assert\Type(['type' => 'numeric']),
                     ],
+                    'attr' => [
+                        'min' => 1,
+                    ],
+                    'html5' => true,
                 ]
             )
             ->add(
