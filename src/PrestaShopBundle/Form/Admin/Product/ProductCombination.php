@@ -181,6 +181,10 @@ class ProductCombination extends CommonAbstractType
                     new Assert\NotBlank(),
                     new Assert\Type(['type' => 'numeric']),
                 ],
+                'attr' => [
+                    'min' => 1,
+                ],
+                'html5' => true,
             ])
             ->add('attribute_location', TextType::class, [
                 'label' => $this->translator->trans('Stock location', [], 'Admin.Catalog.Feature'),
