@@ -35,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -112,8 +112,7 @@ class QuantityType extends TranslatorAwareType
             ->add('minimal_quantity', NumberType::class, [
                 'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new NotBlank(),
-                    new Assert\Positive(),
+                    new Positive(),
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
