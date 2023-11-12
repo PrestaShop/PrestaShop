@@ -113,10 +113,11 @@ class QuantityType extends TranslatorAwareType
                 'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new NotBlank(),
+                    new Assert\Positive(),
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
-                'default_empty_data' => 0,
+                'default_empty_data' => 1,
                 'modify_all_shops' => true,
                 'attr' => [
                     'class' => 'small-input',
