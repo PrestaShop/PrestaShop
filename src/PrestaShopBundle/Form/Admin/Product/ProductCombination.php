@@ -176,9 +176,11 @@ class ProductCombination extends CommonAbstractType
             ])
             ->add('attribute_minimal_quantity', NumberType::class, [
                 'required' => false,
+                'default_empty_data' => 1,
                 'label' => $this->translator->trans('Min. quantity for sale', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new Assert\NotBlank(),
+                    new Assert\Positive(),
                     new Assert\Type(['type' => 'numeric']),
                 ],
                 'attr' => [
