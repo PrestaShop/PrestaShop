@@ -181,9 +181,11 @@ class ProductQuantity extends CommonAbstractType
                 FormType\NumberType::class,
                 [
                     'required' => true,
+                    'default_empty_data' => 1,
                     'label' => $this->translator->trans('Minimum quantity for sale', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
                         new Assert\NotBlank(),
+                        new Assert\Positive(),
                         new Assert\Type(['type' => 'numeric']),
                     ],
                     'attr' => [
