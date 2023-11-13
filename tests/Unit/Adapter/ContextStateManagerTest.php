@@ -70,6 +70,31 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 
+    public function testControllerState()
+    {
+        $context = $this->createContextMock([
+            'controller' => $this->createLegacyControllerContextMock('AdminProductsController'),
+        ]);
+        $this->assertEquals('AdminProductsController', $context->controller->controller_name);
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setController($this->createLegacyControllerContextMock('AdminOrdersController'));
+        $this->assertEquals('AdminOrdersController', $context->controller->controller_name);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setController($this->createLegacyControllerContextMock('AdminCartsController'));
+        $this->assertEquals('AdminCartsController', $context->controller->controller_name);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals('AdminProductsController', $context->controller->controller_name);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
     public function testCountryState()
     {
         $context = $this->createContextMock([
@@ -208,12 +233,14 @@ class ContextStateManagerTest extends ContextStateTestCase
             'currency' => $this->createContextFieldMock(Currency::class, 42),
             'customer' => $this->createContextFieldMock(Customer::class, 42),
             'language' => $this->createContextFieldMock(Language::class, 42),
+            'controller' => $this->createLegacyControllerContextMock('AdminProductsController'),
         ]);
         $this->assertEquals(42, $context->cart->id);
         $this->assertEquals(42, $context->country->id);
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('AdminProductsController', $context->controller->controller_name);
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
         $this->assertNull($contextStateManager->getContextFieldsStack());
@@ -224,7 +251,8 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCurrency($this->createContextFieldMock(Currency::class, 51))
             ->setCustomer($this->createContextFieldMock(Customer::class, 51))
             ->setLanguage($this->createContextFieldMock(Language::class, 51))
-        ;
+            ->setController($this->createLegacyControllerContextMock('AdminCartsController'));
+
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
@@ -233,6 +261,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->currency->id);
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(51, $context->language->id);
+        $this->assertEquals('AdminCartsController', $context->controller->controller_name);
 
         $contextStateManager->restorePreviousContext();
 
@@ -241,6 +270,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('AdminProductsController', $context->controller->controller_name);
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 
@@ -306,12 +336,14 @@ class ContextStateManagerTest extends ContextStateTestCase
             'currency' => $this->createContextFieldMock(Currency::class, 42),
             'customer' => $this->createContextFieldMock(Customer::class, 42),
             'language' => $this->createContextFieldMock(Language::class, 42),
+            'controller' => $this->createLegacyControllerContextMock('AdminProductsController'),
         ]);
         $this->assertEquals(42, $context->cart->id);
         $this->assertEquals(42, $context->country->id);
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('AdminProductsController', $context->controller->controller_name);
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
         $this->assertNull($contextStateManager->getContextFieldsStack());
@@ -320,6 +352,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCart($this->createContextFieldMock(Cart::class, 51))
             ->setCurrency($this->createContextFieldMock(Currency::class, 51))
             ->setCustomer($this->createContextFieldMock(Customer::class, 51))
+            ->setController($this->createLegacyControllerContextMock('AdminCartsController'))
         ;
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
@@ -329,6 +362,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->currency->id);
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('AdminCartsController', $context->controller->controller_name);
 
         $contextStateManager->saveCurrentContext();
         $this->assertCount(2, $contextStateManager->getContextFieldsStack());
@@ -336,6 +370,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $contextStateManager
             ->setCart($this->createContextFieldMock(Cart::class, 69))
             ->setCurrency($this->createContextFieldMock(Currency::class, 69))
+            ->setController($this->createLegacyControllerContextMock('AdminImagesController'))
         ;
 
         $this->assertEquals(69, $context->cart->id);
@@ -343,6 +378,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(69, $context->currency->id);
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('AdminImagesController', $context->controller->controller_name);
         $this->assertCount(2, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -352,6 +388,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->currency->id);
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('AdminCartsController', $context->controller->controller_name);
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
@@ -362,6 +399,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('AdminProductsController', $context->controller->controller_name);
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 

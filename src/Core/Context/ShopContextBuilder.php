@@ -63,10 +63,10 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
             categoryId: (int) $legacyShop->id_category,
             themeName: $legacyShop->theme_name,
             color: $legacyShop->color,
-            physicalUri: $legacyShop->physical_uri,
-            virtualUri: $legacyShop->virtual_uri,
-            domain: $legacyShop->domain,
-            domainSSL: $legacyShop->domain_ssl,
+            physicalUri: $legacyShop->physical_uri ?? '',
+            virtualUri: $legacyShop->virtual_uri ?? '',
+            domain: $legacyShop->domain ?? '',
+            domainSSL: $legacyShop->domain_ssl ?? '',
             active: (bool) $legacyShop->active
         );
     }

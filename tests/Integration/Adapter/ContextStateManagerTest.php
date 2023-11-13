@@ -28,30 +28,21 @@ namespace Tests\Integration\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\TestCase\ContextStateTestCase;
 
 class ContextStateManagerTest extends ContextStateTestCase
 {
-    /**
-     * @var LegacyContext
-     */
-    protected $legacyContext;
+    protected LegacyContext $legacyContext;
+    protected Shop $basicShop;
+    protected Shop $shop1;
+    protected Shop $shop2;
 
-    /**
-     * @var Shop
-     */
-    protected $basicShop;
-
-    /**
-     * @var Shop
-     */
-    protected $shop1;
-
-    /**
-     * @var Shop
-     */
-    protected $shop2;
+    protected LegacyControllerContext $legacyControllerContext1;
+    protected LegacyControllerContext $legacyControllerContext2;
 
     protected function setUp(): void
     {
@@ -71,6 +62,30 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->shop2->id_category = 2;
         $this->shop2->id_shop_group = 1;
         $this->shop2->add();
+
+        $this->legacyControllerContext1 = new LegacyControllerContext(
+            $this->createMock(ContainerInterface::class),
+            'AdminProductsController',
+            'admin',
+            'AdminProductsController',
+            ShopConstraint::ALL_SHOPS,
+            'Product',
+            20,
+            'token',
+            'override_folder/'
+        );
+
+        $this->legacyControllerContext2 = new LegacyControllerContext(
+            $this->createMock(ContainerInterface::class),
+            'AdminCartsController',
+            'admin',
+            'AdminCartsController',
+            ShopConstraint::ALL_SHOPS,
+            'Cart',
+            10,
+            'token',
+            'override_folder/'
+        );
     }
 
     protected function tearDown(): void
@@ -79,6 +94,24 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $this->shop1->delete();
         $this->shop2->delete();
+    }
+
+    public function testControllerState(): void
+    {
+        $this->legacyContext->getContext()->controller = $this->legacyControllerContext1;
+        $this->assertEquals($this->legacyControllerContext1->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setController($this->legacyControllerContext2);
+        $this->assertEquals($this->legacyControllerContext2->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals($this->legacyControllerContext1->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 
     public function testShopState(): void

@@ -26,29 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace PrestaShopBundle\EventListener;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
+use Symfony\Component\HttpFoundation\Request;
 
-class CurrencyContextListener
+/**
+ * Utility Trait, enabling the detection of whether a request is an external API request.
+ * This allows us to condition listeners and thus control the creation of contexts.
+ */
+trait ExternalApiTrait
 {
-    use ExternalApiTrait;
-
-    public function __construct(
-        private readonly CurrencyContextBuilder $currencyContextBuilder,
-        private readonly ConfigurationInterface $configuration,
-    ) {
-    }
-
-    public function onKernelRequest(RequestEvent $event): void
+    protected function isExternalApiRequest(Request $request): bool
     {
-        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
-            return;
-        }
-
-        $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
+        return in_array(
+            $request->attributes->get('_controller'),
+            [AccessTokenController::class, 'api_platform.action.placeholder']
+        );
     }
 }

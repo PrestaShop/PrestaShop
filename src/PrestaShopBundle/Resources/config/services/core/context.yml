@@ -3,6 +3,9 @@ services:
     public: false
     autowire: true
     autoconfigure: true
+    bind:
+      $controllersLockedToAllShopContext: '%prestashop.controllers_all_shop_context%'
+      $container: "@service_container"
   _instanceof:
     PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface:
       tags: [ 'core.legacy_context_builder' ]
@@ -26,3 +29,8 @@ services:
   PrestaShop\PrestaShop\Core\Context\CountryContext:
     lazy: true
     factory: [ '@PrestaShop\PrestaShop\Core\Context\CountryContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\LegacyControllerContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder', 'build' ]

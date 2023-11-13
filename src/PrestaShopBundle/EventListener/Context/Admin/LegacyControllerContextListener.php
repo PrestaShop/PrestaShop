@@ -28,18 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
 use PrestaShopBundle\EventListener\ExternalApiTrait;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class CurrencyContextListener
+/**
+ * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ */
+class LegacyControllerContextListener
 {
     use ExternalApiTrait;
 
     public function __construct(
-        private readonly CurrencyContextBuilder $currencyContextBuilder,
-        private readonly ConfigurationInterface $configuration,
+        private readonly LegacyControllerContextBuilder $legacyControllerContextBuilder,
     ) {
     }
 
@@ -49,6 +51,20 @@ class CurrencyContextListener
             return;
         }
 
-        $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
+        $controllerName = $this->getControllerName($event->getRequest());
+        $this->legacyControllerContextBuilder->setControllerName($controllerName);
+    }
+
+    private function getControllerName(?Request $request): string
+    {
+        $controllerName = 'AdminController';
+
+        if ($request->attributes->has('_legacy_controller')) {
+            $controllerName = $request->attributes->get('_legacy_controller');
+        } elseif ($request->query->has('controller')) {
+            $controllerName = $request->query->get('controller');
+        }
+
+        return $controllerName;
     }
 }
