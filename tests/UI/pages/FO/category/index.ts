@@ -636,6 +636,8 @@ class Category extends FOBasePage {
    * @returns Promise<boolean>
    */
   async isAddedToWishlist(page: Page, idxProduct: number): Promise<boolean> {
+    await page.waitForTimeout(1000);
+
     return ((await this.getTextContent(page, this.productAddToWishlist(idxProduct))) === 'favorite');
   }
 }
