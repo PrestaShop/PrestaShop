@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Context\Employee;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
+use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
 
@@ -46,7 +46,7 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
     {
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
-            $this->createMock(Repository::class),
+            $this->createMock(RepositoryInterface::class),
         );
         $listener = new LanguageContextListener(
             $languageContextBuilder,
@@ -63,7 +63,7 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
     {
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
-            $this->createMock(Repository::class),
+            $this->createMock(RepositoryInterface::class),
         );
         $listener = new LanguageContextListener(
             $languageContextBuilder,

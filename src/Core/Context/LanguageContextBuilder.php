@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
+use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 
 class LanguageContextBuilder
 {
@@ -39,7 +39,7 @@ class LanguageContextBuilder
 
     public function __construct(
         private readonly LanguageRepositoryInterface $languageRepository,
-        private readonly Repository $localeRepository
+        private readonly RepositoryInterface $localeRepository
     ) {
     }
 

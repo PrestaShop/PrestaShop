@@ -31,10 +31,13 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
+use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class LanguageContextListener
 {
+    use ExternalApiTrait;
+
     public function __construct(
         private readonly LanguageContextBuilder $languageContextBuilder,
         private readonly EmployeeContext $employeeContext,
@@ -44,7 +47,7 @@ class LanguageContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest()) {
+        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
             return;
         }
 
