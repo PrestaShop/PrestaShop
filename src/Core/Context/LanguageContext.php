@@ -41,15 +41,15 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 class LanguageContext implements LanguageInterface, LocaleInterface
 {
     public function __construct(
-        private readonly int $id,
-        private readonly string $name,
-        private readonly string $isoCode,
-        private readonly string $locale,
-        private readonly string $languageCode,
-        private readonly bool $isRTL,
-        private readonly string $dateFormat,
-        private readonly string $dateTimeFormat,
-        private readonly LocaleInterface $localizationLocale
+        protected readonly int $id,
+        protected readonly string $name,
+        protected readonly string $isoCode,
+        protected readonly string $locale,
+        protected readonly string $languageCode,
+        protected readonly bool $isRTL,
+        protected readonly string $dateFormat,
+        protected readonly string $dateTimeFormat,
+        protected readonly LocaleInterface $localizationLocale
     ) {
     }
 
