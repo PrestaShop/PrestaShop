@@ -122,6 +122,17 @@ class APIAccess extends BOBasePage {
   }
 
   /**
+   * Get text from Column
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} Order row in table
+   * @returns {Promise<string>}
+   */
+  async getTextColumn(page: Page, columnName: string, row: number = 1): Promise<string> {
+    return this.getTextContent(page, this.gridTableColumn(row, columnName));
+  }
+
+  /**
    * Delete webservice key
    * @param page {Page} Browser tab
    * @param row {number} Row on table

@@ -87,4 +87,59 @@ function createAPIAccessTest(apiAccess: APIAccessData, baseContext: string = 'co
   });
 }
 
-export default createAPIAccessTest;
+/**
+ * Function to delete API Access
+ * @param baseContext {string} String to identify the test
+ */
+function deleteAPIAccessTest(baseContext: string = 'commonTests-deleteAPIAccessTest'): void {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfAPIAccess: number = 0;
+
+  describe('PRE-TEST: Delete an API Access', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Advanced Parameters > API Access\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.authorizationServerLink,
+      );
+
+      const pageTitle = await apiAccessPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiAccessPage.pageTitle);
+
+      numberOfAPIAccess = await apiAccessPage.getNumberOfElementInGrid(page);
+      expect(numberOfAPIAccess).to.gte(0);
+    });
+
+    it('should delete API Access', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIAccess', baseContext);
+
+      const textResult = await apiAccessPage.deleteAPIAccess(page, 1);
+      expect(textResult).to.equal(addNewApiAccessPage.successfulDeleteMessage);
+
+      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      expect(numElements).to.equal(0);
+    });
+  });
+}
+
+export {
+  createAPIAccessTest,
+  deleteAPIAccessTest,
+};
