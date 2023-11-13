@@ -19,7 +19,6 @@ import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import ProductData from '@data/faker/product';
-import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -165,14 +164,14 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
-      it('should go to first product page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
+      it('should search for the created product and go to product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToCreatedProductPage${index}`, baseContext);
 
         await homePage.searchProduct(page, productData.name);
         await searchResultsPage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
-        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(productData.name.toUpperCase());
       });
 
       it('should check the unavailable product attributes in FO product page', async function () {

@@ -23,7 +23,6 @@ import {searchResultsPage} from '@pages/FO/searchResults';
 import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
-import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -200,15 +199,15 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
-        it('should go to first product page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
+        it('should search for the created product and go to product page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToCreatedProductPage${index}`, baseContext);
 
           // search for the created pack and add go to product page
           await foHomePage.searchProduct(page, productPackData.name);
           await searchResultsPage.goToProductPage(page, 1);
 
           const pageTitle = await foProductPage.getPageTitle(page);
-          expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+          expect(pageTitle.toUpperCase()).to.contains(productPackData.name.toUpperCase());
         });
 
         it('should add product to cart and proceed to checkout', async function () {
