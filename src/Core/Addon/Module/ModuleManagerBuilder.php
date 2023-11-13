@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -45,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
@@ -170,7 +170,7 @@ class ModuleManagerBuilder
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
         $cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
-        self::$cacheProvider = new DoctrineProvider(
+        self::$cacheProvider = DoctrineProvider::wrap(
             new FilesystemAdapter(
                 '',
                 0,
