@@ -148,6 +148,9 @@ describe('BO - Catalog - Products : Combination tab', async () => {
 
       page = await combinationsTab.clickOnLearnMoreButton(page);
 
+      const currentURL = await combinationsTab.getCurrentURL(page);
+      expect(currentURL).to.contains('creatingaproductwithcombinations');
+
       page = await combinationsTab.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
