@@ -53,6 +53,11 @@ class LegacyControllerContextListener
 
         $controllerName = $this->getControllerName($event->getRequest());
         $this->legacyControllerContextBuilder->setControllerName($controllerName);
+
+        // Optional redirection url
+        if ($event->getRequest()->query->has('back')) {
+            $this->legacyControllerContextBuilder->setRedirectionUrl($event->getRequest()->query->get('back'));
+        }
     }
 
     private function getControllerName(?Request $request): string

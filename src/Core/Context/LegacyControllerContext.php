@@ -38,8 +38,6 @@ use Traversable;
  */
 class LegacyControllerContext
 {
-    public ?string $className;
-
     /**
      * List of CSS files.
      *
@@ -54,68 +52,78 @@ class LegacyControllerContext
      */
     public array $js_files = [];
 
-    // Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin'.
-    public string $controller_type;
-
-    // Controller name.
-    public string $php_self;
+    /**
+     * Controller name alias kept for backward compatibility.
+     *
+     * @var string
+     */
+    public readonly string $php_self;
 
     /**
-     * Errors displayed after post processing
+     * Error messages displayed after refresh
      *
      * @var array<string|int, string|bool>
      */
     public array $errors = [];
 
+    /**
+     * Warning messages displayed after refresh
+     *
+     * @var array<string|int, string|bool>
+     */
     public array $warnings = [];
 
+    /**
+     * Information messages displayed after refresh
+     *
+     * @var array<string|int, string|bool>
+     */
     public array $informations = [];
 
+    /**
+     * Confirmation/success messages displayed after refresh
+     *
+     * @var array<string|int, string|bool>
+     */
     public array $confirmations = [];
 
-    public string $currentIndex;
-
-    public int $id = -1;
-
-    // Security token
-    public ?string $token;
-
-    public string $override_folder;
-
-    // Image type
+    /**
+     * Image type
+     *
+     * @var string
+     */
     public string $imageType = 'jpg';
 
-    // Current controller name without suffix
-    public string $controller_name;
-
-    public int $multishop_context = -1;
-
-    // Bootstrap variable
+    /**
+     * Array description of buttons to add in the header toolbar
+     *
+     * @var array|Traversable
+     */
     public array|Traversable $page_header_toolbar_btn = [];
 
-    // Dependency container
-    protected ContainerInterface $container;
-
+    /**
+     * @param ContainerInterface $container Dependency container
+     * @param string $controller_name Current controller name without suffix
+     * @param string $controller_type Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin'.
+     * @param int $multishop_context Allowed multi shop contexts Possible values: Byte addition of ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP
+     * @param string|null $className Legacy ObjectModel associated to the controller (if possible)
+     * @param int $id Tab ID
+     * @param string|null $token Legacy security token
+     * @param string $override_folder
+     * @param string $currentIndex Legacy current index built like a legacy URL based on controller name
+     */
     public function __construct(
-        ContainerInterface $container,
-        string $controller_name,
-        string $controller_type,
-        string $php_self,
-        int $multishop_context,
-        ?string $className,
-        int $id,
-        ?string $token,
-        string $override_folder,
+        protected readonly ContainerInterface $container,
+        public readonly string $controller_name,
+        public readonly string $controller_type,
+        public readonly int $multishop_context,
+        public readonly ?string $className,
+        public readonly int $id,
+        public readonly ?string $token,
+        public readonly string $override_folder,
+        public readonly string $currentIndex
     ) {
-        $this->container = $container;
-        $this->controller_type = $controller_type;
-        $this->php_self = $php_self;
-        $this->controller_name = $controller_name;
-        $this->multishop_context = $multishop_context;
-        $this->className = $className;
-        $this->id = $id;
-        $this->token = $token;
-        $this->override_folder = $override_folder;
+        $this->php_self = $this->controller_name;
     }
 
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true): void

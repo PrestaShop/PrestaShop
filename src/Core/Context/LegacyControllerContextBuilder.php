@@ -40,6 +40,7 @@ use Tools;
 class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
 {
     private ?string $controllerName = null;
+    private ?string $redirectionUrl = null;
     private ?LegacyControllerContext $_legacyControllerContext = null;
 
     public function __construct(
@@ -70,12 +71,12 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
             $this->container,
             $this->controllerName,
             $controllerType,
-            $this->controllerName,
             $multiShopContext,
             $className,
             $id,
             $token,
             $overrideFolder,
+            $this->getCurrentIndex(),
         );
 
         $this->_legacyControllerContext = $legacyControllerContext;
@@ -96,7 +97,21 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
 
     public function setControllerName(string $controllerName): self
     {
+        if (str_ends_with($controllerName, 'ControllerOverride')) {
+            $controllerName = preg_replace('/ControllerOverride$/', '', $controllerName);
+        }
+        if (str_ends_with($controllerName, 'Controller')) {
+            $controllerName = preg_replace('/Controller$/', '', $controllerName);
+        }
+
         $this->controllerName = $controllerName;
+
+        return $this;
+    }
+
+    public function setRedirectionUrl(?string $redirectionUrl): self
+    {
+        $this->redirectionUrl = $redirectionUrl;
 
         return $this;
     }
@@ -121,21 +136,21 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
     private function getClassName(string $controllerName): ?string
     {
         switch ($controllerName) {
-            case 'AdminAccessController':
+            case 'AdminAccess':
                 return 'Profile';
-            case 'AdminCarrierWizardController':
+            case 'AdminCarrierWizard':
                 return 'Carrier';
-            case 'AdminImagesController':
+            case 'AdminImages':
                 return 'ImageType';
-            case 'AdminReturnController':
+            case 'AdminReturn':
                 return 'OrderReturn';
-            case 'AdminSearchConfController':
+            case 'AdminSearchConf':
                 return 'Alias';
-            case 'AdminConfigureFaviconBoController':
+            case 'AdminConfigureFaviconBo':
                 return 'Configuration';
             default:
                 // Here, we use the controller's name to retrieve the object model's name, passing it in singular form.
-                if (preg_match('/Admin([a-zA-Z]+)Controller/', $controllerName, $matches)) {
+                if (preg_match('/Admin([a-zA-Z]+)/', $controllerName, $matches)) {
                     return Inflector::getInflector()->singularize($matches[1]);
                 } else {
                     return null;
@@ -159,5 +174,18 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
         } else {
             return ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP;
         }
+    }
+
+    private function getCurrentIndex(): string
+    {
+        $parameters = [];
+        if (!empty($this->controllerName)) {
+            $parameters[] = 'controller=' . $this->controllerName;
+        }
+        if (!empty($this->redirectionUrl)) {
+            $parameters[] = 'back=' . urlencode($this->redirectionUrl);
+        }
+
+        return 'index.php' . (!empty($parameters) ? '?' . implode('&', $parameters) : '');
     }
 }

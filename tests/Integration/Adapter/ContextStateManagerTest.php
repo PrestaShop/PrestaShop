@@ -65,26 +65,26 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $this->legacyControllerContext1 = new LegacyControllerContext(
             $this->createMock(ContainerInterface::class),
-            'AdminProductsController',
+            'AdminProducts',
             'admin',
-            'AdminProductsController',
             ShopConstraint::ALL_SHOPS,
             'Product',
             20,
             'token',
-            'override_folder/'
+            'override_folder/',
+            'index.php?controller=AdminProducts'
         );
 
         $this->legacyControllerContext2 = new LegacyControllerContext(
             $this->createMock(ContainerInterface::class),
-            'AdminCartsController',
+            'AdminCarts',
             'admin',
-            'AdminCartsController',
             ShopConstraint::ALL_SHOPS,
             'Cart',
             10,
             'token',
-            'override_folder/'
+            'override_folder/',
+            'index.php?controller=AdminCarts'
         );
     }
 
