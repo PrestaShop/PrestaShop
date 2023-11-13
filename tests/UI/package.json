@@ -123,7 +123,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.10",
     "@types/chai-string": "^1.4.4",
-    "@types/libsodium-wrappers": "^0.7.12",
+    "@types/libsodium-wrappers": "^0.7.13",
     "@types/mocha": "^10.0.3",
     "@types/mochawesome": "^6.2.4",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
