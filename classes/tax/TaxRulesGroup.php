@@ -111,10 +111,6 @@ class TaxRulesGroupCore extends ObjectModel
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
 		WHERE id_tax_rules_group=' . (int) $this->id) &&
         Db::getInstance()->execute('
-		UPDATE ' . _DB_PREFIX_ . 'carrier
-		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
-        Db::getInstance()->execute('
 		UPDATE ' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
 		WHERE id_tax_rules_group=' . (int) $this->id);
