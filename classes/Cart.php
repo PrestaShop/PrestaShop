@@ -1772,14 +1772,16 @@ class CartCore extends ObjectModel
             $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
 
             // If yes, we do not delete the product, but change it's quantity to the number of gifts that are in cart,
-            // so they remain.
+            // so they remain. We must specifically target the product ID, combination ID and customization ID.
+            // If we didn't use these conditions, we would set all cart rows with this product ID to $preservedGifts[$giftKey].
             if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
                 return Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                    SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
+                    SET `quantity` = ' . (int) $preservedGifts[$giftKey] . '
                     WHERE `id_cart` = ' . (int) $this->id . '
-                    AND `id_product` = ' . (int) $id_product .
-                    ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                    AND `id_product` = ' . (int) $id_product . '
+                    AND `id_product_attribute` = ' . (int) $id_product_attribute . '
+                    AND `id_customization` = 0'
                 );
             }
         }
