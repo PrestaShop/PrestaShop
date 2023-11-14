@@ -30,7 +30,6 @@ use Context;
 use Employee;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -78,11 +77,6 @@ class AdminModuleDataProvider implements ModuleInterface
     private $router = null;
 
     /**
-     * @var CategoriesProvider
-     */
-    private $categoriesProvider;
-
-    /**
      * @var ModuleDataProvider
      */
     private $moduleProvider;
@@ -115,12 +109,10 @@ class AdminModuleDataProvider implements ModuleInterface
     public $failed = false;
 
     public function __construct(
-        CategoriesProvider $categoriesProvider,
         ModuleDataProvider $modulesProvider,
         TranslatorInterface $translator,
         Employee $employee = null
     ) {
-        $this->categoriesProvider = $categoriesProvider;
         $this->moduleProvider = $modulesProvider;
         $this->translator = $translator;
         $this->employee = $employee;

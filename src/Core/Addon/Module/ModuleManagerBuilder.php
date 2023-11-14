@@ -44,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -70,7 +69,6 @@ class ModuleManagerBuilder
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
     public static $translator = null;
-    public static $categoriesProvider = null;
     public static $instance = null;
     public static $cacheProvider = null;
 
@@ -159,10 +157,6 @@ class ModuleManagerBuilder
             return;
         }
 
-        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
-
-        $prestashopAddonsConfig = $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
-
         $tools = new Tools();
         $tools->refreshCaCertFile();
 
@@ -178,23 +172,12 @@ class ModuleManagerBuilder
             )
         );
 
-        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
-        $themeName = Context::getContext()->shop->theme_name;
-        $themeModules = $themeName ?
-                        $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :
-                        [];
-
         self::$legacyLogger = new LegacyLogger();
-        self::$categoriesProvider = new CategoriesProvider(
-            $prestashopAddonsConfig['prestashop']['addons']['categories'],
-            $themeModules
-        );
         self::$lecacyContext = new LegacyContext();
 
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
-                self::$categoriesProvider,
                 self::$moduleDataProvider,
                 self::$translator,
                 Context::getContext()->employee
