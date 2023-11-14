@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class ShopContext
 {
     public function __construct(
-        private readonly ShopConstraint $shopConstraint,
+        protected readonly ShopConstraint $shopConstraint,
         protected int $id,
         protected string $name,
         protected int $shopGroupId,

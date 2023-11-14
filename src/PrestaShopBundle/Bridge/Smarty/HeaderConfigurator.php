@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
@@ -71,7 +71,7 @@ class HeaderConfigurator implements ConfiguratorInterface
     private $currency;
 
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $currentLocale;
 
@@ -352,7 +352,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $priceSpecification = $this->currentLocale->getPriceSpecification($this->currency->iso_code);
 
         return array_merge(
-            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(LocaleInterface::NUMBERING_SYSTEM_LATIN)->toArray()],
             $priceSpecification->toArray()
         );
     }
@@ -368,7 +368,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $numberSpecification = $this->currentLocale->getNumberSpecification();
 
         return array_merge(
-            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(LocaleInterface::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
     }

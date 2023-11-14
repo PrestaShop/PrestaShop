@@ -33,7 +33,7 @@ use Currency;
 use HistoryController;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use PrestaShopException;
 use Tools;
@@ -41,7 +41,7 @@ use Tools;
 class OrderDetailLazyArray extends AbstractLazyArray
 {
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $locale;
 

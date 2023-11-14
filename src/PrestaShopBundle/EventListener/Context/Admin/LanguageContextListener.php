@@ -28,20 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
-use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShopBundle\EventListener\ExternalApiTrait;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-/**
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
- */
-class LegacyControllerContextListener
+class LanguageContextListener
 {
     use ExternalApiTrait;
 
     public function __construct(
-        private readonly LegacyControllerContextBuilder $legacyControllerContextBuilder,
+        private readonly LanguageContextBuilder $languageContextBuilder,
+        private readonly EmployeeContext $employeeContext,
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -51,25 +51,12 @@ class LegacyControllerContextListener
             return;
         }
 
-        $controllerName = $this->getControllerName($event->getRequest());
-        $this->legacyControllerContextBuilder->setControllerName($controllerName);
-
-        // Optional redirection url
-        if ($event->getRequest()->query->has('back')) {
-            $this->legacyControllerContextBuilder->setRedirectionUrl($event->getRequest()->query->get('back'));
+        if ($this->employeeContext->getEmployee()) {
+            // Use the employee language if available
+            $this->languageContextBuilder->setLanguageId($this->employeeContext->getEmployee()->getLanguageId());
+        } else {
+            // If not use the default language of the shop
+            $this->languageContextBuilder->setLanguageId((int) $this->configuration->get('PS_LANG_DEFAULT'));
         }
-    }
-
-    private function getControllerName(?Request $request): string
-    {
-        $controllerName = 'AdminController';
-
-        if ($request->attributes->has('_legacy_controller')) {
-            $controllerName = $request->attributes->get('_legacy_controller');
-        } elseif ($request->query->has('controller')) {
-            $controllerName = $request->query->get('controller');
-        }
-
-        return $controllerName;
     }
 }

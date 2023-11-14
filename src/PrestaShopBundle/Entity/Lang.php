@@ -54,7 +54,7 @@ class Lang implements LanguageInterface
     private $name;
 
     /**
-     * @var int
+     * @var bool
      *
      * @ORM\Column(name="active", type="boolean")
      */
@@ -82,6 +82,8 @@ class Lang implements LanguageInterface
     private $locale;
 
     /**
+     * Badly named, it's not really light. It's just the format for a date only.
+     *
      * @var string
      *
      * @ORM\Column(name="date_format_lite", type="string", length=32)
@@ -89,6 +91,8 @@ class Lang implements LanguageInterface
     private $dateFormatLite;
 
     /**
+     * Badly named, it's not full. It's just the format for a date AND time.
+     *
      * @var string
      *
      * @ORM\Column(name="date_format_full", type="string", length=32)
@@ -129,7 +133,7 @@ class Lang implements LanguageInterface
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -141,7 +145,7 @@ class Lang implements LanguageInterface
      *
      * @return Lang
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
 
@@ -153,7 +157,7 @@ class Lang implements LanguageInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -161,11 +165,11 @@ class Lang implements LanguageInterface
     /**
      * Set active.
      *
-     * @param int $active
+     * @param bool $active
      *
      * @return Lang
      */
-    public function setActive($active)
+    public function setActive(bool $active)
     {
         $this->active = $active;
 
@@ -175,9 +179,9 @@ class Lang implements LanguageInterface
     /**
      * Get active.
      *
-     * @return int
+     * @return bool
      */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
@@ -189,7 +193,7 @@ class Lang implements LanguageInterface
      *
      * @return Lang
      */
-    public function setIsoCode($isoCode)
+    public function setIsoCode(string $isoCode)
     {
         $this->isoCode = $isoCode;
 
@@ -201,7 +205,7 @@ class Lang implements LanguageInterface
      *
      * @return string
      */
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->isoCode;
     }
@@ -213,7 +217,7 @@ class Lang implements LanguageInterface
      *
      * @return Lang
      */
-    public function setLanguageCode($languageCode)
+    public function setLanguageCode(string $languageCode)
     {
         $this->languageCode = $languageCode;
 
@@ -225,7 +229,7 @@ class Lang implements LanguageInterface
      *
      * @return string
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): string
     {
         return $this->languageCode;
     }
@@ -237,7 +241,7 @@ class Lang implements LanguageInterface
      *
      * @return Lang
      */
-    public function setDateFormatLite($dateFormatLite)
+    public function setDateFormatLite(string $dateFormatLite)
     {
         $this->dateFormatLite = $dateFormatLite;
 
@@ -249,7 +253,15 @@ class Lang implements LanguageInterface
      *
      * @return string
      */
-    public function getDateFormatLite()
+    public function getDateFormatLite(): string
+    {
+        return $this->dateFormatLite;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDateFormat(): string
     {
         return $this->dateFormatLite;
     }
@@ -261,7 +273,7 @@ class Lang implements LanguageInterface
      *
      * @return Lang
      */
-    public function setDateFormatFull($dateFormatFull)
+    public function setDateFormatFull(string $dateFormatFull)
     {
         $this->dateFormatFull = $dateFormatFull;
 
@@ -273,7 +285,15 @@ class Lang implements LanguageInterface
      *
      * @return string
      */
-    public function getDateFormatFull()
+    public function getDateFormatFull(): string
+    {
+        return $this->dateFormatFull;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDateTimeFormat(): string
     {
         return $this->dateFormatFull;
     }
@@ -297,7 +317,7 @@ class Lang implements LanguageInterface
      *
      * @return bool
      */
-    public function getIsRtl()
+    public function getIsRtl(): bool
     {
         return $this->isRtl;
     }
@@ -305,7 +325,7 @@ class Lang implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function isRTL()
+    public function isRTL(): bool
     {
         return $this->getIsRtl();
     }
@@ -313,7 +333,7 @@ class Lang implements LanguageInterface
     /**
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return !empty($this->locale) ? $this->locale : $this->getLanguageCode();
     }

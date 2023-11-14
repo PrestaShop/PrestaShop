@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use Country as LegacyCountry;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
@@ -44,7 +43,7 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
     public function __construct(
         private readonly CountryRepository $countryRepository,
         private readonly ContextStateManager $contextStateManager,
-        private readonly ConfigurationInterface $configuration,
+        private readonly LanguageContext $languageContext,
     ) {
     }
 
@@ -52,8 +51,6 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
     {
         $this->assertArguments();
         $legacyCountry = $this->getLegacyCountry();
-        // Temporary solution, this should be fetched from the LanguageContext when it's available
-        $languageId = $this->configuration->get('PS_LANG_DEFAULT');
 
         return new CountryContext(
             id: $legacyCountry->id,
@@ -61,7 +58,7 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
             currencyId: $legacyCountry->id_currency,
             isoCode: $legacyCountry->iso_code,
             callPrefix: $legacyCountry->call_prefix,
-            name: $legacyCountry->name[$languageId] ?? reset($legacyCountry->name),
+            name: $legacyCountry->name[$this->languageContext->getId()] ?? reset($legacyCountry->name),
             containsStates: $legacyCountry->contains_states,
             identificationNumberNeeded: $legacyCountry->need_identification_number,
             zipCodeNeeded: $legacyCountry->need_zip_code,

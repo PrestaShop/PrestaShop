@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -92,7 +92,7 @@ class ContextCore
     /**
      * Current locale instance.
      *
-     * @var Locale|null
+     * @var LocaleInterface|null
      */
     public $currentLocale;
 
@@ -226,7 +226,7 @@ class ContextCore
     }
 
     /**
-     * @return Locale|null
+     * @return LocaleInterface|null
      */
     public function getCurrentLocale()
     {

@@ -36,6 +36,7 @@ use Currency;
 use Customer;
 use Language;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use Shop;
 
 /**
@@ -54,6 +55,7 @@ class ContextStateManager
         'country',
         'currency',
         'language',
+        'currentLocale',
         'customer',
         'shop',
         'shopContext',
@@ -157,6 +159,21 @@ class ContextStateManager
         if ($language) {
             $this->getContext()->getTranslator()->setLocale($language->locale);
         }
+
+        return $this;
+    }
+
+    /**
+     * Sets context localization locale and saves previous value
+     *
+     * @param LocaleInterface|null $locale
+     *
+     * @return $this
+     */
+    public function setCurrentLocale(?LocaleInterface $locale): self
+    {
+        $this->saveContextField('currentLocale');
+        $this->getContext()->currentLocale = $locale;
 
         return $this;
     }

@@ -38,7 +38,7 @@ class EmployeeContext
     public const SUPER_ADMIN_PROFILE_ID = 1;
 
     public function __construct(
-        private readonly ?Employee $employee
+        protected readonly ?Employee $employee
     ) {
     }
 

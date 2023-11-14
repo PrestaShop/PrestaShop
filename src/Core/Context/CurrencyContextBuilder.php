@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use Currency as LegacyCurrency;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
@@ -44,7 +43,7 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
     public function __construct(
         private readonly CurrencyRepository $currencyRepository,
         private readonly ContextStateManager $contextStateManager,
-        private readonly ConfigurationInterface $configuration
+        private readonly LanguageContext $languageContext
     ) {
     }
 
@@ -52,9 +51,8 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
     {
         $this->assertArguments();
         $legacyCurrency = $this->getLegacyCurrency();
-        // Temporary solution, this should be fetched from the LanguageContext when it's available
-        $languageId = $this->configuration->get('PS_LANG_DEFAULT');
 
+        $languageId = $this->languageContext->getId();
         $localizedNames = $legacyCurrency->getLocalizedNames();
         $localizedPatterns = $legacyCurrency->getLocalizedPatterns();
         $localizedSymbols = $legacyCurrency->getLocalizedSymbols();

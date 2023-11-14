@@ -26,34 +26,22 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Configuration;
+namespace Tests\Unit\Core\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 
-/**
- * Trait to easily mock configuration with specified configuration values passed via an array.
- * This trait must be used on a class that extends TestCase so that it can use the mock functions.
- */
-trait MockConfigurationTrait
+abstract class ContextBuilderTestCase extends TestCase
 {
-    protected function mockConfiguration(array $configurationValues = []): ShopConfigurationInterface|MockObject
+    protected function mockLanguageContext(int $languageId): LanguageContext|MockObject
     {
-        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        $languageContext = $this->createMock(LanguageContext::class);
+        $languageContext
+            ->method('getId')
+            ->willReturn($languageId)
+        ;
 
-        if (!empty($configurationValues)) {
-            $configuration
-                ->method('get')
-                ->will($this->returnCallback(function ($configurationName) use ($configurationValues) {
-                    if (isset($configurationValues[$configurationName])) {
-                        return $configurationValues[$configurationName];
-                    }
-
-                    throw new \InvalidArgumentException('Unhandled configuration ' . $configurationName);
-                }))
-            ;
-        }
-
-        return $configuration;
+        return $languageContext;
     }
 }

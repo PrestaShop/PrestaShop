@@ -26,17 +26,16 @@
 
 declare(strict_types=1);
 
-namespace Core\Context;
+namespace Tests\Unit\Core\Context;
 
 use Country;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
 use Tests\Unit\Core\Configuration\MockConfigurationTrait;
 
-class CountryContextBuilderTest extends TestCase
+class CountryContextBuilderTest extends ContextBuilderTestCase
 {
     use MockConfigurationTrait;
 
@@ -56,7 +55,7 @@ class CountryContextBuilderTest extends TestCase
         $builder = new CountryContextBuilder(
             $this->mockCountryRepository($country),
             $this->createMock(ContextStateManager::class),
-            $this->mockConfiguration(['PS_LANG_DEFAULT' => $languageId])
+            $this->mockLanguageContext($languageId)
         );
         $builder->setCountryId(42);
         $countryContext = $builder->build();

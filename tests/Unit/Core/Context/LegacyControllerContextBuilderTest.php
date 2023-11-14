@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Context;
+namespace Tests\Unit\Core\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -48,48 +48,126 @@ class LegacyControllerContextBuilderTest extends TestCase
      * @dataProvider getControllerValues
      *
      * @param string $controllerName
+     * @param string $expectedControllerName
      * @param ?string $className
      * @param int $multishopContext
+     * @param string $expectedCurrentIndex
+     * @param ?string $redirectionUrl
      */
-    public function testBuild(string $controllerName, ?string $className, int $multishopContext): void
+    public function testBuild(string $controllerName, string $expectedControllerName, ?string $className, int $multishopContext, string $expectedCurrentIndex, string $redirectionUrl = null): void
     {
         $builder = new LegacyControllerContextBuilder(
             $this->mockEmployeeContext(),
             $this->createMock(ContextStateManager::class),
-            ['AdminCartsController'],
+            ['AdminCarts'],
             $this->mockTabRepository(),
             $this->createMock(ContainerInterface::class),
         );
 
         $builder->setControllerName($controllerName);
+        if (null !== $redirectionUrl) {
+            $builder->setRedirectionUrl($redirectionUrl);
+        }
         $legacyController = $builder->build();
 
         $this->assertEquals($className, $legacyController->className);
         $this->assertEquals('admin', $legacyController->controller_type);
-        $this->assertEquals($controllerName, $legacyController->php_self);
-        $this->assertEquals($controllerName, $legacyController->controller_name);
+        $this->assertEquals($expectedControllerName, $legacyController->php_self);
+        $this->assertEquals($expectedControllerName, $legacyController->controller_name);
         $this->assertEquals(10, $legacyController->id);
         $this->assertEquals($multishopContext, $legacyController->multishop_context);
+        $this->assertEquals($expectedCurrentIndex, $legacyController->currentIndex);
     }
 
     public function getControllerValues(): iterable
     {
-        yield 'AdminCartsController' => [
-            'AdminCartsController',
+        yield 'AdminCarts default generic behaviour for all controllers' => [
+            'AdminCarts',
+            'AdminCarts',
             'Cart',
             ShopConstraint::ALL_SHOPS,
+            'index.php?controller=AdminCarts',
         ];
 
-        yield 'AdminAccessController' => [
-            'AdminAccessController',
+        yield 'AdminCarts default behaviour with redirection url' => [
+            'AdminCarts',
+            'AdminCarts',
+            'Cart',
+            ShopConstraint::ALL_SHOPS,
+            'index.php?controller=AdminCarts&back=index.php%3Fcontroller%3DAdminOrder',
+            'index.php?controller=AdminOrder',
+        ];
+
+        yield 'AdminAccess special classname' => [
+            'AdminAccess',
+            'AdminAccess',
             'Profile',
-            7,
+            ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
+            'index.php?controller=AdminAccess',
         ];
 
-        yield 'AdminController' => [
+        yield 'AdminCarrierWizard special classname' => [
+            'AdminCarrierWizard',
+            'AdminCarrierWizard',
+            'Carrier',
+            ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
+            'index.php?controller=AdminCarrierWizard',
+        ];
+
+        yield 'AdminImages special classname' => [
+            'AdminImages',
+            'AdminImages',
+            'ImageType',
+            ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
+            'index.php?controller=AdminImages',
+        ];
+
+        yield 'AdminReturn special classname' => [
+            'AdminReturn',
+            'AdminReturn',
+            'OrderReturn',
+            ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
+            'index.php?controller=AdminReturn',
+        ];
+
+        yield 'AdminSearchConf special classname' => [
+            'AdminSearchConfController',
+            'AdminSearchConf',
+            'Alias',
+            ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
+            'index.php?controller=AdminSearchConf',
+        ];
+
+        yield 'AdminConfigureFaviconBo special classname' => [
+            'AdminConfigureFaviconBo',
+            'AdminConfigureFaviconBo',
+            'Configuration',
+            ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
+            'index.php?controller=AdminConfigureFaviconBo',
+        ];
+
+        yield 'AdminController default fallback for symfony routes without associated legacy controller' => [
             'AdminController',
+            'Admin',
             null,
-            7,
+            ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
+            'index.php?controller=Admin',
+        ];
+
+        yield 'AdminCartsController with Controller prefix' => [
+            'AdminCartsController',
+            'AdminCarts',
+            'Cart',
+            ShopConstraint::ALL_SHOPS,
+            'index.php?controller=AdminCarts',
+        ];
+
+        yield 'AdminCartsControllerOverride with ControllerOverride prefix' => [
+            'AdminCartsControllerOverride',
+            'AdminCarts',
+            'Cart',
+            ShopConstraint::ALL_SHOPS,
+            'index.php?controller=AdminCarts',
         ];
     }
 
@@ -98,7 +176,7 @@ class LegacyControllerContextBuilderTest extends TestCase
         $builder = new LegacyControllerContextBuilder(
             $this->mockEmployeeContext(),
             $this->createMock(ContextStateManager::class),
-            ['AdminCartsController'],
+            ['AdminCarts'],
             $this->mockTabRepository(),
             $this->createMock(ContainerInterface::class),
         );

@@ -26,18 +26,17 @@
 
 declare(strict_types=1);
 
-namespace Core\Context;
+namespace Tests\Unit\Core\Context;
 
 use Currency;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
 use Tests\Unit\Core\Configuration\MockConfigurationTrait;
 
-class CurrencyContextBuilderTest extends TestCase
+class CurrencyContextBuilderTest extends ContextBuilderTestCase
 {
     use MockConfigurationTrait;
 
@@ -59,7 +58,7 @@ class CurrencyContextBuilderTest extends TestCase
         $builder = new CurrencyContextBuilder(
             $this->mockCurrencyRepository($currency),
             $this->createMock(ContextStateManager::class),
-            $this->mockConfiguration(['PS_LANG_DEFAULT' => $languageId])
+            $this->mockLanguageContext($languageId)
         );
         $builder->setCurrencyId($currency->id);
 

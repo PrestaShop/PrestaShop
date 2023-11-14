@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Context;
+namespace Tests\Unit\Core\Context;
 
 use Employee;
 use PHPUnit\Framework\MockObject\MockObject;
