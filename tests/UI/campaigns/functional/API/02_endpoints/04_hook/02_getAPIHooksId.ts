@@ -20,6 +20,7 @@ describe('API : GET /api/hooks/{id}', async () => {
   let page: Page;
   let apiContext: APIRequestContext;
   let accessToken: string;
+  let jsonResponse: any;
   let idHook: number;
   let statusHook: boolean;
   let nameHook: string;
@@ -108,29 +109,47 @@ describe('API : GET /api/hooks/{id}', async () => {
       expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
       expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
-      const jsonResponse = await apiResponse.json();
-      // id
+      jsonResponse = await apiResponse.json();
+    });
+
+    it('should check the JSON Response : `id`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseId', baseContext);
+
       expect(jsonResponse).to.have.property('id');
       expect(jsonResponse.id).to.be.a('number');
       expect(jsonResponse.id).to.be.equal(idHook);
+    });
 
-      // active
+    it('should check the JSON Response : `active`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseActive', baseContext);
+
       expect(jsonResponse).to.have.property('active');
       expect(jsonResponse.active).to.be.a('boolean');
       expect(jsonResponse.active).to.be.equal(statusHook);
+    });
 
-      // name
+    it('should check the JSON Response : `name`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseName', baseContext);
+
       expect(jsonResponse).to.have.property('name');
       expect(jsonResponse.name).to.be.a('string');
       expect(jsonResponse.name).to.be.equal(nameHook);
+    });
 
-      // title
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
-      /*expect(jsonResponse).to.have.property('title');
-      expect(jsonResponse.title).to.be.a('string');
-      expect(jsonResponse.title).to.be.equal(titleHook);*/
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
+    it('should check the JSON Response : `title`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseTitle', baseContext);
 
-      // description
+      this.skip();
+
+      //expect(jsonResponse).to.have.property('title');
+      //expect(jsonResponse.title).to.be.a('string');
+      //expect(jsonResponse.title).to.be.equal(titleHook);
+    });
+
+    it('should check the JSON Response : `description`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescription', baseContext);
+
       expect(jsonResponse).to.have.property('description');
       expect(jsonResponse.description).to.be.a('string');
       expect(jsonResponse.description).to.be.equal(descriptionHook);

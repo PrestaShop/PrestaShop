@@ -20,6 +20,7 @@ describe('API : GET /api/hook-status/{id}', async () => {
   let page: Page;
   let apiContext: APIRequestContext;
   let accessToken: string;
+  let jsonResponse: any;
   let idHook: number;
   let statusHook: boolean;
 
@@ -95,13 +96,20 @@ describe('API : GET /api/hook-status/{id}', async () => {
       expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
       expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
-      const jsonResponse = await apiResponse.json();
-      // id
+      jsonResponse = await apiResponse.json();
+    });
+
+    it('should check the JSON Response : `id`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseId', baseContext);
+
       expect(jsonResponse).to.have.property('id');
       expect(jsonResponse.id).to.be.a('number');
       expect(jsonResponse.id).to.be.equal(idHook);
+    });
 
-      // active
+    it('should check the JSON Response : `active`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseActive', baseContext);
+
       expect(jsonResponse).to.have.property('active');
       expect(jsonResponse.active).to.be.a('boolean');
       expect(jsonResponse.active).to.be.equal(statusHook);
