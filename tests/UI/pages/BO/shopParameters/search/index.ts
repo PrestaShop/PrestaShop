@@ -345,11 +345,11 @@ class Search extends BOBasePage {
    */
   async deleteAlias(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -365,10 +365,10 @@ class Search extends BOBasePage {
    * @return {Promise<void>}
    */
   async bulkSelectRows(page: Page): Promise<void> {
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
@@ -384,7 +384,7 @@ class Search extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Click on Button Bulk actions
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     // Click on delete
     await this.clickAndWaitForURL(page, this.bulkDeleteLink);
@@ -403,7 +403,7 @@ class Search extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Click on Button Bulk actions
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForURL(page, enable ? this.bulkEnableButton : this.bulkDisableButton);
@@ -431,7 +431,7 @@ class Search extends BOBasePage {
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.tableColumnStatus(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(this.tableColumnStatus(row));
+      await page.locator(this.tableColumnStatus(row)).click();
       await this.waitForVisibleSelector(
         page,
         (valueWanted ? this.tableColumnStatusEnabledIcon(row) : this.tableColumnStatusDisabledIcon(row)),

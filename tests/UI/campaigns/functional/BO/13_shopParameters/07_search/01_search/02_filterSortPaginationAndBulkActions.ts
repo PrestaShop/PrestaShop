@@ -20,7 +20,10 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_BO_shopParameters_search_search_filterSortPaginationAndBulkActions';
 
 /*
-Create 2 aliases
+Create 19 aliases
+Pagination
+Filter table
+Sort table
 Enable status by bulk actions
 Disable status by bulk actions
 Delete th created aliases by bulk actions
@@ -94,7 +97,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
   // 2 - Pagination aliases
   describe('Pagination', async () => {
     it('should change the items number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await searchPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
@@ -123,7 +126,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
   });
 
   // 3 - Filter aliases
-  describe('Filter aliases', async () => {
+  describe('Filter aliases table', async () => {
     const tests = [
       {
         args:
@@ -184,7 +187,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
   });
 
   // 4 - Sort aliases
-  describe('Sort groups', async () => {
+  describe('Sort aliases table', async () => {
     [
       {
         args:
@@ -210,9 +213,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
             testIdentifier: 'sortBySearchDesc', sortBy: 'search', sortDirection: 'desc',
           },
       },
-    ].forEach((test: {
-      args: { testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean, isDate?: boolean }
-    }) => {
+    ].forEach((test: { args: { testIdentifier: string, sortBy: string, sortDirection: string} }) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
