@@ -26,6 +26,7 @@ describe('API : GET /api/api-access/{apiAccessId}', async () => {
   let page: Page;
   let apiContext: APIRequestContext;
   let accessToken: string;
+  let jsonResponse: any;
   let idApiAccess: number;
 
   const createAPIAccess: APIAccessData = new APIAccessData({
@@ -109,23 +110,36 @@ describe('API : GET /api/api-access/{apiAccessId}', async () => {
       expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
       expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
-      const jsonResponse = await apiResponse.json();
-      // apiAccessId
+      jsonResponse = await apiResponse.json();
+    });
+
+    it('should check the JSON Response : `apiAccessId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseApiAccessId', baseContext);
+
       expect(jsonResponse).to.have.property('apiAccessId');
       expect(jsonResponse.apiAccessId).to.be.a('number');
       expect(jsonResponse.apiAccessId).to.be.equal(idApiAccess);
+    });
 
-      // clientName
+    it('should check the JSON Response : `clientName`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseClientName', baseContext);
+
       expect(jsonResponse).to.have.property('clientName');
       expect(jsonResponse.clientName).to.be.a('string');
       expect(jsonResponse.clientName).to.be.equal(createAPIAccess.clientName);
+    });
 
-      // description
+    it('should check the JSON Response : `description`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescription', baseContext);
+
       expect(jsonResponse).to.have.property('description');
       expect(jsonResponse.description).to.be.a('string');
       expect(jsonResponse.description).to.be.equal(createAPIAccess.description);
+    });
 
-      // enabled
+    it('should check the JSON Response : `enabled`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseEnabled', baseContext);
+
       expect(jsonResponse).to.have.property('enabled');
       expect(jsonResponse.enabled).to.be.a('boolean');
       expect(jsonResponse.enabled).to.be.equal(createAPIAccess.enabled);
