@@ -18,6 +18,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -133,7 +134,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should view my shop and go to first product page', async function () {
+    it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
@@ -141,8 +142,15 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
 
       const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage, 'Home page was not opened').to.eq(true);
+    });
+
+    it('should go to first product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
       await homePage.goToProductPage(page, 1);
+
+      const pageTitle = await productPage.getPageTitle(page);
+      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should check the existence of the unit value', async function () {

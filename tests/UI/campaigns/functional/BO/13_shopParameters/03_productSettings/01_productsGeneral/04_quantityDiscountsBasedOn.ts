@@ -161,19 +161,23 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
     });
 
-    it('should create combinations and edit the quantity', async function () {
+    it('should create combinations', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCombination', baseContext);
 
       const createProductMessage = await combinationsTab.setProductAttributes(page, productWithCombinations.attributes);
       expect(createProductMessage).to.equal(combinationsTab.generateCombinationsMessage(2));
 
-      let successMessage = await combinationsTab.generateCombinations(page);
+      const successMessage = await combinationsTab.generateCombinations(page);
       expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(2));
+    });
+
+    it('should edit the quantity', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editQuantity', baseContext);
 
       await combinationsTab.editCombinationRowQuantity(page, 1, 5);
       await combinationsTab.editCombinationRowQuantity(page, 2, 5);
 
-      successMessage = await combinationsTab.saveCombinationsForm(page);
+      const successMessage = await combinationsTab.saveCombinationsForm(page);
       expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
     });
 

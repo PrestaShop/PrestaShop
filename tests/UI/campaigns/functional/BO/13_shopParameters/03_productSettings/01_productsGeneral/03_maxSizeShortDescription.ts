@@ -56,7 +56,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
 
     tests.forEach((test, index: number) => {
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -70,14 +70,14 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       });
 
       it(`should update max size of short description to ${test.args.descriptionSize}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `updateMaxSizeSummaryValue${index + 1}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `updateMaxSizeSummaryValue${index}`, baseContext);
 
         const result = await productSettingsPage.UpdateMaxSizeOfSummary(page, test.args.descriptionSize);
         expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToCatalogProductsPage${index + 1}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToCatalogProductsPage${index}`, baseContext);
 
         await productSettingsPage.goToSubMenu(
           page,
@@ -89,17 +89,23 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
         expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
+      it('should click on new product button and go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductPage${index}`, baseContext);
+
+        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.equal(true);
+
+        await productsPage.selectProductType(page, productData.type);
+        await productsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await addProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
+      });
+
       if (test.args.descriptionSize === maxSummarySizeValue) {
         it(`should create a product with a summary more than ${test.args.descriptionSize} characters
       and check the error message`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
-
-          const isModalVisible = await productsPage.clickOnNewProductButton(page);
-          expect(isModalVisible).to.be.eq(true);
-
-          await productsPage.selectProductType(page, productData.type);
-
-          await productsPage.clickOnAddNewProduct(page);
+          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index}`, baseContext);
 
           await descriptionTab.setProductDescription(page, productData);
 
@@ -110,14 +116,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
         });
       } else {
         it(`should create a product with a summary less than ${test.args.descriptionSize} characters`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
-
-          const isModalVisible = await productsPage.clickOnNewProductButton(page);
-          expect(isModalVisible).to.be.eq(true);
-
-          await productsPage.selectProductType(page, productData.type);
-
-          await productsPage.clickOnAddNewProduct(page);
+          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index}`, baseContext);
 
           const successMessage = await addProductPage.setProduct(page, productData);
           expect(successMessage).to.equal(addProductPage.successfulUpdateMessage);

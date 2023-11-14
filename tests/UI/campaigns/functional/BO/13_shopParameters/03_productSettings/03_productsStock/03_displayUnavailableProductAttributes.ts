@@ -150,33 +150,37 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
           baseContext,
         );
 
-        const result = await productSettingsPage.setDisplayUnavailableProductAttributesStatus(
-          page,
-          test.args.enable,
-        );
-
+        const result = await productSettingsPage.setDisplayUnavailableProductAttributesStatus(page, test.args.enable);
         expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      });
+
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
+
+        page = await productSettingsPage.viewMyShop(page);
+        await homePage.changeLanguage(page, 'en');
+
+        const isHomePage = await homePage.isHomePage(page);
+        expect(isHomePage, 'Home page was not opened').to.eq(true);
+      });
+
+      it('should search for the created product and go to product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToCreatedProductPage${index}`, baseContext);
+
+        await homePage.searchProduct(page, productData.name);
+        await searchResultsPage.goToProductPage(page, 1);
+
+        const pageTitle = await productPage.getPageTitle(page);
+        expect(pageTitle.toUpperCase()).to.contains(productData.name.toUpperCase());
       });
 
       it('should check the unavailable product attributes in FO product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkUnavailableAttribute${index}`, baseContext);
 
-        page = await productSettingsPage.viewMyShop(page);
-
-        await homePage.changeLanguage(page, 'en');
-        await homePage.searchProduct(page, productData.name);
-        await searchResultsPage.goToProductPage(page, 1);
-
-        const sizeIsVisible = await productPage.isUnavailableProductSizeDisplayed(
-          page,
-          productData.attributes[1].values[0],
-        );
+        const sizeIsVisible = await productPage.isUnavailableProductSizeDisplayed(page, productData.attributes[1].values[0]);
         expect(sizeIsVisible).to.be.equal(test.args.enable);
 
-        const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(
-          page,
-          productData.attributes[0].values[0],
-        );
+        const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(page, productData.attributes[0].values[0]);
         expect(colorIsVisible).to.be.equal(test.args.enable);
       });
 
