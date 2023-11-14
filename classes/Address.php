@@ -434,7 +434,7 @@ class AddressCore extends ObjectModel
      *
      * @param int $id_address Address ID
      *
-     * @return array
+     * @return array|bool
      */
     public static function getCountryAndState($id_address)
     {

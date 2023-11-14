@@ -47,7 +47,7 @@ class Login extends BOBasePage {
     this.passwordInput = '#passwd';
     this.submitLoginButton = '#submit_login';
     this.alertDangerDiv = '#error';
-    this.alertDangerTextBlock = `${this.alertDangerDiv} li`;
+    this.alertDangerTextBlock = `${this.alertDangerDiv} p`;
     // reset password selectors
     this.forgotPasswordLink = '#forgot-password-link';
     this.resetPasswordEmailFormField = '#email_forgot';

@@ -63,6 +63,8 @@ class AdminLoginControllerCore extends AdminController
         $this->addJS(_PS_JS_DIR_ . 'vendor/spin.js');
         $this->addJS(_PS_JS_DIR_ . 'vendor/ladda.js');
         Media::addJsDef(['img_dir' => _PS_IMG_]);
+
+        // Error wordings, one_error is not used anymore
         Media::addJsDefL('one_error', $this->trans('There is one error.', [], 'Admin.Notifications.Error'));
         Media::addJsDefL('more_errors', $this->trans('There are several errors.', [], 'Admin.Notifications.Error'));
 
