@@ -10,6 +10,7 @@ services:
     arguments:
       - "@prestashop.categories_provider"
       - "@prestashop.adapter.data_provider.module"
+      - '@translator'
       - "@=service('prestashop.adapter.legacy.context').getContext().employee"
     calls:
       - [ setRouter, [ '@router' ] ]

@@ -196,6 +196,7 @@ class ModuleManagerBuilder
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$categoriesProvider,
                 self::$moduleDataProvider,
+                self::$translator,
                 Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
