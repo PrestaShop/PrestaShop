@@ -16,6 +16,8 @@ class ShopParamsGeneral extends BOBasePage {
 
   private readonly displayBrandsToggleInput: (toggle: number) => string;
 
+  private readonly displayBestSellersToggleInput: (toggle: number) => string;
+
   private readonly enableMultiStoreToggleInput: (toggle: number) => string;
 
   private readonly saveFormButton: string;
@@ -33,6 +35,7 @@ class ShopParamsGeneral extends BOBasePage {
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
     this.displaySuppliersToggleInput = (toggle: number) => `#form_display_suppliers_${toggle}`;
     this.displayBrandsToggleInput = (toggle: number) => `#form_display_manufacturers_${toggle}`;
+    this.displayBestSellersToggleInput = (toggle: number) => `#form_display_best_sellers_${toggle}`;
     this.enableMultiStoreToggleInput = (toggle: number) => `#form_multishop_feature_active_${toggle}`;
     this.saveFormButton = '#form-preferences-save-button';
   }
@@ -59,6 +62,20 @@ class ShopParamsGeneral extends BOBasePage {
   async setDisplaySuppliers(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displaySuppliersToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForLoadState(page, this.saveFormButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Enable/Disable best sellers
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to enable/disable suppliers
+   * @returns {Promise<string>}
+   */
+  async setDisplayBestSellers(page: Page, toEnable: boolean = true): Promise<string> {
+    await this.setChecked(page, this.displayBestSellersToggleInput(toEnable ? 1 : 0));
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -71,6 +88,7 @@ class ShopParamsGeneral extends BOBasePage {
   async setDisplayBrands(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displayBrandsToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForLoadState(page, this.saveFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -83,6 +101,7 @@ class ShopParamsGeneral extends BOBasePage {
   async setMultiStoreStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableMultiStoreToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForLoadState(page, this.saveFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
