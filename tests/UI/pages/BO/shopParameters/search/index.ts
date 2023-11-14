@@ -78,6 +78,26 @@ class Search extends BOBasePage {
 
   private readonly bulkDisableButton: string;
 
+  private readonly paginationDiv: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationListOpen: string;
+
+  private readonly paginationNumber: (number: number) => string;
+
+  private readonly paginationRightBlock: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string, direction: string) => string;
+
   private readonly aliasForm: string;
 
   private readonly fuzzySearchLabel: (status: string) => string;
@@ -149,6 +169,20 @@ class Search extends BOBasePage {
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
     this.bulkEnableButton = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.bulkDisableButton = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+
+    // Pagination selectors
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationLimitSelect = `${this.paginationDiv}  button.dropdown-toggle`;
+    this.paginationListOpen = `${this.paginationDiv}.open`;
+    this.paginationNumber = (number: number) => `${this.gridForm} div.row li a[data-items='${number}']`;
+    this.paginationRightBlock = `${this.paginationDiv}.pull-right`;
+    this.paginationLabel = `${this.paginationRightBlock} li.active a`;
+    this.paginationNextLink = `${this.paginationRightBlock} i.icon-angle-right`;
+    this.paginationPreviousLink = `${this.paginationRightBlock} i.icon-angle-left`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = (column: string, direction: string) => `${this.tableHead} a.${direction}-sort-column-${column}-link`;
 
     // Search form
     this.aliasForm = '#alias_fieldset_search';
@@ -224,7 +258,7 @@ class Search extends BOBasePage {
 
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
@@ -266,7 +300,7 @@ class Search extends BOBasePage {
         columnSelector = this.tableColumnAliases(row);
         break;
 
-      case 'result':
+      case 'search':
         columnSelector = this.tableColumnSearch(row);
         break;
 
@@ -283,6 +317,24 @@ class Search extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all text content
+   * @return {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
   }
 
   /**
@@ -387,6 +439,64 @@ class Search extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getPaginationLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    await page.locator(this.paginationLimitSelect).click();
+    await this.waitForVisibleSelector(page, this.paginationListOpen);
+    await this.clickAndWaitForURL(page, this.paginationNumber(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    await this.clickAndWaitForURL(page, `${this.sortColumnDiv(sortBy, sortDirection)} i`);
   }
 
   // Methods for search form
