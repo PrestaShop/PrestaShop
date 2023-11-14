@@ -104,13 +104,21 @@ class CartRuleCalculator
             $cartRuleData->addDiscountApplied($initialShippingFees);
         }
 
-        // Free gift
+        /*
+         * Free gift
+         *
+         * If this cart rule adds a free product as a gift, we need to discount the initial price of the product.
+         * We loop the cart and we try to find a product with the same product ID, combination ID and no customization.
+         * We use getInitialUnitPrice because the product row may have been already discounted by some previously applied
+         * cart rule.
+         */
         if ((int) $cartRule->gift_product) {
             foreach ($this->cartRows as $cartRow) {
                 $product = $cartRow->getRowData();
                 if ($product['id_product'] == $cartRule->gift_product
                     && ($product['id_product_attribute'] == $cartRule->gift_product_attribute
                         || !(int) $cartRule->gift_product_attribute)
+                    && empty($product['id_customization'])
                 ) {
                     $cartRuleData->addDiscountApplied($cartRow->getInitialUnitPrice());
                     $cartRow->applyFlatDiscount($cartRow->getInitialUnitPrice());

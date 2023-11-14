@@ -776,7 +776,8 @@ class CartCore extends ObjectModel
 
                             if (
                                 $product['id_product'] == $gift['gift_product'] &&
-                                $product['id_product_attribute'] == $gift['gift_product_attribute']
+                                $product['id_product_attribute'] == $gift['gift_product_attribute'] &&
+                                empty($product['id_customization'])
                             ) {
                                 $product['is_gift'] = true;
                                 $products[$rowIndex] = $product;
@@ -1741,6 +1742,7 @@ class CartCore extends ObjectModel
             unset(self::$_totalWeight[$this->id]);
         }
 
+        // First, if we are deleting a product with customization, we delete it from the database
         if ((int) $id_customization) {
             if (!$this->_deleteCustomization((int) $id_customization)) {
                 return false;
@@ -1760,10 +1762,17 @@ class CartCore extends ObjectModel
             return false;
         }
 
+        // Now, we must check if there are any products added as gifts in the cart and keep them.
+        // We do this only for products without customization, because we can't have a customized
+        // product added as a gift
         $preservedGifts = [];
         $giftKey = (int) $id_product . '-' . (int) $id_product_attribute;
-        if ($preserveGiftsRemoval) {
+        if ($preserveGiftsRemoval && empty($id_customization)) {
+            // We check the cart and see if there are any gifts added
             $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
+
+            // If yes, we do not delete the product, but change it's quantity to the number of gifts that are in cart,
+            // so they remain.
             if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
                 return Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
