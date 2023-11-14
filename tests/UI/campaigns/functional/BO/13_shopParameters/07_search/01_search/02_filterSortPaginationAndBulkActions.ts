@@ -26,9 +26,9 @@ Filter table
 Sort table
 Enable status by bulk actions
 Disable status by bulk actions
-Delete th created aliases by bulk actions
+Delete the created aliases by bulk actions
  */
-describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk actions search', async () => {
+describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk actions', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfSearch: number = 0;
