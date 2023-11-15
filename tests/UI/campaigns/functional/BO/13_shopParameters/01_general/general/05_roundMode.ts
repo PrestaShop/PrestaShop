@@ -29,7 +29,7 @@ const baseContext: string = 'functional_BO_shopParameters_general_general_roundM
 /*
 Create product
 Select round mode
-Check the selected round mode
+Check the selected round mode when last digit of product price (= 5 , >5 , <5)
 Delete product
  */
 describe('BO - Shop Parameters - General : Round mode', async () => {
