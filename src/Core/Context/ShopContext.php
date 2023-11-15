@@ -110,4 +110,24 @@ class ShopContext
     {
         return $this->domainSSL;
     }
+
+    public function getBaseURI(): string
+    {
+        return $this->physicalUri . $this->virtualUri;
+    }
+
+    public function getBaseURL(bool $secure_mode, bool $addBaseUri = true): string
+    {
+        if ($secure_mode) {
+            $url = 'https://' . $this->domainSSL;
+        } else {
+            $url = 'http://' . $this->domain;
+        }
+
+        if ($addBaseUri) {
+            $url .= $this->getBaseURI();
+        }
+
+        return $url;
+    }
 }

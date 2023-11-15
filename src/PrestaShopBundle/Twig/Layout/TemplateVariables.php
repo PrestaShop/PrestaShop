@@ -48,7 +48,7 @@ class TemplateVariables
     private bool $isMaintenanceEnabled;
     private bool $isFrontOfficeAccessibleForAdmins;
     private bool $isDisplayedWithTabs;
-    private ?string $baseUrl;
+    private string $baseUrl;
 
     public function __construct(
         ?string $displayBackOfficeTop,
@@ -66,7 +66,7 @@ class TemplateVariables
         bool $isMaintenanceEnabled,
         bool $isFrontOfficeAccessibleForAdmins,
         bool $isDisplayedWithTabs,
-        ?string $baseUrl,
+        string $baseUrl,
     ) {
         $this->displayBackOfficeTop = $displayBackOfficeTop;
         $this->isoUser = $isoUser;

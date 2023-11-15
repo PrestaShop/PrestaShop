@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
@@ -40,6 +41,7 @@ use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Tools;
 
 /**
  * Allows you to construct variables used in rendering
@@ -59,6 +61,7 @@ class TemplateVariablesBuilder
         private readonly TabRepository $tabRepository,
         private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private readonly EmployeeContext $employeeContext,
+        private readonly ShopContext $shopContext,
         private readonly LegacyControllerContext $legacyControllerContext,
         private readonly MultistoreFeature $multistoreFeature,
     ) {
@@ -159,10 +162,9 @@ class TemplateVariablesBuilder
         return $this->menuBuilder->getCurrentTabLevel() >= 3;
     }
 
-    private function getBaseUrl(): ?string
+    private function getBaseUrl(): string
     {
-        $baseUrl = $this->context->getContext()->shop->getBaseURL();
-
-        return false === $baseUrl ? null : $baseUrl;
+        $secureMode = $this->configuration->get('PS_SSL_ENABLED') || Tools::usingSecureMode();
+        return $this->shopContext->getBaseURL($secureMode);
     }
 }
