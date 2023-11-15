@@ -58,7 +58,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
   tests.forEach((test, index: number) => {
     describe(`${test.args.action} Allow iframes on HTML fields`, async () => {
       it('should go to \'Shop parameters > General\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage_${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -79,7 +79,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       });
 
       it('should go to Products page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}GoToProductsPage`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -93,7 +93,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       });
 
       it('should go to first product page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}GoToFirstProductPage`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
         await productsPage.goToProductPage(page, 1);
 
@@ -102,7 +102,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       });
 
       it('should add an iframe in the product description', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}EditDescription`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `editDescription${index}`, baseContext);
 
         await descriptionTab.setIframeInDescription(page, description);
 
@@ -117,7 +117,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       });
 
       it('should preview the product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}PreviewProduct`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `previewProduct${index}`, baseContext);
 
         page = await addProductPage.previewProduct(page);
         await foProductPage.changeLanguage(page, 'en');
@@ -127,7 +127,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       });
 
       it('should check the existence of the iframe in the product description', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}checkIframe`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkIframe${index}`, baseContext);
 
         const isIframeVisible = await foProductPage.isIframeVisibleInProductDescription(page);
         expect(isIframeVisible).to.equal(test.args.exist);
@@ -139,7 +139,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       });
 
       it('should go back to BO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
         page = await foProductPage.closePage(browserContext, page, 0);
 
@@ -150,7 +150,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
   });
 
   // POST-TEST : Delete iframe in product description
-  describe('POST-TEST : Delete iframe in product description', async () => {
+  describe('POST-TEST : Reset product description', async () => {
     it('should go to Products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 

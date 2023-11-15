@@ -46,62 +46,64 @@ describe('BO - Shop Parameters - General : Enable/Disable display best sellers',
   ];
 
   tests.forEach((test, index: number) => {
-    it('should go to \'Shop parameters > General\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage_${index}`, baseContext);
+    describe(`${test.args.action} Display best sellers`, async () => {
+      it('should go to \'Shop parameters > General\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage_${index}`, baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.shopParametersGeneralLink,
-      );
-      await generalPage.closeSfToolBar(page);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.shopParametersParentLink,
+          dashboardPage.shopParametersGeneralLink,
+        );
+        await generalPage.closeSfToolBar(page);
 
-      const pageTitle = await generalPage.getPageTitle(page);
-      expect(pageTitle).to.contains(generalPage.pageTitle);
-    });
+        const pageTitle = await generalPage.getPageTitle(page);
+        expect(pageTitle).to.contains(generalPage.pageTitle);
+      });
 
-    it(`should ${test.args.action} display best sellers`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayBestSellers`, baseContext);
+      it(`should ${test.args.action} display best sellers`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayBestSellers`, baseContext);
 
-      const result = await generalPage.setDisplayBestSellers(page, test.args.exist);
-      expect(result).to.contains(generalPage.successfulUpdateMessage);
-    });
+        const result = await generalPage.setDisplayBestSellers(page, test.args.exist);
+        expect(result).to.contains(generalPage.successfulUpdateMessage);
+      });
 
-    it('should go to FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToFO_${test.args.action}`, baseContext);
+      it('should go to FO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToFO_${test.args.action}`, baseContext);
 
-      // View shop
-      page = await generalPage.viewMyShop(page);
-      // Change shop language
-      await homePage.changeLanguage(page, 'en');
+        // View shop
+        page = await generalPage.viewMyShop(page);
+        // Change shop language
+        await homePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
-      expect(isHomePage).to.eq(true);
-    });
+        const isHomePage = await homePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
+      });
 
-    it('should go to site map page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToBestSellersPage_${test.args.action}`, baseContext);
+      it('should go to site map page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToBestSellersPage_${test.args.action}`, baseContext);
 
-      await homePage.goToFooterLink(page, 'Sitemap');
+        await homePage.goToFooterLink(page, 'Sitemap');
 
-      const pageTitle = await siteMapPage.getPageTitle(page);
-      expect(pageTitle).to.equal(siteMapPage.pageTitle);
-    });
+        const pageTitle = await siteMapPage.getPageTitle(page);
+        expect(pageTitle).to.equal(siteMapPage.pageTitle);
+      });
 
-    it('should verify the existence of the best sellers page link', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkBestSellersPage_${test.args.action}`, baseContext);
+      it('should verify the existence of the best sellers page link', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkBestSellersPage_${test.args.action}`, baseContext);
 
-      const exist = await siteMapPage.isBestSellersLinkVisible(page);
-      expect(exist).to.equal(test.args.exist);
-    });
+        const exist = await siteMapPage.isBestSellersLinkVisible(page);
+        expect(exist).to.equal(test.args.exist);
+      });
 
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
 
-      page = await siteMapPage.closePage(browserContext, page, 0);
+        page = await siteMapPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await generalPage.getPageTitle(page);
-      expect(pageTitle).to.contains(generalPage.pageTitle);
+        const pageTitle = await generalPage.getPageTitle(page);
+        expect(pageTitle).to.contains(generalPage.pageTitle);
+      });
     });
   });
 });
