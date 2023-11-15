@@ -71,7 +71,7 @@ class LanguageContextBuilder
 
     public function setDefaultLanguageId(int $languageId): void
     {
-        $this->languageId = $languageId;
+        $this->defaultLanguageId = $languageId;
     }
 
     private function assertArguments(): void

@@ -45,19 +45,12 @@ class PrestaShopLayoutGlobalVariables
 
     /**
      * Enable New theme for smarty to avoid some problems with kpis for instance...
-     * TODO: Need to be refactored, we need to find a proper way to initialize this smarty template directory when we display a migrated page
-     */
-    public function enableSmartyNewTheme(): void
-    {
-        $this->context->getContext()->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/');
-    }
-
-    /**
      * Allows you to fill variables in the smarty context
      * TODO: Need to be refactored, we need to find a proper way to initialize this smarty template directory when we display a migrated page
      */
-    public function fillSmartyVariables(string $title, string $metaTitle, bool $liteDisplay): void
+    public function setupSmarty(string $title, string $metaTitle, bool $liteDisplay): void
     {
+        $this->context->getContext()->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/');
         $this->assignSmartyVariables->fill($title, $metaTitle, $liteDisplay);
     }
 
@@ -124,11 +117,6 @@ class PrestaShopLayoutGlobalVariables
     public function isFrontOfficeAccessibleForAdmins(): bool
     {
         return $this->templateVariables->isFrontOfficeAccessibleForAdmins();
-    }
-
-    public function getDisplayBackOfficeTop(): ?string
-    {
-        return $this->templateVariables->getDisplayBackOfficeTop();
     }
 
     public function isDisplayedWithTabs(): bool

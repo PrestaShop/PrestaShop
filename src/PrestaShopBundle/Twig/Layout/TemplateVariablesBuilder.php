@@ -28,20 +28,18 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Layout;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Tools;
 
 /**
  * Allows you to construct variables used in rendering
@@ -51,16 +49,15 @@ class TemplateVariablesBuilder
     public function __construct(
         private readonly LegacyContext $context,
         private readonly bool $debugMode,
-        private readonly RequestStack $requestStack,
         private readonly CsrfTokenManagerInterface $tokenManager,
         private readonly UserProvider $userProvider,
         private readonly string $psVersion,
-        private readonly Configuration $configuration,
-        private readonly HookDispatcherInterface $hookDispatcher,
+        private readonly ConfigurationInterface $configuration,
         private readonly MenuBuilder $menuBuilder,
         private readonly TabRepository $tabRepository,
         private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private readonly EmployeeContext $employeeContext,
+        private readonly LanguageContext $languageContext,
         private readonly ShopContext $shopContext,
         private readonly LegacyControllerContext $legacyControllerContext,
         private readonly MultistoreFeature $multistoreFeature,
@@ -70,10 +67,9 @@ class TemplateVariablesBuilder
     public function build(): TemplateVariables
     {
         return new TemplateVariables(
-            $this->getDisplayBackOfficeTop(),
-            $this->context->getLanguage()->getIsoCode(),
+            $this->languageContext->getIsoCode(),
             $this->featureFlagStateChecker->isEnabled('symfony_layout'),
-            (bool) $this->context->getLanguage()->isRTL(),
+            $this->languageContext->isRTL(),
             $this->legacyControllerContext->controller_name,
             $this->multistoreFeature->isActive(),
             $this->isMenuCollapsed(),
@@ -104,7 +100,7 @@ class TemplateVariablesBuilder
     {
         return [
             // base url for javascript router
-            'base_url' => $this->requestStack->getCurrentRequest()->getBaseUrl(),
+            'base_url' => $this->shopContext->getBaseURL(),
             //security token for javascript router
             'token' => $this->tokenManager->getToken($this->userProvider->getUsername())->getValue(),
         ];
@@ -137,26 +133,6 @@ class TemplateVariablesBuilder
         return (bool) $this->configuration->get('PS_MAINTENANCE_ALLOW_ADMINS');
     }
 
-    private function getDisplayBackOfficeTop(): ?string
-    {
-        $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters('displayBackOfficeTop');
-
-        if (!$content = $renderedHook->getContent()) {
-            return null;
-        }
-        $displayBackOfficeTop = null;
-
-        foreach ($content as $hookContent) {
-            if (is_array($hookContent)) {
-                $displayBackOfficeTop .= implode($hookContent);
-            } else {
-                $displayBackOfficeTop = $hookContent;
-            }
-        }
-
-        return $displayBackOfficeTop;
-    }
-
     private function isDisplayedWithTabs(): bool
     {
         return $this->menuBuilder->getCurrentTabLevel() >= 3;
@@ -164,7 +140,6 @@ class TemplateVariablesBuilder
 
     private function getBaseUrl(): string
     {
-        $secureMode = $this->configuration->get('PS_SSL_ENABLED') || Tools::usingSecureMode();
-        return $this->shopContext->getBaseURL($secureMode);
+        return $this->shopContext->getBaseURL();
     }
 }

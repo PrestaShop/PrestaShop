@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
@@ -57,6 +58,7 @@ class HeadTag
         private readonly HookDispatcherInterface $hookDispatcher,
         private readonly TemplateVariables $templateVariables,
         private readonly CountryContext $countryContext,
+        private readonly ShopContext $shopContext,
         private readonly LanguageContext $languageContext,
         private readonly LanguageContext $defaultLanguageContext,
         private readonly LegacyControllerContext $legacyControllerContext,
@@ -143,7 +145,7 @@ class HeadTag
 
     public function getImgDir(): string
     {
-        return $this->context->getContext()->shop->getBaseURI() . 'img/';
+        return $this->shopContext->getBaseURI() . 'img/';
     }
 
     public function getFullLanguageCode(): string

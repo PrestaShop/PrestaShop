@@ -65,6 +65,10 @@ class ShopContextListener
             return;
         }
 
+        $psSslEnabled = (bool) $this->configuration->get('PS_SSL_ENABLED', null, ShopConstraint::allShops());
+
+        $this->shopContextBuilder->setSecureMode($psSslEnabled && $event->getRequest()->isSecure());
+
         $redirectResponse = $this->redirectShopContext($event);
         if ($redirectResponse) {
             $event->setResponse($redirectResponse);

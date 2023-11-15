@@ -33,7 +33,6 @@ namespace PrestaShopBundle\Twig\Layout;
  */
 class TemplateVariables
 {
-    private ?string $displayBackOfficeTop;
     private string $isoUser;
     private bool $isSymfonyLayoutEnabled;
     private bool $isRtlLanguage;
@@ -51,7 +50,6 @@ class TemplateVariables
     private string $baseUrl;
 
     public function __construct(
-        ?string $displayBackOfficeTop,
         string $isoUser,
         bool $isSymfonyLayoutEnabled,
         bool $isRtlLanguage,
@@ -68,7 +66,6 @@ class TemplateVariables
         bool $isDisplayedWithTabs,
         string $baseUrl,
     ) {
-        $this->displayBackOfficeTop = $displayBackOfficeTop;
         $this->isoUser = $isoUser;
         $this->isSymfonyLayoutEnabled = $isSymfonyLayoutEnabled;
         $this->isRtlLanguage = $isRtlLanguage;
@@ -84,11 +81,6 @@ class TemplateVariables
         $this->isFrontOfficeAccessibleForAdmins = $isFrontOfficeAccessibleForAdmins;
         $this->isDisplayedWithTabs = $isDisplayedWithTabs;
         $this->baseUrl = $baseUrl;
-    }
-
-    public function getDisplayBackOfficeTop(): ?string
-    {
-        return $this->displayBackOfficeTop;
     }
 
     public function getIsoUser(): string

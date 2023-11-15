@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 
 /**
  * Has the role of filling Smarty variables in the context.
@@ -42,10 +41,8 @@ use PrestaShopBundle\EventListener\ExternalApiTrait;
  */
 class SmartyVariablesFiller
 {
-    use ExternalApiTrait;
-
     public function __construct(
-        private readonly TemplateVariables $globalVariables,
+        private readonly TemplateVariables $templateVariables,
         private readonly LegacyControllerContext $legacyControllerContext,
         private readonly LanguageContext $languageContext,
         private readonly LanguageContext $defaultLanguageContext,
@@ -59,30 +56,30 @@ class SmartyVariablesFiller
     public function fill(string $title, string $metaTitle, bool $liteDisplay): void
     {
         $smartyVariables = [
-            'maintenance_mode' => $this->globalVariables->isMaintenanceEnabled(),
-            'maintenance_allow_admins' => $this->globalVariables->isFrontOfficeAccessibleForAdmins(),
-            'debug_mode' => $this->globalVariables->isDebugMode(),
+            'maintenance_mode' => $this->templateVariables->isMaintenanceEnabled(),
+            'maintenance_allow_admins' => $this->templateVariables->isFrontOfficeAccessibleForAdmins(),
+            'debug_mode' => $this->templateVariables->isDebugMode(),
             'title' => $title,
             'meta_title' => $metaTitle,
             'lite_display' => $liteDisplay,
-            'img_dir' => $this->globalVariables->getBaseUrl() . 'img/',
-            'baseAdminUrl' => $this->globalVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
-            'base_url' => $this->globalVariables->getBaseUrl(),
+            'img_dir' => $this->templateVariables->getBaseUrl() . 'img/',
+            'baseAdminUrl' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
+            'base_url' => $this->templateVariables->getBaseUrl(),
             'lang_is_rtl' => $this->languageContext->isRTL(),
             'full_language_code' => $this->languageContext->getLanguageCode(),
             'country_iso_code' => $this->countryContext->getIsoCode(),
             'currentIndex' => $this->legacyControllerContext->currentIndex,
             'default_language' => $this->defaultLanguageContext->getId(),
-            'js_router_metadata' => $this->globalVariables->getJsRouterMetadata(),
+            'js_router_metadata' => $this->templateVariables->getJsRouterMetadata(),
             'token' => $this->legacyControllerContext->token,
             'employee' => $this->legacyContext->getContext()->employee,
-            'is_multishop' => $this->globalVariables->isMultiShop(),
+            'is_multishop' => $this->templateVariables->isMultiShop(),
             'shop_name' => $this->shopContext->getName(),
             'shop' => $this->legacyContext->getContext()->shop,
             'shop_group' => $this->legacyContext->getContext()->shop->getGroup(),
-            'iso' => $this->globalVariables->getIsoUser(),
+            'iso' => $this->templateVariables->getIsoUser(),
             'class_name' => $this->legacyControllerContext->className,
-            'version' => $this->globalVariables->getVersion(),
+            'version' => $this->templateVariables->getVersion(),
             'link' => $this->legacyContext->getContext()->link,
             'controller_name' => $this->legacyControllerContext->controller_name,
             'login_link' => $this->legacyContext->getAdminLink('AdminLogin'),
@@ -92,8 +89,8 @@ class SmartyVariablesFiller
             'url_post' => $this->legacyControllerContext->currentIndex . '&token=' . $this->legacyControllerContext->token,
             'stock_management' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
             'install_dir_exists' => file_exists(_PS_ADMIN_DIR_ . '/../install'),
-            'pic_dir' => $this->globalVariables->getBaseUrl() . 'upload/',
-            'img_base_path' => $this->globalVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
+            'pic_dir' => $this->templateVariables->getBaseUrl() . 'upload/',
+            'img_base_path' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
             'multishop_context' => $this->legacyControllerContext->multishop_context,
         ];
 
