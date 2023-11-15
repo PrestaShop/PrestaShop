@@ -16,6 +16,8 @@ class ShopParamsGeneral extends BOBasePage {
 
   private readonly displaySuppliersToggleInput: (toggle: number) => string;
 
+  private readonly allowIframesToggleInput: (toggle: number) => string;
+
   private readonly displayBrandsToggleInput: (toggle: number) => string;
 
   private readonly displayBestSellersToggleInput: (toggle: number) => string;
@@ -36,6 +38,7 @@ class ShopParamsGeneral extends BOBasePage {
     // Selectors
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
     this.roundModeSelect = '#form_price_round_mode';
+    this.allowIframesToggleInput = (toggle: number) => `#form_allow_html_iframes_${toggle}`;
     this.displaySuppliersToggleInput = (toggle: number) => `#form_display_suppliers_${toggle}`;
     this.displayBrandsToggleInput = (toggle: number) => `#form_display_manufacturers_${toggle}`;
     this.displayBestSellersToggleInput = (toggle: number) => `#form_display_best_sellers_${toggle}`;
@@ -64,6 +67,19 @@ class ShopParamsGeneral extends BOBasePage {
    */
   async selectRoundMode(page: Page, roundMode: string): Promise<string> {
     await this.selectByVisibleText(page, this.roundModeSelect, roundMode);
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Enable/Disable display suppliers
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to enable/disable suppliers
+   * @returns {Promise<string>}
+   */
+  async setAllowIframes(page: Page, toEnable: boolean = true): Promise<string> {
+    await this.setChecked(page, this.allowIframesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForLoadState(page, this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

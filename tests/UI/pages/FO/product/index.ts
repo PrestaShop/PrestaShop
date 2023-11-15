@@ -320,6 +320,24 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Is iframe visible in product d
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isIframeVisibleInProductDescription(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.productDescription} iframe`, 1000);
+  }
+
+  /**
+   * Get URL in product description
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getURLInProductDescription(page: Page): Promise<string> {
+    return this.getAttributeContent(page, `${this.productDescription} iframe`, 'src');
+  }
+
+  /**
    * Get product information in pack
    * @param page {Page} Browser tab
    * @param productInList {number} Product in pack list

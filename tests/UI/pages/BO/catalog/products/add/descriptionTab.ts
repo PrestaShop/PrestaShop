@@ -63,6 +63,12 @@ class DescriptionTab extends BOBasePage {
 
   private readonly productDescription: string;
 
+  private readonly productDescriptionSourceCodeLink: string;
+
+  private readonly productDescriptionTextBox: string;
+
+  private readonly productDescriptionTextBoxSaveButton: string;
+
   private readonly productDescriptionTabLocale: (locale: string) => string;
 
   private readonly productDescriptionTabContent: (locale: string) => string;
@@ -136,6 +142,9 @@ class DescriptionTab extends BOBasePage {
     this.productDescription = '#product_description_description';
     this.productDescriptionTabLocale = (locale: string) => `${this.productDescription} a[data-locale="${locale}"]`;
     this.productDescriptionTabContent = (locale: string) => `${this.productDescription} div.panel[data-locale="${locale}"]`;
+    this.productDescriptionSourceCodeLink = `${this.productDescription} div.mce-widget[aria-label='Source code']`;
+    this.productDescriptionTextBox = '.mce-textbox';
+    this.productDescriptionTextBoxSaveButton = '.mce-window div.mce-first button[type="button"]';
     // Categories selectors
     this.productDefaultCategory = '#product_description_categories_default_category_id';
     this.addCategoryButton = '#product_description_categories_add_categories_btn';
@@ -312,6 +321,17 @@ class DescriptionTab extends BOBasePage {
   }
 
   /**
+   * Set description
+   * @param page {Page} Browser tab
+   * @param description {string} Data to set in description textarea
+   */
+  async setDescription(page: Page, description: string): Promise<void> {
+    await page.locator(this.productDescriptionTabLocale('en')).click();
+    await this.elementVisible(page, `${this.productDescriptionTabLocale('en')}.active`);
+    await this.setValueOnTinymceInput(page, this.productDescriptionTabContent('en'), description);
+  }
+
+  /**
    * Set product description
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set in description form
@@ -326,9 +346,19 @@ class DescriptionTab extends BOBasePage {
     await this.elementVisible(page, `${this.productSummaryTabLocale('en')}.active`);
     await this.setValueOnTinymceInput(page, this.productSummaryTabContent('en'), productData.summary);
 
-    await page.locator(this.productDescriptionTabLocale('en')).click();
-    await this.elementVisible(page, `${this.productDescriptionTabLocale('en')}.active`);
-    await this.setValueOnTinymceInput(page, this.productDescriptionTabContent('en'), productData.description);
+    await this.setDescription(page, productData.description);
+  }
+
+  /**
+   * Set iframe in description
+   * @param page {Page} Browser tab
+   * @param description {string} Data to set in the description
+   */
+  async setIframeInDescription(page: Page, description: string): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.descriptionTabLink);
+    await page.locator(this.productDescriptionSourceCodeLink).first().click();
+    await this.setValue(page, this.productDescriptionTextBox, description);
+    await page.locator(this.productDescriptionTextBoxSaveButton).click();
   }
 
   /**
