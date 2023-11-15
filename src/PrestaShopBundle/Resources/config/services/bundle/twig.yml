@@ -7,6 +7,7 @@ services:
       $psVersion: !php/const _PS_VERSION_
       $debugMode: !php/const _PS_MODE_DEV_
       $controllersLockedToAllShopContext: '%prestashop.controllers_all_shop_context%'
+      $defaultLanguageContext: '@=service("prestashop.default.language.context")'
 
   Twig\Extension\StringLoaderExtension: ~
 
@@ -73,7 +74,9 @@ services:
     lazy: true
     factory: [ '@PrestaShopBundle\Twig\Layout\TemplateVariablesBuilder', 'build' ]
 
-  PrestaShopBundle\Twig\Layout\AssignSmartyVariables: ~
+  PrestaShopBundle\Twig\Layout\SmartyVariablesFiller: ~
+
+  PrestaShopBundle\Twig\Component\HeadTag: ~
 
   # Deprecated since 9.0
   prestashop.twig.modules.loader:

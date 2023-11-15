@@ -58,6 +58,7 @@ class HeadTag
         private readonly TemplateVariables $templateVariables,
         private readonly CountryContext $countryContext,
         private readonly LanguageContext $languageContext,
+        private readonly LanguageContext $defaultLanguageContext,
         private readonly LegacyControllerContext $legacyControllerContext,
     ) {
     }
@@ -167,7 +168,7 @@ class HeadTag
 
     public function getDefaultLanguage(): int
     {
-        return (int) $this->configuration->get('PS_LANG_DEFAULT');
+        return $this->defaultLanguageContext->getId();
     }
 
     public function getCurrentIndex(): string
