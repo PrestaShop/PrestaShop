@@ -32,6 +32,10 @@ class AddNewAPIAccess extends BOBasePage {
 
   private readonly tokenLifetimeInput: string;
 
+  private readonly statusSpan: string;
+
+  private readonly statusInput: string;
+
   private readonly scopeGroup: (group:string) => string;
 
   private readonly scopeStatus: (scope: string) => string;
@@ -69,6 +73,8 @@ class AddNewAPIAccess extends BOBasePage {
     this.clientIdInput = `${this.formAPIAccess} #api_access_client_id`;
     this.descriptionInput = `${this.formAPIAccess} #api_access_description`;
     this.tokenLifetimeInput = `${this.formAPIAccess} #api_access_lifetime`;
+    this.statusSpan = `${this.formAPIAccess} span#api_access_enabled`;
+    this.statusInput = `${this.statusSpan} input`;
     this.scopeGroup = (group:string) => `#api_access_scopes_${group}_accordion div.switch-scope`;
     this.scopeStatus = (scope: string) => `${this.formAPIAccess} div[data-scope="${scope}"] div.switch-widget span.ps-switch`;
     this.scopeStatusInput = (scope: string) => `${this.scopeStatus(scope)} input`;
@@ -92,6 +98,7 @@ class AddNewAPIAccess extends BOBasePage {
     await this.setValue(page, this.clientIdInput, apiAccessData.clientId);
     await this.setValue(page, this.descriptionInput, apiAccessData.description);
     await this.setValue(page, this.tokenLifetimeInput, apiAccessData.tokenLifetime);
+    await this.setEnabled(page, apiAccessData.enabled);
 
     // eslint-disable-next-line no-restricted-syntax
     for (const scope of apiAccessData.scopes) {
@@ -102,6 +109,43 @@ class AddNewAPIAccess extends BOBasePage {
     await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Returns if the API Access is enabled
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isEnabled(page: Page): Promise<boolean> {
+    if (await page.locator(`${this.statusInput}:checked`).count() === 0) {
+      return false;
+    }
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(page, `${this.statusInput}:checked`, 'value');
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
+  }
+
+  /**
+   * Check/Uncheck an API Access
+   * @param page {Page} Browser tab
+   * @param valueWanted {boolean} True if we need to enable status, false if not
+   * @return {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async setEnabled(page: Page, valueWanted: boolean = true): Promise<boolean> {
+    if (await this.isEnabled(page) !== valueWanted) {
+      await page.locator(this.statusSpan).click();
+
+      await this.waitForVisibleSelector(
+        page,
+        `${this.statusInput}[value='${valueWanted ? 1 : 0}']:checked`,
+      );
+
+      return true;
+    }
+
+    return false;
   }
 
   /**

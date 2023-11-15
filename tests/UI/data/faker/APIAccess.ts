@@ -17,6 +17,8 @@ export default class APIAccessData {
 
   public readonly tokenLifetime: number;
 
+  public readonly enabled: boolean;
+
   public readonly scopes: string[];
 
   /**
@@ -37,7 +39,10 @@ export default class APIAccessData {
     this.description = apiAccessToCreate.description || faker.lorem.sentence();
 
     /** @type {string} Token Lifetime */
-    this.tokenLifetime = apiAccessToCreate.tokenLifetime || 3600;
+    this.tokenLifetime = apiAccessToCreate.tokenLifetime || faker.number.int({min: 120, max: 3600});
+
+    /** @type {boolean} Enabled */
+    this.enabled = apiAccessToCreate.enabled || faker.datatype.boolean();
 
     /** @type {string[]} Scopes */
     this.scopes = apiAccessToCreate.scopes || [];
