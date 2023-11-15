@@ -29,14 +29,16 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component;
 
 use Context;
-use Doctrine\ORM\NoResultException;
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
+use PrestaShopBundle\Twig\Layout\TemplateVariables;
 use Shop;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -48,14 +50,15 @@ class HeadTag
     private string $metaTitle;
 
     public function __construct(
-        private readonly TabRepository $tabRepository,
         private readonly LegacyContext $context,
         private readonly Configuration $configuration,
         private readonly MenuBuilder $menuBuilder,
-        private readonly string $psVersion,
-        private readonly bool $debugMode,
         private readonly TranslatorInterface $translator,
         private readonly HookDispatcherInterface $hookDispatcher,
+        private readonly TemplateVariables $templateVariables,
+        private readonly CountryContext $countryContext,
+        private readonly LanguageContext $languageContext,
+        private readonly LegacyControllerContext $legacyControllerContext,
     ) {
     }
 
@@ -97,7 +100,7 @@ class HeadTag
                 'currency_specifications' => $this->preparePriceSpecifications(),
                 'number_specifications' => $this->prepareNumberSpecifications(),
                 'prestashop' => [
-                    'debug' => $this->debugMode,
+                    'debug' => $this->templateVariables->isDebugMode(),
                 ],
                 'show_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS'),
                 'show_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS'),
@@ -109,22 +112,22 @@ class HeadTag
 
     public function getPsVersion(): string
     {
-        return $this->psVersion;
+        return $this->templateVariables->getVersion();
     }
 
     public function getIsoUser(): string
     {
-        return $this->context->getLanguage()->getIsoCode();
+        return $this->templateVariables->getIsoUser();
     }
 
     public function getCountryIsoCode(): string
     {
-        return $this->context->getContext()->country->iso_code;
+        return $this->countryContext->getIsoCode();
     }
 
     public function getLangIsRtl(): bool
     {
-        return (bool) $this->context->getLanguage()->isRTL();
+        return $this->templateVariables->isRtlLanguage();
     }
 
     public function getShopName(): string
@@ -134,7 +137,7 @@ class HeadTag
 
     public function getControllerName(): string
     {
-        return $this->menuBuilder->getLegacyControllerClassName() ?: '';
+        return $this->legacyControllerContext->controller_name;
     }
 
     public function getImgDir(): string
@@ -144,12 +147,12 @@ class HeadTag
 
     public function getFullLanguageCode(): string
     {
-        return $this->context->getLanguage()->getLanguageCode();
+        return $this->languageContext->getLanguageCode();
     }
 
     public function getFullCldrLanguageCode(): string
     {
-        return $this->context->getContext()->getCurrentLocale()->getCode();
+        return $this->languageContext->getLanguageCode();
     }
 
     public function getRoundMode(): int
@@ -159,22 +162,7 @@ class HeadTag
 
     public function getLegacyToken(): string
     {
-        $controllerName = $this->menuBuilder->getLegacyControllerClassName();
-
-        $tabId = '';
-        if (!empty($controllerName)) {
-            try {
-                $tabId = $this->tabRepository->getIdByClassName($controllerName);
-            } catch (NoResultException) {
-            }
-        }
-
-        $employeeId = '';
-        if ($this->context->getContext()->employee) {
-            $employeeId = (int) $this->context->getContext()->employee->id;
-        }
-
-        return Tools::getAdminToken($controllerName . $tabId . $employeeId);
+        return $this->legacyControllerContext->token;
     }
 
     public function getDefaultLanguage(): int
@@ -184,9 +172,7 @@ class HeadTag
 
     public function getCurrentIndex(): string
     {
-        $controllerName = $this->menuBuilder->getLegacyControllerClassName();
-
-        return 'index.php' . (!empty($controllerName) ? '?controller=' . $controllerName : '');
+        return $this->legacyControllerContext->currentIndex;
     }
 
     public function getEditForLabel(): string
@@ -204,12 +190,12 @@ class HeadTag
 
     public function getCssFiles(): array
     {
-        return $this->context->getContext()->controller->css_files;
+        return $this->legacyControllerContext->css_files;
     }
 
     public function getJsFiles(): array
     {
-        return $this->context->getContext()->controller->js_files;
+        return $this->legacyControllerContext->js_files;
     }
 
     public function getMetaTitle(): string
@@ -227,7 +213,7 @@ class HeadTag
         /* @var Currency */
         $currency = $context->currency;
         /* @var PriceSpecification */
-        $priceSpecification = $context->getCurrentLocale()->getPriceSpecification($currency->iso_code);
+        $priceSpecification = $this->languageContext->getPriceSpecification($currency->iso_code);
 
         return array_merge(
             ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
@@ -243,7 +229,7 @@ class HeadTag
         /** @var Context $context */
         $context = $this->context->getContext();
         /* @var NumberSpecification */
-        $numberSpecification = $context->getCurrentLocale()->getNumberSpecification();
+        $numberSpecification = $this->languageContext->getNumberSpecification();
 
         return array_merge(
             ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
