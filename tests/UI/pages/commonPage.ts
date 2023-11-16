@@ -261,6 +261,7 @@ export default class CommonPage {
 
     // eslint-disable-next-line no-param-reassign
     await page.$eval(selector, (el: HTMLInputElement, value: string) => {
+      // eslint-disable-next-line no-param-reassign
       el.value = value;
     }, value);
   }
@@ -275,6 +276,7 @@ export default class CommonPage {
     await this.waitForVisibleSelector(page, selector);
     // eslint-disable-next-line no-param-reassign
     await page.locator(selector).evaluate((el: HTMLInputElement) => {
+      // eslint-disable-next-line no-param-reassign
       el.value = '';
     });
   }
@@ -545,7 +547,8 @@ export default class CommonPage {
    * @param selector {string} String to locate the child element
    * @return {Promise<ElementHandle>}
    */
-  getParentElement(page: Frame | Page, selector: string): Promise<ElementHandle<HTMLElement> | JSHandle<undefined> | JSHandle<null>> {
+  getParentElement(page: Frame | Page, selector: string)
+    : Promise<ElementHandle<HTMLElement> | JSHandle<undefined> | JSHandle<null>> {
     return page.evaluateHandle((sl: string) => document.querySelector(sl)?.parentElement, selector);
   }
 
