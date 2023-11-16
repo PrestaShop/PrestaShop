@@ -139,23 +139,23 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 ->setTotalProductsCount($count);
 
             $result->setAvailableSortOrders(
-				[
-					(new SortOrder('product', 'position', 'desc'))->setLabel(
-						$this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
-					),
-					(new SortOrder('product', 'name', 'asc'))->setLabel(
-						$this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
-					),
-					(new SortOrder('product', 'name', 'desc'))->setLabel(
-						$this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
-					),
-					(new SortOrder('product', 'price', 'asc'))->setLabel(
-						$this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
-					),
-					(new SortOrder('product', 'price', 'desc'))->setLabel(
-						$this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
-					),
-				]	
+                [
+                    (new SortOrder('product', 'position', 'desc'))->setLabel(
+                        $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'name', 'asc'))->setLabel(
+                        $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'name', 'desc'))->setLabel(
+                        $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'price', 'asc'))->setLabel(
+                        $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'price', 'desc'))->setLabel(
+                        $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
+                    ),
+                ]
             );
         }
 
