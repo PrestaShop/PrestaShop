@@ -185,7 +185,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'has_unlimited_checkbox' => true,
                 'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 'placeholder' => $this->trans('YYYY-MM-DD HH:mm:ss', 'Admin.Global'),
-                'default_end_value' => (new DateTime())->format('Y-m-d H:i:s'),
+                'default_end_value' => (new DateTime())->modify('+1 month')->format('Y-m-d H:i:s'),
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(

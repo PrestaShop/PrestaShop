@@ -288,6 +288,6 @@ class SpecificPriceController extends FrameworkBundleAdminController
             throw new EntityDataInconsistencyException(sprintf('Found bad date for specific price: %s', $dateAsString));
         }
 
-        return $dateTime->format('Y-m-d');
+        return $dateTime->format('Y-m-d H:i:s');
     }
 }
