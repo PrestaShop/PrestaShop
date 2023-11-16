@@ -361,7 +361,7 @@ class CombinationsTab extends BOBasePage {
   async clickOnLearnMoreButton(page: Page): Promise<Page> {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
 
-    return this.openLinkWithTargetBlank(page, this.learnMoreButton, 'body');
+    return this.openLinkWithTargetBlank(page, this.learnMoreButton, 'body', 'domcontentloaded');
   }
 
   /**
