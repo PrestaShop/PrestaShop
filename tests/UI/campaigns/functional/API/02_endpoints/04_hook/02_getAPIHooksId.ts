@@ -13,9 +13,9 @@ import positionsPage from '@pages/BO/design/positions';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_hook_getAPIHookStatusId';
+const baseContext: string = 'functional_API_endpoints_hook_getAPIHooksId';
 
-describe('API : GET /api/hook-status/{id}', async () => {
+describe('API : GET /api/hooks/{id}', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let apiContext: APIRequestContext;
@@ -23,6 +23,9 @@ describe('API : GET /api/hook-status/{id}', async () => {
   let jsonResponse: any;
   let idHook: number;
   let statusHook: boolean;
+  let nameHook: string;
+  //let titleHook: string;
+  let descriptionHook: string;
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -80,14 +83,24 @@ describe('API : GET /api/hook-status/{id}', async () => {
 
       statusHook = await positionsPage.getHookStatus(page, 0);
       expect(statusHook).to.be.equal(true);
+
+      nameHook = await positionsPage.getHookName(page, 0);
+      expect(nameHook.length).to.be.gt(0);
+
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
+      //titleHook = await positionsPage.getHookStatus(page, 0);
+      //expect(titleHook.length).to.be.gt(0);
+
+      descriptionHook = await positionsPage.getHookDescription(page, 0);
+      expect(descriptionHook.length).to.be.gt(0);
     });
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /admin-dev/api/hook-status/{id}', async function () {
+    it('should request the endpoint /admin-dev/api/hooks/{id}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`api/hook-status/${idHook}`, {
+      const apiResponse = await apiContext.get(`api/hooks/${idHook}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -113,6 +126,33 @@ describe('API : GET /api/hook-status/{id}', async () => {
       expect(jsonResponse).to.have.property('active');
       expect(jsonResponse.active).to.be.a('boolean');
       expect(jsonResponse.active).to.be.equal(statusHook);
+    });
+
+    it('should check the JSON Response : `name`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseName', baseContext);
+
+      expect(jsonResponse).to.have.property('name');
+      expect(jsonResponse.name).to.be.a('string');
+      expect(jsonResponse.name).to.be.equal(nameHook);
+    });
+
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
+    it('should check the JSON Response : `title`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseTitle', baseContext);
+
+      this.skip();
+
+      //expect(jsonResponse).to.have.property('title');
+      //expect(jsonResponse.title).to.be.a('string');
+      //expect(jsonResponse.title).to.be.equal(titleHook);
+    });
+
+    it('should check the JSON Response : `description`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescription', baseContext);
+
+      expect(jsonResponse).to.have.property('description');
+      expect(jsonResponse.description).to.be.a('string');
+      expect(jsonResponse.description).to.be.equal(descriptionHook);
     });
   });
 });

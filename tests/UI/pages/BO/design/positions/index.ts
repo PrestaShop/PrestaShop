@@ -28,7 +28,13 @@ class Positions extends BOBasePage {
 
   private readonly hookRowNth: (hookRow: number) => string;
 
-  private readonly hookStatusInput: (hookRow: number) => string;
+  private readonly hookHeader: (hookRow: number) => string;
+
+  private readonly hookHeaderStatusInput: (hookRow: number) => string;
+
+  private readonly hookHeaderNameSpan: (hookRow: number) => string;
+
+  private readonly hookHeaderDescriptionDiv: (hookRow: number) => string;
 
   private readonly hookRowName: (hookName: string) => string;
 
@@ -56,7 +62,10 @@ class Positions extends BOBasePage {
     this.modulePositionFormHookSectionVisible = `${this.modulePositionFormHookSection}.hook-panel.hook-visible`;
     this.hookRowNth = (hookRow: number) => `${this.modulePositionFormHookSection}:nth-child(${hookRow + 1
     } of .hook-panel.hook-visible)`;
-    this.hookStatusInput = (hookRow: number) => `${this.hookRowNth(hookRow)} header span.hook-status input.hook-switch-action`;
+    this.hookHeader = (hookRow: number) => `${this.hookRowNth(hookRow)} header`;
+    this.hookHeaderStatusInput = (hookRow: number) => `${this.hookHeader(hookRow)} span.hook-status input.hook-switch-action`;
+    this.hookHeaderNameSpan = (hookRow: number) => `${this.hookHeader(hookRow)} span.hook-name`;
+    this.hookHeaderDescriptionDiv = (hookRow: number) => `${this.hookHeader(hookRow)} div.hook_description`;
     this.hookRowName = (hookName: string) => `${this.modulePositionFormHookSection} a[name=${hookName}]`;
     this.hookRowModulesList = (hookName: string) => `${this.hookRowName(hookName)} ~ section.module-list ul`;
     this.hookNameSpan = (hookName: string) => `${this.hookRowName(hookName)} + header span.hook-name`;
@@ -124,9 +133,29 @@ class Positions extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async getHookId(page: Page, hookRow: number): Promise<number> {
-    const attribute = await this.getAttributeContent(page, this.hookStatusInput(hookRow), 'data-hook-id');
+    const attribute = await this.getAttributeContent(page, this.hookHeaderStatusInput(hookRow), 'data-hook-id');
 
     return parseInt(attribute, 10);
+  }
+
+  /**
+   * Return the hook name
+   * @param page {Page} Browser tab
+   * @param hookRow {number} Hook Row
+   * @returns {Promise<string>}
+   */
+  async getHookName(page: Page, hookRow: number): Promise<string> {
+    return this.getTextContent(page, this.hookHeaderNameSpan(hookRow));
+  }
+
+  /**
+   * Return the hook description
+   * @param page {Page} Browser tab
+   * @param hookRow {number} Hook Row
+   * @returns {Promise<string>}
+   */
+  async getHookDescription(page: Page, hookRow: number): Promise<string> {
+    return this.getTextContent(page, this.hookHeaderDescriptionDiv(hookRow));
   }
 
   /**
@@ -136,7 +165,7 @@ class Positions extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async getHookStatus(page: Page, hookRow: number): Promise<boolean> {
-    const inputValue = await this.getAttributeContent(page, `${this.hookStatusInput(hookRow)}:checked`, 'value');
+    const inputValue = await this.getAttributeContent(page, `${this.hookHeaderStatusInput(hookRow)}:checked`, 'value');
 
     // Return status=false if value='0' and true otherwise
     return (inputValue !== '0');
