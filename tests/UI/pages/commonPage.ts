@@ -100,7 +100,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
-  async waitForHiddenSelector(page: Frame|Page, selector: string, timeout: number = 10000): Promise<void> {
+  async waitForHiddenSelector(page: Frame | Page, selector: string, timeout: number = 10000): Promise<void> {
     await this.waitForSelector(page, selector, 'hidden', timeout);
   }
 
@@ -151,8 +151,8 @@ export default class CommonPage {
    * @param attribute {string} Name of the attribute to get
    * @returns {Promise<string|null>}
    */
-  async getAttributeContent(page: Frame|Page, selector: string, attribute: string): Promise<string> {
-    const attributeContent: string|null = await page.getAttribute(selector, attribute);
+  async getAttributeContent(page: Frame | Page, selector: string, attribute: string): Promise<string> {
+    const attributeContent: string | null = await page.getAttribute(selector, attribute);
 
     return attributeContent ?? '';
   }
@@ -164,7 +164,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<boolean>} True if visible, false if not
    */
-  async elementVisible(page: Frame|Page, selector: string, timeout: number = 10): Promise<boolean> {
+  async elementVisible(page: Frame | Page, selector: string, timeout: number = 10): Promise<boolean> {
     try {
       await this.waitForVisibleSelector(page, selector, timeout);
       return true;
@@ -180,7 +180,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<boolean>} True if not visible, false if visible
    */
-  async elementNotVisible(page: Frame|Page, selector: string, timeout: number = 10): Promise<boolean> {
+  async elementNotVisible(page: Frame | Page, selector: string, timeout: number = 10): Promise<boolean> {
     try {
       await this.waitForHiddenSelector(page, selector, timeout);
       return true;
@@ -194,15 +194,20 @@ export default class CommonPage {
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element for the click
    * @param newPageSelector {string} String to locate the element on the opened page (default to FO logo)
+   * @param state {'load'|'domcontentloaded'|'networkidle'} The event to wait after click
    * @return {Promise<Page>} Opened tab after the click
    */
-  async openLinkWithTargetBlank(page: Page, selector: string, newPageSelector: string = 'body .logo'): Promise<Page> {
+  async openLinkWithTargetBlank(
+    page: Page,
+    selector: string,
+    newPageSelector: string = 'body .logo',
+    state: 'load' | 'domcontentloaded' | 'networkidle' = 'networkidle'): Promise<Page> {
     const [newPage] = await Promise.all([
       page.waitForEvent('popup'),
       page.click(selector),
     ]);
 
-    await newPage.waitForLoadState('networkidle');
+    await newPage.waitForLoadState(state);
 
     await this.waitForVisibleSelector(newPage, newPageSelector);
     return newPage;
@@ -215,7 +220,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
-  async waitForSelectorAndClick(page: Frame|Page, selector: string, timeout: number = 5000): Promise<void> {
+  async waitForSelectorAndClick(page: Frame | Page, selector: string, timeout: number = 5000): Promise<void> {
     await this.waitForVisibleSelector(page, selector, timeout);
     await page.click(selector);
   }
@@ -236,7 +241,7 @@ export default class CommonPage {
    * @param value {?string|number} Value to set on the input
    * @return {Promise<void>}
    */
-  async setValue(page: Frame|Page, selector: string, value: string | number): Promise<void> {
+  async setValue(page: Frame | Page, selector: string, value: string | number): Promise<void> {
     await this.clearInput(page, selector);
 
     if (value !== null) {
@@ -255,7 +260,9 @@ export default class CommonPage {
     await this.clearInput(page, selector);
 
     // eslint-disable-next-line no-param-reassign
-    await page.$eval(selector, (el: HTMLInputElement, value: string) => { el.value = value; }, value);
+    await page.$eval(selector, (el: HTMLInputElement, value: string) => {
+      el.value = value;
+    }, value);
   }
 
   /**
@@ -264,10 +271,12 @@ export default class CommonPage {
    * @param selector {string} String to locate the element for the deletion
    * @returns {Promise<void>}
    */
-  async clearInput(page: Frame|Page, selector: string): Promise<void> {
+  async clearInput(page: Frame | Page, selector: string): Promise<void> {
     await this.waitForVisibleSelector(page, selector);
     // eslint-disable-next-line no-param-reassign
-    await page.locator(selector).evaluate((el: HTMLInputElement) => { el.value = ''; });
+    await page.locator(selector).evaluate((el: HTMLInputElement) => {
+      el.value = '';
+    });
   }
 
   /**
@@ -325,7 +334,7 @@ export default class CommonPage {
    * @returns {Promise<void>}
    */
   async selectByVisibleText(
-    page: Frame|Page,
+    page: Frame | Page,
     selector: string,
     textValue: string | number,
     force: boolean = false,
@@ -341,7 +350,7 @@ export default class CommonPage {
    * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByValue(page: Frame|Page, selector: string, valueToSelect: number, force: boolean = false): Promise<void> {
+  async selectByValue(page: Frame | Page, selector: string, valueToSelect: number, force: boolean = false): Promise<void> {
     await page.selectOption(selector, {value: valueToSelect.toString()}, {force});
   }
 
@@ -369,9 +378,9 @@ export default class CommonPage {
    * @return {Promise<void>}
    */
   async clickAndWaitForLoadState(
-    page: Frame|Page,
+    page: Frame | Page,
     selector: string,
-    state: 'load'|'domcontentloaded'|'networkidle' = 'networkidle',
+    state: 'load' | 'domcontentloaded' | 'networkidle' = 'networkidle',
     timeout: number = 30000,
   ): Promise<void> {
     await Promise.all([
@@ -389,7 +398,7 @@ export default class CommonPage {
    * @return {Promise<void>}
    */
   async clickAndWaitForURL(
-    page: Frame|Page,
+    page: Frame | Page,
     selector: string,
     waitUntil: WaitForNavigationWaitUntil = 'networkidle',
     timeout: number = 30000,
@@ -428,7 +437,7 @@ export default class CommonPage {
    * @param selector {string} String to locate the checkbox
    * @return {Promise<boolean>}
    */
-  async isChecked(page: Frame|Page, selector: string): Promise<boolean> {
+  async isChecked(page: Frame | Page, selector: string): Promise<boolean> {
     return page.isChecked(selector);
   }
 
@@ -439,7 +448,7 @@ export default class CommonPage {
    * @param valueWanted {boolean} Value wanted on the selector
    * @return {Promise<void>}
    */
-  async setChecked(page: Frame|Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
+  async setChecked(page: Frame | Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
     await page.setChecked(checkboxSelector, valueWanted);
   }
 
@@ -450,7 +459,7 @@ export default class CommonPage {
    * @param valueWanted {boolean} Wanted value for the checkbox
    * @return {Promise<void>}
    */
-  async setHiddenCheckboxValue(page: Frame|Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
+  async setHiddenCheckboxValue(page: Frame | Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
     if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       const parentElement = await this.getParentElement(page, checkboxSelector);
       const parentHTMLElement = parentElement.asElement();
@@ -468,7 +477,7 @@ export default class CommonPage {
    * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
    * @return {Promise<void>}
    */
-  async setCheckedWithIcon(page: Frame|Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
+  async setCheckedWithIcon(page: Frame | Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
     if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       // The selector is not visible, that why '+ i' is required here
       await page.$eval(`${checkboxSelector} + i`, (el: HTMLInputElement) => el.click());
@@ -523,7 +532,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<number>}
    */
-  async getPriceFromText(page: Frame|Page, selector: string, timeout: number = 0): Promise<number> {
+  async getPriceFromText(page: Frame | Page, selector: string, timeout: number = 0): Promise<number> {
     await page.waitForTimeout(timeout);
     const text = await this.getTextContent(page, selector);
 
@@ -536,7 +545,7 @@ export default class CommonPage {
    * @param selector {string} String to locate the child element
    * @return {Promise<ElementHandle>}
    */
-  getParentElement(page: Frame|Page, selector: string): Promise<ElementHandle<HTMLElement>|JSHandle<undefined>|JSHandle<null>> {
+  getParentElement(page: Frame | Page, selector: string): Promise<ElementHandle<HTMLElement> | JSHandle<undefined> | JSHandle<null>> {
     return page.evaluateHandle((sl: string) => document.querySelector(sl)?.parentElement, selector);
   }
 
