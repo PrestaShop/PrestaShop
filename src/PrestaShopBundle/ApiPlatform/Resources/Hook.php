@@ -31,12 +31,15 @@ namespace PrestaShopBundle\ApiPlatform\Resources;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHooks;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
@@ -86,6 +89,14 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             provider: QueryProvider::class,
             extraProperties: [
                 'query' => GetHook::class,
+                'scopes' => ['hook_read'],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/hooks',
+            provider: QueryListProvider::class,
+            extraProperties: [
+                'query_builder' => 'prestashop.core.api.query_builder.hook',
                 'scopes' => ['hook_read'],
             ]
         ),

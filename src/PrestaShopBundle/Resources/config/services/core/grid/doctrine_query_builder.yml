@@ -210,6 +210,13 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
     public: true
 
+  prestashop.core.api.query_builder.hook:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\Api\HookQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+    public: false
+
   prestashop.core.grid.query_builder.cms_page:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\CmsPageQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'

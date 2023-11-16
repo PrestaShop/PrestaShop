@@ -111,6 +111,11 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
+  PrestaShopBundle\ApiPlatform\Provider\QueryListProvider:
+    tags: [ 'api_platform.state_provider' ]
+    public: false
+    autowire: true
+
   PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
     tags: [ 'api_platform.state_processor' ]
     public: false
