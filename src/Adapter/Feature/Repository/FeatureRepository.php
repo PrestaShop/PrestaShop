@@ -138,12 +138,18 @@ class FeatureRepository extends AbstractObjectModelRepository
      */
     private function getFeaturesQueryBuilder(?array $filters): QueryBuilder
     {
-        //@todo: filters are not handled.
         $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'feature', 'f')
-            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature')
-            ->addOrderBy('f.position', 'ASC')
-        ;
+        $qb->from($this->dbPrefix . 'feature', 'f');
+        if (!empty($filters['id_lang'])) {
+            $languageIds = is_array($filters['id_lang']) ? $filters['id_lang'] : [$filters['id_lang']];
+            $qb
+                ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang IN (:languageIds)')
+                ->setParameter('languageIds', $languageIds, Connection::PARAM_INT_ARRAY)
+            ;
+        } else {
+            $qb->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature');
+        }
+        $qb->addOrderBy('f.position', 'ASC');
 
         return $qb;
     }

@@ -74,6 +74,7 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
         if (isset($options['custom'])) {
             $filters['custom'] = $options['custom'];
         }
+        $filters['id_lang'] = $options['id_lang'] ?? $this->contextLanguageId;
 
         $featureValues = $this->featureValueRepository->getFeatureValues(null, null, $filters);
         $choices = [];

@@ -64,7 +64,12 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $features = $this->featureRepository->getFeatures();
+        $features = $this->featureRepository->getFeatures(null, null, [
+            'id_lang' => [
+                $this->contextLanguageId,
+                $this->defaultLanguageId,
+            ],
+        ]);
         $choices = [];
         foreach ($features as $feature) {
             if (!empty($feature['localized_names'][$this->contextLanguageId])) {
