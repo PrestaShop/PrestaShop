@@ -49,6 +49,13 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
      */
     private $defaultLanguageId;
 
+    /**
+     * Cache value to avoid performing the same request multiple times as the value should remain the same inside a request.
+     *
+     * @var array
+     */
+    private $cacheFeatureChoices;
+
     public function __construct(
         FeatureRepository $featureRepository,
         LegacyContext $legacyContext,
@@ -64,22 +71,26 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
+        if (!empty($this->cacheFeatureChoices)) {
+            return $this->cacheFeatureChoices;
+        }
+
         $features = $this->featureRepository->getFeatures(null, null, [
             'id_lang' => [
                 $this->contextLanguageId,
                 $this->defaultLanguageId,
             ],
         ]);
-        $choices = [];
+        $this->cacheFeatureChoices = [];
         foreach ($features as $feature) {
             if (!empty($feature['localized_names'][$this->contextLanguageId])) {
                 $featureName = $feature['localized_names'][$this->contextLanguageId];
             } else {
                 $featureName = $feature['localized_names'][$this->defaultLanguageId];
             }
-            $choices[$featureName] = $feature['id_feature'];
+            $this->cacheFeatureChoices[$featureName] = $feature['id_feature'];
         }
 
-        return $choices;
+        return $this->cacheFeatureChoices;
     }
 }

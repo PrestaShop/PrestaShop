@@ -49,6 +49,13 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
      */
     private $defaultLanguageId;
 
+    /**
+     * Cache value to avoid performing the same request multiple times as the value should remain the same inside a request.
+     *
+     * @var array
+     */
+    private $cacheFeatureValueChoices;
+
     public function __construct(
         FeatureValueRepository $featureValueRepository,
         LegacyContext $legacyContext,
@@ -75,9 +82,14 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
             $filters['custom'] = $options['custom'];
         }
         $filters['id_lang'] = $options['id_lang'] ?? $this->contextLanguageId;
+        $cacheKey = implode('-', $filters);
+
+        if (!empty($this->cacheFeatureValueChoices[$cacheKey])) {
+            return $this->cacheFeatureValueChoices[$cacheKey];
+        }
 
         $featureValues = $this->featureValueRepository->getFeatureValues(null, null, $filters);
-        $choices = [];
+        $this->cacheFeatureValueChoices[$cacheKey] = [];
         foreach ($featureValues as $feature) {
             if (!empty($feature['localized_values'][$this->contextLanguageId])) {
                 $featureValueName = $feature['localized_values'][$this->contextLanguageId];
@@ -86,9 +98,9 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
             } else {
                 $featureValueName = reset($feature['localized_values']);
             }
-            $choices[$featureValueName] = (int) $feature['id_feature_value'];
+            $this->cacheFeatureValueChoices[$cacheKey][$featureValueName] = (int) $feature['id_feature_value'];
         }
 
-        return $choices;
+        return $this->cacheFeatureValueChoices[$cacheKey];
     }
 }
