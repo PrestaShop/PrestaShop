@@ -357,12 +357,11 @@ class CookieCore
             $time = 1;
         }
 
-        /* 
-         * If there is some data to store, we need to check if it's compliant with RFC 2965,
-         * maximum of 4096 bytes per cookie. Major browsers follow this very closely and will
-         * refuse to save this cookie.
+        /*
+         * We need to check if the new cookie will be compliant with RFC 2965, maximum of 4096 bytes
+         * per cookie. Major browsers follow this very closely and will refuse to save this cookie.
          *
-         * If we exceed this value, some module is saving to cookie that it shouldn't,
+         * If we exceed this value, some module is saving something to cookie that it shouldn't save,
          * and overflowing the cookie. It's absolutely critical that this does not happen because
          * it breaks for example all cart functionality.
          *
