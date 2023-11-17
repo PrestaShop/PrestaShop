@@ -58,6 +58,8 @@ class MultiStoreSettings extends BOBasePage {
 
   private readonly shopUrlLink: (id: number) => string;
 
+  private readonly shopGroupLink: (id: number) => string;
+
   private readonly paginationActiveLabel: string;
 
   private readonly paginationDiv: string;
@@ -72,6 +74,10 @@ class MultiStoreSettings extends BOBasePage {
 
   private readonly tableHead: string;
 
+  private readonly defaultShopSelect: string;
+
+  private readonly saveButton: string;
+
   private readonly sortColumnDiv: (number: number) => string;
 
   /**
@@ -82,6 +88,7 @@ class MultiStoreSettings extends BOBasePage {
     super();
 
     this.pageTitle = 'Multistore • ';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -124,6 +131,7 @@ class MultiStoreSettings extends BOBasePage {
     this.multistoreTree = '#shops-tree';
     this.shopLink = (id: number) => `${this.multistoreTree} a[href*='shop_id=${id}']`;
     this.shopUrlLink = (id: number) => `${this.multistoreTree} a[href*='shop_url=${id}']`;
+    this.shopGroupLink = (id: number) => `${this.multistoreTree} a[href*='id_shop_group=${id}']`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
@@ -136,6 +144,10 @@ class MultiStoreSettings extends BOBasePage {
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+
+    // Multistore options selectors
+    this.defaultShopSelect = '#PS_SHOP_DEFAULT';
+    this.saveButton = '#shop_group_fieldset_general div.panel-footer button[name="submitOptionsshop_group"]';
   }
 
   /* Header methods */
@@ -263,6 +275,16 @@ class MultiStoreSettings extends BOBasePage {
   }
 
   /**
+   * Go to shop url link
+   * @param page {Page} Browser tab
+   * @param id {number} Id of the shop group
+   * @returns {Promise<void>}
+   */
+  async goToShopGroupPage(page: Page, id: number): Promise<void> {
+    await this.clickAndWaitForURL(page, this.shopGroupLink(id));
+  }
+
+  /**
    * Get text from a column from table
    * @param page {Page} Browser tab
    * @param row {number} Row on table
@@ -377,6 +399,21 @@ class MultiStoreSettings extends BOBasePage {
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForURL(page, sortColumnButton);
+  }
+
+  // Multistore options methods
+
+  /**
+   * Select default store
+   * @param page {Page} Browser tab
+   * @param defaultStore {string} Default store name to select
+   * @return {Promise<string>}
+   */
+  async selectDefaultStore(page: Page, defaultStore: string): Promise<string> {
+    await this.selectByVisibleText(page, this.defaultShopSelect, defaultStore);
+    await this.clickAndWaitForURL(page, this.saveButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

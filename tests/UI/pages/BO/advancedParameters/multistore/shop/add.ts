@@ -24,6 +24,8 @@ class AddShop extends BOBasePage {
 
   private readonly saveButton: string;
 
+  private readonly sourceStoreSelect: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add shop page
@@ -40,6 +42,7 @@ class AddShop extends BOBasePage {
     this.shopGroupSelect = '#id_shop_group';
     this.categoryRootSelect = '#id_category';
     this.saveButton = '#shop_form_submit_btn';
+    this.sourceStoreSelect = '#importFromShop';
   }
 
   /*
@@ -66,6 +69,15 @@ class AddShop extends BOBasePage {
     ]);
 
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Get source store
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getSourceStore(page: Page): Promise<string> {
+    return this.getTextContent(page, `${this.sourceStoreSelect} option[selected]`, false);
   }
 }
 
