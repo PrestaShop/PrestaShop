@@ -140,7 +140,7 @@ describe('BO - Advanced Parameters - Multistore : Multistore options', async () 
     it('should go to add URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddURL2', baseContext);
 
-      await shopPage.filterTable(page, 'a!name', secondCreateShopData.name)
+      await shopPage.filterTable(page, 'a!name', secondCreateShopData.name);
       await shopPage.goToSetURL(page, 1);
 
       const pageTitle = await addShopUrlPage.getPageTitle(page);
