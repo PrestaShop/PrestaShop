@@ -178,7 +178,7 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         }
         $featureValueIds = array_keys($indexedFeatureValues);
 
-        $localizedFeatureValues = $this->getFeatureValueLocalizedValues($featureValueIds, $filters['id_lang'] ?? null);
+        $localizedFeatureValues = $this->getFeatureValueLocalizedValues($featureValueIds, $filters);
         foreach ($localizedFeatureValues as $localizedFeatureValue) {
             $indexedFeatureValues[$localizedFeatureValue['id_feature_value']]['localized_values'][$localizedFeatureValue['id_lang']] = $localizedFeatureValue['value'];
         }
@@ -213,11 +213,11 @@ class FeatureValueRepository extends AbstractObjectModelRepository
 
     /**
      * @param array $featureValuesIds
-     * @param int|null $langId
+     * @param array $filters
      *
      * @return array
      */
-    private function getFeatureValueLocalizedValues(array $featureValuesIds, ?int $langId): array
+    private function getFeatureValueLocalizedValues(array $featureValuesIds, array $filters): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'feature_value_lang', 'fvl')
@@ -225,10 +225,12 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->where('fvl.id_feature_value IN(:featureValueIds)')
             ->setParameter('featureValueIds', $featureValuesIds, Connection::PARAM_INT_ARRAY)
         ;
-        if (!empty($langId)) {
+
+        if (!empty($filters['id_lang'])) {
+            $languageIds = is_array($filters['id_lang']) ? $filters['id_lang'] : [$filters['id_lang']];
             $qb
-                ->andWhere('fvl.id_lang = :langId')
-                ->setParameter('langId', $langId)
+                ->andWhere('fvl.id_lang IN (:languageIds)')
+                ->setParameter('languageIds', $languageIds, Connection::PARAM_INT_ARRAY)
             ;
         }
 

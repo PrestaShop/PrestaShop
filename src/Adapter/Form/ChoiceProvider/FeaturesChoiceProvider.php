@@ -85,11 +85,16 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
         foreach ($features as $feature) {
             if (!empty($feature['localized_names'][$this->contextLanguageId])) {
                 $featureName = $feature['localized_names'][$this->contextLanguageId];
-            } else {
+            } elseif (!empty($feature['localized_names'][$this->defaultLanguageId])) {
                 $featureName = $feature['localized_names'][$this->defaultLanguageId];
+            } else {
+                $featureName = reset($feature['localized_names']);
             }
             $this->cacheFeatureChoices[$featureName] = $feature['id_feature'];
         }
+
+        // Order alphabetically
+        ksort($this->cacheFeatureChoices);
 
         return $this->cacheFeatureChoices;
     }

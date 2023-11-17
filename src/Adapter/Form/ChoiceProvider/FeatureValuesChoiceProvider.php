@@ -81,8 +81,11 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
         if (isset($options['custom'])) {
             $filters['custom'] = $options['custom'];
         }
-        $filters['id_lang'] = $options['id_lang'] ?? $this->contextLanguageId;
-        $cacheKey = implode('-', $filters);
+        $filters['id_lang'] = [
+            $this->contextLanguageId,
+            $this->defaultLanguageId,
+        ];
+        $cacheKey = md5(serialize($filters));
 
         if (!empty($this->cacheFeatureValueChoices[$cacheKey])) {
             return $this->cacheFeatureValueChoices[$cacheKey];
@@ -100,6 +103,9 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
             }
             $this->cacheFeatureValueChoices[$cacheKey][$featureValueName] = (int) $feature['id_feature_value'];
         }
+
+        // Order alphabetically
+        ksort($this->cacheFeatureValueChoices[$cacheKey]);
 
         return $this->cacheFeatureValueChoices[$cacheKey];
     }
