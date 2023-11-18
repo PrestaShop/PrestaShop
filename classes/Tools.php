@@ -1107,7 +1107,7 @@ class ToolsCore
     /**
      * Get token to prevent CSRF.
      *
-     * @param bool $page
+     * @param bool|string $page
      * @param Context|null $context
      *
      * @return string
