@@ -758,6 +758,8 @@ class FrontControllerCore extends Controller
 
             $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
             if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
+            /** Ajout d'un bout de code permettant la syncronisation des produits du module ebay2 meme si le mode maintenant est actif. sans cela la syncro ne se lance pas en mode maintenance **/
+            if (Tools::getValue('ebay') == 'ebay') {
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
@@ -772,6 +774,7 @@ class FrontControllerCore extends Controller
                 $this->smartyOutputContent('errors/maintenance.tpl');
 
                 exit;
+                }
             }
         }
     }
