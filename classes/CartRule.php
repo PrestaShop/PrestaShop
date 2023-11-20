@@ -875,7 +875,7 @@ class CartRuleCore extends ObjectModel
              *
              * It would be much better if $cart->getOrderTotal returned the total without the gifts, which it should actually do by the way.
              * Check inside of that method, if 'is_gift' is not empty, it should skip that product.
-             * But, that would require calling getProducts inside that method with $cart->shouldSplitGiftProductsQuantity enabled. 
+             * But, that would require calling getProducts inside that method with $cart->shouldSplitGiftProductsQuantity enabled.
              * But, if that started to work, it would mess up all places in the code, where it expects Cart::ONLY_PRODUCTS to include gifts.
              *
              * A solution would be to create Cart::ONLY_PRODUCTS_WITHOUT_GIFTS, that we could use here.
