@@ -345,7 +345,8 @@ describe('WS - Products : CRUD', async () => {
 
           // Attribute : id
           const xmlID = productXml.getAttributeValue(xmlResponse, 'id');
-          productNodeID = parseInt(xmlID, 10);
+          expect(xmlID).to.be.a('string');
+          productNodeID = parseInt(xmlID as string, 10);
           expect(xmlID).to.eq(productNodeID.toString());
         });
       });
@@ -444,10 +445,11 @@ describe('WS - Products : CRUD', async () => {
             } else if (oNode.nodeName === 'associations') {
               // Don't check all associations at the moment
             } else {
-              const objectNodeValue: string = productXml.getAttributeValue(
+              const objectNodeValue = productXml.getAttributeValue(
                 xmlCreate,
                 oNode.nodeName,
               );
+              expect(objectNodeValue).to.be.a('string');
               expect(oNode.textContent).to.eq(objectNodeValue);
             }
           }
@@ -724,7 +726,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'width');
             const value = (await shippingTab.getValue(page, 'width'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Height', async function () {
@@ -732,7 +735,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'height');
             const value = (await shippingTab.getValue(page, 'height'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Depth', async function () {
@@ -740,7 +744,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'depth');
             const value = (await shippingTab.getValue(page, 'depth'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Weight', async function () {
@@ -748,7 +753,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'weight');
             const value = (await shippingTab.getValue(page, 'weight'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Delivery time', async function () {
@@ -1029,7 +1035,8 @@ describe('WS - Products : CRUD', async () => {
 
           // Attribute : id
           const xmlID = productXml.getAttributeValue(xmlResponse, 'id');
-          productNodeID = parseInt(xmlID, 10);
+          expect(xmlID).to.be.a('string');
+          productNodeID = parseInt(xmlID as string, 10);
           expect(xmlID).to.eq(productNodeID.toString());
         });
       });
@@ -1127,10 +1134,11 @@ describe('WS - Products : CRUD', async () => {
             } else if (oNode.nodeName === 'associations') {
               // Don't check all associations at the moment
             } else {
-              const objectNodeValue: string = productXml.getAttributeValue(
+              const objectNodeValue = productXml.getAttributeValue(
                 xmlUpdate,
                 oNode.nodeName,
               );
+              expect(objectNodeValue).to.be.a('string');
               expect(oNode.textContent).to.eq(objectNodeValue);
             }
           }
@@ -1392,7 +1400,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'width');
             const value = (await shippingTab.getValue(page, 'width'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Height', async function () {
@@ -1400,7 +1409,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'height');
             const value = (await shippingTab.getValue(page, 'height'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Depth', async function () {
@@ -1408,7 +1418,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'depth');
             const value = (await shippingTab.getValue(page, 'depth'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Weight', async function () {
@@ -1416,7 +1427,8 @@ describe('WS - Products : CRUD', async () => {
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'weight');
             const value = (await shippingTab.getValue(page, 'weight'));
-            expect(value).to.eq(parseInt(xmlValue, 10).toString());
+            expect(xmlValue).to.be.a('string');
+            expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
 
           it('should check Delivery time', async function () {

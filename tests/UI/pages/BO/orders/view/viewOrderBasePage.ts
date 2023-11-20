@@ -159,6 +159,18 @@ class ViewOrderBasePage extends BOBasePage {
   }
 
   /**
+   * Get order status ID
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderStatusID(page: Page): Promise<number> {
+    return parseInt(
+      await this.getAttributeContent(page, `${this.orderStatusesSelect} option[selected='selected']`, 'value'),
+      10,
+    );
+  }
+
+  /**
    * Modify the order status
    * @param page {Page} Browser tab
    * @param status {string} Status to edit

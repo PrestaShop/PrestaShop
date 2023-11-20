@@ -45,9 +45,9 @@ describe('WS - Stores : CRUD', async () => {
   ];
   const xmlCreate: string = getStoreXml();
   const xmlValueHoursLang1 = storeXml.getLangEltTextContent(xmlCreate, 'hours', '1');
-  const hoursArrLang1: string[] = xmlValueHoursLang1.split(',');
+  const hoursArrLang1: string[] = (xmlValueHoursLang1 as string).split(',');
   const xmlValueHoursLang2 = storeXml.getLangEltTextContent(xmlCreate, 'hours', '2');
-  const hoursArrLang2: string[] = xmlValueHoursLang2.split(',');
+  const hoursArrLang2: string[] = (xmlValueHoursLang2 as string).split(',');
   let xmlUpdate: string;
 
   const week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -70,7 +70,7 @@ describe('WS - Stores : CRUD', async () => {
   addWebserviceKey(wsKeyDescription, wsKeyPermissions, `${baseContext}_preTest_2`);
 
   describe('Stores : CRUD', () => {
-    let storeNodeID: string = '';
+    let storeNodeID: string|null = '';
     describe('Fetch the Webservice Key', () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
@@ -327,7 +327,8 @@ describe('WS - Stores : CRUD', async () => {
 
           // Attribute : id
           storeNodeID = storeXml.getEltTextContent(xmlResponse, 'id');
-          expect(storeNodeID).to.be.eq(parseInt(storeNodeID, 10).toString());
+          expect(storeNodeID).to.be.a('string');
+          expect(storeNodeID).to.be.eq(parseInt(storeNodeID as string, 10).toString());
         });
       });
 
@@ -342,7 +343,7 @@ describe('WS - Stores : CRUD', async () => {
           apiResponse = await StoreWS.getById(
             apiContext,
             authorization,
-            storeNodeID,
+            storeNodeID as string,
           );
           expect(apiResponse.status()).to.eq(200);
         });
@@ -377,7 +378,7 @@ describe('WS - Stores : CRUD', async () => {
             const oNode: Element = storesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(storeNodeID);
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(storeNodeID as string);
             } else if (oNode.nodeName === 'name' || oNode.nodeName === 'hours' || oNode.nodeName === 'address1'
               || oNode.nodeName === 'address2' || oNode.nodeName === 'note') {
               const objectNodeValueEN = storeXml.getLangEltTextContent(
@@ -406,11 +407,12 @@ describe('WS - Stores : CRUD', async () => {
               );
               expect(objectNodeValueFR, `node name: ${oNode.nodeName}`).to.be.eq(createNodeValueFR);
             } else if (oNode.nodeName !== 'date_add' && oNode.nodeName !== 'date_upd') {
-              const objectNodeValue: string = storeXml.getEltTextContent(
+              const objectNodeValue = storeXml.getEltTextContent(
                 xmlCreate,
                 oNode.nodeName,
               );
-              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(objectNodeValue);
+              expect(objectNodeValue).to.be.a('string');
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(objectNodeValue as string);
             }
           }
         });
@@ -445,14 +447,14 @@ describe('WS - Stores : CRUD', async () => {
 
           // Filter
           await storesPage.resetFilter(page);
-          await storesPage.filterTable(page, 'input', 'id_store', storeNodeID);
+          await storesPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
 
           // Check number of stores
           const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
           expect(numberOfStoresAfterFilter).to.be.eq(1);
 
           const textColumn = await storesPage.getTextColumn(page, 1, 'id_store');
-          expect(textColumn).to.contains(storeNodeID);
+          expect(textColumn).to.contains(storeNodeID as string);
         });
 
         it('should go to edit store page', async function () {
@@ -656,11 +658,11 @@ describe('WS - Stores : CRUD', async () => {
 
         it(`should check response status of ${StoreWS.endpoint}/{id}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPutStatus1', baseContext);
-          xmlUpdate = getUpdateStoreXml(storeNodeID);
+          xmlUpdate = getUpdateStoreXml(storeNodeID as string);
           apiResponse = await StoreWS.update(
             apiContext,
             authorization,
-            storeNodeID,
+            storeNodeID as string,
             xmlUpdate,
           );
 
@@ -687,7 +689,8 @@ describe('WS - Stores : CRUD', async () => {
 
           // Attribute : id
           storeNodeID = storeXml.getEltTextContent(xmlResponse, 'id');
-          expect(storeNodeID).to.be.eq(parseInt(storeNodeID, 10).toString());
+          expect(storeNodeID).to.be.a('string');
+          expect(storeNodeID).to.be.eq(parseInt(storeNodeID as string, 10).toString());
         });
       });
 
@@ -702,7 +705,7 @@ describe('WS - Stores : CRUD', async () => {
           apiResponse = await StoreWS.getById(
             apiContext,
             authorization,
-            storeNodeID,
+            storeNodeID as string,
           );
 
           expect(apiResponse.status()).to.eq(200);
@@ -738,7 +741,7 @@ describe('WS - Stores : CRUD', async () => {
             const oNode: Element = storesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(storeNodeID);
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(storeNodeID as string);
             } else if (oNode.nodeName === 'name' || oNode.nodeName === 'hours' || oNode.nodeName === 'address1'
               || oNode.nodeName === 'address2' || oNode.nodeName === 'note') {
               const objectNodeValueEN = storeXml.getLangEltTextContent(
@@ -767,11 +770,12 @@ describe('WS - Stores : CRUD', async () => {
               );
               expect(objectNodeValueFR, `node name: ${oNode.nodeName}`).to.be.eq(createNodeValueFR);
             } else if (oNode.nodeName !== 'date_add' && oNode.nodeName !== 'date_upd') {
-              const objectNodeValue: string = storeXml.getEltTextContent(
+              const objectNodeValue = storeXml.getEltTextContent(
                 xmlUpdate,
                 oNode.nodeName,
               );
-              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(objectNodeValue);
+              expect(objectNodeValue).to.be.a('string');
+              expect(oNode.textContent, `node name: ${oNode.nodeName}`).to.be.eq(objectNodeValue as string);
             }
           }
         });
@@ -783,14 +787,14 @@ describe('WS - Stores : CRUD', async () => {
 
           // Filter
           await storesPage.resetFilter(page);
-          await storesPage.filterTable(page, 'input', 'id_store', storeNodeID);
+          await storesPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
 
           // Check number of stores
           const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
           expect(numberOfStoresAfterFilter).to.be.eq(1);
 
           const textColumn = await storesPage.getTextColumn(page, 1, 'id_store');
-          expect(textColumn).to.contains(storeNodeID);
+          expect(textColumn).to.contains(storeNodeID as string);
         });
 
         it('should go to edit store page', async function () {
@@ -935,7 +939,8 @@ describe('WS - Stores : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', `checkStoreHours${day}Lang1${index}`, baseContext);
 
             const xmlValueUpdatedHoursLang1 = storeXml.getLangEltTextContent(xmlUpdate, 'hours', '1');
-            const hoursArrUpdatedLang1: string[] = xmlValueUpdatedHoursLang1.split(',');
+            expect(xmlValueUpdatedHoursLang1).to.be.a('string');
+            const hoursArrUpdatedLang1: string[] = (xmlValueUpdatedHoursLang1 as string).split(',');
             const dayHours = hoursArrUpdatedLang1[index];
 
             let expectedDayHours: string;
@@ -956,7 +961,8 @@ describe('WS - Stores : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', `checkStoreHours${day}Lang2${index}`, baseContext);
 
             const xmlValueUpdatedHoursLang2 = storeXml.getLangEltTextContent(xmlUpdate, 'hours', '2');
-            const hoursArrUpdatedLang2: string[] = xmlValueUpdatedHoursLang2.split(',');
+            expect(xmlValueUpdatedHoursLang2).to.be.a('string');
+            const hoursArrUpdatedLang2: string[] = (xmlValueUpdatedHoursLang2 as string).split(',');
             const dayHours = hoursArrUpdatedLang2[index];
 
             let expectedDayHours : string;
@@ -999,7 +1005,7 @@ describe('WS - Stores : CRUD', async () => {
         const apiResponse = await StoreWS.delete(
           apiContext,
           authorization,
-          storeNodeID,
+          storeNodeID as string,
         );
 
         expect(apiResponse.status()).to.eq(200);
@@ -1011,7 +1017,7 @@ describe('WS - Stores : CRUD', async () => {
         const apiResponse = await StoreWS.getById(
           apiContext,
           authorization,
-          storeNodeID,
+          storeNodeID as string,
         );
 
         expect(apiResponse.status()).to.eq(404);
@@ -1022,7 +1028,7 @@ describe('WS - Stores : CRUD', async () => {
 
         // Filter
         await storesPage.resetFilter(page);
-        await storesPage.filterTable(page, 'input', 'id_store', storeNodeID);
+        await storesPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
 
         // Check number of stores
         const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);

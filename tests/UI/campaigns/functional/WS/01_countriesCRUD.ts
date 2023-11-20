@@ -65,7 +65,7 @@ describe('WS - Countries : CRUD', async () => {
   addWebserviceKey(wsKeyDescription, wsKeyPermissions, `${baseContext}_preTest_2`);
 
   describe('Countries : CRUD', () => {
-    let countryNodeID: string = '';
+    let countryNodeID: string|null = '';
     describe('Fetch the Webservice Key', () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
@@ -319,7 +319,8 @@ describe('WS - Countries : CRUD', async () => {
 
           // Attribute : id
           countryNodeID = countryXml.getAttributeValue(xmlResponse, 'id');
-          expect(countryNodeID).to.be.eq(parseInt(countryNodeID, 10).toString());
+          expect(countryNodeID).to.be.a('string');
+          expect(countryNodeID).to.be.eq(parseInt(countryNodeID as string, 10).toString());
         });
       });
 
@@ -334,7 +335,7 @@ describe('WS - Countries : CRUD', async () => {
           apiResponse = await CountryWS.getById(
             apiContext,
             authorization,
-            countryNodeID,
+            countryNodeID as string,
           );
 
           expect(apiResponse.status()).to.eq(200);
@@ -370,7 +371,7 @@ describe('WS - Countries : CRUD', async () => {
             const oNode: Element = countriesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent).to.be.eq(countryNodeID);
+              expect(oNode.textContent).to.be.eq(countryNodeID as string);
             } else if (oNode.nodeName === 'name') {
               const objectNodeValueEN = countryXml.getAttributeLangValue(
                 xmlResponse,
@@ -397,10 +398,11 @@ describe('WS - Countries : CRUD', async () => {
               );
               expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
             } else {
-              const objectNodeValue: string = countryXml.getAttributeValue(
+              const objectNodeValue = countryXml.getAttributeValue(
                 xmlCreate,
                 oNode.nodeName,
               );
+              expect(objectNodeValue).to.be.a('string');
               expect(oNode.textContent).to.be.eq(objectNodeValue);
             }
           }
@@ -436,14 +438,14 @@ describe('WS - Countries : CRUD', async () => {
 
           // Filter
           await countriesPage.resetFilter(page);
-          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID);
+          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
           // Check number of countries
           const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
           expect(numberOfCountriesAfterFilter).to.be.eq(1);
 
           const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'id_country');
-          expect(textColumn).to.contains(countryNodeID);
+          expect(textColumn).to.contains(countryNodeID as string);
         });
 
         it('should go to edit country page', async function () {
@@ -569,11 +571,11 @@ describe('WS - Countries : CRUD', async () => {
         it(`should check response status of ${CountryWS.endpoint}/{id}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPutStatus1', baseContext);
 
-          xmlUpdate = getCountryXml(countryNodeID);
+          xmlUpdate = getCountryXml(countryNodeID as string);
           apiResponse = await CountryWS.update(
             apiContext,
             authorization,
-            countryNodeID,
+            countryNodeID as string,
             xmlUpdate,
           );
 
@@ -600,7 +602,8 @@ describe('WS - Countries : CRUD', async () => {
 
           // Attribute : id
           countryNodeID = countryXml.getAttributeValue(xmlResponse, 'id');
-          expect(countryNodeID).to.be.eq(parseInt(countryNodeID, 10).toString());
+          expect(countryNodeID).to.be.a('string');
+          expect(countryNodeID).to.be.eq(parseInt(countryNodeID as string, 10).toString());
         });
       });
 
@@ -615,7 +618,7 @@ describe('WS - Countries : CRUD', async () => {
           apiResponse = await CountryWS.getById(
             apiContext,
             authorization,
-            countryNodeID,
+            countryNodeID as string,
           );
 
           expect(apiResponse.status()).to.eq(200);
@@ -651,7 +654,7 @@ describe('WS - Countries : CRUD', async () => {
             const oNode: Element = countriesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent).to.be.eq(countryNodeID);
+              expect(oNode.textContent).to.be.eq(countryNodeID as string);
             } else if (oNode.nodeName === 'name') {
               const objectNodeValueEN = countryXml.getAttributeLangValue(
                 xmlResponse,
@@ -695,14 +698,14 @@ describe('WS - Countries : CRUD', async () => {
 
           // Filter
           await countriesPage.resetFilter(page);
-          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID);
+          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
           // Check number of countries
           const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
           expect(numberOfCountriesAfterFilter).to.be.eq(1);
 
           const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'id_country');
-          expect(textColumn).to.contains(countryNodeID);
+          expect(textColumn).to.contains(countryNodeID as string);
         });
 
         it('should go to edit country page', async function () {
@@ -827,7 +830,7 @@ describe('WS - Countries : CRUD', async () => {
         const apiResponse = await CountryWS.delete(
           apiContext,
           authorization,
-          countryNodeID,
+          countryNodeID as string,
         );
 
         expect(apiResponse.status()).to.eq(200);
@@ -839,7 +842,7 @@ describe('WS - Countries : CRUD', async () => {
         const apiResponse = await CountryWS.getById(
           apiContext,
           authorization,
-          countryNodeID,
+          countryNodeID as string,
         );
 
         expect(apiResponse.status()).to.eq(404);
@@ -850,7 +853,7 @@ describe('WS - Countries : CRUD', async () => {
 
         // Filter
         await countriesPage.resetFilter(page);
-        await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID);
+        await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
         // Check number of countries
         const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
