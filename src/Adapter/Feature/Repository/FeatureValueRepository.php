@@ -153,7 +153,26 @@ class FeatureValueRepository extends AbstractObjectModelRepository
      */
     public function getProductFeatureValues(ProductId $productId, ?int $limit = null, ?int $offset = null, ?array $filters = []): array
     {
-        return $this->getFeatureValues($limit, $offset, array_merge($filters, ['id_product' => $productId->getValue()]));
+        return $this->getFeatureValues($limit, $offset, array_merge($filters ?? [], ['id_product' => $productId->getValue()]));
+    }
+
+    /**
+     * @param int $langId
+     * @param array $filters
+     *
+     * @return array
+     */
+    public function getFeatureValuesByLang(int $langId, array $filters): array
+    {
+        $qb = $this->getFeatureValuesQueryBuilder(array_merge($filters, ['id_lang' => $langId]))
+            ->leftJoin('f', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :langId')
+            ->setParameter('langId', $langId)
+            ->select('fv.*, fvl.value')
+            // Override the default order by feature position and ID
+            ->orderBy('fvl.value')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
     }
 
     /**
@@ -170,6 +189,7 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
+
         $featureValues = $qb->execute()->fetchAllAssociative();
 
         $indexedFeatureValues = [];

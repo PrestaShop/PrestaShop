@@ -78,6 +78,23 @@ class FeatureRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param int $langId
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getFeaturesByLang(int $langId): array
+    {
+        $qb = $this->getFeaturesQueryBuilder(['id_lang' => $langId])
+            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang = :languageId')
+            ->setParameter('languageId', $langId)
+            ->select('f.*, fl.*')
+            ->addOrderBy('fl.name', 'ASC')
+        ;
+
+        return $this->formatResult($qb->execute()->fetchAllAssociative());
+    }
+
+    /**
      * @param int|null $limit
      * @param int|null $offset
      * @param array|null $filters
@@ -88,11 +105,31 @@ class FeatureRepository extends AbstractObjectModelRepository
     {
         $qb = $this->getFeaturesQueryBuilder($filters)
             ->select('f.*, fl.*')
+            ->addOrderBy('f.position', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
 
-        $results = $qb->execute()->fetchAll();
+        return $this->formatResult($qb->execute()->fetchAllAssociative());
+    }
+
+    /**
+     * @param array|null $filters
+     *
+     * @return int
+     */
+    public function getFeaturesCount(?array $filters = []): int
+    {
+        $qb = $this->getFeaturesQueryBuilder($filters)
+            ->select('COUNT(f.id_feature_value) AS total_feature_values')
+            ->addGroupBy('f.id_feature_value')
+        ;
+
+        return (int) $qb->execute()->fetch()['total_feature_values'];
+    }
+
+    private function formatResult(array $results): array
+    {
         $localizedNames = [];
         $featuresById = [];
         foreach ($results as $result) {
@@ -119,37 +156,13 @@ class FeatureRepository extends AbstractObjectModelRepository
     /**
      * @param array|null $filters
      *
-     * @return int
-     */
-    public function getFeaturesCount(?array $filters = []): int
-    {
-        $qb = $this->getFeaturesQueryBuilder($filters)
-            ->select('COUNT(f.id_feature_value) AS total_feature_values')
-            ->addGroupBy('f.id_feature_value')
-        ;
-
-        return (int) $qb->execute()->fetch()['total_feature_values'];
-    }
-
-    /**
-     * @param array|null $filters
-     *
      * @return QueryBuilder
      */
     private function getFeaturesQueryBuilder(?array $filters): QueryBuilder
     {
+        // Filters not handled yet
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'feature', 'f');
-        if (!empty($filters['id_lang'])) {
-            $languageIds = is_array($filters['id_lang']) ? $filters['id_lang'] : [$filters['id_lang']];
-            $qb
-                ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang IN (:languageIds)')
-                ->setParameter('languageIds', $languageIds, Connection::PARAM_INT_ARRAY)
-            ;
-        } else {
-            $qb->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature');
-        }
-        $qb->addOrderBy('f.position', 'ASC');
 
         return $qb;
     }

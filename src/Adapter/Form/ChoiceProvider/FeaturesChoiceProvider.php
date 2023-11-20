@@ -45,11 +45,6 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
     private $contextLanguageId;
 
     /**
-     * @var int
-     */
-    private $defaultLanguageId;
-
-    /**
      * Cache value to avoid performing the same request multiple times as the value should remain the same inside a request.
      *
      * @var array
@@ -58,12 +53,10 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
 
     public function __construct(
         FeatureRepository $featureRepository,
-        LegacyContext $legacyContext,
-        int $defaultLanguageId
+        LegacyContext $legacyContext
     ) {
         $this->featureRepository = $featureRepository;
         $this->contextLanguageId = (int) $legacyContext->getLanguage()->getId();
-        $this->defaultLanguageId = $defaultLanguageId;
     }
 
     /**
@@ -75,26 +68,11 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
             return $this->cacheFeatureChoices;
         }
 
-        $features = $this->featureRepository->getFeatures(null, null, [
-            'id_lang' => [
-                $this->contextLanguageId,
-                $this->defaultLanguageId,
-            ],
-        ]);
+        $features = $this->featureRepository->getFeaturesByLang($this->contextLanguageId);
         $this->cacheFeatureChoices = [];
         foreach ($features as $feature) {
-            if (!empty($feature['localized_names'][$this->contextLanguageId])) {
-                $featureName = $feature['localized_names'][$this->contextLanguageId];
-            } elseif (!empty($feature['localized_names'][$this->defaultLanguageId])) {
-                $featureName = $feature['localized_names'][$this->defaultLanguageId];
-            } else {
-                $featureName = reset($feature['localized_names']);
-            }
-            $this->cacheFeatureChoices[$featureName] = $feature['id_feature'];
+            $this->cacheFeatureChoices[$feature['localized_names'][$this->contextLanguageId]] = $feature['id_feature'];
         }
-
-        // Order alphabetically
-        ksort($this->cacheFeatureChoices);
 
         return $this->cacheFeatureChoices;
     }
