@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +22,8 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% if (action == 'configure') %}
-  <a class="{{ classes }}" href="{{ url }}">
-    {{ label }}
-  </a>
-{% else %}
-  <form class="{{classes_form|default() }}" method="post" action="{{ url }}">
-    <button type="submit" class="{{ classes }} module_action_menu_{{ action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ action }}">
-      {{ label }}
-    </button>
-  </form>
-{% endif %}
+// Make sure these module actions are translatable because they won't be discoverable
+trans('Update', 'Admin.Modules.Actions');
+trans('Configure', 'Admin.Modules.Actions');
