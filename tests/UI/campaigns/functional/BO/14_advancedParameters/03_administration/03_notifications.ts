@@ -5,30 +5,33 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
+// Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import administrationPage from '@pages/BO/advancedParameters/administration';
+import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
+import customersPage from '@pages/BO/customers';
+import addCustomerPage from '@pages/BO/customers/add';
+
+// Import FO pages
+import {homePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
+import productPage from '@pages/FO/product';
+import {cartPage} from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import {myAccountPage} from '@pages/FO/myAccount';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import orderDetails from '@pages/FO/myAccount/orderDetails';
+
+// Import data
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
+import CustomerData from '@data/faker/customer';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
+import {faker} from '@faker-js/faker';
 import type {BrowserContext, Page} from 'playwright';
-import {homePage} from "@pages/FO/home";
-import {loginPage as foLoginPage} from "@pages/FO/login";
-import Customers from "@data/demo/customers";
-import productPage from "@pages/FO/product";
-import {cartPage} from "@pages/FO/cart";
-import checkoutPage from "@pages/FO/checkout";
-import PaymentMethods from "@data/demo/paymentMethods";
-import orderConfirmationPage from "@pages/FO/checkout/orderConfirmation";
-import shoppingCartsPage from "@pages/BO/orders/shoppingCarts";
-import customersPage from "@pages/BO/customers";
-import addCustomerPage from "@pages/BO/customers/add";
-import CustomerData from "@data/faker/customer";
-import {myAccountPage} from "@pages/FO/myAccount";
-import {orderHistoryPage} from "@pages/FO/myAccount/orderHistory";
-import orderDetails from "@pages/FO/myAccount/orderDetails";
-import {faker} from "@faker-js/faker";
-import Products from "@data/demo/products";
-import customerServicePage from "@pages/BO/customerService/customerService";
 
 const baseContext: string = 'functional_BO_advancedParameters_administration_checkNotifications';
 
