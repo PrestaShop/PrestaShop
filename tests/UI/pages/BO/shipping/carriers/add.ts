@@ -81,7 +81,7 @@ class AddCarrier extends BOBasePage {
     this.nameInput = '#name';
     this.transitTimeInput = '#delay_1';
     this.speedGradeInput = '#grade';
-    this.logoInput = '#attachement_filename';
+    this.logoInput = '#carrier_logo_input';
     this.trackingURLInput = '#url';
 
     // Shipping locations and costs
