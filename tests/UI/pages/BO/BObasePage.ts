@@ -313,11 +313,11 @@ export default class BOBasePage extends CommonPage {
     // Header links
     this.helpButton = '#product_form_open_help';
     this.menuMobileButton = '.js-mobile-menu';
-    this.notificationsLink = '#notification';
-    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown';
-    this.totalNotificationsValue = '#total_notif_value';
+    this.notificationsLink = '#notification,#notif';
+    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown, #notif div.dropdown-menu';
+    this.totalNotificationsValue = '#total_notif_value,#notifications-total';
     this.notificationsTab = (tabName: string) => `#${tabName}-tab`;
-    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value`;
+    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value, #_nb_new_${tabName}_`;
     this.notificationRowInTab = (tabName: string, row: number) => `#${tabName}-notifications div a:nth-child(${row})`;
 
     // left navbar
@@ -733,7 +733,7 @@ export default class BOBasePage extends CommonPage {
       await this.scrollTo(page, parentSelector);
 
       await Promise.all([
-        page.click(parentSelector),
+        page.locator(parentSelector).click(),
         this.waitForVisibleSelector(page, `${parentSelector}${openSelector}`),
       ]);
     }
@@ -782,7 +782,7 @@ export default class BOBasePage extends CommonPage {
       await this.scrollTo(page, parentSelector);
 
       await Promise.all([
-        page.click(parentSelector),
+        page.locator(parentSelector).click(),
         this.waitForVisibleSelector(page, `${parentSelector}${openSelector}`),
       ]);
 
@@ -802,7 +802,7 @@ export default class BOBasePage extends CommonPage {
 
     if (isCurrentCollapsed !== isCollapsed) {
       await Promise.all([
-        page.click(this.navbarCollapseButton),
+        page.locator(this.navbarCollapseButton).click(),
         this.waitForVisibleSelector(
           page,
           this.navbarCollapsed(isCollapsed),
@@ -821,8 +821,18 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Is notifications link visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isNotificationsLinkVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.notificationsLink, 1000);
+  }
+
+  /**
    * Click on notifications link
    * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
    */
   async clickOnNotificationsLink(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.notificationsLink);
@@ -833,15 +843,27 @@ export default class BOBasePage extends CommonPage {
   /**
    * Get all notifications number
    * @param page {Page} Browser tab
+   * @return {Promise<number>}
    */
-  getAllNotificationsNumber(page: Page): Promise<number> {
+  async getAllNotificationsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.totalNotificationsValue, 2000);
+  }
+
+  /**
+   * Is notifications tab visible
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   * @return {Promise<boolean>}
+   */
+  async isNotificationsTabVisible(page: Page, tabName: string): Promise<boolean> {
+    return this.elementVisible(page, this.notificationsTab(tabName));
   }
 
   /**
    * Click on notifications tab
    * @param page {Page} Browser tab
    * @param tabName {string} Messages, customers or orders tab
+   * @return {Promise<void>}
    */
   async clickOnNotificationsTab(page: Page, tabName: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.notificationsTab(tabName));
@@ -851,8 +873,9 @@ export default class BOBasePage extends CommonPage {
    * Get notifications number in tab
    * @param page {Page} Browser tab
    * @param tabName {string} Messages, customers or orders tab
+   * @return {Promise<number>}
    */
-  getNotificationsNumberInTab(page: Page, tabName: string): Promise<number> {
+  async getNotificationsNumberInTab(page: Page, tabName: string): Promise<number> {
     return this.getNumberFromText(page, this.notificationsNumberInTab(tabName), 2000);
   }
 
@@ -870,12 +893,13 @@ export default class BOBasePage extends CommonPage {
    * Go to my profile page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async goToMyProfile(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
-      await page.click(this.userProfileIcon);
+      await page.locator(this.userProfileIcon).click();
     } else {
-      await page.click(this.userProfileIconNonMigratedPages);
+      await page.locator(this.userProfileIconNonMigratedPages).click();
     }
     if (await this.elementVisible(page, this.userProfileYourProfileLink, 1000)) {
       await this.waitForVisibleSelector(page, this.userProfileYourProfileLink);
@@ -892,9 +916,9 @@ export default class BOBasePage extends CommonPage {
    */
   async getCurrentEmployeeAvatar(page: Page): Promise<string | null> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
-      await page.click(this.userProfileIcon);
+      await page.locator(this.userProfileIcon).click();
     } else {
-      await page.click(this.userProfileIconNonMigratedPages);
+      await page.locator(this.userProfileIconNonMigratedPages).click();
     }
 
     return page.getAttribute(this.userProfileAvatar, 'src');
@@ -907,9 +931,9 @@ export default class BOBasePage extends CommonPage {
    */
   async logoutBO(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
-      await page.click(this.userProfileIcon);
+      await page.locator(this.userProfileIcon).click();
     } else {
-      await page.click(this.userProfileIconNonMigratedPages);
+      await page.locator(this.userProfileIconNonMigratedPages).click();
     }
     await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
     await this.clickAndWaitForURL(page, this.userProfileLogoutLink);
@@ -934,7 +958,7 @@ export default class BOBasePage extends CommonPage {
   async setValueOnTinymceInput(page: Page, iFrameSelector: string, value: string): Promise<void> {
     const args = {selector: iFrameSelector, vl: value};
     // eslint-disable-next-line no-eval
-    const fn: {fnSetValueOnTinymceInput: PageFunction<{ selector: string, vl: string }, void>} = eval(`({
+    const fn: { fnSetValueOnTinymceInput: PageFunction<{ selector: string, vl: string }, void> } = eval(`({
       async fnSetValueOnTinymceInput(args) {
         /* eslint-env browser */
         const iFrameElement = await document.querySelector(args.selector);
@@ -957,7 +981,7 @@ export default class BOBasePage extends CommonPage {
   async setValueOnDateTimePickerInput(page: Page, selector: string, value: string, onChange: boolean = false): Promise<void> {
     const args = {selector, value, onChange};
     // eslint-disable-next-line no-eval
-    const fn: {fnSetValueOnDTPickerInput: PageFunction<{ selector: string, value: string, onChange: boolean }, void>} = eval(`({
+    const fn: { fnSetValueOnDTPickerInput: PageFunction<{ selector: string, value: string, onChange: boolean }, void> } = eval(`({
       async fnSetValueOnDTPickerInput(args) {
         /* eslint-env browser */
         const textElement = await document.querySelector(args.selector);
@@ -977,7 +1001,7 @@ export default class BOBasePage extends CommonPage {
    */
   async closeSfToolBar(page: Frame | Page): Promise<void> {
     if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
-      await page.click(this.sfCloseToolbarLink);
+      await page.locator(this.sfCloseToolbarLink).click();
     }
   }
 
@@ -1030,7 +1054,7 @@ export default class BOBasePage extends CommonPage {
 
     while (!growlNotVisible) {
       try {
-        await page.click(this.growlCloseButton);
+        await page.locator(this.growlCloseButton).click();
       } catch (e) {
         // If element does not exist it's already not visible
       }
