@@ -452,7 +452,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
-                'displayUnitPrice' => !empty($this->product->unity) && $this->product->unit_price > 0.000000,
+                'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
                 'product_manufacturer' => $productManufacturer,
                 'manufacturer_image_url' => $manufacturerImageUrl,
                 'product_brand_url' => $productBrandUrl,
