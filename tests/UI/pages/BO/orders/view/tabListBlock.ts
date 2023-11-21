@@ -584,14 +584,14 @@ class TabListBlock extends ViewOrderBasePage {
   }
 
   /**
-   * Click on cancel button and check if the modal is visible
+   * Click on cancel button and check if the modal is not visible
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async closeOrderShippingModal(page: Page): Promise<boolean> {
     await page.click(this.cancelCarrierButton);
 
-    return this.elementVisible(page, this.updateOrderShippingModalDialog, 1000);
+    return this.elementNotVisible(page, this.updateOrderShippingModalDialog, 3000);
   }
 
   /**
