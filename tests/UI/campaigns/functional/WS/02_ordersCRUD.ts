@@ -151,7 +151,7 @@ describe('WS - Orders : CRUD', async () => {
           expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
         });
 
-        it('should reset all filters and get number of shopping carts', async function () {
+        it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
           const numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
@@ -669,8 +669,8 @@ describe('WS - Orders : CRUD', async () => {
 
             const value = await orderPageTabListBlock.getShippingCarrierID(page);
 
-            const isModalVisibleAfter = await orderPageTabListBlock.closeOrderShippingModal(page);
-            expect(isModalVisibleAfter).to.be.equal(false);
+            const isModalHiddenAfter = await orderPageTabListBlock.closeOrderShippingModal(page);
+            expect(isModalHiddenAfter).to.be.equal(true);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'id_carrier');
             expect(value.toString()).to.be.eq(xmlValue);
@@ -1009,8 +1009,8 @@ describe('WS - Orders : CRUD', async () => {
 
             const value = await orderPageTabListBlock.getShippingCarrierID(page);
 
-            const isModalVisibleAfter = await orderPageTabListBlock.closeOrderShippingModal(page);
-            expect(isModalVisibleAfter).to.be.equal(false);
+            const isModalHiddenAfter = await orderPageTabListBlock.closeOrderShippingModal(page);
+            expect(isModalHiddenAfter).to.be.equal(true);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'id_carrier');
             expect(value.toString()).to.be.eq(xmlValue);
