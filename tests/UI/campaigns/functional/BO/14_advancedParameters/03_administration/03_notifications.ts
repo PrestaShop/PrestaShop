@@ -4,6 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -33,7 +34,7 @@ import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_administration_checkNotifications';
+const baseContext: string = 'functional_BO_advancedParameters_administration_notifications';
 
 describe('BO - Advanced Parameters - Administration : Check notifications', async () => {
   let browserContext: BrowserContext;
@@ -376,14 +377,14 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     });
 
     it('should check notifications number', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber4', baseContext);
 
       const number = await administrationPage.getAllNotificationsNumber(page);
       expect(number).to.equal(1);
     });
 
     it('should click on notifications icon', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink4', baseContext);
 
       const isNotificationsVisible = await administrationPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
@@ -398,4 +399,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       expect(notificationsNumber).to.equal(1);
     });
   });
+
+  // Post-condition: Delete the created customer account
+  deleteCustomerTest(createCustomerData, `${baseContext}_postTest_1`);
 });
