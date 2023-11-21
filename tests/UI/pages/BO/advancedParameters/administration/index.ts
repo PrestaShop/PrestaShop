@@ -22,6 +22,14 @@ class AdministrationPage extends BOBasePage {
 
   private readonly generalFormSaveButton: string;
 
+  private readonly notificationsForNewOrdersSwitchButton: (toEnable: number) => string;
+
+  private readonly notificationsForNewCustomersSwitchButton: (toEnable: number) => string;
+
+  private readonly notificationsForNewMessagesSwitchButton: (toEnable: number) => string;
+
+  private readonly notificationsFormSaveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on Performance page
@@ -41,6 +49,12 @@ class AdministrationPage extends BOBasePage {
     this.generalCookieSameSite = '#general_cookie_samesite';
     this.generalFormSaveButton = '#configuration_fieldset_general button';
     this.alertSuccessBlock = 'div.alert[role=alert] div.alert-text';
+
+    // Notifications form selectors
+    this.notificationsForNewOrdersSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_orders_${toEnable}`;
+    this.notificationsForNewCustomersSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_customers_${toEnable}`;
+    this.notificationsForNewMessagesSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_messages_${toEnable}`;
+    this.notificationsFormSaveButton = '#configuration_fieldset_notifications button';
   }
 
   /*
@@ -88,7 +102,7 @@ class AdministrationPage extends BOBasePage {
   /**
    * Select cookie same site
    * @param page {Page} Browser tab
-   * @param value {sting} Value to set on cookie same site
+   * @param value {string} Value to set on cookie same site
    * @return {Promise<void>}
    */
   async setCookieSameSite(page: Page, value: string): Promise<void> {
@@ -102,6 +116,45 @@ class AdministrationPage extends BOBasePage {
    */
   async saveGeneralForm(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.generalFormSaveButton);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Enable/Disable show notifications for new orders
+   * @param page {Page} Browser tab
+   * @param toEnable {string} True if we need to enable notifications for new orders
+   * @return {Promise<string>}
+   */
+  async setShowNotificationsForNewOrders(page: Page, toEnable: boolean): Promise<string> {
+    await this.setChecked(page, this.notificationsForNewOrdersSwitchButton(toEnable ? 1 : 0));
+    await this.clickAndWaitForURL(page, this.notificationsFormSaveButton);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Enable/Disable show notifications for new customers
+   * @param page {Page} Browser tab
+   * @param toEnable {string} True if we need to enable notifications for new customers
+   * @return {Promise<string>}
+   */
+  async setShowNotificationsForNewCustomers(page: Page, toEnable: boolean): Promise<string> {
+    await this.setChecked(page, this.notificationsForNewCustomersSwitchButton(toEnable ? 1 : 0));
+    await this.clickAndWaitForURL(page, this.notificationsFormSaveButton);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Enable/Disable show notifications for new messages
+   * @param page {Page} Browser tab
+   * @param toEnable {string} True if we need to enable notifications for new messages
+   * @return {Promise<string>}
+   */
+  async setShowNotificationsForNewMessages(page: Page, toEnable: boolean): Promise<string> {
+    await this.setChecked(page, this.notificationsForNewMessagesSwitchButton(toEnable ? 1 : 0));
+    await this.clickAndWaitForURL(page, this.notificationsFormSaveButton);
 
     return this.getAlertSuccessBlockContent(page);
   }
