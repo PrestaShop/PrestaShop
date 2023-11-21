@@ -314,10 +314,10 @@ export default class BOBasePage extends CommonPage {
     this.helpButton = '#product_form_open_help';
     this.menuMobileButton = '.js-mobile-menu';
     this.notificationsLink = '#notification,#notif';
-    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown, #notif div.dropdown-menu';
+    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown,#notif div.dropdown-menu';
     this.totalNotificationsValue = '#total_notif_value,#notifications-total';
     this.notificationsTab = (tabName: string) => `#${tabName}-tab`;
-    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value, #_nb_new_${tabName}_`;
+    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value,#_nb_new_${tabName}_`;
     this.notificationRowInTab = (tabName: string, row: number) => `#${tabName}-notifications div a:nth-child(${row})`;
 
     // left navbar
