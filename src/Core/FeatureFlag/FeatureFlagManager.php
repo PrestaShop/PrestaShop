@@ -28,35 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DbLayer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DotEnvLayer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\EnvLayer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\QueryLayer;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Container\ContainerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
 
-class FeatureFlagManager implements ServiceSubscriberInterface, FeatureFlagStateCheckerInterface
+class FeatureFlagManager implements FeatureFlagStateCheckerInterface
 {
     public function __construct(
+        #[TaggedLocator(TypeLayerInterface::class, defaultIndexMethod: 'getTypeName')]
         private readonly ContainerInterface $locator,
-        private readonly FeatureFlagRepository $featureFlagRepository
+        private readonly FeatureFlagRepository $featureFlagRepository,
     ) {
-    }
-
-    /**
-     * Subscribe all handlers in this service container.
-     *
-     * @return string[]
-     */
-    public static function getSubscribedServices(): array
-    {
-        return [
-            FeatureFlagSettings::TYPE_ENV => EnvLayer::class,
-            FeatureFlagSettings::TYPE_QUERY => QueryLayer::class,
-            FeatureFlagSettings::TYPE_DOTENV => DotEnvLayer::class,
-            FeatureFlagSettings::TYPE_DB => DbLayer::class,
-        ];
     }
 
     /**
