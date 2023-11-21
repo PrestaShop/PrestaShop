@@ -53,7 +53,7 @@ class PageType extends TranslatorAwareType
             ])
             ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
                 'label' => $this->trans(
-                    'Display the "%add_to_cart_label%" button when a product has attributes',
+                    'Display the "%add_to_cart_label%" button when a product has combinations',
                     'Admin.Shopparameters.Help',
                     [
                         '%add_to_cart_label%' => $this->trans(
@@ -63,14 +63,9 @@ class PageType extends TranslatorAwareType
                     ]
                 ),
                 'help' => $this->trans(
-                    'Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.',
+                    'Some themes allow your customers to add a product to their cart directly from the product list. You may want to deactivate this feature if a product has combinations, requiring your customers to check product details and choose one of the options.',
                     'Admin.Shopparameters.Help',
-                    [
-                        '%add_to_cart_label%' => $this->trans(
-                            'Add to cart',
-                            'Shop.Theme.Actions'
-                        ),
-                    ]
+                    []
                 ),
                 'required' => false,
             ])

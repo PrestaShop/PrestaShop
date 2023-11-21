@@ -858,6 +858,18 @@ class ValidateCore
     }
 
     /**
+     * Check for a number (int) bigger than 0
+     *
+     * @param mixed $value Integer with value bigger than 0 to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isPositiveInt($value)
+    {
+        return self::isUnsignedInt($value) && $value > 0;
+    }
+
+    /**
      * Check for an percentage validity (between 0 and 100).
      *
      * @param float $value Float to validate
