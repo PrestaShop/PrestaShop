@@ -22,11 +22,11 @@ class AdministrationPage extends BOBasePage {
 
   private readonly generalFormSaveButton: string;
 
-  private readonly showNotificationsForNewOrdersSwitchButton: (toEnable: number) => string;
+  private readonly notificationsForNewOrdersSwitchButton: (toEnable: number) => string;
 
-  private readonly showNotificationsForNewCustomersSwitchButton: (toEnable: number) => string;
+  private readonly notificationsForNewCustomersSwitchButton: (toEnable: number) => string;
 
-  private readonly showNotificationsForNewMessagesSwitchButton: (toEnable: number) => string;
+  private readonly notificationsForNewMessagesSwitchButton: (toEnable: number) => string;
 
   private readonly notificationsFormSaveButton: string;
 
@@ -51,9 +51,9 @@ class AdministrationPage extends BOBasePage {
     this.alertSuccessBlock = 'div.alert[role=alert] div.alert-text';
 
     // Notifications form selectors
-    this.showNotificationsForNewOrdersSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_orders_${toEnable}`;
-    this.showNotificationsForNewCustomersSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_customers_${toEnable}`;
-    this.showNotificationsForNewMessagesSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_messages_${toEnable}`;
+    this.notificationsForNewOrdersSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_orders_${toEnable}`;
+    this.notificationsForNewCustomersSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_customers_${toEnable}`;
+    this.notificationsForNewMessagesSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_messages_${toEnable}`;
     this.notificationsFormSaveButton = '#configuration_fieldset_notifications button';
   }
 
@@ -127,7 +127,7 @@ class AdministrationPage extends BOBasePage {
    * @return {Promise<string>}
    */
   async setShowNotificationsForNewOrders(page: Page, toEnable: boolean): Promise<string> {
-    await this.setChecked(page, this.showNotificationsForNewOrdersSwitchButton(toEnable ? 1 : 0));
+    await this.setChecked(page, this.notificationsForNewOrdersSwitchButton(toEnable ? 1 : 0));
     await this.clickAndWaitForURL(page, this.notificationsFormSaveButton);
 
     return this.getAlertSuccessBlockContent(page);
@@ -140,7 +140,7 @@ class AdministrationPage extends BOBasePage {
    * @return {Promise<string>}
    */
   async setShowNotificationsForNewCustomers(page: Page, toEnable: boolean): Promise<string> {
-    await this.setChecked(page, this.showNotificationsForNewCustomersSwitchButton(toEnable ? 1 : 0));
+    await this.setChecked(page, this.notificationsForNewCustomersSwitchButton(toEnable ? 1 : 0));
     await this.clickAndWaitForURL(page, this.notificationsFormSaveButton);
 
     return this.getAlertSuccessBlockContent(page);
@@ -153,7 +153,7 @@ class AdministrationPage extends BOBasePage {
    * @return {Promise<string>}
    */
   async setShowNotificationsForNewMessages(page: Page, toEnable: boolean): Promise<string> {
-    await this.setChecked(page, this.showNotificationsForNewMessagesSwitchButton(toEnable ? 1 : 0));
+    await this.setChecked(page, this.notificationsForNewMessagesSwitchButton(toEnable ? 1 : 0));
     await this.clickAndWaitForURL(page, this.notificationsFormSaveButton);
 
     return this.getAlertSuccessBlockContent(page);
