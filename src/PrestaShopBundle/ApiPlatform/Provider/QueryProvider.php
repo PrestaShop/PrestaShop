@@ -28,24 +28,22 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Provider;
 
-use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class QueryProvider implements ProviderInterface
 {
-    /**
-     * @param CommandBusInterface $queryBus
-     * @param DomainSerializer $apiPlatformSerializer
-     */
+    use QueryResultSerializerTrait;
+
     public function __construct(
-        private readonly CommandBusInterface $queryBus,
-        private readonly DomainSerializer $apiPlatformSerializer,
+        protected readonly CommandBusInterface $queryBus,
+        protected readonly DomainSerializer $apiPlatformSerializer,
     ) {
     }
 
@@ -71,20 +69,8 @@ class QueryProvider implements ProviderInterface
         }
 
         $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
-
         $queryResult = $this->queryBus->handle($query);
 
-        //Handle return type
-        $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
-
-        if ($operation instanceof CollectionOperationInterface) {
-            foreach ($normalizedQueryResult as $key => $result) {
-                $normalizedQueryResult[$key] = $this->apiPlatformSerializer->denormalize($result, $operation->getClass());
-            }
-
-            return $normalizedQueryResult;
-        }
-
-        return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
+        return $this->denormalizeQueryResult($queryResult, $operation);
     }
 }
