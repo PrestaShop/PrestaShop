@@ -965,7 +965,6 @@ class CartRuleCore extends ObjectModel
 
         // Do all of this only if the cart rule actually has some restrictions
         if ($this->product_restriction) {
-
             // Load products in cart and return if it's empty, there is no point in checking anything else
             $products = $cart->getProducts();
             if (empty($products)) {
