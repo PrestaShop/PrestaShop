@@ -496,7 +496,7 @@ class FrontControllerCore extends Controller
         }
 
         $templateVars = [
-            'cart' => $this->cart_presenter->present($cart),
+            'cart' => $this->cart_presenter->present($cart, true),
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'country' => $this->objectPresenter->present($this->context->country),

@@ -838,6 +838,9 @@ class CartRuleCore extends ObjectModel
             return (!$display_error) ? false : $this->trans('You cannot use this voucher', [], 'Shop.Notifications.Error');
         }
 
+        /*
+         * Now, we need to check if the cart rule meets the minimum requirements to use it.
+         */
         if ($this->minimum_amount && $check_carrier) {
             // Minimum amount is converted to the contextual currency
             $minimum_amount = $this->minimum_amount;
@@ -845,6 +848,7 @@ class CartRuleCore extends ObjectModel
                 $minimum_amount = Tools::convertPriceFull($minimum_amount, new Currency($this->minimum_amount_currency), Context::getContext()->currency);
             }
 
+            // Let's get the full cart total first, add shipping price if the rule was configured like this.
             $cartTotal = $cart->getOrderTotal(
                 $this->minimum_amount_tax,
                 Cart::ONLY_PRODUCTS,
@@ -863,13 +867,26 @@ class CartRuleCore extends ObjectModel
                     $useOrderPrices
                 );
             }
+
+            /*
+             * Now, we will reduce the cart total by all already applied gifts in the cart.
+             *
+             * This is big magic happening here, because it's subtracting the gifts from the cart total one by one, by matching it.
+             *
+             * It would be much better if $cart->getOrderTotal returned the total without the gifts, which it should actually do by the way.
+             * Check inside of that method, if 'is_gift' is not empty, it should skip that product.
+             * But, that would require calling getProducts inside that method with $cart->shouldSplitGiftProductsQuantity enabled.
+             * But, if that started to work, it would mess up all places in the code, where it expects Cart::ONLY_PRODUCTS to include gifts.
+             *
+             * A solution would be to create Cart::ONLY_PRODUCTS_WITHOUT_GIFTS, that we could use here.
+             */
             $products = $cart->getProducts();
             $cart_rules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
 
             foreach ($cart_rules as $cart_rule) {
                 if ($cart_rule['gift_product']) {
                     foreach ($products as $key => &$product) {
-                        if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
+                        if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'] && empty($product['id_customization'])) {
                             $cartTotal = Tools::ps_round($cartTotal - $product[$this->minimum_amount_tax ? 'price_wt' : 'price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
                         }
                     }
@@ -897,7 +914,9 @@ class CartRuleCore extends ObjectModel
                 if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart) {
                     return (!$display_error) ? false : $this->trans('This voucher is already in your cart', [], 'Shop.Notifications.Error');
                 }
-                $giftProductQuantity = $cart->getProductQuantity($otherCartRule['gift_product'], $otherCartRule['gift_product_attribute']);
+
+                // We try to check how many gifts are already in the cart, with this product ID, combination ID and no customization.
+                $giftProductQuantity = $cart->getProductQuantity($otherCartRule['gift_product'], $otherCartRule['gift_product_attribute'], 0);
 
                 if ($otherCartRule['gift_product'] && !empty($giftProductQuantity['quantity'])) {
                     --$nb_products;
