@@ -241,6 +241,7 @@ class AdminGroupsControllerCore extends AdminController
         $this->tpl_view_vars = [
             'group' => $group,
             'language' => $this->context->language,
+            // @phpstan-ignore-next-line
             'customerList' => $this->renderCustomersList($group),
             'categorieReductions' => $this->formatCategoryDiscountList($group->id),
         ];
@@ -248,7 +249,7 @@ class AdminGroupsControllerCore extends AdminController
         return parent::renderView();
     }
 
-    protected function renderCustomersList($group)
+    protected function renderCustomersList(Group $group)
     {
         $genders = [0 => '?'];
         $genders_icon = ['default' => 'unknown.gif'];
@@ -449,7 +450,7 @@ class AdminGroupsControllerCore extends AdminController
         return parent::renderForm();
     }
 
-    protected function formatCategoryDiscountList($id_group)
+    protected function formatCategoryDiscountList(int $id_group)
     {
         $group_reductions = GroupReduction::getGroupReductions((int) $id_group, $this->context->language->id);
         $category_reductions = [];

@@ -103,9 +103,9 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
-    protected function _cleanMetaKeywords($keywords)
+    protected function _cleanMetaKeywords(string $keywords)
     {
-        if (!empty($keywords) && $keywords != '') {
+        if (!empty($keywords)) {
             $out = [];
             $words = explode(',', $keywords);
             foreach ($words as $word_item) {

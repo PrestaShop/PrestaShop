@@ -534,7 +534,7 @@ class AdminStoresControllerCore extends AdminController
         return $formFields;
     }
 
-    protected function _buildOrderedFieldsShop($formFields)
+    protected function _buildOrderedFieldsShop(array $formFields)
     {
         // You cannot do that, because the fields must be sorted for the country you've selected.
         // Simple example: the current country is France, where we don't display the state. You choose "US" as a country in the form. The state is not dsplayed at the right place...
@@ -610,7 +610,7 @@ class AdminStoresControllerCore extends AdminController
      *
      * @return array
      */
-    protected function adaptHoursFormat($value)
+    protected function adaptHoursFormat(array $value)
     {
         $separator = array_fill(0, count($value), ' | ');
 

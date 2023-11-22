@@ -278,7 +278,7 @@ class AdminCartRulesControllerCore extends AdminController
     }
 
     /**
-     * @param $current_object
+     * @param CartRule $current_object
      *
      * @return bool|void
      *
@@ -320,7 +320,7 @@ class AdminCartRulesControllerCore extends AdminController
     /**
      * @TODO Move this function into CartRule
      *
-     * @param ObjectModel $currentObject
+     * @param CartRule $currentObject
      *
      * @return bool|void
      *
@@ -634,9 +634,9 @@ class AdminCartRulesControllerCore extends AdminController
         }
     }
 
-    protected function searchProducts($search)
+    protected function searchProducts(string $searchString)
     {
-        if ($products = Product::searchByName((int) $this->context->language->id, $search)) {
+        if ($products = Product::searchByName((int) $this->context->language->id, $searchString)) {
             foreach ($products as &$product) {
                 $combinations = [];
                 $productObj = new Product((int) $product['id_product'], false, (int) $this->context->language->id);

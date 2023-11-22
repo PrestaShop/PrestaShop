@@ -585,7 +585,7 @@ class AdminImagesControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function _deleteOldImages($dir, $type, $product = false)
+    protected function _deleteOldImages(string $dir, array $type, bool $product = false)
     {
         if (!is_dir($dir)) {
             return false;
@@ -640,7 +640,7 @@ class AdminImagesControllerCore extends AdminController
      *
      * @return bool|string
      */
-    protected function _regenerateNewImages($dir, $type, $productsImages = false)
+    protected function _regenerateNewImages(string $dir, array $type, bool $productsImages = false)
     {
         if (!is_dir($dir)) {
             return false;
@@ -758,7 +758,7 @@ class AdminImagesControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function _regenerateNoPictureImages($dir, $type, $languages)
+    protected function _regenerateNoPictureImages(string $dir, array $type, array $languages)
     {
         $errors = false;
 
@@ -799,7 +799,7 @@ class AdminImagesControllerCore extends AdminController
     }
 
     /* Hook watermark optimization */
-    protected function _regenerateWatermark($dir, $type = null)
+    protected function _regenerateWatermark(string $dir, array $formats = null)
     {
         $result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `' . _DB_PREFIX_ . 'module` m
@@ -815,7 +815,7 @@ class AdminImagesControllerCore extends AdminController
                     foreach ($result as $module) {
                         $moduleInstance = Module::getInstanceByName($module['name']);
                         if ($moduleInstance && is_callable([$moduleInstance, 'hookActionWatermark'])) {
-                            call_user_func([$moduleInstance, 'hookActionWatermark'], ['id_image' => $imageObj->id, 'id_product' => $imageObj->id_product, 'image_type' => $type]);
+                            call_user_func([$moduleInstance, 'hookActionWatermark'], ['id_image' => $imageObj->id, 'id_product' => $imageObj->id_product, 'image_type' => $formats]);
                         }
 
                         if (time() - $this->start_time > $this->max_execution_time - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
@@ -827,7 +827,7 @@ class AdminImagesControllerCore extends AdminController
         }
     }
 
-    protected function _regenerateThumbnails($type = 'all', $deleteOldImages = false)
+    protected function _regenerateThumbnails(string $type = 'all', bool $deleteOldImages = false)
     {
         $this->start_time = time();
         ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
