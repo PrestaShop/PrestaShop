@@ -30,9 +30,11 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\ApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DateTimeImmutableDenormalizer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
@@ -57,13 +59,27 @@ class DomainSerializerTest extends TestCase
     /**
      * @dataProvider getExpectedDenormalizedData
      */
-    public function testDenormalize(array $arrayToDenormalize, $denormalizedObject): void
+    public function testDenormalize($dataToDenormalize, $denormalizedObject): void
     {
-        self::assertEquals($denormalizedObject, $this->serializer->denormalize($arrayToDenormalize, get_class($denormalizedObject)));
+        self::assertEquals($denormalizedObject, $this->serializer->denormalize($dataToDenormalize, get_class($denormalizedObject)));
     }
 
     public function getExpectedDenormalizedData()
     {
+        $normalizedCreatedApiAccess = [
+            'apiAccessId' => [
+                'value' => 42,
+            ],
+            'secret' => 'my_secret',
+        ];
+        $apiResource = new ApiAccess();
+        $apiResource->apiAccessId = 42;
+        $apiResource->secret = 'my_secret';
+        yield [
+            $normalizedCreatedApiAccess,
+            $apiResource,
+        ];
+
         yield [
             [
                 'localizedNames' => [
@@ -124,6 +140,46 @@ class DomainSerializerTest extends TestCase
                 // 'cartRuleAction' => ['freeShipping' => true, 'giftProduct' => ['productId': 1], 'discount' => ['amountDiscount' => ['amount' => 10]]]...
             ],
             $editCartRuleCommand,
+        ];
+    }
+
+    /**
+     * @dataProvider getNormalizationData
+     */
+    public function testNormalize($dataToNormalize, $expectedNormalizedData, ?array $normalizationMapping = []): void
+    {
+        self::assertEquals($expectedNormalizedData, $this->serializer->normalize($dataToNormalize, null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]));
+    }
+
+    public function getNormalizationData(): iterable
+    {
+        $groupId = new GroupId(42);
+        yield 'normalize value object' => [
+            $groupId,
+            [
+                'value' => 42,
+            ],
+        ];
+
+        $groupId = new GroupId(42);
+        yield 'normalize value object with mapping null' => [
+            $groupId,
+            [
+                'value' => 42,
+            ],
+            null,
+        ];
+
+        $groupId = new GroupId(42);
+        yield 'normalize value object with mapping for value' => [
+            $groupId,
+            [
+                'value' => 42,
+                'customerGroupId' => 42,
+            ],
+            [
+                '[value]' => '[customerGroupId]',
+            ],
         ];
     }
 }

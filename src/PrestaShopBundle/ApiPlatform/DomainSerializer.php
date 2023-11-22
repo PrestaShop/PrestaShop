@@ -30,6 +30,7 @@ namespace PrestaShopBundle\ApiPlatform;
 use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
@@ -37,7 +38,11 @@ use Traversable;
 
 class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 {
+    public const NORMALIZATION_MAPPING = 'normalization_mapping';
+
     private SymfonySerializer $serializer;
+
+    private PropertyAccessor $propertyAccessor;
 
     /**
      * @param Traversable $denormalizers
@@ -45,6 +50,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     public function __construct(Traversable $denormalizers)
     {
         $this->serializer = new SymfonySerializer(iterator_to_array($denormalizers));
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     /**
@@ -75,21 +81,29 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
             if ($reflectionMethod = $this->findSetterMethod($param, $type)) {
                 $methodParameters = $reflectionMethod->getParameters();
                 foreach ($methodParameters as $methodParameter) {
-                    $requestValue = is_array($value) && isset($value[$methodParameter->getName()]) ? $value[$methodParameter->getName()] : $value;
-                    if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($requestValue)) {
-                        $parameters[] = $this->serializer->denormalize($requestValue, $methodParameter->getType()->getName());
-                    } else {
-                        $parameters[] = $requestValue;
-                    }
+                    $paramType = $methodParameter->getType() instanceof \ReflectionNamedType ? $methodParameter->getType()->getName() : null;
+                    $parameters[] = $this->getConvertedValue($value, $methodParameter->getName(), $paramType);
                 }
 
                 $reflectionMethod->invoke($action, ...$parameters);
             } elseif ($propertyAccessor->isWritable($action, $param)) {
-                $propertyAccessor->setValue($action, $param, $value);
+                $propertyAccessor->setValue($action, $param, $this->getConvertedValue($value, $param, null));
             }
         }
 
         return $action;
+    }
+
+    private function getConvertedValue($value, string $paramName, ?string $paramType)
+    {
+        $convertedValue = is_array($value) && isset($value[$paramName]) ? $value[$paramName] : $value;
+        // If converted value is an array with only value it is likely a serialized ValueObject
+        $convertedValue = is_array($convertedValue) && isset($convertedValue['value']) ? $convertedValue['value'] : $convertedValue;
+        if ($paramType && $paramType !== gettype($convertedValue)) {
+            return $this->serializer->denormalize($convertedValue, $paramType);
+        } else {
+            return $convertedValue;
+        }
     }
 
     /**
@@ -97,7 +111,12 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     public function normalize($object, string $format = null, array $context = [])
     {
-        return $this->serializer->normalize($object, $format, $context);
+        $normalizedData = $this->serializer->normalize($object, $format, $context);
+        if (!empty($context[self::NORMALIZATION_MAPPING])) {
+            $this->mapNormalizedData($normalizedData, $context[self::NORMALIZATION_MAPPING]);
+        }
+
+        return $normalizedData;
     }
 
     /**
@@ -136,5 +155,21 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Modify the normalized data based on a mapping, basically it copies some values from a path to another, the original
+     * path is not modified.
+     *
+     * @param $normalizedData
+     * @param array $normalizationMapping
+     */
+    private function mapNormalizedData(&$normalizedData, array $normalizationMapping): void
+    {
+        foreach ($normalizationMapping as $originPath => $targetPath) {
+            if ($this->propertyAccessor->isReadable($normalizedData, $originPath) && $this->propertyAccessor->isWritable($normalizedData, $targetPath)) {
+                $this->propertyAccessor->setValue($normalizedData, $targetPath, $this->propertyAccessor->getValue($normalizedData, $originPath));
+            }
+        }
     }
 }
