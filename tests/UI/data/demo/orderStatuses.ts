@@ -17,6 +17,14 @@ export default {
     invoiceOn: true,
     emailTemplate: 'payment',
   }),
+  processingInProgress: new OrderStatusData({
+    id: 3,
+    name: 'Processing in progress',
+    sendEmailOn: true,
+    deliveryOn: true,
+    invoiceOn: true,
+    emailTemplate: 'preparation',
+  }),
   shipped: new OrderStatusData({
     id: 4,
     name: 'Shipped',
@@ -57,12 +65,12 @@ export default {
     invoiceOn: false,
     emailTemplate: 'bankwire',
   }),
-  processingInProgress: new OrderStatusData({
-    id: 3,
-    name: 'Processing in progress',
-    sendEmailOn: true,
-    deliveryOn: true,
-    invoiceOn: true,
-    emailTemplate: 'preparation',
+  awaitingCashOnDelivery: new OrderStatusData({
+    id: 13,
+    name: 'Awaiting Cash On Delivery validation',
+    sendEmailOn: false,
+    deliveryOn: false,
+    invoiceOn: false,
+    emailTemplate: 'cashondelivery',
   }),
 };
