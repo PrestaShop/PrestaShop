@@ -48,6 +48,7 @@ class ShopContext
         protected string $domain,
         protected string $domainSSL,
         protected bool $active,
+        protected bool $secured,
     ) {
     }
 
@@ -109,5 +110,21 @@ class ShopContext
     public function getDomainSSL(): string
     {
         return $this->domainSSL;
+    }
+
+    public function getBaseURI(): string
+    {
+        return $this->physicalUri . $this->virtualUri;
+    }
+
+    public function getBaseURL(): string
+    {
+        if ($this->secured) {
+            $url = 'https://' . $this->domainSSL;
+        } else {
+            $url = 'http://' . $this->domain;
+        }
+
+        return $url . $this->getBaseURI();
     }
 }

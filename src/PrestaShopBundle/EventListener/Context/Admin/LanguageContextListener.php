@@ -51,12 +51,15 @@ class LanguageContextListener
             return;
         }
 
+        $defaultLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT');
+        $this->languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
+
         if ($this->employeeContext->getEmployee()) {
             // Use the employee language if available
             $this->languageContextBuilder->setLanguageId($this->employeeContext->getEmployee()->getLanguageId());
         } else {
             // If not use the default language of the shop
-            $this->languageContextBuilder->setLanguageId((int) $this->configuration->get('PS_LANG_DEFAULT'));
+            $this->languageContextBuilder->setLanguageId($defaultLanguageId);
         }
     }
 }

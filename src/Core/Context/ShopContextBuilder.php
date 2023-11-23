@@ -43,10 +43,11 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
     private ?ShopConstraint $shopConstraint = null;
     private ?int $shopId = null;
     private ?LegacyShop $legacyShop = null;
+    private bool $secureMode = false;
 
     public function __construct(
         private readonly ShopRepository $shopRepository,
-        private readonly ContextStateManager $contextStateManager
+        private readonly ContextStateManager $contextStateManager,
     ) {
     }
 
@@ -67,7 +68,8 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
             virtualUri: $legacyShop->virtual_uri ?? '',
             domain: $legacyShop->domain ?? '',
             domainSSL: $legacyShop->domain_ssl ?? '',
-            active: (bool) $legacyShop->active
+            active: (bool) $legacyShop->active,
+            secured: $this->secureMode
         );
     }
 
@@ -100,6 +102,11 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
         $this->shopConstraint = $shopConstraint;
 
         return $this;
+    }
+
+    public function setSecureMode(bool $canUseSecureMode): void
+    {
+        $this->secureMode = $canUseSecureMode;
     }
 
     private function assertArguments(): void

@@ -111,17 +111,19 @@ class LegacyControllerContext
      * @param string|null $token Legacy security token
      * @param string $override_folder
      * @param string $currentIndex Legacy current index built like a legacy URL based on controller name
+     *
+     * @todo Add a readonly tag to fields when switching to symfony 6.2, currently an error does not allow this to be done (see https://github.com/FriendsOfPHP/proxy-manager-lts/issues/26)
      */
     public function __construct(
         protected readonly ContainerInterface $container,
-        public readonly string $controller_name,
-        public readonly string $controller_type,
-        public readonly int $multishop_context,
-        public readonly ?string $className,
-        public readonly int $id,
-        public readonly ?string $token,
-        public readonly string $override_folder,
-        public readonly string $currentIndex
+        public string $controller_name,
+        public string $controller_type,
+        public int $multishop_context,
+        public ?string $className,
+        public int $id,
+        public ?string $token,
+        public string $override_folder,
+        public string $currentIndex
     ) {
         $this->php_self = $this->controller_name;
     }

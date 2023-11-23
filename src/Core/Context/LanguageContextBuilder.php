@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 class LanguageContextBuilder
 {
     private ?int $languageId = null;
+    private ?int $defaultLanguageId = null;
 
     public function __construct(
         private readonly LanguageRepositoryInterface $languageRepository,
@@ -50,6 +51,51 @@ class LanguageContextBuilder
         /** @var LanguageInterface $language */
         $language = $this->languageRepository->find($this->languageId);
 
+        return $this->buildLanguageContext($language);
+    }
+
+    public function buildDefault(): LanguageContext
+    {
+        $this->assertDefaultArguments();
+
+        /** @var LanguageInterface $language */
+        $language = $this->languageRepository->find($this->defaultLanguageId);
+
+        return $this->buildLanguageContext($language);
+    }
+
+    public function setLanguageId(int $languageId): void
+    {
+        $this->languageId = $languageId;
+    }
+
+    public function setDefaultLanguageId(int $languageId): void
+    {
+        $this->defaultLanguageId = $languageId;
+    }
+
+    private function assertArguments(): void
+    {
+        if (null === $this->languageId) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot build Language context as no languageId has been defined you need to call %s::setLanguageId to define it before building the Language context',
+                self::class
+            ));
+        }
+    }
+
+    private function assertDefaultArguments(): void
+    {
+        if (null === $this->defaultLanguageId) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot build Language context as no defaultLanguageId has been defined you need to call %s::setDefaultLanguageId to define it before building the Language context',
+                self::class
+            ));
+        }
+    }
+
+    private function buildLanguageContext(LanguageInterface $language): LanguageContext
+    {
         $localizationLocale = $this->localeRepository->getLocale($language->getLocale());
 
         return new LanguageContext(
@@ -63,20 +109,5 @@ class LanguageContextBuilder
             dateTimeFormat: $language->getDateTimeFormat(),
             localizationLocale: $localizationLocale,
         );
-    }
-
-    public function setLanguageId(int $languageId): void
-    {
-        $this->languageId = $languageId;
-    }
-
-    private function assertArguments(): void
-    {
-        if (null === $this->languageId) {
-            throw new InvalidArgumentException(sprintf(
-                'Cannot build Language context as no languageId has been defined you need to call %s::setLanguageId to define it before building the Language context',
-                self::class
-            ));
-        }
     }
 }

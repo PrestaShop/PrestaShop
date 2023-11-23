@@ -44,6 +44,7 @@ use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCa
 
 class ShopContextListenerTest extends ContextEventListenerTestCase
 {
+    private const PS_SSL_ENABLED = 1;
     private const DEFAULT_SHOP_ID = 42;
     private const EMPLOYEE_DEFAULT_SHOP_ID = 51;
 
@@ -59,7 +60,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $listener = new ShopContextListener(
             $shopContextBuilder,
             $this->mockEmployeeContext(),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID]),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $this->mockLegacyContext(['shopContext' => '']),
             $this->mockMultistoreFeature(false)
         );
@@ -91,7 +92,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $listener = new ShopContextListener(
             $shopContextBuilder,
             $this->mockEmployeeContext($employeeData),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID]),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $this->mockLegacyContext(['shopContext' => $cookieValue]),
             $this->mockMultistoreFeature(true)
         );
@@ -165,7 +166,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $listener = new ShopContextListener(
             $shopContextBuilder,
             $this->mockEmployeeContext(),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID]),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $mockContext,
             $this->mockMultistoreFeature(true)
         );

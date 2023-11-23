@@ -28,168 +28,104 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Layout;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
-use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Entity\Tab;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
-use Shop;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Tools;
 
+/**
+ * Allows you to define variables accessible globally in a twig rendering.
+ * Only public methods will be accessible on the rendering.
+ */
 class PrestaShopLayoutGlobalVariables
 {
-    private ?string $displayBackOfficeTop = null;
-
     public function __construct(
         private readonly LegacyContext $context,
-        private readonly bool $debugMode,
-        private readonly RequestStack $requestStack,
-        private readonly CsrfTokenManagerInterface $tokenManager,
-        private readonly UserProvider $userProvider,
-        private readonly string $psVersion,
-        private readonly Configuration $configuration,
-        private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly MenuBuilder $menuBuilder,
-        private readonly TabRepository $tabRepository,
-        private readonly LocaleRepository $localeRepository,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        private readonly TemplateVariables $templateVariables,
+        private readonly SmartyVariablesFiller $assignSmartyVariables,
     ) {
     }
 
     /**
-     * Used to set the current locale in the context.
-     * TODO: Need to be removed when we rework on contexts.
-     */
-    public function setCurrentLocale(): void
-    {
-        $this->context->getContext()->currentLocale = $this->localeRepository->getLocale(
-            $this->context->getLanguage()->getLocale()
-        );
-    }
-
-    /**
      * Enable New theme for smarty to avoid some problems with kpis for instance...
+     * Allows you to fill variables in the smarty context
      * TODO: Need to be refactored, we need to find a proper way to initialize this smarty template directory when we display a migrated page
      */
-    public function enableSmartyNewTheme(): void
+    public function setupSmarty(string $title, string $metaTitle, bool $liteDisplay): void
     {
         $this->context->getContext()->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/');
+        $this->assignSmartyVariables->fill($title, $metaTitle, $liteDisplay);
     }
 
     public function getIsoUser(): string
     {
-        return $this->context->getLanguage()->getIsoCode();
+        return $this->templateVariables->getIsoUser();
     }
 
     public function isSymfonyLayoutEnabled(): bool
     {
-        return $this->featureFlagStateChecker->isEnabled('symfony_layout');
+        return $this->templateVariables->isSymfonyLayoutEnabled();
     }
 
     public function isRtlLanguage(): bool
     {
-        return (bool) $this->context->getLanguage()->isRTL();
+        return $this->templateVariables->isRtlLanguage();
     }
 
     public function getControllerName(): string
     {
-        return htmlentities(Tools::getValue('controller'));
+        return $this->templateVariables->getControllerName();
     }
 
     public function isMultiShop(): bool
     {
-        return Shop::isFeatureActive();
+        return $this->templateVariables->isMultiShop();
     }
 
     public function isMenuCollapsed(): bool
     {
-        $cookie = $this->context->getContext()->cookie;
-
-        if (isset($cookie->collapse_menu)) {
-            return boolval($cookie->collapse_menu);
-        }
-
-        return false;
+        return $this->templateVariables->isMenuCollapsed();
     }
 
     public function getJsRouterMetadata(): array
     {
-        return [
-            // base url for javascript router
-            'base_url' => $this->requestStack->getCurrentRequest()->getBaseUrl(),
-            //security token for javascript router
-            'token' => $this->tokenManager->getToken($this->userProvider->getUsername())->getValue(),
-        ];
+        return $this->templateVariables->getJsRouterMetadata();
     }
 
     public function isDebugMode(): bool
     {
-        return $this->debugMode;
+        return $this->templateVariables->isDebugMode();
     }
 
     public function installDirExists(): bool
     {
-        return file_exists(_PS_ADMIN_DIR_ . '/../install');
+        return $this->templateVariables->isInstallDirExists();
     }
 
     public function getVersion(): string
     {
-        return $this->psVersion;
+        return $this->templateVariables->getVersion();
     }
 
     public function getDefaultTabLink(): string
     {
-        /** @var Tab $tab */
-        $tab = $this->tabRepository->findOneBy(['id' => (int) $this->context->getContext()->employee->default_tab]);
-
-        return $this->context->getLegacyAdminLink($tab->getClassName());
+        return $this->templateVariables->getDefaultTabLink();
     }
 
     public function isMaintenanceEnabled(): bool
     {
-        return !(bool) $this->configuration->get('PS_SHOP_ENABLE');
+        return $this->templateVariables->isMaintenanceEnabled();
     }
 
     public function isFrontOfficeAccessibleForAdmins(): bool
     {
-        return (bool) $this->configuration->get('PS_MAINTENANCE_ALLOW_ADMINS');
-    }
-
-    public function getDisplayBackOfficeTop(): ?string
-    {
-        if ($this->displayBackOfficeTop) {
-            return $this->displayBackOfficeTop;
-        }
-
-        $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters('displayBackOfficeTop');
-
-        if (!$content = $renderedHook->getContent()) {
-            return null;
-        }
-
-        foreach ($content as $hookContent) {
-            if (is_array($hookContent)) {
-                $this->displayBackOfficeTop .= implode($hookContent);
-            } else {
-                $this->displayBackOfficeTop = $hookContent;
-            }
-        }
-
-        return $this->displayBackOfficeTop;
+        return $this->templateVariables->isFrontOfficeAccessibleForAdmins();
     }
 
     public function isDisplayedWithTabs(): bool
     {
-        return $this->menuBuilder->getCurrentTabLevel() >= 3;
+        return $this->templateVariables->isDisplayedWithTabs();
     }
 
     public function getBaseUrl(): string
     {
-        return $this->context->getContext()->shop->getBaseURL();
+        return $this->templateVariables->getBaseUrl();
     }
 }

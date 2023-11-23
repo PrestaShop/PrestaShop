@@ -22,10 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
-{# TODO: Need to be removed when we doen't have anymore problems with new theme and smarty. #}
-{{ ps.enableSmartyNewTheme() }}
-{# TODO: Need to be removed when we have new contexts! #}
-{{ ps.setCurrentLocale() }}
+{# TODO: To be removed when we find a better time to fill the smarty variables. #}
+{{ ps.setupSmarty(layoutTitle ?? '', metaTitle, lightDisplay) }}
 <!DOCTYPE html>
 <html lang="{{ ps.isoUser }}">
   <head>
@@ -131,7 +129,7 @@
         </div>
         {{ component('NotificationsCenter') }}
         {{ component('EmployeeDropdown') }}
-        {{ ps.displayBackOfficeTop }}
+        {{ renderhook('displayBackOfficeTop') }}
       </div>
     </nav>
   </header>
