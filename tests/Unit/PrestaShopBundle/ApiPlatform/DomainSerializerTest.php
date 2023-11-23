@@ -34,6 +34,7 @@ use PrestaShop\Module\APIResources\ApiPlatform\Resources\ApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DateTimeImmutableDenormalizer;
@@ -179,6 +180,40 @@ class DomainSerializerTest extends TestCase
             ],
             [
                 '[value]' => '[customerGroupId]',
+            ],
+        ];
+
+        $editableCustomerGroup = new EditableCustomerGroup(
+            42,
+            [
+                1 => 'Group',
+                2 => 'Groupe',
+            ],
+            new DecimalNumber('10.67'),
+            false,
+            true,
+            [
+                1,
+            ],
+        );
+
+        yield 'normalize object with getter not starting by get and mapping for help' => [
+            $editableCustomerGroup,
+            [
+                'id' => 42,
+                'localizedNames' => [
+                    1 => 'Group',
+                    2 => 'Groupe',
+                ],
+                'reduction' => 10.67,
+                'displayPriceTaxExcluded' => false,
+                'showPrice' => true,
+                'shopIds' => [
+                    1,
+                ],
+            ],
+            [
+                'displayPriceTaxExcluded' => '[displayPriceTaxExcluded]',
             ],
         ];
     }

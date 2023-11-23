@@ -28,9 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
+use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class DateTimeImmutableDenormalizer implements DenormalizerInterface
+class DateTimeImmutableDenormalizer implements DenormalizerInterface, CacheableSupportsMethodInterface
 {
     public function denormalize($data, string $type, string $format = null, array $context = [])
     {
@@ -40,6 +41,18 @@ class DateTimeImmutableDenormalizer implements DenormalizerInterface
     public function supportsDenormalization($data, string $type, string $format = null)
     {
         return \DateTimeImmutable::class === $type;
+    }
+
+    /**
+     * This denormalizer supports method only depends on the type, so it is cacheable.
+     * Careful if it is one day turned into a normalizer as well the supports methods must depend on the format
+     * only, or it won't be cacheable anymore and this value should be changed.
+     *
+     * {@inheritDoc}
+     */
+    public function hasCacheableSupportsMethod(): bool
+    {
+        return true;
     }
 
     /**
