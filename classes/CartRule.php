@@ -960,25 +960,41 @@ class CartRuleCore extends ObjectModel
      */
     public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
+        // Prepare a list of products to return, if the caller wishes so and provided returnProducts = true
         $selected_products = [];
 
-        // Check if the products chosen by the customer are usable with the cart rule
+        // Do all of this only if the cart rule actually has some restrictions
         if ($this->product_restriction) {
+            // Load products in cart and return if it's empty, there is no point in checking anything else
+            $products = $cart->getProducts();
+            if (empty($products)) {
+                return (!$displayError) ? false : $this->trans('You cannot use this voucher in an empty cart', [], 'Shop.Notifications.Error');
+            }
+
+            // Now we load all RULE GROUP.
             $product_rule_groups = $this->getProductRuleGroups();
             foreach ($product_rule_groups as $id_product_rule_group => $product_rule_group) {
+                /*
+                 * Rule group is a set of rules that the cart must meet for this cart rule to be applied.
+                 * These groups have an AND relationship. If you create two groups for given cart rule,
+                 * the cart must meet the conditions of both of them to be applied.
+                 *
+                 * Also, at least $product_rule_group['quantity'] must meet these rules.
+                 */
                 $eligible_products_list = [];
-                if (is_array($products = $cart->getProducts())) {
-                    foreach ($products as $product) {
-                        $eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
-                    }
+                foreach ($products as $product) {
+                    $eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
                 }
-                if (!count($eligible_products_list)) {
-                    return (!$displayError) ? false : $this->trans('You cannot use this voucher in an empty cart', [], 'Shop.Notifications.Error');
-                }
+
+                // Now, we load the RULES inside the RULE GROUP
                 $product_rules = $this->getProductRules($id_product_rule_group);
                 $countRulesProduct = count($product_rules);
                 $condition = 0;
                 foreach ($product_rules as $product_rule) {
+                    /*
+                     * For the cart RULE GROUP to be validated, at least on of the RULES inside the RULE GROUP
+                     * must meet the conditions.
+                     */
                     switch ($product_rule['type']) {
                         case 'attributes':
                             $cart_attributes = Db::getInstance()->executeS('
@@ -1312,6 +1328,9 @@ class CartRuleCore extends ObjectModel
             // Discount (%) on the selection of products
             if ((float) $this->reduction_percent && $this->reduction_product == -2) {
                 $selected_products_reduction = 0;
+
+                // Let's get products this cart rule applies to. We should get an array, but we can also
+                // get a false in some cases. It doesn't matter much though, as long as we check what we got.
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
