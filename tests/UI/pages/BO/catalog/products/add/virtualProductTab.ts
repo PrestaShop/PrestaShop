@@ -18,7 +18,7 @@ class VirtualProductTab extends BOBasePage {
 
   private readonly productMinimumQuantityInput: string;
 
-  private readonly productChooseFile: string;
+  private readonly productChooseFile: (toCheck: number) => string;
 
   private readonly productFile: string;
 
@@ -53,7 +53,7 @@ class VirtualProductTab extends BOBasePage {
     this.virtualProductTabLink = '#product_stock-tab-nav';
     this.productQuantityInput = '#product_stock_quantities_delta_quantity_delta';
     this.productMinimumQuantityInput = '#product_stock_quantities_minimal_quantity';
-    this.productChooseFile = '#product_stock_virtual_product_file_has_file_1';
+    this.productChooseFile = (toCheck: number) => `#product_stock_virtual_product_file_has_file_${toCheck}`;
     this.productFile = '#product_stock_virtual_product_file_file';
     this.productFileNameInput = '#product_stock_virtual_product_file_name';
     this.productFileDownloadTimesLimit = '#product_stock_virtual_product_file_download_times_limit';
@@ -94,7 +94,7 @@ class VirtualProductTab extends BOBasePage {
     await this.setProductQuantity(page, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);
     if (productData.downloadFile) {
-      await this.waitForSelectorAndClick(page, this.productChooseFile);
+      await this.setChecked(page, this.productChooseFile(productData.downloadFile ? 1 : 0));
       await this.waitForVisibleSelector(page, this.productFile);
       await this.uploadFile(page, this.productFile, productData.fileName);
       await this.setValue(page, this.productFileNameInput, productData.fileName);
@@ -102,6 +102,10 @@ class VirtualProductTab extends BOBasePage {
       await this.setValue(page, this.productFileExpirationDate, productData.expirationDate!);
       await this.setValue(page, this.productFileNumberOfDays, productData.numberOfDays!);
     }
+  }
+
+  async getErrorMessageInDownloadFileInput(page: Page): Promise<string> {
+    return this.getTextContent(page, '#product_stock_virtual_product_file div.form-group.file-widget.has-error div.alert-danger p');
   }
 
   // Methods for when out of stock

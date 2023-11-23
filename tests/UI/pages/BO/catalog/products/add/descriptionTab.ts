@@ -178,6 +178,19 @@ class DescriptionTab extends BOBasePage {
     return page.locator(this.productImage).count();
   }
 
+  async uploadProductImages(page: Page, imagesPaths: any[] = []): Promise<void> {
+    const filteredImagePaths = imagesPaths.filter((el) => el !== null);
+
+    if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
+      const numberOfImages = await this.getNumberOfImages(page);
+      await this.uploadOnFileChooser(
+        page,
+        numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock,
+        filteredImagePaths,
+      );
+    }
+  }
+
   /**
    * Add product images
    * @param page {Page} Browser tab

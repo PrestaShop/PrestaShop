@@ -51,9 +51,10 @@ class AddFile extends BOBasePage {
    * Create or edit file
    * @param page {Page} Browser tab
    * @param fileData {FileData} Data to set on add/edit file form
+   * @param save {boolean} True if we need to save the form
    * @returns {Promise<string>}
    */
-  async createEditFile(page: Page, fileData: FileData): Promise<string> {
+  async createEditFile(page: Page, fileData: FileData, save: boolean = true): Promise<string | null> {
     // Fill name and description in english
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValue(page, this.nameInput(1), fileData.name);
@@ -71,9 +72,19 @@ class AddFile extends BOBasePage {
       await fileInputElement.setInputFiles(fileData.filename);
     }
 
-    // Save Supplier
-    await this.clickAndWaitForURL(page, this.saveButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    if (save) {
+      // Save
+      await this.clickAndWaitForURL(page, this.saveButton);
+
+      return this.getAlertSuccessBlockParagraphContent(page);
+    }
+    return null;
+  }
+
+  async getTextDanger(page: Page): Promise<string> {
+    await page.locator(this.saveButton).click();
+
+    return this.getTextContent(page, '#attachment div.form-group.row.file-widget.has-error div.d-inline-block div.text-danger');
   }
 
   /**

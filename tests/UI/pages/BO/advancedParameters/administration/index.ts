@@ -22,6 +22,14 @@ class AdministrationPage extends BOBasePage {
 
   private readonly generalFormSaveButton: string;
 
+  private readonly maxSizeAttachedFiles: string;
+
+  private readonly maxSizeDownloadableProduct: string;
+
+  private readonly maxSizeProductImage: string;
+
+  private readonly saveUploadQuotaForm: string;
+
   private readonly notificationsForNewOrdersSwitchButton: (toEnable: number) => string;
 
   private readonly notificationsForNewCustomersSwitchButton: (toEnable: number) => string;
@@ -55,6 +63,12 @@ class AdministrationPage extends BOBasePage {
     this.notificationsForNewCustomersSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_customers_${toEnable}`;
     this.notificationsForNewMessagesSwitchButton = (toEnable: number) => `#notifications_show_notifs_new_messages_${toEnable}`;
     this.notificationsFormSaveButton = '#configuration_fieldset_notifications button';
+
+    // Upload quota form selectors
+    this.maxSizeAttachedFiles = '#upload-quota_max_size_attached_files';
+    this.maxSizeDownloadableProduct = '#upload-quota_max_size_downloadable_product';
+    this.maxSizeProductImage = '#upload-quota_max_size_product_image';
+    this.saveUploadQuotaForm = '#configuration_fieldset_upload button';
   }
 
   /*
@@ -155,6 +169,28 @@ class AdministrationPage extends BOBasePage {
   async setShowNotificationsForNewMessages(page: Page, toEnable: boolean): Promise<string> {
     await this.setChecked(page, this.notificationsForNewMessagesSwitchButton(toEnable ? 1 : 0));
     await this.clickAndWaitForURL(page, this.notificationsFormSaveButton);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  // Methods for upload quota form
+  async setMaxSizeAttachedFiles(page: Page, size: number): Promise<string> {
+    await this.setValue(page, this.maxSizeAttachedFiles, size);
+    await page.locator(this.saveUploadQuotaForm).click();
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  async setMaxSizeDownloadedProduct(page: Page, size: number): Promise<string> {
+    await this.setValue(page, this.maxSizeDownloadableProduct, size);
+    await page.locator(this.saveUploadQuotaForm).click();
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  async setMaxSizeForProductImage(page: Page, size: number): Promise<string> {
+    await this.setValue(page, this.maxSizeProductImage, size);
+    await page.locator(this.saveUploadQuotaForm).click();
 
     return this.getAlertSuccessBlockContent(page);
   }
