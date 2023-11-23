@@ -30,6 +30,7 @@ use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class CustomerGroupValidator extends AbstractObjectModelValidator
 {
@@ -83,7 +84,7 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     private function validateShopsExists(array $shopIds): void
     {
         foreach ($shopIds as $shopId) {
-            $this->shopRepository->assertShopExists($shopId);
+            $this->shopRepository->assertShopExists(new ShopId($shopId));
         }
     }
 

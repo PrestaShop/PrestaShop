@@ -17,22 +17,64 @@ Feature: CustomerGroup Management
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "test_shop2" and color "blue" for the group "default_shop_group"
     And I add a shop "shop3" with name "test_shop3" and color "red" for the group "default_shop_group"
+    And I add a shop "shop4" with name "test_shop4" and color "red" for the group "default_shop_group"
 
-  Scenario: Create a simple customer group
-    When I create a Customer Group "CustomerGroup1" with the following details:
+  Scenario: Create a simple customer group and udpate it
+    When I create a customer group "CustomerGroup1" with the following details:
       | name[en-US]             | Name EN           |
       | name[fr-FR]             | Name FR           |
       | reduction               | 1.23              |
       | displayPriceTaxExcluded | true              |
       | showPrice               | true              |
-      | shopIds                 | shop1,shop2,shop3 |
+      | shopIds                 | shop1,shop2,shop4 |
     # See CustomerGroupFeatureContext::transformEditableCustomerGroup
-    When I query Customer Group "CustomerGroup1" I should get a Customer Group with properties:
+    Then customer group "CustomerGroup1" have the following values:
       | customer group          | value             |
-      | id                      | 4                 |
+      | reference_id            | CustomerGroup1    |
       | name[en-US]             | Name EN           |
       | name[fr-FR]             | Name FR           |
       | reduction               | 1.23              |
       | displayPriceTaxExcluded | true              |
       | showPrice               | true              |
-      | shopIds                 | shop1,shop2,shop3 |
+      | shopIds                 | shop1,shop2,shop4 |
+    When I update customer group "CustomerGroup1" with the following details:
+      | name[en-US]             | New Name EN |
+      | name[fr-FR]             | New Name FR |
+      | reduction               | 2.56        |
+      | displayPriceTaxExcluded | false       |
+      | showPrice               | false       |
+      | shopIds                 | shop2,shop3 |
+    Then customer group "CustomerGroup1" have the following values:
+      | customer group          | value          |
+      | reference_id            | CustomerGroup1 |
+      | name[en-US]             | New Name EN    |
+      | name[fr-FR]             | New Name FR    |
+      | reduction               | 2.56           |
+      | displayPriceTaxExcluded | false          |
+      | showPrice               | false          |
+      | shopIds                 | shop2,shop3    |
+    # Test partial update
+    When I update customer group "CustomerGroup1" with the following details:
+      | displayPriceTaxExcluded | true |
+      | showPrice               | true |
+    Then customer group "CustomerGroup1" have the following values:
+      | customer group          | value          |
+      | reference_id            | CustomerGroup1 |
+      | name[en-US]             | New Name EN    |
+      | name[fr-FR]             | New Name FR    |
+      | reduction               | 2.56           |
+      | displayPriceTaxExcluded | true           |
+      | showPrice               | true           |
+      | shopIds                 | shop2,shop3    |
+    # Test partial update
+    When I update customer group "CustomerGroup1" with the following details:
+      | name[en-US] | Partial New Name EN |
+    Then customer group "CustomerGroup1" have the following values:
+      | customer group          | value               |
+      | reference_id            | CustomerGroup1      |
+      | name[en-US]             | Partial New Name EN |
+      | name[fr-FR]             | New Name FR         |
+      | reduction               | 2.56                |
+      | displayPriceTaxExcluded | true                |
+      | showPrice               | true                |
+      | shopIds                 | shop2,shop3         |

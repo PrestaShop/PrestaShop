@@ -32,21 +32,23 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When /^I create a Customer Group "(.+)" with the following details:$/
+     * @When I create a customer group :customerGroupReference with the following details:
      *
      * @param string $customerGroupReference
      * @param TableNode $tableNode
      *
      * @throws Exception
      */
-    public function createCustomerUsingCommand(string $customerGroupReference, TableNode $tableNode)
+    public function createCustomerGroupUsingCommand(string $customerGroupReference, TableNode $tableNode)
     {
         $data = $this->localizeByRows($tableNode);
 
@@ -64,11 +66,43 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I query Customer Group "(.+)" I should get a Customer Group with properties:$/
+     * @When I update customer group :customerGroupReference with the following details:
+     *
+     * @param string $customerGroupReference
+     * @param TableNode $tableNode
+     *
+     * @throws Exception
      */
-    public function assertQueryCustomerProperties($customerGroupReference, EditableCustomerGroup $expectedGroup)
+    public function updateCustomerGroupUsingCommand(string $customerGroupReference, TableNode $tableNode)
     {
-        Assert::assertEquals($this->getCustomerGroupForEditing($customerGroupReference), $expectedGroup);
+        $data = $this->localizeByRows($tableNode);
+
+        $command = new EditCustomerGroupCommand($this->referenceToId($customerGroupReference));
+        if (!empty($data['name'])) {
+            $command->setLocalizedNames($data['name']);
+        }
+        if (!empty($data['reduction'])) {
+            $command->setReductionPercent(new DecimalNumber($data['reduction']));
+        }
+        if (!empty($data['displayPriceTaxExcluded'])) {
+            $command->setDisplayPriceTaxExcluded(PrimitiveUtils::castStringBooleanIntoBoolean($data['displayPriceTaxExcluded']));
+        }
+        if (!empty($data['showPrice'])) {
+            $command->setShowPrice(PrimitiveUtils::castStringBooleanIntoBoolean($data['showPrice']));
+        }
+        if (!empty($data['shopIds'])) {
+            $command->setShopIds($this->referencesToIds($data['shopIds']));
+        }
+
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then customer group :customerGroupReference have the following values:
+     */
+    public function assertQueryCustomerGroupProperties($customerGroupReference, EditableCustomerGroup $expectedGroup)
+    {
+        Assert::assertEquals($expectedGroup, $this->getCustomerGroupForEditing($customerGroupReference));
     }
 
     /**
@@ -83,11 +117,11 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
         $data = $this->localizeByRows($tableNode);
 
         return new EditableCustomerGroup(
-            (int) $data['id'],
+            $this->referenceToId($data['reference_id']),
             $data['name'],
             new DecimalNumber($data['reduction']),
-            (bool) $data['displayPriceTaxExcluded'],
-            (bool) $data['showPrice'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['displayPriceTaxExcluded']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['showPrice']),
             $this->referencesToIds($data['shopIds'])
         );
     }

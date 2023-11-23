@@ -23,6 +23,11 @@ services:
     autowire: true
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\EditCustomerGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandler:
     public: false
     autowire: true
