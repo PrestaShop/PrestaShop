@@ -314,7 +314,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await descriptionTab.uploadProductImages(page, [firstStandardProductData.coverImage, firstStandardProductData.thumbImage]);
 
       const message = await createProductPage.getGrowlMessageContent(page);
-      expect(message).to.eq('Max file size allowed is \'1048576\' bytes');
+      expect(message).to.eq('Max file size allowed is "1048576" bytes.');
     });
 
     it('should create standard product and add an image size < 1MB and check the validation message', async function () {
@@ -328,11 +328,11 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
     });
 
-    it('should delete the created file', async function () {
+    it('should delete the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFile2', baseContext);
 
-      const result = await filesPage.deleteFile(page, 1);
-      expect(result).to.be.equal(filesPage.successfulDeleteMessage);
+      const createProductMessage = await createProductPage.deleteProduct(page);
+      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 });
