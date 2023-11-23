@@ -250,7 +250,7 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
           const fileExistsJPG = await files.doesFileExist(pathImageJPG);
           expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-          const imageTypeJPG = await files.getImageType(pathImageJPG);
+          const imageTypeJPG = await files.getFileType(pathImageJPG);
           expect(imageTypeJPG).to.be.eq(arg.extGenerated);
         });
       });

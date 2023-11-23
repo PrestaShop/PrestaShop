@@ -223,7 +223,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const fileExistsJPG = await files.doesFileExist(pathImageJPG);
           expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-          const imageTypeJPG = await files.getImageType(pathImageJPG);
+          const imageTypeJPG = await files.getFileType(pathImageJPG);
           expect(imageTypeJPG).to.be.eq(arg.extOriginal);
 
           // Check the cover image file
@@ -232,7 +232,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const fileExistsCoverJPG = await files.doesFileExist(pathImageCoverJPG);
           expect(fileExistsCoverJPG, `The file ${pathImageCoverJPG} doesn't exist!`).to.eq(true);
 
-          const imageTypeCoverJPG = await files.getImageType(pathImageCoverJPG);
+          const imageTypeCoverJPG = await files.getFileType(pathImageCoverJPG);
           expect(imageTypeCoverJPG).to.be.eq(arg.extImageType);
 
           // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
@@ -253,7 +253,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const fileExistsMetaJPG = await files.doesFileExist(pathImageMetaJPG);
           expect(fileExistsMetaJPG, `The file ${pathImageMetaJPG} doesn't exist!`).to.eq(true);
 
-          const imageTypeMetaJPG = await files.getImageType(pathImageMetaJPG);
+          const imageTypeMetaJPG = await files.getFileType(pathImageMetaJPG);
           expect(imageTypeMetaJPG).to.be.eq(arg.extOriginal);
 
           // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
@@ -296,7 +296,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
 
           await files.downloadFile(categoryImage as string, 'image.img');
 
-          const categoryImageType = await files.getImageType('image.img');
+          const categoryImageType = await files.getFileType('image.img');
           expect(categoryImageType).to.be.eq('webp');
 
           await files.deleteFile('image.img');
