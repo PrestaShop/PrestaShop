@@ -114,7 +114,6 @@ describe('API : External Auth Server - Authorization Endpoint', async () => {
 
       this.skip();
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34297
       const apiResponse = await apiContextBO.post('api/oauth2/token', {
         form: {
           client_id: 'my_client_id',

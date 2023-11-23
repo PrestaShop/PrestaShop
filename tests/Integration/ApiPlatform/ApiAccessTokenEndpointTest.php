@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,73 +29,59 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform;
 
-use ApiPlatform\Symfony\Bundle\Test\Client;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
-use Tests\Resources\DatabaseDump;
-
-abstract class ApiTestCase extends \ApiPlatform\Symfony\Bundle\Test\ApiTestCase
+class ApiAccessTokenEndpointTest extends ApiTestCase
 {
-    protected const CLIENT_ID = 'test_client_id';
-    protected const CLIENT_NAME = 'test_client_name';
-
-    protected static ?string $clientSecret = null;
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['api_access']);
+        static::createApiAccess([
+            'hook_read',
+            'hook_write',
+            'api_access_read',
+        ],
+            9999
+        );
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        DatabaseDump::restoreTables(['api_access']);
-        self::$clientSecret = null;
     }
 
-    protected static function createClient(array $kernelOptions = [], array $defaultOptions = []): Client
+    public function testApiAccessToken(): void
     {
-        if (!isset($defaultOptions['headers']['accept'])) {
-            $defaultOptions['headers']['accept'] = ['application/json'];
-        }
-
-        return parent::createClient($kernelOptions, $defaultOptions);
-    }
-
-    protected function getBearerToken(array $scopes = []): string
-    {
-        if (null === self::$clientSecret) {
-            self::createApiAccess($scopes);
-        }
         $client = static::createClient();
         $parameters = ['parameters' => [
             'client_id' => static::CLIENT_ID,
             'client_secret' => static::$clientSecret,
             'grant_type' => 'client_credentials',
-            'scope' => $scopes,
+            'scope' => [
+                'hook_read',
+                'hook_write',
+                'api_access_read',
+            ],
         ]];
         $options = ['extra' => $parameters];
         $response = $client->request('POST', '/api/oauth2/token', $options);
+        $token = json_decode($response->getContent())->access_token;
+        $decodedToken = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
 
-        return json_decode($response->getContent())->access_token;
-    }
-
-    protected static function createApiAccess(array $scopes = [], int $lifetime = 10000): void
-    {
-        $client = static::createClient();
-        $command = new AddApiAccessCommand(
-            static::CLIENT_NAME,
-            static::CLIENT_ID,
-            true,
-            '',
-            $lifetime,
-            $scopes
+        static::assertEquals(9999, json_decode($response->getContent())->expires_in);
+        static::assertEquals(
+            [
+                'is_authenticated',
+                'hook_read',
+                'hook_write',
+                'api_access_read',
+            ],
+            $decodedToken->scopes
         );
-
-        $container = $client->getContainer();
-        $commandBus = $container->get('prestashop.core.command_bus');
-        $createdApiAccess = $commandBus->handle($command);
-
-        self::$clientSecret = $createdApiAccess->getSecret();
+        static::assertEquals('Bearer', json_decode($response->getContent())->token_type);
+        static::assertEquals(static::CLIENT_ID, $decodedToken->aud);
+        static::assertNotNull($decodedToken->jti);
+        static::assertNotNull($decodedToken->iat);
+        static::assertNotNull($decodedToken->nbf);
+        static::assertNotNull($decodedToken->exp);
+        static::assertNotNull($decodedToken->sub);
     }
 }

@@ -68,17 +68,4 @@ class PostCustomerTest extends ApiTestCase
         self::assertResponseStatusCodeSame(201);
         self::assertCount($numberOfGroups + 1, Group::getGroups(Context::getContext()->language->id));
     }
-
-    private function getBearerToken(): string
-    {
-        $parameters = ['parameters' => [
-            'client_id' => 'my_client_id',
-            'client_secret' => 'prestashop',
-            'grant_type' => 'client_credentials',
-        ]];
-        $options = ['extra' => $parameters];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
-
-        return json_decode($response->getContent())->access_token;
-    }
 }

@@ -28,8 +28,9 @@ namespace Tests\Unit\Core\Security;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
-use PrestaShop\PrestaShop\Core\Security\TokenAuthenticator;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator;
+use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,15 +42,15 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TokenAuthenticatorTest extends TestCase
 {
     protected $tokenAuthenticator;
-    protected $resourceServer;
+    protected $authorizationServer;
     protected $request;
 
     public function setUp(): void
     {
         $psr7 = new Psr17Factory();
-        $this->resourceServer = $this->createMock(ResourceServerInterface::class);
+        $this->authorizationServer = $this->createMock(AuthorisationServerInterface::class);
         $this->tokenAuthenticator = new TokenAuthenticator(
-            $this->resourceServer,
+            $this->authorizationServer,
             new PsrHttpFactory($psr7, $psr7, $psr7, $psr7)
         );
         $this->request = Request::create('/');
@@ -80,16 +81,18 @@ class TokenAuthenticatorTest extends TestCase
 
     public function testGetUser(): void
     {
-        $this->resourceServer->expects($this->once())->method('getUser');
-        $this->tokenAuthenticator->getUser(
-            $this->createMock(ServerRequestInterface::class),
+        $this->authorizationServer->method('getUser')->willReturn(new JwtTokenUser('testUser', []));
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $user = $this->tokenAuthenticator->getUser(
+            $serverRequestMock,
             $this->createMock(UserProviderInterface::class)
         );
+        $this->assertInstanceOf(JwtTokenUser::class, $user);
     }
 
     public function testCheckCredentials(): void
     {
-        $this->resourceServer->expects($this->once())->method('isTokenValid');
+        $this->authorizationServer->expects($this->once())->method('isTokenValid');
         $this->tokenAuthenticator->checkCredentials(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(UserInterface::class)

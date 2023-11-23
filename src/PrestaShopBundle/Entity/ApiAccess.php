@@ -31,6 +31,8 @@ namespace PrestaShopBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\InstalledApiResourceScope;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -41,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[UniqueEntity('clientId')]
 #[UniqueEntity('clientName')]
-class ApiAccess
+class ApiAccess implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -195,5 +197,35 @@ class ApiAccess
         $this->lifetime = $lifetime;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return array_map(fn (string $scope): string => 'ROLE_' . strtoupper($scope), $this->getScopes());
+    }
+
+    public function getPassword(): string
+    {
+        return $this->getClientSecret();
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+        return null;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getClientName();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getClientId();
     }
 }

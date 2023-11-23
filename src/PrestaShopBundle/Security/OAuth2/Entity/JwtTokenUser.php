@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,20 +25,58 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
+declare(strict_types=1);
 
-use Psr\Http\Message\ServerRequestInterface;
+namespace PrestaShopBundle\Security\OAuth2\Entity;
+
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Interface to implement when using/implementing an Authorization Server so the Resource Server
- * can have a way to verify the access token
- *
- * @experimental
- */
-interface ResourceServerInterface
+class JwtTokenUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public function isTokenValid(ServerRequestInterface $request): bool;
+    protected array $roles = [];
 
-    public function getUser(ServerRequestInterface $request): ?UserInterface;
+    public function __construct(
+        protected readonly string $userId,
+        protected readonly array $scopes
+    ) {
+        $this->convertScopesToRoles();
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function getPassword(): string
+    {
+        return '';
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+        return;
+    }
+
+    public function getUsername()
+    {
+        return '';
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->userId;
+    }
+
+    protected function convertScopesToRoles(): void
+    {
+        foreach ($this->scopes as $scope) {
+            $this->roles[] = 'ROLE_' . strtoupper($scope);
+        }
+    }
 }

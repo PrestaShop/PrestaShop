@@ -38,6 +38,12 @@ class GetHookStatusTest extends ApiTestCase
         DatabaseDump::restoreTables(['hook']);
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(['hook']);
+    }
+
     public function testGetHookStatus(): void
     {
         $inactiveHook = new \Hook();
@@ -50,7 +56,10 @@ class GetHookStatusTest extends ApiTestCase
         $activeHook->active = true;
         $activeHook->add();
 
-        $bearerToken = $this->getBearerToken();
+        $bearerToken = $this->getBearerToken([
+            'hook_read',
+            'hook_write',
+        ]);
         $response = static::createClient()->request('GET', '/api/hook-status/' . (int) $inactiveHook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $inactiveHook->active);
         self::assertResponseStatusCodeSame(200);
@@ -76,7 +85,10 @@ class GetHookStatusTest extends ApiTestCase
         $hook->active = true;
         $hook->add();
 
-        $bearerToken = $this->getBearerToken();
+        $bearerToken = $this->getBearerToken([
+            'hook_read',
+            'hook_write',
+        ]);
         static::createClient()->request('PUT', '/api/hook-status', [
             'auth_bearer' => $bearerToken,
             'json' => ['id' => (int) $hook->id, 'active' => false],
@@ -95,7 +107,10 @@ class GetHookStatusTest extends ApiTestCase
         $hook->active = false;
         $hook->add();
 
-        $bearerToken = $this->getBearerToken();
+        $bearerToken = $this->getBearerToken([
+            'hook_read',
+            'hook_write',
+        ]);
         static::createClient()->request('PUT', '/api/hook-status', [
             'auth_bearer' => $bearerToken,
             'json' => ['id' => (int) $hook->id, 'active' => true],
@@ -105,18 +120,5 @@ class GetHookStatusTest extends ApiTestCase
         $response = static::createClient()->request('GET', '/api/hook-status/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, true);
         self::assertResponseStatusCodeSame(200);
-    }
-
-    private function getBearerToken(): string
-    {
-        $parameters = ['parameters' => [
-            'client_id' => 'my_client_id',
-            'client_secret' => 'prestashop',
-            'grant_type' => 'client_credentials',
-        ]];
-        $options = ['extra' => $parameters];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
-
-        return json_decode($response->getContent())->access_token;
     }
 }

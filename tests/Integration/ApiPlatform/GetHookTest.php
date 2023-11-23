@@ -39,6 +39,12 @@ class GetHookTest extends ApiTestCase
         DatabaseDump::restoreTables(['hook']);
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(['hook']);
+    }
+
     public function testGetHook(): void
     {
         $hook = new \Hook();
@@ -46,7 +52,10 @@ class GetHookTest extends ApiTestCase
         $hook->active = true;
         $hook->add();
 
-        $bearerToken = $this->getBearerToken();
+        $bearerToken = $this->getBearerToken([
+            'hook_read',
+            'hook_write',
+        ]);
 
         $response = static::createClient()->request('GET', '/api/hooks/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $hook->active);
@@ -59,18 +68,5 @@ class GetHookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(401);
 
         $hook->delete();
-    }
-
-    private function getBearerToken(): string
-    {
-        $parameters = ['parameters' => [
-            'client_id' => 'my_client_id',
-            'client_secret' => 'prestashop',
-            'grant_type' => 'client_credentials',
-        ]];
-        $options = ['extra' => $parameters];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
-
-        return json_decode($response->getContent())->access_token;
     }
 }

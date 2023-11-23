@@ -30,11 +30,10 @@ namespace PrestaShopBundle\Security\OAuth2;
 
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer as LeagueResourceServer;
-use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
+use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Class responsible for validating token
@@ -42,22 +41,16 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  *
  * @experimental
  */
-class ResourceServer implements ResourceServerInterface
+class PrestashopAuthorisationServer implements AuthorisationServerInterface
 {
     /**
      * @var LeagueResourceServer
      */
     private $leagueResourceServer;
 
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
-
-    public function __construct(LeagueResourceServer $resourceServer, UserProviderInterface $userProvider)
+    public function __construct(LeagueResourceServer $resourceServer)
     {
         $this->leagueResourceServer = $resourceServer;
-        $this->userProvider = $userProvider;
     }
 
     public function isTokenValid(ServerRequestInterface $request): bool
@@ -73,24 +66,15 @@ class ResourceServer implements ResourceServerInterface
 
     public function getUser(ServerRequestInterface $request): ?UserInterface
     {
-        $audience = $this->getAudience($request);
-        if ($audience === null) {
-            return null;
-        }
-
         try {
-            return $this->userProvider->loadUserByIdentifier($audience);
-        } catch (UserNotFoundException $exception) {
-            return null;
-        }
-    }
-
-    private function getAudience(ServerRequestInterface $request): ?string
-    {
-        try {
-            return $this->leagueResourceServer->validateAuthenticatedRequest($request)->getAttribute('oauth_client_id');
+            $validatedResquest = $this->leagueResourceServer->validateAuthenticatedRequest($request);
         } catch (OAuthServerException) {
             return null;
         }
+
+        return new JwtTokenUser(
+            $validatedResquest->getAttribute('oauth_client_id'),
+            $validatedResquest->getAttribute('oauth_scopes') ?? []
+        );
     }
 }
