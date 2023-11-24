@@ -94,6 +94,15 @@ class AdvancedCustomization extends themeAndLogoBasePage {
   }
 
   /**
+   * Click on the link How to use Parent's child theme
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async clickHowToUseParentsChildThemesLink(page: Page): Promise<Page> {
+    return this.openLinkWithTargetBlank(page, this.howToUseParentsChildThemesLink, 'body', 'domcontentloaded');
+  }
+
+  /**
    * Get the link How to use Parent's child theme
    * @param page {Page} Browser tab
    * @returns {Promise<string>}

@@ -245,7 +245,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/32265
         if (arg.extOriginal !== 'webp') {
-          const imageTypeOriginal = await files.getImageType(pathImageOriginal);
+          const imageTypeOriginal = await files.getFileType(pathImageOriginal);
           expect(imageTypeOriginal).to.be.eq(arg.extOriginal);
         }
 
@@ -255,7 +255,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         const fileExistsJPG = await files.doesFileExist(pathImageJPG);
         expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-        const imageTypeJPG = await files.getImageType(pathImageJPG);
+        const imageTypeJPG = await files.getFileType(pathImageJPG);
         expect(imageTypeJPG).to.be.eq(arg.extGenerated);
 
         // Check the WebP file
@@ -264,7 +264,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
         expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-        const imageTypeWEBP = await files.getImageType(pathImageWEBP);
+        const imageTypeWEBP = await files.getFileType(pathImageWEBP);
         expect(imageTypeWEBP).to.be.eq('webp');
       });
 
@@ -309,7 +309,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
         await files.downloadFile(quickViewImageMain as string, 'image.img');
 
-        const quickViewImageMainType = await files.getImageType('image.img');
+        const quickViewImageMainType = await files.getFileType('image.img');
         expect(quickViewImageMainType).to.be.eq('webp');
 
         await files.deleteFile('image.img');

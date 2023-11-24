@@ -201,7 +201,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         const fileExistsOrigJPG = await files.doesFileExist(pathImageOrigJPG);
         expect(fileExistsOrigJPG, `The file ${pathImageOrigJPG} doesn't exist!`).to.eq(true);
 
-        const imageTypeOrigJPG = await files.getImageType(pathImageOrigJPG);
+        const imageTypeOrigJPG = await files.getFileType(pathImageOrigJPG);
 
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/32527
         if (arg.extOriginal !== 'png') {
@@ -214,7 +214,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         const fileExistsJPG = await files.doesFileExist(pathImageJPG);
         expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-        const imageTypeJPG = await files.getImageType(pathImageJPG);
+        const imageTypeJPG = await files.getFileType(pathImageJPG);
         expect(imageTypeJPG).to.be.eq(arg.extOriginal);
 
         // Check the WebP file
@@ -223,7 +223,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
         expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-        const imageTypeWEBP = await files.getImageType(pathImageWEBP);
+        const imageTypeWEBP = await files.getFileType(pathImageWEBP);
         expect(imageTypeWEBP).to.be.eq('webp');
       });
 
@@ -255,7 +255,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
 
         await files.downloadFile(quickViewImageMain as string, 'image.img');
 
-        const quickViewImageMainType = await files.getImageType('image.img');
+        const quickViewImageMainType = await files.getFileType('image.img');
         expect(quickViewImageMainType).to.be.eq('webp');
 
         await files.deleteFile('image.img');
@@ -266,7 +266,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
         expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-        const imageTypeWEBP = await files.getImageType(pathImageWEBP);
+        const imageTypeWEBP = await files.getFileType(pathImageWEBP);
         expect(imageTypeWEBP).to.be.eq('webp');
       });
     });
