@@ -29,24 +29,62 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Resources;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
     operations: [
+        new Get(
+            uriTemplate: '/customers/group/{customerGroupId}',
+            provider: QueryProvider::class,
+            extraProperties: [
+                'query' => GetCustomerGroupForEditing::class,
+                'queryNormalizationMapping' => [
+                    '[id]' => '[customerGroupId]',
+                ],
+            ],
+        ),
         new Post(
             uriTemplate: '/customers/group',
             processor: CommandProcessor::class,
             extraProperties: [
                 'command' => AddCustomerGroupCommand::class,
+                'commandNormalizationMapping' => [
+                    '[value]' => '[customerGroupId]',
+                ],
+                'query' => GetCustomerGroupForEditing::class,
+                'queryNormalizationMapping' => [
+                    '[id]' => '[customerGroupId]',
+                ],
+            ],
+        ),
+        new Put(
+            uriTemplate: '/customers/group/{customerGroupId}',
+            read: false,
+            processor: CommandProcessor::class,
+            extraProperties: [
+                'command' => EditCustomerGroupCommand::class,
+                'query' => GetCustomerGroupForEditing::class,
+                'queryNormalizationMapping' => [
+                    '[id]' => '[customerGroupId]',
+                ],
             ],
         ),
     ]
 )]
 class CustomerGroup
 {
+    #[ApiProperty(identifier: true)]
+    public int $customerGroupId;
+
     public array $localizedNames;
 
     public float $reductionPercent;
