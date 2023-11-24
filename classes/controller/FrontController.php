@@ -448,7 +448,7 @@ class FrontControllerCore extends Controller
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
         // Automatically redirect to the canonical URL if needed
-        if (!empty($this->php_self) && !Tools::getValue('ajax')) {
+        if (!empty($this->php_self) && !Tools::getValue('ajax') && !Tools::isPHPCLI()) {
             $this->canonicalRedirection($this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id));
         }
 
@@ -464,7 +464,7 @@ class FrontControllerCore extends Controller
             $this->displayMaintenancePage();
         }
 
-        if (Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
+        if (!Tools::isPHPCLI() && Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
             $this->displayRestrictedCountryPage();
         }
 
@@ -856,7 +856,7 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1'])) {
+        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) && !Tools::isPHPCLI()) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
