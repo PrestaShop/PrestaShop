@@ -28,18 +28,16 @@ const baseContext: string = 'functional_BO_advancedParameters_administration_upl
 describe('BO - Advanced Parameters - Administration : Upload quota', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  // Image data with size > 3MB
+  // Image data with size > 2MB
   const firstFileData: FileData = new FileData({filename: 'image1.jpg'});
   // Image data with size < 2MB
   const secondFileData: FileData = new FileData({filename: 'image2.jpg'});
-  // Image data with size < 3MB
-  const thirdFileData: FileData = new FileData({filename: 'image3.jpg'});
   // Image data with size < 1MB
-  const fourthFileData: FileData = new FileData({filename: 'image4.jpg'});
+  const thirdFileData: FileData = new FileData({filename: 'image3.jpg'});
   const firstVirtualProductData: ProductData = new ProductData({
     type: 'virtual',
     downloadFile: true,
-    fileName: thirdFileData.filename,
+    fileName: firstFileData.filename,
     allowedDownload: 1,
     status: true,
   });
@@ -57,7 +55,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
   });
   const secondStandardProductData: ProductData = new ProductData({
     type: 'standard',
-    coverImage: fourthFileData.filename,
+    coverImage: thirdFileData.filename,
     status: true,
   });
 
@@ -66,14 +64,12 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    // Create image with size > 3MB
-    await files.generateImage(firstFileData.filename, 1000, 1500, 100);
+    // Create image with size > 2MB
+    await files.generateImage(firstFileData.filename, 1000, 1500, 92);
     // Create image with size < 2MB
     await files.generateImage(secondFileData.filename, 1000, 1500, 70);
-    // Create image with size < 3MB
-    await files.generateImage(thirdFileData.filename, 1000, 1500, 90);
     // Create image with size < 1MB
-    await files.generateImage(fourthFileData.filename, 100, 200);
+    await files.generateImage(thirdFileData.filename, 100, 200);
   });
 
   after(async () => {
@@ -82,7 +78,6 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     await files.deleteFile(firstFileData.filename);
     await files.deleteFile(secondFileData.filename);
     await files.deleteFile(thirdFileData.filename);
-    await files.deleteFile(fourthFileData.filename);
   });
 
   describe('Check \'Maximum size for attached files\'', async () => {
@@ -103,10 +98,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       expect(pageTitle).to.contains(administrationPage.pageTitle);
     });
 
-    it('should set the \'Maximum size for attached files\' to 3MB', async function () {
+    it('should set the \'Maximum size for attached files\' to 2MB', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMaximumSizeForAttachedFiles', baseContext);
 
-      const successMessage = await administrationPage.setMaxSizeAttachedFiles(page, 3);
+      const successMessage = await administrationPage.setMaxSizeAttachedFiles(page, 2);
       expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
     });
 
@@ -133,16 +128,16 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       expect(pageTitle).to.contains(addFilePage.pageTitle);
     });
 
-    it('should try to upload a file > 3MB and check the error message alert', async function () {
+    it('should try to upload a file > 2MB and check the error message alert', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFileAndCheckError', baseContext);
 
       await addFilePage.createEditFile(page, firstFileData, false);
 
       const errorAlert = await addFilePage.getTextDanger(page);
-      expect(errorAlert).to.equal('The file is too large. Allowed maximum size is 2 MiB.');
+      expect(errorAlert).to.equal('Upload error. Please check your server configurations for the maximum upload size allowed.');
     });
 
-    it('should upload a file < 3MB and check the validation message', async function () {
+    it('should upload a file < 2MB and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFileAndCheckSuccess', baseContext);
 
       const result = await addFilePage.createEditFile(page, secondFileData);
@@ -171,7 +166,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       expect(pageTitle).to.contains(administrationPage.pageTitle);
     });
 
-    it('should set the \'Maximum size for a downloadable product\' to 3MB', async function () {
+    it('should set the \'Maximum size for a downloadable product\' to 2MB', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMaximumSizeForAttachedFiles2', baseContext);
 
       const successMessage = await administrationPage.setMaxSizeDownloadedProduct(page, 2);
@@ -218,7 +213,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
-    it('should try to add a file in virtual tab > 3 MB and check the error message', async function () {
+    it('should try to add a file in virtual tab > 2 MB and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createVirtualProduct1', baseContext);
 
       await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
@@ -226,10 +221,11 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await createProductPage.clickOnSaveProductButton(page);
 
       const errorMessage = await virtualProductTab.getErrorMessageInDownloadFileInput(page);
-      expect(errorMessage).to.equal('The file is too large (6.2 MB). Allowed maximum size is 3 MB.');
+      expect(errorMessage).to.contains('The file is too large')
+        .and.to.contains('Allowed maximum size is 2 MB.');
     });
 
-    it('should try to add a file in virtual tab < 3 MB', async function () {
+    it('should try to add a file in virtual tab < 2 MB', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createVirtualProduct2', baseContext);
 
       await virtualProductTab.setVirtualProduct(page, secondVirtualProductData);
@@ -307,7 +303,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
-    it('should create standard product and add an image size > 1MB and check the error message', async function () {
+    it('should create standard product and add an image size > 1MB then check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImageAndCheckErrorMessage', baseContext);
 
       await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
@@ -317,7 +313,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       expect(message).to.eq('Max file size allowed is "1048576" bytes.');
     });
 
-    it('should create standard product and add an image size < 1MB and check the validation message', async function () {
+    it('should create standard product and add an image size < 1MB then check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImageAndCheckSuccessMessage', baseContext);
 
       await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');

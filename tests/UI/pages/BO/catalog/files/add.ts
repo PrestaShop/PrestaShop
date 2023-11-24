@@ -81,10 +81,15 @@ class AddFile extends BOBasePage {
     return null;
   }
 
+  /**
+   * Get text danger
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
   async getTextDanger(page: Page): Promise<string> {
     await page.locator(this.saveButton).click();
 
-    return this.getTextContent(page, '#attachment div.form-group.row.file-widget.has-error div.d-inline-block div.text-danger');
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**

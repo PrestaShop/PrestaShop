@@ -174,6 +174,12 @@ class AdministrationPage extends BOBasePage {
   }
 
   // Methods for upload quota form
+  /**
+   * Set max size for attached files
+   * @param page {Page} Browser tab
+   * @param size {number} The data to set in size input
+   * @return {Promise<string>}
+   */
   async setMaxSizeAttachedFiles(page: Page, size: number): Promise<string> {
     await this.setValue(page, this.maxSizeAttachedFiles, size);
     await page.locator(this.saveUploadQuotaForm).click();
@@ -181,6 +187,12 @@ class AdministrationPage extends BOBasePage {
     return this.getAlertSuccessBlockContent(page);
   }
 
+  /**
+   * Set max size for downloaded product image
+   * @param page {Page} Browser tab
+   * @param size {number} The data to set in size input
+   * @return {Promise<string>}
+   */
   async setMaxSizeDownloadedProduct(page: Page, size: number): Promise<string> {
     await this.setValue(page, this.maxSizeDownloadableProduct, size);
     await page.locator(this.saveUploadQuotaForm).click();
@@ -188,6 +200,12 @@ class AdministrationPage extends BOBasePage {
     return this.getAlertSuccessBlockContent(page);
   }
 
+  /**
+   * Set max size for product image
+   * @param page {Page} Browser tab
+   * @param size {number} The data to set in size input
+   * @return {Promise<string>}
+   */
   async setMaxSizeForProductImage(page: Page, size: number): Promise<string> {
     await this.setValue(page, this.maxSizeProductImage, size);
     await page.locator(this.saveUploadQuotaForm).click();

@@ -178,6 +178,12 @@ class DescriptionTab extends BOBasePage {
     return page.locator(this.productImage).count();
   }
 
+  /**
+   * Upload product image
+   * @param page {Page} Browser tab
+   * @param imagesPaths {Array<?string>} Paths of the images to add to the product
+   * @returns {Promise<void>}
+   */
   async uploadProductImages(page: Page, imagesPaths: any[] = []): Promise<void> {
     const filteredImagePaths = imagesPaths.filter((el) => el !== null);
 

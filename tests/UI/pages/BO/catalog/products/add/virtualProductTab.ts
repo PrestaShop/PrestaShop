@@ -22,6 +22,8 @@ class VirtualProductTab extends BOBasePage {
 
   private readonly productFile: string;
 
+  private readonly errorMessageInFileInput: string;
+
   private readonly productFileNameInput: string;
 
   private readonly productFileDownloadTimesLimit: string;
@@ -55,6 +57,7 @@ class VirtualProductTab extends BOBasePage {
     this.productMinimumQuantityInput = '#product_stock_quantities_minimal_quantity';
     this.productChooseFile = (toCheck: number) => `#product_stock_virtual_product_file_has_file_${toCheck}`;
     this.productFile = '#product_stock_virtual_product_file_file';
+    this.errorMessageInFileInput = `${this.productFile} div.form-group.file-widget.has-error div.alert-danger p`;
     this.productFileNameInput = '#product_stock_virtual_product_file_name';
     this.productFileDownloadTimesLimit = '#product_stock_virtual_product_file_download_times_limit';
     this.productFileExpirationDate = '#product_stock_virtual_product_file_expiration_date';
@@ -104,8 +107,13 @@ class VirtualProductTab extends BOBasePage {
     }
   }
 
+  /**
+   * Get error message in downloaded file input
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   async getErrorMessageInDownloadFileInput(page: Page): Promise<string> {
-    return this.getTextContent(page, '#product_stock_virtual_product_file div.form-group.file-widget.has-error div.alert-danger p');
+    return this.getTextContent(page, this.errorMessageInFileInput);
   }
 
   // Methods for when out of stock
