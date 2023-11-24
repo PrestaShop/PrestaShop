@@ -246,8 +246,10 @@ class FrontControllerCore extends Controller
             $useSSL = true;
         }
 
-        // Redirect to SSL variant of the page if required and visited in non-ssl mode
-        $this->sslRedirection();
+        // Redirect to SSL variant of the page if required and visited in non-ssl mode and not in cli context
+        if (!Tools::isPHPCLI()) {
+            $this->sslRedirection();
+        }
 
         if ($this->ajax) {
             $this->display_header = false;
@@ -458,7 +460,9 @@ class FrontControllerCore extends Controller
             $this->context->country = $country;
         }
 
-        $this->displayMaintenancePage();
+        if (!Tools::isPHPCLI()) {
+            $this->displayMaintenancePage();
+        }
 
         if (Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
             $this->displayRestrictedCountryPage();
