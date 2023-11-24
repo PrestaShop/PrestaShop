@@ -31,6 +31,10 @@ export default {
     name: 'Faceted search',
     releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.13.1/ps_facetedsearch.zip',
   }),
+  psThemeCusto: new ModuleData({
+    tag: 'ps_themecusto',
+    name: 'Theme Customization',
+  }),
   contactForm: new ModuleData({
     tag: 'contactform',
     name: 'Contact form',
