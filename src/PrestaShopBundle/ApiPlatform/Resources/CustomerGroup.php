@@ -49,6 +49,10 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
                 'query' => GetCustomerGroupForEditing::class,
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',
+                    '[reduction]' => '[reductionPercent]',
+                ],
+                'scopes' => [
+                    'customer_group_read',
                 ],
             ],
         ),
@@ -63,6 +67,10 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
                 'query' => GetCustomerGroupForEditing::class,
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',
+                    '[reduction]' => '[reductionPercent]',
+                ],
+                'scopes' => [
+                    'customer_group_write',
                 ],
             ],
         ),
@@ -75,6 +83,10 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
                 'query' => GetCustomerGroupForEditing::class,
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',
+                    '[reduction]' => '[reductionPercent]',
+                ],
+                'scopes' => [
+                    'customer_group_write',
                 ],
             ],
         ),
