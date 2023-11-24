@@ -33,18 +33,17 @@ use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class CommandProcessor implements ProcessorInterface
 {
-    /**
-     * @param CommandBusInterface $commandBus
-     * @param DomainSerializer $apiPlatformSerializer
-     */
+    use QueryResultSerializerTrait;
+
     public function __construct(
-        private readonly CommandBusInterface $commandBus,
-        private readonly DomainSerializer $apiPlatformSerializer,
+        protected readonly CommandBusInterface $commandBus,
+        protected readonly DomainSerializer $apiPlatformSerializer,
     ) {
     }
 
@@ -54,14 +53,15 @@ class CommandProcessor implements ProcessorInterface
      * @param array $uriVariables
      * @param array $context
      *
-     * @return void
+     * @return mixed
      *
      * @throws NoExtraPropertiesFoundException
      * @throws ExceptionInterface|ReflectionException
      */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $commandClass = $operation->getExtraProperties()['command'] ?? null;
+        $extraProperties = $operation->getExtraProperties();
+        $commandClass = $extraProperties['command'] ?? null;
         $commandParameters = array_merge($this->apiPlatformSerializer->normalize($data), $uriVariables);
 
         if (null === $commandClass || !class_exists($commandClass)) {
@@ -69,7 +69,40 @@ class CommandProcessor implements ProcessorInterface
         }
 
         $command = $this->apiPlatformSerializer->denormalize($commandParameters, $commandClass);
+        $commandResult = $this->commandBus->handle($command);
 
-        $this->commandBus->handle($command);
+        // If no result is returned and no query is configured the API returns nothing
+        if (empty($commandResult) && empty($extraProperties['query'])) {
+            // If the command returns nothing (including void) we return null (because void can't be returned and its value is equivalent to null)
+            return null;
+        }
+
+        return $this->denormalizeCommandResult($commandResult, $operation, $uriVariables);
+    }
+
+    private function denormalizeCommandResult(mixed $commandResult, Operation $operation, array $uriVariables): mixed
+    {
+        $extraProperties = $operation->getExtraProperties();
+        if (!empty($commandResult)) {
+            $normalizationMapping = $extraProperties['commandNormalizationMapping'] ?? null;
+            $normalizedResult = $this->apiPlatformSerializer->normalize($commandResult, null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]);
+        } else {
+            // Use URI variables as fallback when the command returned no result as it probably contains the ID
+            $normalizedResult = $uriVariables;
+        }
+
+        $queryClass = $extraProperties['query'] ?? null;
+        // If no query class as specified the normalized data is simply what the command returned (an array, an object, ...) that is
+        // denormalized to match the operation class
+        if (!$queryClass) {
+            return $this->apiPlatformSerializer->denormalize($normalizedResult, $operation->getClass());
+        }
+
+        // If a query was specified it means the expected return should use it, usually it allows returning the full object like in GET
+        // operation, but it can also be q different query that returns different data from the GET
+        $query = $this->apiPlatformSerializer->denormalize($normalizedResult, $queryClass);
+        $queryResult = $this->commandBus->handle($query);
+
+        return $this->denormalizeQueryResult($queryResult, $operation);
     }
 }
