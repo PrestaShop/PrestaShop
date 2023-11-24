@@ -179,6 +179,25 @@ class DescriptionTab extends BOBasePage {
   }
 
   /**
+   * Upload product image
+   * @param page {Page} Browser tab
+   * @param imagesPaths {Array<?string>} Paths of the images to add to the product
+   * @returns {Promise<void>}
+   */
+  async uploadProductImages(page: Page, imagesPaths: any[] = []): Promise<void> {
+    const filteredImagePaths = imagesPaths.filter((el) => el !== null);
+
+    if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
+      const numberOfImages = await this.getNumberOfImages(page);
+      await this.uploadOnFileChooser(
+        page,
+        numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock,
+        filteredImagePaths,
+      );
+    }
+  }
+
+  /**
    * Add product images
    * @param page {Page} Browser tab
    * @param imagesPaths {Array<?string>} Paths of the images to add to the product
