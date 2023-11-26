@@ -31,29 +31,27 @@ namespace PrestaShopBundle\ApiPlatform\Resources;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSQuery;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
-use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
     operations: [
-        new Get(
+        new CQRSQuery(
             uriTemplate: '/customers/group/{customerGroupId}',
-            provider: QueryProvider::class,
             extraProperties: [
-                'query' => GetCustomerGroupForEditing::class,
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',
                     '[reduction]' => '[reductionPercent]',
                 ],
-                'scopes' => [
-                    'customer_group_read',
-                ],
+            ],
+            CQRSQuery: GetCustomerGroupForEditing::class,
+            scopes: [
+                'customer_group_read',
             ],
         ),
         new Post(

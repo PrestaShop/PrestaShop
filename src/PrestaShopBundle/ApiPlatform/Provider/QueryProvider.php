@@ -32,7 +32,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -55,19 +55,18 @@ class QueryProvider implements ProviderInterface
      * @return mixed
      *
      * @throws ExceptionInterface
-     * @throws NoExtraPropertiesFoundException
+     * @throws CQRSQueryNotFoundException
      * @throws ReflectionException
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        $queryClass = $operation->getExtraProperties()['query'] ?? null;
-        $filters = $context['filters'] ?? [];
-        $queryParameters = array_merge($uriVariables, $filters);
-
+        $queryClass = $this->getQueryClass($operation);
         if (null === $queryClass) {
-            throw new NoExtraPropertiesFoundException('Extra property "query" not found');
+            throw new CQRSQueryNotFoundException(sprintf('Resource %s has no CQRS query defined.', $operation->getClass()));
         }
 
+        $filters = $context['filters'] ?? [];
+        $queryParameters = array_merge($uriVariables, $filters);
         $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
         $queryResult = $this->queryBus->handle($query);
 

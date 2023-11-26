@@ -35,7 +35,7 @@ trait QueryResultSerializerTrait
 {
     protected readonly DomainSerializer $apiPlatformSerializer;
 
-    public function denormalizeQueryResult($queryResult, Operation $operation)
+    protected function denormalizeQueryResult($queryResult, Operation $operation)
     {
         // Handle return type
         $normalizationMapping = $operation->getExtraProperties()['queryNormalizationMapping'] ?? null;
@@ -50,5 +50,10 @@ trait QueryResultSerializerTrait
         }
 
         return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
+    }
+
+    protected function getQueryClass(Operation $operation): ?string
+    {
+        return $operation->getExtraProperties()['CQRSQuery'] ?? null;
     }
 }
