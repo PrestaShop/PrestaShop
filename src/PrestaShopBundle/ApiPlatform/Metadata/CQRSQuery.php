@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
+
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class CQRSQuery extends AbstractCQRSOperation
 {
@@ -108,7 +110,11 @@ class CQRSQuery extends AbstractCQRSOperation
         string $CQRSQuery = null,
         array $scopes = [],
     ) {
-        parent::__construct(...\func_get_args());
+        $passedArguments = \get_defined_vars();
+
+        $passedArguments['provider'] = $provider ?? QueryProvider::class;
+
+        parent::__construct(...$passedArguments);
     }
 
     public function getScopes(): array

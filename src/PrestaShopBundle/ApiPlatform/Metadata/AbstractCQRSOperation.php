@@ -30,7 +30,6 @@ namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\HttpOperation;
-use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 abstract class AbstractCQRSOperation extends HttpOperation
 {
@@ -112,8 +111,6 @@ abstract class AbstractCQRSOperation extends HttpOperation
         array $scopes = [],
     ) {
         $passedArguments = \get_defined_vars();
-
-        $passedArguments['provider'] = $provider ?? QueryProvider::class;
 
         if (!empty($scopes)) {
             $extraScopes = $passedArguments['extraProperties']['scopes'] ?? [];
