@@ -173,8 +173,22 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
         $orderInformation = [
             'id' => $order->id,
-            'placed_date' => (new DateTime($order->date_add))->format($context->language->date_format_lite),
+            'placed_date' => (new DateTime($order->date_add))->format($context->language->date_format_full),
         ];
+
+        // Prepare link to share this cart, if it was not ordered yet
+        $cartLink = null;
+        if (!Validate::isLoadedObject($order)) {
+            $cartLink = $context->link->getPageLink(
+                'cart',
+                false,
+                (int) $cart->getAssociatedLanguage()->getId(),
+                [
+                    'recover_cart' => $cart->id,
+                    'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . (int) $cart->id),
+                ]
+            );
+        }
 
         $cartSummary = [
             'products' => $products,
@@ -190,6 +204,9 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             'total' => $total_price,
             'total_formatted' => $this->locale->formatPrice($total_price, $currency->iso_code),
             'is_tax_included' => $tax_calculation_method == PS_TAX_INC,
+            'cart_link' => $cartLink,
+            'date_add' => (new DateTime($cart->date_add))->format($context->language->date_format_full),
+            'date_upd' => (new DateTime($cart->date_upd))->format($context->language->date_format_full),
         ];
 
         return new CartView($cart->id, $cart->id_currency, $customerInformation, $orderInformation, $cartSummary);

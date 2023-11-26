@@ -24,25 +24,35 @@
  *#}
 
 <div class="card" data-role="order-information">
-  <h3 class="card-header">{{ 'Order information'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
+  <h3 class="card-header">{{ 'Cart information'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
   <div class="card-body">
-    {% if cartView.orderInformation.id %}
-      <h2>
-        <a href="{{ getAdminLink('AdminOrders', true, {'id_order': cartView.orderInformation.id, 'vieworder': 1}) }}">
-          {{ 'Order #%d'|trans({
-            '%d': cartView.orderInformation.id|format('"%06d')
-          }, 'Admin.Orderscustomers.Feature') }}
-        </a>
-      </h2>
-      <p class="mb-0">
-        {{ 'Made on:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        {{ cartView.orderInformation.placed_date }}
-      </p>
+    <p class="mb-0">
+      {{ 'Created:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      {{ cartView.cartSummary.date_add }}
+    </p>
+    <p class="mb-0">
+      {{ 'Last updated:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      {{ cartView.cartSummary.date_upd }}
+    </p>
+    <hr class="mt-2 mb-2">
+    {% if cartView.orderInformation.id is not empty %}
+
+      <p>{{ 'Order %orderid% was created from this cart on %orderdate%.'|trans({}, 'Admin.Orderscustomers.Feature')|replace({
+        '%orderid%': '<a href="' ~ path('admin_orders_view', {'orderId': cartView.orderInformation.id}) ~ '">#' ~ cartView.orderInformation.id|format('"%06d') ~ '</a>',
+        '%orderdate%': cartView.orderInformation.placed_date,
+      })|raw }}</p>
+
+      <a href="{{ path('admin_orders_view', {'orderId': cartView.orderInformation.id}) }}" class="btn btn-primary">
+        <i class="material-icons">remove_red_eye</i>
+        {{ 'View order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </a>
     {% else %}
-      <h2>{{ 'No order was created from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
+      <p class="mb-0">{{ 'The customer has not proceeded to checkout yet.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+
       {% if cartView.customerInformation.id %}
-        <a href="{{ createOrderFromCartLink }}" class="btn btn-outline-secondary" id="create-order-from-cart">
-          {{ 'Create an order from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        <a href="{{ createOrderFromCartLink }}" class="btn btn-primary mt-3" id="create-order-from-cart">
+          <i class="material-icons">add_circle_outline</i>
+          {{ 'Create an order from this cart'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       {% endif %}
     {% endif %}

@@ -81,6 +81,7 @@ class CartController extends FrameworkBundleAdminController
             return $this->redirect($this->getAdminLink('AdminCarts', [], true));
         }
 
+        // Prepare KPI row
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.cart');
         $kpiRowFactory->setOptions([
             'cart_id' => $cartId,
