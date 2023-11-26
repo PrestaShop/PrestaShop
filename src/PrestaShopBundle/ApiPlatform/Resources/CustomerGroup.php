@@ -73,11 +73,10 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
         ),
         new Put(
             uriTemplate: '/customers/group/{customerGroupId}',
-            read: false,
             processor: CommandProcessor::class,
             extraProperties: [
-                'command' => EditCustomerGroupCommand::class,
-                'query' => GetCustomerGroupForEditing::class,
+                'CQRSCommand' => EditCustomerGroupCommand::class,
+                'CQRSQuery' => GetCustomerGroupForEditing::class,
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',
                     '[reduction]' => '[reductionPercent]',

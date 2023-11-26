@@ -28,20 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
-use ApiPlatform\Exception\InvalidArgumentException;
-use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
-use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
-
 /**
- * Class CQRSCommand handles parameters to ease the configuration of an operation relying on CommandProcessor
- * it doesn't force any arguments, so it is suitable for custom usage, but it is recommended to use CQRSCreateCommand
- * or CQRSUpdateCommand instead as they handle default values that help the configuration and avoid unexpected behaviour.
+ * Class CQRSUpdateCommand is a custom operation that provides extra parameters to help configure an operation
+ * based on a CQRS command, it is custom tailed for update operations and forces using the PUT method by default,
+ * but you can also use PATCH method.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class CQRSCommand extends AbstractCQRSOperation
+class CQRSUpdateCommand extends CQRSCommand
 {
     public function __construct(
-        string $method = self::METHOD_POST,
+        string $method = self::METHOD_PUT,
         ?string $uriTemplate = null,
         ?array $types = null,
         $formats = null,
@@ -62,11 +58,14 @@ class CQRSCommand extends AbstractCQRSOperation
         ?string $condition = null,
         ?string $controller = null,
         ?array $cacheHeaders = null,
+
         ?array $hydraContext = null,
         ?array $openapiContext = null,
         ?bool $openapi = null,
         ?array $exceptionToStatus = null,
+
         ?bool $queryParameterValidationEnabled = null,
+
         ?string $shortName = null,
         ?string $class = null,
         ?bool $paginationEnabled = null,
@@ -113,51 +112,12 @@ class CQRSCommand extends AbstractCQRSOperation
         array $extraProperties = [],
         ?string $CQRSCommand = null,
         ?string $CQRSQuery = null,
-        array $scopes = []
+        array $scopes = [],
     ) {
         $passedArguments = \get_defined_vars();
-
-        $passedArguments['processor'] = $processor ?? CommandProcessor::class;
-
-        if (!empty($CQRSCommand)) {
-            if (!empty($passedArguments['extraProperties']['CQRSCommand']) && $passedArguments['extraProperties']['CQRSCommand'] !== $CQRSCommand) {
-                throw new InvalidArgumentException('Specifying an extra property CQRSCommand and a CQRSCommand argument that are different is invalid');
-            }
-            $passedArguments['extraProperties']['CQRSCommand'] = $CQRSCommand;
-        }
-
-        // If a CQRSQuery is specified without a provider we use the QueryProvider by default
-        if (!empty($CQRSQuery) || !empty($passedArguments['extraProperties']['CQRSQuery'])) {
-            $passedArguments['provider'] = $provider ?? QueryProvider::class;
-        }
-
-        // Remove custom arguments
-        unset($passedArguments['CQRSCommand']);
+        // Disable read listener because it is forced when using PUT method, but we don't need it since we rely on CQRS commands/queries
+        $passedArguments['read'] = $read ?? false;
 
         parent::__construct(...$passedArguments);
-    }
-
-    public function getCQRSCommand(): ?string
-    {
-        return $this->extraProperties['CQRSCommand'] ?? null;
-    }
-
-    public function withCQRSCommand(string $CQRSCommand): self
-    {
-        $self = clone $this;
-        $self->extraProperties['CQRSCommand'] = $CQRSCommand;
-
-        return $self;
-    }
-
-    public function withCQRSQuery(string $CQRSQuery): self
-    {
-        $self = clone $this;
-        $self->extraProperties['CQRSQuery'] = $CQRSQuery;
-        if (empty($self->provider)) {
-            $self->provider = QueryProvider::class;
-        }
-
-        return $self;
     }
 }
