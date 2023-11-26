@@ -31,11 +31,11 @@ namespace PrestaShopBundle\ApiPlatform\Resources;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSCommand;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSQuery;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 
@@ -54,22 +54,21 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
                 'customer_group_read',
             ],
         ),
-        new Post(
+        new CQRSCommand(
             uriTemplate: '/customers/group',
-            processor: CommandProcessor::class,
             extraProperties: [
-                'command' => AddCustomerGroupCommand::class,
                 'commandNormalizationMapping' => [
                     '[value]' => '[customerGroupId]',
                 ],
-                'query' => GetCustomerGroupForEditing::class,
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',
                     '[reduction]' => '[reductionPercent]',
                 ],
-                'scopes' => [
-                    'customer_group_write',
-                ],
+            ],
+            CQRSCommand: AddCustomerGroupCommand::class,
+            CQRSQuery: GetCustomerGroupForEditing::class,
+            scopes: [
+                'customer_group_write',
             ],
         ),
         new Put(

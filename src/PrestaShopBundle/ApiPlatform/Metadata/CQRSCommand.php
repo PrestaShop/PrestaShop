@@ -28,13 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use ApiPlatform\Exception\InvalidArgumentException;
+use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class CQRSQuery extends AbstractCQRSOperation
+class CQRSCommand extends AbstractCQRSOperation
 {
     public function __construct(
-        string $method = self::METHOD_GET,
+        string $method = self::METHOD_POST,
         ?string $uriTemplate = null,
         ?array $types = null,
         $formats = null,
@@ -55,14 +57,11 @@ class CQRSQuery extends AbstractCQRSOperation
         ?string $condition = null,
         ?string $controller = null,
         ?array $cacheHeaders = null,
-
         ?array $hydraContext = null,
         ?array $openapiContext = null,
         ?bool $openapi = null,
         ?array $exceptionToStatus = null,
-
         ?bool $queryParameterValidationEnabled = null,
-
         ?string $shortName = null,
         ?string $class = null,
         ?bool $paginationEnabled = null,
@@ -107,13 +106,53 @@ class CQRSQuery extends AbstractCQRSOperation
         $provider = null,
         $processor = null,
         array $extraProperties = [],
+        ?string $CQRSCommand = null,
         ?string $CQRSQuery = null,
-        array $scopes = [],
+        array $scopes = []
     ) {
         $passedArguments = \get_defined_vars();
 
-        $passedArguments['provider'] = $provider ?? QueryProvider::class;
+        $passedArguments['processor'] = $processor ?? CommandProcessor::class;
+
+        if (!empty($CQRSCommand)) {
+            if (!empty($passedArguments['extraProperties']['CQRSCommand']) && $passedArguments['extraProperties']['CQRSCommand'] !== $CQRSCommand) {
+                throw new InvalidArgumentException('Specifying an extra property CQRSCommand and a CQRSCommand argument that are different is invalid');
+            }
+            $passedArguments['extraProperties']['CQRSCommand'] = $CQRSCommand;
+        }
+
+        // If a CQRSQuery is specified without a provider we use the QueryProvider by default
+        if (!empty($CQRSQuery) || !empty($passedArguments['extraProperties']['CQRSQuery'])) {
+            $passedArguments['provider'] = $provider ?? QueryProvider::class;
+        }
+
+        // Remove custom arguments
+        unset($passedArguments['CQRSCommand']);
 
         parent::__construct(...$passedArguments);
+    }
+
+    public function getCQRSCommand(): ?string
+    {
+        return $this->extraProperties['CQRSCommand'] ?? null;
+    }
+
+    public function withCQRSCommand(string $CQRSCommand): self
+    {
+        $self = clone $this;
+        $self->extraProperties['CQRSCommand'] = $CQRSCommand;
+
+        return $self;
+    }
+
+    public function withCQRSQuery(string $CQRSQuery): self
+    {
+        $self = clone $this;
+        $self->extraProperties['CQRSQuery'] = $CQRSQuery;
+        if (empty($self->provider)) {
+            $self->provider = QueryProvider::class;
+        }
+
+        return $self;
     }
 }

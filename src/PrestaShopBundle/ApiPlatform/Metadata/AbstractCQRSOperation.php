@@ -107,7 +107,7 @@ abstract class AbstractCQRSOperation extends HttpOperation
         $provider = null,
         $processor = null,
         array $extraProperties = [],
-        string $CQRSQuery = null,
+        ?string $CQRSQuery = null,
         array $scopes = [],
     ) {
         $passedArguments = \get_defined_vars();
@@ -124,7 +124,7 @@ abstract class AbstractCQRSOperation extends HttpOperation
             $passedArguments['extraProperties']['CQRSQuery'] = $CQRSQuery;
         }
 
-        // Remove arguments that the parent can't understand
+        // Remove custom arguments
         unset($passedArguments['scopes']);
         unset($passedArguments['CQRSQuery']);
 

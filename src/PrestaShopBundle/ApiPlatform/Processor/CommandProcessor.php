@@ -32,7 +32,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\Exception\CQRSCommandNotFoundException;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -55,24 +55,24 @@ class CommandProcessor implements ProcessorInterface
      *
      * @return mixed
      *
-     * @throws NoExtraPropertiesFoundException
+     * @throws CQRSCommandNotFoundException
      * @throws ExceptionInterface|ReflectionException
      */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $extraProperties = $operation->getExtraProperties();
-        $commandClass = $extraProperties['command'] ?? null;
+        $commandClass = $extraProperties['CQRSCommand'] ?? null;
         $commandParameters = array_merge($this->apiPlatformSerializer->normalize($data), $uriVariables);
 
         if (null === $commandClass || !class_exists($commandClass)) {
-            throw new NoExtraPropertiesFoundException('Extra property "command" not found');
+            throw new CQRSCommandNotFoundException(sprintf('Resource %s has no CQRS command defined.', $operation->getClass()));
         }
 
         $command = $this->apiPlatformSerializer->denormalize($commandParameters, $commandClass);
         $commandResult = $this->commandBus->handle($command);
 
         // If no result is returned and no query is configured the API returns nothing
-        if (empty($commandResult) && empty($extraProperties['query'])) {
+        if (empty($commandResult) && empty($extraProperties['CQRSQuery'])) {
             // If the command returns nothing (including void) we return null (because void can't be returned and its value is equivalent to null)
             return null;
         }
@@ -91,7 +91,7 @@ class CommandProcessor implements ProcessorInterface
             $normalizedResult = $uriVariables;
         }
 
-        $queryClass = $extraProperties['query'] ?? null;
+        $queryClass = $this->getQueryClass($operation);
         // If no query class as specified the normalized data is simply what the command returned (an array, an object, ...) that is
         // denormalized to match the operation class
         if (!$queryClass) {
