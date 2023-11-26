@@ -116,30 +116,4 @@ class CQRSQuery extends AbstractCQRSOperation
 
         parent::__construct(...$passedArguments);
     }
-
-    public function getScopes(): array
-    {
-        return $this->extraProperties['scopes'] ?? [];
-    }
-
-    public function withScopes(array $scopes): self
-    {
-        $self = clone $this;
-        $self->extraProperties['scopes'] = $scopes;
-
-        return $self;
-    }
-
-    public function getCQRSQuery(): ?string
-    {
-        return $this->extraProperties['CQRSQuery'] ?? null;
-    }
-
-    public function withCQRSQuery(string $CQRSQuery): self
-    {
-        $self = clone $this;
-        $self->extraProperties['CQRSQuery'] = $CQRSQuery;
-
-        return $self;
-    }
 }
