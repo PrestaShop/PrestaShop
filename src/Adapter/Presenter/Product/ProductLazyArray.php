@@ -1026,6 +1026,10 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Validates and formats available_date property passed into the lazy array.
+     * It will return the date back only if it's a valid date in the future.
+     * Also handles the case when the date was not passed at all.
+     *
      * @param array $product
      *
      * @return string|null
