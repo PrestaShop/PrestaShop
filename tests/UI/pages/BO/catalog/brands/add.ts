@@ -153,7 +153,7 @@ class AddBrand extends BOBasePage {
    */
   async changeLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
-      page.$eval(this.shortDescriptionLangLink(lang), (el: HTMLElement) => el.click()),
+      page.locator(this.shortDescriptionLangLink(lang)).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.shortDescriptionLangLink(lang)}.active`),
     ]);
   }

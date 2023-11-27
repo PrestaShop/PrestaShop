@@ -252,7 +252,7 @@ class ShoppingCarts extends BOBasePage {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await page.click(this.filterSearchButton);
+        await page.locator(this.filterSearchButton).click();
         await this.elementVisible(page, this.filterResetButton);
         break;
 
@@ -360,18 +360,18 @@ class ShoppingCarts extends BOBasePage {
 
     // Select all rows
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.selectAllLink),
     ]);
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 

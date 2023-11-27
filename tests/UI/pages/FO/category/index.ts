@@ -351,7 +351,7 @@ class Category extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
+      page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
   }
 
@@ -454,7 +454,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async hasSearchFilters(page: Page): Promise<boolean> {
-    return page.$$eval(this.searchFilters, (all) => all.length !== 0);
+    return (await page.locator(this.searchFilters).count()) !== 0;
   }
 
   /**
@@ -464,7 +464,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isSearchFiltersCheckbox(page: Page, facetType: string): Promise<boolean> {
-    return page.$$eval(this.searchFiltersCheckbox(facetType), (all) => all.length !== 0);
+    return (await page.locator(this.searchFiltersCheckbox(facetType)).count()) !== 0;
   }
 
   /**
@@ -592,7 +592,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isSearchFilterRadio(page: Page, facetType: string): Promise<boolean> {
-    return page.$$eval(this.searchFiltersRadio(facetType), (all) => all.length !== 0);
+    return (await page.locator(this.searchFiltersRadio(facetType)).count()) !== 0;
   }
 
   /**
@@ -602,7 +602,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isSearchFilterDropdown(page: Page, facetType: string): Promise<boolean> {
-    return page.$$eval(this.searchFiltersDropdown(facetType), (all) => all.length !== 0);
+    return (await page.locator(this.searchFiltersDropdown(facetType)).count()) !== 0;
   }
 
   /**

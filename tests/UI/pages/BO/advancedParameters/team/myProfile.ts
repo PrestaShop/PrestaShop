@@ -71,7 +71,7 @@ class MyProfile extends EmployeeBasePage {
     }
     await this.setChecked(page, this.enableGravatarInput(newEmployeeData.enableGravatar ? 1 : 0));
     await this.setValue(page, this.emailInput, newEmployeeData.email);
-    await page.click(this.passwordButton);
+    await page.locator(this.passwordButton).click();
     await this.setValue(page, this.currentPasswordInput, currentPassword);
     await this.setValue(page, this.newPasswordInput, newEmployeeData.password);
     await this.setValue(page, this.confirmPasswordInput, newEmployeeData.password);

@@ -120,7 +120,9 @@ class AccountIdentityPage extends FOBasePage {
    * @returns {Promise<string>}
    */
   async editAccount(page: Page, oldPassword: string, customer: any): Promise<string> {
-    await page.$eval(this.genderRadioButton(this.theme, customer.socialTitle === 'Mr.' ? 1 : 2), (el: HTMLElement) => el.click());
+    await page
+      .locator(this.genderRadioButton(this.theme, customer.socialTitle === 'Mr.' ? 1 : 2))
+      .evaluate((el: HTMLElement) => el.click());
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
     await this.setValue(page, this.newEmailInput, customer.email);
@@ -179,11 +181,11 @@ class AccountIdentityPage extends FOBasePage {
   async unsubscribeNewsletter(page:Page, password:string):Promise<string> {
     await this.setValue(page, this.passwordInput, password);
 
-    await page.click(this.customerPrivacyCheckbox);
+    await page.locator(this.customerPrivacyCheckbox).click();
     if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
-      await page.click(this.psgdprCheckbox);
+      await page.locator(this.psgdprCheckbox).click();
     }
-    await page.click(this.newsletterCheckbox);
+    await page.locator(this.newsletterCheckbox).click();
 
     await this.clickAndWaitForLoadState(page, this.saveButton);
 

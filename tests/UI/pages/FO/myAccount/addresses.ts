@@ -75,10 +75,7 @@ class AddressesPage extends FOBasePage {
    * @return {Promise<number>}
    */
   async getAddressPosition(page: Page, alias: string): Promise<number> {
-    const titles = await page.$$eval(
-      this.addressBodyTitle,
-      (all) => all.map((address) => address.textContent),
-    );
+    const titles = await page.locator(this.addressBodyTitle).allTextContents();
 
     return titles.indexOf(alias) + 1;
   }

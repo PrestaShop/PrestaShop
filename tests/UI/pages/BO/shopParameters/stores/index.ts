@@ -392,7 +392,7 @@ class Stores extends BOBasePage {
     const actualStatus = await this.getStoreStatus(page, row);
 
     if (actualStatus !== wantedStatus) {
-      await page.click(this.tableColumnStatus(row));
+      await page.locator(this.tableColumnStatus(row)).click();
     }
   }
 
@@ -414,11 +414,11 @@ class Stores extends BOBasePage {
    */
   async deleteStore(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -436,12 +436,12 @@ class Stores extends BOBasePage {
    */
   async selectAllRow(page: Page): Promise<void> {
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.selectAllLink),
     ]);
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
@@ -458,7 +458,7 @@ class Stores extends BOBasePage {
 
     // Perform bulk update status
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(
         page,
         this.enableSelectionLink,
@@ -485,7 +485,7 @@ class Stores extends BOBasePage {
 
     // Perform delete
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
@@ -570,7 +570,7 @@ class Stores extends BOBasePage {
     await this.setValue(page, this.faxInput, storeContactData.fax);
 
     // Save contact details
-    await page.click(this.saveButton);
+    await page.locator(this.saveButton).click();
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

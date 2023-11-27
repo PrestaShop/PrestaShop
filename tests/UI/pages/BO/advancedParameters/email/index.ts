@@ -150,7 +150,7 @@ class Email extends BOBasePage {
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
-    this.paginationLabel = `${this.emailGridPanel} .col-form-label`;
+    this.paginationLabel = `${this.emailGridPanel} .col-form-label:not([for="paginator_select_page_limit"])`;
     this.paginationNextLink = `${this.emailGridPanel} [data-role=next-page-link]`;
     this.paginationPreviousLink = `${this.emailGridPanel} [data-role='previous-page-link']`;
 
@@ -170,7 +170,7 @@ class Email extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await page.click(this.filterResetButton);
+      await page.locator(this.filterResetButton).click();
       await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
@@ -227,7 +227,7 @@ class Email extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await page.click(this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
     await this.elementVisible(page, this.filterResetButton, 2000);
   }
 
@@ -281,12 +281,12 @@ class Email extends BOBasePage {
   async deleteEmailLogsBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
@@ -319,7 +319,7 @@ class Email extends BOBasePage {
     encryption: string = 'None',
   ): Promise<string> {
     // Click on smtp radio button
-    await page.click(this.smtpParametersRadioButton);
+    await page.locator(this.smtpParametersRadioButton).click();
     await this.waitForVisibleSelector(page, this.smtpServerFormField);
     // fill the form field
     await this.setValue(page, this.smtpServerFormField, server);
@@ -340,7 +340,7 @@ class Email extends BOBasePage {
    */
   async resetDefaultParameters(page: Page): Promise<string> {
     // Click on smtp radio button
-    await page.click(this.sendMailParametersRadioButton);
+    await page.locator(this.sendMailParametersRadioButton).click();
     await this.waitForHiddenSelector(page, this.smtpServerFormField);
 
     // Click on Save button
@@ -357,7 +357,7 @@ class Email extends BOBasePage {
    */
   async sendTestEmail(page: Page, email: string): Promise<string> {
     await this.setValue(page, this.sendTestEmailInput, email);
-    await page.click(this.sendTestEmailButton);
+    await page.locator(this.sendTestEmailButton).click();
     return this.getTextContent(page, this.sendTestEmailAlertParagraph);
   }
 
@@ -369,7 +369,7 @@ class Email extends BOBasePage {
    */
   async setLogEmails(page: Page, toEnable: boolean): Promise<string> {
     await this.setChecked(page, this.logEmailsToggleInput(toEnable ? 1 : 0));
-    await page.$eval(this.saveEmailFormButton, (el: HTMLElement) => el.click());
+    await page.locator(this.saveEmailFormButton).evaluate((el: HTMLElement) => el.click());
     await page.waitForURL('');
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -401,7 +401,7 @@ class Email extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number.toString());
-    await page.click(this.paginationLabel);
+    await page.locator(this.paginationLabel).click();
 
     return this.getPaginationLabel(page);
   }
@@ -412,7 +412,7 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await page.click(this.paginationNextLink);
+    await page.locator(this.paginationNextLink).click();
 
     return this.getPaginationLabel(page);
   }
@@ -423,7 +423,7 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await page.click(this.paginationPreviousLink);
+    await page.locator(this.paginationPreviousLink).click();
 
     return this.getPaginationLabel(page);
   }
@@ -477,7 +477,7 @@ class Email extends BOBasePage {
     // Add listener to dialog to accept erase
     await this.dialogListener(page);
 
-    await page.click(this.gridActionButton);
+    await page.locator(this.gridActionButton).click();
     await this.waitForSelectorAndClick(page, this.eraseAllButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

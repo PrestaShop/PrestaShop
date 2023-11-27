@@ -428,7 +428,7 @@ class PricingTab extends BOBasePage {
       case 'ecotax':
         return this.getAttributeContent(page, this.ecotaxInput, 'value');
       case 'id_tax_rules_group':
-        return page.$eval(this.taxRuleSelect, (node: HTMLSelectElement) => node.value);
+        return page.locator(this.taxRuleSelect).evaluate((node: HTMLSelectElement) => node.value);
       case 'on_sale':
         return (await this.isChecked(page, this.onSaleCheckbox)) ? '1' : '0';
       case 'price':

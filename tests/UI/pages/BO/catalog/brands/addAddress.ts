@@ -79,7 +79,7 @@ class AddBrandAddress extends BOBasePage {
     await this.setValue(page, this.postalCodeInput, brandAddressData.postalCode);
     await this.setValue(page, this.cityInput, brandAddressData.city);
     await this.selectByVisibleText(page, this.countrySelect, brandAddressData.country);
-    await page.click(this.homePhoneInput);
+    await page.locator(this.homePhoneInput).click();
     await this.setValue(page, this.homePhoneInput, brandAddressData.homePhone);
     await this.setValue(page, this.mobilePhoneInput, brandAddressData.mobilePhone);
     await this.setValue(page, this.otherInput, brandAddressData.other);

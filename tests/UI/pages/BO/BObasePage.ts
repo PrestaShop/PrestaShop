@@ -40,9 +40,11 @@ export default class BOBasePage extends CommonPage {
 
   private readonly headerShopNameLink: string;
 
+  private readonly quickAccessContainer: string;
+
   private readonly quickAccessDropdownToggle: string;
 
-  private readonly quickAccessLink: (idLink: number) => string;
+  private readonly quickAccessLink: (linkName: string) => string;
 
   private readonly quickAddCurrentLink: string;
 
@@ -304,10 +306,11 @@ export default class BOBasePage extends CommonPage {
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
     this.quickAccessDropdownToggle = '#quick_select';
-    this.quickAccessLink = (idLink) => `.quick-row-link:nth-child(${idLink})`;
-    this.quickAddCurrentLink = '#quick-add-link';
-    this.quickAccessRemoveLink = '#quick-remove-link';
-    this.manageYourQuickAccessLink = '#quick-manage-link';
+    this.quickAccessContainer = '#quick-access-container';
+    this.quickAccessLink = (linkName) => `${this.quickAccessContainer} [data-item='${linkName}']`;
+    this.quickAddCurrentLink = `${this.quickAccessContainer} #quick-add-link`;
+    this.quickAccessRemoveLink = `${this.quickAccessContainer} #quick-remove-link`;
+    this.manageYourQuickAccessLink = `${this.quickAccessContainer} #quick-manage-link`;
     this.navbarSearchInput = '#bo_query';
 
     // Header links
@@ -634,35 +637,35 @@ export default class BOBasePage extends CommonPage {
   /**
    * Click on link from Quick access dropdown toggle
    * @param page {Page} Browser tab
-   * @param linkId {number} Page ID
+   * @param linkName {linkName} Page name
    * @returns {Promise<void>}
    */
-  async quickAccessToPage(page: Page, linkId: number): Promise<void> {
+  async quickAccessToPage(page: Page, linkName: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.clickAndWaitForURL(page, this.quickAccessLink(linkId));
+    await this.clickAndWaitForURL(page, this.quickAccessLink(linkName));
     await this.waitForPageTitleToLoad(page);
   }
 
   /**
    * Quick access to page with frame
    * @param page {Page} Browser tab
-   * @param linkId {number} Page ID
+   * @param linkName {linkName} Page name
    * @returns {Promise<Page>}
    */
-  async quickAccessToPageWithFrame(page: Page, linkId: number): Promise<void> {
+  async quickAccessToPageWithFrame(page: Page, linkName: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.waitForSelectorAndClick(page, this.quickAccessLink(linkId));
+    await this.waitForSelectorAndClick(page, this.quickAccessLink(linkName));
   }
 
   /**
    * Click on link from Quick access dropdown toggle and get the opened Page
    * @param page {Page} Browser tab
-   * @param linkId {number} Page ID
+   * @param linkName {linkName} Page name
    * @returns {Promise<Page>}
    */
-  async quickAccessToPageNewWindow(page: Page, linkId: number): Promise<Page> {
+  async quickAccessToPageNewWindow(page: Page, linkName: string): Promise<Page> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    return this.openLinkWithTargetBlank(page, this.quickAccessLink(linkId));
+    return this.openLinkWithTargetBlank(page, this.quickAccessLink(linkName));
   }
 
   /**

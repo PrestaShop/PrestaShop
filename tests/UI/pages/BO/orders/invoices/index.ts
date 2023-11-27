@@ -120,7 +120,7 @@ class Invoice extends BOBasePage {
    */
   async generatePDFByDateAndFail(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
-    await page.click(this.generatePdfByDateButton);
+    await page.locator(this.generatePdfByDateButton).click();
 
     return this.getAlertDangerBlockParagraphContent(page);
   }
@@ -171,7 +171,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<string>}
    */
   async generatePDFByStatusAndFail(page: Page): Promise<string> {
-    await page.click(this.generatePdfByStatusButton);
+    await page.locator(this.generatePdfByStatusButton).click();
     return this.getAlertDangerBlockParagraphContent(page);
   }
 
@@ -191,7 +191,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveInvoiceOptions(page: Page): Promise<string> {
-    await page.click(this.saveInvoiceOptionsButton);
+    await page.locator(this.saveInvoiceOptionsButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -244,7 +244,7 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async chooseInvoiceOptionsYearPosition(page: Page, id: number): Promise<void> {
-    await page.click(this.optionYearPositionRadioButton(id));
+    await page.locator(this.optionYearPositionRadioButton(id)).click();
   }
 
   /**

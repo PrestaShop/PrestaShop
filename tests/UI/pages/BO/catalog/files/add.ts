@@ -100,11 +100,11 @@ class AddFile extends BOBasePage {
    */
   async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
-      page.click(this.nameLangButton),
+      page.locator(this.nameLangButton).click(),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.nameLangSpan(lang)),
+      page.locator(this.nameLangSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='false']`),
     ]);
   }

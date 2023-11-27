@@ -150,7 +150,7 @@ class Movements extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabStocks(page: Page): Promise<void> {
-    await page.click(this.stocksNavItemLink);
+    await page.locator(this.stocksNavItemLink).click();
     await this.waitForVisibleSelector(page, `${this.stocksNavItemLink}.active`);
   }
 
@@ -163,7 +163,7 @@ class Movements extends BOBasePage {
   async simpleFilter(page: Page, value: string): Promise<void> {
     await page.locator(this.searchInput).fill(value);
     await Promise.all([
-      page.click(this.searchButton),
+      page.locator(this.searchButton).click(),
       this.waitForVisibleSelector(page, this.productListLoading),
     ]);
     await this.waitForHiddenSelector(page, this.productListLoading);
@@ -176,7 +176,7 @@ class Movements extends BOBasePage {
    */
   async setAdvancedFiltersVisible(page: Page): Promise<void> {
     if (await this.elementNotVisible(page, this.advFiltersBlock, 2000)) {
-      await page.click(this.advFiltersButton);
+      await page.locator(this.advFiltersButton).click();
       await this.elementVisible(page, this.advFiltersBlock, 2000);
     }
   }
@@ -211,7 +211,7 @@ class Movements extends BOBasePage {
    * @return {Promise<void>}
    */
   async setAdvancedFiltersCategory(page: Page, categoryName: string, status: boolean = true): Promise<void> {
-    await page.click(this.advFiltersFilterCategoriesExpandBtn);
+    await page.locator(this.advFiltersFilterCategoriesExpandBtn).click();
 
     // Choose category to filter with
     const args = {
@@ -321,7 +321,7 @@ class Movements extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, selector);
-    await page.click(selector);
+    await page.locator(selector).click();
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }
@@ -445,7 +445,7 @@ class Movements extends BOBasePage {
    * @return {Promise<number>}
    */
   async paginateTo(page: Page, pageNumber: number = 1): Promise<number> {
-    await page.click(this.paginationListItemLink(pageNumber));
+    await page.locator(this.paginationListItemLink(pageNumber)).click();
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }

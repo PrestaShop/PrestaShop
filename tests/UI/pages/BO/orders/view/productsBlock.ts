@@ -50,7 +50,7 @@ class ProductsBlock extends ViewOrderBasePage {
 
   private readonly editProductPriceInput: string;
 
-  private readonly UpdateProductButton: string;
+  private readonly updateProductButton: string;
 
   private readonly modalConfirmNewPrice: string;
 
@@ -174,7 +174,7 @@ class ProductsBlock extends ViewOrderBasePage {
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
     this.editProductPriceInput = `${this.orderProductsEditRowTable} input.editProductPriceTaxIncl`;
-    this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
+    this.updateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.modalConfirmNewPrice = '#modal-confirm-new-price';
     this.modalConfirmNewPriceSubmitButton = `${this.modalConfirmNewPrice} button.btn-confirm-submit`;
 
@@ -298,12 +298,12 @@ class ProductsBlock extends ViewOrderBasePage {
   async modifyProductQuantity(page: Page, row: number, quantity: number): Promise<number> {
     await this.dialogListener(page);
     await Promise.all([
-      page.click(this.editProductButton(row)),
+      page.locator(this.editProductButton(row)).click(),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
     await this.setValue(page, `${this.editProductQuantityInput}:visible`, quantity);
     await Promise.all([
-      page.click(`${this.UpdateProductButton}:visible`),
+      page.locator(`${this.updateProductButton}:visible`).first().click(),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
     await this.waitForVisibleSelector(page, this.productQuantitySpan(row));
@@ -325,7 +325,7 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.setValue(page, `${this.editProductPriceInput}:visible`, price);
 
     await Promise.all([
-      page.click(this.UpdateProductButton),
+      page.locator(this.updateProductButton).first().click(),
       this.waitForHiddenSelector(page, this.editProductPriceInput),
     ]);
 
@@ -346,17 +346,17 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.dialogListener(page);
 
     await Promise.all([
-      page.click(this.editProductButton(row)),
+      page.locator(this.editProductButton(row)).click(),
       this.waitForVisibleSelector(page, this.editProductPriceInput),
     ]);
     await this.setValue(page, `${this.editProductPriceInput}:visible`, price);
 
     await Promise.all([
-      page.click(this.UpdateProductButton),
+      page.locator(this.updateProductButton).first().click(),
       this.waitForVisibleSelector(page, this.modalConfirmNewPrice),
     ]);
 
-    await page.click(this.modalConfirmNewPriceSubmitButton);
+    await page.locator(this.modalConfirmNewPriceSubmitButton).click();
 
     if (await this.elementVisible(page, this.orderProductsLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.orderProductsLoading);
@@ -589,9 +589,9 @@ class ProductsBlock extends ViewOrderBasePage {
   /**
    * Get searched product details
    * @param page {Page} Browser tab
-   * @returns {Promise<{stockLocation: string, available: number}>}
+   * @returns {Promise<{stockLocation: string, available: number, price:number;}>}
    */
-  async getSearchedProductDetails(page: Page) {
+  async getSearchedProductDetails(page: Page): Promise<{ stockLocation: string; available: number; price:number; }> {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
@@ -602,9 +602,9 @@ class ProductsBlock extends ViewOrderBasePage {
   /**
    * Get searched product information
    * @param page {Page} Browser tab
-   * @returns {Promise<{available: number, price: float}>}
+   * @returns {Promise<{available: number, price: number}>}
    */
-  async getSearchedProductInformation(page: Page) {
+  async getSearchedProductInformation(page: Page): Promise<{ available: number; price: number; }> {
     return {
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
       price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
@@ -629,7 +629,7 @@ class ProductsBlock extends ViewOrderBasePage {
     await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
 
     await this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`);
-    await page.click(this.addOrderCartRuleAddButton);
+    await page.locator(this.addOrderCartRuleAddButton).click();
     await this.waitForVisibleSelector(page, this.alertBlock);
 
     return this.getTextContent(page, this.alertBlock);

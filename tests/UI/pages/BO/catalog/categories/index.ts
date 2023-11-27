@@ -174,7 +174,7 @@ class Categories extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await page.click(this.filterResetButton);
+      await page.locator(this.filterResetButton).click();
       await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
@@ -248,7 +248,7 @@ class Categories extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(this.categoriesListColumnStatus(row));
+      await page.locator(this.categoriesListColumnStatus(row)).click();
 
       await this.waitForVisibleSelector(
         page,
@@ -315,7 +315,7 @@ class Categories extends BOBasePage {
   async goToEditCategoryPage(page: Page, row: number): Promise<void> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.categoriesListTableToggleDropDown(row, 'actions')),
+      page.locator(this.categoriesListTableToggleDropDown(row, 'actions')).click(),
       this.waitForVisibleSelector(page, this.categoriesListTableEditLink(row, 'actions')),
     ]);
     // Click on edit
@@ -348,7 +348,7 @@ class Categories extends BOBasePage {
   async deleteCategory(page: Page, row: number, modeID: number = 0): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.categoriesListTableToggleDropDown(row, 'actions')),
+      page.locator(this.categoriesListTableToggleDropDown(row, 'actions')).click(),
       this.waitForVisibleSelector(
         page,
         `${this.categoriesListTableToggleDropDown(row, 'actions')}[aria-expanded='true']`,
@@ -356,7 +356,7 @@ class Categories extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.categoriesListTableDeleteLink(row, 'actions')),
+      page.locator(this.categoriesListTableDeleteLink(row, 'actions')).click(),
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
@@ -385,18 +385,18 @@ class Categories extends BOBasePage {
   async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsDiv).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
-    await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.locator(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -409,19 +409,19 @@ class Categories extends BOBasePage {
   async deleteCategoriesBulkActions(page: Page, modeID: number = 0): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsDiv).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
@@ -476,7 +476,7 @@ class Categories extends BOBasePage {
    */
   async exportDataToCsv(page: Page): Promise<string|null> {
     await Promise.all([
-      page.click(this.categoryGridActionsButton),
+      page.locator(this.categoryGridActionsButton).click(),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 

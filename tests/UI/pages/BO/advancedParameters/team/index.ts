@@ -280,7 +280,7 @@ class Employees extends BOBasePage {
   async deleteEmployeeAction(page: Page, row: number): Promise<void> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.employeesListTableToggleDropDown(row)),
+      page.locator(this.employeesListTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.employeesListTableToggleDropDown(row)}[aria-expanded='true']`,
@@ -288,7 +288,7 @@ class Employees extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.employeesListTableDeleteLink(row)),
+      page.locator(this.employeesListTableDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteEmployees(page);
@@ -324,7 +324,7 @@ class Employees extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteEmployees(page: Page): Promise<void> {
-    await page.click(this.confirmDeleteButton);
+    await page.locator(this.confirmDeleteButton).click();
     await this.elementNotVisible(page, this.confirmDeleteModal, 2000);
   }
 
@@ -338,16 +338,16 @@ class Employees extends BOBasePage {
   async bulkSetStatus(page: Page, enable: boolean = true, getValidationMessage: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.locator(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton).click();
     await this.elementNotVisible(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton, 2000);
 
     if (getValidationMessage) {
@@ -365,18 +365,18 @@ class Employees extends BOBasePage {
   async deleteBulkActions(page: Page, getValidationMessage: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteEmployees(page);

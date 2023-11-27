@@ -152,6 +152,8 @@ class AddCartRule extends BOBasePage {
 
   private readonly freeGiftProductSelect: string;
 
+  private readonly desktopButtonsBlock: string;
+
   private readonly saveButton: string;
 
   private readonly cancelButton: string;
@@ -278,7 +280,8 @@ class AddCartRule extends BOBasePage {
     this.freeGiftProductSelect = '#gift_product';
 
     // Form footer selectors
-    this.saveButton = '#desc-cart_rule-save';
+    this.desktopButtonsBlock = '.desktop-buttons';
+    this.saveButton = `${this.desktopButtonsBlock} #desc-cart_rule-save`;
     this.cancelButton = '#desc-cart_rule-cancel';
   }
 

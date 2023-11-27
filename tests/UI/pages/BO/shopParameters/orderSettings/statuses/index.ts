@@ -203,7 +203,7 @@ class Statuses extends BOBasePage {
    */
   async resetFilter(page: Page, tableName: string): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton(tableName), 2000)) {
-      await page.click(this.filterResetButton(tableName));
+      await page.locator(this.filterResetButton(tableName)).click();
       await this.elementNotVisible(page, this.filterResetButton(tableName), 2000);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton(tableName), 2000);
@@ -234,12 +234,12 @@ class Statuses extends BOBasePage {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
-        await page.click(this.filterSearchButton(tableName));
+        await page.locator(this.filterSearchButton(tableName)).click();
         break;
 
       case 'select':
         await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No');
-        await page.click(this.filterSearchButton(tableName));
+        await page.locator(this.filterSearchButton(tableName)).click();
         break;
 
       default:
@@ -286,12 +286,12 @@ class Statuses extends BOBasePage {
     await this.dialogListener(page, true);
     // Click on dropDown
     await Promise.all([
-      page.click(this.tableColumnActionsDropdownMenu(tableName, row)),
+      page.locator(this.tableColumnActionsDropdownMenu(tableName, row)).click(),
       this.waitForVisibleSelector(page, `${this.tableColumnActionsDropdownMenu(tableName, row)}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
-    await page.click(this.tableColumnActionsDeleteLink(tableName, row));
+    await page.locator(this.tableColumnActionsDeleteLink(tableName, row)).click();
     await this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`);
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.confirmDeleteButton(tableName));
@@ -331,7 +331,7 @@ class Statuses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page, tableName: string): Promise<string> {
-    await page.click(this.paginationNextLink(tableName));
+    await page.locator(this.paginationNextLink(tableName)).click();
 
     return this.getPaginationLabel(page, tableName);
   }
@@ -343,7 +343,7 @@ class Statuses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page, tableName: string): Promise<string> {
-    await page.click(this.paginationPreviousLink(tableName));
+    await page.locator(this.paginationPreviousLink(tableName)).click();
 
     return this.getPaginationLabel(page, tableName);
   }
@@ -399,7 +399,7 @@ class Statuses extends BOBasePage {
   async bulkSelectRows(page: Page, tableName: string): Promise<void> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel(tableName), (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllLabel(tableName)).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
   }
@@ -416,12 +416,12 @@ class Statuses extends BOBasePage {
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton(tableName)),
+      page.locator(this.bulkActionsToggleButton(tableName)).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteSelectionButton(tableName)),
+      page.locator(this.deleteSelectionButton(tableName)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
     ]);
     await this.clickAndWaitForURL(page, this.confirmDeleteButton(tableName));

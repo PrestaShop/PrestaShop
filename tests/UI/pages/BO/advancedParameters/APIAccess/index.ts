@@ -141,16 +141,16 @@ class APIAccess extends BOBasePage {
   async deleteAPIAccess(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.gridTableToggleDropDown(row)),
+      page.locator(this.gridTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(page, `${this.gridTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
     // Click on delete
     await Promise.all([
-      page.click(this.gridTableDeleteLink(row)),
+      page.locator(this.gridTableDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
 
-    await page.click(this.confirmDeleteButton);
+    await page.locator(this.confirmDeleteButton).click();
     await this.elementNotVisible(page, this.confirmDeleteModal, 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);

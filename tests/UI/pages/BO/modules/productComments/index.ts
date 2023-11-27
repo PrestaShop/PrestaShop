@@ -113,7 +113,7 @@ class ProductComments extends ModuleConfiguration {
    */
   async openProductReviewDropdown(page: Page, table: string, row: number = 1): Promise<void> {
     await this.waitForVisibleSelector(page, this.toggleDropdownButton(table, row));
-    await page.click(this.toggleDropdownButton(table, row));
+    await page.locator(this.toggleDropdownButton(table, row)).click();
   }
 
   /**
@@ -184,7 +184,7 @@ class ProductComments extends ModuleConfiguration {
    * @returns {Promise<void>}
    */
   async deleteReview(page: Page, table: string, row: number = 1): Promise<void> {
-    await page.click(this.deleteReviewButton(table, row));
+    await page.locator(this.deleteReviewButton(table, row)).click();
     await this.clickAndWaitForURL(page, this.confirmReviewDeletionButton);
   }
 
@@ -230,7 +230,7 @@ class ProductComments extends ModuleConfiguration {
   async confirmNotAbusiveReview(page: Page, table: string, row: number = 1): Promise<void> {
     await this.openProductReviewDropdown(page, 'reported', row);
     await this.waitForVisibleSelector(page, this.confirmNotAbusiveReviewButton(table, row));
-    await page.click(this.confirmNotAbusiveReviewButton(table, row));
+    await page.locator(this.confirmNotAbusiveReviewButton(table, row)).click();
   }
 }
 

@@ -143,7 +143,7 @@ class Order extends BOBasePage {
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
     this.tableColumnStatus = (row: number) => `${this.tableRow(row)} td.column-osname`;
-    this.updateStatusInTableButton = (row: number) => `${this.tableColumnStatus(row)} button`;
+    this.updateStatusInTableButton = (row: number) => `${this.tableColumnStatus(row)} button[data-toggle='dropdown']`;
     this.updateStatusInTableDropdown = (row: number) => `${this.tableColumnStatus(row)} div.js-choice-options`;
     this.updateStatusInTableDropdownChoice = (row: number, statusId: number) => `${this.updateStatusInTableDropdown(row)}`
       + ` button[data-value='${statusId}']`;
@@ -210,7 +210,7 @@ class Order extends BOBasePage {
    */
   async exportDataToCsv(page: Page): Promise<string | null> {
     await Promise.all([
-      page.click(this.gridActionButton),
+      page.locator(this.gridActionButton).click(),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 
@@ -409,10 +409,10 @@ class Order extends BOBasePage {
    */
   async setOrderStatus(page: Page, row: number, status: OrderStatusData): Promise<string> {
     await Promise.all([
-      page.click(this.updateStatusInTableButton(row)),
+      page.locator(this.updateStatusInTableButton(row)).click(),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),
     ]);
-    await page.click(this.updateStatusInTableDropdownChoice(row, status.id));
+    await page.locator(this.updateStatusInTableDropdownChoice(row, status.id)).click();
     await this.elementNotVisible(page, this.updateStatusInTableDropdownChoice(row, status.id), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -484,7 +484,7 @@ class Order extends BOBasePage {
    */
   async selectOrdersRows(page: Page, rows: number[] = []): Promise<void> {
     for (let i = 0; i < rows.length; i++) {
-      await page.click(this.tableColumnOrderBulkCheckboxLabel(rows[i]));
+      await page.locator(this.tableColumnOrderBulkCheckboxLabel(rows[i])).click();
     }
     await this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`);
   }
@@ -496,7 +496,7 @@ class Order extends BOBasePage {
    */
   async clickOnBulkActionsButton(page: Page): Promise<void> {
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
   }
@@ -544,13 +544,13 @@ class Order extends BOBasePage {
 
     // Click on change order status button
     await Promise.all([
-      page.click(this.bulkUpdateOrdersStatusButton),
+      page.locator(this.bulkUpdateOrdersStatusButton).click(),
       this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true'])`),
     ]);
 
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
-    await page.click(this.updateOrdersStatusModalButton);
+    await page.locator(this.updateOrdersStatusModalButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

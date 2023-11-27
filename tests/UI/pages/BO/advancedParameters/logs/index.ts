@@ -167,7 +167,7 @@ class Logs extends BOBasePage {
     // Add listener to dialog to accept erase
     await this.dialogListener(page);
 
-    await page.click(this.gridActionButton);
+    await page.locator(this.gridActionButton).click();
     await this.waitForSelectorAndClick(page, this.eraseAllButton);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);

@@ -128,7 +128,7 @@ class AddAddress extends BOBasePage {
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
 
     if (await this.elementVisible(page, this.customerAddressStateSelect, 1000)) {
-      await page.click(this.customerAddressStateSelect);
+      await page.locator(this.customerAddressStateSelect).click();
       await this.setValue(page, this.searchStateInput, addressData.state);
       await this.waitForSelectorAndClick(page, this.searchResultState);
     }
@@ -139,7 +139,7 @@ class AddAddress extends BOBasePage {
         return this.saveAddress(page);
       }
 
-      await page.click(this.saveAddressButton);
+      await page.locator(this.saveAddressButton).click();
     }
 
     return null;

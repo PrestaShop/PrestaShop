@@ -283,11 +283,11 @@ class Titles extends BOBasePage {
    */
   async deleteTitle(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -305,18 +305,18 @@ class Titles extends BOBasePage {
    */
   async bulkDeleteTitles(page: Page): Promise<string> {
     // Select all rows
-    await page.$eval(this.filterSelectAll, (el: HTMLElement) => el.click());
+    await page.locator(this.filterSelectAll).evaluate((el: HTMLElement) => el.click());
     await this.waitForVisibleSelector(page, this.bulkActionsToggleButton);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteSelectionButton),
+      page.locator(this.deleteSelectionButton).click(),
       this.waitForVisibleSelector(page, this.deleteModalButtonYes),
     ]);
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);

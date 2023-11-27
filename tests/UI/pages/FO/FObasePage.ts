@@ -163,7 +163,7 @@ export default class FOBasePage extends CommonPage {
     this.accountLink = `${this.userInfoLink} .user-info a[href*="/my-account"]`;
     this.logoutLink = `${this.userInfoLink} .user-info a[href*="/?mylogout="]`;
     this.contactLink = '#contact-link';
-    this.categoryMenu = (id) => `#category-${id} a`;
+    this.categoryMenu = (id) => `#category-${id} > a`;
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
@@ -327,7 +327,7 @@ export default class FOBasePage extends CommonPage {
    */
   async logout(page: Page): Promise<void> {
     if (this.theme === 'hummingbird') {
-      await page.click(this.userMenuDropdown);
+      await page.locator(this.userMenuDropdown).click();
       await this.clickAndWaitForLoadState(page, this.logoutLink);
       await this.elementNotVisible(page, this.logoutLink, 2000);
 
@@ -352,7 +352,7 @@ export default class FOBasePage extends CommonPage {
    */
   async goToMyAccountPage(page: Page): Promise<void> {
     if (this.theme === 'hummingbird') {
-      await page.click(this.userMenuDropdown);
+      await page.locator(this.userMenuDropdown).click();
       await this.clickAndWaitForURL(page, this.accountLink);
 
       return;
@@ -402,7 +402,7 @@ export default class FOBasePage extends CommonPage {
       return;
     }
     await Promise.all([
-      page.click(this.languageSelectorExpandIcon),
+      page.locator(this.languageSelectorExpandIcon).click(),
       this.waitForVisibleSelector(page, this.languageSelectorList),
     ]);
     await this.clickAndWaitForLoadState(page, this.languageSelectorMenuItemLink(lang));
@@ -429,7 +429,7 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async languageExists(page: Page, lang: string = 'en'): Promise<boolean> {
-    await page.click(this.languageSelectorExpandIcon);
+    await page.locator(this.languageSelectorExpandIcon).click();
     return this.elementVisible(page, this.languageSelectorMenuItemLink(lang), 1000);
   }
 
@@ -481,7 +481,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<boolean>}
    */
   async currencyExists(page: Page, currencyName: string = 'Euro'): Promise<boolean> {
-    await page.click(this.currencySelectorExpandIcon);
+    await page.locator(this.currencySelectorExpandIcon).click();
     return this.elementVisible(page, this.currencySelectorMenuItemLink(currencyName), 1000);
   }
 
@@ -602,7 +602,7 @@ export default class FOBasePage extends CommonPage {
   async countAutocompleteSearchResult(page: Page, productName: string): Promise<number> {
     await this.setValue(page, this.searchInput, productName);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
-    return page.$$eval(this.autocompleteSearchResultItem, (all) => all.length);
+    return page.locator(this.autocompleteSearchResultItem).count();
   }
 
   /**

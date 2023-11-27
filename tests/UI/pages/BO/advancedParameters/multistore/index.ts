@@ -231,11 +231,11 @@ class MultiStoreSettings extends BOBasePage {
    */
   async deleteShopGroup(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -346,7 +346,7 @@ class MultiStoreSettings extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await page.click(this.paginationItems(number));
+    await page.locator(this.paginationItems(number)).click();
 
     return this.getPaginationLabel(page);
   }

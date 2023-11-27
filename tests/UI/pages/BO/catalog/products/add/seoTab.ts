@@ -151,7 +151,7 @@ class SeoTab extends BOBasePage {
       case 'meta_title':
         return this.getAttributeContent(page, `${this.productMetaTitleInput}_${languageId}`, 'value');
       case 'redirect_type':
-        return page.$eval(this.productRedirectTypeSelect, (node: HTMLSelectElement) => node.value);
+        return page.locator(this.productRedirectTypeSelect).evaluate((node: HTMLSelectElement) => node.value);
       default:
         throw new Error(`Input ${inputName} was not found`);
     }

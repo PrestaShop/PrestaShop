@@ -3,7 +3,7 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import type {ProductPackInformation, ProductPackItem} from '@data/types/product';
 
-import type {Page} from 'playwright';
+import type {Locator, Page} from 'playwright';
 import {ProductPackOptions, ProductStockMovement} from '@data/types/product';
 
 /**
@@ -152,14 +152,13 @@ class PackTab extends BOBasePage {
    * @param productInSearchList {number} The row of product in the search list
    */
   async selectProductFromList(page: Page, productInSearchList: number): Promise<boolean> {
-    const numberOfProducts = await this.getNumberOfSearchedProduct(page);
+    let productPosition: number = 1;
 
-    if (numberOfProducts > 1) {
-      await this.waitForSelectorAndClick(page, this.searchResultSuggestionRow(productInSearchList));
-    } else {
-      await this.waitForSelectorAndClick(page, this.searchResultSuggestion);
+    if ((await this.getNumberOfSearchedProduct(page)) > 1) {
+      productPosition = productInSearchList;
     }
 
+    await this.waitForSelectorAndClick(page, this.searchResultSuggestionRow(productPosition));
     return this.elementVisible(page, this.listOfProducts, 1000);
   }
 
@@ -204,7 +203,7 @@ class PackTab extends BOBasePage {
    * @param productInList {number} The row of product in pack
    */
   async saveAndGetProductInPackErrorMessage(page: Page, productInList: number): Promise<string> {
-    await page.click(this.saveProductButton);
+    await page.locator(this.saveProductButton).click();
 
     return this.getTextContent(page, this.alertDangerProductInPack(productInList));
   }
@@ -217,7 +216,7 @@ class PackTab extends BOBasePage {
    */
   async addProductToPack(page: Page, product: string, quantity: number): Promise<void> {
     await this.searchProduct(page, product);
-    await this.waitForSelectorAndClick(page, this.searchResultSuggestion);
+    await this.waitForSelectorAndClick(page, this.searchResultSuggestionRow(1));
     await this.waitForVisibleSelector(page, this.listOfProducts);
     const numberOfProducts: number = await this.getNumberOfProductsInPack(page);
 
@@ -324,26 +323,30 @@ class PackTab extends BOBasePage {
    * @param packStockType {string} Quantity
    */
   async editPackStockType(page: Page, packStockType: string): Promise<void> {
+    let locator: Locator;
+
     switch (packStockType) {
       case 'Decrement pack only':
-        await page.click(this.packStockTypeRadioButton(0));
+        locator = page.locator(this.packStockTypeRadioButton(0));
         break;
 
       case 'Decrement products in pack only':
-        await page.click(this.packStockTypeRadioButton(1));
+        locator = page.locator(this.packStockTypeRadioButton(1));
         break;
 
       case 'Decrement both':
-        await page.click(this.packStockTypeRadioButton(2));
+        locator = page.locator(this.packStockTypeRadioButton(2));
         break;
 
       case 'Default':
-        await page.click(this.packStockTypeRadioButton(3));
+        locator = page.locator(this.packStockTypeRadioButton(3));
         break;
 
       default:
         throw new Error(`Radio button for ${packStockType} was not found`);
     }
+
+    await locator.click();
   }
 
   /**

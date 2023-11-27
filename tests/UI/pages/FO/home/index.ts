@@ -31,6 +31,8 @@ class HomePage extends FOBasePage {
 
   private readonly homePageSection: string;
 
+  private productsBlock: (blockId: number) => string;
+
   private readonly productsBlockTitle: (blockId: number) => string;
 
   private readonly productsBlockDiv: (blockId: number) => string;
@@ -44,8 +46,6 @@ class HomePage extends FOBasePage {
   private readonly productQuickViewLink: (number: number) => string;
 
   private readonly productColorLink: (number: number, color: string) => string;
-
-  private readonly allProductLink: string;
 
   private readonly allProductsBlockLink: (blockId: number) => string;
 
@@ -167,15 +167,15 @@ class HomePage extends FOBasePage {
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
-    this.productsBlockTitle = (blockId: number) => `#content section:nth-child(${blockId}) h2`;
-    this.productsBlockDiv = (blockId: number) => `#content section:nth-child(${blockId}) div.products div.js-product`;
-    this.productArticle = (number: number) => `#content .products div:nth-child(${number}) article`;
+    this.productsBlock = (blockId: number) => `#content section:nth-child(${blockId})`;
+    this.productsBlockTitle = (blockId: number) => `${this.productsBlock(blockId)} h2`;
+    this.productsBlockDiv = (blockId: number) => `${this.productsBlock(blockId)} div.products div.js-product`;
+    this.productArticle = (number: number) => `${this.productsBlock(2)} .products div:nth-child(${number}) article`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
     this.productColorLink = (number: number, color: string) => `${this.productArticle(number)} .variant-links`
       + ` a[aria-label='${color}']`;
-    this.allProductLink = '#content a.all-product-link';
     this.allProductsBlockLink = (blockId: number) => `#content section:nth-child(${blockId}) a.all-product-link`;
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = (number: number) => `${this.productArticle(number)} span[aria-label="Price"]`;
@@ -183,7 +183,7 @@ class HomePage extends FOBasePage {
     this.bannerImg = '.banner img';
     this.customTextBlock = '#custom-text';
     this.newsletterFormField = '.block_newsletter [name=email]';
-    this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
+    this.newsletterSubmitButton = '.block_newsletter [name="submitNewsletter"][value="Subscribe"]';
 
     // Newsletter Subscription alert message
     this.subscriptionAlertMessage = '.block_newsletter_alert';
@@ -264,7 +264,7 @@ class HomePage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnLeftOrRightArrow(page: Page, direction: string): Promise<void> {
-    await page.click(this.carouselControlDirectionLink(direction));
+    await page.locator(this.carouselControlDirectionLink(direction)).click();
   }
 
   /**
@@ -319,12 +319,12 @@ class HomePage extends FOBasePage {
   }
 
   /**
-   * Go to home category page by clicking on all products
+   * Goto home category page by clicking on all products
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAllProductsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.allProductLink);
+    await this.goToAllProductsBlockPage(page, 1);
   }
 
   /**
@@ -452,7 +452,7 @@ class HomePage extends FOBasePage {
     if (this.theme === 'hummingbird') {
       await page.hover(this.productImgHummingbird(id));
       await this.waitForVisibleSelector(page, this.quickviewButtonHummingbird(id));
-      await page.click(this.quickviewButtonHummingbird(id));
+      await page.locator(this.quickviewButtonHummingbird(id)).first().click();
 
       return;
     }
@@ -481,7 +481,7 @@ class HomePage extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
+      page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
   }
 
@@ -506,7 +506,7 @@ class HomePage extends FOBasePage {
     await this.setValue(page, this.quickViewQuantityWantedInput, quantityWanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
-      page.click(this.addToCartButton),
+      page.locator(this.addToCartButton).click(),
     ]);
 
     return this.getTextContent(page, this.blockCartLabel);

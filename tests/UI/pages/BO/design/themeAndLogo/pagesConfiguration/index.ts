@@ -16,9 +16,13 @@ class PagesConfigurationPage extends themeAndLogoBasePage {
 
   public readonly successMessage: string;
 
+  private readonly moduleBlock: (moduleTag: string) => string;
+
   private readonly actionModuleButton: (moduleTag: string, action: string) => string;
 
   private readonly configureModuleButton: (moduleTag: string) => string;
+
+  private homePageModal: string;
 
   private readonly actionsDropdownButton: (moduleTag: string) => string;
 
@@ -39,15 +43,19 @@ class PagesConfigurationPage extends themeAndLogoBasePage {
     this.successMessage = 'Action on the module successfully completed';
 
     // Module actions
-    this.actionModuleButton = (moduleTag: string, action: string) => `div[data-module_name=${moduleTag}]`
-      + ` button.module_action_menu_${action}`;
-    this.configureModuleButton = (moduleTag: string) => `div[data-module_name=${moduleTag}]`
-      + ' div.module-actions a[href*=\'/action/configure\']';
+    this.homePageModal = '#homepageModal';
+    this.moduleBlock = (moduleTag: string) => `${this.homePageModal} div[data-module_name=${moduleTag}]`;
+    this.actionModuleButton = (moduleTag: string, action: string) => `${this.moduleBlock(moduleTag)
+    } button.module_action_menu_${action}`;
+    this.configureModuleButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)
+    } div.module-actions a[href*='/action/configure']`;
 
     // Module actions in dropdown selectors
-    this.actionsDropdownButton = (moduleTag: string) => `#homepageModal div.src_parent_${moduleTag} button.dropdown-action`;
-    this.actionModuleButtonInDropdownList = (moduleTag: string, action: string) => `#homepageModal div.src_parent_${moduleTag}`
-      + ` button.module_action_menu_${action}`;
+    this.actionsDropdownButton = (moduleTag: string) => `${this.homePageModal
+    } div.src_parent_${moduleTag} button.dropdown-action`;
+
+    this.actionModuleButtonInDropdownList = (moduleTag: string, action: string) => `${this.homePageModal
+    } div.src_parent_${moduleTag} button.module_action_menu_${action}`;
 
     // Modal confirmation selectors
     this.modalConfirmAction = '#moduleActionModal';
@@ -69,7 +77,7 @@ class PagesConfigurationPage extends themeAndLogoBasePage {
     if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {
       await this.waitForSelectorAndClick(page, this.actionModuleButton(module.tag, action));
     } else {
-      await page.click(this.actionsDropdownButton(module.tag));
+      await page.locator(this.actionsDropdownButton(module.tag)).click();
       await this.waitForSelectorAndClick(page, this.actionModuleButtonInDropdownList(module.tag, action));
     }
 

@@ -74,7 +74,7 @@ class LoginPage extends FOBasePage {
       await this.clickAndWaitForLoadState(page, this.signInButton);
       await this.elementNotVisible(page, this.signInButton, 2000);
     } else {
-      await page.click(this.signInButton);
+      await page.locator(this.signInButton).click();
     }
   }
 

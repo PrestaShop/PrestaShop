@@ -226,7 +226,7 @@ class Import extends BOBasePage {
    * @return {Promise<string>}
    */
   async goToImportNextStep(page: Page): Promise<string> {
-    await page.click(this.nextStepButton);
+    await page.locator(this.nextStepButton).click();
 
     return this.getTextContent(page, this.importFileSecondStepPanelTitle);
   }
@@ -237,7 +237,7 @@ class Import extends BOBasePage {
    * @return {Promise<string>}
    */
   async startFileImport(page: Page): Promise<string> {
-    await page.click(this.importButton);
+    await page.locator(this.importButton).click();
 
     return this.getTextContent(page, this.importProgressModal);
   }

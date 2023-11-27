@@ -170,7 +170,7 @@ class Zones extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.resetFilterButton, 2000)) {
-      await page.click(this.resetFilterButton);
+      await page.locator(this.resetFilterButton).click();
       await this.elementNotVisible(page, this.resetFilterButton, 2000);
     }
     await this.waitForVisibleSelector(page, this.searchFilterButton, 2000);
@@ -260,7 +260,7 @@ class Zones extends BOBasePage {
    */
   async setZoneStatus(page: Page, row: number, wantedStatus: boolean): Promise<boolean> {
     if (wantedStatus !== await this.getZoneStatus(page, row)) {
-      await page.click(this.zonesGridStatusColumn(row));
+      await page.locator(this.zonesGridStatusColumn(row)).click();
       return true;
     }
 
@@ -288,16 +288,16 @@ class Zones extends BOBasePage {
     await this.dialogListener(page, true);
     // Click on dropDown
     await Promise.all([
-      page.click(this.zonesGridColumnToggleDropdown(row)),
+      page.locator(this.zonesGridColumnToggleDropdown(row)).click(),
       this.waitForVisibleSelector(page, `${this.zonesGridColumnToggleDropdown(row)}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.zonesGridDeleteLink(row)),
+      page.locator(this.zonesGridDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await page.click(this.confirmDeleteButton);
+    await page.locator(this.confirmDeleteButton).click();
     await this.elementNotVisible(page, this.confirmDeleteModal, 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -331,7 +331,7 @@ class Zones extends BOBasePage {
   async bulkSelectRows(page: Page): Promise<void> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
   }
@@ -346,15 +346,15 @@ class Zones extends BOBasePage {
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteSelectionButton),
+      page.locator(this.deleteSelectionButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await page.click(this.confirmDeleteButton);
+    await page.locator(this.confirmDeleteButton).click();
     await this.elementNotVisible(page, this.confirmDeleteModal, 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -371,11 +371,11 @@ class Zones extends BOBasePage {
     await this.bulkSelectRows(page);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status
-    await page.click(wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
+    await page.locator(wantedStatus ? this.enableSelectionButton : this.disableSelectionButton).click();
     await this.elementNotVisible(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton, 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
