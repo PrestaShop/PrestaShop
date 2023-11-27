@@ -76,18 +76,20 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         //Try to call setters
-        foreach ($data as $param => $value) {
-            $parameters = [];
-            if ($reflectionMethod = $this->findSetterMethod($param, $type)) {
-                $methodParameters = $reflectionMethod->getParameters();
-                foreach ($methodParameters as $methodParameter) {
-                    $paramType = $methodParameter->getType() instanceof \ReflectionNamedType ? $methodParameter->getType()->getName() : null;
-                    $parameters[] = $this->getConvertedValue($value, $methodParameter->getName(), $paramType);
-                }
+        if (is_iterable($data)) {
+            foreach ($data as $param => $value) {
+                $parameters = [];
+                if ($reflectionMethod = $this->findSetterMethod($param, $type)) {
+                    $methodParameters = $reflectionMethod->getParameters();
+                    foreach ($methodParameters as $methodParameter) {
+                        $paramType = $methodParameter->getType() instanceof \ReflectionNamedType ? $methodParameter->getType()->getName() : null;
+                        $parameters[] = $this->getConvertedValue($value, $methodParameter->getName(), $paramType);
+                    }
 
-                $reflectionMethod->invoke($action, ...$parameters);
-            } elseif ($propertyAccessor->isWritable($action, $param)) {
-                $propertyAccessor->setValue($action, $param, $this->getConvertedValue($value, $param, null));
+                    $reflectionMethod->invoke($action, ...$parameters);
+                } elseif ($propertyAccessor->isWritable($action, $param)) {
+                    $propertyAccessor->setValue($action, $param, $this->getConvertedValue($value, $param, null));
+                }
             }
         }
 

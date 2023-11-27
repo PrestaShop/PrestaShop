@@ -40,6 +40,7 @@ use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DateTimeImmutableDenormalizer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
 use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
+use PrestaShopBundle\ApiPlatform\Resources\CustomerGroup;
 
 class DomainSerializerTest extends TestCase
 {
@@ -141,6 +142,11 @@ class DomainSerializerTest extends TestCase
                 // 'cartRuleAction' => ['freeShipping' => true, 'giftProduct' => ['productId': 1], 'discount' => ['amountDiscount' => ['amount' => 10]]]...
             ],
             $editCartRuleCommand,
+        ];
+
+        yield 'null value returns an empty object' => [
+            null,
+            new CustomerGroup(),
         ];
     }
 
