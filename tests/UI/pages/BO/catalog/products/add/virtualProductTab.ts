@@ -18,6 +18,8 @@ class VirtualProductTab extends BOBasePage {
 
   private readonly productMinimumQuantityInput: string;
 
+  private readonly productFileSection: string;
+
   private readonly productChooseFile: (toCheck: number) => string;
 
   private readonly productFile: string;
@@ -55,9 +57,10 @@ class VirtualProductTab extends BOBasePage {
     this.virtualProductTabLink = '#product_stock-tab-nav';
     this.productQuantityInput = '#product_stock_quantities_delta_quantity_delta';
     this.productMinimumQuantityInput = '#product_stock_quantities_minimal_quantity';
+    this.productFileSection = '#product_stock_virtual_product_file';
     this.productChooseFile = (toCheck: number) => `#product_stock_virtual_product_file_has_file_${toCheck}`;
     this.productFile = '#product_stock_virtual_product_file_file';
-    this.errorMessageInFileInput = `${this.productFile} div.form-group.file-widget.has-error div.alert-danger p`;
+    this.errorMessageInFileInput = `${this.productFileSection} div.form-group.file-widget.has-error div.alert-danger p`;
     this.productFileNameInput = '#product_stock_virtual_product_file_name';
     this.productFileDownloadTimesLimit = '#product_stock_virtual_product_file_download_times_limit';
     this.productFileExpirationDate = '#product_stock_virtual_product_file_expiration_date';
