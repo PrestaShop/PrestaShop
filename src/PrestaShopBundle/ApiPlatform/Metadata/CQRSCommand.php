@@ -34,8 +34,8 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
  * Class CQRSCommand handles parameters to ease the configuration of an operation relying on CommandProcessor
- * it doesn't force any arguments, so it is suitable for custom usage, but it is recommended to use CQRSCreateCommand
- * or CQRSUpdateCommand instead as they handle default values that help the configuration and avoid unexpected behaviour.
+ * it doesn't force any arguments, so it is suitable for custom usage, but it is recommended to use CQRSCreate
+ * or CQRSUpdate instead as they handle default values that help the configuration and avoid unexpected behaviour.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class CQRSCommand extends AbstractCQRSOperation

@@ -32,24 +32,24 @@ use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
-class CQRSQueryTest extends TestCase
+class CQRSGetTest extends TestCase
 {
     public function testDefaultConstructor(): void
     {
         // Without any parameters
-        $operation = new CQRSQuery();
+        $operation = new CQRSGet();
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
-        $this->assertEquals(CQRSQuery::METHOD_GET, $operation->getMethod());
+        $this->assertEquals(CQRSGet::METHOD_GET, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
 
         // With positioned parameters
-        $operation = new CQRSQuery('/uri');
+        $operation = new CQRSGet('/uri');
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
 
         // With named parameters
-        $operation = new CQRSQuery(
+        $operation = new CQRSGet(
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
@@ -59,21 +59,21 @@ class CQRSQueryTest extends TestCase
     public function testScopes(): void
     {
         // Scopes parameters in constructor
-        $operation = new CQRSQuery(
+        $operation = new CQRSGet(
             scopes: ['test', 'test2']
         );
         $this->assertEquals(['scopes' => ['test', 'test2']], $operation->getExtraProperties());
         $this->assertEquals(['test', 'test2'], $operation->getScopes());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSQuery(
+        $operation = new CQRSGet(
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertEquals(['test'], $operation->getScopes());
 
         // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
-        $operation = new CQRSQuery(
+        $operation = new CQRSGet(
             extraProperties: ['scopes' => ['test', 'test1']],
             scopes: ['test', 'test2'],
         );
@@ -93,21 +93,21 @@ class CQRSQueryTest extends TestCase
     public function testCQRSQuery(): void
     {
         // CQRS query parameters in constructor
-        $operation = new CQRSQuery(
+        $operation = new CQRSGet(
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSQuery(
+        $operation = new CQRSGet(
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
         );
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
         // Extra properties AND CQRS query parameters in constructor, both values are equals no problem
-        $operation = new CQRSQuery(
+        $operation = new CQRSGet(
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
@@ -126,7 +126,7 @@ class CQRSQueryTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new CQRSQuery(
+            new CQRSGet(
                 extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
                 CQRSQuery: 'My\\Namespace\\MyOtherQuery',
             );

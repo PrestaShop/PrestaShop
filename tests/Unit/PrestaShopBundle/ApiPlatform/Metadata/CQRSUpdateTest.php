@@ -26,59 +26,63 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Metadata;
+namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
-class CQRSCreateCommandTest extends TestCase
+class CQRSUpdateTest extends TestCase
 {
     public function testDefaultConstructor(): void
     {
         // Without any parameters
-        $operation = new CQRSCreateCommand();
+        $operation = new CQRSUpdate();
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
-        $this->assertEquals(CQRSCommand::METHOD_POST, $operation->getMethod());
+        $this->assertEquals(CQRSUpdate::METHOD_PUT, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertFalse($operation->canRead());
 
         // With positioned parameters
-        $operation = new CQRSCreateCommand('/uri');
+        $operation = new CQRSUpdate(CQRSUpdate::METHOD_PATCH, '/uri');
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
-        $this->assertEquals(CQRSCommand::METHOD_POST, $operation->getMethod());
+        $this->assertEquals(CQRSUpdate::METHOD_PATCH, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
 
         // With named parameters
-        $operation = new CQRSCreateCommand(
-            extraProperties: ['scopes' => ['test']]
+        $operation = new CQRSUpdate(
+            read: true,
+            extraProperties: ['scopes' => ['test']],
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
+        $this->assertTrue($operation->canRead());
     }
 
     public function testScopes(): void
     {
         // Scopes parameters in constructor
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             scopes: ['test', 'test2']
         );
         $this->assertEquals(['scopes' => ['test', 'test2']], $operation->getExtraProperties());
         $this->assertEquals(['test', 'test2'], $operation->getScopes());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertEquals(['test'], $operation->getScopes());
 
         // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             extraProperties: ['scopes' => ['test', 'test1']],
             scopes: ['test', 'test2'],
         );
@@ -98,7 +102,7 @@ class CQRSCreateCommandTest extends TestCase
     public function testCQRSCommand(): void
     {
         // CQRS query parameters in constructor
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             CQRSCommand: 'My\\Namespace\\MyCommand',
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
@@ -107,14 +111,14 @@ class CQRSCreateCommandTest extends TestCase
         $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             extraProperties: ['CQRSCommand' => 'My\\Namespace\\MyCommand'],
         );
         $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyCommand'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
 
         // Extra properties AND CQRS query parameters in constructor, both values are equals no problem
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             extraProperties: ['CQRSCommand' => 'My\\Namespace\\MyCommand'],
             CQRSCommand: 'My\\Namespace\\MyCommand',
         );
@@ -133,7 +137,7 @@ class CQRSCreateCommandTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new CQRSCreateCommand(
+            new CQRSUpdate(
                 extraProperties: ['CQRSCommand' => 'My\\Namespace\\MyCommand'],
                 CQRSCommand: 'My\\Namespace\\MyOtherCommand',
             );
@@ -149,7 +153,7 @@ class CQRSCreateCommandTest extends TestCase
     public function testCQRSQuery(): void
     {
         // CQRS query parameters in constructor
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
@@ -158,7 +162,7 @@ class CQRSCreateCommandTest extends TestCase
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
@@ -167,7 +171,7 @@ class CQRSCreateCommandTest extends TestCase
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
         // Extra properties AND CQRS query parameters in constructor, both values are equals no problem
-        $operation = new CQRSCreateCommand(
+        $operation = new CQRSUpdate(
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
@@ -186,7 +190,7 @@ class CQRSCreateCommandTest extends TestCase
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
         // New operation without query, the provider is forced when it is set
-        $operation = new CQRSCreateCommand();
+        $operation = new CQRSUpdate();
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
         $this->assertArrayNotHasKey('CQRSQuery', $operation->getExtraProperties());
@@ -206,7 +210,7 @@ class CQRSCreateCommandTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new CQRSCreateCommand(
+            new CQRSUpdate(
                 extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
                 CQRSQuery: 'My\\Namespace\\MyOtherQuery',
             );

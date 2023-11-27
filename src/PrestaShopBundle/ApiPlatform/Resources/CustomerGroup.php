@@ -34,13 +34,13 @@ use ApiPlatform\Metadata\ApiResource;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreateCommand;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSQuery;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdateCommand;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
 
 #[ApiResource(
     operations: [
-        new CQRSQuery(
+        new CQRSGet(
             uriTemplate: '/customers/group/{customerGroupId}',
             extraProperties: [
                 'queryNormalizationMapping' => [
@@ -53,7 +53,7 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdateCommand;
                 'customer_group_read',
             ],
         ),
-        new CQRSCreateCommand(
+        new CQRSCreate(
             uriTemplate: '/customers/group',
             extraProperties: [
                 'commandNormalizationMapping' => [
@@ -70,7 +70,7 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdateCommand;
                 'customer_group_write',
             ],
         ),
-        new CQRSUpdateCommand(
+        new CQRSUpdate(
             uriTemplate: '/customers/group/{customerGroupId}',
             extraProperties: [
                 'queryNormalizationMapping' => [

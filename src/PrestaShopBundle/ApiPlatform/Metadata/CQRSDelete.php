@@ -31,7 +31,7 @@ namespace PrestaShopBundle\ApiPlatform\Metadata;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
- * Class CQRSUpdateCommand is a custom operation that provides extra parameters to help configure an operation
+ * Class CQRSUpdate is a custom operation that provides extra parameters to help configure an operation
  * based on a CQRS command, it is custom tailed for update operations and forces using the PUT method by default,
  * but you can also use PATCH method.
  */

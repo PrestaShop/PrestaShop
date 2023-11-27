@@ -31,11 +31,11 @@ namespace PrestaShopBundle\ApiPlatform\Metadata;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
- * Class CQRSCreateCommand is a custom operation that provides extra parameters to help configure an operation
+ * Class CQRSQuery is a custom operation that provides extra parameters to help configure an operation
  * based on a CQRS query, it is custom tailed for read operations and forces using the GET method.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class CQRSQuery extends AbstractCQRSOperation
+class CQRSGet extends AbstractCQRSOperation
 {
     public function __construct(
         ?string $uriTemplate = null,
