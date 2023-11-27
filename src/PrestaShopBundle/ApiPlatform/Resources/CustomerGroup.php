@@ -31,13 +31,12 @@ namespace PrestaShopBundle\ApiPlatform\Resources;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSCommand;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreateCommand;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSQuery;
-use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdateCommand;
 
 #[ApiResource(
     operations: [
@@ -54,7 +53,7 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
                 'customer_group_read',
             ],
         ),
-        new CQRSCommand(
+        new CQRSCreateCommand(
             uriTemplate: '/customers/group',
             extraProperties: [
                 'commandNormalizationMapping' => [
@@ -71,19 +70,18 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
                 'customer_group_write',
             ],
         ),
-        new Put(
+        new CQRSUpdateCommand(
             uriTemplate: '/customers/group/{customerGroupId}',
-            processor: CommandProcessor::class,
             extraProperties: [
-                'CQRSCommand' => EditCustomerGroupCommand::class,
-                'CQRSQuery' => GetCustomerGroupForEditing::class,
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',
                     '[reduction]' => '[reductionPercent]',
                 ],
-                'scopes' => [
-                    'customer_group_write',
-                ],
+            ],
+            CQRSCommand: EditCustomerGroupCommand::class,
+            CQRSQuery: GetCustomerGroupForEditing::class,
+            scopes: [
+                'customer_group_write',
             ],
         ),
     ]

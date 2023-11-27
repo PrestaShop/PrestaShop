@@ -62,12 +62,11 @@ class CommandProcessor implements ProcessorInterface
     {
         $extraProperties = $operation->getExtraProperties();
         $commandClass = $extraProperties['CQRSCommand'] ?? null;
-        $commandParameters = array_merge($this->apiPlatformSerializer->normalize($data), $uriVariables);
-
         if (null === $commandClass || !class_exists($commandClass)) {
             throw new CQRSCommandNotFoundException(sprintf('Resource %s has no CQRS command defined.', $operation->getClass()));
         }
 
+        $commandParameters = array_merge($this->apiPlatformSerializer->normalize($data), $uriVariables);
         $command = $this->apiPlatformSerializer->denormalize($commandParameters, $commandClass);
         $commandResult = $this->commandBus->handle($command);
 
