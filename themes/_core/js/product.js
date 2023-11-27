@@ -118,7 +118,7 @@ function showErrorNextToAddtoCartButton(errorMessage) {
  * @param {string} updateUrl
  */
 function updateProduct(event, eventType, updateUrl) {
-  const $productActions = $(prestashop.selectors.product.actions);
+  const $productActions = $(prestashop.selectors.product.actions).last();
   const $quantityWantedInput = $productActions.find(
     prestashop.selectors.quantityWanted,
   );
