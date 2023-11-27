@@ -19,7 +19,7 @@ Feature: CustomerGroup Management
     And I add a shop "shop3" with name "test_shop3" and color "red" for the group "default_shop_group"
     And I add a shop "shop4" with name "test_shop4" and color "red" for the group "default_shop_group"
 
-  Scenario: Create a simple customer group and udpate it
+  Scenario: Create a simple customer group
     When I create a customer group "CustomerGroup1" with the following details:
       | name[en-US]             | Name EN           |
       | name[fr-FR]             | Name FR           |
@@ -37,6 +37,8 @@ Feature: CustomerGroup Management
       | displayPriceTaxExcluded | true              |
       | showPrice               | true              |
       | shopIds                 | shop1,shop2,shop4 |
+
+  Scenario: Update the created customer group
     When I update customer group "CustomerGroup1" with the following details:
       | name[en-US]             | New Name EN |
       | name[fr-FR]             | New Name FR |
@@ -78,3 +80,8 @@ Feature: CustomerGroup Management
       | displayPriceTaxExcluded | true                |
       | showPrice               | true                |
       | shopIds                 | shop2,shop3         |
+
+  Scenario: Delete the customer group
+    Given customer group CustomerGroup1 exists
+    When I delete customer group CustomerGroup1
+    Then customer group CustomerGroup1 does not exist

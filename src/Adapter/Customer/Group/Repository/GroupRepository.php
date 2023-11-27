@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Repository;
 use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotAddGroupException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotDeleteGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotUpdateGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
@@ -110,5 +111,12 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     {
         $this->partiallyUpdateObjectModel($customerGroup, $propertiesToUpdate, CannotUpdateGroupException::class);
         $this->updateObjectModelShopAssociations((int) $customerGroup->id, CustomerGroup::class, $customerGroup->id_shop_list);
+    }
+
+    public function delete(GroupId $customerGroupId): void
+    {
+        $customerGroup = $this->get($customerGroupId);
+        $shopIds = $this->getAssociatedShopIds($customerGroupId->getValue());
+        $this->deleteObjectModelFromShops($customerGroup, array_map(fn (int $shopId) => new ShopId($shopId), $shopIds), CannotDeleteGroupException::class);
     }
 }

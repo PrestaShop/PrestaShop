@@ -32,7 +32,9 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\DeleteCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
@@ -98,11 +100,44 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I delete customer group :customerGroupReference
+     *
+     * @param string $customerGroupReference
+     */
+    public function deleteCustomerGroupUsingCommand(string $customerGroupReference)
+    {
+        $this->getCommandBus()->handle(new DeleteCustomerGroupCommand($this->referenceToId($customerGroupReference)));
+    }
+
+    /**
      * @Then customer group :customerGroupReference have the following values:
      */
     public function assertQueryCustomerGroupProperties($customerGroupReference, EditableCustomerGroup $expectedGroup)
     {
         Assert::assertEquals($expectedGroup, $this->getCustomerGroupForEditing($customerGroupReference));
+    }
+
+    /**
+     * @Given customer group :customerGroupReference exists
+     */
+    public function assertCustomerGroupExists(string $customerGroupReference): void
+    {
+        $customerGroup = $this->getCustomerGroupForEditing($customerGroupReference);
+        Assert::assertNotNull($customerGroup, sprintf('Customer group %s as not found', $customerGroupReference));
+    }
+
+    /**
+     * @Then customer group :customerGroupReference does not exist
+     */
+    public function assertCustomerGroupDoesNotExist(string $customerGroupReference): void
+    {
+        $caughtException = null;
+        try {
+            $this->getCustomerGroupForEditing($customerGroupReference);
+        } catch (GroupNotFoundException $e) {
+            $caughtException = $e;
+        }
+        Assert::assertNotNull($caughtException, sprintf('Customer group %s should not exist', $customerGroupReference));
     }
 
     /**
