@@ -143,13 +143,12 @@ class CustomerGroupApiTest extends ApiTestCase
      *
      * @param int $customerGroupId
      *
-     * @return void
+     * @return int
      */
-    public function testGetCustomerGroup(int $customerGroupId): void
+    public function testGetCustomerGroup(int $customerGroupId): int
     {
         $bearerToken = $this->getBearerToken(['customer_group_read']);
         $client = static::createClient();
-        // Update customer group with partial data
         $response = $client->request('GET', '/api/customers/group/' . $customerGroupId, [
             'auth_bearer' => $bearerToken,
         ]);
@@ -171,5 +170,32 @@ class CustomerGroupApiTest extends ApiTestCase
             ],
             $decodedResponse
         );
+
+        return $customerGroupId;
+    }
+
+    /**
+     * @depends testGetCustomerGroup
+     *
+     * @param int $customerGroupId
+     *
+     * @return void
+     */
+    public function testDeleteCustomerGroup(int $customerGroupId): void
+    {
+        $bearerToken = $this->getBearerToken(['customer_group_read', 'customer_group_write']);
+        $client = static::createClient();
+        // Update customer group with partial data
+        $response = $client->request('DELETE', '/api/customers/group/' . $customerGroupId, [
+            'auth_bearer' => $bearerToken,
+        ]);
+        self::assertResponseStatusCodeSame(204);
+        $this->assertEmpty($response->getContent());
+
+        $client = static::createClient();
+        $response = $client->request('GET', '/api/customers/group/' . $customerGroupId, [
+            'auth_bearer' => $bearerToken,
+        ]);
+        self::assertResponseStatusCodeSame(404);
     }
 }

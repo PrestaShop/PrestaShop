@@ -32,9 +32,12 @@ namespace PrestaShopBundle\ApiPlatform\Resources;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\DeleteCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
 
@@ -84,7 +87,15 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
                 'customer_group_write',
             ],
         ),
-    ]
+        new CQRSDelete(
+            uriTemplate: '/customers/group/{customerGroupId}',
+            CQRSQuery: DeleteCustomerGroupCommand::class,
+            scopes: [
+                'customer_group_write',
+            ],
+        ),
+    ],
+    exceptionToStatus: [GroupNotFoundException::class => 404],
 )]
 class CustomerGroup
 {
