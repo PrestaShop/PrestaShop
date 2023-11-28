@@ -128,7 +128,6 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
 
         const productName = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'product_name');
         expect(productName).to.contain(productStock.name);
-        console.log(productName);
 
         // Check movement quantity
         const movementQuantity = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'quantity');

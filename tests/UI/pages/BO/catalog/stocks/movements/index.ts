@@ -363,11 +363,7 @@ class Movements extends BOBasePage {
       case 'product_id':
         return this.getTextContent(page, this.tableProductId(row));
       case 'product_name':
-        // @ts-ignore
-        return page.evaluate(
-          (selector) => document.querySelector(selector)!.childNodes[0].textContent,
-          this.tableProductNameColumn(row),
-        );
+        return this.getTextContent(page, this.tableProductNameColumn(row));
       case 'reference':
         return this.getTextContent(page, this.tableProductReferenceColumn(row));
       case 'quantity':
