@@ -790,7 +790,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $qb = $this->connection->createQueryBuilder()
-            ->select('pac.id_product_attribute, pac.id_attribute')
+            ->select('DISTINCT pac.id_product_attribute')
             ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
         ;
 
@@ -817,18 +817,20 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-
         $results = $qb->execute()->fetchAll();
         if (!$results) {
             return [];
         }
 
-        return array_map(static function (array $result): CombinationId {
+        $combinationsIds = array_map(static function (array $result): CombinationId {
             return new CombinationId((int) $result['id_product_attribute']);
         }, $results);
+
+        if ($limit) {
+            $combinationsIds = array_slice($combinationsIds, 0, $limit);
+        }
+
+        return $combinationsIds;
     }
 
     /**
