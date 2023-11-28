@@ -747,6 +747,13 @@ class FrontControllerCore extends Controller
      */
     protected function displayMaintenancePage()
     {
+        $moduleSyncUrl = '/module/' . Tools::getValue('module') . '/synchronizeCron';
+
+// If the request matches the synchronization URL of a module, allows access even in maintenance mode
+if (Tools::getValue('action') == 'product' && strpos($_SERVER['REQUEST_URI'], $moduleSyncUrl) !== false) {
+    // Authorizes access, does not block the execution of the rest of the code
+    return;
+}
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
 
