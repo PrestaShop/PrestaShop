@@ -1344,19 +1344,19 @@ class ProductCore extends ObjectModel
      *
      * @return bool|int
      */
-    public function deleteSelection($products)
+    public function deleteSelection(array $products)
     {
         $return = 1;
-        if (is_array($products) && ($count = count($products))) {
-            // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-            if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
-                ini_set('max_execution_time', (string) round($count * 1.5));
-            }
 
-            foreach ($products as $id_product) {
-                $product = new Product((int) $id_product);
-                $return &= $product->delete();
-            }
+        // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
+        $count = count($products);
+        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
+            ini_set('max_execution_time', (string) round($count * 1.5));
+        }
+
+        foreach ($products as $id_product) {
+            $product = new Product((int) $id_product);
+            $return &= $product->delete();
         }
 
         return $return;
@@ -3200,17 +3200,13 @@ class ProductCore extends ObjectModel
         $id_lang,
         $page_number = 0,
         $nb_products = 10,
-        $count = false,
+        bool $count = false,
         $order_by = null,
         $order_way = null,
         $beginning = false,
         $ending = false,
         Context $context = null
     ) {
-        if (!Validate::isBool($count)) {
-            die(Tools::displayError('Parameter "count" is invalid.'));
-        }
-
         if (!$context) {
             $context = Context::getContext();
         }
@@ -3538,7 +3534,7 @@ class ProductCore extends ObjectModel
      */
     public static function getPriceStatic(
         $id_product,
-        $usetax = true,
+        bool $usetax = true,
         $id_product_attribute = null,
         $decimals = 6,
         $divisor = null,
@@ -3566,9 +3562,6 @@ class ProductCore extends ObjectModel
             Tools::displayParameterAsDeprecated('divisor');
         }
 
-        if (!Validate::isBool($usetax)) {
-            die(Tools::displayError('Parameter "usetax" is invalid.'));
-        }
         if (!Validate::isUnsignedId($id_product)) {
             die(Tools::displayError('Product ID is invalid.'));
         }

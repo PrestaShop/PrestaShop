@@ -100,7 +100,7 @@ class FeatureCore extends ObjectModel
      *
      * @return bool Deletion result
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
         /* Also delete Attributes */
         foreach ($selection as $value) {

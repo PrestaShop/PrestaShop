@@ -348,11 +348,8 @@ class CategoryCore extends ObjectModel
      * @param array $toDelete Array reference where categories ID will be saved
      * @param int $idCategory Parent category ID
      */
-    protected function recursiveDelete(&$toDelete, $idCategory)
+    protected function recursiveDelete(array &$toDelete, $idCategory)
     {
-        if (!is_array($toDelete)) {
-            die(Tools::displayError('Parameter "toDelete" is invalid.'));
-        }
         if (!$idCategory) {
             die(Tools::displayError('Parameter "idCategory" is invalid.'));
         }
@@ -434,7 +431,7 @@ class CategoryCore extends ObjectModel
      *
      * @return bool Deletion result
      */
-    public function deleteSelection($idCategories)
+    public function deleteSelection(array $idCategories)
     {
         $return = 1;
         foreach ($idCategories as $idCategory) {
@@ -614,11 +611,8 @@ class CategoryCore extends ObjectModel
      *
      * @return array Categories
      */
-    public static function getCategories($idLang = false, $active = true, $order = true, $sqlFilter = '', $orderBy = '', $limit = '')
+    public static function getCategories($idLang = false, bool $active = true, $order = true, $sqlFilter = '', $orderBy = '', $limit = '')
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
 			SELECT *
@@ -679,7 +673,7 @@ class CategoryCore extends ObjectModel
     public static function getAllCategoriesName(
         $idRootCategory = null,
         $idLang = false,
-        $active = true,
+        bool $active = true,
         $groups = null,
         $useShopRestriction = true,
         $sqlFilter = '',
@@ -688,10 +682,6 @@ class CategoryCore extends ObjectModel
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
             die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
-        }
-
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -754,7 +744,7 @@ class CategoryCore extends ObjectModel
     public static function getNestedCategories(
         $idRootCategory = null,
         $idLang = false,
-        $active = true,
+        bool $active = true,
         $groups = null,
         $useShopRestriction = true,
         $sqlFilter = '',
@@ -763,10 +753,6 @@ class CategoryCore extends ObjectModel
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
             die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
-        }
-
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -1134,12 +1120,8 @@ class CategoryCore extends ObjectModel
      *
      * @return array Children of given Category
      */
-    public static function getChildren($idParent, $idLang, $active = true, $idShop = false)
+    public static function getChildren($idParent, $idLang, bool $active = true, $idShop = false)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
-
         $cacheId = 'Category::getChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
@@ -1170,12 +1152,8 @@ class CategoryCore extends ObjectModel
      *
      * @return bool Indicates whether the given Category has children
      */
-    public static function hasChildren($idParent, $idLang, $active = true, $idShop = false)
+    public static function hasChildren($idParent, $idLang, bool $active = true, $idShop = false)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
-
         $cacheId = 'Category::hasChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = 'SELECT c.id_category, "" as name

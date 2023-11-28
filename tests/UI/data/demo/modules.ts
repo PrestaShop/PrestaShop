@@ -29,7 +29,7 @@ export default {
   psFacetedSearch: new ModuleData({
     tag: 'ps_facetedsearch',
     name: 'Faceted search',
-    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.13.1/ps_facetedsearch.zip',
+    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.14.1/ps_facetedsearch.zip',
   }),
   psThemeCusto: new ModuleData({
     tag: 'ps_themecusto',

@@ -805,7 +805,7 @@ class ToolsCore
      *
      * @return string Date
      */
-    public static function displayDate($date, $full = false)
+    public static function displayDate($date, bool $full = false)
     {
         if (!$date || !($time = strtotime($date))) {
             return $date;
@@ -815,7 +815,7 @@ class ToolsCore
             return '';
         }
 
-        if (!Validate::isDate($date) || !Validate::isBool($full)) {
+        if (!Validate::isDate($date)) {
             throw new PrestaShopException('Invalid date');
         }
 

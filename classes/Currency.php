@@ -441,7 +441,7 @@ class CurrencyCore extends ObjectModel
      *
      * @return bool Indicates whether the selected Currencies have been succesfully deleted
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
         if (!is_array($selection)) {
             return false;
