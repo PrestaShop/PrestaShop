@@ -23,7 +23,7 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_hook_getAPIHookStatusId';
 
-describe('API : GET /api/hook-status/{id}', async () => {
+describe('API : GET /api/hookStatus/{id}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -157,10 +157,10 @@ describe('API : GET /api/hook-status/{id}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /admin-dev/api/hook-status/{id}', async function () {
+    it('should request the endpoint /admin-dev/api/hookStatus/{id}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`api/hook-status/${idHook}`, {
+      const apiResponse = await apiContext.get(`api/hookStatus/${idHook}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

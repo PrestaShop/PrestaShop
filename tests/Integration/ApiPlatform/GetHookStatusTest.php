@@ -60,18 +60,18 @@ class GetHookStatusTest extends ApiTestCase
             'hook_read',
             'hook_write',
         ]);
-        $response = static::createClient()->request('GET', '/api/hook-status/' . (int) $inactiveHook->id, ['auth_bearer' => $bearerToken]);
+        $response = static::createClient()->request('GET', '/api/hookStatus/' . (int) $inactiveHook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $inactiveHook->active);
         self::assertResponseStatusCodeSame(200);
 
-        $response = static::createClient()->request('GET', '/api/hook-status/' . (int) $activeHook->id, ['auth_bearer' => $bearerToken]);
+        $response = static::createClient()->request('GET', '/api/hookStatus/' . (int) $activeHook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $activeHook->active);
         self::assertResponseStatusCodeSame(200);
 
-        static::createClient()->request('GET', '/api/hook-status/' . 9999, ['auth_bearer' => $bearerToken]);
+        static::createClient()->request('GET', '/api/hookStatus/' . 9999, ['auth_bearer' => $bearerToken]);
         self::assertResponseStatusCodeSame(404);
 
-        static::createClient()->request('GET', '/api/hook-status/' . $activeHook->id);
+        static::createClient()->request('GET', '/api/hookStatus/' . $activeHook->id);
         self::assertResponseStatusCodeSame(401);
 
         $inactiveHook->delete();
@@ -89,13 +89,13 @@ class GetHookStatusTest extends ApiTestCase
             'hook_read',
             'hook_write',
         ]);
-        static::createClient()->request('PUT', '/api/hook-status', [
+        static::createClient()->request('PUT', '/api/hookStatus', [
             'auth_bearer' => $bearerToken,
             'json' => ['id' => (int) $hook->id, 'active' => false],
         ]);
         self::assertResponseStatusCodeSame(200);
 
-        $response = static::createClient()->request('GET', '/api/hook-status/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
+        $response = static::createClient()->request('GET', '/api/hookStatus/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, false);
         self::assertResponseStatusCodeSame(200);
     }
@@ -111,13 +111,13 @@ class GetHookStatusTest extends ApiTestCase
             'hook_read',
             'hook_write',
         ]);
-        static::createClient()->request('PUT', '/api/hook-status', [
+        static::createClient()->request('PUT', '/api/hookStatus', [
             'auth_bearer' => $bearerToken,
             'json' => ['id' => (int) $hook->id, 'active' => true],
         ]);
         self::assertResponseStatusCodeSame(200);
 
-        $response = static::createClient()->request('GET', '/api/hook-status/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
+        $response = static::createClient()->request('GET', '/api/hookStatus/' . (int) $hook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, true);
         self::assertResponseStatusCodeSame(200);
     }

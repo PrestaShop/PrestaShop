@@ -22,10 +22,10 @@ describe('API : Basic Test', async () => {
       expect(apiResponse.status()).to.eq(404);
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status', async function () {
+    it('should request the endpoint /admin-dev/api/hookStatus', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestNewApiHookStatus', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status');
+      const apiResponse = await apiContext.get('api/hookStatus');
       expect(apiResponse.status()).to.eq(405);
     });
   });

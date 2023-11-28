@@ -22,7 +22,7 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_apiAccess_getAPIApiAccessId';
 
-describe('API : GET /api/api-access/{apiAccessId}', async () => {
+describe('API : GET /api/apiAccess/{apiAccessId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -152,10 +152,10 @@ describe('API : GET /api/api-access/{apiAccessId}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /admin-dev/api/api-access/{apiAccessId}', async function () {
+    it('should request the endpoint /admin-dev/api/apiAccess/{apiAccessId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`api/api-access/${idApiAccess}`, {
+      const apiResponse = await apiContext.get(`api/apiAccess/${idApiAccess}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

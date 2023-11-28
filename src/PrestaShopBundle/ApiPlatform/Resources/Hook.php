@@ -42,7 +42,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 #[ApiResource(
     operations: [
         new Get(
-            uriTemplate: '/hook-status/{id}',
+            uriTemplate: '/hookStatus/{id}',
             requirements: ['id' => '\d+'],
             openapiContext: [
                 'summary' => 'Get hook status A',
@@ -72,7 +72,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             ]
         ),
         new Put(
-            uriTemplate: '/hook-status',
+            uriTemplate: '/hookStatus',
             processor: CommandProcessor::class,
             extraProperties: [
                 'command' => UpdateHookStatusCommand::class,
