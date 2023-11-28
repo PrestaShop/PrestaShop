@@ -2081,8 +2081,7 @@ class FrontControllerCore extends Controller
      */
     protected function buildContainer(): ContainerInterface
     {
-        /* @phpstan-ignore-next-line */
-        if (FRONT_LEGACY_CONTEXT) {
+        if (!defined('FRONT_LEGACY_CONTEXT') || FRONT_LEGACY_CONTEXT) {
             return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
         }
 
