@@ -13,6 +13,8 @@
     "check:typescript": "tsc --build ./tsconfig.json",
     "// Step identifiers": "Script to check step identifiers",
     "check:step-identifiers": "ts-node tools/stepIdentifiersChecker.ts",
+    "// Check data modules": "Script to check if data modules are updated",
+    "check:data:modules": "ts-mocha tools/bumpModules.ts",
     "// Linkchecker": "Script to run link checker",
     "check:links": "ts-mocha tools/linkchecker.ts",
     "check:links:fast-fail": "ts-mocha --bail tools/linkchecker.ts",
