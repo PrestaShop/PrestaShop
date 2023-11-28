@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface;
@@ -59,15 +61,34 @@ class ObjectDenormalizer extends SfObjectNormalizer
         };
     }
 
+    public function normalize($object, string $format = null, array $context = [])
+    {
+        $normalizedObject = parent::normalize($object, $format, $context);
+
+        if (!$this->isValueObject($object)) {
+            return $normalizedObject;
+        }
+
+        // Returned normalized ValueObject with array key matching value object class (ex: ProductId => ['productId' => 42])
+        $objectValue = $object->getValue();
+        $class = ($this->protectedObjectClassResolver)($object);
+        $reflClass = new ReflectionClass($class);
+
+        return [
+            lcfirst($reflClass->getShortName()) => $objectValue,
+        ];
+    }
+
     protected function extractAttributes(object $object, string $format = null, array $context = [])
     {
         $attributes = parent::extractAttributes($object, $format, $context);
 
-        // Check methods that may have been ignored by the parent
+        // Check methods that may have been ignored by the parent, the parent normalizer only checks getter if they start
+        // with "is" or "get" we increase this behaviour on other potential getters that don't match this convention
         $class = ($this->protectedObjectClassResolver)($object);
-        $reflClass = new \ReflectionClass($class);
+        $reflClass = new ReflectionClass($class);
 
-        foreach ($reflClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflMethod) {
+        foreach ($reflClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflMethod) {
             if (
                 0 !== $reflMethod->getNumberOfRequiredParameters() ||
                 $reflMethod->isStatic() ||
@@ -78,16 +99,48 @@ class ObjectDenormalizer extends SfObjectNormalizer
             }
 
             $methodName = $reflMethod->name;
+            // These type of getters have already been handled by the parent
             if (str_starts_with($methodName, 'get') || str_starts_with($methodName, 'has') || str_starts_with($methodName, 'is')) {
                 continue;
             }
-            // Add attributes that match the getter method
+
+            // Add attributes that match the getter method name exactly
             if ($reflClass->hasProperty($methodName) && $this->isAllowedAttribute($object, $methodName, $format, $context)) {
                 $attributes[] = $methodName;
+            } elseif (str_starts_with($methodName, 'with')) {
+                // Getter methods that start with "with"
+                $attributeName = substr($methodName, 2);
+                if (!$reflClass->hasProperty($attributeName)) {
+                    $attributeName = lcfirst($attributeName);
+                }
+
+                if ($reflClass->hasProperty($attributeName) && $this->isAllowedAttribute($object, $attributeName, $format, $context)) {
+                    $attributes[] = $attributeName;
+                }
             }
         }
 
         return $attributes;
+    }
+
+    protected function getAttributeValue(object $object, string $attribute, string $format = null, array $context = [])
+    {
+        $attributeValue = parent::getAttributeValue($object, $attribute, $format, $context);
+        // Value objects are not returned as is, the value itself is returned
+        if ($this->isValueObject($attributeValue)) {
+            $attributeValue = $attributeValue->getValue();
+        }
+
+        return $attributeValue;
+    }
+
+    protected function isValueObject($object): bool
+    {
+        return is_object($object)
+            && !is_iterable($object)
+            && method_exists($object, 'getValue')
+            && str_contains(get_class($object), 'ValueObject')
+        ;
     }
 
     /**

@@ -60,7 +60,7 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
             uriTemplate: '/customers/group',
             extraProperties: [
                 'commandNormalizationMapping' => [
-                    '[value]' => '[customerGroupId]',
+                    '[groupId]' => '[customerGroupId]',
                 ],
                 'queryNormalizationMapping' => [
                     '[id]' => '[customerGroupId]',

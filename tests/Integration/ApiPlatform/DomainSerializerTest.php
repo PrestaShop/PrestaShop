@@ -26,62 +26,34 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\ApiPlatform;
+namespace Tests\Integration\ApiPlatform;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Module\APIResources\ApiPlatform\Resources\ApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
-use PrestaShopBundle\ApiPlatform\Normalizer\DateTimeImmutableDenormalizer;
-use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
-use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
 use PrestaShopBundle\ApiPlatform\Resources\CustomerGroup;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DomainSerializerTest extends TestCase
+class DomainSerializerTest extends KernelTestCase
 {
-    /**
-     * @var DomainSerializer
-     */
-    private DomainSerializer $serializer;
-
-    /**
-     * Set up dependencies for HookStatusProvider
-     */
-    public function setUp(): void
-    {
-        $denormalizers = new \ArrayIterator([new DateTimeImmutableDenormalizer(), new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
-        $this->serializer = new DomainSerializer($denormalizers);
-    }
-
     /**
      * @dataProvider getExpectedDenormalizedData
      */
     public function testDenormalize($dataToDenormalize, $denormalizedObject): void
     {
-        self::assertEquals($denormalizedObject, $this->serializer->denormalize($dataToDenormalize, get_class($denormalizedObject)));
+        $serializer = self::getContainer()->get(DomainSerializer::class);
+        self::assertEquals($denormalizedObject, $serializer->denormalize($dataToDenormalize, get_class($denormalizedObject)));
     }
 
     public function getExpectedDenormalizedData()
     {
-        $normalizedCreatedApiAccess = [
-            'apiAccessId' => [
-                'value' => 42,
-            ],
-            'secret' => 'my_secret',
-        ];
-        $apiResource = new ApiAccess();
-        $apiResource->apiAccessId = 42;
-        $apiResource->secret = 'my_secret';
-        yield [
-            $normalizedCreatedApiAccess,
-            $apiResource,
-        ];
-
         yield [
             [
                 'localizedNames' => [
@@ -148,6 +120,15 @@ class DomainSerializerTest extends TestCase
             null,
             new CustomerGroup(),
         ];
+
+        $customerGroupQuery = new GetCustomerGroupForEditing(51);
+        yield 'value object with wrong parameter converted via mapping' => [
+            [
+                'groupId' => 51,
+                'customerGroupId' => 51,
+            ],
+            $customerGroupQuery,
+        ];
     }
 
     /**
@@ -155,37 +136,34 @@ class DomainSerializerTest extends TestCase
      */
     public function testNormalize($dataToNormalize, $expectedNormalizedData, ?array $normalizationMapping = []): void
     {
-        self::assertEquals($expectedNormalizedData, $this->serializer->normalize($dataToNormalize, null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]));
+        $serializer = self::getContainer()->get(DomainSerializer::class);
+        self::assertEquals($expectedNormalizedData, $serializer->normalize($dataToNormalize, null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]));
     }
 
     public function getNormalizationData(): iterable
     {
-        $groupId = new GroupId(42);
-        yield 'normalize value object' => [
-            $groupId,
+        $createdApiAccess = new CreatedApiAccess(42, 'my_secret');
+        yield 'normalize command result that contains a ValueObject' => [
+            $createdApiAccess,
             [
-                'value' => 42,
+                'apiAccessId' => 42,
+                'secret' => 'my_secret',
             ],
         ];
 
         $groupId = new GroupId(42);
-        yield 'normalize value object with mapping null' => [
+        yield 'normalize GroupId value object' => [
             $groupId,
             [
-                'value' => 42,
+                'groupId' => 42,
             ],
-            null,
         ];
 
-        $groupId = new GroupId(42);
-        yield 'normalize value object with mapping for value' => [
-            $groupId,
+        $productId = new ProductId(42);
+        yield 'normalize ProductId value object' => [
+            $productId,
             [
-                'value' => 42,
-                'customerGroupId' => 42,
-            ],
-            [
-                '[value]' => '[customerGroupId]',
+                'productId' => 42,
             ],
         ];
 
@@ -202,7 +180,6 @@ class DomainSerializerTest extends TestCase
                 1,
             ],
         );
-
         yield 'normalize object with getter not starting by get and mapping for help' => [
             $editableCustomerGroup,
             [
@@ -217,9 +194,6 @@ class DomainSerializerTest extends TestCase
                 'shopIds' => [
                     1,
                 ],
-            ],
-            [
-                'displayPriceTaxExcluded' => '[displayPriceTaxExcluded]',
             ],
         ];
     }
