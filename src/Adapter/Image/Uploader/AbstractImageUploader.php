@@ -107,7 +107,14 @@ abstract class AbstractImageUploader
             throw new MemoryLimitException('Cannot upload image due to memory restrictions');
         }
 
-        if (!ImageManager::resize($temporaryImageName, $destination)) {
+        if (!ImageManager::resize(
+            $temporaryImageName,
+            $destination,
+            null,
+            null,
+            'jpg',
+            true
+        )) {
             throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
