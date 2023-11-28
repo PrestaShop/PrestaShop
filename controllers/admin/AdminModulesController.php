@@ -71,7 +71,7 @@ class AdminModulesControllerCore extends AdminController
      *
      * @return string
      */
-    protected function getCurrentUrl($remove = [])
+    protected function getCurrentUrl(array $remove = [])
     {
         $url = $_SERVER['REQUEST_URI'];
         if (!$remove) {
