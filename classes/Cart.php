@@ -140,7 +140,7 @@ class CartCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'delivery_option' => ['type' => self::TYPE_STRING],
             'secure_key' => ['type' => self::TYPE_STRING, 'size' => 32],
