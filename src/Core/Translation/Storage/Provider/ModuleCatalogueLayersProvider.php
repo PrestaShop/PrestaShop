@@ -303,7 +303,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
 
         foreach ($catalogueFromPhpAndSmartyFiles->all() as $currentDomain => $items) {
             foreach (array_keys($items) as $translationKey) {
-                $legacyKey = md5($translationKey);
+                $legacyKey = md5((string)$translationKey);
 
                 if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $currentDomain)) {
                     $legacyFilesCatalogue->set(
