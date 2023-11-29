@@ -51,13 +51,6 @@ abstract class ModuleCore implements ModuleInterface
     public $version;
     public $database_version;
 
-    /**
-     * @since 1.5.0.1
-     *
-     * @var string Registered Version in database
-     */
-    public $registered_version;
-
     /** @var array filled with known compliant PS versions */
     public $ps_versions_compliancy = [];
 
@@ -113,9 +106,6 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array */
     public $options;
 
-    /** @var array|string */
-    public $optionsHtml;
-
     /** @var int need_instance */
     public $need_instance = 1;
 
@@ -148,13 +138,7 @@ abstract class ModuleCore implements ModuleInterface
     public $installed;
 
     /** @var bool */
-    public $show_quick_view = false;
-
-    /** @var bool */
     public $onclick_option = false;
-
-    /** @var string|null */
-    public $addons_buy_url = null;
 
     /** @var string|null */
     public $url = null;
@@ -235,11 +219,6 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected $tabs = [];
 
-    /** @var bool Define if we will log modules performances for this session */
-    public static $_log_modules_perfs = null;
-    /** @var bool Random session for modules perfs logs */
-    public static $_log_modules_perfs_session = null;
-
     /** @var ContainerInterface */
     private $container;
 
@@ -249,17 +228,11 @@ abstract class ModuleCore implements ModuleInterface
     /** @var int Defines the multistore compatibility level of the module */
     public $multistoreCompatibility = self::MULTISTORE_COMPATIBILITY_UNKNOWN;
 
-    public const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
-
-    public const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
-
     public const MULTISTORE_COMPATIBILITY_NO = -20;
     public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = -10;
     public const MULTISTORE_COMPATIBILITY_UNKNOWN = 0;
     public const MULTISTORE_COMPATIBILITY_PARTIAL = 10;
     public const MULTISTORE_COMPATIBILITY_YES = 20;
-
-    public static $hosted_modules_blacklist = ['autoupgrade'];
 
     public static function setContextInstanceForTesting(Context $context)
     {
@@ -561,7 +534,8 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Init the upgrade module.
+     * Init the upgrade module. This method verifies if module upgrade is available and if yes,
+     * it preloads the upgrade data. They will be later used in runUpgradeModule method.
      *
      * @param Module|stdClass $module
      *
@@ -574,7 +548,12 @@ abstract class ModuleCore implements ModuleInterface
             $module->database_version = $module->version;
         }
 
-        // Init cache upgrade details
+        /*
+         * Init default upgrade data.
+         *
+         * Beware, that this data is later wiped by ServiceLocator::get($module_name); called inside
+         * Module::needUpgrade -> Module::getInstanceByName($module->name), not sure what causes this.
+         */
         static::$modules_cache[$module->name]['upgrade'] = [
             'success' => false, // bool to know if upgrade succeed or not
             'available_upgrade' => 0, // Number of available module before any upgrade
@@ -676,10 +655,9 @@ abstract class ModuleCore implements ModuleInterface
         static::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
         // Check the version of the module with the registered one and look if any upgrade file exist
         if (Tools::version_compare($module->version, $module->database_version, '>')) {
-            $old_version = $module->database_version;
             $module = Module::getInstanceByName($module->name);
             if ($module instanceof Module) {
-                return $module->loadUpgradeVersionList($module->name, $module->version, $old_version);
+                return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
             }
         }
 
@@ -698,6 +676,24 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected static function loadUpgradeVersionList($module_name, $module_version, $registered_version)
     {
+        /*
+         * Init cache upgrade details, again.
+         *
+         * We already initialized this in Module::initUpgradeModule, but for some reason, the static variable
+         * is wiped when calling Module::getInstanceByName in Module::needUpgrade.
+         */
+        static::$modules_cache[$module_name]['upgrade'] = [
+            'success' => false, // bool to know if upgrade succeed or not
+            'available_upgrade' => 0, // Number of available module before any upgrade
+            'number_upgraded' => 0, // Number of upgrade done
+            'number_upgrade_left' => 0,
+            'upgrade_file_left' => [], // List of the upgrade file left
+            'version_fail' => 0, // Version of the upgrade failure
+            'upgraded_from' => $registered_version, // Version number before upgrading anything
+            'upgraded_to' => 0, // Last upgrade applied
+        ];
+
+        // Prepare list of upgrade files
         $list = [];
 
         $upgrade_path = _PS_MODULE_DIR_ . $module_name . '/upgrade/';
@@ -738,7 +734,6 @@ abstract class ModuleCore implements ModuleInterface
 
         usort($list, 'ps_module_version_sort');
 
-        // Set the list to module cache
         static::$modules_cache[$module_name]['upgrade']['upgrade_file_left'] = $list;
         static::$modules_cache[$module_name]['upgrade']['available_upgrade'] = count($list);
 
@@ -842,7 +837,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @since 1.4.1
      * @deprecated since 1.7
-     * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->enable($name)
+     * @see  PrestaShop\PrestaShop\Core\Module\ModuleManager->enable($name)
      */
     public static function enableByName($name)
     {
@@ -991,7 +986,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @since 1.4.1
      * @deprecated since 1.7
-     * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->disable($name)
+     * @see  PrestaShop\PrestaShop\Core\Module\ModuleManager->disable($name)
      */
     public static function disableByName($name)
     {
@@ -1586,38 +1581,6 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * @param StdClass $modaddons Addons Module object, provided by XML stream
-     *
-     * @return string|null
-     */
-    public static function copyModAddonsImg($modaddons)
-    {
-        if (!Validate::isLoadedObject($modaddons)) {
-            return null;
-        }
-
-        $filename = md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
-        $filepath = _PS_TMP_IMG_DIR_ . $filename;
-        $fileExist = file_exists($filepath);
-
-        if (!$fileExist) {
-            $remoteDownloadWasASuccess = false;
-            try {
-                $remoteImage = Tools::file_get_contents($modaddons->img);
-                $remoteDownloadWasASuccess = true;
-            } catch (Exception $e) {
-                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
-            }
-
-            if ($remoteDownloadWasASuccess && !file_put_contents($filepath, $remoteImage)) {
-                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
-            }
-        }
-
-        return file_exists($filepath) ? '../img/tmp/' . $filename : null;
-    }
-
-    /**
      * Return modules directory list.
      *
      * @return array Modules Directory List
@@ -2071,7 +2034,7 @@ abstract class ModuleCore implements ModuleInterface
      * @return bool
      *
      * @deprecated since 1.7
-     * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->isInstalled($name)
+     * @see  PrestaShop\PrestaShop\Core\Module\ModuleManager->isInstalled($name)
      */
     public static function isInstalled($module_name)
     {
@@ -2096,6 +2059,14 @@ abstract class ModuleCore implements ModuleInterface
         );
     }
 
+    /**
+     * @param string $module_name
+     *
+     * @return bool
+     *
+     * @deprecated since 1.7
+     * @see  PrestaShop\PrestaShop\Core\Module\ModuleManager->isEnabled($name)
+     */
     public static function isEnabled($module_name)
     {
         if (!Cache::isStored('Module::isEnabled' . $module_name)) {
