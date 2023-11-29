@@ -156,6 +156,34 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         return $this->getFeatureValues($limit, $offset, array_merge($filters ?? [], ['id_product' => $productId->getValue()]));
     }
 
+    public function getAllProductFeatureValues(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value AND fp.id_product = :productId')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->select('fv.*, fvl.*')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAllAssociative();
+        $featureValues = [];
+        foreach ($result as $featureValue) {
+            $featureValueId = (int) $featureValue['id_feature_value'];
+            if (!isset($featureValues[$featureValueId])) {
+                $featureValues[$featureValueId] = [
+                    'id_feature_value' => $featureValueId,
+                    'id_feature' => (int) $featureValue['id_feature'],
+                    'custom' => (int) $featureValue['custom'],
+                ];
+            }
+            $featureValues[$featureValueId]['localized_values'][(int) $featureValue['id_lang']] = $featureValue['value'];
+        }
+
+        return array_values($featureValues);
+    }
+
     /**
      * @param int $langId
      * @param array $filters
