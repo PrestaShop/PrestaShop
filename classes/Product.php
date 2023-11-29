@@ -5799,9 +5799,11 @@ class ProductCore extends ObjectModel
         // Then if combination has an impact we apply it on unit price
         if ($combinationId) {
             $combination = new Combination($combinationId);
-            if (0 != $combination->unit_price_impact && 0 != $baseUnitPrice) {
-                $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
-            }
+            $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
+        }
+
+        if ($baseUnitPrice == 0) {
+            return 0;
         }
 
         // Finally, we apply the currency rate
@@ -5809,10 +5811,6 @@ class ProductCore extends ObjectModel
         $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : $defaultCurrencyId;
         if ($currencyId !== $defaultCurrencyId) {
             $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
-        }
-
-        if ($baseUnitPrice == 0) {
-            return 0;
         }
 
         // Compute price ratio based on initial product price and initial unit price (without taxes, group discount, cart rules)
