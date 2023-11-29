@@ -550,7 +550,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @returns {Promise<string>}
    */
   async getGiftMessage(page: Page): Promise<string> {
-    if (await this.elementVisible(page, this.giftMessage)) {
+    if (await this.elementVisible(page, this.giftMessage, 1000)) {
       return this.getTextContent(page, this.giftMessage);
     }
     return '';
