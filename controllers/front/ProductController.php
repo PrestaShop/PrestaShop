@@ -414,7 +414,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 foreach ($accessories as &$accessory) {
                     $accessory = $presenter->present(
                         $presentationSettings,
-                        Product::getProductProperties($this->context->language->id, $accessory, $this->context),
+                        $assembler->assembleProduct($accessory),
                         $this->context->language
                     );
                 }

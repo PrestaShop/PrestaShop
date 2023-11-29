@@ -1059,8 +1059,7 @@ class CategoryCore extends ObjectModel
             $result = array_slice($result, (int) (($pageNumber - 1) * $productPerPage), (int) $productPerPage);
         }
 
-        // Modify SQL result
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**
