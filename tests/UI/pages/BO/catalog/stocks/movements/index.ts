@@ -219,14 +219,12 @@ class Movements extends BOBasePage {
       categoryName,
       status,
     };
-    const fn: {
-      categoryClick: PageFunction<{
+    const fn: {categoryClick: PageFunction<{
         selector: string,
         categoryName: string,
         status: boolean
         // eslint-disable-next-line no-eval
-      }, boolean>
-    } = eval(`({
+      }, boolean>} = eval(`({
       async categoryClick(args) {
         /* eslint-env browser */
         const allCategories = [...await document.querySelectorAll(args.selector)];
@@ -263,7 +261,7 @@ class Movements extends BOBasePage {
    * @param onChange {boolean} Dispatch event change
    * @return {Promise<void>}
    */
-  async setAdvancedFiltersDate(page: Page, type: 'inf' | 'sup', date: string, onChange: boolean = false): Promise<void> {
+  async setAdvancedFiltersDate(page: Page, type: 'inf'|'sup', date: string, onChange: boolean = false): Promise<void> {
     const selector: string = type === 'inf' ? this.advFiltersFilterDateInfInput : this.advFiltersFilterDateSupInput;
 
     await this.waitForVisibleSelector(page, selector);
@@ -298,7 +296,7 @@ class Movements extends BOBasePage {
    * @param movementType {'None'|'Employee Edition'|'Customer Order'} Movement type
    * @return {Promise<void>}
    */
-  async setAdvancedFiltersMovementType(page: Page, movementType: 'None' | 'Employee Edition' | 'Customer Order'): Promise<void> {
+  async setAdvancedFiltersMovementType(page: Page, movementType: 'None'|'Employee Edition'|'Customer Order'): Promise<void> {
     await this.waitForVisibleSelector(page, this.advFiltersFilterMvtTypeSelect);
     await this.selectByVisibleText(page, this.advFiltersFilterMvtTypeSelect, movementType);
     if (await this.elementVisible(page, this.productListLoading, 5000)) {
