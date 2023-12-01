@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 class ProductListingLazyArray extends ProductLazyArray
@@ -41,7 +42,7 @@ class ProductListingLazyArray extends ProductLazyArray
             return null;
         }
 
-        if ($this->product['customizable'] == 2 || !empty($this->product['customization_required'])) {
+        if ($this->product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($this->product['customization_required'])) {
             return null;
         }
 

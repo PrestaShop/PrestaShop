@@ -1219,9 +1219,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $extraContentFinder = new ProductExtraContentFinder();
 
         $product = $this->objectPresenter->present($this->product);
-        $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
-        $product['new'] = (int) $this->product->new;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
