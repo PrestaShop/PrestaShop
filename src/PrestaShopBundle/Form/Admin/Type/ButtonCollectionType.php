@@ -40,20 +40,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * ButtonCollectionType is a form type used to group buttons in a common form group which
  * is useful for forms which have multiple submit buttons.
  *
- * $builder
- *     ->add('buttons', ButtonCollectionType::class, [
- *         'buttons' => [
- *             'save' => SubmitType::class,
- *             'cancel' => [
- *                 'type' => SubmitType::class,
- *                 'options' => [
- *                     'label' => 'Cancel',
- *                 ],
- *                 'group' => 'left',
- *             ],
- *         ],
- *     ])
- * ;
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/button-collection/
  */
 class ButtonCollectionType extends AbstractType
 {

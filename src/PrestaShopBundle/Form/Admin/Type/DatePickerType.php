@@ -36,6 +36,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a date picker field.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/date-picker/
  */
 class DatePickerType extends AbstractType
 {

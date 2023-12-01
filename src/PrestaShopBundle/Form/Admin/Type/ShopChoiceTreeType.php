@@ -37,6 +37,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ShopChoiceTreeType.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/shop-choice-tree/
  */
 class ShopChoiceTreeType extends AbstractType
 {

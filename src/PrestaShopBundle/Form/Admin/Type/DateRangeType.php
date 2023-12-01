@@ -39,6 +39,12 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Class DateRangeType
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/date-range/
+ */
 class DateRangeType extends AbstractType
 {
     /**

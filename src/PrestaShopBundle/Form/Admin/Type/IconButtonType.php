@@ -35,6 +35,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * A form button with material icon.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/icon-button-type/
  */
 class IconButtonType extends ButtonType
 {

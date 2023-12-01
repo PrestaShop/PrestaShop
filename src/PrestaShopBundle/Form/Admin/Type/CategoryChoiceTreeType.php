@@ -32,6 +32,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class CategoryChoiceTreeType.
+ * 
+ * Form type documentation: 
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/category-choice-tree/
  */
 class CategoryChoiceTreeType extends AbstractType
 {

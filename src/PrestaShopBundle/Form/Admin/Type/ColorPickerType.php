@@ -32,6 +32,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * This form class is responsible to create a color picker field.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/color-picker-type/
  */
 class ColorPickerType extends AbstractType
 {

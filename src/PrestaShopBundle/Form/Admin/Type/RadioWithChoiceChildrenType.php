@@ -33,6 +33,12 @@ use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class RadioWithChoiceChildrenType
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/radio-with-choice-children-type/
+ */
 class RadioWithChoiceChildrenType extends AbstractType
 {
     /**

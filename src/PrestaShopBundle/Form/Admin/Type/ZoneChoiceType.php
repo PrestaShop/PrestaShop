@@ -36,6 +36,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class is responsible for providing configurable zone choices with -- symbol in front of array.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/zone-choice-type/
  */
 class ZoneChoiceType extends AbstractType
 {

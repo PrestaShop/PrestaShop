@@ -39,6 +39,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Responsible for creating form for price reduction
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/price-reduction-type/
  */
 class PriceReductionType extends TranslatorAwareType
 {

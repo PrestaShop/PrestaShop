@@ -34,7 +34,9 @@ use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Wraps SubmittableInput and DeltaQuantity components to work together.
- * admin-dev/themes/new-theme/js/components/form/submittable-delta-quantity-input.ts responsible for javascript part.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/submittable-delta-quantity-type/
  *
  * @see DeltaQuantityType
  * @see SubmittableInputType

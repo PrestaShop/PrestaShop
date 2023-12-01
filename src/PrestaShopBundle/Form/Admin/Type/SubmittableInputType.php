@@ -37,7 +37,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Adds a button right into specified input and toggles it's availability on change
  *
- * Check admin-dev/themes/new-theme/js/components/form/submittable-input.ts for related javascript component
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/submittable-input-type/
  */
 class SubmittableInputType extends AbstractType
 {

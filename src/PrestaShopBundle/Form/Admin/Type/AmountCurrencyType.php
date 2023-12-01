@@ -33,6 +33,12 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class AmountCurrencyType
+ * 
+ * Form type documentation: 
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/amount-currency/
+ */
 class AmountCurrencyType extends AbstractType
 {
     /**

@@ -37,6 +37,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CountryChoiceType is responsible for providing country choices with -- symbol in front of array.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/country-choice/
  */
 class CountryChoiceType extends AbstractType
 {

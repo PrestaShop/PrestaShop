@@ -34,6 +34,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class MaterialMultipleChoiceTableType
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/material-multiple-choice-table/
+ */
 class MaterialMultipleChoiceTableType extends AbstractType
 {
     /**

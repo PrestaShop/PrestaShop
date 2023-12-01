@@ -33,6 +33,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a customer.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/typeahead-customer-collection-type/
  */
 class TypeaheadCustomerCollectionType extends CommonAbstractType
 {

@@ -34,6 +34,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class MoneyWithSuffixType is a money type,
  * which also has a suffix string right after the currency sign.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/money-with-suffix/
  */
 class MoneyWithSuffixType extends MoneyType
 {

@@ -35,6 +35,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a product, with or without attribute field.
+ * 
+ * Form type documentation:
+ * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/typeahead-product-pack-collection-type/
  */
 class TypeaheadProductPackCollectionType extends CommonAbstractType
 {
