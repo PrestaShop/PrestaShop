@@ -310,13 +310,13 @@ jobs:
           npx mochawesome-merge "${{ env.REPORTS_DIR_PATH }}/*.json" -o "${{ env.COMBINED_REPORT_DIR_PATH }}/${REPORT_NAME}.json"
 
       - name: Auth Cloud Sdk
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GC_SERVICE_KEY }}
           project_id: ${{ secrets.GC_PROJECT_ID }}
 
       - name: Setup Cloud Sdk
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v1
 
       - name: Upload to Google Cloud Storage (GCS)
         run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports
