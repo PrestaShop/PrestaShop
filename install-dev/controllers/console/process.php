@@ -377,7 +377,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     private function rebootWithoutTranslationsCache()
     {
         global $kernel;
-        (new Filesystem())->remove($kernel->getCacheDir() . 'translations');
+        (new Filesystem())->remove($kernel->getCacheDir() . DIRECTORY_SEPARATOR . 'translations');
         $kernel->reboot($kernel->getCacheDir());
     }
 }

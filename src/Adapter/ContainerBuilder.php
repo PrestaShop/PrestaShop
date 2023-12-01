@@ -125,7 +125,7 @@ class ContainerBuilder
     {
         $this->containerName = $containerName;
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
-        $this->dumpFile = $this->environment->getCacheDir() . $this->containerClassName . '.php';
+        $this->dumpFile = $this->environment->getCacheDir() . DIRECTORY_SEPARATOR . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->environment->isDebug());
 
         //These methods load required files like autoload or annotation metadata so we need to load
