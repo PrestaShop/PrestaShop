@@ -31,20 +31,7 @@ export default class CustomerSelector {
   }
 
   private init(): void {
-    // This check is here for when the multishop is not enabled.
-    // The selector returned by the this.getShopIdSelect does not exist when multishop is not enabled.
-    if (this.getShopIdSelect() !== null) {
-      const customerSearchInput = this.initCustomerSearchInput();
-      // clear selected customers whenever shop is changed, because customers may differ between shops
-      this.getShopIdSelect().addEventListener('change', () => customerSearchInput.setValues([]));
-    }
-  }
-
-  private initCustomerSearchInput(): EntitySearchInput {
-    return new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
-      extraQueryParams: () => ({
-        shopId: Number(this.getShopIdSelect().value) ?? null,
-      }),
+    let searchInputOptions: OptionsObject = {
       responseTransformer: (response: any) => {
         if (!response || response.customers.length === 0) {
           return [];
@@ -52,7 +39,27 @@ export default class CustomerSelector {
 
         return Object.values(response.customers);
       },
-    });
+    };
+
+    // This check is here for when the multishop is not enabled.
+    // The selector returned by the this.getShopIdSelect does not exist when multishop is not enabled.
+    if (this.getShopIdSelect() !== null) {
+      searchInputOptions = {
+        ...searchInputOptions,
+        extraQueryParams: () => ({
+          shopId: Number(this.getShopIdSelect().value) ?? null,
+        }),
+      };
+      const customerSearchInput = this.initCustomerSearchInput(searchInputOptions);
+      // clear selected customers whenever shop is changed, because customers may differ between shops
+      this.getShopIdSelect().addEventListener('change', () => customerSearchInput.setValues([]));
+    } else {
+      this.initCustomerSearchInput(searchInputOptions);
+    }
+  }
+
+  private initCustomerSearchInput(options: OptionsObject): EntitySearchInput {
+    return new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), options);
   }
 
   private getShopIdSelect(): HTMLSelectElement {
