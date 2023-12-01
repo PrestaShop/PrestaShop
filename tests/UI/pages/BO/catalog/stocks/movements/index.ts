@@ -219,12 +219,14 @@ class Movements extends BOBasePage {
       categoryName,
       status,
     };
-    const fn: {categoryClick: PageFunction<{
-      selector: string,
-      categoryName: string,
-      status: boolean
-      // eslint-disable-next-line no-eval
-    }, boolean>} = eval(`({
+    const fn: {
+      categoryClick: PageFunction<{
+        selector: string,
+        categoryName: string,
+        status: boolean
+        // eslint-disable-next-line no-eval
+      }, boolean>
+    } = eval(`({
       async categoryClick(args) {
         /* eslint-env browser */
         const allCategories = [...await document.querySelectorAll(args.selector)];
@@ -261,7 +263,7 @@ class Movements extends BOBasePage {
    * @param onChange {boolean} Dispatch event change
    * @return {Promise<void>}
    */
-  async setAdvancedFiltersDate(page: Page, type: 'inf'|'sup', date: string, onChange: boolean = false): Promise<void> {
+  async setAdvancedFiltersDate(page: Page, type: 'inf' | 'sup', date: string, onChange: boolean = false): Promise<void> {
     const selector: string = type === 'inf' ? this.advFiltersFilterDateInfInput : this.advFiltersFilterDateSupInput;
 
     await this.waitForVisibleSelector(page, selector);
@@ -296,7 +298,7 @@ class Movements extends BOBasePage {
    * @param movementType {'None'|'Employee Edition'|'Customer Order'} Movement type
    * @return {Promise<void>}
    */
-  async setAdvancedFiltersMovementType(page: Page, movementType: 'None'|'Employee Edition'|'Customer Order'): Promise<void> {
+  async setAdvancedFiltersMovementType(page: Page, movementType: 'None' | 'Employee Edition' | 'Customer Order'): Promise<void> {
     await this.waitForVisibleSelector(page, this.advFiltersFilterMvtTypeSelect);
     await this.selectByVisibleText(page, this.advFiltersFilterMvtTypeSelect, movementType);
     if (await this.elementVisible(page, this.productListLoading, 5000)) {
@@ -311,7 +313,7 @@ class Movements extends BOBasePage {
    * @param status {boolean|null} Status
    * @return {Promise<void>}
    */
-  async setAdvancedFiltersStatus(page: Page, status: boolean|null): Promise<void> {
+  async setAdvancedFiltersStatus(page: Page, status: boolean | null): Promise<void> {
     let selector: string;
 
     if (status === null) {
@@ -359,11 +361,16 @@ class Movements extends BOBasePage {
    * @return {Promise<string>}
    */
   async getTextColumnFromTable(page: Page, row: number, column: string): Promise<string> {
+    let productAttribute = '';
+
+    if (await this.elementVisible(page, `${this.tableProductNameColumn(row)} small`, 1000)) {
+      productAttribute = await this.getTextContent(page, `${this.tableProductNameColumn(row)} small`);
+    }
     switch (column) {
       case 'product_id':
         return this.getTextContent(page, this.tableProductId(row));
       case 'product_name':
-        return this.getTextContent(page, this.tableProductNameColumn(row));
+        return (await this.getTextContent(page, this.tableProductNameColumn(row))).replace(productAttribute, '');
       case 'reference':
         return this.getTextContent(page, this.tableProductReferenceColumn(row));
       case 'quantity':
