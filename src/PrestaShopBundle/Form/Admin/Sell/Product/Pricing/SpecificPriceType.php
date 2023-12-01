@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use DateTime;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
@@ -182,6 +183,9 @@ class SpecificPriceType extends TranslatorAwareType
                 'label_tag_name' => 'h4',
                 'required' => false,
                 'has_unlimited_checkbox' => true,
+                'date_format' => 'YYYY-MM-DD HH:mm:ss',
+                'placeholder' => $this->trans('YYYY-MM-DD HH:mm:ss', 'Admin.Global'),
+                'default_end_value' => (new DateTime())->modify('+1 month')->format('Y-m-d H:i:s'),
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(
