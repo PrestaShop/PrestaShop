@@ -36,7 +36,6 @@ services:
       $environment: "%kernel.environment%"
 
   PrestaShopBundle\Twig\TranslationsExtension:
-    arguments: [ "@service_container", "@router" ]
     properties:
       logger: "@logger"
       translator: "@translator"

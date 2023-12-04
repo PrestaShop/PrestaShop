@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -47,11 +47,6 @@ class TranslationsExtension extends AbstractExtension
     public $logger;
 
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * @var RouterInterface
      */
     private $router;
@@ -61,10 +56,12 @@ class TranslationsExtension extends AbstractExtension
      */
     private $theme;
 
-    public function __construct(ContainerInterface $container, RouterInterface $router)
+    private Environment $twig;
+
+    public function __construct(RouterInterface $router, Environment $twig)
     {
-        $this->container = $container;
         $this->router = $router;
+        $this->twig = $twig;
     }
 
     /**
@@ -258,7 +255,7 @@ class TranslationsExtension extends AbstractExtension
 
         $breadcrumbParts = explode('_', Inflector::getInflector()->tableize($domain));
 
-        return $this->container->get('twig')->render(
+        return $this->twig->render(
             '@PrestaShop/Admin/Translations/include/form-edit-message.html.twig',
             [
                 'default_translation_value' => $defaultTranslationValue,
@@ -365,7 +362,7 @@ class TranslationsExtension extends AbstractExtension
         }
 
         if ($hasMessagesSubtree) {
-            $output .= $this->container->get('twig')->render(
+            $output .= $this->twig->render(
                 '@PrestaShop/Admin/Translations/include/button-toggle-messages-visibility.html.twig',
                 [
                     'label_show_messages' => $this->translator->trans('Show messages', [], 'Admin.International.Feature'),
@@ -377,7 +374,7 @@ class TranslationsExtension extends AbstractExtension
         }
 
         $formStart = $this->getTranslationsFormStart($subtree, $output);
-        $output = $this->container->get('twig')->render(
+        $output = $this->twig->render(
             '@PrestaShop/Admin/Translations/include/translations-form-end.html.twig',
             [
                 'form_start' => $formStart,
@@ -439,7 +436,7 @@ class TranslationsExtension extends AbstractExtension
             unset($subtree['__metadata']);
         }
 
-        return $this->container->get('twig')->render(
+        return $this->twig->render(
             '@PrestaShop/Admin/Translations/include/translations-form-start.html.twig',
             [
                 'id' => $id,
@@ -534,7 +531,7 @@ class TranslationsExtension extends AbstractExtension
      */
     protected function getNavigation($id)
     {
-        return $this->container->get('twig')->render(
+        return $this->twig->render(
             '@PrestaShop/Admin/Translations/include/pagination-bar.html.twig',
             ['page_id' => $id]
         );
