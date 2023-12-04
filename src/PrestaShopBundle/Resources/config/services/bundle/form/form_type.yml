@@ -424,8 +424,6 @@ services:
       $isFeatureEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
-    arguments:
-      $featureValueListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType:
     arguments:

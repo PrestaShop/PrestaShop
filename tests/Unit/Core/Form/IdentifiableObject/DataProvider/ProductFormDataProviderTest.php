@@ -35,6 +35,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
@@ -119,7 +120,8 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            null,
+            $this->getFeaturesProvider()
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -131,7 +133,8 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            $contextShopId
+            $contextShopId,
+            $this->getFeaturesProvider()
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -949,17 +952,26 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['details']['features']['feature_values'] = [];
         $expectedOutputData['details']['features']['feature_values'][] = [
             'feature_id' => 42,
+            'feature_name' => 'Test feature',
             'feature_value_id' => 51,
+            'feature_value_name' => 'english feature',
         ];
 
         $localizedValues = [
-            1 => 'english',
-            2 => 'french',
+            1 => 'english feature',
+            2 => 'propriété française',
+        ];
+
+        $customLocalizedValues = [
+            1 => 'english custom feature',
+            2 => 'propriété personnalisée française',
         ];
         $expectedOutputData['details']['features']['feature_values'][] = [
             'feature_id' => 42,
+            'feature_name' => 'Test feature',
             'feature_value_id' => 69,
-            'custom_value' => $localizedValues,
+            'feature_value_name' => 'english custom feature',
+            'custom_value' => $customLocalizedValues,
             'custom_value_id' => 69,
         ];
 
@@ -975,7 +987,7 @@ class ProductFormDataProviderTest extends TestCase
                     'feature_id' => 42,
                     'feature_value_id' => 69,
                     'custom' => true,
-                    'localized_values' => $localizedValues,
+                    'localized_values' => $customLocalizedValues,
                 ],
             ],
         ];
@@ -1678,7 +1690,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDefaultConfigurationMock(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            null,
+            $this->getFeaturesProvider()
         );
     }
 
@@ -1694,5 +1707,17 @@ class ProductFormDataProviderTest extends TestCase
         ]);
 
         return $configurationMock;
+    }
+
+    private function getFeaturesProvider(): FeaturesChoiceProvider
+    {
+        $featureProviderMock = $this->getMockBuilder(FeaturesChoiceProvider::class)->disableOriginalConstructor()->getMock();
+        $featureProviderMock->method('getChoices')->willReturn([
+            'Feature A' => 1,
+            'Feature B' => 2,
+            'Test feature' => 42,
+        ]);
+
+        return $featureProviderMock;
     }
 }

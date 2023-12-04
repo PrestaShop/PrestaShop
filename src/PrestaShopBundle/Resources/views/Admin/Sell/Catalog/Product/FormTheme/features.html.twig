@@ -27,48 +27,65 @@
   <h3>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h3>
 
   {{ form_errors(form) }}
+  <div class="product-features-controls">
+    {{ form_widget(form.feature_id) }}
+    {{ form_widget(form.feature_value_id) }}
+    {{ form_widget(form.add_feature) }}
+  </div>
+
   {{- block('form_rows') -}}
 {%- endblock -%}
 
 {%- block feature_value_row -%}
-  <div class="form-group row product-feature">
-    <div class="col-xl-3">
-      <fieldset class="form-group mb-0">
-        <label class="form-control-label">{{ form.feature_id.vars.label }}</label>
-        {{ form_widget(form.feature_id) }}
-        {{ form_errors(form.feature_id) }}
-      </fieldset>
-    </div>
-    <div class="col-xl-4">
-      <fieldset class="form-group mb-0">
-        <label class="form-control-label">{{ form.feature_value_id.vars.label }}</label>
-        {{ form_widget(form.feature_value_id) }}
-        {{ form_errors(form.feature_value_id) }}
-      </fieldset>
-    </div>
-    <div class="col-lg-11 col-xl-4">
-      <fieldset class="form-group mb-0">
-        <label class="form-control-label">{{ form.custom_value.vars.label }}</label>
-        {{ form_widget(form.custom_value_id) }}
-        {{ form_widget(form.custom_value) }}
-        {{ form_errors(form.custom_value) }}
-      </fieldset>
-    </div>
-    <div class="col-lg-1 col-xl-1">
+  <tr class="product-feature">
+    <td>
+      {{ form_row(form.feature_name) }}
+      {{ form_row(form.feature_id) }}
+    </td>
+    <td>
+      {% if is_custom is null %}
+        {% set featureValueAttributes = {} %}
+        {% set customValueAttributes = {} %}
+      {% elseif is_custom %}
+        {# Hide feature value when feature value is custom #}
+        {% set featureValueAttributes = {'row_attr': {'class': 'd-none'}} %}
+        {% set customValueAttributes = {} %}
+      {% else %}
+        {# Hide custom inputs when feature value is not custom #}
+        {% set featureValueAttributes = {} %}
+        {% set customValueAttributes = {'row_attr': {'class': 'd-none'}} %}
+      {% endif %}
+
+      {{ form_row(form.feature_value_name, form.feature_value_name.vars.attr|merge(featureValueAttributes)) }}
+      {{ form_row(form.feature_value_id, form.feature_value_id.vars.attr|merge(featureValueAttributes)) }}
+      {{ form_row(form.custom_value_id, form.custom_value_id.vars.attr|merge(customValueAttributes)) }}
+      {{ form_row(form.custom_value, form.custom_value.vars.attr|merge(customValueAttributes)) }}
+    </td>
+    <td>
       {{ form_widget(form.delete) }}
-    </div>
-  </div>
+
+      {# Not ideal place but still we render the rest in case some inputs were added #}
+      {{ form_rest(form) }}
+    </td>
+  </tr>
 {%- endblock -%}
 
 {# Override features collection template to remove the label and init the table #}
 {%- block collection_row -%}
   {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row feature-values-collection')|trim }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' table feature-values-table-collection')|trim }) -%}
 
-  <div {{ block('widget_attributes') }}>
-    <div class="col-sm">
+  <table {{ block('widget_attributes') }}>
+    <thead class="thead-default">
+    <tr>
+      <th>{{ 'Feature'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Feature value'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
       {{- block('form_rows') -}}
-    </div>
-  </div>
+    </tbody>
+  </table>
 {%- endblock -%}

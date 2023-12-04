@@ -552,22 +552,25 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  .product-feature {
-    align-items: flex-end;
-    margin-bottom: 1rem;
+  .product-features-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 35px;
 
-    .js-locale-input-group {
-      flex-wrap: nowrap;
-      align-items: center;
+    .feature-value-add-button {
+      padding: 0.4rem 1rem;
     }
+  }
 
-    @media screen and (max-width: 1300px) {
-      &::after {
-        display: inline-block;
-        width: 100%;
-        margin: 0.5rem 0.9375rem;
-        content: "";
-        border-top: 1px solid $primary;
+  .feature-values-table-collection {
+    max-width: 860px;
+
+    .form-group {
+      margin-bottom: 0;
+      text-align: left;
+
+      .locale-input-group {
+        max-width: 320px;
       }
     }
   }
