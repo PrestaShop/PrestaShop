@@ -223,7 +223,6 @@ class ConfigurationCore extends ObjectModel
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
-
         // Init the cache on demand
         if (!self::$_initialized) {
             Configuration::loadConfiguration();
