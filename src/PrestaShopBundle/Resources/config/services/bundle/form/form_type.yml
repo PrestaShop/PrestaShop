@@ -548,10 +548,6 @@ services:
       $countriesChoiceProvider: '@prestashop.core.form.choice_provider.configurable_country_by_id'
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener:
-    arguments:
-      $featureValuesChoiceProvider: '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
-
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
       $combinationRepository: '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
@@ -580,11 +576,6 @@ services:
   # Deprecated in 9.0.0
   form.type.sell.product.event_listener.categories_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
-    public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
-  form.type.sell.product.event_listener.feature_value_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
     public: true
     deprecated: ~
   # Deprecated in 9.0.0
