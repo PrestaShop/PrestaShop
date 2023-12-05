@@ -1,15 +1,5 @@
 name: UI tests Product V2
-on:
-  pull_request:
-    paths:
-      - .github/workflows/sanity-productV2.yml
-      - tests/UI/campaigns/productV2/**
-      - admin-dev/themes/new-theme/js/pages/product/**
-      - src/PrestaShopBundle/Form/Admin/Sell/Product/**
-      - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/**
-      - src/Core/Domain/Product/**
-      - src/Adapter/Product/**
-      - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
+on: [ push, pull_request ]
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
