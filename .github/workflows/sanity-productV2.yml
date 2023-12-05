@@ -45,7 +45,9 @@ jobs:
         working-directory: ./tests/UI
 
       - uses: actions/upload-artifact@v3
-        if: ${{ always() }}
+        if: ${{ failure() }}
         with:
-          name: screenshots-${{ matrix.php }}
-          path: ./tests/UI/screenshots/
+          name: failure-${{ matrix.php }}
+          path: |
+            ./tests/UI/screenshots/
+            ./var/logs/

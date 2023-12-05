@@ -1,21 +1,16 @@
 name: UI tests
 on: [ push, pull_request ]
-permissions:
-  contents: read   #   to fetch code (actions/checkout)
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   sanity:
-    permissions:
-      contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
       fail-fast: false
-
     steps:
       - uses: actions/checkout@v3
 
@@ -28,6 +23,8 @@ jobs:
           mysql-root-password: 'password'
           node-version: '16'
           npm-version: '7'
+          ps-auto-install: 'false'
+          ps-dev-mode: 'false'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache Playwright browsers
@@ -44,10 +41,17 @@ jobs:
         run: npm install && npm run test:sanity:fast-fail
         working-directory: ./tests/UI
         env:
+          URL_FO: https://localhost/
+          DB_NAME: prestashop
+          DB_PASSWD: password
+          HEADLESS: true
           ENABLE_SSL: true
+          TAKE_SCREENSHOT_AFTER_FAIL: true
 
       - uses: actions/upload-artifact@v3
-        if: ${{ always() }}
+        if: ${{ failure() }}
         with:
-          name: screenshots-${{ matrix.php }}
-          path: ./tests/UI/screenshots/
+          name: failure-${{ matrix.php }}
+          path: |
+            ./tests/UI/screenshots/
+            ./var/logs/
