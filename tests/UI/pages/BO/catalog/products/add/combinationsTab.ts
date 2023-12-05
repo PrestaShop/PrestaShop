@@ -566,7 +566,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getCombinationNameFromModal(page: Page): Promise<string> {
-    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame | null = await page.frame({url: /sell\/catalog\/products\/combinations/gmi});
     expect(combinationFrame).not.eq(null);
 
     return this.getTextContent(combinationFrame!, this.editCombinationNameValue);
@@ -603,7 +603,7 @@ class CombinationsTab extends BOBasePage {
     await page.waitForTimeout(2000);
     await this.waitForVisibleSelector(page, this.editCombinationIframe);
 
-    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products\/combinations/gmi});
     expect(combinationFrame).to.not.equal(null);
 
     await this.setValue(combinationFrame!, this.editCombinationModalQuantityInput, combinationData.quantity);
@@ -633,7 +633,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<ProductStockMovement>}
    */
   async getRecentStockMovements(page: Page, row: number = 1): Promise<ProductStockMovement> {
-    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products\/combinations/gmi});
     expect(combinationFrame).to.not.equal(null);
 
     return {
@@ -649,7 +649,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeEditCombinationModal(page: Page): Promise<boolean> {
-    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame|null = page.frame({url: /sell\/catalog\/products\/combinations/gmi});
     expect(combinationFrame).to.not.equal(null);
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalCloseButton);
