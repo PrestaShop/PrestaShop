@@ -31,6 +31,11 @@ import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
+interface FeatureValue {
+  id: number,
+  value: string,
+}
+
 export default class FeatureValuesManager {
   router: Router;
 
@@ -42,11 +47,15 @@ export default class FeatureValuesManager {
 
   $featureValueSelector: JQuery;
 
+  $featureValueLoader: JQuery;
+
   $addFeatureValueButton: JQuery;
 
   $collectionContainer: JQuery;
 
   $collectionRowsContainer: JQuery;
+
+  featureValues: Array<FeatureValue[]> = [];
 
   /**
    * @param eventEmitter {EventEmitter}
@@ -60,6 +69,7 @@ export default class FeatureValuesManager {
     this.$featureValueSelector = $(ProductMap.featureValues.featureValueSelect, this.$controlsContainer);
     this.$featureValueSelector.select2();
     this.$addFeatureValueButton = $(ProductMap.featureValues.addFeatureValue, this.$controlsContainer);
+    this.$featureValueLoader = $(ProductMap.featureValues.featureValueLoader, this.$controlsContainer);
 
     this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
     this.$collectionRowsContainer = $(ProductMap.featureValues.collectionRowsContainer);
@@ -163,23 +173,40 @@ export default class FeatureValuesManager {
       return;
     }
 
-    $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
-      .then((featureValuesData) => {
-        this.$featureValueSelector.empty();
-        if (featureValuesData.length) {
-          const selectedFeatureValues = this.getFeatureValueIds();
-          this.addFeatureValue(this.$featureValueSelector.data('customValueLabel'), -1);
-          $.each(featureValuesData, (index, featureValue) => {
-            if (featureValue.id !== 0 && !selectedFeatureValues.includes(featureValue.id)) {
-              this.addFeatureValue(featureValue.value, featureValue.id);
-            }
-          });
-        }
+    if (this.featureValues[idFeature]) {
+      this.doRenderFeatureValueChoices(this.featureValues[idFeature]);
+    } else {
+      // Hide select2 and display loader
+      const $featureSelect2Container = $(`#select2-${this.$featureValueSelector.prop('id')}-container`);
+      const $featureSelect2 = $featureSelect2Container.parents('.select2-container');
+      this.$featureValueLoader.removeClass('d-none');
+      $featureSelect2.addClass('d-none');
 
-        this.$featureValueSelector.prop('disabled', featureValuesData.length === 0);
-        this.$featureValueSelector.val(-1).trigger('change');
-        this.$featureValueSelector.select2();
+      $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
+        .then((featureValuesData: FeatureValue[]) => {
+          this.featureValues[idFeature] = featureValuesData;
+          this.doRenderFeatureValueChoices(this.featureValues[idFeature]);
+          this.$featureValueLoader.addClass('d-none');
+          $featureSelect2.removeClass('d-none');
+        });
+    }
+  }
+
+  private doRenderFeatureValueChoices(featureValuesData: FeatureValue[]): void {
+    this.$featureValueSelector.empty();
+    if (featureValuesData.length) {
+      const selectedFeatureValues = this.getFeatureValueIds();
+      this.addFeatureValue(this.$featureValueSelector.data('customValueLabel'), -1);
+      $.each(featureValuesData, (index, featureValue) => {
+        if (featureValue.id !== 0 && !selectedFeatureValues.includes(featureValue.id)) {
+          this.addFeatureValue(featureValue.value, featureValue.id);
+        }
       });
+    }
+
+    this.$featureValueSelector.prop('disabled', featureValuesData.length === 0);
+    this.$featureValueSelector.val(-1).trigger('change');
+    this.$featureValueSelector.select2();
   }
 
   private getFeatureValueIds(): number[] {

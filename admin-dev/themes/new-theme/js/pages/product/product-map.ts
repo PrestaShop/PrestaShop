@@ -108,6 +108,7 @@ export default {
     customValuesContainer: '.custom-values-form-group',
     deleteFeatureValue: 'button.delete-feature-value',
     addFeatureValue: '.feature-value-add-button',
+    featureValueLoader: '.feature-value-spinner',
   },
   customizations: {
     customizationsContainer: '.product-customizations-collection',

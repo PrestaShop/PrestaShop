@@ -30,6 +30,10 @@
     {{ form_errors(form) }}
     <div class="product-features-controls">
       {{ form_widget(form.feature_id) }}
+      <div class="feature-value-spinner d-none">
+        <div class="spinner"></div>
+        {{ 'Loading feature values...'|trans({}, 'Admin.Catalog.Feature') }}
+      </div>
       {{ form_widget(form.feature_value_id) }}
       {{ form_widget(form.add_feature) }}
     </div>
