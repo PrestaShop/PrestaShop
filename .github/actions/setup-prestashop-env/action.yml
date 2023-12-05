@@ -114,7 +114,7 @@ runs:
       shell: bash
       run: |
         echo "Disabling DEV mode ...";
-        sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" config/defines.inc.php
+        sudo runuser -g www-data -u www-data -- sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" config/defines.inc.php
 
     - name: Install PrestaShop
       if: inputs.ps-auto-install == 'true'
