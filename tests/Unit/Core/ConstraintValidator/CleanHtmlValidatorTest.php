@@ -56,6 +56,30 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
+    public function testItFailsWhenAttributeStartingWithOnIsGiven()
+    {
+        $htmlTag = '<a href="#" onanything="evilJavascriptIsCalled()"></a>';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testCaseInsensitiveOnEventAttributeDetection()
+    {
+        $htmlTag = '<a href="#" oNnotexi="evilJavascriptIsCalled()"></a>';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
     public function testItFailsWhenIframeIsGiven()
     {
         $htmlTag = '<iframe src="catvideo.html" /></iframe>';
@@ -132,6 +156,15 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
     {
         $htmlTag = '/form input > embed object iframe';
 
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->assertNoViolation();
+        $this->context->getViolations();
+    }
+
+    public function testItSucceedsWhenRegularAttributeIsGiven()
+    {
+        $htmlTag = '<div randomattribute="blabla">test</div>';
         $this->validator->validate($htmlTag, new CleanHtml());
 
         $this->assertNoViolation();
