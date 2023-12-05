@@ -105,6 +105,7 @@ runs:
       shell: bash
       run: |
         sudo chown www-data:www-data -R ${{ github.workspace }} && \
+        sudo chown www-data:www-data -R . && \
         sudo mkdir -p /var/lib/php/sessions && \
         sudo chown www-data:www-data -R /var/lib/php/sessions && \
         sudo service apache2 restart

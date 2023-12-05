@@ -34,11 +34,11 @@ jobs:
           key: ${{ runner.os }}-browsers
 
       - name: Use .env.ci
-        run: mv .env.ci .env
+        run: sudo runuser -g www-data -u www-data -- mv .env.ci .env
         working-directory: ./tests/UI
 
       - name: Run tests
-        run: npm install && npm run test:sanity:fast-fail
+        run: sudo runuser -g www-data -u www-data -- npm install && npm run test:sanity:fast-fail
         working-directory: ./tests/UI
         env:
           URL_FO: https://localhost/
