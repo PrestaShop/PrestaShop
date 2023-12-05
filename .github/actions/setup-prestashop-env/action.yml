@@ -106,12 +106,14 @@ runs:
       run: |
         sudo chown :www-data -R ${{ github.workspace }} && \
         sudo chown :www-data -R . && \
-        sudo chmod g+w -R ${{ github.workspace }} \
-        sudo chmod g+X -R ${{ github.workspace }} \
-        sudo chmod g+w -R . \
-        sudo chmod g+X -R . \
+        sudo chmod g+w -R ${{ github.workspace }} && \
+        sudo chmod g+X -R ${{ github.workspace }} && \
+        sudo chmod g+w -R . && \
+        sudo chmod g+X -R . && \
         sudo mkdir -p /var/lib/php/sessions && \
         sudo chown :www-data -R /var/lib/php/sessions && \
+        sudo chmod g+w -R /var/lib/php/sessions && \
+        sudo chmod g+X -R /var/lib/php/sessions && \
         sudo service apache2 restart
 
     - name: Disable dev mode
