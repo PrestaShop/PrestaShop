@@ -36,6 +36,14 @@ export default class FeatureValuesManager {
 
   eventEmitter: typeof EventEmitter;
 
+  $controlsContainer: JQuery;
+
+  $featureSelector: JQuery;
+
+  $featureValueSelector: JQuery;
+
+  $addFeatureValueButton: JQuery;
+
   $collectionContainer: JQuery;
 
   $collectionRowsContainer: JQuery;
@@ -46,29 +54,70 @@ export default class FeatureValuesManager {
   constructor(eventEmitter: typeof EventEmitter) {
     this.router = new Router();
     this.eventEmitter = eventEmitter;
+    this.$controlsContainer = $(ProductMap.featureValues.controlsContainer);
+    this.$featureSelector = $(ProductMap.featureValues.featureSelect, this.$controlsContainer);
+    this.$featureSelector.select2();
+    this.$featureValueSelector = $(ProductMap.featureValues.featureValueSelect, this.$controlsContainer);
+    this.$featureValueSelector.select2();
+    this.$addFeatureValueButton = $(ProductMap.featureValues.addFeatureValue, this.$controlsContainer);
+
     this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
     this.$collectionRowsContainer = $(ProductMap.featureValues.collectionRowsContainer);
 
     this.watchFeatureSelectors();
-    this.watchCustomInputs();
     this.watchDeleteButtons();
     this.watchAddButton();
   }
 
   private watchAddButton(): void {
-    $(ProductMap.featureValues.addFeatureValue).on('click', () => {
+    this.$addFeatureValueButton.on('click', () => {
       const prototype = this.$collectionContainer.data('prototype');
       const prototypeName = this.$collectionContainer.data('prototypeName');
-      const newIndex = $(ProductMap.featureValues.collectionRow, this.$collectionContainer).length;
+      const newIndex = $(ProductMap.featureValues.collectionRow, this.$collectionRowsContainer).length;
 
       const $newRow = $(prototype.replace(new RegExp(prototypeName, 'g'), newIndex));
       this.$collectionRowsContainer.append($newRow);
-      $('select[data-toggle="select2"]', $newRow).select2();
+
+      const $selectedFeature = $('option:selected', this.$featureSelector);
+      const featureId = <string> $selectedFeature.val();
+      const featureName = <string> $selectedFeature.text();
+      $(ProductMap.featureValues.featureIdInput, $newRow).val(featureId);
+      $(ProductMap.featureValues.featureNameInput, $newRow).val(featureName);
+      $(ProductMap.featureValues.featureNamePreview, $newRow).text(featureName);
+
+      const $selectedFeatureValue = $('option:selected', this.$featureValueSelector);
+      const featureValueId = <string> $selectedFeatureValue.val();
+      const featureValueName = <string> $selectedFeatureValue.text();
+
+      if (featureValueId !== '-1') {
+        $(ProductMap.featureValues.featureValueIdInput, $newRow).val(featureValueId);
+        $(ProductMap.featureValues.featureValueNameInput, $newRow).val(featureValueName);
+        $(ProductMap.featureValues.featureValueNamePreview, $newRow).text(featureValueName);
+        $(ProductMap.featureValues.isCustomInput, $newRow).val(0);
+        $(ProductMap.featureValues.customValuesContainer, $newRow).hide();
+      } else {
+        $(ProductMap.featureValues.featureValueIdInput, $newRow).val('');
+        $(ProductMap.featureValues.featureValueNameInput, $newRow).val('');
+        $(ProductMap.featureValues.featureValueNamePreview, $newRow).text('');
+        $(ProductMap.featureValues.isCustomInput, $newRow).val(1);
+        $(ProductMap.featureValues.customValuesContainer, $newRow).show();
+      }
+
+      // Display list that can't be empty anymore
+      this.$collectionContainer.removeClass('d-none');
+      this.resetControls();
     });
   }
 
+  private resetControls(): void {
+    this.$featureSelector.val(0).trigger('change');
+    this.$featureValueSelector.empty();
+    this.$featureValueSelector.val('').trigger('change');
+    this.$featureValueSelector.prop('disabled', true);
+  }
+
   private watchDeleteButtons(): void {
-    $(this.$collectionContainer).on('click', ProductMap.featureValues.deleteFeatureValue, (event) => {
+    $(this.$collectionRowsContainer).on('click', ProductMap.featureValues.deleteFeatureValue, (event) => {
       const $deleteButton = $(event.currentTarget);
       const $collectionRow = $deleteButton.closest(ProductMap.featureValues.collectionRow);
       const modal = new (ConfirmModal as any)(
@@ -84,74 +133,71 @@ export default class FeatureValuesManager {
         () => {
           $collectionRow.remove();
           this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+          this.$collectionContainer.toggleClass('d-none', this.$collectionRowsContainer.children().length === 0);
         },
       );
       modal.show();
     });
   }
 
-  private watchCustomInputs(): void {
-    $(this.$collectionContainer).on('keyup change', ProductMap.featureValues.customValueInput, (event) => {
-      const $changedInput = $(event.target);
-      const $collectionRow = $changedInput.closest(ProductMap.featureValues.collectionRow);
-
-      // Check if any custom inputs has a value
-      let hasCustomValue = false;
-      $(ProductMap.featureValues.customValueInput, $collectionRow).each((index, input) => {
-        const $input = $(input);
-
-        if ($input.val() !== '') {
-          hasCustomValue = true;
-        }
-      });
-
-      const $featureValueSelector = $(ProductMap.featureValues.featureValueSelect, $collectionRow).first();
-      $featureValueSelector.prop('disabled', hasCustomValue);
-      if (hasCustomValue) {
-        $featureValueSelector.val('0');
-      } else {
-        const $featureInput = $(ProductMap.featureValues.featureSelect, $collectionRow).first();
-        const featureId = Number($featureInput.val());
-        this.renderFeatureValueChoices($featureValueSelector, featureId);
-      }
-    });
-  }
-
   private watchFeatureSelectors(): void {
-    $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, (event) => {
-      const $selector = $(event.target);
-      const featureId = Number($selector.val());
-      const $collectionRow = $selector.closest(ProductMap.featureValues.collectionRow);
-      const $featureValueSelector = $(ProductMap.featureValues.featureValueSelect, $collectionRow).first();
-      const $customValueInputs = $(ProductMap.featureValues.customValueInput, $collectionRow);
-      const $customFeatureIdInput = $(ProductMap.featureValues.customFeatureIdInput, $collectionRow);
+    this.$featureSelector.on('change', () => {
+      this.$addFeatureValueButton.prop('disabled', true);
+      const idFeature = Number(this.$featureSelector.val());
+      this.renderFeatureValueChoices(idFeature);
+    });
 
-      // Reset values
-      $customValueInputs.val('');
-      $featureValueSelector.val('0');
-      $customFeatureIdInput.val('');
-
-      this.renderFeatureValueChoices($featureValueSelector, featureId);
+    this.$featureValueSelector.on('change', () => {
+      const idFeature = Number(this.$featureSelector.val());
+      const idFeatureValue = Number(this.$featureValueSelector.val());
+      this.$addFeatureValueButton.prop('disabled', idFeature === 0 || idFeatureValue === 0);
     });
   }
 
-  private renderFeatureValueChoices($featureValueSelector: JQuery, featureId: number): void {
-    if (!featureId) {
-      $featureValueSelector.prop('disabled', true);
+  private renderFeatureValueChoices(idFeature: number): void {
+    this.$featureValueSelector.val('');
+    this.$featureValueSelector.trigger('change');
+    this.$featureValueSelector.prop('disabled', true);
 
+    if (!idFeature) {
       return;
     }
 
-    $.get(this.router.generate('admin_feature_get_feature_values', {featureId}))
+    $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
       .then((featureValuesData) => {
-        $featureValueSelector.prop('disabled', featureValuesData.length === 0);
-        $featureValueSelector.empty();
-        $.each(featureValuesData, (index, featureValue) => {
-          $featureValueSelector
-            .append($('<option></option>')
-              .attr('value', featureValue.id)
-              .text(featureValue.value));
-        });
+        this.$featureValueSelector.empty();
+        if (featureValuesData.length) {
+          const selectedFeatureValues = this.getFeatureValueIds();
+          this.addFeatureValue(this.$featureValueSelector.data('customValueLabel'), -1);
+          $.each(featureValuesData, (index, featureValue) => {
+            if (featureValue.id !== 0 && !selectedFeatureValues.includes(featureValue.id)) {
+              this.addFeatureValue(featureValue.value, featureValue.id);
+            }
+          });
+        }
+
+        this.$featureValueSelector.prop('disabled', featureValuesData.length === 0);
+        this.$featureValueSelector.val(-1).trigger('change');
+        this.$featureValueSelector.select2();
       });
+  }
+
+  private getFeatureValueIds(): number[] {
+    const featureValueIds: number[] = [];
+    $(ProductMap.featureValues.featureValueIdInput, this.$collectionRowsContainer).each((index, featureValueInput) => {
+      if (featureValueInput instanceof HTMLInputElement) {
+        featureValueIds.push(parseInt(<string> featureValueInput.value, 10));
+      }
+    });
+
+    return featureValueIds;
+  }
+
+  private addFeatureValue(valueLabel: string, value: number): void {
+    this.$featureValueSelector.append(
+      $('<option></option>')
+        .attr('value', value)
+        .text(valueLabel),
+    );
   }
 }

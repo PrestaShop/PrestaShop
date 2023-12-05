@@ -70,14 +70,15 @@ final class FeatureValuesCommandsBuilder implements ProductCommandsBuilderInterf
                 continue;
             }
 
-            $formattedFeature = ['feature_id' => (int) $featureValueDatum['feature_id']];
+            $formattedFeature = [
+                'feature_id' => (int) $featureValueDatum['feature_id'],
+            ];
+
+            if (isset($featureValueDatum['feature_value_id'])) {
+                $formattedFeature['feature_value_id'] = (int) $featureValueDatum['feature_value_id'];
+            }
             if ($this->hasCustomValues($featureValueDatum)) {
                 $formattedFeature['custom_values'] = $featureValueDatum['custom_value'];
-                if (!empty($featureValueDatum['custom_value_id'])) {
-                    $formattedFeature['feature_value_id'] = (int) $featureValueDatum['custom_value_id'];
-                }
-            } elseif (!empty($featureValueDatum['feature_value_id'])) {
-                $formattedFeature['feature_value_id'] = (int) $featureValueDatum['feature_value_id'];
             }
 
             $featureValues[] = $formattedFeature;
@@ -93,7 +94,7 @@ final class FeatureValuesCommandsBuilder implements ProductCommandsBuilderInterf
      */
     private function hasCustomValues(array $featureValueDatum): bool
     {
-        if (empty($featureValueDatum['custom_value'])) {
+        if (empty($featureValueDatum['custom_value']) || empty($featureValueDatum['is_custom'])) {
             return false;
         }
 

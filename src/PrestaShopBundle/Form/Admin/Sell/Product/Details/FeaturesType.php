@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -40,14 +40,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class FeaturesType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var FeaturesChoiceProvider
      */
     private $featuresChoiceProvider;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $featuresChoiceProvider
+        FeaturesChoiceProvider $featuresChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->featuresChoiceProvider = $featuresChoiceProvider;
@@ -58,17 +58,16 @@ class FeaturesType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $features = $this->featuresChoiceProvider->getChoices();
+        $features = array_merge([
+            $this->trans('Choose a feature', 'Admin.Catalog.Feature') => 0,
+        ], $this->featuresChoiceProvider->getChoices());
 
         $builder
             ->add('feature_id', ChoiceType::class, [
-                'empty_data' => null,
+                'empty_data' => 0,
                 'choices' => $features,
-                'required' => false,
-                'placeholder' => $this->trans('Choose a feature', 'Admin.Catalog.Feature'),
                 'label' => $this->trans('Feature', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'data-toggle' => 'select2',
                     'class' => 'feature-selector',
                 ],
             ])
@@ -79,8 +78,7 @@ class FeaturesType extends TranslatorAwareType
                 'invalid_message' => $this->trans('Choose a value or provide a customized one', 'Admin.Catalog.Feature'),
                 'disabled' => true,
                 'attr' => [
-                    'disabled' => true,
-                    'data-toggle' => 'select2',
+                    'data-custom-value-label' => $this->trans('Add a customized value', 'Admin.Catalog.Feature'),
                     'class' => 'feature-value-selector',
                 ],
             ])
@@ -90,6 +88,7 @@ class FeaturesType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'btn-outline-primary feature-value-add-button',
                 ],
+                'disabled' => true,
             ])
             ->add('feature_values', CollectionType::class, [
                 'entry_type' => FeatureValueType::class,

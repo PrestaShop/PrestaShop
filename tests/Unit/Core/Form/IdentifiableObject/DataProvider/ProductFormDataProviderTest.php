@@ -955,6 +955,7 @@ class ProductFormDataProviderTest extends TestCase
             'feature_name' => 'Test feature',
             'feature_value_id' => 51,
             'feature_value_name' => 'english feature',
+            'is_custom' => false,
         ];
 
         $localizedValues = [
@@ -971,8 +972,8 @@ class ProductFormDataProviderTest extends TestCase
             'feature_name' => 'Test feature',
             'feature_value_id' => 69,
             'feature_value_name' => 'english custom feature',
+            'is_custom' => true,
             'custom_value' => $customLocalizedValues,
-            'custom_value_id' => 69,
         ];
 
         $productData = [

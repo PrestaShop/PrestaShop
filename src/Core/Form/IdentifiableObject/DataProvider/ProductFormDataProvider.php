@@ -362,10 +362,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'feature_name' => $featureNames[$featureValue->getFeatureId()],
                 'feature_value_id' => $featureValue->getFeatureValueId(),
                 'feature_value_name' => $featureValue->getLocalizedValues()[$this->contextLangId],
+                'is_custom' => $featureValue->isCustom(),
             ];
             if ($featureValue->isCustom()) {
                 $productFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
-                $productFeatureValue['custom_value_id'] = $featureValue->getFeatureValueId();
             }
 
             $productFeatureValues[] = $productFeatureValue;

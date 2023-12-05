@@ -557,6 +557,10 @@ $product-page-padding-bottom: 80px !default;
     flex-direction: row;
     gap: 35px;
 
+    .select2 {
+      min-width: 250px;
+    }
+
     .feature-value-add-button {
       padding: 0.4rem 1rem;
     }
@@ -2800,6 +2804,10 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
+.select2-results__option[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
 
 // Create product modal
 @import "create_product_modal";

@@ -24,16 +24,18 @@
  *#}
 
 {%- block features_row -%}
-  <h3>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h3>
+  <div class="form-group">
+    <h3>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h3>
 
-  {{ form_errors(form) }}
-  <div class="product-features-controls">
-    {{ form_widget(form.feature_id) }}
-    {{ form_widget(form.feature_value_id) }}
-    {{ form_widget(form.add_feature) }}
+    {{ form_errors(form) }}
+    <div class="product-features-controls">
+      {{ form_widget(form.feature_id) }}
+      {{ form_widget(form.feature_value_id) }}
+      {{ form_widget(form.add_feature) }}
+    </div>
+
+    {{- block('form_rows') -}}
   </div>
-
-  {{- block('form_rows') -}}
 {%- endblock -%}
 
 {%- block feature_value_row -%}
@@ -44,6 +46,7 @@
     </td>
     <td>
       {% if is_custom is null %}
+        {# Rendering the prototype we keep everything visble by default #}
         {% set featureValueAttributes = {} %}
         {% set customValueAttributes = {} %}
       {% elseif is_custom %}
@@ -55,11 +58,10 @@
         {% set featureValueAttributes = {} %}
         {% set customValueAttributes = {'row_attr': {'class': 'd-none'}} %}
       {% endif %}
-
       {{ form_row(form.feature_value_name, form.feature_value_name.vars.attr|merge(featureValueAttributes)) }}
-      {{ form_row(form.feature_value_id, form.feature_value_id.vars.attr|merge(featureValueAttributes)) }}
-      {{ form_row(form.custom_value_id, form.custom_value_id.vars.attr|merge(customValueAttributes)) }}
       {{ form_row(form.custom_value, form.custom_value.vars.attr|merge(customValueAttributes)) }}
+      {{ form_row(form.feature_value_id) }}
+      {{ form_row(form.is_custom) }}
     </td>
     <td>
       {{ form_widget(form.delete) }}
@@ -75,6 +77,11 @@
   {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' table feature-values-table-collection')|trim }) -%}
+
+  {# Hide table if content is empty#}
+  {% if form.vars.value is empty %}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' d-none')|trim }) -%}
+  {% endif %}
 
   <table {{ block('widget_attributes') }}>
     <thead class="thead-default">

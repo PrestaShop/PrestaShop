@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -37,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FeatureValueType extends TranslatorAwareType
@@ -48,6 +50,9 @@ class FeatureValueType extends TranslatorAwareType
     {
         $builder
             ->add('feature_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'feature-id',
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('Choose a feature', 'Admin.Catalog.Feature'),
@@ -55,23 +60,54 @@ class FeatureValueType extends TranslatorAwareType
                 ],
             ])
             ->add('feature_name', TextPreviewType::class, [
+                'row_attr' => [
+                    'class' => 'feature-name',
+                ],
                 'label' => false,
             ])
-            ->add('feature_value_id', HiddenType::class)
+            ->add('feature_value_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'feature-value-id',
+                ],
+            ])
             ->add('feature_value_name', TextPreviewType::class, [
+                'row_attr' => [
+                    'class' => 'feature-value-name',
+                ],
                 'label' => false,
+            ])
+            ->add('is_custom', HiddenType::class, [
+                'attr' => [
+                    'class' => 'is-custom-feature-value',
+                ],
+                'required' => false,
+                'empty_data' => false,
             ])
             ->add('custom_value', TranslatableType::class, [
                 'label' => false,
                 'required' => false,
                 'type' => TextType::class,
+                'row_attr' => [
+                    'class' => 'custom-values-form-group',
+                ],
                 'attr' => [
                     'class' => 'custom-values',
                 ],
-            ])
-            ->add('custom_value_id', HiddenType::class, [
-                'required' => false,
-                'empty_data' => null,
+                'constraints' => [
+                    new DefaultLanguage([
+                        'message' => $this->trans(
+                            'The field %field_name% is required at least in your default language.',
+                            'Admin.Notifications.Error',
+                            [
+                                '%field_name%' => sprintf(
+                                    '"%s"',
+                                    $this->trans('Custom value', 'Admin.Catalog.Feature')
+                                ),
+                            ]
+                        ),
+                        'groups' => 'custom_value',
+                    ]),
+                ],
             ])
             ->add('delete', IconButtonType::class, [
                 'icon' => 'delete',
@@ -88,11 +124,23 @@ class FeatureValueType extends TranslatorAwareType
         ;
     }
 
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'validation_groups' => function (FormInterface $form): array {
+                $formData = $form->getData();
+
+                return !empty($formData['is_custom']) ? ['Default', 'custom_value'] : ['Default'];
+            },
+        ]);
+    }
+
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
         $formData = $form->getData();
+
         // When data is null the prototype is being rendered so the input is not custom and is not not custom either (schrodinger custom input)
-        $view->vars['is_custom'] = null === $formData ? null : !empty($formData['custom_value_id']);
+        $view->vars['is_custom'] = null === $formData ? null : !empty($formData['is_custom']);
     }
 }
