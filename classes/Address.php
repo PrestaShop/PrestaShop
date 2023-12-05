@@ -113,6 +113,9 @@ class AddressCore extends ObjectModel
     /** @var array<int, bool> Store if an adress ID exists */
     protected static $addressExists = [];
 
+    /** @var int old address ID */
+    public $id_old_address;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -129,6 +132,7 @@ class AddressCore extends ObjectModel
             'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'],
+            'id_old_address' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'alias' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
             'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],

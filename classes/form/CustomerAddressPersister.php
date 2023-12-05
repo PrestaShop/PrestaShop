@@ -109,6 +109,7 @@ class CustomerAddressPersisterCore
     {
         $old_address = new Address($address->id);
         $address->id = $address->id_address = null;
+        $address->id_old_address = $old_address->id;
 
         if ($address->save() && $old_address->delete()) {
             // a new address was created, we must update current cart
