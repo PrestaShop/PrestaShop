@@ -108,6 +108,9 @@ jobs:
       # Wait for all builds to be finished (the check is required because we encountered cases where the action exited before
       # everything was built, probably because of the parallelization and background processes)
       - name: Check that all builds are finished
+        env:
+          URL_FO: 'https://localhost:8002/'
+          URL_PING: 'install-dev/'
         run: |
           buildLocks="tests/UI admin-dev/themes/new-theme/buildLock admin-dev/themes/default/buildLock themes/classic/_dev/buildLock themes/buildLock"
           echo Checking for all these lock files $buildLocks
@@ -123,6 +126,8 @@ jobs:
             fi
             echo $lockFile is no longer present
           done
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do echo Waiting 5 more seconds for shop install to be ready; sleep 5; done'
+
       # Playwright must be installed all the time, we only install chromium since it's the only browser used
       - name: Install browsers
         working-directory: ${{ env.PS_DIR }}/tests/UI
