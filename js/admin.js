@@ -536,11 +536,11 @@ function showRedirectProductOptions(show)
 function redirectSelectChange()
 {
   redirectTypeValue = $('#redirect_type :selected').val();
-  if (redirectTypeValue == '404' || 
-      redirectTypeValue == '410' || 
-      redirectTypeValue == 'default' || 
-      redirectTypeValue == '200-displayed' || 
-      redirectTypeValue == '404-displayed' || 
+  if (redirectTypeValue == '404' ||
+      redirectTypeValue == '410' ||
+      redirectTypeValue == 'default' ||
+      redirectTypeValue == '200-displayed' ||
+      redirectTypeValue == '404-displayed' ||
       redirectTypeValue == '410-displayed')
     showRedirectProductSelectOptions(false);
   else
@@ -1434,10 +1434,14 @@ function isCleanHtml(content)
   var events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
   events += '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
   events += '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
-  events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|onmousewheel';
+  events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|ondragexit|onmousewheel';
   events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
   events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
-  events += '|onselectstart|onstart|onstop';
+  events += '|onselectstart|onstart|onstop|onanimationcancel|onanimationend|onanimationiteration|onanimationstart';
+  events += '|onpointerover|onpointerenter|onpointerdown|onpointermove|onpointerup|onpointerout|onpointerleave|onpointercancel|ongotpointercapture|onlostpointercapture';
+  events += '|onpagehide|onpageshow|onautocomplete|onautocompleteerror|oncanplay|oncanplaythrough|onclose|oncuechange|ondurationchange|onemptied|onended|oninvalid|onloadeddata';
+  events += '|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onpopstate|onprogress|onratechange|onreset|onseeked|onseeking|onshow|onsort|onstalled|onstorage|onsuspend|ontimeupdate';
+  events += '|ontoggle|onvolumechange|onwaiting';
 
   var script1 = /<[\s]*script/im;
   var script2 = new RegExp('('+events+')[\s]*=', 'im');
