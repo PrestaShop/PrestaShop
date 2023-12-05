@@ -515,7 +515,7 @@ class ValidateCore
      */
     public static function isCleanHtml($html, $allow_iframe = false)
     {
-        // any html attribute starting with "on"
+        // any html attribute starting with "on" (event attributes)
         $eventAttributeRegex = '/<\s*\w+[^>]*\s(on\w+)=["\'][^"\']*["\']/ims';
 
         $events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
