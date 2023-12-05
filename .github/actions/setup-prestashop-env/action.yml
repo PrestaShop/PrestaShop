@@ -104,10 +104,14 @@ runs:
     - name: Setup permission and restart apache
       shell: bash
       run: |
-        sudo chown www-data:www-data -R ${{ github.workspace }} && \
-        sudo chown www-data:www-data -R . && \
+        sudo chown :www-data -R ${{ github.workspace }} && \
+        sudo chown :www-data -R . && \
+        sudo chmod g+w -R ${{ github.workspace }} \
+        sudo chmod g+X -R ${{ github.workspace }} \
+        sudo chmod g+w -R . \
+        sudo chmod g+X -R . \
         sudo mkdir -p /var/lib/php/sessions && \
-        sudo chown www-data:www-data -R /var/lib/php/sessions && \
+        sudo chown :www-data -R /var/lib/php/sessions && \
         sudo service apache2 restart
 
     - name: Disable dev mode
@@ -115,13 +119,13 @@ runs:
       shell: bash
       run: |
         echo "Disabling DEV mode ...";
-        sudo runuser -g www-data -u www-data -- sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" config/defines.inc.php
+        sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" config/defines.inc.php
 
     - name: Install PrestaShop
       if: inputs.ps-auto-install == 'true'
       shell: bash
       run: |
-        sudo runuser -g www-data -u www-data -- php install-dev/index_cli.php \
+        php install-dev/index_cli.php \
         ---domain="localhost" --db_server="127.0.0.1:3306" --db_name="${{ inputs.mysql-database }}" \
         --db_user="root" --db_password=${{ inputs.mysql-root-password }} \
          --prefix="tst_" --firstname="Marc" --lastname="Beier" \

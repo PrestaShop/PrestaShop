@@ -19,3 +19,12 @@ a2dismod mpm_event
 cp -f $WORKSPACE/.github/workflows/sanity/apache-vhost /etc/apache2/sites-available/000-default.conf
 sed -e "s?%BUILD_DIR%?$(echo $WORKSPACE)?g" --in-place /etc/apache2/sites-available/000-default.conf
 sed -e "s?%MKCERT_DIR%?$(echo $WORKSPACE)?g" --in-place /etc/apache2/sites-available/000-default.conf
+
+# Restart apache after giving permission
+sudo chown :www-data -R $WORKSPACE
+sudo chown :www-data -R /home/runner/
+sudo chmod g+w -R $WORKSPACE
+sudo chmod g+X -R $WORKSPACE
+sudo chmod g+w -R /home/runner/
+sudo chmod g+X -R /home/runner/
+service apache2 restart
