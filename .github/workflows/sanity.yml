@@ -53,5 +53,4 @@ jobs:
         with:
           name: failure-${{ matrix.php }}
           path: |
-            ./tests/UI/screenshots/
-            ./var/logs/
+            ./
