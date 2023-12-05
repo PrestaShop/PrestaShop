@@ -48,9 +48,15 @@ jobs:
           ENABLE_SSL: true
           TAKE_SCREENSHOT_AFTER_FAIL: true
 
+      - name: Archive shop content
+        if: failure()
+        run: |
+          mkdir -p /tmp/shop-artifacts
+          zip -q -r /tmp/shop-artifacts/sources.zip .
+
       - uses: actions/upload-artifact@v3
         if: ${{ failure() }}
         with:
           name: failure-${{ matrix.php }}
           path: |
-            ./
+            /tmp/shop-artifacts
