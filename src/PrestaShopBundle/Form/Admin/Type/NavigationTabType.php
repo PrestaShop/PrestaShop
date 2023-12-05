@@ -39,8 +39,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * component. Each first level child is used as a different tab, its label is used for the tab name and it's widget
  * as the tab content.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/navigation-tab-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/navigation-tab-type/
  */
 class NavigationTabType extends AbstractType
 {

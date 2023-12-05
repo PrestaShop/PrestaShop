@@ -35,8 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class MaterialChoiceTableType renders checkbox choices using table layout.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/material-choice-table/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/material-choice-table/
  */
 class MaterialChoiceTableType extends AbstractType
 {

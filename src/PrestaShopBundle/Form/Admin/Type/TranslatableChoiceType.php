@@ -34,8 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class TranslatableChoiceType
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/translatable-choice-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/translatable-choice-type/
  */
 class TranslatableChoiceType extends TranslatableType
 {

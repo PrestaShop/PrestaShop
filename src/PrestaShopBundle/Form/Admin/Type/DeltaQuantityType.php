@@ -47,8 +47,7 @@ use Symfony\Component\Validator\Constraints\Type;
  * instead (ex: +5, -8). The input data of this form type is the initial (as a plain integer) however its output
  * on submit is the delta quantity.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/delta-quantity-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/delta-quantity-type/
  */
 class DeltaQuantityType extends TranslatorAwareType
 {

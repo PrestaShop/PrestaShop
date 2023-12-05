@@ -35,8 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * It is extension of TextType that adds additonal button which allows generating value for input
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/generatable-text/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/generatable-text/
  */
 class GeneratableTextType extends AbstractType
 {

@@ -34,8 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class MaterialChoiceTreeType
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/material-choice-tree/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/material-choice-tree/
  */
 class MaterialChoiceTreeType extends AbstractType
 {

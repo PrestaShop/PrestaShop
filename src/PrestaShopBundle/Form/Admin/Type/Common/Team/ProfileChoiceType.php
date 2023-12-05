@@ -33,8 +33,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class ProfileChoiceType is choice type for selecting employee's profile.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/profile-choice-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/profile-choice-type/
  */
 class ProfileChoiceType extends AbstractType
 {

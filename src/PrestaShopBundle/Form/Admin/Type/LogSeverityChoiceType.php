@@ -35,8 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class LogSeverityChoiceType.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/log-severity-choice-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/log-severity-choice-type/
  */
 class LogSeverityChoiceType extends TranslatorAwareType
 {

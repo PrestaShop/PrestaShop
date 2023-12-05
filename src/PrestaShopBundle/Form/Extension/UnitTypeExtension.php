@@ -38,8 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Adds a unit suffix to form type.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/unit-type-extension/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/unit-type-extension/
  */
 class UnitTypeExtension extends AbstractTypeExtension
 {

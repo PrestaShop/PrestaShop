@@ -36,8 +36,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * FormType used in rendering of "Search and Reset" action in Grids.
  * 
- * Form type documentation: 
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/search-and-reset-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/search-and-reset-type/
  */
 class SearchAndResetType extends AbstractType
 {

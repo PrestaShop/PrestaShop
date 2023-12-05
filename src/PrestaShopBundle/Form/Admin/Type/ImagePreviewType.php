@@ -38,8 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * It is based on a hidden input so it could be changed programmatically, or be used just to display
  * an image in a form.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/image-preview-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/image-preview-type/
  */
 class ImagePreviewType extends HiddenType
 {

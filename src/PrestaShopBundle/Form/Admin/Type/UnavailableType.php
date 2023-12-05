@@ -33,8 +33,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form type is useful during development phase to show part of a form that are not available yet.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/unavailable-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/unavailable-type/
  */
 class UnavailableType extends TranslatorAwareType
 {

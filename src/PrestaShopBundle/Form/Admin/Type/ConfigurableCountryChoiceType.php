@@ -37,8 +37,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class responsible for providing configurable countries list
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/configurable-country-choice-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/configurable-country-choice-type/
  */
 class ConfigurableCountryChoiceType extends AbstractType
 {

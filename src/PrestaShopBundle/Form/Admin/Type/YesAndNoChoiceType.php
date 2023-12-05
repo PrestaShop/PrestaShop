@@ -32,8 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class YesAndNoChoiceType.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/yes-and-no-choice/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/yes-and-no-choice/
  */
 class YesAndNoChoiceType extends TranslatorAwareType
 {

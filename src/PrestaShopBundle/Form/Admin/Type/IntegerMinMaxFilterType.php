@@ -38,8 +38,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Defines the integer type two inputs of min and max value - designed to fit grid in grid filter.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/integer-min-max-filter/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/integer-min-max-filter/
  */
 final class IntegerMinMaxFilterType extends AbstractType
 {

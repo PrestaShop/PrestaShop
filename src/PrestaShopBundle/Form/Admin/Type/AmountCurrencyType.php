@@ -36,8 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class AmountCurrencyType
  * 
- * Form type documentation: 
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/amount-currency/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/amount-currency/
  */
 class AmountCurrencyType extends AbstractType
 {

@@ -36,8 +36,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * This form class is responsible to create a translatable form.
  * Language selection uses tabs.
  * 
- * Form type documentation: 
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/translate-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/translate-type/
  */
 class TranslateType extends CommonAbstractType
 {

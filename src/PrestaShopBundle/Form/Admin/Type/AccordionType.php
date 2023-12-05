@@ -36,8 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form type is used as a container of sub forms, each sub form will be rendered as a part of an accordion.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/accordion-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/accordion-type/
  */
 class AccordionType extends AbstractType
 {

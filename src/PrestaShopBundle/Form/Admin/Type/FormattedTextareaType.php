@@ -36,8 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class enabling TinyMCE on a Textarea field.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/formatted-textarea/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/formatted-textarea/
  */
 class FormattedTextareaType extends TranslatorAwareType
 {

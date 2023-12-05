@@ -49,8 +49,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * to change the included data, the rendering and/or the mapping. In front the EntitySearchInput js component
  * will automatically adapt to the new mapping.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/entity-search-input-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/entity-search-input-type/
  */
 class EntitySearchInputType extends CollectionType
 {

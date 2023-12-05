@@ -34,8 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Defines reusable text input with max length counter
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/text-with-length-counter/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/text-with-length-counter/
  */
 class TextWithLengthCounterType extends AbstractType
 {

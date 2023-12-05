@@ -42,8 +42,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Class ChangePasswordType is responsible for defining "change password" form type.
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/change-password/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/change-password/
  */
 class ChangePasswordType extends AbstractType
 {

@@ -34,8 +34,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Class EmailType
  * 
- * Form type documentation:
- * https://devdocs.prestashop-project.org/8/development/components/form/types-reference/email-type/
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/email-type/
  */
 class EmailType extends BaseEmailType
 {
