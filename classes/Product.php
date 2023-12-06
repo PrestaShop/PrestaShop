@@ -2234,7 +2234,7 @@ class ProductCore extends ObjectModel
         $id_images,
         $reference,
         $ean13,
-        $default,
+        ?bool $default,
         $location = null,
         $upc = null,
         $minimal_quantity = null,
@@ -2243,7 +2243,7 @@ class ProductCore extends ObjectModel
         array $id_shop_list = [],
         $isbn = '',
         $low_stock_threshold = null,
-        $low_stock_alert = false,
+        ?bool $low_stock_alert = false,
         $mpn = null,
         $available_now = null,
         $available_later = null
