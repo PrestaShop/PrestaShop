@@ -1,0 +1,57 @@
+name: Setup and Run UI tests
+description: Setup a UI Tests Environment and run tests
+
+inputs:
+  # TEST Config inputs
+  TESTS_DIR:
+    required: false
+    description: Tests Folder on PrestaShop
+    default: './tests/UI/'
+  ENABLE_SSL:
+    required: false
+    description: True to Run with SSL
+    default: 'true'
+  TEST_CAMPAIGN:
+    required: true
+    description: Campaign To Run
+  NODE_VERSION:
+    required: false
+    description: Node Version for tests
+    default: '16'
+  INSTALL_BROWSERS:
+    required: false
+    description: True To Install Browsers
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.NODE_VERSION }}
+
+    - name: Use .env.ci
+      working-directory: ${{ inputs.TESTS_DIR }}
+      shell: bash
+      run: cp .env.ci .env
+
+    - name: Install dependencies
+      working-directory: ${{ inputs.TESTS_DIR }}
+      shell: bash
+      run: npm ci
+
+    - name: Install browsers
+      if: inputs.INSTALL_BROWSERS == 'true'
+      working-directory: ${{ inputs.TESTS_DIR }}
+      shell: bash
+      run: npx playwright install --with-deps
+
+    # Run tests
+    - name: Run tests
+      working-directory: ${{ inputs.TESTS_DIR }}
+      env:
+        URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+        ENABLE_SSL: ${{ inputs.ENABLE_SSL }}
+      shell: bash
+      run: npm run test:${{ inputs.TEST_CAMPAIGN }}

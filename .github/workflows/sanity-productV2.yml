@@ -1,51 +1,56 @@
 name: UI tests Product V2
 on: [ push, pull_request ]
+
+permissions:
+  contents: read   #   to fetch code (actions/checkout)
+
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+env:
+  TEST_CAMPAIGN: 'sanity:productV2:fast-fail'
+
 jobs:
-  sanity_product_v2:
+  sanity:
+    permissions:
+      contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity Product V2
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
       fail-fast: false
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup environment
-        uses: ./.github/actions/setup-prestashop-env
+      - name: Setup Environment
+        timeout-minutes: 15
+        uses: ./.github/actions/setup-env
         with:
-          php-version: ${{ matrix.php }}
-          mysql-version: '5.7'
-          mysql-database: 'prestashop'
-          mysql-root-password: 'password'
-          node-version: '16'
-          npm-version: '7'
-          ps-auto-install: 'true'
-          ps-dev-mode: 'false'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          PHP_VERSION: ${{ matrix.php }}
+          ENABLE_SSL: 'true'
+          INSTALL_AUTO: 'true'
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v3
+      - name: Run Tests
+        uses: ./.github/actions/ui-test
         with:
-          path: ~/.cache/ms-playwright/
-          key: ${{ runner.os }}-browsers
+          TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
 
-      - name: Run tests
-        run: npm install && npm run test:sanity:productV2:fast-fail
-        env:
-          URL_FO: https://localhost/
-          DB_NAME: prestashop
-          DB_PASSWD: password
-          HEADLESS: true
-          ENABLE_SSL: true
-          TAKE_SCREENSHOT_AFTER_FAIL: true
-        working-directory: ./tests/UI
+      - name: Export docker logs
+        if: failure()
+        run: |
+          mkdir -p ./var/docker-logs
+          docker logs my_prestashop_mysql_1 > ./var/docker-logs/mysql.log
+          docker logs my_prestashop_prestashop-git_1 > ./var/docker-logs/prestashop.log
 
-      - uses: actions/upload-artifact@v3
-        if: ${{ always() }}
+      - name: Upload Screenshots and logs
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-          name: screenshots-${{ matrix.php }}
-          path: ./tests/UI/screenshots/
+          name: sanity-${{ matrix.php }}
+          path: |
+            ./tests/UI/screenshots/
+            ./var/logs
+            ./var/docker-logs

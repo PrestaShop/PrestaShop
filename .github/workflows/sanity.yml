@@ -1,165 +1,57 @@
 name: UI tests
+
 on: [ push, pull_request ]
+
+permissions:
+  contents: read   #   to fetch code (actions/checkout)
+
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+env:
+  TEST_CAMPAIGN: 'sanity'
+
 jobs:
   sanity:
+    permissions:
+      contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
       fail-fast: false
-    env:
-      PHP_VERSION: ${{ matrix.php }}
-      NODE_VERSION: 16
-      VERSION: ${{ matrix.php }}-apache
-      # Fixed values
-      ADMIN_PASSWD: 'Correct Horse Battery Staple'
-      PS_DOMAIN: 'localhost:8002'
-      PS_ENABLE_SSL: '1'
-      PS_MODE_DEV: '0'
-      PS_DEV_MODE: '0'
-      DB_USER: root
-      DB_PASSWD: prestashop
-      DB_NAME: prestashop
-      DB_PREFIX: tst_
-      DB_SERVER: mysql
-      PS_DIR: 'my_prestashop'
-      PS_FOLDER_INSTALL: install-dev
-      PS_FOLDER_ADMIN: admin-dev
-      PS_COUNTRY: fr
-      PS_LANGUAGE: en
-      ADMIN_MAIL: 'demo@prestashop.com'
+
     steps:
-      # Checkout prestashop PR
       - uses: actions/checkout@v3
-        with:
-          path: ${{ env.PS_DIR }}
 
-      # Pre pull/build images (no need for keycloak)
-      - name: Pull mysql image in background
-        working-directory: ${{ env.PS_DIR }}
-        run: |
-          # Pull mysql image
-          USER_ID=$(id -u) GROUP_ID=$(id -g) nohup docker-compose -f docker-compose.yml pull -q mysql >& /dev/null &
-      - name: Build PrestaShop image in background
-        working-directory: ${{ env.PS_DIR }}
-        run: |
-          # Build prestashop image in background
-          USER_ID=$(id -u) GROUP_ID=$(id -g) nohup docker-compose -f docker-compose.yml build >& /dev/null &
-
-      # Certificate
-      - name: Generate a certificate
-        run: |
-          ## Install MkCert
-          sudo apt install libnss3-tools
-          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
-          chmod +x mkcert-v*-linux-amd64
-          sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
-          ## Generate certificate
-          mkcert -key-file ./${{ env.PS_DIR }}/.docker/ssl.key -cert-file ./${{ env.PS_DIR }}/.docker/ssl.crt localhost
-          ## Link certificate to Chrome Trust Store
-          mkdir -p $HOME/.pki/nssdb
-          certutil -d $HOME/.pki/nssdb -N
-          certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ./${{ env.PS_DIR }}/.docker/ssl.crt
-          ## Add self-signed certificate to Chrome Trust Store
-          mkcert -install
-
-      # Run composer install
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --optimize-autoloader
-        working-directory: ${{ env.PS_DIR }}
-
-      # Create shop with Docker without building assets, and initialize database and shop content
-      # No need to wait for install-dev ready it should be nearly automatic and just in case we build the assets after to leave
-      # a bit more time for the docker to fully init
-      - name: Build and run shop with docker
-        working-directory: ${{ env.PS_DIR }}
+      - name: Setup Environment
         timeout-minutes: 15
-        env:
-          URL_FO: 'https://localhost:8002/'
-          VERSION: ${{ env.VERSION }}
-          # No assets built, already done and no install since the campaign handles it
-          DISABLE_MAKE: 1
-          PS_INSTALL_AUTO: 0
-        run: |
-          # First wait for all images to be ready
-          echo Check that all images are ready
-          until docker images | grep mysql; do echo Waiting for mysql image; sleep 1; done
-          until docker images | grep prestashop-git; do echo Waiting for prestashop-git image; sleep 1; done
-          # Then build and start the docker, no need to wait the install page is accessible right away
-          echo Build docker via docker composer
-          USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose -f docker-compose.yml up -d --build prestashop-git
-
-      # Install node dependencies and build assets
-      - name: Setup Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
+        uses: ./.github/actions/setup-env
         with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Build assets in parallel and in background
-        run: |
-          (pushd ${{ env.PS_DIR }}/tests/UI; touch buildLock; npm ci; npm run build; rm buildLock; popd) &
-          (pushd ${{ env.PS_DIR }}/admin-dev/themes/new-theme; touch buildLock; npm ci; npm run build; rm buildLock; popd) &
-          (pushd ${{ env.PS_DIR }}/admin-dev/themes/default; touch buildLock; npm ci; npm run build; rm buildLock; popd) &
-          (pushd ${{ env.PS_DIR }}/themes/classic/_dev; touch buildLock; npm ci; npm run build; rm buildLock; popd) &
-          (pushd ${{ env.PS_DIR }}/themes/; touch buildLock; npm ci; npm run build; rm buildLock; popd) &
-      # Wait for all builds to be finished (the check is required because we encountered cases where the action exited before
-      # everything was built, probably because of the parallelization and background processes)
-      - name: Check that all builds are finished
-        env:
-          URL_FO: 'https://localhost:8002/'
-          URL_PING: 'install-dev/'
-        run: |
-          buildLocks="tests/UI admin-dev/themes/new-theme/buildLock admin-dev/themes/default/buildLock themes/classic/_dev/buildLock themes/buildLock"
-          echo Checking for all these lock files $buildLocks
-          for lockFile in $buildLocks; do
-            lockFile="${{ env.PS_DIR }}/$lockFile"
-            if [ -f $lockFile ]; then
-              echo Wait for $lockFile to be removed
-              sleep 1
-              while [ -f $lockFile ]; do
-                echo $lockFile still present wait a bit more
-                sleep 1
-              done
-            fi
-            echo $lockFile is no longer present
-          done
-          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do echo Waiting 5 more seconds for shop install to be ready; sleep 5; done'
+          PHP_VERSION: ${{ matrix.php }}
+          ENABLE_SSL: 'true'
+          INSTALL_AUTO: 'false'
 
-      # Playwright must be installed all the time, we only install chromium since it's the only browser used
-      - name: Install browsers
-        working-directory: ${{ env.PS_DIR }}/tests/UI
-        run: npx playwright install chromium
+      - name: Run Tests
+        uses: ./.github/actions/ui-test
+        with:
+          TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
 
-      # Run tests
-      - name: Run tests
-        run: |
-          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
-          npm run test:sanity:fast-fail
-        working-directory: ${{ env.PS_DIR }}/tests/UI
-        env:
-          # Test variables
-          URL_FO: 'https://localhost:8002/'
-          HEADLESS: true
-          ENABLE_SSL: true
-          TAKE_SCREENSHOT_AFTER_FAIL: true
-          SMTP_SERVER: '172.17.0.1'
-
-      # UI Tests : Upload screenshots
       - name: Export docker logs
-        run: |
-          mkdir -p ${{ env.PS_DIR }}/var/docker-logs
-          docker logs my_prestashop_mysql_1 > ${{ env.PS_DIR }}/var/docker-logs/mysql.log
-          docker logs my_prestashop_prestashop-git_1 > ${{ env.PS_DIR }}/var/docker-logs/prestashop.log
         if: failure()
-      - name: Export logs and screenshots as artifacts
+        run: |
+          mkdir -p ./var/docker-logs
+          docker logs my_prestashop_mysql_1 > ./var/docker-logs/mysql.log
+          docker logs my_prestashop_prestashop-git_1 > ./var/docker-logs/prestashop.log
+
+      - name: Upload Screenshots and logs
         uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: campaign-sanity-${{ matrix.php }}
+          name: sanity-${{ matrix.php }}
           path: |
-            ${{ env.PS_DIR }}/tests/UI/screenshots/
-            ${{ env.PS_DIR }}/var/logs
-            ${{ env.PS_DIR }}/var/docker-logs
+            ./tests/UI/screenshots/
+            ./var/logs
+            ./var/docker-logs
