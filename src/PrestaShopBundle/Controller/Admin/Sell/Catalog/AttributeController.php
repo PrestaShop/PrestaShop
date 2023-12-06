@@ -104,7 +104,7 @@ class AttributeController extends FrameworkBundleAdminController
     public function updatePositionAction(Request $request, int $attributeGroupId)
     {
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
             'parentId' => $attributeGroupId,
         ];
 

@@ -229,7 +229,7 @@ class CarriersController extends FrameworkBundleAdminController
     public function updatePositionAction(Request $request): RedirectResponse
     {
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
         ];
 
         $positionDefinition = $this->get('prestashop.core.grid.carrier.position_definition');

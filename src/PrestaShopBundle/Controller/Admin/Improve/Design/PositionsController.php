@@ -159,7 +159,7 @@ class PositionsController extends FrameworkBundleAdminController
     public function unhookAction(Request $request)
     {
         $validateAdapter = $this->get('prestashop.adapter.validate');
-        $unhooks = $request->request->get('unhooks');
+        $unhooks = $request->request->all('unhooks');
         $context = null;
         if (empty($unhooks)) {
             $moduleId = $request->query->get('moduleId');

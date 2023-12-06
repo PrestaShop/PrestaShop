@@ -218,7 +218,7 @@ class WebserviceController extends FrameworkBundleAdminController
     #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function bulkDeleteAction(Request $request)
     {
-        $webserviceToDelete = $request->request->get('webservice_key_bulk_action');
+        $webserviceToDelete = $request->request->all('webservice_key_bulk_action');
 
         $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase($webserviceToDelete);
@@ -247,7 +247,7 @@ class WebserviceController extends FrameworkBundleAdminController
     #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function bulkEnableAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
+        $webserviceToEnable = $request->request->all('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
         if ($statusModifier->setStatus($webserviceToEnable, true)) {
@@ -272,7 +272,7 @@ class WebserviceController extends FrameworkBundleAdminController
     #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function bulkDisableAction(Request $request)
     {
-        $webserviceToDisable = $request->request->get('webservice_key_bulk_action');
+        $webserviceToDisable = $request->request->all('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
         if ($statusModifier->setStatus($webserviceToDisable, false)) {
