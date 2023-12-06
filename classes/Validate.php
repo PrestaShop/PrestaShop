@@ -538,6 +538,15 @@ class ValidateCore
             return false;
         }
 
+        // RLO characters detection
+        $rloCharacters = "\xE2\x80\xAE";
+
+        // Check if the RLO character is in the string
+        if (strpos($html, $rloCharacters) !== false) {
+            // RLO character found, potential RLO attack
+            return false;
+        }
+
         return true;
     }
 

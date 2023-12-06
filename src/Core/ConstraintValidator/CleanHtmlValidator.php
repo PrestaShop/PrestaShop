@@ -73,8 +73,16 @@ final class CleanHtmlValidator extends ConstraintValidator
 
         // any html attribute starting with "on" (event attributes), as a second layer protection
         $eventAttributeRegex = '/<\s*\w+[^>]*\s(on\w+)=["\'][^"\']*["\']/ims';
+        // RLO characters detection
+        $rloCharacters = "\xE2\x80\xAE";
 
-        if ($containsScriptTags || $containsJavascriptEvents || $iframe || preg_match($eventAttributeRegex, $value)) {
+        // Check if the RLO character is in the string
+        if (strpos($value, $rloCharacters) !== false) {
+            // RLO character found, potential RLO attack
+            return false;
+        }
+
+        if ($containsScriptTags || $containsJavascriptEvents || $iframe || preg_match($eventAttributeRegex, $value) || strpos($value, $rloCharacters) !== false) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter('%s', $this->formatValue($value))
