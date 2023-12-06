@@ -171,6 +171,52 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
         $this->context->getViolations();
     }
 
+    public function testSucceedsWithSpaces()
+    {
+        $htmlTag = '<div
+
+randomattribute="blabla"   attributewithoutvalue
+
+        randomattr="random value">
+
+</div>';
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->assertNoViolation();
+    }
+
+    public function itFailsToHaveOnAttributeWithRandomSpacesAndLines()
+    {
+        $htmlTag = '<div
+randomattribute="blabla"
+
+    onbidule="test" attributewithoutvalue
+
+        randomattr="random value">test
+
+        </div>';
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+
+        $this->context->getViolations();
+    }
+
+    public function itFailsWithRLOInjection()
+    {
+        $htmlTag = '‮<img src=x onerror="alert(\'img\')">';
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+
+        $this->context->getViolations();
+
+    }
+
     protected function createValidator()
     {
         return new CleanHtmlValidator(false);
