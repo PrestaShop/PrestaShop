@@ -31,37 +31,27 @@ namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
-use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 /**
  * This class is responsible for authenticating api calls using the Authorization header
  *
  * @experimental
  */
-class TokenAuthenticator extends AbstractGuardAuthenticator
+class TokenAuthenticator extends AbstractAuthenticator
 {
-    /**
-     * @var AuthorisationServerInterface
-     */
-    private $authorizationServer;
-
-    /**
-     * @var HttpMessageFactoryInterface
-     */
-    private $httpMessageFactory;
-
-    public function __construct(AuthorisationServerInterface $authorizationServer, HttpMessageFactoryInterface $httpMessageFactory)
-    {
-        $this->authorizationServer = $authorizationServer;
-        $this->httpMessageFactory = $httpMessageFactory;
+    public function __construct(
+        private readonly AuthorisationServerInterface $authorizationServer,
+        private readonly HttpMessageFactoryInterface $httpMessageFactory,
+    ) {
     }
 
     public function start(Request $request, AuthenticationException $authException = null): Response
@@ -71,17 +61,18 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request): bool
     {
-        try {
-            $authorization = $request->headers->get('Authorization') ?? null;
-            if (null === $authorization) {
+        $authorization = $request->headers->get('Authorization') ?? null;
+        if (null === $authorization) {
+            return false;
+        }
+        if (str_starts_with(strtolower($authorization), 'bearer ')) {
+            $token = substr($authorization, 7);
+            try {
+                (new Parser(new JoseEncoder()))->parse($token);
+            } catch (InvalidTokenStructure) {
                 return false;
             }
-            $explode = explode(' ', $authorization);
-            if (count($explode) >= 2) {
-                $token = $explode[1];
-                (new Parser(new JoseEncoder()))->parse($token);
-            }
-        } catch (InvalidTokenStructure $e) {
+        } else {
             return false;
         }
 
@@ -89,40 +80,36 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return true;
     }
 
-    public function getCredentials(Request $request): ServerRequestInterface
-    {
-        return $this->httpMessageFactory->createRequest($request);
-    }
-
-    public function getUser($credentials, UserProviderInterface $userProvider): ?UserInterface
-    {
-        return $this->authorizationServer->getUser($credentials);
-    }
-
-    public function checkCredentials($credentials, UserInterface $user): bool
-    {
-        return $this->authorizationServer->isTokenValid($credentials);
-    }
-
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         return $this->returnWWWAuthenticateResponse();
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         // No response returned here, the request should keep running
         return null;
     }
 
-    public function supportsRememberMe(): bool
-    {
-        // Stateless API, remember me feature doesn't apply here
-        return false;
-    }
-
     private function returnWWWAuthenticateResponse(): Response
     {
         return new Response(null, Response::HTTP_UNAUTHORIZED, ['WWW-Authenticate' => 'Bearer']);
+    }
+
+    public function authenticate(Request $request)
+    {
+        $authorization = $request->headers->get('Authorization');
+        if (null === $authorization) {
+            throw new CustomUserMessageAuthenticationException('No API token provided');
+        }
+
+        $credentials = $this->httpMessageFactory->createRequest($request);
+        $userIdentifier = $this->authorizationServer->getUser($credentials);
+
+        if (null === $userIdentifier) {
+            throw new CustomUserMessageAuthenticationException('Invalid credentials');
+        }
+
+        return new SelfValidatingPassport(new UserBadge($userIdentifier->getUserIdentifier()));
     }
 }
