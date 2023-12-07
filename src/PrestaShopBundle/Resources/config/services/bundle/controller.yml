@@ -31,9 +31,6 @@ services:
       stockRepository: "@prestashop.core.api.stock.repository"
       queryParams: "@prestashop.core.api.query_stock_params_collection"
 
-  prestashop.core.api.stock.controller:
-    alias: PrestaShopBundle\Controller\Api\StockController
-
   PrestaShopBundle\Controller\Api\StockMovementController:
     class: PrestaShopBundle\Controller\Api\StockMovementController
     parent: PrestaShopBundle\Controller\Api\ApiController
@@ -52,18 +49,12 @@ services:
     properties:
       supplierRepository: "@prestashop.core.api.supplier.repository"
 
-  prestashop.core.api.supplier.controller:
-    alias: PrestaShopBundle\Controller\Api\SupplierController
-
   PrestaShopBundle\Controller\Api\ManufacturerController:
     class: PrestaShopBundle\Controller\Api\ManufacturerController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
     properties:
       manufacturerRepository: "@prestashop.core.api.manufacturer.repository"
-
-  prestashop.core.api.manufacturer.controller:
-    alias: PrestaShopBundle\Controller\Api\ManufacturerController
 
   PrestaShopBundle\Controller\Api\CategoryController:
     class: PrestaShopBundle\Controller\Api\CategoryController
@@ -72,18 +63,12 @@ services:
     properties:
       categoryRepository: "@prestashop.core.api.category.repository"
 
-  prestashop.core.api.category.controller:
-    alias: PrestaShopBundle\Controller\Api\CategoryController
-
   PrestaShopBundle\Controller\Api\AttributeController:
     class: PrestaShopBundle\Controller\Api\AttributeController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
     properties:
       featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
-
-  prestashop.core.api.attribute.controller:
-    alias: PrestaShopBundle\Controller\Api\AttributeController
 
   PrestaShopBundle\Controller\Api\FeatureController:
     class: PrestaShopBundle\Controller\Api\FeatureController
@@ -92,16 +77,10 @@ services:
     properties:
       featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
 
-  prestashop.core.api.feature.controller:
-    alias: PrestaShopBundle\Controller\Api\FeatureController
-
   PrestaShopBundle\Controller\Api\I18nController:
     class: PrestaShopBundle\Controller\Api\I18nController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
-
-  prestashop.core.api.i18n.controller:
-    alias: PrestaShopBundle\Controller\Api\I18nController
 
   PrestaShopBundle\Controller\Api\TranslationController:
     class: PrestaShopBundle\Controller\Api\TranslationController
@@ -111,16 +90,10 @@ services:
       translationService: "@prestashop.service.translation"
       queryParams: "@prestashop.core.api.query_translation_params_collection"
 
-  prestashop.core.api.translation.controller:
-    alias: PrestaShopBundle\Controller\Api\TranslationController
-
   PrestaShopBundle\Controller\Api\Improve\Design\PositionsController:
     class: PrestaShopBundle\Controller\Api\Improve\Design\PositionsController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
-
-  prestashop.core.api.improve.design.postions.controller:
-    alias: PrestaShopBundle\Controller\Api\Improve\Design\PositionsController
 
   prestashop.core.admin.multistore:
     class: PrestaShopBundle\Controller\Admin\MultistoreController

@@ -22,7 +22,7 @@ api_warehouse_list_warehouses:
     path: /warehouses
     methods: [GET]
     defaults:
-        _controller: prestashop.core.api.warehouse.controller:listWarehousesAction
+        _controller: PrestaShopBundle\Controller\Api\WarehouseController::listWarehousesAction
 
 ```
 
