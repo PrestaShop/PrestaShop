@@ -271,8 +271,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         );
 
         const textResult = await monitoringPage.deleteProductInGrid(page, test.gridName, 1);
-        expect(textResult).to.equal('Product successfully deleted.');
-        // productsPage.successfulDeleteMessage
+        expect(textResult).to.equal(productsPage.successfulDeleteMessage);
 
         const pageTitle = await productsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productsPage.pageTitle);
