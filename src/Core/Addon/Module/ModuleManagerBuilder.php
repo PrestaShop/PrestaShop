@@ -29,11 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Context;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use PrestaShop\PrestaShop\Adapter\HookManager;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -60,10 +58,8 @@ class ModuleManagerBuilder
      */
     public static $moduleManager = null;
     public static $adminModuleDataProvider = null;
-    public static $lecacyContext;
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
-    public static $moduleDataUpdater = null;
     public static $translator = null;
     public static $instance = null;
     public static $cacheProvider = null;
@@ -169,7 +165,6 @@ class ModuleManagerBuilder
         );
 
         self::$legacyLogger = new LegacyLogger();
-        self::$lecacyContext = new LegacyContext();
 
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
@@ -179,9 +174,6 @@ class ModuleManagerBuilder
                 Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
-
-            self::$translator = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater = new ModuleDataUpdater();
         }
     }
 
