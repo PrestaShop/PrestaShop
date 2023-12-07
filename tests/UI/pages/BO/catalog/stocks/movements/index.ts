@@ -220,11 +220,11 @@ class Movements extends BOBasePage {
       status,
     };
     const fn: {categoryClick: PageFunction<{
-      selector: string,
-      categoryName: string,
-      status: boolean
-      // eslint-disable-next-line no-eval
-    }, boolean>} = eval(`({
+        selector: string,
+        categoryName: string,
+        status: boolean
+        // eslint-disable-next-line no-eval
+      }, boolean>} = eval(`({
       async categoryClick(args) {
         /* eslint-env browser */
         const allCategories = [...await document.querySelectorAll(args.selector)];
@@ -311,7 +311,7 @@ class Movements extends BOBasePage {
    * @param status {boolean|null} Status
    * @return {Promise<void>}
    */
-  async setAdvancedFiltersStatus(page: Page, status: boolean|null): Promise<void> {
+  async setAdvancedFiltersStatus(page: Page, status: boolean | null): Promise<void> {
     let selector: string;
 
     if (status === null) {
@@ -359,11 +359,16 @@ class Movements extends BOBasePage {
    * @return {Promise<string>}
    */
   async getTextColumnFromTable(page: Page, row: number, column: string): Promise<string> {
+    let productAttribute = '';
+
+    if (await this.elementVisible(page, `${this.tableProductNameColumn(row)} small`, 1000)) {
+      productAttribute = await this.getTextContent(page, `${this.tableProductNameColumn(row)} small`);
+    }
     switch (column) {
       case 'product_id':
         return this.getTextContent(page, this.tableProductId(row));
       case 'product_name':
-        return this.getTextContent(page, this.tableProductNameColumn(row));
+        return (await this.getTextContent(page, this.tableProductNameColumn(row))).replace(productAttribute, '');
       case 'reference':
         return this.getTextContent(page, this.tableProductReferenceColumn(row));
       case 'quantity':
