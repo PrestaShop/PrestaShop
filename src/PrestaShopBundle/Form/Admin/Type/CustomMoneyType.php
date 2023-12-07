@@ -32,13 +32,18 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Number\LocaleNumberTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
+use PrestaShopBundle\Form\DataTransformer\MoneyToLocalizedStringTransformer;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\DataTransformer\MoneyToLocalizedStringTransformer as SymfonyMoneyToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+// TODO: in 9.0, we need to migrate this class into PrestaShopBundle/Form/Extension/MoneyTypeExtension
 class CustomMoneyType extends AbstractTypeExtension
 {
     public const PRESTASHOP_DECIMALS = 6;
@@ -59,6 +64,11 @@ class CustomMoneyType extends AbstractTypeExtension
     private $currencyRepository;
 
     /**
+     * @var LocaleNumberTransformer
+     */
+    private $localeNumberTransformer;
+
+    /**
      * @param Locale $locale
      * @param int $defaultCurrencyId
      * @param CurrencyRepository $currencyRepository
@@ -66,11 +76,13 @@ class CustomMoneyType extends AbstractTypeExtension
     public function __construct(
         Locale $locale,
         int $defaultCurrencyId,
-        CurrencyRepository $currencyRepository
+        CurrencyRepository $currencyRepository,
+        LocaleNumberTransformer $localeNumberTransformer
     ) {
         $this->locale = $locale;
         $this->defaultCurrencyId = $defaultCurrencyId;
         $this->currencyRepository = $currencyRepository;
+        $this->localeNumberTransformer = $localeNumberTransformer;
     }
 
     public static function getExtendedTypes(): iterable
@@ -93,6 +105,33 @@ class CustomMoneyType extends AbstractTypeExtension
         ]);
 
         $resolver->setAllowedTypes('scale', 'int');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        // We only want to replace/adapt the MoneyToLocalizedStringTransformer, so we save the current transformers
+        // to restore them after replacing the new MoneyToLocalizedStringTransformer.
+        $viewTransformers = $builder->getViewTransformers();
+        $builder->resetViewTransformers();
+
+        foreach ($viewTransformers as $viewTransformer) {
+            if ($viewTransformer instanceof MoneyToLocalizedStringTransformer || $viewTransformer instanceof SymfonyMoneyToLocalizedStringTransformer) {
+                $builder
+                    ->addViewTransformer(new MoneyToLocalizedStringTransformer(
+                        $options['scale'],
+                        $options['grouping'],
+                        $options['rounding_mode'],
+                        $options['divisor'],
+                        $this->localeNumberTransformer->getLocaleForNumberInputs()
+                    ))
+                ;
+            } else {
+                $builder->addViewTransformer($viewTransformer);
+            }
+        }
     }
 
     /**

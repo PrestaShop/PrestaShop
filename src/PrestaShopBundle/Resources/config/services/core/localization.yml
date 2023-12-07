@@ -28,3 +28,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Localization\RTL\StyleSheetProcessorFactory'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Core\Localization\Number\LocaleNumberTransformer:
+    public: false
+    arguments:
+      - '@prestashop.core.localization.locale.context_locale'
