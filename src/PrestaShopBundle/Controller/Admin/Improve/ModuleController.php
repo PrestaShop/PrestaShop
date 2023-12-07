@@ -48,6 +48,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Twig\Environment;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.
@@ -57,6 +58,10 @@ class ModuleController extends ModuleAbstractController
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     public const MAX_MODULES_DISPLAYED = 6;
+
+    public function __construct(private readonly Environment $twig)
+    {
+    }
 
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
@@ -276,7 +281,7 @@ class ModuleController extends ModuleAbstractController
 
             $modulePresenter = $this->get('prestashop.adapter.presenter.module');
             $collectionPresented = $modulePresenter->presentCollection($collectionWithActionUrls);
-            $response[$moduleName]['action_menu_html'] = $this->get('twig')->render(
+            $response[$moduleName]['action_menu_html'] = $this->twig->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $collectionPresented[0],
