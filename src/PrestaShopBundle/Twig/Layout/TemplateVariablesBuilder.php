@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -61,6 +62,7 @@ class TemplateVariablesBuilder
         private readonly ShopContext $shopContext,
         private readonly LegacyControllerContext $legacyControllerContext,
         private readonly MultistoreFeature $multistoreFeature,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -100,7 +102,7 @@ class TemplateVariablesBuilder
     {
         return [
             // base url for javascript router
-            'base_url' => $this->shopContext->getBaseURL(),
+            'base_url' => $this->requestStack->getCurrentRequest()->getBaseUrl(),
             //security token for javascript router
             'token' => $this->tokenManager->getToken($this->userProvider->getUsername())->getValue(),
         ];
