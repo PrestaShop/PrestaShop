@@ -367,7 +367,7 @@ class CommonController extends FrameworkBundleAdminController
     public function updatePositionAction(Request $request): RedirectResponse
     {
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
         ];
 
         /** @var PositionDefinitionInterface $positionDefinition */

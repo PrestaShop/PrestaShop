@@ -965,7 +965,7 @@ class CustomerController extends AbstractAdminController
         }
 
         if (!$request->request->has('customer')
-            || isset($request->request->get('customer')['group_ids'])
+            || isset($request->request->all('customer')['group_ids'])
         ) {
             return;
         }

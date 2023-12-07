@@ -85,7 +85,7 @@ $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
-Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
+Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO);
 
 $catch = str_contains($request->getRequestUri(), Api::API_BASE_PATH);
 
