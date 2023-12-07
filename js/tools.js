@@ -721,8 +721,10 @@ function isCleanHtml(content)
 	var script2 = new RegExp('('+events+')[\s]*=', 'im');
 	var script3 = /.*script\:/im;
 	var script4 = /<[\s]*(i?frame|embed|object)/im;
+  var script5 = /<\s*\w+[^>]*\s(on\w+)=["'][^"']*["']/ims;
+  var rloCharacter = "\xE2\x80\xAE";
 
-	if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content))
+	if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content) || script5.test(content) || content.indexOf(rloCharacter) !== -1)
 		return false;
 
 	return true;
