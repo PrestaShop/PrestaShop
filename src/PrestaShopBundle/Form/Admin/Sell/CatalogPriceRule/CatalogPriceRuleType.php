@@ -142,6 +142,7 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('date_range', DateRangeType::class, [
                 'date_format' => 'YYYY-MM-DD HH:mm:ss',
+                'placeholder' => $this->translator->trans('YYYY-MM-DD HH:mm:ss', [], 'Admin.Global'),
                 'constraints' => [
                     new DateRange([
                         'message' => $this->translator->trans(

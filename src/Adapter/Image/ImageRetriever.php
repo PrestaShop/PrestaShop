@@ -105,20 +105,26 @@ class ImageRetriever
             $imageToCombinations
         ) {
             // Now let's fetch extra information about thumbnail sizes etc. and add this information.
-            // getImage also resolves a proper image legend, if it was missing in $image originally.
-            $image = array_merge(
+            $finalImage = array_merge(
                 $image,
                 $this->getImage($productInstance, $image['id_image'])
             );
 
-            // Assign a list of variants related to the given image
-            if (isset($imageToCombinations[$image['id_image']])) {
-                $image['associatedVariants'] = $imageToCombinations[$image['id_image']];
-            } else {
-                $image['associatedVariants'] = [];
+            // The only special thing we can't just merge is the legend.
+            // If there is a legend on the image object, we will use it.
+            // If not, we keep the one we got from getImage method (product name).
+            if (!empty($image['legend'])) {
+                $finalImage['legend'] = $image['legend'];
             }
 
-            return $image;
+            // Assign a list of variants related to the given image
+            if (isset($imageToCombinations[$image['id_image']])) {
+                $finalImage['associatedVariants'] = $imageToCombinations[$image['id_image']];
+            } else {
+                $finalImage['associatedVariants'] = [];
+            }
+
+            return $finalImage;
         }, $images);
 
         return $images;
