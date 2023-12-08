@@ -56,7 +56,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     /**
      * @param Traversable $denormalizers
      */
-    public function __construct(Traversable $denormalizers)
+    public function __construct(iterable $denormalizers)
     {
         $this->serializer = new SymfonySerializer(iterator_to_array($denormalizers));
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();

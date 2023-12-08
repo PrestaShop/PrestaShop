@@ -28,35 +28,36 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
-use PrestaShop\Decimal\DecimalNumber;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class DecimalNumberDenormalizer implements DenormalizerInterface, NormalizerInterface
+/**
+ * Normalize DateTimeImmutable properties.
+ */
+#[AutoconfigureTag('prestashop.api.normalizers')]
+class DateTimeImmutableNormalizer implements DenormalizerInterface, CacheableSupportsMethodInterface
 {
     public function denormalize($data, string $type, string $format = null, array $context = [])
     {
-        return new DecimalNumber((string) $data);
+        return new \DateTimeImmutable($data);
     }
 
     public function supportsDenormalization($data, string $type, string $format = null)
     {
-        return DecimalNumber::class === $type;
+        return \DateTimeImmutable::class === $type;
     }
 
-    public function normalize($object, string $format = null, array $context = [])
+    /**
+     * This denormalizer supports method only depends on the type, so it is cacheable.
+     * Careful if it is one day turned into a normalizer as well the supports methods must depend on the format
+     * only, or it won't be cacheable anymore and this value should be changed.
+     *
+     * {@inheritDoc}
+     */
+    public function hasCacheableSupportsMethod(): bool
     {
-        if (!($object instanceof DecimalNumber)) {
-            throw new InvalidArgumentException('Expected object to be a ' . DecimalNumber::class);
-        }
-
-        return (float) (string) $object;
-    }
-
-    public function supportsNormalization($data, string $format = null)
-    {
-        return $data instanceof DecimalNumber;
+        return true;
     }
 
     /**
@@ -64,7 +65,7 @@ class DecimalNumberDenormalizer implements DenormalizerInterface, NormalizerInte
      *
      * @return int
      */
-    public static function getDefaultPriority(): int
+    public static function getNormalizerPriority(): int
     {
         return 10;
     }

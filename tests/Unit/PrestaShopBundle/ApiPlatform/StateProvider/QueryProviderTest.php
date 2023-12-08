@@ -40,8 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
-use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
-use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
+use PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer;
+use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberNormalizer;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 use PrestaShopBundle\ApiPlatform\Resources\FoundProduct as FoundProductDto;
 use PrestaShopBundle\ApiPlatform\Resources\Hook;
@@ -64,7 +64,7 @@ class QueryProviderTest extends TestCase
      */
     public function setUp(): void
     {
-        $denormalizers = new \ArrayIterator([new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
+        $denormalizers = new \ArrayIterator([new DecimalNumberNormalizer(), new CQRSApiNormalizer()]);
         $this->serializer = new DomainSerializer($denormalizers);
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus

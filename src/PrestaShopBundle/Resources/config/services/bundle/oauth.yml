@@ -58,4 +58,9 @@ services:
 
   PrestaShopBundle\ApiPlatform\Normalizer\:
     resource: "../../../../ApiPlatform/Normalizer/*"
-    tags: [ 'prestashop.api.denormalizers' ]
+    tags: [ 'prestashop.api.normalizers' ]
+
+  PrestaShopBundle\ApiPlatform\DomainSerializer:
+    class: PrestaShopBundle\ApiPlatform\DomainSerializer
+    arguments:
+      - !tagged_iterator { tag: prestashop.api.normalizers, default_priority_method: getNormalizerPriority }

@@ -30,18 +30,28 @@ namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
 use ReflectionClass;
 use ReflectionMethod;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer as SfObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 /**
- * Used to be automatic injected in PrestaShopBundle/ApiPlatform/DomainSerializer::normalizers with
- * prestashop.api.denormalizers tagged services.
+ * This normalizer is based on the Symfony ObjectNormalizer but it handles some specific normalization for
+ * our CQRS <-> ApiPlatform conversion:
+ *  - handle getters that match the property without starting by get, has, is
+ *  - normalize ValueObject (when it is the root object), it renames the [value] key based on the ValueObject class name
+ *      ex: new ProductId(42); is not normalized as ['value' => 42] but as ['productId' => 42] which most of the time matches
+ *          the following DTO object to denormalize and saves adding some extra mapping
+ *  - normalize attributes that are ValueObject (so not on the root level) to remove the extra value layer
+ *     ex: new CreatedApiAccess(42, 'my_secret') is not normalized as ['apiAccessId' => ['value' => 42], 'secret' => 'my_secret']
+ *         but as ['apiAccessId' => 42, 'secret' => 'my_secret']
+ *         Again this is useful to help the automatic mapping when denormalizing the following DTO in our workflow
  */
-class ObjectDenormalizer extends SfObjectNormalizer
+#[AutoconfigureTag('prestashop.api.normalizers')]
+class CQRSApiNormalizer extends ObjectNormalizer
 {
     protected $protectedObjectClassResolver;
 
@@ -107,16 +117,6 @@ class ObjectDenormalizer extends SfObjectNormalizer
             // Add attributes that match the getter method name exactly
             if ($reflClass->hasProperty($methodName) && $this->isAllowedAttribute($object, $methodName, $format, $context)) {
                 $attributes[] = $methodName;
-            } elseif (str_starts_with($methodName, 'with')) {
-                // Getter methods that start with "with"
-                $attributeName = substr($methodName, 2);
-                if (!$reflClass->hasProperty($attributeName)) {
-                    $attributeName = lcfirst($attributeName);
-                }
-
-                if ($reflClass->hasProperty($attributeName) && $this->isAllowedAttribute($object, $attributeName, $format, $context)) {
-                    $attributes[] = $attributeName;
-                }
             }
         }
 
@@ -144,11 +144,11 @@ class ObjectDenormalizer extends SfObjectNormalizer
     }
 
     /**
-     * ObjectDenormalizer must be the last denormalizer as a fallback.
+     * ObjectNormalizer must be the last normalizer as a fallback.
      *
      * @return int
      */
-    public static function getDefaultPriority(): int
+    public static function getNormalizerPriority(): int
     {
         return -1;
     }
