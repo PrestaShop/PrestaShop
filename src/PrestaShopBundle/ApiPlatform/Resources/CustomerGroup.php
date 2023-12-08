@@ -46,65 +46,57 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
     operations: [
         new CQRSGet(
             uriTemplate: '/customers/group/{customerGroupId}',
-            extraProperties: [
-                // QueryResult format doesn't patch with ApiResource, so we can specify a mapping so that it is normalized with extra fields adapted for the ApiResource DTO
-                'CQRSQueryMapping' => [
-                    // EditableCustomerGroup::$id is normalized as [customerGroupId]
-                    '[id]' => '[customerGroupId]',
-                    // EditableCustomerGroup::$reduction is normalized as [reductionPercent]
-                    '[reduction]' => '[reductionPercent]',
-                ],
-            ],
             CQRSQuery: GetCustomerGroupForEditing::class,
             scopes: [
                 'customer_group_read',
             ],
+            // QueryResult format doesn't match with ApiResource, so we can specify a mapping so that it is normalized with extra fields adapted for the ApiResource DTO
+            CQRSQueryMapping: [
+                // EditableCustomerGroup::$id is normalized as [customerGroupId]
+                '[id]' => '[customerGroupId]',
+                // EditableCustomerGroup::$reduction is normalized as [reductionPercent]
+                '[reduction]' => '[reductionPercent]',
+            ],
         ),
         new CQRSCreate(
             uriTemplate: '/customers/group',
-            extraProperties: [
-                // Here, we use command mapping to adapt the normalized command result for the CQRS query
-                'CQRSCommandMapping' => [
-                    '[groupId]' => '[customerGroupId]',
-                ],
-                // Here, we use query mapping to adapt normalized query result for the ApiPlatform DTO
-                'CQRSQueryMapping' => [
-                    '[id]' => '[customerGroupId]',
-                    '[reduction]' => '[reductionPercent]',
-                ],
-            ],
             CQRSCommand: AddCustomerGroupCommand::class,
             CQRSQuery: GetCustomerGroupForEditing::class,
             scopes: [
                 'customer_group_write',
             ],
+            // Here, we use query mapping to adapt normalized query result for the ApiPlatform DTO
+            CQRSQueryMapping: [
+                '[id]' => '[customerGroupId]',
+                '[reduction]' => '[reductionPercent]',
+            ],
+            // Here, we use command mapping to adapt the normalized command result for the CQRS query
+            CQRSCommandMapping: [
+                '[groupId]' => '[customerGroupId]',
+            ],
         ),
         new CQRSUpdate(
             uriTemplate: '/customers/group/{customerGroupId}',
-            extraProperties: [
-                // Here we use the ApiResource DTO mapping to transform the normalized query result
-                'ApiResourceMapping' => [
-                    '[id]' => '[customerGroupId]',
-                    '[reduction]' => '[reductionPercent]',
-                ],
-            ],
             CQRSCommand: EditCustomerGroupCommand::class,
             CQRSQuery: GetCustomerGroupForEditing::class,
             scopes: [
                 'customer_group_write',
             ],
+            // Here we use the ApiResource DTO mapping to transform the normalized query result
+            ApiResourceMapping: [
+                '[id]' => '[customerGroupId]',
+                '[reduction]' => '[reductionPercent]',
+            ],
         ),
         new CQRSDelete(
             uriTemplate: '/customers/group/{customerGroupId}',
-            extraProperties: [
-                // Here, we use query mapping to adapt URI parameters to the expected constructor parameter name
-                'CQRSQueryMapping' => [
-                    '[customerGroupId]' => '[groupId]',
-                ],
-            ],
             CQRSQuery: DeleteCustomerGroupCommand::class,
             scopes: [
                 'customer_group_write',
+            ],
+            // Here, we use query mapping to adapt URI parameters to the expected constructor parameter name
+            CQRSQueryMapping: [
+                '[customerGroupId]' => '[groupId]',
             ],
         ),
     ],
