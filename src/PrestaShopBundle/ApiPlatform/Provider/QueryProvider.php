@@ -43,7 +43,7 @@ class QueryProvider implements ProviderInterface
 
     public function __construct(
         protected readonly CommandBusInterface $queryBus,
-        protected readonly DomainSerializer $apiPlatformSerializer,
+        protected readonly DomainSerializer $domainSerializer,
     ) {
     }
 
@@ -60,16 +60,17 @@ class QueryProvider implements ProviderInterface
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        $queryClass = $this->getQueryClass($operation);
-        if (null === $queryClass) {
+        $CQRSQueryClass = $this->getCQRSQueryClass($operation);
+        if (null === $CQRSQueryClass) {
             throw new CQRSQueryNotFoundException(sprintf('Resource %s has no CQRS query defined.', $operation->getClass()));
         }
 
         $filters = $context['filters'] ?? [];
         $queryParameters = array_merge($uriVariables, $filters);
-        $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
-        $queryResult = $this->queryBus->handle($query);
 
-        return $this->denormalizeQueryResult($queryResult, $operation);
+        $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [DomainSerializer::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
+        $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
+
+        return $this->denormalizeQueryResult($CQRSQueryResult, $operation);
     }
 }

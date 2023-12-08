@@ -33,26 +33,55 @@ use ApiPlatform\Metadata\Operation;
 
 trait QueryResultSerializerTrait
 {
-    protected readonly DomainSerializer $apiPlatformSerializer;
+    protected readonly DomainSerializer $domainSerializer;
 
-    protected function denormalizeQueryResult($queryResult, Operation $operation)
+    /**
+     * @param mixed $CQRSQueryResult this is the QueryResult DTO returned by a CQRS query
+     * @param Operation $operation
+     *
+     * @return mixed It returns the ApiResource DTO object
+     */
+    protected function denormalizeQueryResult($CQRSQueryResult, Operation $operation)
     {
-        // Handle return type
-        $normalizationMapping = $operation->getExtraProperties()['queryNormalizationMapping'] ?? null;
-        $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult, null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]);
+        // Start by normalizing the QueryResult object into normalized array
+        $normalizedQueryResult = $this->domainSerializer->normalize($CQRSQueryResult, null, [DomainSerializer::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
 
         if ($operation instanceof CollectionOperationInterface) {
             foreach ($normalizedQueryResult as $key => $result) {
-                $normalizedQueryResult[$key] = $this->apiPlatformSerializer->denormalize($result, $operation->getClass());
+                $normalizedQueryResult[$key] = $this->domainSerializer->denormalize($result, $operation->getClass(), null, [DomainSerializer::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
             }
 
             return $normalizedQueryResult;
         }
 
-        return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
+        return $this->domainSerializer->denormalize($normalizedQueryResult, $operation->getClass(), null, [DomainSerializer::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
     }
 
-    protected function getQueryClass(Operation $operation): ?string
+    /**
+     * Return the mapping used for normalizing AND denormalizing the ApiResource DTO, if specified.
+     *
+     * @param Operation $operation
+     *
+     * @return array|null
+     */
+    protected function getApiResourceMapping(Operation $operation): ?array
+    {
+        return $operation->getExtraProperties()['ApiResourceMapping'] ?? null;
+    }
+
+    /**
+     * Return the mapping used for normalizing AND denormalizing the CQRS query, if specified.
+     *
+     * @param Operation $operation
+     *
+     * @return array|null
+     */
+    protected function getCQRSQueryMapping(Operation $operation): ?array
+    {
+        return $operation->getExtraProperties()['CQRSQueryMapping'] ?? null;
+    }
+
+    protected function getCQRSQueryClass(Operation $operation): ?string
     {
         return $operation->getExtraProperties()['CQRSQuery'] ?? null;
     }
