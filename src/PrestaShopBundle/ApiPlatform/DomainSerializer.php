@@ -69,6 +69,11 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     public function denormalize($data, string $type, string $format = null, array $context = []): mixed
     {
+        // Before anything perform the mapping if specified
+        if (!empty($context[self::NORMALIZATION_MAPPING])) {
+            $this->mapNormalizedData($data, $context[self::NORMALIZATION_MAPPING]);
+        }
+
         $dataConstruct = [];
         $reflectionClass = $this->getReflectionClass($type);
         if ($reflectionClass->getConstructor()) {

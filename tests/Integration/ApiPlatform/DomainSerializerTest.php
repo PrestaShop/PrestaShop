@@ -46,10 +46,10 @@ class DomainSerializerTest extends KernelTestCase
     /**
      * @dataProvider getExpectedDenormalizedData
      */
-    public function testDenormalize($dataToDenormalize, $denormalizedObject): void
+    public function testDenormalize($dataToDenormalize, $denormalizedObject, ?array $normalizationMapping = []): void
     {
         $serializer = self::getContainer()->get(DomainSerializer::class);
-        self::assertEquals($denormalizedObject, $serializer->denormalize($dataToDenormalize, get_class($denormalizedObject)));
+        self::assertEquals($denormalizedObject, $serializer->denormalize($dataToDenormalize, get_class($denormalizedObject), null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]));
     }
 
     public function getExpectedDenormalizedData()
@@ -125,9 +125,11 @@ class DomainSerializerTest extends KernelTestCase
         yield 'value object with wrong parameter converted via mapping' => [
             [
                 'groupId' => 51,
-                'customerGroupId' => 51,
             ],
             $customerGroupQuery,
+            [
+                '[groupId]' => '[customerGroupId]',
+            ],
         ];
     }
 
@@ -180,7 +182,7 @@ class DomainSerializerTest extends KernelTestCase
                 1,
             ],
         );
-        yield 'normalize object with getter not starting by get and mapping for help' => [
+        yield 'normalize object with displayPriceTaxExcluded that is a getter not starting by get' => [
             $editableCustomerGroup,
             [
                 'id' => 42,
@@ -194,6 +196,27 @@ class DomainSerializerTest extends KernelTestCase
                 'shopIds' => [
                     1,
                 ],
+            ],
+        ];
+
+        yield 'normalize object with displayPriceTaxExcluded that is a getter not starting by get and with extra mapping' => [
+            $editableCustomerGroup,
+            [
+                'id' => 42,
+                'localizedNames' => [
+                    1 => 'Group',
+                    2 => 'Groupe',
+                ],
+                'reduction' => 10.67,
+                'reductionPercent' => 10.67,
+                'displayPriceTaxExcluded' => false,
+                'showPrice' => true,
+                'shopIds' => [
+                    1,
+                ],
+            ],
+            [
+                '[reduction]' => '[reductionPercent]',
             ],
         ];
     }
