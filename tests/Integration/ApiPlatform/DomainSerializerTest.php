@@ -131,6 +131,31 @@ class DomainSerializerTest extends KernelTestCase
                 '[groupId]' => '[customerGroupId]',
             ],
         ];
+
+        $customerGroupQuery = new GetCustomerGroupForEditing(51);
+        yield 'value object with proper parameter, extra mapping for normalization should ignore absent data and not override it with null' => [
+            [
+                'customerGroupId' => 51,
+            ],
+            $customerGroupQuery,
+            [
+                '[id]' => '[customerGroupId]',
+                '[reduction]' => '[reductionPercent]',
+            ],
+        ];
+
+        $customerGroupQuery = new GetCustomerGroupForEditing(51);
+        yield 'value object with wrong parameter plus extra mapping for normalization' => [
+            [
+                'groupId' => 51,
+            ],
+            $customerGroupQuery,
+            [
+                '[groupId]' => '[customerGroupId]',
+                '[id]' => '[customerGroupId]',
+                '[reduction]' => '[reductionPercent]',
+            ],
+        ];
     }
 
     /**

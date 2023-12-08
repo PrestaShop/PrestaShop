@@ -34,7 +34,7 @@ use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
@@ -46,7 +46,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 
     protected SymfonySerializer $serializer;
 
-    protected PropertyAccessor $propertyAccessor;
+    protected PropertyAccessorInterface $propertyAccessor;
 
     /**
      * @var array<string, ReflectionClass>
@@ -59,7 +59,13 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     public function __construct(iterable $denormalizers)
     {
         $this->serializer = new SymfonySerializer(iterator_to_array($denormalizers));
-        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+        // Invalid (or absent) indexes or properties in array/objects are invalid, therefore ignored when checking isReadable
+        // which is important for the normalization mapping process
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->enableExceptionOnInvalidIndex()
+            ->enableExceptionOnInvalidPropertyPath()
+            ->getPropertyAccessor()
+        ;
     }
 
     /**
