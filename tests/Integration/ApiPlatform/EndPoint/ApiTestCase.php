@@ -26,13 +26,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\ApiPlatform;
+namespace Tests\Integration\ApiPlatform\EndPoint;
 
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
 use Tests\Resources\DatabaseDump;
 
-abstract class ApiTestCase extends \ApiPlatform\Symfony\Bundle\Test\ApiTestCase
+abstract class ApiTestCase extends ApiPlatformTestCase
 {
     protected const CLIENT_ID = 'test_client_id';
     protected const CLIENT_NAME = 'test_client_name';

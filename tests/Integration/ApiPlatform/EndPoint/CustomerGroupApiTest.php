@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\ApiPlatform;
+namespace Tests\Integration\ApiPlatform\EndPoint;
 
 use Context;
 use Group;
