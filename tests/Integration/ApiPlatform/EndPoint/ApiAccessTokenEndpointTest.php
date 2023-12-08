@@ -38,7 +38,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
             [
                 'hook_read',
                 'hook_write',
-                'api_access_read',
+                'customer_group_read',
             ],
             9999
         );
@@ -59,7 +59,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
             'scope' => [
                 'hook_read',
                 'hook_write',
-                'api_access_read',
+                'customer_group_read',
             ],
         ]];
         $options = ['extra' => $parameters];
@@ -73,7 +73,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'is_authenticated',
                 'hook_read',
                 'hook_write',
-                'api_access_read',
+                'customer_group_read',
             ],
             $decodedToken->scopes
         );
@@ -118,7 +118,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
             'client_secret' => static::$clientSecret,
             'grant_type' => 'client_credentials',
             'scope' => [
-                'api_access_write',
+                'customer_group_write',
             ],
         ]];
         $options = ['extra' => $parameters];
@@ -129,7 +129,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
         $this->assertEquals([
             'error' => 'access_denied',
             'error_description' => 'The resource owner or authorization server denied the request.',
-            'hint' => 'Usage of scope `api_access_write` is not allowed for this client',
+            'hint' => 'Usage of scope `customer_group_write` is not allowed for this client',
             'message' => 'The resource owner or authorization server denied the request.',
         ], $decodedResponse);
     }
