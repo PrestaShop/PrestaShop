@@ -113,6 +113,8 @@ class CQRSDelete extends AbstractCQRSOperation
         array $extraProperties = [],
         ?string $CQRSQuery = null,
         array $scopes = [],
+        ?array $CQRSQueryMapping = null,
+        ?array $ApiResourceMapping = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_DELETE;

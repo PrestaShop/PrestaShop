@@ -109,6 +109,8 @@ abstract class AbstractCQRSOperation extends HttpOperation
         array $extraProperties = [],
         ?string $CQRSQuery = null,
         array $scopes = [],
+        ?array $CQRSQueryMapping = null,
+        ?array $ApiResourceMapping = null,
     ) {
         $passedArguments = \get_defined_vars();
 
@@ -118,15 +120,25 @@ abstract class AbstractCQRSOperation extends HttpOperation
         }
 
         if (!empty($CQRSQuery)) {
-            if (!empty($passedArguments['extraProperties']['CQRSQuery']) && $passedArguments['extraProperties']['CQRSQuery'] !== $CQRSQuery) {
-                throw new InvalidArgumentException('Specifying an extra property CQRSQuery and a CQRSQuery argument that are different is invalid');
-            }
+            $this->checkArgumentAndExtraParameterValidity('CQRSQuery', $CQRSQuery, $passedArguments['extraProperties']);
             $passedArguments['extraProperties']['CQRSQuery'] = $CQRSQuery;
+        }
+
+        if (!empty($CQRSQueryMapping)) {
+            $this->checkArgumentAndExtraParameterValidity('CQRSQueryMapping', $CQRSQueryMapping, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['CQRSQueryMapping'] = $CQRSQueryMapping;
+        }
+
+        if (!empty($ApiResourceMapping)) {
+            $this->checkArgumentAndExtraParameterValidity('ApiResourceMapping', $ApiResourceMapping, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['ApiResourceMapping'] = $ApiResourceMapping;
         }
 
         // Remove custom arguments
         unset($passedArguments['scopes']);
         unset($passedArguments['CQRSQuery']);
+        unset($passedArguments['CQRSQueryMapping']);
+        unset($passedArguments['ApiResourceMapping']);
 
         parent::__construct(...$passedArguments);
     }
@@ -155,5 +167,42 @@ abstract class AbstractCQRSOperation extends HttpOperation
         $self->extraProperties['CQRSQuery'] = $CQRSQuery;
 
         return $self;
+    }
+
+    public function getCQRSQueryMapping(): ?array
+    {
+        return $this->extraProperties['CQRSQueryMapping'] ?? null;
+    }
+
+    public function withCQRSQueryMapping(array $CQRSQuery): self
+    {
+        $self = clone $this;
+        $self->extraProperties['CQRSQueryMapping'] = $CQRSQuery;
+
+        return $self;
+    }
+
+    public function getApiResourceMapping(): ?array
+    {
+        return $this->extraProperties['ApiResourceMapping'] ?? null;
+    }
+
+    public function withApiResourceMapping(array $CQRSQuery): self
+    {
+        $self = clone $this;
+        $self->extraProperties['ApiResourceMapping'] = $CQRSQuery;
+
+        return $self;
+    }
+
+    protected function checkArgumentAndExtraParameterValidity(string $extraParameterName, $constructorParameterValue, array $extraProperties): void
+    {
+        if (!empty($extraProperties[$extraParameterName]) && $extraProperties[$extraParameterName] !== $constructorParameterValue) {
+            throw new InvalidArgumentException(sprintf(
+                'Specifying an extra property %s and a %s argument that are different is invalid',
+                $extraParameterName,
+                $extraParameterName
+            ));
+        }
     }
 }

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
-use ApiPlatform\Exception\InvalidArgumentException;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
@@ -113,17 +112,23 @@ class CQRSCommand extends AbstractCQRSOperation
         array $extraProperties = [],
         ?string $CQRSCommand = null,
         ?string $CQRSQuery = null,
-        array $scopes = []
+        array $scopes = [],
+        ?array $CQRSQueryMapping = null,
+        ?array $ApiResourceMapping = null,
+        ?array $CQRSCommandMapping = null,
     ) {
         $passedArguments = \get_defined_vars();
 
         $passedArguments['processor'] = $processor ?? CommandProcessor::class;
 
         if (!empty($CQRSCommand)) {
-            if (!empty($passedArguments['extraProperties']['CQRSCommand']) && $passedArguments['extraProperties']['CQRSCommand'] !== $CQRSCommand) {
-                throw new InvalidArgumentException('Specifying an extra property CQRSCommand and a CQRSCommand argument that are different is invalid');
-            }
+            $this->checkArgumentAndExtraParameterValidity('CQRSCommand', $CQRSCommand, $passedArguments['extraProperties']);
             $passedArguments['extraProperties']['CQRSCommand'] = $CQRSCommand;
+        }
+
+        if (!empty($CQRSCommandMapping)) {
+            $this->checkArgumentAndExtraParameterValidity('CQRSCommandMapping', $CQRSCommandMapping, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['CQRSCommandMapping'] = $CQRSCommandMapping;
         }
 
         // If a CQRSQuery is specified without a provider we use the QueryProvider by default
@@ -133,6 +138,7 @@ class CQRSCommand extends AbstractCQRSOperation
 
         // Remove custom arguments
         unset($passedArguments['CQRSCommand']);
+        unset($passedArguments['CQRSCommandMapping']);
 
         parent::__construct(...$passedArguments);
     }
@@ -157,6 +163,19 @@ class CQRSCommand extends AbstractCQRSOperation
         if (empty($self->provider)) {
             $self->provider = QueryProvider::class;
         }
+
+        return $self;
+    }
+
+    public function getCQRSCommandMapping(): ?array
+    {
+        return $this->extraProperties['CQRSCommandMapping'] ?? null;
+    }
+
+    public function withCQRSCommandMapping(array $CQRSQuery): self
+    {
+        $self = clone $this;
+        $self->extraProperties['CQRSCommandMapping'] = $CQRSQuery;
 
         return $self;
     }

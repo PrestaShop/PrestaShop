@@ -171,4 +171,108 @@ class CQRSDeleteTest extends TestCase
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property CQRSQuery and a CQRSQuery argument that are different is invalid', $caughtException->getMessage());
     }
+
+    public function testCQRSQueryMapping(): void
+    {
+        // CQRS query mapping parameters in constructor
+        $queryMapping = ['[id]' => '[queryId]'];
+        $operation = new CQRSDelete(
+            CQRSQueryMapping: $queryMapping,
+        );
+
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // Extra properties parameters in constructor
+        $operation = new CQRSDelete(
+            extraProperties: ['CQRSQueryMapping' => $queryMapping],
+        );
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
+        $operation = new CQRSDelete(
+            extraProperties: ['CQRSQueryMapping' => $queryMapping],
+            CQRSQueryMapping: $queryMapping,
+        );
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // Use with method, returned object is a clone All values are replaced
+        $newMapping = ['[queryId' => '[valueObjectId]'];
+        $operation2 = $operation->withCQRSQueryMapping($newMapping);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['CQRSQueryMapping' => $newMapping], $operation2->getExtraProperties());
+        $this->assertEquals($newMapping, $operation2->getCQRSQueryMapping());
+        // Initial operation not modified of course
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSDelete(
+                extraProperties: ['CQRSQueryMapping' => $queryMapping],
+                CQRSQueryMapping: $newMapping,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property CQRSQueryMapping and a CQRSQueryMapping argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testApiResourceMapping(): void
+    {
+        // Api resource mapping parameters in constructor
+        $resourceMapping = ['[id]' => '[queryId]'];
+        $operation = new CQRSDelete(
+            ApiResourceMapping: $resourceMapping,
+        );
+
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // Extra properties parameters in constructor
+        $operation = new CQRSDelete(
+            extraProperties: ['ApiResourceMapping' => $resourceMapping],
+        );
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // Extra properties AND Api resource mapping parameters in constructor, both values are equals no problem
+        $operation = new CQRSDelete(
+            extraProperties: ['ApiResourceMapping' => $resourceMapping],
+            ApiResourceMapping: $resourceMapping,
+        );
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // Use with method, returned object is a clone All values are replaced
+        $newMapping = ['[queryId' => '[valueObjectId]'];
+        $operation2 = $operation->withApiResourceMapping($newMapping);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['ApiResourceMapping' => $newMapping], $operation2->getExtraProperties());
+        $this->assertEquals($newMapping, $operation2->getApiResourceMapping());
+        // Initial operation not modified of course
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSDelete(
+                extraProperties: ['ApiResourceMapping' => $resourceMapping],
+                ApiResourceMapping: $newMapping,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property ApiResourceMapping and a ApiResourceMapping argument that are different is invalid', $caughtException->getMessage());
+    }
 }

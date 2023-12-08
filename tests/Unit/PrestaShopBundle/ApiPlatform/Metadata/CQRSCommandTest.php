@@ -26,10 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Metadata;
+namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSCommand;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
@@ -146,6 +147,58 @@ class CQRSCommandTest extends TestCase
         $this->assertEquals('Specifying an extra property CQRSCommand and a CQRSCommand argument that are different is invalid', $caughtException->getMessage());
     }
 
+    public function testCQRSCommandMapping(): void
+    {
+        // CQRS query mapping parameters in constructor
+        $commandMapping = ['[id]' => '[queryId]'];
+        $operation = new CQRSCommand(
+            CQRSCommandMapping: $commandMapping,
+        );
+
+        $this->assertEquals(['CQRSCommandMapping' => $commandMapping], $operation->getExtraProperties());
+        $this->assertEquals($commandMapping, $operation->getCQRSCommandMapping());
+
+        // Extra properties parameters in constructor
+        $operation = new CQRSCommand(
+            extraProperties: ['CQRSCommandMapping' => $commandMapping],
+        );
+        $this->assertEquals(['CQRSCommandMapping' => $commandMapping], $operation->getExtraProperties());
+        $this->assertEquals($commandMapping, $operation->getCQRSCommandMapping());
+
+        // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
+        $operation = new CQRSCommand(
+            extraProperties: ['CQRSCommandMapping' => $commandMapping],
+            CQRSCommandMapping: $commandMapping,
+        );
+        $this->assertEquals(['CQRSCommandMapping' => $commandMapping], $operation->getExtraProperties());
+        $this->assertEquals($commandMapping, $operation->getCQRSCommandMapping());
+
+        // Use with method, returned object is a clone All values are replaced
+        $newCommandMapping = ['[queryId' => '[valueObjectId]'];
+        $operation2 = $operation->withCQRSCommandMapping($newCommandMapping);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['CQRSCommandMapping' => $newCommandMapping], $operation2->getExtraProperties());
+        $this->assertEquals($newCommandMapping, $operation2->getCQRSCommandMapping());
+        // Initial operation not modified of course
+        $this->assertEquals(['CQRSCommandMapping' => $commandMapping], $operation->getExtraProperties());
+        $this->assertEquals($commandMapping, $operation->getCQRSCommandMapping());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSCommand(
+                extraProperties: ['CQRSCommandMapping' => $commandMapping],
+                CQRSCommandMapping: $newCommandMapping,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property CQRSCommandMapping and a CQRSCommandMapping argument that are different is invalid', $caughtException->getMessage());
+    }
+
     public function testCQRSQuery(): void
     {
         // CQRS query parameters in constructor
@@ -217,5 +270,109 @@ class CQRSCommandTest extends TestCase
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property CQRSQuery and a CQRSQuery argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testCQRSQueryMapping(): void
+    {
+        // CQRS query mapping parameters in constructor
+        $queryMapping = ['[id]' => '[queryId]'];
+        $operation = new CQRSCommand(
+            CQRSQueryMapping: $queryMapping,
+        );
+
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // Extra properties parameters in constructor
+        $operation = new CQRSCommand(
+            extraProperties: ['CQRSQueryMapping' => $queryMapping],
+        );
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
+        $operation = new CQRSCommand(
+            extraProperties: ['CQRSQueryMapping' => $queryMapping],
+            CQRSQueryMapping: $queryMapping,
+        );
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // Use with method, returned object is a clone All values are replaced
+        $newMapping = ['[queryId' => '[valueObjectId]'];
+        $operation2 = $operation->withCQRSQueryMapping($newMapping);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['CQRSQueryMapping' => $newMapping], $operation2->getExtraProperties());
+        $this->assertEquals($newMapping, $operation2->getCQRSQueryMapping());
+        // Initial operation not modified of course
+        $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSCommand(
+                extraProperties: ['CQRSQueryMapping' => $queryMapping],
+                CQRSQueryMapping: $newMapping,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property CQRSQueryMapping and a CQRSQueryMapping argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testApiResourceMapping(): void
+    {
+        // Api resource mapping parameters in constructor
+        $resourceMapping = ['[id]' => '[queryId]'];
+        $operation = new CQRSCommand(
+            ApiResourceMapping: $resourceMapping,
+        );
+
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // Extra properties parameters in constructor
+        $operation = new CQRSCommand(
+            extraProperties: ['ApiResourceMapping' => $resourceMapping],
+        );
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // Extra properties AND Api resource mapping parameters in constructor, both values are equals no problem
+        $operation = new CQRSCommand(
+            extraProperties: ['ApiResourceMapping' => $resourceMapping],
+            ApiResourceMapping: $resourceMapping,
+        );
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // Use with method, returned object is a clone All values are replaced
+        $newMapping = ['[queryId' => '[valueObjectId]'];
+        $operation2 = $operation->withApiResourceMapping($newMapping);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['ApiResourceMapping' => $newMapping], $operation2->getExtraProperties());
+        $this->assertEquals($newMapping, $operation2->getApiResourceMapping());
+        // Initial operation not modified of course
+        $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSCommand(
+                extraProperties: ['ApiResourceMapping' => $resourceMapping],
+                ApiResourceMapping: $newMapping,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property ApiResourceMapping and a ApiResourceMapping argument that are different is invalid', $caughtException->getMessage());
     }
 }
