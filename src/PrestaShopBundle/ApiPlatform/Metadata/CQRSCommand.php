@@ -148,7 +148,7 @@ class CQRSCommand extends AbstractCQRSOperation
         return $this->extraProperties['CQRSCommand'] ?? null;
     }
 
-    public function withCQRSCommand(string $CQRSCommand): self
+    public function withCQRSCommand(string $CQRSCommand): static
     {
         $self = clone $this;
         $self->extraProperties['CQRSCommand'] = $CQRSCommand;
@@ -156,7 +156,7 @@ class CQRSCommand extends AbstractCQRSOperation
         return $self;
     }
 
-    public function withCQRSQuery(string $CQRSQuery): self
+    public function withCQRSQuery(string $CQRSQuery): static
     {
         $self = clone $this;
         $self->extraProperties['CQRSQuery'] = $CQRSQuery;
@@ -172,7 +172,7 @@ class CQRSCommand extends AbstractCQRSOperation
         return $this->extraProperties['CQRSCommandMapping'] ?? null;
     }
 
-    public function withCQRSCommandMapping(array $CQRSQuery): self
+    public function withCQRSCommandMapping(array $CQRSQuery): static
     {
         $self = clone $this;
         $self->extraProperties['CQRSCommandMapping'] = $CQRSQuery;

@@ -148,7 +148,7 @@ abstract class AbstractCQRSOperation extends HttpOperation
         return $this->extraProperties['scopes'] ?? [];
     }
 
-    public function withScopes(array $scopes): self
+    public function withScopes(array $scopes): static
     {
         $self = clone $this;
         $self->extraProperties['scopes'] = $scopes;
@@ -161,7 +161,7 @@ abstract class AbstractCQRSOperation extends HttpOperation
         return $this->extraProperties['CQRSQuery'] ?? null;
     }
 
-    public function withCQRSQuery(string $CQRSQuery): self
+    public function withCQRSQuery(string $CQRSQuery): static
     {
         $self = clone $this;
         $self->extraProperties['CQRSQuery'] = $CQRSQuery;
@@ -174,7 +174,7 @@ abstract class AbstractCQRSOperation extends HttpOperation
         return $this->extraProperties['CQRSQueryMapping'] ?? null;
     }
 
-    public function withCQRSQueryMapping(array $CQRSQuery): self
+    public function withCQRSQueryMapping(array $CQRSQuery): static
     {
         $self = clone $this;
         $self->extraProperties['CQRSQueryMapping'] = $CQRSQuery;
@@ -187,7 +187,7 @@ abstract class AbstractCQRSOperation extends HttpOperation
         return $this->extraProperties['ApiResourceMapping'] ?? null;
     }
 
-    public function withApiResourceMapping(array $CQRSQuery): self
+    public function withApiResourceMapping(array $CQRSQuery): static
     {
         $self = clone $this;
         $self->extraProperties['ApiResourceMapping'] = $CQRSQuery;
