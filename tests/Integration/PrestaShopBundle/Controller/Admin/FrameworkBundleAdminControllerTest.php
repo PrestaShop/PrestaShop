@@ -213,6 +213,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             ->getMock();
 
         $mockFeatureFlagStateChecker->method('isEnabled')->willReturn(false);
+        $mockFeatureFlagStateChecker->method('getEnabledFeatureFlags')->willReturn([]);
 
         self::$kernel->getContainer()->set(FeatureFlagRepository::class, $mockFeatureFlagRepository);
         self::$kernel->getContainer()->set(FeatureFlagStateCheckerInterface::class, $mockFeatureFlagStateChecker);

@@ -26,24 +26,24 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
+namespace PrestaShopBundle\EventListener;
 
-interface FeatureFlagStateCheckerInterface
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+
+class FeatureFlagAttributeListener
 {
-    /**
-     * Retrieve if the feature flag is enabled.
-     */
-    public function isEnabled(string $featureFlagName): bool;
+    public function __construct(
+        private FeatureFlagStateCheckerInterface $featureFlagStateChecker
+    ) {
+    }
 
-    /**
-     * Retrieve if the feature flag is enabled.
-     */
-    public function isDisabled(string $featureFlagName): bool;
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
 
-    /**
-     * Returns the list of all enabled feature flags by name.
-     *
-     * @return string[]
-     */
-    public function getEnabledFeatureFlags(): array;
+        $event->getRequest()->attributes->set('enabledFeatureFlags', $this->featureFlagStateChecker->getEnabledFeatureFlags());
+    }
 }
