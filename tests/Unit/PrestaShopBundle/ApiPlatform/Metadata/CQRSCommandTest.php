@@ -375,4 +375,99 @@ class CQRSCommandTest extends TestCase
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property ApiResourceMapping and a ApiResourceMapping argument that are different is invalid', $caughtException->getMessage());
     }
+
+    public function testMultipleArguments(): void
+    {
+        $resourceMapping = ['[id]' => '[queryId]'];
+        $queryMapping = ['[id]' => '[queryId]'];
+        $commandMapping = ['[uriId]' => ['commandId']];
+        $operation = new CQRSCommand(
+            extraProperties: [
+                'CQRSQuery' => 'My\\Namespace\\MyQuery',
+                'scopes' => ['master_scope'],
+                'CQRSCommandMapping' => $commandMapping,
+            ],
+            CQRSCommand: 'My\\Namespace\\MyCommand',
+            scopes: ['scope1', 'scope2'],
+            CQRSQueryMapping: $queryMapping,
+            ApiResourceMapping: $resourceMapping,
+        );
+
+        $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
+        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
+        $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
+        $this->assertEquals($commandMapping, $operation->getCQRSCommandMapping());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+        $this->assertEquals(['master_scope', 'scope1', 'scope2'], $operation->getScopes());
+        $this->assertEquals([
+            'CQRSQuery' => 'My\\Namespace\\MyQuery',
+            'CQRSCommand' => 'My\\Namespace\\MyCommand',
+            'scopes' => ['master_scope', 'scope1', 'scope2'],
+            'CQRSQueryMapping' => $queryMapping,
+            'ApiResourceMapping' => $resourceMapping,
+            'CQRSCommandMapping' => $commandMapping,
+        ], $operation->getExtraProperties());
+
+        // Using with clones the object, only one extra parameter is modified
+        $operation2 = $operation->withCQRSCommand('My\\Namespace\\MyNewCommand');
+        $operation3 = $operation2->withScopes(['scope3']);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertNotEquals($operation2, $operation3);
+        $this->assertNotEquals($operation3, $operation);
+
+        // Check first clone operation2
+        $this->assertEquals(CommandProcessor::class, $operation2->getProcessor());
+        $this->assertEquals(QueryProvider::class, $operation2->getProvider());
+        $this->assertEquals('My\\Namespace\\MyQuery', $operation2->getCQRSQuery());
+        $this->assertEquals('My\\Namespace\\MyNewCommand', $operation2->getCQRSCommand());
+        $this->assertEquals($commandMapping, $operation2->getCQRSCommandMapping());
+        $this->assertEquals($queryMapping, $operation2->getCQRSQueryMapping());
+        $this->assertEquals($resourceMapping, $operation2->getApiResourceMapping());
+        $this->assertEquals(['master_scope', 'scope1', 'scope2'], $operation2->getScopes());
+        $this->assertEquals([
+            'CQRSQuery' => 'My\\Namespace\\MyQuery',
+            'CQRSCommand' => 'My\\Namespace\\MyNewCommand',
+            'scopes' => ['master_scope', 'scope1', 'scope2'],
+            'CQRSQueryMapping' => $queryMapping,
+            'ApiResourceMapping' => $resourceMapping,
+            'CQRSCommandMapping' => $commandMapping,
+        ], $operation2->getExtraProperties());
+
+        // Check second clone operation3
+        $this->assertEquals(CommandProcessor::class, $operation3->getProcessor());
+        $this->assertEquals(QueryProvider::class, $operation3->getProvider());
+        $this->assertEquals('My\\Namespace\\MyQuery', $operation3->getCQRSQuery());
+        $this->assertEquals('My\\Namespace\\MyNewCommand', $operation3->getCQRSCommand());
+        $this->assertEquals($commandMapping, $operation3->getCQRSCommandMapping());
+        $this->assertEquals($queryMapping, $operation3->getCQRSQueryMapping());
+        $this->assertEquals($resourceMapping, $operation3->getApiResourceMapping());
+        $this->assertEquals(['scope3'], $operation3->getScopes());
+        $this->assertEquals([
+            'CQRSQuery' => 'My\\Namespace\\MyQuery',
+            'CQRSCommand' => 'My\\Namespace\\MyNewCommand',
+            'scopes' => ['scope3'],
+            'CQRSQueryMapping' => $queryMapping,
+            'ApiResourceMapping' => $resourceMapping,
+            'CQRSCommandMapping' => $commandMapping,
+        ], $operation3->getExtraProperties());
+
+        // The original object has not been modified
+        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
+        $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
+        $this->assertEquals($commandMapping, $operation->getCQRSCommandMapping());
+        $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
+        $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
+        $this->assertEquals(['master_scope', 'scope1', 'scope2'], $operation->getScopes());
+        $this->assertEquals([
+            'CQRSQuery' => 'My\\Namespace\\MyQuery',
+            'CQRSCommand' => 'My\\Namespace\\MyCommand',
+            'scopes' => ['master_scope', 'scope1', 'scope2'],
+            'CQRSQueryMapping' => $queryMapping,
+            'ApiResourceMapping' => $resourceMapping,
+            'CQRSCommandMapping' => $commandMapping,
+        ], $operation->getExtraProperties());
+    }
 }
