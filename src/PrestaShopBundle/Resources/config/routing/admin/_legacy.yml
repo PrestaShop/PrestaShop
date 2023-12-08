@@ -2,3 +2,9 @@ legacy_controller_route:
   path: /legacy
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CustomLegacyController::legacyPageAction
+
+attribute_symfony_layout_conditional_route:
+  path: /
+  controller: PrestaShopBundle\Controller\Admin\CustomLegacyController::legacyPageAction
+  # Condition only when symfony layout is enabled and only for Attribute groups pages
+  condition: 'request.query.has("controller") and request.query.get("controller") in ["AdminAttributesGroups"] and "symfony_layout" in request.attributes.get("enabledFeatureFlags")'
