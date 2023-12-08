@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\DeleteCustomerGroup
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
@@ -46,8 +47,11 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
         new CQRSGet(
             uriTemplate: '/customers/group/{customerGroupId}',
             extraProperties: [
-                'queryNormalizationMapping' => [
+                // QueryResult format doesn't patch with ApiResource, so we can specify a mapping so that it is normalized with extra fields adapted for the ApiResource DTO
+                'CQRSQueryMapping' => [
+                    // EditableCustomerGroup::$id is normalized as [customerGroupId]
                     '[id]' => '[customerGroupId]',
+                    // EditableCustomerGroup::$reduction is normalized as [reductionPercent]
                     '[reduction]' => '[reductionPercent]',
                 ],
             ],
@@ -59,10 +63,12 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
         new CQRSCreate(
             uriTemplate: '/customers/group',
             extraProperties: [
-                'commandNormalizationMapping' => [
+                // Here, we use command mapping to adapt the normalized command result for the CQRS query
+                'CQRSCommandMapping' => [
                     '[groupId]' => '[customerGroupId]',
                 ],
-                'queryNormalizationMapping' => [
+                // Here, we use query mapping to adapt normalized query result for the ApiPlatform DTO
+                'CQRSQueryMapping' => [
                     '[id]' => '[customerGroupId]',
                     '[reduction]' => '[reductionPercent]',
                 ],
@@ -76,7 +82,8 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
         new CQRSUpdate(
             uriTemplate: '/customers/group/{customerGroupId}',
             extraProperties: [
-                'queryNormalizationMapping' => [
+                // Here we use the ApiResource DTO mapping to transform the normalized query result
+                'ApiResourceMapping' => [
                     '[id]' => '[customerGroupId]',
                     '[reduction]' => '[reductionPercent]',
                 ],
@@ -89,6 +96,12 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
         ),
         new CQRSDelete(
             uriTemplate: '/customers/group/{customerGroupId}',
+            extraProperties: [
+                // Here, we use query mapping to adapt URI parameters to the expected constructor parameter name
+                'CQRSQueryMapping' => [
+                    '[customerGroupId]' => '[groupId]',
+                ],
+            ],
             CQRSQuery: DeleteCustomerGroupCommand::class,
             scopes: [
                 'customer_group_write',

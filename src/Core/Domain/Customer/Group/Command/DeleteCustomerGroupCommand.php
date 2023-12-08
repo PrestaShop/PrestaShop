@@ -34,9 +34,9 @@ class DeleteCustomerGroupCommand
 {
     private GroupId $customerGroupId;
 
-    public function __construct(int $customerGroupId)
+    public function __construct(int $groupId)
     {
-        $this->customerGroupId = new GroupId($customerGroupId);
+        $this->customerGroupId = new GroupId($groupId);
     }
 
     public function getCustomerGroupId(): GroupId
