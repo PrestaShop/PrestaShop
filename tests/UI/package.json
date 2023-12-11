@@ -119,7 +119,7 @@
     "mochawesome": "^7.1.3",
     "mysql2": "^3.6.5",
     "pdfjs-dist": "^3.4.120",
-    "playwright": "^1.40.0",
+    "playwright": "^1.40.1",
     "xpath-ts": "^1.3.13"
   },
   "devDependencies": {
