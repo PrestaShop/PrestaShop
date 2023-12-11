@@ -143,7 +143,7 @@ class Order extends BOBasePage {
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
     this.tableColumnStatus = (row: number) => `${this.tableRow(row)} td.column-osname`;
-    this.updateStatusInTableButton = (row: number) => `${this.tableColumnStatus(row)} button[data-toggle='dropdown']`;
+    this.updateStatusInTableButton = (row: number) => `${this.tableColumnStatus(row)}.choice-type.text-left > div > button`;
     this.updateStatusInTableDropdown = (row: number) => `${this.tableColumnStatus(row)} div.js-choice-options`;
     this.updateStatusInTableDropdownChoice = (row: number, statusId: number) => `${this.updateStatusInTableDropdown(row)}`
       + ` button[data-value='${statusId}']`;
@@ -412,7 +412,7 @@ class Order extends BOBasePage {
       page.locator(this.updateStatusInTableButton(row)).click(),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),
     ]);
-    await page.locator(this.updateStatusInTableDropdownChoice(row, status.id)).click();
+    await this.clickAndWaitForURL(page, this.updateStatusInTableDropdownChoice(row, status.id));
     await this.elementNotVisible(page, this.updateStatusInTableDropdownChoice(row, status.id), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
