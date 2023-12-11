@@ -46,6 +46,8 @@ class ViewOrderBasePage extends BOBasePage {
 
   private readonly orderStatusesSelect: string;
 
+  private readonly orderStatusesOptionSelect: string;
+
   private readonly updateStatusButton: string;
 
   private readonly viewInvoiceButton: string;
@@ -86,6 +88,7 @@ class ViewOrderBasePage extends BOBasePage {
     this.orderID = '.title-content strong[data-role=order-id]';
     this.orderReference = '.title-content strong[data-role=order-reference]';
     this.orderStatusesSelect = '#update_order_status_action_input';
+    this.orderStatusesOptionSelect = `${this.orderStatusesSelect} option`;
     this.updateStatusButton = '#update_order_status_action_btn';
     this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=view-invoice]';
     this.viewDeliverySlipButton = 'form.order-actions-delivery a[data-role=view-delivery-slip]';
@@ -122,10 +125,9 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async doesStatusExist(page: Page, statusName: string): Promise<boolean> {
-    const options = await page.$$eval(
-      `${this.orderStatusesSelect} option`,
-      (all: HTMLElement[]) => all.map((option: HTMLElement) => option.textContent),
-    );
+    const options = await page
+      .locator(this.orderStatusesOptionSelect)
+      .allTextContents();
 
     return options.indexOf(statusName) !== -1;
   }
@@ -155,7 +157,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getOrderStatus(page: Page): Promise<string> {
-    return this.getTextContent(page, `${this.orderStatusesSelect} option[selected='selected']`, false);
+    return this.getTextContent(page, `${this.orderStatusesOptionSelect}[selected='selected']`, false);
   }
 
   /**
@@ -165,7 +167,7 @@ class ViewOrderBasePage extends BOBasePage {
    */
   async getOrderStatusID(page: Page): Promise<number> {
     return parseInt(
-      await this.getAttributeContent(page, `${this.orderStatusesSelect} option[selected='selected']`, 'value'),
+      await this.getAttributeContent(page, `${this.orderStatusesOptionSelect}[selected='selected']`, 'value'),
       10,
     );
   }

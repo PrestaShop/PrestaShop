@@ -55,7 +55,7 @@ class ThemeAndLogo extends themeAndLogoBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfThemes(page: Page): Promise<number> {
-    return (await page.$$(this.themeCardContainer)).length;
+    return page.locator(this.themeCardContainer).count();
   }
 
   /**

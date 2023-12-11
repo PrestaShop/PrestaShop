@@ -86,10 +86,10 @@ class AddSeoUrl extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtons = await page.$$(this.deleteKeywordLink(lang));
+    const closeButtonsLocator = page.locator(this.deleteKeywordLink(lang));
 
-    for (let i = 0; i < closeButtons.length; i++) {
-      await closeButtons[i].click();
+    for (let i = (await closeButtonsLocator.count()) - 1; i > 0; i--) {
+      await closeButtonsLocator.nth(i).click();
     }
   }
 
@@ -122,7 +122,7 @@ class AddSeoUrl extends BOBasePage {
     await this.deleteKeywords(page, 'en');
     await this.addKeywords(page, seoPageData.metaKeywords, 1);
     await this.setValue(page, this.friendlyUrlInput(1), seoPageData.friendlyUrl);
-    // Fill form in french
+    // Fill form in French
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.pageTitleInput(2), seoPageData.frTitle);
     await this.setValue(page, this.metaDescriptionInput(2), seoPageData.frMetaDescription);

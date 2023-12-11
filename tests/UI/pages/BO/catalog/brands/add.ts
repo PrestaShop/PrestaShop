@@ -120,29 +120,25 @@ class AddBrand extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtons = await page.$$(this.deleteKeywordLink(lang));
+    const closeButtonsLocator = page.locator(this.deleteKeywordLink(lang));
 
-    /* eslint-disable no-await-in-loop, no-restricted-syntax */
-    for (const closeButton of closeButtons) {
-      await closeButton.click();
+    for (let i = (await closeButtonsLocator.count()) - 1; i > 0; i--) {
+      await closeButtonsLocator.nth(i).click();
     }
-    /* eslint-enable no-await-in-loop, no-restricted-syntax */
   }
 
   /**
    * Add keywords
    * @param page {Page} Browser tab
    * @param keywords {Array<string>} Array of keywords
-   * @param id {number} ID for lang (1 for en, 2 for fr)
+   * @param idLang {number} ID for lang (1 for en, 2 for fr)
    * @return {Promise<void>}
    */
-  async addKeywords(page: Page, keywords: string[], id: number = 1): Promise<void> {
-    /* eslint-disable no-await-in-loop, no-restricted-syntax */
-    for (const keyword of keywords) {
-      await page.locator(this.metaKeywordsInput(id)).fill(keyword);
+  async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
+    for (let i = 0; i < keywords.length; i++) {
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keywords[i]);
       await page.keyboard.press('Enter');
     }
-    /* eslint-enable no-await-in-loop, no-restricted-syntax */
   }
 
   /**

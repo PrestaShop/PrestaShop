@@ -62,7 +62,7 @@ class PreviewEmailTheme extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfLayoutInGrid(page: Page): Promise<number> {
-    return (await page.$$(this.tableRows)).length;
+    return page.locator(this.tableRows).count();
   }
 
   /**

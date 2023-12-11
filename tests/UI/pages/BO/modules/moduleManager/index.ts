@@ -357,7 +357,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfBlocks(page: Page): Promise<number> {
-    return (await page.$$(this.moduleBlocks)).length;
+    return page.locator(this.moduleBlocks).count();
   }
 
   /**
@@ -399,10 +399,11 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<Array<string>>}
    */
   async getAllModulesTechNames(page: Page): Promise<(string | null)[]> {
-    return page.$$eval(
-      this.allModulesBlock,
-      (all) => all.map((el) => el.getAttribute('data-tech-name')),
-    );
+    return page
+      .locator(this.allModulesBlock)
+      .evaluateAll(
+        (all) => all.map((el) => el.getAttribute('data-tech-name')),
+      );
   }
 
   /**
@@ -508,7 +509,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<string|null>}
    */
   async getBlockModuleTitle(page: Page, position: number): Promise<string | null> {
-    const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, (all) => all.map((el) => el.textContent));
+    const modulesBlocks = await page.locator(this.modulesListBlockTitle).allTextContents();
 
     return modulesBlocks[position - 1];
   }
@@ -544,7 +545,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfModulesInBlock(page: Page, blockName: string): Promise<number> {
-    return (await page.$$(this.moduleListBlock(blockName))).length;
+    return page.locator(this.moduleListBlock(blockName)).count();
   }
 }
 

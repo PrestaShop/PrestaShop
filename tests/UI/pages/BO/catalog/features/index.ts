@@ -290,7 +290,7 @@ class Features extends BOBasePage {
 
     // In case we filter products and there is only one page, link next from pagination does not appear
     if (!found) {
-      return (await page.$$(this.tableBodyRows)).length;
+      return page.locator(this.tableBodyRows).count();
     }
 
     const footerText = await this.getTextContent(page, this.paginationLabel);

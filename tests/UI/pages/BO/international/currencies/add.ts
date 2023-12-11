@@ -228,7 +228,7 @@ class AddCurrency extends LocalizationBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
-    return (await page.$$(this.currencyFormatRows)).length;
+    return page.locator(this.currencyFormatRows).count();
   }
 
   /**

@@ -24,9 +24,11 @@ class Permissions extends BOBasePage {
 
   private readonly modulesTableHeaderCheckbox: (permission: string) => string;
 
+  private readonly modulesTableBodyRows: string;
+
   private readonly menuTableRow: (row: number) => string;
 
-  private readonly modulesTableRow: (row: number) => string;
+  private readonly modulesTableBodyRow: (row: number) => string;
 
   private readonly menuTablePermissionCheckboxRow: (row: number, access: string) => string;
 
@@ -58,7 +60,8 @@ class Permissions extends BOBasePage {
     // Selectors for modules table
     this.modulesTable = '#table_module_2';
     this.modulesTableHeaderCheckbox = (permission: string) => `${this.modulesTable} thead tr th input[data-rel*='${permission}']`;
-    this.modulesTableRow = (row: number) => `${this.modulesTable} tr:nth-child(${row})`;
+    this.modulesTableBodyRows = `${this.modulesTable} body tr`;
+    this.modulesTableBodyRow = (row: number) => `${this.modulesTableBodyRows}:nth-child(${row})`;
     this.modulesTablePermissionCheckboxRow = (row: number, permission: string) => `${this.modulesTable} tr:nth-child(${row})`
       + ` td input[data-rel*='${permission}']`;
   }
@@ -121,7 +124,7 @@ class Permissions extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfElementInMenu(page: Page): Promise<number> {
-    return (await page.$$(this.menuTablePermissionCheckboxAll)).length;
+    return page.locator(this.menuTablePermissionCheckboxAll).count();
   }
 
   /**
@@ -220,7 +223,7 @@ class Permissions extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfModules(page: Page): Promise<number> {
-    return (await page.$$(`${this.modulesTable} body tr`)).length;
+    return page.locator(this.modulesTableBodyRows).count();
   }
 
   /**

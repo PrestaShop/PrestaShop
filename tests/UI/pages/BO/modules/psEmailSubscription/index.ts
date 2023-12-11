@@ -51,7 +51,7 @@ class PsEmailSubscription extends ModuleConfiguration {
       return 0;
     }
 
-    return (await page.$$(this.newsletterTableRows)).length;
+    return page.locator(this.newsletterTableRows).count();
   }
 
   /**

@@ -389,16 +389,11 @@ export default class FOBasePage extends CommonPage {
    */
   async changeLanguage(page: Page, lang: string = 'en'): Promise<void> {
     if (this.theme === 'hummingbird') {
-      const langOptions = await page.$$(`${this.languageSelector} option`);
+      const textContent = await page
+        .locator(`${this.languageSelector} option[data-iso-code='${lang}']`)
+        .textContent();
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [keyOption, langOption] of Object.entries(langOptions)) {
-        if ((await langOption.getAttribute('data-iso-code')) === lang) {
-          await page.selectOption(this.languageSelector, {index: parseInt(keyOption, 10)});
-          return;
-        }
-      }
-
+      await this.selectByVisibleText(page, this.languageSelector, textContent!);
       return;
     }
     await Promise.all([
@@ -444,16 +439,7 @@ export default class FOBasePage extends CommonPage {
     const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
 
     if (this.theme === 'hummingbird') {
-      const langOptions = await page.$$(`${this.currencySelector} option`);
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [keyOption, langOption] of Object.entries(langOptions)) {
-        if ((await langOption.textContent()) === currency) {
-          await page.selectOption(this.currencySelector, {index: parseInt(keyOption, 10)});
-          return;
-        }
-      }
-
+      await this.selectByVisibleText(page, this.currencySelector, currency);
       return;
     }
     // If isoCode and symbol are the same, only isoCode id displayed in FO
@@ -650,10 +636,10 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<Array<string>>}
    */
   async getFooterLinksTextContent(page: Page, position: number): Promise<Array<string>> {
-    return page.$$eval(
-      this.wrapperSubmenuItemLink(position),
-      (all) => all.map((el) => (el.textContent ?? '').trim()),
-    );
+    return (await page
+      .locator(this.wrapperSubmenuItemLink(position))
+      .allTextContents())
+      .map((textContent) => textContent.trim());
   }
 
   /**

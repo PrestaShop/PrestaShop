@@ -792,7 +792,7 @@ class Checkout extends FOBasePage {
   async getNumberOfAddresses(page: Page): Promise<number> {
     await this.waitForSelector(page, this.deliveryAddressBlock, 'visible');
 
-    return (await page.$$(this.deliveryAddressSection)).length;
+    return page.locator(this.deliveryAddressSection).count();
   }
 
   /**
@@ -803,7 +803,7 @@ class Checkout extends FOBasePage {
   async getNumberOfInvoiceAddresses(page: Page): Promise<number> {
     await this.waitForSelector(page, this.invoiceAddressesBlock, 'visible');
 
-    return (await page.$$(this.invoiceAddressSection)).length;
+    return page.locator(this.invoiceAddressSection).count();
   }
 
   /**
@@ -952,12 +952,10 @@ class Checkout extends FOBasePage {
    * @returns {Promise<Array<string>>}
    */
   async getAllCarriersPrices(page: Page): Promise<string[]> {
-    return page.$$eval(
-      this.deliveryOptionAllPricesSpan,
-      (all) => all
-        .map((el): string|null => el.textContent)
-        .filter((el: string|null): el is string => el !== null),
-    );
+    return (await page
+      .locator(this.deliveryOptionAllPricesSpan)
+      .allTextContents())
+      .filter((el: string|null): el is string => el !== null);
   }
 
   /**
@@ -1041,20 +1039,13 @@ class Checkout extends FOBasePage {
   /**
    * Get selected shipping method name
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @return {Promise<string | null>}
    */
-  async getSelectedShippingMethod(page: Page): Promise<string> {
-    // Get checkbox radios
-    const optionsRadiosElement = await page.$$(this.deliveryOptionsRadioButton);
-    let selectedOptionId: number = 0;
-
-    // Get id of selected option
-    for (let position: number = 1; position <= optionsRadiosElement.length; position++) {
-      if (await (await optionsRadiosElement[position - 1].getProperty('checked')).jsonValue()) {
-        selectedOptionId = position;
-        break;
-      }
-    }
+  async getSelectedShippingMethod(page: Page): Promise<string | null> {
+    const selectedOptionId = parseInt(
+      await page.locator(`${this.deliveryOptionsRadioButton}[checked]`).getAttribute('value') ?? '0',
+      10,
+    );
 
     // Return text of the selected option
     if (selectedOptionId !== 0) {

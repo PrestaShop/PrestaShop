@@ -749,7 +749,7 @@ export default class BOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isSubMenuActive(page: Page, linkSelector: string): Promise<boolean> {
-    return (await page.$$(`${linkSelector}.link-active`)).length > 0;
+    return ((await page.locator(`${linkSelector}.link-active`).count()) > 0);
   }
 
   /**

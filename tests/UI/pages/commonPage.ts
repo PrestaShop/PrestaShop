@@ -506,11 +506,7 @@ export default class CommonPage {
    * @return {Promise<void>}
    */
   async uploadFile(page: Page | Frame, selector: string, filePath: string): Promise<void> {
-    const input = await page.$(selector);
-
-    if (input) {
-      await input.setInputFiles(filePath);
-    }
+    await page.locator(selector).setInputFiles(filePath);
   }
 
   /**

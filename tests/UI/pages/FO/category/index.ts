@@ -188,7 +188,7 @@ class Category extends FOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfProductsDisplayed(page: Page): Promise<number> {
-    return (await page.$$(this.productItemListDiv)).length;
+    return page.locator(this.productItemListDiv).count();
   }
 
   /**
