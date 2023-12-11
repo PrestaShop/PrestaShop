@@ -302,7 +302,7 @@ class Attributes extends BOBasePage {
    */
   async openRowActionsDropdown(page: Page, row: number): Promise<void> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsEditLink(row)),
     ]);
   }
@@ -328,7 +328,7 @@ class Attributes extends BOBasePage {
   async deleteAttribute(page: Page, row: number): Promise<string> {
     await this.openRowActionsDropdown(page, row);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -366,18 +366,18 @@ class Attributes extends BOBasePage {
 
     // Select all rows
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.selectAllLink),
     ]);
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
@@ -490,7 +490,7 @@ class Attributes extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async openHelpSideBar(page: Page): Promise<boolean> {
-    await page.click(this.helpCardLink);
+    await page.locator(this.helpCardLink).click();
 
     return this.elementVisible(page, this.helpContainterBlock, 4000);
   }
@@ -502,7 +502,7 @@ class Attributes extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar(page: Page): Promise<boolean> {
-    await page.click(this.helpCardLink);
+    await page.locator(this.helpCardLink).click();
 
     return this.elementNotVisible(page, this.helpContainterBlock, 2000);
   }

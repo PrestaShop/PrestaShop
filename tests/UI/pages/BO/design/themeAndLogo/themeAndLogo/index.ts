@@ -65,7 +65,7 @@ class ThemeAndLogo extends themeAndLogoBasePage {
    * @returns {Promise<String>}
    */
   async enableTheme(page: Page, themeName: string): Promise<string> {
-    await page.$eval(this.useSpecificThemeButton(themeName), (el: HTMLElement) => el.click());
+    await page.locator(this.useSpecificThemeButton(themeName)).evaluate((el: HTMLElement) => el.click());
     await this.waitForSelectorAndClick(page, this.useThemeModalDialogYesButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -78,7 +78,7 @@ class ThemeAndLogo extends themeAndLogoBasePage {
    * @returns {Promise<String>}
    */
   async removeTheme(page: Page, themeName: string): Promise<string> {
-    await page.$eval(this.removeSpecificThemeButton(themeName), (el: HTMLElement) => el.click());
+    await page.locator(this.removeSpecificThemeButton(themeName)).evaluate((el: HTMLElement) => el.click());
     await this.waitForSelectorAndClick(page, this.removeThemeModalDialogYesButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

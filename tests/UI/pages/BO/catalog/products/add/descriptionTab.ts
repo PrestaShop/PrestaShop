@@ -330,7 +330,7 @@ class DescriptionTab extends BOBasePage {
    */
   async setValueOnTinymceInput(page: Page, selector: string, value: string): Promise<void> {
     // Select all
-    await page.click(`${selector} .mce-edit-area`, {clickCount: 3});
+    await page.locator(`${selector} .mce-edit-area`).click({clickCount: 3});
 
     // Delete all text
     await page.keyboard.press('Backspace');

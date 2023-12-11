@@ -538,11 +538,11 @@ class Products extends BOBasePage {
    */
   async filterProductsByCategory(page: Page, categoryName: string = 'Home'): Promise<void> {
     // Click and wait to be open
-    await page.click(this.filterByCategoriesButton);
+    await page.locator(this.filterByCategoriesButton).click();
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
 
     // Click on expand button
-    await page.click(this.filterByCategoriesExpandButton);
+    await page.locator(this.filterByCategoriesExpandButton).click();
 
     // Choose category to filter with
     const args = {allCategoriesSelector: this.filterByCategoriesLabel, val: categoryName};
@@ -584,7 +584,7 @@ class Products extends BOBasePage {
    */
   async resetFilterCategory(page: Page): Promise<void> {
     // Click and wait to be open
-    await page.click(this.filterByCategoriesButton);
+    await page.locator(this.filterByCategoriesButton).click();
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
 
     // Unselect all categories
@@ -607,7 +607,7 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnClearFilterLink(page: Page): Promise<void> {
-    await page.click(this.clearFilterButton);
+    await page.locator(this.clearFilterButton).click();
   }
 
   /**

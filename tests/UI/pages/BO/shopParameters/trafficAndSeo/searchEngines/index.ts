@@ -257,11 +257,11 @@ class SearchEngines extends BOBasePage {
    */
   async deleteSearchEngine(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.confirmDelete(page);
@@ -320,7 +320,7 @@ class SearchEngines extends BOBasePage {
    */
   async bulkSelectRows(page: Page): Promise<void> {
     await Promise.all([
-      page.$eval(this.selectAllLink, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllLink).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionMenuButton}:not([disabled])`),
     ]);
   }
@@ -335,10 +335,10 @@ class SearchEngines extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Click on Button Bulk actions
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     // Click on delete
-    await page.click(this.bulkDeleteLink);
+    await page.locator(this.bulkDeleteLink).click();
 
     // Click on confirm delete on modal
     await this.confirmDelete(page);

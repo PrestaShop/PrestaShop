@@ -221,7 +221,7 @@ class CartRules extends BOBasePage {
       await this.filterCartRules(page, 'input', 'name', cartRuleName);
     }
 
-    await page.click(this.tableColumnActionsToggleButton(row));
+    await page.locator(this.tableColumnActionsToggleButton(row)).click();
 
     await this.waitForSelectorAndClick(page, this.tableColumnActionsDeleteLink(row));
 
@@ -293,7 +293,7 @@ class CartRules extends BOBasePage {
    */
   async setCartRuleStatus(page: Page, row: number, wantedStatus: boolean): Promise<void> {
     if (wantedStatus !== await this.getCartRuleStatus(page, row)) {
-      await page.click(this.tableColumnStatusLink(row));
+      await page.locator(this.tableColumnStatusLink(row)).click();
     }
   }
 
@@ -370,10 +370,10 @@ class CartRules extends BOBasePage {
    * @return {Promise<void>}
    */
   async bulkSelectRows(page: Page): Promise<void> {
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
@@ -391,7 +391,7 @@ class CartRules extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Perform delete
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
     await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     // Return successful message
@@ -410,7 +410,7 @@ class CartRules extends BOBasePage {
 
     // Set status
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkEnableLink),
     ]);
 

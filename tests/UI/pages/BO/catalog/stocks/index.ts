@@ -164,7 +164,7 @@ class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabMovements(page: Page): Promise<void> {
-    await page.click(this.movementsNavItemLink);
+    await page.locator(this.movementsNavItemLink).click();
     await page.waitForResponse('**/api/stock-movements/**');
     await this.waitForVisibleSelector(page, `${this.movementsNavItemLink}.active`, 2000);
   }
@@ -226,7 +226,7 @@ class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async paginateTo(page: Page, pageNumber: number = 1): Promise<void> {
-    await page.click(this.paginationListItemLink(pageNumber));
+    await page.locator(this.paginationListItemLink(pageNumber)).click();
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }
@@ -257,7 +257,7 @@ class Stocks extends BOBasePage {
    */
   async simpleFilter(page: Page, value: string): Promise<void> {
     await page.locator(this.searchInput).fill(value);
-    await page.click(this.searchButton);
+    await page.locator(this.searchButton).click();
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }
@@ -319,7 +319,7 @@ class Stocks extends BOBasePage {
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
     const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
-    await page.click(this.alertBoxButtonClose);
+    await page.locator(this.alertBoxButtonClose).click();
 
     return textContent;
   }
@@ -332,18 +332,18 @@ class Stocks extends BOBasePage {
    */
   async bulkEditQuantityWithInput(page: Page, quantity: number): Promise<string> {
     // Select All products
-    await page.$eval(this.selectAllCheckbox, (el: HTMLElement) => el.click());
+    await page.locator(this.selectAllCheckbox).evaluate((el: HTMLElement) => el.click());
 
     // Set value in input
     await this.setValue(page, this.bulkEditQuantityInput, quantity);
 
     // Wait for check button before click
-    await page.click(this.applyNewQuantityButton);
+    await page.locator(this.applyNewQuantityButton).click();
 
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
     const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
-    await page.click(this.alertBoxButtonClose);
+    await page.locator(this.alertBoxButtonClose).click();
 
     return textContent;
   }
@@ -358,13 +358,13 @@ class Stocks extends BOBasePage {
     await this.openCloseAdvancedFilter(page);
     switch (status) {
       case 'enabled':
-        await page.click(this.filterStatusEnabledLabel);
+        await page.locator(this.filterStatusEnabledLabel).click();
         break;
       case 'disabled':
-        await page.click(this.filterStatusDisabledLabel);
+        await page.locator(this.filterStatusDisabledLabel).click();
         break;
       case 'all':
-        await page.click(this.filterStatusAllLabel);
+        await page.locator(this.filterStatusAllLabel).click();
         break;
       default:
         throw Error(`${status} was not found as an option`);
@@ -379,10 +379,10 @@ class Stocks extends BOBasePage {
    */
   async filterByCategory(page: Page, category: string): Promise<void> {
     await this.openCloseAdvancedFilter(page);
-    await page.click(this.filterCategoryExpandButton);
-    await page.click(this.filterCategoryCheckBoxDiv(category));
+    await page.locator(this.filterCategoryExpandButton).click();
+    await page.locator(this.filterCategoryCheckBoxDiv(category)).click();
     await this.waitForHiddenSelector(page, this.productListLoading);
-    await page.click(this.filterCategoryCollapseButton);
+    await page.locator(this.filterCategoryCollapseButton).click();
     await this.openCloseAdvancedFilter(page, false);
   }
 
@@ -394,7 +394,7 @@ class Stocks extends BOBasePage {
    */
   async openCloseAdvancedFilter(page: Page, toOpen: boolean = true): Promise<void> {
     await Promise.all([
-      page.click(this.advancedFiltersButton),
+      page.locator(this.advancedFiltersButton).click(),
       this.waitForVisibleSelector(page, `${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
     ]);
   }
@@ -406,7 +406,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async openHelpSideBar(page: Page): Promise<boolean> {
-    await page.$eval(this.helpButton, (el: HTMLElement) => el.click());
+    await page.locator(this.helpButton).evaluate((el: HTMLElement) => el.click());
     return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
   }
 
@@ -417,7 +417,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar(page: Page): Promise<boolean> {
-    await page.$eval(this.helpButton, (el: HTMLElement) => el.click());
+    await page.locator(this.helpButton).evaluate((el: HTMLElement) => el.click());
     return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
   }
 }

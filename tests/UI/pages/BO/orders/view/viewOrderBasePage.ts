@@ -221,7 +221,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnPartialRefund(page: Page): Promise<void> {
-    await page.click(this.partialRefundButton);
+    await page.locator(this.partialRefundButton).click();
   }
 
   /**

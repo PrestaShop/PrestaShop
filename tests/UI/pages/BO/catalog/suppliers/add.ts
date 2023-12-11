@@ -127,7 +127,7 @@ class AddSupplier extends BOBasePage {
     await this.setValue(page, this.postalCodeInput, supplierData.postalCode);
     await this.setValue(page, this.cityInput, supplierData.city);
     // Select country
-    await page.click(this.selectCountryList);
+    await page.locator(this.selectCountryList).click();
     await this.setValue(page, this.searchCountryInput, supplierData.country);
     await this.waitForSelectorAndClick(page, this.countrySearchResult);
 
@@ -203,17 +203,17 @@ class AddSupplier extends BOBasePage {
   async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     // Change language for Description input
     await Promise.all([
-      page.click(this.descriptionLangNavItemLink(lang)),
+      page.locator(this.descriptionLangNavItemLink(lang)).click(),
       this.waitForVisibleSelector(page, `${this.descriptionLangNavItemLink(lang)}.active`),
     ]);
 
     // Change language for meta selectors
     await Promise.all([
-      page.click(this.metaTitleLangButton),
+      page.locator(this.metaTitleLangButton).click(),
       this.waitForVisibleSelector(page, `${this.metaTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.metaTitleLangSpan(lang)),
+      page.locator(this.metaTitleLangSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.metaTitleLangButton}[aria-expanded='false']`),
     ]);
   }

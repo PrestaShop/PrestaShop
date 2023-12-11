@@ -249,7 +249,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {boolean} Return if the modal is visible
    */
   async editCurrencyFormat(page: Page, row: number): Promise<boolean> {
-    await page.click(this.currencyFormatEdit(row));
+    await page.locator(this.currencyFormatEdit(row)).click();
 
     return this.elementVisible(page, this.currencyFormatEditModal, 2000);
   }
@@ -261,7 +261,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {string} Return the message of the grow
    */
   async resetCurrencyFormat(page: Page, row: number): Promise<string|null> {
-    await page.click(this.currencyFormatReset(row));
+    await page.locator(this.currencyFormatReset(row)).click();
 
     return this.getGrowlMessageContent(page);
   }
@@ -284,7 +284,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {void}
    */
   async setCurrencyFormatFormat(page: Page, format: CurrencyFormat): Promise<void> {
-    await page.click(this.currencyFormatEditFormatRadio(format));
+    await page.locator(this.currencyFormatEditFormatRadio(format)).click();
   }
 
   /**
@@ -293,7 +293,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {void}
    */
   async saveCurrencyFormat(page: Page): Promise<void> {
-    await page.click(this.currencyFormatEditSubmit);
+    await page.locator(this.currencyFormatEditSubmit).click();
   }
 
   /**
@@ -301,7 +301,7 @@ class AddCurrency extends LocalizationBasePage {
    * @param {Page} page
    */
   async restoreDefaultSettings(page: Page): Promise<boolean> {
-    await page.click(this.restoreDefaultSettingsButton);
+    await page.locator(this.restoreDefaultSettingsButton).click();
 
     const isVisible = this.elementVisible(page, `${this.restoreDefaultSettingsModal}.show`, 2000);
 

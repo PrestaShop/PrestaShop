@@ -79,7 +79,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
 
     while (!growlNotVisible) {
       try {
-        await page.click(this.growlCloseButton);
+        await page.locator(this.growlCloseButton).click();
       } catch (e) {
         // If element does not exist it's already not visible
       }

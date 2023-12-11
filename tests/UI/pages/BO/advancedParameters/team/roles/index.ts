@@ -200,14 +200,14 @@ class Roles extends BOBasePage {
   async deleteRole(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.rolesListTableToggleDropDown(row)),
+      page.locator(this.rolesListTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.rolesListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.rolesListTableDeleteLink(row)),
+      page.locator(this.rolesListTableDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteRoles(page);
@@ -232,18 +232,18 @@ class Roles extends BOBasePage {
   async deleteBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, this.bulkActionsDeleteButton),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
 

@@ -188,7 +188,7 @@ class OrderSettings extends BOBasePage {
     }
 
     await this.setChecked(page, this.recycledPackagingToggleInput(recyclePackagingStatus ? 1 : 0));
-    await page.click(this.saveGiftOptionsFormButton);
+    await page.locator(this.saveGiftOptionsFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

@@ -125,16 +125,16 @@ class AddCarrier extends BOBasePage {
     await this.setValue(page, this.speedGradeInput, carrierData.speedGrade);
     await this.uploadFile(page, this.logoInput, `${carrierData.name}.jpg`);
     await this.setValue(page, this.trackingURLInput, carrierData.trakingURL);
-    await page.click(this.nextButton);
+    await page.locator(this.nextButton).click();
 
     // Set shipping locations and costs
     await this.setChecked(page, this.addHandlingCostsToggle(carrierData.handlingCosts ? 'on' : 'off'));
     await this.setChecked(page, this.freeShippingToggle(carrierData.freeShipping ? 'on' : 'off'));
 
     if (carrierData.billing === 'According to total price') {
-      await page.click(this.billingPriceRadioButton);
+      await page.locator(this.billingPriceRadioButton).click();
     } else {
-      await page.click(this.billingWeightButton);
+      await page.locator(this.billingWeightButton).click();
     }
     await this.selectByVisibleText(page, this.taxRuleSelect, carrierData.taxRule);
     await this.selectByVisibleText(page, this.rangeBehaviorSelect, carrierData.outOfRangeBehavior);
@@ -144,24 +144,24 @@ class AddCarrier extends BOBasePage {
       await this.setValue(page, this.rangeSupInput, carrierData.rangeSup);
 
       if (carrierData.allZones) {
-        await page.click(this.allZonesRadioButton);
+        await page.locator(this.allZonesRadioButton).click();
         await this.setValue(page, this.allZonesValueInput, carrierData.allZonesValue);
       } else {
-        await page.click(this.zoneRadioButton(carrierData.zoneID.toString()));
+        await page.locator(this.zoneRadioButton(carrierData.zoneID.toString())).click();
       }
     }
-    await page.click(this.nextButton);
+    await page.locator(this.nextButton).click();
 
     // Set size, weight and group access
     await this.setValue(page, this.maxWidthInput, carrierData.maxWidth);
     await this.setValue(page, this.maxHeightInput, carrierData.maxHeight);
     await this.setValue(page, this.maxDepthInput, carrierData.maxDepth);
     await this.setValue(page, this.maxWeightInput, carrierData.maxWeight);
-    await page.click(this.nextButton);
+    await page.locator(this.nextButton).click();
 
     // Summary
     await this.setChecked(page, this.enableToggle(carrierData.enable ? 'on' : 'off'));
-    await page.click(this.finishButton);
+    await page.locator(this.finishButton).click();
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -174,10 +174,10 @@ class AddCarrier extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setHandlingCosts(page: Page, toEnable: boolean = true): Promise<string> {
-    await page.click(this.nextButton);
+    await page.locator(this.nextButton).click();
     await this.setChecked(page, this.addHandlingCostsToggle(toEnable ? 'on' : 'off'));
 
-    await page.click(this.finishButton);
+    await page.locator(this.finishButton).click();
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);

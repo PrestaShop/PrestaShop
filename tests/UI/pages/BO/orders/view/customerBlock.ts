@@ -255,7 +255,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @returns {Promise<void>}
    */
   async clickAddNewPrivateNote(page: Page): Promise<void> {
-    await page.click(this.addNewPrivateNoteLink);
+    await page.locator(this.addNewPrivateNoteLink).click();
     await this.waitForVisibleSelector(page, this.privateNoteTextarea);
   }
 
@@ -267,7 +267,7 @@ class CustomerBlock extends ViewOrderBasePage {
    */
   async setPrivateNote(page: Page, note: string): Promise<string> {
     await this.setValue(page, this.privateNoteTextarea, note);
-    await page.click(this.privateNoteSaveButton);
+    await page.locator(this.privateNoteSaveButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

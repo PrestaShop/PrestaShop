@@ -204,7 +204,7 @@ export default class CommonPage {
     state: 'load' | 'domcontentloaded' | 'networkidle' = 'networkidle'): Promise<Page> {
     const [newPage] = await Promise.all([
       page.waitForEvent('popup'),
-      page.click(selector),
+      page.locator(selector).click(),
     ]);
 
     await newPage.waitForLoadState(state);
@@ -222,7 +222,7 @@ export default class CommonPage {
    */
   async waitForSelectorAndClick(page: Frame | Page, selector: string, timeout: number = 5000): Promise<void> {
     await this.waitForVisibleSelector(page, selector, timeout);
-    await page.click(selector);
+    await page.locator(selector).click();
   }
 
   /**
@@ -260,10 +260,11 @@ export default class CommonPage {
     await this.clearInput(page, selector);
 
     // eslint-disable-next-line no-param-reassign
-    await page.$eval(selector, (el: HTMLInputElement, value: string) => {
-      // eslint-disable-next-line no-param-reassign
-      el.value = value;
-    }, value);
+    await page.locator(selector).evaluate(
+      (el: HTMLInputElement, value: string) => {
+        // eslint-disable-next-line no-param-reassign
+        el.value = value;
+      }, value);
   }
 
   /**
@@ -324,7 +325,7 @@ export default class CommonPage {
    * @return {Promise<void>}
    */
   async scrollTo(page: Page, selector: string): Promise<void> {
-    await page.$eval(selector, (el) => el.scrollIntoView());
+    await page.locator(selector).evaluate((el) => el.scrollIntoView());
   }
 
   /**
@@ -387,7 +388,7 @@ export default class CommonPage {
   ): Promise<void> {
     await Promise.all([
       page.waitForLoadState(state, {timeout}),
-      page.click(selector),
+      page.locator(selector).click(),
     ]);
   }
 
@@ -409,7 +410,7 @@ export default class CommonPage {
 
     await Promise.all([
       page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil, timeout}),
-      page.click(selector),
+      page.locator(selector).click(),
     ]);
   }
 
@@ -482,7 +483,7 @@ export default class CommonPage {
   async setCheckedWithIcon(page: Frame | Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
     if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       // The selector is not visible, that why '+ i' is required here
-      await page.$eval(`${checkboxSelector} + i`, (el: HTMLInputElement) => el.click());
+      await page.locator(`${checkboxSelector} + i`).evaluate((el: HTMLInputElement) => el.click());
     }
   }
 
@@ -524,7 +525,7 @@ export default class CommonPage {
     page.once('filechooser', async (fileChooser: FileChooser) => {
       await fileChooser.setFiles(filePath);
     });
-    await page.click(selector);
+    await page.locator(selector).click();
   }
 
   /**
@@ -569,13 +570,13 @@ export default class CommonPage {
     /* eslint-disable no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     if (targetBlank) {
-      await page.$eval(selector, (el: HTMLLinkElement) => el.setAttribute('target', ''));
+      await page.locator(selector).evaluate((el: HTMLLinkElement) => el.setAttribute('target', ''));
     }
     /* eslint-enable no-param-reassign */
 
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.click(selector),
+      page.locator(selector).click(),
     ]);
 
     return download.path();

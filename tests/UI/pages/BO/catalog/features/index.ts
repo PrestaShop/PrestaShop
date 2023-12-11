@@ -356,7 +356,7 @@ class Features extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await page.click(sortColumnSpanButton);
+      await page.locator(sortColumnSpanButton).click();
       i += 1;
     }
 
@@ -391,19 +391,19 @@ class Features extends BOBasePage {
   async bulkDeleteFeatures(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.filterSelectAll, (el: HTMLElement) => el.click()),
+      page.locator(this.filterSelectAll).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForURL(page, this.confirmDeleteButton);

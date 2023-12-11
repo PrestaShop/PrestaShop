@@ -244,7 +244,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @returns {Promise<string>}
    */
   async clickOnUpdateStatus(page: Page): Promise<string> {
-    await page.click(this.secondUpdateStatusButton);
+    await page.locator(this.secondUpdateStatusButton).click();
 
     return this.getAlertDangerBlockParagraphContent(page);
   }
@@ -257,7 +257,7 @@ class TabListBlock extends ViewOrderBasePage {
    */
   async updateOrderStatus(page: Page, status: string): Promise<string> {
     await this.selectByVisibleText(page, this.secondOrderStatusesSelect, status);
-    await page.click(this.secondUpdateStatusButton);
+    await page.locator(this.secondUpdateStatusButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -346,7 +346,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @returns {Promise<boolean>}
    */
   async goToDocumentsTab(page: Page): Promise<boolean> {
-    await page.click(this.documentTab);
+    await page.locator(this.documentTab).click();
     return this.elementVisible(page, `${this.documentTab}.active`, 1000);
   }
 
@@ -385,7 +385,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @returns {Promise<string>}
    */
   async generateInvoice(page: Page): Promise<string> {
-    await page.click(this.generateInvoiceButton);
+    await page.locator(this.generateInvoiceButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -589,7 +589,7 @@ class TabListBlock extends ViewOrderBasePage {
    * @returns {Promise<boolean>}
    */
   async closeOrderShippingModal(page: Page): Promise<boolean> {
-    await page.click(this.cancelCarrierButton);
+    await page.locator(this.cancelCarrierButton).click();
 
     return this.elementNotVisible(page, this.updateOrderShippingModalDialog, 3000);
   }
@@ -602,9 +602,9 @@ class TabListBlock extends ViewOrderBasePage {
    */
   async setShippingDetails(page: Page, shippingData: OrderShippingData): Promise<string> {
     await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
-    await page.click(this.carrierSelect2);
+    await page.locator(this.carrierSelect2).click();
     await this.waitForSelectorAndClick(page, this.carrierToSelect(shippingData.carrierID));
-    await page.click(this.updateCarrierButton);
+    await page.locator(this.updateCarrierButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

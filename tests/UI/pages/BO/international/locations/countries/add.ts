@@ -154,7 +154,7 @@ class AddCountry extends BOBasePage {
         throw new Error(`Field ${input} was not found`);
     }
 
-    return page.$eval(selector, (node: HTMLSelectElement) => node.value);
+    return page.locator(selector).evaluate((node: HTMLSelectElement) => node.value);
   }
 
   /**

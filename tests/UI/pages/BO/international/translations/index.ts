@@ -167,7 +167,7 @@ class Translations extends BOBasePage {
    */
   async searchTranslation(page: Page, expression: string): Promise<void> {
     await this.setValue(page, this.searchInput, expression);
-    await page.click(this.searchButton);
+    await page.locator(this.searchButton).click();
     await this.waitForAttachedSelector(page, this.translationTextarea);
     await page.waitForTimeout(2000);
   }
@@ -180,7 +180,7 @@ class Translations extends BOBasePage {
    */
   async translateExpression(page: Page, translation: string): Promise<string> {
     await this.setValue(page, this.translationTextarea, translation);
-    await page.click(this.saveTranslationButton);
+    await page.locator(this.saveTranslationButton).click();
 
     return this.getTextContent(page, this.growlMessage);
   }
@@ -192,7 +192,7 @@ class Translations extends BOBasePage {
    */
   async resetTranslation(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.resetTranslationButton);
-    await page.click(this.saveTranslationButton);
+    await page.locator(this.saveTranslationButton).click();
 
     return this.getTextContent(page, this.growlMessage);
   }
@@ -207,7 +207,7 @@ class Translations extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.languageToAddSelect);
     await this.setValue(page, this.searchLanguageInput, language);
     await this.waitForSelectorAndClick(page, this.searchLanguageResult);
-    await page.click(this.addUpdateLanguageButton);
+    await page.locator(this.addUpdateLanguageButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

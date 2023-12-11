@@ -91,9 +91,9 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async changeMaintenanceTextShopStatus(page: Page, text: string): Promise<string> {
     await this.setValueOnTinymceInput(page, this.maintenanceTextInputEN, text);
-    await page.click(this.customMaintenanceFrTab);
+    await page.locator(this.customMaintenanceFrTab).click();
     await this.setValueOnTinymceInput(page, this.maintenanceTextInputFR, text);
-    await page.click(this.saveFormButton);
+    await page.locator(this.saveFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -104,8 +104,8 @@ class ShopParamsMaintenance extends BOBasePage {
    * @return {Promise<string>}
    */
   async addMyIpAddress(page: Page): Promise<string> {
-    await page.click(this.addMyIPAddressButton);
-    await page.click(this.saveFormButton);
+    await page.locator(this.addMyIPAddressButton).click();
+    await page.locator(this.saveFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -118,7 +118,7 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async addMaintenanceIPAddress(page: Page, ipAddress: string): Promise<string> {
     await this.setValue(page, this.maintenanceIpInput, ipAddress);
-    await page.click(this.saveFormButton);
+    await page.locator(this.saveFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

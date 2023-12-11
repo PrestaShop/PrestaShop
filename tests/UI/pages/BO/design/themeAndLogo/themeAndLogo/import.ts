@@ -36,15 +36,15 @@ class ImportTheme extends themeAndLogoBasePage {
     this.importForm = 'form[name="import_theme"]';
     // Form "Import from your computer"
     this.zipFileUploadButton = '#import_theme_import_from_computer';
-    this.importFromYourComputerSubmit = `${this.importForm} div.row div:nth-child(1) div.card-footer button`;
+    this.importFromYourComputerSubmit = `${this.importForm} button[data-role='computer-import-button']`;
 
     // Form "Import from the web"
     this.inputArchiveURL = '#import_theme_import_from_web';
-    this.importWebSubmit = `${this.importForm} div.row div:nth-child(2) div.card-footer button`;
+    this.importWebSubmit = `${this.importForm} button[data-role='web-import-button']`;
 
     // From FTP
     this.selectArchive = '#import_theme_import_from_ftp';
-    this.importFTPSubmit = `${this.importForm} div.row div:nth-child(3) div.card-footer button`;
+    this.importFTPSubmit = `${this.importForm} button[data-role='ftp-import-button']`;
   }
 
   /**
@@ -55,7 +55,7 @@ class ImportTheme extends themeAndLogoBasePage {
    */
   async importFromYourComputer(page: Page, path: string): Promise<void> {
     await this.uploadFile(page, this.zipFileUploadButton, path);
-    await page.click(this.importFromYourComputerSubmit);
+    await page.locator(this.importFromYourComputerSubmit).click();
   }
 
   /**

@@ -343,7 +343,7 @@ class ProductSettings extends BOBasePage {
    */
   async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
-      page.click(this.nameLangButton),
+      page.locator(this.nameLangButton).click(),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([

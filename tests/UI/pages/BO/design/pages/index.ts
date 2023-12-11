@@ -174,7 +174,7 @@ class Pages extends BOBasePage {
     const resetButton = this.filterResetButton(tableName);
 
     if (await this.elementVisible(page, resetButton, 2000)) {
-      await page.click(resetButton);
+      await page.locator(resetButton).click();
       await this.elementNotVisible(page, resetButton, 2000);
     }
     return this.getNumberFromText(page, this.gridHeaderTitle(tableName));
@@ -214,12 +214,12 @@ class Pages extends BOBasePage {
   async deleteRowInTable(page: Page, tableName: string, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.listTableToggleDropDown(tableName, row)),
+      page.locator(this.listTableToggleDropDown(tableName, row)).click(),
       this.waitForVisibleSelector(page, `${this.listTableToggleDropDown(tableName, row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteRowLink(tableName, row)),
+      page.locator(this.deleteRowLink(tableName, row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
     ]);
     await this.confirmDeleteFromTable(page, tableName);
@@ -239,19 +239,19 @@ class Pages extends BOBasePage {
 
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel(tableName)).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton(tableName)),
+      page.locator(this.bulkActionsToggleButton(tableName)).click(),
       this.waitForVisibleSelector(page, this.bulkActionsDeleteButton(tableName)),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton(tableName)),
+      page.locator(this.bulkActionsDeleteButton(tableName)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
     ]);
     await this.confirmDeleteFromTable(page, tableName);
@@ -266,7 +266,7 @@ class Pages extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteFromTable(page: Page, tableName: string): Promise<void> {
-    await page.click(this.confirmDeleteButton(tableName));
+    await page.locator(this.confirmDeleteButton(tableName)).click();
     await this.elementNotVisible(page, this.confirmDeleteButton(tableName), 2000);
   }
 
@@ -299,7 +299,7 @@ class Pages extends BOBasePage {
    */
   async setStatus(page: Page, tableName: string, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, tableName, row) !== valueWanted) {
-      await page.click(this.listTableStatusColumn(tableName, row));
+      await page.locator(this.listTableStatusColumn(tableName, row)).click();
 
       return true;
     }
@@ -317,18 +317,18 @@ class Pages extends BOBasePage {
   async bulkSetStatus(page: Page, tableName: string, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel(tableName)).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton(tableName)),
+      page.locator(this.bulkActionsToggleButton(tableName)).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}`),
     ]);
 
     // Click on enable/disable and wait for modal
-    await page.click(enable ? this.bulkActionsEnableButton(tableName) : this.bulkActionsDisableButton(tableName));
+    await page.locator(enable ? this.bulkActionsEnableButton(tableName) : this.bulkActionsDisableButton(tableName)).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -477,7 +477,7 @@ class Pages extends BOBasePage {
   async goToEditCategoryPage(page: Page, row: number): Promise<void> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.listTableToggleDropDown('cms_page_category', row)),
+      page.locator(this.listTableToggleDropDown('cms_page_category', row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.listTableToggleDropDown('cms_page_category', row)}[aria-expanded='true']`,

@@ -14,6 +14,8 @@ class AddShop extends BOBasePage {
 
   public readonly pageTitleEdit: string;
 
+  private readonly storeForm: string;
+
   private readonly nameInput: string;
 
   private readonly colorInput: string;
@@ -37,11 +39,12 @@ class AddShop extends BOBasePage {
     this.pageTitleEdit = 'Edit:';
 
     // Selectors
+    this.storeForm = '#shop_form';
     this.nameInput = '#name';
     this.colorInput = '#color_0';
     this.shopGroupSelect = '#id_shop_group';
     this.categoryRootSelect = '#id_category';
-    this.saveButton = '#shop_form_submit_btn';
+    this.saveButton = `${this.storeForm} #fieldset_0 #shop_form_submit_btn`;
     this.sourceStoreSelect = '#importFromShop';
   }
 
@@ -64,7 +67,7 @@ class AddShop extends BOBasePage {
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
     await Promise.all([
-      page.$eval(this.saveButton, (el: HTMLElement) => el.click()),
+      page.locator(this.saveButton).evaluate((el: HTMLElement) => el.click()),
       page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle', timeout: 30000}),
     ]);
 

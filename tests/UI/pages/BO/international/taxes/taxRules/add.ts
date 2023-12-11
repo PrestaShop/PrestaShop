@@ -97,7 +97,7 @@ class AddTaxRules extends BOBasePage {
     await this.selectByVisibleText(page, this.taxSelect, taxRuleData.name);
     await this.setValue(page, this.descriptionInput, taxRuleData.description);
     // Save Tax rules
-    await page.click(this.saveAndStayButton);
+    await page.locator(this.saveAndStayButton).click();
 
     return this.getAlertSuccessBlockContent(page);
   }
@@ -108,7 +108,7 @@ class AddTaxRules extends BOBasePage {
    * @return {Promise<void>}
    */
   async clickOnAddNewTaxRule(page: Page): Promise<void> {
-    await page.click(this.addNewTaxRuleButton);
+    await page.locator(this.addNewTaxRuleButton).click();
   }
 }
 export default new AddTaxRules();

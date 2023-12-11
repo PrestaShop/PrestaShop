@@ -110,7 +110,7 @@ class PasswordReminderPage extends FOBasePage {
   async setNewPassword(page: Page, password: string): Promise<void> {
     await this.setValue(page, this.newPasswordInput, password);
     await this.setValue(page, this.confirmationPasswordInput, password);
-    await page.click(this.submitButton);
+    await page.locator(this.submitButton).click();
   }
 
   /**

@@ -73,7 +73,7 @@ class Permissions extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async goToProfileSubTab(page: Page, profileName: string): Promise<boolean> {
-    await page.click(this.profileSubTab(profileName));
+    await page.locator(this.profileSubTab(profileName)).click();
     return this.elementVisible(page, `${this.profileSubTab(profileName)}.selected.active`, 1000);
   }
 
@@ -90,7 +90,7 @@ class Permissions extends BOBasePage {
     if (await this.isChecked(page, this.menuTableProfileAccess(className, access))) {
       return true;
     }
-    await page.click(this.menuTableProfileAccess(className, access));
+    await page.locator(this.menuTableProfileAccess(className, access)).click();
     const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
     await this.closeGrowlMessage(page);
 
@@ -109,7 +109,7 @@ class Permissions extends BOBasePage {
     if (toCheck && await this.isChecked(page, this.menuTableHeaderCheckbox(permission))) {
       return true;
     }
-    await page.click(this.menuTableHeaderCheckbox(permission));
+    await page.locator(this.menuTableHeaderCheckbox(permission)).click();
     const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
 
     return growlTextMessage === this.successfulUpdateMessage;
@@ -188,7 +188,7 @@ class Permissions extends BOBasePage {
     if (toCheck && await this.isChecked(page, this.modulesTableHeaderCheckbox(permission))) {
       return true;
     }
-    await page.click(this.modulesTableHeaderCheckbox(permission));
+    await page.locator(this.modulesTableHeaderCheckbox(permission)).click();
     const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
 
     return growlTextMessage === this.successfulUpdateMessage;

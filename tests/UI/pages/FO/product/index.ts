@@ -383,7 +383,7 @@ class Product extends FOBasePage {
    * @returns {Promise<Array<string>>}
    */
   async getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string | null>> {
-    return page.$$eval(`${ulSelector} li .attribute-name`, (all) => all.map((el) => el.textContent));
+    return page.locator(`${ulSelector} li .attribute-name`).allTextContents();
   }
 
   /**
@@ -547,7 +547,7 @@ class Product extends FOBasePage {
         case 'color':
           await Promise.all([
             this.waitForVisibleSelector(page, `${this.productColorInput(attributes[i].value)}[checked]`),
-            page.click(this.productColorInput(attributes[i].value)),
+            page.locator(this.productColorInput(attributes[i].value)).click(),
           ]);
           break;
         case 'size':
@@ -766,16 +766,16 @@ class Product extends FOBasePage {
    */
   async addProductReview(page: Page, productReviewData: ProductReviewData): Promise<boolean> {
     if (await this.getNumberOfComments(page) !== 0) {
-      await page.click(this.notEmptyReviewAddReviewButton);
+      await page.locator(this.notEmptyReviewAddReviewButton).click();
     } else {
-      await page.click(this.emptyReviewAddReviewButton);
+      await page.locator(this.emptyReviewAddReviewButton).click();
     }
     await this.waitForVisibleSelector(page, this.productReviewModal);
     await this.setValue(page, this.reviewTitle, productReviewData.reviewTitle);
     await this.setValue(page, this.reviewTextContent, productReviewData.reviewContent);
-    await page.click(this.reviewRating(productReviewData.reviewRating));
-    await page.click(this.reviewSubmitButton);
-    await page.click(this.closeReviewSentConfirmationModalButton);
+    await page.locator(this.reviewRating(productReviewData.reviewRating)).click();
+    await page.locator(this.reviewSubmitButton).click();
+    await page.locator(this.closeReviewSentConfirmationModalButton).click();
     return this.elementNotVisible(page, this.reviewSentConfirmationModal, 3000);
   }
 
@@ -785,7 +785,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfComments(page: Page): Promise<number> {
-    return page.$$eval(this.productReviewRows, (rows) => rows.length);
+    return page.locator(this.productReviewRows).count();
   }
 
   /**
@@ -815,7 +815,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getReviewRating(page: Page, row: number = 1): Promise<number> {
-    return page.$$eval(this.productRatingStar(row), (divs) => divs.length);
+    return page.locator(this.productRatingStar(row)).count();
   }
 
   /**

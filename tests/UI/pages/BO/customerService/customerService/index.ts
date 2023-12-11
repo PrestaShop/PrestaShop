@@ -321,14 +321,14 @@ class CustomerService extends BOBasePage {
    */
   async deleteMessage(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
-    await page.click(this.deleteModalButtonYes);
+    await page.locator(this.deleteModalButtonYes).click();
     await this.elementNotVisible(page, this.deleteModalButtonYes);
 
     // Get successful message
@@ -343,7 +343,7 @@ class CustomerService extends BOBasePage {
    */
   async allowFileUploading(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.allowFileUploadingToggleInput(toEnable ? 'on' : 'off'));
-    await page.click(this.contactOptionSaveButton);
+    await page.locator(this.contactOptionSaveButton).click();
     await this.elementNotVisible(page, this.allowFileUploadingToggleInput(!toEnable ? 'on' : 'off'));
 
     return this.getAlertSuccessBlockContent(page);
@@ -357,7 +357,7 @@ class CustomerService extends BOBasePage {
    */
   async setDefaultMessage(page: Page, message: string): Promise<string> {
     await page.fill(this.defaultMessageTextarea, message);
-    await page.click(this.contactOptionSaveButton);
+    await page.locator(this.contactOptionSaveButton).click();
 
     return this.getAlertSuccessBlockContent(page);
   }

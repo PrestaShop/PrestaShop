@@ -41,7 +41,7 @@ class AddOrderMessage extends BOBasePage {
 
     // Selectors
     this.nameLangButton = '#order_message_name_dropdown';
-    this.langDropdownDiv = 'div.locale-dropdown-menu';
+    this.langDropdownDiv = 'div.locale-dropdown-menu[aria-labelledby="order_message_name_dropdown"]';
     this.nameLangSpan = (lang: string) => `${this.langDropdownDiv} span[data-locale='${lang}']`;
     this.nameInput = (id: number) => `#order_message_name_${id}`;
     this.messageTextarea = (id: number) => `#order_message_message_${id}`;
@@ -60,11 +60,11 @@ class AddOrderMessage extends BOBasePage {
    */
   async changeFormLang(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
-      page.click(this.nameLangButton),
+      page.locator(this.nameLangButton).click(),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.nameLangSpan(lang)),
+      page.locator(this.nameLangSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='false']`),
     ]);
   }

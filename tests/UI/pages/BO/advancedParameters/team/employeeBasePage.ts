@@ -65,7 +65,7 @@ export default class EmployeeBasePage extends BOBasePage {
    */
   async selectDefaultPage(page: Page, defaultPage: string): Promise<void> {
     await Promise.all([
-      page.click(this.defaultPageSpan),
+      page.locator(this.defaultPageSpan).click(),
       this.waitForVisibleSelector(page, `${this.defaultPageSpan}[aria-expanded='true']`),
     ]);
     await this.setValue(page, this.searchDefaultPageInput, defaultPage);
