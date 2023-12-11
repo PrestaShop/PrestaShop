@@ -34,7 +34,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Is used to add field with recommended input length counter to the form.
  *
- * Requires Javasript text-with-recommended-lenght-counter.js to work properly.
+ * Requires Javasript text-with-recommended-length-counter.js to work properly.
+ * Path: /admin-dev/themes/new-theme/js/components/form/text-with-recommended-length-counter.ts
  */
 class TextWithRecommendedLengthType extends AbstractType
 {

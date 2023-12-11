@@ -31,6 +31,11 @@ use PrestaShopBundle\Form\DataTransformer\IDNConverterDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\EmailType as BaseEmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Class EmailType
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/email-type/
+ */
 class EmailType extends BaseEmailType
 {
     /**

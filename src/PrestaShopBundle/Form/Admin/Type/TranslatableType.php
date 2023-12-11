@@ -40,6 +40,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Class TranslatableType adds translatable inputs with custom inner type to forms.
  * Language selection uses a dropdown.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/translatable/
  */
 class TranslatableType extends TranslatorAwareType
 {

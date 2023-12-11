@@ -33,6 +33,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Default entry type used by @see EntitySearchInputType
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/entity-item-type/
  */
 class EntityItemType extends CommonAbstractType
 {

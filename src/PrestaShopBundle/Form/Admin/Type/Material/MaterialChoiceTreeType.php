@@ -31,6 +31,11 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class MaterialChoiceTreeType
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/material-choice-tree/
+ */
 class MaterialChoiceTreeType extends AbstractType
 {
     /**

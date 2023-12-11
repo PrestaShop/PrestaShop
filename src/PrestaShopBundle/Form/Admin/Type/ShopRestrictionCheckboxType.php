@@ -34,6 +34,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class displays customized checkbox which is used for shop restriction functionality.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/shop-restriction-checkbox-type/
  */
 class ShopRestrictionCheckboxType extends AbstractType
 {

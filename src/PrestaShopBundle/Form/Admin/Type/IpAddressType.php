@@ -34,6 +34,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Extended input type for IP addresses
  * Displays a bouton to add the user's one to the list.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/ip-address/
  */
 class IpAddressType extends TextType
 {

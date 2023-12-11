@@ -37,6 +37,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * This form type is used to display a text value without providing an interactive input to edit it.
  * It is based on a hidden input so it could be changed programmatically, or be used just to display
  * a data in a form.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/text-preview-type/
  */
 class TextPreviewType extends TextType
 {

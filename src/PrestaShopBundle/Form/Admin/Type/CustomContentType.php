@@ -33,6 +33,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Type is used to add any content in any position of the form rather than actual field.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/custom-content-type/
  */
 final class CustomContentType extends AbstractType
 {

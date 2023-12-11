@@ -34,6 +34,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a category selector using Nested sets.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/choice-category-tree/
  */
 class ChoiceCategoriesTreeType extends CommonAbstractType
 {

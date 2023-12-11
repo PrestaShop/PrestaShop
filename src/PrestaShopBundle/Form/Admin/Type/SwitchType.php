@@ -34,6 +34,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Displays a switch (ON / OFF by default).
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/switch/
  */
 class SwitchType extends AbstractType
 {

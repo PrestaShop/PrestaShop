@@ -38,6 +38,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * This form type is used as a container of sub forms, each sub form will be rendered as a part of navigation tab
  * component. Each first level child is used as a different tab, its label is used for the tab name and it's widget
  * as the tab content.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/navigation-tab-type/
  */
 class NavigationTabType extends AbstractType
 {

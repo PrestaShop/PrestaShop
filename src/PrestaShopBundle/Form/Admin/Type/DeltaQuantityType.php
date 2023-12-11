@@ -46,6 +46,8 @@ use Symfony\Component\Validator\Constraints\Type;
  * Quantity field that displays the initial quantity (not editable) and allows editing with delta quantity
  * instead (ex: +5, -8). The input data of this form type is the initial (as a plain integer) however its output
  * on submit is the delta quantity.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/delta-quantity-type/
  */
 class DeltaQuantityType extends TranslatorAwareType
 {

@@ -37,6 +37,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Defines the number type two inputs of min and max value - designed to fit grid in grid filter.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/number-min-max-filter/
  */
 final class NumberMinMaxFilterType extends AbstractType
 {

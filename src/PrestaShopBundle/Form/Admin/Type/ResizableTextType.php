@@ -30,6 +30,8 @@ use PrestaShopBundle\Form\Extension\ResizableTextTypeExtension;
 
 /**
  * Class ResizableTextType adds new sizing options to TextType.
+ * 
+ * @link https://devdocs.prestashop-project.org/8/development/components/form/types-reference/resizable-text-type/
  */
 class ResizableTextType extends ResizableTextTypeExtension
 {
