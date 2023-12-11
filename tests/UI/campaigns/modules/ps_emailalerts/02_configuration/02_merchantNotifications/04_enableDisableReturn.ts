@@ -37,7 +37,7 @@ import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
 
-const baseContext: string = 'modules_ps_emailalerts_configurationForMerchant_enableDisableReturn';
+const baseContext: string = 'modules_ps_emailalerts_merchantNotifications_enableDisableReturn';
 
 /*
 Pre-condition:
@@ -189,21 +189,21 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
   describe(`BO: Change the second created orders status to '${OrderStatuses.delivered.name}'`, async () => {
     it('should get the second order ID', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getOrderID2', baseContext);
 
       secondOrderID = await ordersPage.getOrderIDNumber(page, 2);
       expect(orderID).to.not.equal(1);
     });
 
     it('should get the created Order reference', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference2', baseContext);
 
       secondOrderReference = await ordersPage.getTextColumn(page, 'reference', 2);
       expect(orderReference).to.not.eq(null);
     });
 
     it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
       const result = await ordersPage.setOrderStatus(page, 2, OrderStatuses.delivered);
       expect(result).to.equal(ordersPage.successfulUpdateMessage);
@@ -232,7 +232,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     });
 
     it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage1', baseContext);
 
       await homePage.goToMyAccountPage(page);
 
