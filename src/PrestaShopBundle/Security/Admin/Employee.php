@@ -191,7 +191,7 @@ class Employee implements UserInterface, EquatableInterface, PasswordAuthenticat
             return false;
         }
 
-        if ($this->username !== $user->getUsername()) {
+        if ($this->username !== $user->getUserIdentifier()) {
             return false;
         }
 
