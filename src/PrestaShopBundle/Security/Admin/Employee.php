@@ -114,6 +114,10 @@ class Employee implements UserInterface, EquatableInterface, PasswordAuthenticat
     /**
      * Get the login of the current employee.
      *
+     * @todo
+     *
+     * @deprecated to be removed for SF6
+     *
      * @return string
      */
     public function getUsername()
