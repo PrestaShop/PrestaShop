@@ -16,15 +16,14 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage, loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import productPage from '@pages/FO/product';
+import {cartPage} from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
 import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
@@ -34,10 +33,6 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
-import productPage from "@pages/FO/product";
-import {cartPage} from "@pages/FO/cart";
-import checkoutPage from "@pages/FO/checkout";
-import orderConfirmationPage from "@pages/FO/checkout/orderConfirmation";
 
 const baseContext: string = 'modules_ps_emailalerts_merchantNotifications_enableDisablNewOrder';
 
@@ -45,21 +40,23 @@ const baseContext: string = 'modules_ps_emailalerts_merchantNotifications_enable
 Pre-condition:
 - Setup SMTP parameters
 Scenario
-- Enable/Disable returns in email alerts module
+- Enable new order in email alerts module
 - Create order by default customer
-- Check email
+- Check 3 emails
+- Disable new order in email alerts module
+- Create order by default customer
+- Check 2 emails
 Post-condition:
 - Reset SMTP parameters
  */
 describe('Mail alerts module - Enable/Disable new order', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let newMail: MailDevEmail;
+  let allEmails: MailDevEmail[];
+  let numberOfEmails: number;
   let mailListener: MailDev;
   let orderID: number;
-  let secondOrderID: number;
   let orderReference: string;
-  let secondOrderReference: string;
 
   // New order by customer data
   const orderData: OrderData = new OrderData({
@@ -85,9 +82,10 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
 
-    // Handle every new email
-    mailListener.on('new', (email: MailDevEmail) => {
-      newMail = email;
+    // get all emails
+    // @ts-ignore
+    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
+      allEmails = emails;
     });
   });
 
@@ -133,8 +131,8 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
     });
 
-    it('should enable returns and set email', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
+    it('should enable new order and set email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableNewOrder', baseContext);
 
       const successMessage = await emailAlertsPage.setNewOrder(page, true, 'demo@prestashop.com');
       expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
@@ -165,9 +163,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      // Go to home page
       await foLoginPage.goToHomePage(page);
-      // Go to the first product page
       await homePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
@@ -206,40 +202,104 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
 
-    it('should check that the confirmation mail is in mailbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMail', baseContext);
-
-      // eslint-disable-next-line consistent-return
-      mailListener.getAllEmail((err, emails) => {
-        if (err) return console.log(err);
-        console.log('There are %s emails', emails.length);
-      });
-
-      console.log(newMail.subject);
-      expect(newMail.subject).to.contains('Order confirmation');
-      mailListener.on('new', (email: MailDevEmail) => {
-        newMail = email;
-      });
-      console.log(newMail.subject);
-      expect(newMail.subject).to.contains('Order confirmation');
-      mailListener.on('new', (email: MailDevEmail) => {
-        newMail = email;
-      });
-      console.log(newMail.subject);
-      expect(newMail.subject).to.contains('Order confirmation');
-    });
-
     it('should close the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeShop', baseContext);
 
-      page = await foMerchandiseReturnsPage.closePage(browserContext, page, 0);
+      page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await emailAlertsPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
     });
   });
 
+  describe('BO: Get create order ID and reference', async () => {
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should get the first order ID', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
+
+      orderID = await ordersPage.getOrderIDNumber(page);
+      expect(orderID).to.not.equal(1);
+    });
+
+    it('should get the first Order reference', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
+
+      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      expect(orderReference).to.not.eq(null);
+    });
+  });
+
+  describe('Check emails', async () => {
+    it('should get the number of all emails', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfEmails', baseContext);
+
+      numberOfEmails = allEmails.length;
+      expect(numberOfEmails).to.not.equal(0);
+    });
+
+    it('should check that the order confirmation mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderConfirmationMail', baseContext);
+
+      expect(allEmails[numberOfEmails - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Order confirmation`);
+    });
+
+    it('should check that the payment confirmation mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentMail', baseContext);
+
+      expect(allEmails[numberOfEmails - 2].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Awaiting bank wire payment`);
+    });
+
+    it('should check that the new order mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNewOrderMail', baseContext);
+
+      expect(allEmails[numberOfEmails - 3].subject).to
+        .equal(`[${global.INSTALL.SHOP_NAME}] New order : #${orderID} - ${orderReference}`);
+    });
+  });
+
   describe(`BO: case 2 - Disable 'New order' in the module '${Modules.psEmailAlerts.name}'`, async () => {
+    it('should go to \'Modules > Module Manager\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.modulesParentLink,
+        dashboardPage.moduleManagerLink,
+      );
+      await moduleManager.closeSfToolBar(page);
+
+      const pageTitle = await moduleManager.getPageTitle(page);
+      expect(pageTitle).to.contains(moduleManager.pageTitle);
+    });
+
+    it(`should search the module ${Modules.psEmailAlerts.name}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+
+      const isModuleVisible = await moduleManager.searchModule(page, Modules.psEmailAlerts);
+      expect(isModuleVisible).to.equal(true);
+    });
+
+    it(`should go to the configuration page of the module '${Modules.psEmailAlerts.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
+
+      await moduleManager.goToConfigurationPage(page, Modules.psEmailAlerts.tag);
+
+      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
+      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+    });
+
     it('should disable new order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns2', baseContext);
 
@@ -248,7 +308,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
   });
 
-  describe('FO: Create new order', async () => {
+  describe('FO: Create second order', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
@@ -302,11 +362,32 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
+  });
 
-    it('should check that the confirmation mail is in mailbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMail2', baseContext);
+  describe('Check emails', async () => {
+    it('should check the number of emails', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfEmails', baseContext);
 
-      expect(newMail.subject).to.not.contains('Order confirmation');
+      const number = allEmails.length;
+      expect(number).to.equal(numberOfEmails + 2);
+    });
+
+    it('should check that the new order confirmation mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderConfirmationMail2', baseContext);
+
+      expect(allEmails[allEmails.length - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Order confirmation`);
+    });
+
+    it('should check that the payment confirmation mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentMail2', baseContext);
+
+      expect(allEmails[allEmails.length - 2].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Awaiting bank wire payment`);
+    });
+
+    it('should check that the new order mail is not in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNewOrderMailNotExist', baseContext);
+
+      expect(allEmails[allEmails.length - 3].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Order confirmation`);
     });
   });
 
