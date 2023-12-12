@@ -4959,16 +4959,16 @@
         },
         {
             "name": "prestashop/ps_checkpayment",
-            "version": "v2.0.6",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_checkpayment.git",
-                "reference": "d953dac82fe7f046d96a9f752a645360060957f2"
+                "reference": "030a828cbcade2b381c8613775bdd4460852158d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_checkpayment/zipball/d953dac82fe7f046d96a9f752a645360060957f2",
-                "reference": "d953dac82fe7f046d96a9f752a645360060957f2",
+                "url": "https://api.github.com/repos/PrestaShop/ps_checkpayment/zipball/030a828cbcade2b381c8613775bdd4460852158d",
+                "reference": "030a828cbcade2b381c8613775bdd4460852158d",
                 "shasum": ""
             },
             "require": {
@@ -4997,9 +4997,9 @@
             "description": "PrestaShop module ps_checkpayment",
             "homepage": "https://github.com/PrestaShop/ps_checkpayment",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_checkpayment/tree/v2.0.6"
+                "source": "https://github.com/PrestaShop/ps_checkpayment/tree/v2.1.0"
             },
-            "time": "2022-12-06T12:20:46+00:00"
+            "time": "2023-11-17T14:46:55+00:00"
         },
         {
             "name": "prestashop/ps_contactinfo",
