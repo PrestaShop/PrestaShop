@@ -76,7 +76,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             ],
             provider: QueryProvider::class,
             extraProperties: [
-                'query' => SearchProducts::class,
+                'CQRSQuery' => SearchProducts::class,
             ]
         ),
     ],

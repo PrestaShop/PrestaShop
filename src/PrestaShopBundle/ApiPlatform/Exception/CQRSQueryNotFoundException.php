@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,23 +27,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform\Normalizer;
+namespace PrestaShopBundle\ApiPlatform\Exception;
 
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer as SfObjectNormalizer;
+use ApiPlatform\Exception\InvalidResourceException;
 
 /**
- * Used to be automatic injected in PrestaShopBundle/ApiPlatform/DomainSerializer::normalizers with
- * prestashop.api.denormalizers tagged services.
+ * Is thrown when the CQRS query property is not defined on a resource on which it should be.
  */
-class ObjectDenormalizer extends SfObjectNormalizer
+class CQRSQueryNotFoundException extends InvalidResourceException
 {
-    /**
-     * ObjectDenormalizer must be the last denormalizer as a fallback.
-     *
-     * @return int
-     */
-    public static function getDefaultPriority(): int
-    {
-        return -1;
-    }
 }

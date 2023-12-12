@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use ApiPlatform\Exception\InvalidResourceException;
 
 /**
- * Is thrown when the query provider does not match any extra properties.
+ * Is thrown when the CQRS query property is not defined on a resource on which it should be.
  */
-class NoExtraPropertiesFoundException extends DomainException
+class CQRSCommandNotFoundException extends InvalidResourceException
 {
 }

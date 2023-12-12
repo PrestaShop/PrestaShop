@@ -51,6 +51,10 @@ parameters:
     - '#^Function smartyRegisterFunction not found\.$#'
     ## Doctrine Entities
     - '#Property PrestaShopBundle\\Entity\\[A-Za-z]+\:\:\$[A-Za-z]+ is never written, only read.#'
+    ## CQRS API Platform operations
+    -
+      message: '#Constructor of class [a-zA-Z0-9\\_]+ has an unused parameter \$[a-zA-Z0-9_]+.$#'
+      path: src/PrestaShopBundle/ApiPlatform/Metadata/
   reportUnmatchedIgnoredErrors: false
   universalObjectCratesClasses:
     - Cookie

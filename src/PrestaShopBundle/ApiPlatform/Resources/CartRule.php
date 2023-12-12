@@ -38,7 +38,7 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
         new Put(
             uriTemplate: '/cart-rule',
             processor: CommandProcessor::class,
-            extraProperties: ['command' => EditCartRuleCommand::class]
+            extraProperties: ['CQRSCommand' => EditCartRuleCommand::class]
         ),
     ],
 )]

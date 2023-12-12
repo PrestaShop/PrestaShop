@@ -27,11 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\ApiPlatform;
+namespace Tests\Integration\ApiPlatform\EndPoint;
 
 use Tests\Resources\DatabaseDump;
 
-class GetHookTest extends ApiTestCase
+class GetHookApiTest extends ApiTestCase
 {
     public static function setUpBeforeClass(): void
     {

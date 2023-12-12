@@ -28,18 +28,40 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
+use PrestaShop\Decimal\DecimalNumber;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class DateTimeImmutableDenormalizer implements DenormalizerInterface
+/**
+ * Normalize DecimalNumber values
+ */
+#[AutoconfigureTag('prestashop.api.normalizers')]
+class DecimalNumberNormalizer implements DenormalizerInterface, NormalizerInterface
 {
     public function denormalize($data, string $type, string $format = null, array $context = [])
     {
-        return new \DateTimeImmutable($data);
+        return new DecimalNumber((string) $data);
     }
 
     public function supportsDenormalization($data, string $type, string $format = null)
     {
-        return \DateTimeImmutable::class === $type;
+        return DecimalNumber::class === $type;
+    }
+
+    public function normalize($object, string $format = null, array $context = [])
+    {
+        if (!($object instanceof DecimalNumber)) {
+            throw new InvalidArgumentException('Expected object to be a ' . DecimalNumber::class);
+        }
+
+        return (float) (string) $object;
+    }
+
+    public function supportsNormalization($data, string $format = null)
+    {
+        return $data instanceof DecimalNumber;
     }
 
     /**
@@ -47,7 +69,7 @@ class DateTimeImmutableDenormalizer implements DenormalizerInterface
      *
      * @return int
      */
-    public static function getDefaultPriority(): int
+    public static function getNormalizerPriority(): int
     {
         return 10;
     }

@@ -27,18 +27,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\ApiPlatform;
+namespace Tests\Integration\ApiPlatform\EndPoint;
 
 class ApiAccessTokenEndpointTest extends ApiTestCase
 {
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::createApiAccess([
-            'hook_read',
-            'hook_write',
-            'api_access_read',
-        ],
+        static::createApiAccess(
+            [
+                'hook_read',
+                'hook_write',
+                'customer_group_read',
+            ],
             9999
         );
     }
@@ -58,7 +59,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
             'scope' => [
                 'hook_read',
                 'hook_write',
-                'api_access_read',
+                'customer_group_read',
             ],
         ]];
         $options = ['extra' => $parameters];
@@ -72,7 +73,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'is_authenticated',
                 'hook_read',
                 'hook_write',
-                'api_access_read',
+                'customer_group_read',
             ],
             $decodedToken->scopes
         );
@@ -83,5 +84,53 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
         static::assertNotNull($decodedToken->nbf);
         static::assertNotNull($decodedToken->exp);
         static::assertNotNull($decodedToken->sub);
+    }
+
+    public function testNonExistentScope(): void
+    {
+        $client = static::createClient();
+        $parameters = ['parameters' => [
+            'client_id' => static::CLIENT_ID,
+            'client_secret' => static::$clientSecret,
+            'grant_type' => 'client_credentials',
+            'scope' => [
+                'non_existent_scope',
+            ],
+        ]];
+        $options = ['extra' => $parameters];
+        $response = $client->request('POST', '/api/oauth2/token', $options);
+        $this->assertEquals(400, $response->getInfo('http_code'));
+        $decodedResponse = json_decode($response->getContent(false), true);
+        $this->assertNotFalse($decodedResponse);
+        $this->assertEquals([
+            'error' => 'invalid_scope',
+            'error_description' => 'The requested scope is invalid, unknown, or malformed',
+            'hint' => 'Check the `non_existent_scope` scope',
+            'message' => 'The requested scope is invalid, unknown, or malformed',
+        ], $decodedResponse);
+    }
+
+    public function testUnauthorizedScope(): void
+    {
+        $client = static::createClient();
+        $parameters = ['parameters' => [
+            'client_id' => static::CLIENT_ID,
+            'client_secret' => static::$clientSecret,
+            'grant_type' => 'client_credentials',
+            'scope' => [
+                'customer_group_write',
+            ],
+        ]];
+        $options = ['extra' => $parameters];
+        $response = $client->request('POST', '/api/oauth2/token', $options);
+        $this->assertEquals(401, $response->getInfo('http_code'));
+        $decodedResponse = json_decode($response->getContent(false), true);
+        $this->assertNotFalse($decodedResponse);
+        $this->assertEquals([
+            'error' => 'access_denied',
+            'error_description' => 'The resource owner or authorization server denied the request.',
+            'hint' => 'Usage of scope `customer_group_write` is not allowed for this client',
+            'message' => 'The resource owner or authorization server denied the request.',
+        ], $decodedResponse);
     }
 }

@@ -131,11 +131,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
 
-  PrestaShopBundle\ApiPlatform\DomainSerializer $apiPlatformSerializer:
-    class: PrestaShopBundle\ApiPlatform\DomainSerializer
-    arguments:
-      [ !tagged prestashop.api.denormalizers ]
-
   prestashop.attributes.ressource.metadata.collection.factory:
     class: PrestaShopBundle\ApiPlatform\Metadata\ScopesToSecurityMetadataCollectionFactoryDecorator
     decorates: api_platform.metadata.resource.metadata_collection_factory
