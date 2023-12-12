@@ -16,6 +16,8 @@ class PsEmailAlerts extends ModuleConfiguration {
 
   private readonly newOrderToggle: (toEnable: boolean) => string;
 
+  private readonly addOrderEmailInput: string;
+
   private readonly returnEmailInput: string;
 
   private readonly outOfStockToggle: (toEnable: boolean) => string;
@@ -46,6 +48,28 @@ class PsEmailAlerts extends ModuleConfiguration {
   }
 
   /* Methods */
+
+  /**
+   * Set new order
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable new order
+   * @param email {string} Email to set
+   * @returns {Promise<number>}
+   */
+  async setNewOrder(page: Page, toEnable: boolean, email: string = ''): Promise<string> {
+    await this.setChecked(page, this.newOrderToggle(toEnable ? 'on' : 'off'));
+    if (toEnable) {
+      await this.setValue(page, this.addOrderEmailInput, email);
+      await page.keyboard.press('Enter');
+    }
+    // To delete after the fix of https://github.com/PrestaShop/PrestaShop/issues/34784
+    await this.setChecked(page, this.outOfStockToggle('off'));
+    await this.setChecked(page, this.returnsToggle('off'));
+    await this.clickAndWaitForURL(page, this.saveButton);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
   /**
    * Set returns
    * @param page {Page} Browser tab
@@ -53,7 +77,6 @@ class PsEmailAlerts extends ModuleConfiguration {
    * @param email {string} Email to set
    * @returns {Promise<number>}
    */
-
   async setReturns(page: Page, toEnable: boolean, email: string = ''): Promise<string> {
     // To delete after the fix of https://github.com/PrestaShop/PrestaShop/issues/34784
     await this.setChecked(page, this.newOrderToggle(false));
