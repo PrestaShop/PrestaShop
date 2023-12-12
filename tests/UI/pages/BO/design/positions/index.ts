@@ -103,7 +103,7 @@ class Positions extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfHooks(page: Page): Promise<number> {
-    return (await page.$$(this.modulePositionFormHookSectionVisible)).length;
+    return page.locator(this.modulePositionFormHookSectionVisible).count();
   }
 
   /**

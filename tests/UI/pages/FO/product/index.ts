@@ -727,7 +727,7 @@ class Product extends FOBasePage {
    */
   async isUnavailableProductSizeDisplayed(page: Page, size: string): Promise<boolean> {
     await page.waitForTimeout(2000);
-    return await page.$(this.productSizeOption(size)) !== null;
+    return (await page.locator(this.productSizeOption(size)).count()) !== 0;
   }
 
   /**

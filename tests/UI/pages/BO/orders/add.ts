@@ -386,7 +386,7 @@ class AddOrder extends BOBasePage {
   async getCustomersSearchNumber(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.customerCardNameTitle(1));
 
-    return page.$$eval(this.customerResultsBlock, (divs: HTMLElement[]) => divs.length);
+    return page.locator(this.customerResultsBlock).count();
   }
 
   /**
@@ -560,7 +560,7 @@ class AddOrder extends BOBasePage {
   async getOrdersNumber(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.customerOrdersTable);
 
-    return page.$$eval(this.customerOrdersTableRows, (trs: HTMLElement[]) => trs.length);
+    return page.locator(this.customerOrdersTableRows).count();
   }
 
   /**

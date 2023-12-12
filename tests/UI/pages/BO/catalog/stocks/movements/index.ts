@@ -395,7 +395,7 @@ class Movements extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
-    return (await page.$$(this.tableRows)).length;
+    return page.locator(this.tableRows).count();
   }
 
   /**

@@ -190,7 +190,7 @@ class Email extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
-    return (await page.$$(`${this.tableRows}:not(.empty_row)`)).length;
+    return page.locator(`${this.tableRows}:not(.empty_row)`).count();
   }
 
   /**

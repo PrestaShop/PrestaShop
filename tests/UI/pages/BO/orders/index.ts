@@ -34,6 +34,8 @@ class Order extends BOBasePage {
 
   private readonly tableBody: string;
 
+  private readonly tableRows: string;
+
   private readonly tableRow: (row: number) => string;
 
   private readonly tableEmptyRow: string;
@@ -139,8 +141,9 @@ class Order extends BOBasePage {
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
-    this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
+    this.tableRows = `${this.tableBody} tr`;
+    this.tableRow = (row: number) => `${this.tableRows}:nth-child(${row})`;
+    this.tableEmptyRow = `${this.tableRows}.empty_row`;
     this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
     this.tableColumnStatus = (row: number) => `${this.tableRow(row)} td.column-osname`;
     this.updateStatusInTableButton = (row: number) => `${this.tableColumnStatus(row)}.choice-type.text-left > div > button`;
@@ -149,7 +152,7 @@ class Order extends BOBasePage {
       + ` button[data-value='${statusId}']`;
     // Preview row
     this.expandIcon = (row: number) => `${this.tableRow(row)} span.preview-toggle`;
-    this.previewRow = `${this.tableBody} tr.preview-row td div[data-role=preview-row]`;
+    this.previewRow = `${this.tableRows}.preview-row td div[data-role=preview-row]`;
     this.shippingDetails = `${this.previewRow} div[data-role=shipping-details]`;
     this.customerEmail = `${this.previewRow} div[data-role=email]`;
     this.invoiceDetails = `${this.previewRow} div[data-role=invoice-details]`;
@@ -355,7 +358,7 @@ class Order extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfOrdersInPage(page: Page): Promise<number> {
-    return (await page.$$(`${this.tableBody} tr`)).length;
+    return page.locator(this.tableRows).count();
   }
 
   /**

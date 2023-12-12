@@ -143,7 +143,7 @@ class PackTab extends BOBasePage {
    * @param page {Page} Browser tab
    */
   async getNumberOfSearchedProduct(page: Page): Promise<number> {
-    return (await page.$$(`${this.packSearchResult} div`)).length;
+    return page.locator(`${this.packSearchResult} div`).count();
   }
 
   /**
@@ -168,7 +168,7 @@ class PackTab extends BOBasePage {
    * @param page {Page} Browser tab
    */
   async getNumberOfProductsInPack(page: Page): Promise<number> {
-    return (await page.$$(`${this.listOfProducts} li`)).length;
+    return page.locator(`${this.listOfProducts} li`).count();
   }
 
   /**

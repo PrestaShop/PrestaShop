@@ -389,7 +389,7 @@ class HomePage extends FOBasePage {
         throw new Error(`Block ${blockID} was not found`);
     }
 
-    return (await page.$$(columnSelector)).length;
+    return page.locator(columnSelector).count();
   }
 
   /**

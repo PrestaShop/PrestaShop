@@ -72,9 +72,8 @@ class ProductComments extends ModuleConfiguration {
     if (await this.elementVisible(page, this.reviewsTableEmptyRows(table), 3000)) {
       return 0;
     }
-    const selector = this.reviewsTableRows(table);
 
-    return page.$$eval(selector, (rows) => rows.length);
+    return page.locator(this.reviewsTableRows(table)).count();
   }
 
   /**

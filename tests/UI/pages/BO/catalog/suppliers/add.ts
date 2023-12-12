@@ -169,13 +169,11 @@ class AddSupplier extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtons = await page.$$(this.deleteKeywordLink(lang));
+    const closeButtonsLocator = page.locator(this.deleteKeywordLink(lang));
 
-    /* eslint-disable no-restricted-syntax */
-    for (const closeButton of closeButtons) {
-      await closeButton.click();
+    for (let i = (await closeButtonsLocator.count()) - 1; i > 0; i--) {
+      await closeButtonsLocator.nth(i).click();
     }
-    /* eslint-enable no-restricted-syntax */
   }
 
   /**
@@ -186,12 +184,10 @@ class AddSupplier extends BOBasePage {
    * @return {Promise<void>}
    */
   async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
-    /* eslint-disable no-restricted-syntax */
-    for (const keyword of keywords) {
-      await page.locator(this.metaKeywordsInput(idLang)).fill(keyword);
+    for (let i = 0; i < keywords.length; i++) {
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keywords[i]);
       await page.keyboard.press('Enter');
     }
-    /* eslint-enable no-restricted-syntax */
   }
 
   /**

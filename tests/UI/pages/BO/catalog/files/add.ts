@@ -60,17 +60,13 @@ class AddFile extends BOBasePage {
     await this.setValue(page, this.nameInput(1), fileData.name);
     await this.setValue(page, this.descriptionInput(1), fileData.description);
 
-    // Fill name and description in french
+    // Fill name and description in French
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.nameInput(2), fileData.frName);
     await this.setValue(page, this.descriptionInput(2), fileData.frDescription);
 
     // Upload file
-    const fileInputElement = await page.$(this.fileInput);
-
-    if (fileInputElement) {
-      await fileInputElement.setInputFiles(fileData.filename);
-    }
+    await this.uploadFile(page, this.fileInput, fileData.filename);
 
     if (save) {
       // Save

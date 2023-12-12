@@ -102,6 +102,8 @@ class ImageSettings extends BOBasePage {
 
   private readonly selectRegenerateThumbnailsFormat: (imageFormat: string) => string;
 
+  private readonly optionSelectRegenerateThumbnailsFormat: (imageFormat: string) => string;
+
   private readonly checkboxRegenerateThumbnailsErasePreviousImages: (value: string) => string;
 
   private readonly submitRegenerateThumbnails: string;
@@ -195,6 +197,8 @@ class ImageSettings extends BOBasePage {
     this.selectRegenerateThumbnailsImage = `${this.formRegenerateThumbnails} select[name="type"]`;
     this.selectRegenerateThumbnailsFormat = (imageFormat: string) => `${this.formRegenerateThumbnails} `
       + `select[name="format_${imageFormat}"]`;
+    this.optionSelectRegenerateThumbnailsFormat = (imageFormat: string) => `${this.selectRegenerateThumbnailsFormat(imageFormat)
+    } option`;
     this.checkboxRegenerateThumbnailsErasePreviousImages = (value: string) => `${this.formRegenerateThumbnails} `
       + `input#erase_${value}`;
     this.submitRegenerateThumbnails = `${this.formRegenerateThumbnails} button[type="submit"]`;
@@ -580,12 +584,10 @@ class ImageSettings extends BOBasePage {
   ): Promise<string[]> {
     await this.waitForHiddenSelector(page, this.selectRegenerateThumbnailsFormat(image));
 
-    return page.$$eval(
-      `${this.selectRegenerateThumbnailsFormat(image)} option`,
-      (all: HTMLElement[]) => all
-        .map((el: HTMLElement) => el.textContent)
-        .filter((el: string|null): el is string => (el !== null && el !== 'All')),
-    );
+    return (await page
+      .locator(this.optionSelectRegenerateThumbnailsFormat(image))
+      .allTextContents())
+      .filter((el: string|null): el is string => (el !== null && el !== 'All'));
   }
 }
 

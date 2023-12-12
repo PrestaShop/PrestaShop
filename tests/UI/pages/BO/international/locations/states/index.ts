@@ -234,7 +234,7 @@ class States extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
-    return (await page.$$(`${this.tableBodyRows}:not(.empty_row)`)).length;
+    return page.locator(`${this.tableBodyRows}:not(.empty_row)`).count();
   }
 
   /**

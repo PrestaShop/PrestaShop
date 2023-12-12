@@ -146,14 +146,15 @@ class Invoice extends BOBasePage {
    * @returns {Promise<void>}
    */
   async chooseStatus(page: Page, statusName: string): Promise<void> {
-    const statusElements = await page.$$(this.statusOrderStateSpan);
+    const statusLocator = page
+      .locator(this.statusOrderStateSpan)
+      .filter({hasText: statusName});
 
-    for (let i = 0; i < statusElements.length; i++) {
-      if (await page.evaluate((element) => element.textContent, statusElements[i]) === statusName) {
-        await statusElements[i].click();
-        break;
-      }
+    if (await statusLocator.count() === 0) {
+      throw new Error(`${statusName} was not found on list`);
     }
+
+    await statusLocator.first().click();
   }
 
   /**

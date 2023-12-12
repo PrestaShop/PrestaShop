@@ -183,14 +183,14 @@ class Stocks extends BOBasePage {
     const pagesLength = await this.getProductsPagesLength(page);
 
     if (pagesLength === 0) {
-      return (await page.$$(this.productRows)).length;
+      return page.locator(this.productRows).count();
     }
     // Get number of products in all pages
     let numberOfProducts = 0;
 
     for (let i = pagesLength; i > 0; i--) {
       await this.paginateTo(page, i);
-      numberOfProducts += (await page.$$(this.productRows)).length;
+      numberOfProducts += await page.locator(this.productRows).count();
     }
 
     return numberOfProducts;
@@ -207,7 +207,7 @@ class Stocks extends BOBasePage {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }
 
-    return (await page.$$(this.productRows)).length;
+    return page.locator(this.productRows).count();
   }
 
   /**
@@ -216,7 +216,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getProductsPagesLength(page: Page): Promise<number> {
-    return (await page.$$(this.paginationListItem)).length;
+    return page.locator(this.paginationListItem).count();
   }
 
   /**
@@ -238,7 +238,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<number>}
    */
   async resetFilter(page: Page): Promise<number> {
-    const closeButtons = await page.$$(this.searchTagsListCloseSpan);
+    const closeButtons = await page.locator(this.searchTagsListCloseSpan).all();
 
     /* eslint-disable no-restricted-syntax */
     for (const closeButton of closeButtons) {
