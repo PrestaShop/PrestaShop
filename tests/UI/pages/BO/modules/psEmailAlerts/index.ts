@@ -11,6 +11,11 @@ class PsEmailAlerts extends ModuleConfiguration {
   public readonly pageTitle: string;
 
   private readonly productAvailabilityCheckbox: (toEnable: boolean) => string;
+  private readonly orderEditToggle: (toEnable: string) => string;
+
+  private readonly saveModuleForm: string;
+
+  private readonly newOrderToggle: (toEnable: string) => string;
 
   private readonly submitCustomerNotifications: string;
 
@@ -44,11 +49,29 @@ class PsEmailAlerts extends ModuleConfiguration {
     this.addOrderEmailInput = '#fieldset_1_1 div.form-wrapper div:nth-child(2) > div > div > input';
     this.outOfStockCheckbox = (toEnable: boolean) => `#MA_MERCHANT_OOS_${toEnable ? 'on' : 'off'}`;
     this.returnsCheckbox = (toEnable: boolean) => `#MA_RETURN_SLIP_${toEnable ? 'on' : 'off'}`;
+    this.orderEditToggle = (toEnable: string) => `#MA_ORDER_EDIT_${toEnable}`;
+    this.saveModuleForm = '#module_form_submit_btn';
+    this.newOrderToggle = (toEnable: string) => `#MA_MERCHANT_ORDER_${toEnable}`;
+    this.outOfStockToggle = (toEnable: string) => `#MA_MERCHANT_OOS_${toEnable}`;
+    this.returnsToggle = (toEnable: string) => `#MA_RETURN_SLIP_${toEnable}`;
     this.returnEmailInput = '#fieldset_1_1 div.form-wrapper div:nth-child(7) > div > div input';
     this.submitMerchantNotifications = 'button[name="submitMAMerchant"]';
   }
 
   /* Methods */
+
+  /**
+   * Set edit order
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable edit order
+   * @returns {Promise<number>}
+   */
+  async setEditOrder(page: Page, toEnable: boolean): Promise<string> {
+    await this.setChecked(page, this.orderEditToggle(toEnable ? 'on' : 'off'));
+    await this.clickAndWaitForURL(page, this.saveModuleForm);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
 
   /**
    * Set new order
