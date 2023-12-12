@@ -6156,16 +6156,16 @@
         },
         {
             "name": "prestashop/statscatalog",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statscatalog.git",
-                "reference": "aa66d122788be439dc4d5810fb460b36ad8f53e0"
+                "reference": "ba29de8fc58a0ab1f80af62ee964f65cf371f427"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statscatalog/zipball/aa66d122788be439dc4d5810fb460b36ad8f53e0",
-                "reference": "aa66d122788be439dc4d5810fb460b36ad8f53e0",
+                "url": "https://api.github.com/repos/PrestaShop/statscatalog/zipball/ba29de8fc58a0ab1f80af62ee964f65cf371f427",
+                "reference": "ba29de8fc58a0ab1f80af62ee964f65cf371f427",
                 "shasum": ""
             },
             "require": {
@@ -6188,9 +6188,9 @@
             "description": "PrestaShop module statscatalog",
             "homepage": "https://github.com/PrestaShop/statscatalog",
             "support": {
-                "source": "https://github.com/PrestaShop/statscatalog/tree/v2.0.3"
+                "source": "https://github.com/PrestaShop/statscatalog/tree/v2.0.4"
             },
-            "time": "2023-01-17T13:24:23+00:00"
+            "time": "2023-11-28T15:22:40+00:00"
         },
         {
             "name": "prestashop/statscheckup",
