@@ -4570,16 +4570,16 @@
         },
         {
             "name": "prestashop/dashtrends",
-            "version": "v2.1.2",
+            "version": "v2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashtrends.git",
-                "reference": "e2cbdb088241a17118a8c4424b468a36216f8316"
+                "reference": "c1661f19edfabbc584c725fecbf0d63d7595866b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/e2cbdb088241a17118a8c4424b468a36216f8316",
-                "reference": "e2cbdb088241a17118a8c4424b468a36216f8316",
+                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/c1661f19edfabbc584c725fecbf0d63d7595866b",
+                "reference": "c1661f19edfabbc584c725fecbf0d63d7595866b",
                 "shasum": ""
             },
             "require": {
@@ -4607,9 +4607,9 @@
             "description": "PrestaShop module dashtrends",
             "homepage": "https://github.com/PrestaShop/dashtrends",
             "support": {
-                "source": "https://github.com/PrestaShop/dashtrends/tree/v2.1.2"
+                "source": "https://github.com/PrestaShop/dashtrends/tree/v2.1.3"
             },
-            "time": "2023-06-19T13:25:37+00:00"
+            "time": "2023-11-28T14:23:21+00:00"
         },
         {
             "name": "prestashop/decimal",
