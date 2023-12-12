@@ -4788,20 +4788,23 @@
         },
         {
             "name": "prestashop/pagesnotfound",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/pagesnotfound.git",
-                "reference": "ac5b640daa39356c8ca96679cbe58e83964b41d2"
+                "reference": "cf05fc7770f9beff2a5c2f17bdfe2da7652744db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/ac5b640daa39356c8ca96679cbe58e83964b41d2",
-                "reference": "ac5b640daa39356c8ca96679cbe58e83964b41d2",
+                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/cf05fc7770f9beff2a5c2f17bdfe2da7652744db",
+                "reference": "cf05fc7770f9beff2a5c2f17bdfe2da7652744db",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -4817,9 +4820,9 @@
             "description": "PrestaShop module pagesnotfound",
             "homepage": "https://github.com/PrestaShop/pagesnotfound",
             "support": {
-                "source": "https://github.com/PrestaShop/pagesnotfound/tree/v2.0.2"
+                "source": "https://github.com/PrestaShop/pagesnotfound/tree/v2.0.3"
             },
-            "time": "2022-01-11T07:53:21+00:00"
+            "time": "2023-06-16T10:59:52+00:00"
         },
         {
             "name": "prestashop/productcomments",
