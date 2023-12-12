@@ -42,11 +42,53 @@
   </div>
 {%- endblock -%}
 
+{# Override feature collection template to remove the label and init the table #}
+{%- block feature_collection_row -%}
+  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' table feature-values-table-collection')|trim }) -%}
+
+  {# Hide table if content is empty #}
+  {% if form.vars.value is empty %}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' d-none')|trim }) -%}
+  {% endif %}
+
+  <table {{ block('widget_attributes') }}>
+    <thead class="thead-default">
+    <tr>
+      <th>{{ 'Feature'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Feature value'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{- block('form_rows') -}}
+    </tbody>
+  </table>
+{%- endblock -%}
+
+{%- block feature_collection_item_row -%}
+  {# Feature inputs are rendered even if they are hidden types, and hidden via CSS, so their data is still submitted #}
+  {% set featureId = form.feature_id.vars.value %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' product-feature-collection')|trim, 'data-feature-id': featureId}) -%}
+  <tr {{ block('widget_attributes') }}>
+    <td colspan="3">
+      {{ form_widget(form.feature_id) }}
+      {{ form_widget(form.feature_name) }}
+    </td>
+  </tr>
+  {# The children of the collection are rendered as TR rows in the same table, we only pass the data from parent #}
+  {{- block('form_rows') -}}
+{%- endblock -%}
+
 {%- block feature_value_row -%}
-  <tr class="product-feature">
+  {# Get feature values from the ancestor #}
+  {% set featureCollectionParent = form.parent.parent %}
+  {% set featureId = featureCollectionParent.feature_id.vars.value %}
+  {% set featureName = featureCollectionParent.feature_name.vars.value %}
+  <tr class="product-feature-value" data-feature-id="{{ featureId }}">
     <td>
-      {{ form_row(form.feature_name) }}
-      {{ form_row(form.feature_id) }}
+      {{ featureName }}
     </td>
     <td>
       {% if is_custom is null %}
@@ -74,29 +116,4 @@
       {{ form_rest(form) }}
     </td>
   </tr>
-{%- endblock -%}
-
-{# Override features collection template to remove the label and init the table #}
-{%- block collection_row -%}
-  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
-  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' table feature-values-table-collection')|trim }) -%}
-
-  {# Hide table if content is empty#}
-  {% if form.vars.value is empty %}
-    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' d-none')|trim }) -%}
-  {% endif %}
-
-  <table {{ block('widget_attributes') }}>
-    <thead class="thead-default">
-    <tr>
-      <th>{{ 'Feature'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th>{{ 'Feature value'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-      {{- block('form_rows') -}}
-    </tbody>
-  </table>
 {%- endblock -%}

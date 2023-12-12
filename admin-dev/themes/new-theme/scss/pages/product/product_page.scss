@@ -591,6 +591,10 @@ $product-page-padding-bottom: 80px !default;
         max-width: 320px;
       }
     }
+
+    .product-feature-collection {
+      display: none;
+    }
   }
 
   // Combination details form

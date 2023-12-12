@@ -39,7 +39,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FeatureValueType extends TranslatorAwareType
 {
@@ -49,22 +48,6 @@ class FeatureValueType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('feature_id', HiddenType::class, [
-                'attr' => [
-                    'class' => 'feature-id',
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('Choose a feature', 'Admin.Catalog.Feature'),
-                    ]),
-                ],
-            ])
-            ->add('feature_name', TextPreviewType::class, [
-                'row_attr' => [
-                    'class' => 'feature-name',
-                ],
-                'label' => false,
-            ])
             ->add('feature_value_id', HiddenType::class, [
                 'attr' => [
                     'class' => 'feature-value-id',
@@ -72,6 +55,9 @@ class FeatureValueType extends TranslatorAwareType
             ])
             ->add('feature_value_name', TextPreviewType::class, [
                 'row_attr' => [
+                    'class' => 'feature-value-preview',
+                ],
+                'attr' => [
                     'class' => 'feature-value-name',
                 ],
                 'label' => false,

@@ -949,31 +949,48 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['details']['features']['feature_values'] = [];
-        $expectedOutputData['details']['features']['feature_values'][] = [
+        $expectedOutputData['details']['features']['feature_collection'] = [];
+
+        $customLocalizedValues = [
+            1 => 'english custom feature',
+            2 => 'propriété personnalisée française',
+        ];
+        $expectedOutputData['details']['features']['feature_collection'][] = [
             'feature_id' => 42,
             'feature_name' => 'Test feature',
-            'feature_value_id' => 51,
-            'feature_value_name' => 'english feature',
-            'is_custom' => false,
+            'feature_values' => [
+                [
+                    'feature_value_id' => 51,
+                    'feature_value_name' => 'english feature',
+                    'is_custom' => false,
+                ],
+                [
+                    'feature_value_id' => 69,
+                    'feature_value_name' => 'english custom feature',
+                    'is_custom' => true,
+                    'custom_value' => $customLocalizedValues,
+                ],
+            ],
+        ];
+        $expectedOutputData['details']['features']['feature_collection'][] = [
+            'feature_id' => 51,
+            'feature_name' => 'Test feature 2',
+            'feature_values' => [
+                [
+                    'feature_value_id' => 99,
+                    'feature_value_name' => 'other english feature',
+                    'is_custom' => false,
+                ],
+            ],
         ];
 
         $localizedValues = [
             1 => 'english feature',
             2 => 'propriété française',
         ];
-
-        $customLocalizedValues = [
-            1 => 'english custom feature',
-            2 => 'propriété personnalisée française',
-        ];
-        $expectedOutputData['details']['features']['feature_values'][] = [
-            'feature_id' => 42,
-            'feature_name' => 'Test feature',
-            'feature_value_id' => 69,
-            'feature_value_name' => 'english custom feature',
-            'is_custom' => true,
-            'custom_value' => $customLocalizedValues,
+        $otherLocalizedValues = [
+            1 => 'other english feature',
+            2 => 'autre propriété française',
         ];
 
         $productData = [
@@ -989,6 +1006,12 @@ class ProductFormDataProviderTest extends TestCase
                     'feature_value_id' => 69,
                     'custom' => true,
                     'localized_values' => $customLocalizedValues,
+                ],
+                [
+                    'feature_id' => 51,
+                    'feature_value_id' => 99,
+                    'custom' => false,
+                    'localized_values' => $otherLocalizedValues,
                 ],
             ],
         ];
@@ -1717,6 +1740,7 @@ class ProductFormDataProviderTest extends TestCase
             'Feature A' => 1,
             'Feature B' => 2,
             'Test feature' => 42,
+            'Test feature 2' => 51,
         ]);
 
         return $featureProviderMock;

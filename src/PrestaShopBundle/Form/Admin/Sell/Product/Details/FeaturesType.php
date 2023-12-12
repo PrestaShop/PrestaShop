@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -90,13 +89,7 @@ class FeaturesType extends TranslatorAwareType
                 ],
                 'disabled' => true,
             ])
-            ->add('feature_values', CollectionType::class, [
-                'entry_type' => FeatureValueType::class,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__FEATURE_VALUE_INDEX__',
-            ])
+            ->add('feature_collection', FeatureCollectionType::class)
         ;
     }
 

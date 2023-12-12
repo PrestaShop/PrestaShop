@@ -355,11 +355,17 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         $featureNames = $this->getFeatureNames();
-        $productFeatureValues = [];
+        $productFeatureCollection = [];
         foreach ($featureValues as $featureValue) {
+            if (!isset($productFeatureCollection[$featureValue->getFeatureId()])) {
+                $productFeatureCollection[$featureValue->getFeatureId()] = [
+                    'feature_id' => $featureValue->getFeatureId(),
+                    'feature_name' => $featureNames[$featureValue->getFeatureId()],
+                    'feature_values' => [],
+                ];
+            }
+
             $productFeatureValue = [
-                'feature_id' => $featureValue->getFeatureId(),
-                'feature_name' => $featureNames[$featureValue->getFeatureId()],
                 'feature_value_id' => $featureValue->getFeatureValueId(),
                 'feature_value_name' => $featureValue->getLocalizedValues()[$this->contextLangId],
                 'is_custom' => $featureValue->isCustom(),
@@ -368,11 +374,12 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 $productFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
             }
 
-            $productFeatureValues[] = $productFeatureValue;
+            $productFeatureCollection[$featureValue->getFeatureId()]['feature_values'][] = $productFeatureValue;
         }
 
         return [
-            'feature_values' => $productFeatureValues,
+            // Return 0-indexed array, not mapped by feature ID
+            'feature_collection' => array_values($productFeatureCollection),
         ];
     }
 
