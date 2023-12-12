@@ -6194,20 +6194,23 @@
         },
         {
             "name": "prestashop/statscheckup",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statscheckup.git",
-                "reference": "ef485adc627745c7e0fa25ad8082c6f4b96dc3cf"
+                "reference": "0535d263a79e3357ea4f0d6dfba5d3cff9044584"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statscheckup/zipball/ef485adc627745c7e0fa25ad8082c6f4b96dc3cf",
-                "reference": "ef485adc627745c7e0fa25ad8082c6f4b96dc3cf",
+                "url": "https://api.github.com/repos/PrestaShop/statscheckup/zipball/0535d263a79e3357ea4f0d6dfba5d3cff9044584",
+                "reference": "0535d263a79e3357ea4f0d6dfba5d3cff9044584",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -6223,9 +6226,9 @@
             "description": "PrestaShop module statscheckup",
             "homepage": "https://github.com/PrestaShop/statscheckup",
             "support": {
-                "source": "https://github.com/PrestaShop/statscheckup/tree/v2.0.2"
+                "source": "https://github.com/PrestaShop/statscheckup/tree/v2.0.3"
             },
-            "time": "2022-01-04T15:20:35+00:00"
+            "time": "2023-11-28T14:23:23+00:00"
         },
         {
             "name": "prestashop/statsdata",
