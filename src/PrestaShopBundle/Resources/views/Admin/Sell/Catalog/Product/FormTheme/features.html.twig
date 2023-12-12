@@ -70,7 +70,9 @@
 {%- block feature_collection_item_row -%}
   {# Feature inputs are rendered even if they are hidden types, and hidden via CSS, so their data is still submitted #}
   {% set featureId = form.feature_id.vars.value %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' product-feature-collection')|trim, 'data-feature-id': featureId}) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' product-feature-collection')|trim, 'feature-id': featureId}) -%}
+  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
+  {%- set attr = attr|merge({'data-prototype': form_row(form.feature_values.vars.prototype), 'data-prototype-name': form.feature_values.vars.prototype.vars.name }) -%}
   <tr {{ block('widget_attributes') }}>
     <td colspan="3">
       {{ form_widget(form.feature_id) }}
@@ -86,23 +88,23 @@
   {% set featureCollectionParent = form.parent.parent %}
   {% set featureId = featureCollectionParent.feature_id.vars.value %}
   {% set featureName = featureCollectionParent.feature_name.vars.value %}
-  <tr class="product-feature-value" data-feature-id="{{ featureId }}">
-    <td>
+  <tr class="product-feature-value" feature-id="{{ featureId }}">
+    <td class="feature-column">
       {{ featureName }}
     </td>
     <td>
       {% if is_custom is null %}
-        {# Rendering the prototype we keep everything visble by default #}
+        {# Rendering the prototype we keep everything visible by default #}
         {% set featureValueAttributes = {} %}
         {% set customValueAttributes = {} %}
       {% elseif is_custom %}
-        {# Hide feature value when feature value is custom #}
-        {% set featureValueAttributes = {'row_attr': {'class': 'd-none'}} %}
+        {# Hide feature value name when feature value is custom #}
+        {% set featureValueAttributes = {'row_attr': {'class': (form.feature_value_name.vars.row_attr.class|default('') ~ ' d-none')|trim}} %}
         {% set customValueAttributes = {} %}
       {% else %}
         {# Hide custom inputs when feature value is not custom #}
         {% set featureValueAttributes = {} %}
-        {% set customValueAttributes = {'row_attr': {'class': 'd-none'}} %}
+        {% set customValueAttributes = {'row_attr': {'class': (form.custom_value.vars.row_attr.class|default('') ~ ' d-none')|trim}} %}
       {% endif %}
       {{ form_row(form.feature_value_name, form.feature_value_name.vars.attr|merge(featureValueAttributes)) }}
       {{ form_row(form.custom_value, form.custom_value.vars.attr|merge(customValueAttributes)) }}

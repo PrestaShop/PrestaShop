@@ -81,42 +81,70 @@ export default class FeatureValuesManager {
 
   private watchAddButton(): void {
     this.$addFeatureValueButton.on('click', () => {
-      const prototype = this.$collectionContainer.data('prototype');
-      const prototypeName = this.$collectionContainer.data('prototypeName');
-      const newIndex = $(ProductMap.featureValues.collectionRow, this.$collectionRowsContainer).length;
-
-      const $newRow = $(prototype.replace(new RegExp(prototypeName, 'g'), newIndex));
-      this.$collectionRowsContainer.append($newRow);
-
+      // Get selected values first
       const $selectedFeature = $('option:selected', this.$featureSelector);
       const featureId = <string> $selectedFeature.val();
       const featureName = <string> $selectedFeature.text();
-      $(ProductMap.featureValues.featureIdInput, $newRow).val(featureId);
-      $(ProductMap.featureValues.featureNameInput, $newRow).val(featureName);
-      $(ProductMap.featureValues.featureNamePreview, $newRow).text(featureName);
 
-      const $selectedFeatureValue = $('option:selected', this.$featureValueSelector);
-      const featureValueId = <string> $selectedFeatureValue.val();
-      const featureValueName = <string> $selectedFeatureValue.text();
+      // Check if feature collection is already present for the selected feature
+      const $featureRow = $(ProductMap.featureValues.featureRowByFeatureId(featureId), this.$collectionRowsContainer);
 
-      if (featureValueId !== '-1') {
-        $(ProductMap.featureValues.featureValueIdInput, $newRow).val(featureValueId);
-        $(ProductMap.featureValues.featureValueNameInput, $newRow).val(featureValueName);
-        $(ProductMap.featureValues.featureValueNamePreview, $newRow).text(featureValueName);
-        $(ProductMap.featureValues.isCustomInput, $newRow).val(0);
-        $(ProductMap.featureValues.customValuesContainer, $newRow).hide();
+      // Feature collection not present we must add it
+      if (!$featureRow.length) {
+        const featurePrototype = this.$collectionContainer.data('prototype');
+        const featurePrototypeName = this.$collectionContainer.data('prototypeName');
+        const newIndex = $(ProductMap.featureValues.featureRow, this.$collectionRowsContainer).length;
+
+        const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), newIndex)).first();
+        $newFeatureRow.attr('feature-id', featureId);
+        this.$collectionRowsContainer.append($newFeatureRow);
+        $(ProductMap.featureValues.featureIdInput, $newFeatureRow).val(featureId);
+        $(ProductMap.featureValues.featureNameInput, $newFeatureRow).val(featureName);
+        this.addFeatureValueRow($newFeatureRow, featureId, featureName);
       } else {
-        $(ProductMap.featureValues.featureValueIdInput, $newRow).val('');
-        $(ProductMap.featureValues.featureValueNameInput, $newRow).val('');
-        $(ProductMap.featureValues.featureValueNamePreview, $newRow).text('');
-        $(ProductMap.featureValues.isCustomInput, $newRow).val(1);
-        $(ProductMap.featureValues.customValuesContainer, $newRow).show();
+        this.addFeatureValueRow($featureRow, featureId, featureName);
       }
 
       // Display list that can't be empty anymore
       this.$collectionContainer.removeClass('d-none');
       this.resetControls();
     });
+  }
+
+  private addFeatureValueRow($featureRow: JQuery, featureId: string, featureName: string): void {
+    const rowValuePrototype = $featureRow.data('prototype');
+    const rowValuePrototypeName = $featureRow.data('prototypeName');
+    const $featureValueRows = $(ProductMap.featureValues.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
+
+    const $newFeatureValueRow = $(rowValuePrototype.replace(new RegExp(rowValuePrototypeName, 'g'), $featureValueRows.length));
+    $newFeatureValueRow.attr('feature-id', featureId);
+
+    if ($featureValueRows.length === 0) {
+      // If no previous feature values the new one is added after the feature row (which is invisible)
+      $featureRow.after($newFeatureValueRow);
+    } else {
+      // If some previous values were present the new one is added after the last value from the feature
+      $featureValueRows.last().after($newFeatureValueRow);
+    }
+
+    const $selectedFeatureValue = $('option:selected', this.$featureValueSelector);
+    const featureValueId = <string> $selectedFeatureValue.val();
+    const featureValueName = <string> $selectedFeatureValue.text();
+
+    if (featureValueId !== '-1') {
+      $(ProductMap.featureValues.featureValueIdInput, $newFeatureValueRow).val(featureValueId);
+      $(ProductMap.featureValues.featureValueNameInput, $newFeatureValueRow).val(featureValueName);
+      $(ProductMap.featureValues.featureValueNamePreview, $newFeatureValueRow).text(featureValueName);
+      $(ProductMap.featureValues.isCustomInput, $newFeatureValueRow).val(0);
+      $(ProductMap.featureValues.customValuesContainer, $newFeatureValueRow).hide();
+    } else {
+      $(ProductMap.featureValues.featureValueIdInput, $newFeatureValueRow).val('');
+      $(ProductMap.featureValues.featureValueNameInput, $newFeatureValueRow).val('');
+      $(ProductMap.featureValues.featureValueNamePreview, $newFeatureValueRow).text('');
+      $(ProductMap.featureValues.isCustomInput, $newFeatureValueRow).val(1);
+      $(ProductMap.featureValues.customValuesContainer, $newFeatureValueRow).show();
+    }
+    $(ProductMap.featureValues.featureNameCell, $newFeatureValueRow).text(featureName);
   }
 
   private resetControls(): void {
@@ -129,7 +157,7 @@ export default class FeatureValuesManager {
   private watchDeleteButtons(): void {
     $(this.$collectionRowsContainer).on('click', ProductMap.featureValues.deleteFeatureValue, (event) => {
       const $deleteButton = $(event.currentTarget);
-      const $collectionRow = $deleteButton.closest(ProductMap.featureValues.collectionRow);
+      const $collectionRow = $deleteButton.closest(ProductMap.featureValues.featureValueRow);
       const modal = new (ConfirmModal as any)(
         {
           id: 'modal-confirm-delete-feature-value',
@@ -141,7 +169,16 @@ export default class FeatureValuesManager {
           closable: true,
         },
         () => {
+          const featureId = <string> $collectionRow.attr('feature-id');
           $collectionRow.remove();
+
+          // Check if the collection has some values left
+          const $valueRows = $(ProductMap.featureValues.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
+
+          if ($valueRows.length === 0) {
+            const $featureRow = $(ProductMap.featureValues.featureRowByFeatureId(featureId), this.$collectionRowsContainer);
+            $featureRow.remove();
+          }
           this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
           this.$collectionContainer.toggleClass('d-none', this.$collectionRowsContainer.children().length === 0);
         },
