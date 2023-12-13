@@ -12,11 +12,8 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
+import stocksPage from '@pages/BO/catalog/stocks';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-import {cartPage} from '@pages/FO/cart';
 
 // Import data
 import Modules from '@data/demo/modules';
@@ -26,24 +23,23 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
-import stocksPage from "@pages/BO/catalog/stocks";
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_merchantNotifications_enableDisableOutOfStock';
 
 /*
 Pre-condition:
 - Setup SMTP parameters
-- Create new product
+- Create 2 productS
 Scenario
 - Enable out of stock in email alerts module
-- Go to created product page and add it to the cart
+- Update first created product quantity to -3
 - check email
 - Disable out of stock in email alerts module
-- Go to created product page and add it to the cart
+- Update second created product quantity to -3
 - check that mail is not received
 Post-condition:
 - Reset SMTP parameters
-- Delete created product
+- Delete created products
  */
 describe('Mail alerts module - Enable/Disable out of stock', async () => {
   let browserContext: BrowserContext;
