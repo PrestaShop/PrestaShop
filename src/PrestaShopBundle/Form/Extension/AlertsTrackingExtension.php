@@ -32,7 +32,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Appends alert messages from session flashbag to form vars.
@@ -43,17 +43,11 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 class AlertsTrackingExtension extends AbstractTypeExtension
 {
     /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @param FlashBagInterface $flashBag
+     * @param RequestStack $requestStack
      */
     public function __construct(
-        FlashBagInterface $flashBag
+        private readonly RequestStack $requestStack
     ) {
-        $this->flashBag = $flashBag;
     }
 
     /**
@@ -69,7 +63,7 @@ class AlertsTrackingExtension extends AbstractTypeExtension
         /*
          * Example: ['alerts' => ['success' => ['Success message'], 'error' => ['Invalid data']]]
          */
-        $view->vars['alerts'] = $this->flashBag->peekAll();
+        $view->vars['alerts'] = $this->requestStack->getSession()->getFlashBag()->peekAll();
     }
 
     /**

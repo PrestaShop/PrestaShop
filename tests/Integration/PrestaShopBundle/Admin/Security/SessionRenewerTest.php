@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Admin\Security;
 
 use PrestaShopBundle\Security\Admin\SessionRenewer;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Tests\Integration\Utility\ContextMockerTrait;
 
-class SessionRenewerTest extends KernelTestCase
+class SessionRenewerTest extends WebTestCase
 {
+    use ContextMockerTrait;
     /**
      * @var CsrfTokenManager
      */
@@ -52,11 +54,15 @@ class SessionRenewerTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        self::bootKernel();
-        $container = self::$kernel->getContainer();
-        $this->sessionTokenManager = $container->get('security.csrf.token_manager');
-        $this->session = $container->get('session');
-        $this->sessionRenewer = $container->get(SessionRenewer::class);
+        $client = parent::createClient();
+        static::mockContext();
+
+        $router = self::$kernel->getContainer()->get('router');
+        $client->request('GET', $router->generate('admin_title_index'));
+
+        $this->sessionTokenManager = $client->getContainer()->get('security.csrf.token_manager');
+        $this->session = $client->getContainer()->get('request_stack')->getSession();
+        $this->sessionRenewer = $client->getContainer()->get(SessionRenewer::class);
     }
 
     public function testRenew(): void

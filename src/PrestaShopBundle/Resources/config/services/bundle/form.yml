@@ -11,7 +11,7 @@ services:
       $defaultCurrencyId: '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
       $defaultLanguageId: '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       $formRenderer: '@twig.form.renderer'
-      $flashBag: '@session.flash_bag'
+      $requestStack: '@request_stack'
       $locale: '@prestashop.core.localization.locale.context_locale'
       $multistoreController: '@prestashop.core.admin.multistore'
       $validate: "@prestashop.adapter.validate"

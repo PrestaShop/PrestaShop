@@ -4,7 +4,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Admin\PagePreference:
     arguments:
-      - "@session"
+      - '@request_stack'
       - !php/const _PS_MODE_DEV_
     decorates: prestashop.core.admin.page_preference_interface
 

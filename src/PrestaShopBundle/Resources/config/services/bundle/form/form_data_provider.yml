@@ -132,7 +132,7 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
     arguments:
       - '@prestashop.core.import.file_finder'
-      - '@session'
+      - '@request_stack'
 
   prestashop.admin.import_data_configuration.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormDataProvider'

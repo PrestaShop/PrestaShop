@@ -31,7 +31,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -46,7 +46,7 @@ class DemoModeEnabledListener
         private readonly ShopConfigurationInterface $shopConfiguration,
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
-        private readonly Session $session,
+        private readonly FlashBagInterface $flashBag,
     ) {
     }
 
@@ -97,7 +97,7 @@ class DemoModeEnabledListener
      */
     private function showNotificationMessage(DemoRestricted $demoRestricted)
     {
-        $this->session->getFlashBag()->add(
+        $this->flashBag->add(
             'error',
             $this->translator->trans(
                 $demoRestricted->getMessage(),

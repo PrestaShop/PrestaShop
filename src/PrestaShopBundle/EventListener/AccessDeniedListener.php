@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -42,26 +42,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class AccessDeniedListener
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    public function __construct(RouterInterface $router, TranslatorInterface $translator, Session $session)
-    {
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->session = $session;
+    public function __construct(
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly FlashBagInterface $flashBag,
+    ) {
     }
 
     /**
@@ -104,7 +89,7 @@ class AccessDeniedListener
             ], Response::HTTP_FORBIDDEN);
         }
 
-        $this->session->getFlashBag()->add('error', $this->getErrorMessage($adminSecurity));
+        $this->flashBag->add('error', $this->getErrorMessage($adminSecurity));
 
         return new RedirectResponse(
             $this->computeRedirectionUrl($adminSecurity, $request)

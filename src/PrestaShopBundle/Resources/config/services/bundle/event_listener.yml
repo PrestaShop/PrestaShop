@@ -47,31 +47,25 @@ services:
     tags:
       - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
-  prestashop.access_denied.listener:
-    class: PrestaShopBundle\EventListener\AccessDeniedListener
-    arguments:
-      - "@router"
-      - "@translator"
-      - "@session"
+  PrestaShopBundle\EventListener\AccessDeniedListener:
+    autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+  prestashop.access_denied.listener:
+    alias: PrestaShopBundle\EventListener\AccessDeniedListener
 
   PrestaShopBundle\EventListener\DemoModeEnabledListener:
     autowire: true
     autoconfigure: true
-    arguments:
-      $session: "@session"
 
-  prestashop.module_activated.listener:
-    class: PrestaShopBundle\EventListener\ModuleActivatedListener
-    arguments:
-      - "@router"
-      - "@translator"
-      - "@session"
-      - "@annotation_reader"
-      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
+  PrestaShopBundle\EventListener\ModuleActivatedListener:
+    autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+  prestashop.module_activated.listener:
+    alias: PrestaShopBundle\EventListener\ModuleActivatedListener
 
   prestashop.bundle.event_listener.filter_category_search_criteria:
     class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
