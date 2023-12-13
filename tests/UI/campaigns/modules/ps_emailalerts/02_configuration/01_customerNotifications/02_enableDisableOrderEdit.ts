@@ -28,7 +28,7 @@ import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
 
-const baseContext: string = 'modules_ps_emailalerts_customerNotifications_enableDisableOrderEdit';
+const baseContext: string = 'modules_ps_emailalerts_configuration_customerNotifications_enableDisableOrderEdit';
 
 /*
 Pre-condition:
@@ -133,7 +133,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should enable edit order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableEditOrder', baseContext);
 
-      const successMessage = await emailAlertsPage.setNewOrder(page, true);
+      const successMessage = await emailAlertsPage.setEditOrder(page, true);
       expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
     });
   });
@@ -276,7 +276,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     });
 
     it('should check that the confirmation mail is not received', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMail2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMail4', baseContext);
 
       expect(allEmails.length).to.equal(newEmailsNumber + 2);
     });
@@ -291,7 +291,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     });
 
     it('should check that the confirmation mail is not received', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMail3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMail5', baseContext);
 
       expect(allEmails.length).to.equal(newEmailsNumber + 2);
     });
@@ -304,7 +304,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     });
 
     it('should check that the confirmation mail is not received', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMail4', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMail6', baseContext);
 
       expect(allEmails.length).to.equal(newEmailsNumber + 2);
     });
