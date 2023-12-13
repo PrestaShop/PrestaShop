@@ -1,4 +1,8 @@
 # Apache
 <Files *.php>
-    deny from all
+    Deny from all
 </Files>
+<Files index.php>
+    Allow from all
+</Files>
+
