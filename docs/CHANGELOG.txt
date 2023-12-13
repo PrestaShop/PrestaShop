@@ -24,6 +24,18 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.11 - (2023-12-13)
+####################################
+- Core:
+  - Improvement:
+    - #34820: Update prestashop modules for 1.7.8.11 (by @tleon)
+  - Bug fix:
+    - GHSA-XGPM-Q3MQ-46RQ: Some attribute not escaped in Validate::isCleanHTML method (by @matthieu-rolland)
+- Tests:
+  - Refactoring:
+    - #33988: Functional tests - Fix random error in 'FO > Quick view product' (by @nesrineabdmouleh)
+
+####################################
 #   v1.7.8.10 - (2023-07-19)
 ####################################
 - Core:
