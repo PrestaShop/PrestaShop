@@ -10,15 +10,19 @@ import type {Page} from 'playwright';
 class PsEmailAlerts extends ModuleConfiguration {
   public readonly pageTitle: string;
 
-  private readonly newOrderToggle: (toEnable: string) => string;
+  private readonly productAvailabilityCheckbox: (toEnable: boolean) => string;
 
-  private readonly outOfStockToggle: (toEnable: string) => string;
+  private readonly submitCustomerNotifications: string;
 
-  private readonly returnsToggle: (toEnable: string) => string;
+  private readonly newOrderToggle: (toEnable: boolean) => string;
 
   private readonly returnEmailInput: string;
 
-  private readonly saveButton: string;
+  private readonly outOfStockToggle: (toEnable: boolean) => string;
+
+  private readonly returnsToggle: (toEnable: boolean) => string;
+
+  private readonly submitMerchantNotifications: string;
 
   /**
    * @constructs
@@ -30,15 +34,18 @@ class PsEmailAlerts extends ModuleConfiguration {
     this.successfulUpdateMessage = 'Settings updated successfully';
 
     // Selectors
-    this.newOrderToggle = (toEnable: string) => `#MA_MERCHANT_ORDER_${toEnable}`;
-    this.outOfStockToggle = (toEnable: string) => `#MA_MERCHANT_OOS_${toEnable}`;
-    this.returnsToggle = (toEnable: string) => `#MA_RETURN_SLIP_${toEnable}`;
+    // Customer Notifications
+    this.productAvailabilityCheckbox = (toEnable: boolean) => `#MA_CUSTOMER_QTY_${toEnable ? 'on' : 'off'}`;
+    this.submitCustomerNotifications = 'button[name="submitMailAlert"]';
+    // Merchant Notifications
+    this.newOrderToggle = (toEnable: boolean) => `#MA_MERCHANT_ORDER_${toEnable ? 'on' : 'off'}`;
     this.returnEmailInput = '#fieldset_1_1 div.form-wrapper div:nth-child(7) > div > div input';
-    this.saveButton = '#module_form_submit_btn_1';
+    this.outOfStockToggle = (toEnable: boolean) => `#MA_MERCHANT_OOS_${toEnable ? 'on' : 'off'}`;
+    this.returnsToggle = (toEnable: boolean) => `#MA_RETURN_SLIP_${toEnable ? 'on' : 'off'}`;
+    this.submitMerchantNotifications = 'button[name="submitMAMerchant"]';
   }
 
   /* Methods */
-
   /**
    * Set returns
    * @param page {Page} Browser tab
@@ -49,15 +56,45 @@ class PsEmailAlerts extends ModuleConfiguration {
 
   async setReturns(page: Page, toEnable: boolean, email: string = ''): Promise<string> {
     // To delete after the fix of https://github.com/PrestaShop/PrestaShop/issues/34784
-    await this.setChecked(page, this.newOrderToggle('off'));
-    await this.setChecked(page, this.outOfStockToggle('off'));
+    await this.setChecked(page, this.newOrderToggle(false));
+    await this.setChecked(page, this.outOfStockToggle(false));
     //
-    await this.setChecked(page, this.returnsToggle(toEnable ? 'on' : 'off'));
+    await this.setChecked(page, this.returnsToggle(toEnable));
     if (toEnable) {
       await this.setValue(page, this.returnEmailInput, email);
       await page.keyboard.press('Enter');
     }
-    await this.clickAndWaitForURL(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.submitMerchantNotifications);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Enable/Disable the "Product availability"
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable
+   * @returns {Promise<void>}
+   */
+  async setProductAvailabilityStatus(page: Page, toEnable: boolean): Promise<void> {
+    return this.setChecked(page, this.productAvailabilityCheckbox(toEnable), true);
+  }
+
+  /**
+   * Return the "Product availability" status
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async getProductAvailabilityStatus(page: Page): Promise<boolean> {
+    return this.isChecked(page, this.productAvailabilityCheckbox(true));
+  }
+
+  /**
+   * Save the "Customer Notifications" form
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async saveFormCustomerNotifications(page: Page): Promise<string> {
+    await page.locator(this.submitCustomerNotifications).click();
 
     return this.getAlertSuccessBlockContent(page);
   }

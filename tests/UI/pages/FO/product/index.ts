@@ -15,6 +15,12 @@ import type {Page} from 'playwright';
 class Product extends FOBasePage {
   public readonly messageNotVisibleToCustomers: string;
 
+  public readonly messageAlertNotificationSaved: string;
+
+  public readonly messageAlertNotificationEmailInvalid: string;
+
+  public readonly messageAlertNotificationAlreadyRegistered: string;
+
   private readonly warningMessage: string;
 
   private readonly productFlags: string;
@@ -95,6 +101,12 @@ class Product extends FOBasePage {
 
   private readonly productMailAlertsBlock: string;
 
+  private readonly productMailAlertsEmailInput: string;
+
+  private readonly productMailAlertsNotifyButton: string;
+
+  private readonly productMailAlertsNotification: string;
+
   private readonly discountTable: string;
 
   private readonly quantityDiscountValue: string;
@@ -162,6 +174,9 @@ class Product extends FOBasePage {
 
     // Messages
     this.messageNotVisibleToCustomers = 'This product is not visible to your customers.';
+    this.messageAlertNotificationSaved = 'Request notification registered';
+    this.messageAlertNotificationEmailInvalid = 'Your email address is invalid.';
+    this.messageAlertNotificationAlreadyRegistered = 'You will be notified when this product is available.';
 
     // Selectors for product page
     this.warningMessage = 'main div.alert-warning p.alert-text';
@@ -209,6 +224,9 @@ class Product extends FOBasePage {
     // Product information block
     this.productInformationBlock = 'div.product-information';
     this.productMailAlertsBlock = `${this.productInformationBlock} div.js-mailalert`;
+    this.productMailAlertsEmailInput = `${this.productMailAlertsBlock} input[type="email"]`;
+    this.productMailAlertsNotifyButton = `${this.productMailAlertsBlock} button`;
+    this.productMailAlertsNotification = `${this.productMailAlertsBlock} article`;
 
     // Volume discounts table
     this.discountTable = '.table-product-discounts';
@@ -292,6 +310,29 @@ class Product extends FOBasePage {
    */
   async hasBlockMailAlert(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productMailAlertsBlock, 2000);
+  }
+
+  /**
+   * Returns notifications block in block Mail Alert
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getBlockMailAlertNotification(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productMailAlertsNotification);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param email {string|null} Email if needed
+   */
+  async notifyEmailAlert(page: Page, email: string|null = null) {
+    if (email) {
+      await this.setValue(page, this.productMailAlertsEmailInput, email);
+    }
+    await page.locator(this.productMailAlertsNotifyButton).click();
+
+    return this.getBlockMailAlertNotification(page);
   }
 
   /**

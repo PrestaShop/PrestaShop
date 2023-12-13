@@ -302,6 +302,22 @@ export default class CommonPage {
   }
 
   /**
+   * Change actual tab to another tab
+   * @param browserContext {BrowserContext} Context of the page
+   * @param tabId {number} Tab to get focus on after closing the other tab
+   * @return {Promise<Page>}
+   */
+  async changePage(browserContext: BrowserContext, tabId: number = -1): Promise<Page> {
+    // Return the asked tab or the first
+    const pages: Page[] = browserContext.pages();
+    const page: Page = pages[tabId] ?? pages[0];
+
+    await page.bringToFront();
+
+    return page;
+  }
+
+  /**
    * Close actual tab and goto another tab if wanted
    * @param browserContext {BrowserContext} Context of the page
    * @param page {Page} Browser tab
