@@ -262,7 +262,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         // Then associate it to other shops and copy its values
         $newProductId = new ProductId((int) $duplicatedProduct->id);
         foreach ($shopIds as $shopId) {
-            $shopProduct = $this->productRepository->get($sourceProductId, $shopId);
+            $shopProduct = $this->productRepository->get($newProductId, $shopId);
             // The duplicated product is disabled and not indexed by default
             $shopProduct->indexed = false;
             $shopProduct->active = false;
