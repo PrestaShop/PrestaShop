@@ -24,6 +24,85 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.1.3 - (2023-12-13)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #34741: Backport v9 SymfonyCacheClearer (by @M0rgan01)
+    - #34606: Optimize product page (by @jolelievre)
+    - #34738: Remove friendly url alert, put codes to columns (by @Hlavtox)
+    - #34563: Update wording of add to cart from list setting (by @Hlavtox)
+    - GHSA-XGPM-Q3MQ-46RQ Some attribute not escaped in Validate::isCleanHTML method (by @matthieu-rolland)
+  - Bug fix:
+    - #34356: Fix arabic numbers displayed (by @boherm)
+    - #34699: Fix customer search in specific price PPV2 (by @M0rgan01)
+    - #34715: Fix combination search in PPV2 specific price (by @M0rgan01)
+    - #33945: [BC Break] Fix specific price datetime range (by @Hlavtox)
+    - #34625: Add hook "actionUpdateQuantity" in product v2 (by @M0rgan01)
+    - #34647: Add empty string check for price in Catalog price rules (by @M0rgan01)
+    - #34600: Remove unnecessary Jquery selector in SerpApp. (by @M0rgan01)
+    - #34537: Minimal quantity should be 1 at least, not 0! (by @ShaiMagal)
+    - #34450: Fix TaxRulesGroup try to update removed column (by @LameuleFR)
+    - #34438: Fix BO CSV import - broken functionality (by @ShaiMagal)
+    - #34441: Fixed SQL apostrophe (') incompatibility (by @Lunyyx)
+    - #34419: Allow unit price to be zero even when displayed (by @gbelorgey)
+    - #34343: Fix combination modal changes detection (by @tleon)
+    - #34351: Fix legacy page images (by @Hlavtox)
+    - #34162: Fix edit bulk quantity for stock page (by @boherm)
+    - #34023: Handle via javascript that the two fields for impact are synced, mean… (by @jolelievre)
+  - Refactoring:
+    - #34491: Improve error message on login page (by @Hlavtox)
+- Front Office:
+  - Improvement:
+    - #34812: Bump classic-theme to 2.1.2 (by @boherm)
+    - #34648: Early return from rule check (by @Hlavtox)
+    - GHSA-VR7M-R9VM-M4WF XSS can be stored in DB from "add a message form" in order detail page (by @matthieu-rolland)
+  - Bug fix:
+    - #34695: Better validate availability date (by @Hlavtox)
+    - #34689: Fix image legend not used (by @Hlavtox)
+    - #34317: Fix sorting by Relevance in search results (by @mrkalchemy)
+    - #34562: Do not allow products with required customization to be used as a gift (by @Hlavtox)
+    - #34487: Fix manufacturer name overwriting (by @Hlavtox)
+    - #34462: Improve front office date validation (by @Hlavtox)
+    - #34207: Don't check all product availability in cart on add to cart action (by @Oksydan)
+    - #34078: Fix URL with accented chars (by @M0rgan01)
+    - #33954: Fix undefined currency if cart is updated before currency is assigned to the context (by @Hlavtox)
+  - Refactoring:
+    - #34633: Update ps_shoppingcart (by @Hlavtox)
+    - #34443: Remove useless htaccess rule for not existing file retro-compat.css.php (by @ShaiMagal)
+- Core:
+  - Improvement:
+    - #34811: Exclude new routes for Security Annotation linter command (by @boherm)
+    - #34723: Updated PrestaShop Packages (by @github-actions[bot])
+    - #34678: [Gift message] allow more special characters, for example <> (by @ShaiMagal)
+    - #34632: Updated PrestaShop Packages (by @github-actions[bot])
+    - #34458: CO: improvement : Performance String Modifier (by @Shoprunners)
+    - #34529: New 12% VAT Czech Republic from 2024-01-01 (by @ShaiMagal)
+    - #34448: Validate smarty render calls (prevent errors from outdated themes) (by @ShaiMagal)
+    - #34452: Prevent Internal Server Error 500 - opcache_invalidate with restrict_api (by @ShaiMagal)
+    - #34158: Explicit error messages (by @Zudjo)
+    - #34435: Protect js folder from dangerous files (by @ShaiMagal)
+    - #34377: Add missing js events in CleanHtmlValidator (by @matthieu-rolland)
+    - #34380: Update module versions in composer.lock (PS 8.1.x) (by @matthieu-rolland)
+    - #34242: Change the APE field validation to match all formats (by @alexandrebak42)
+    - #34120: Bump Smarty to 4.3.4 (by @matks)
+    - #34084:  Update Changelog for 8.1.2 (by @jolelievre)
+  - Bug fix:
+    - #34523: Fix combination unit price math (by @the-ge)
+  - Refactoring:
+    - #34609: Better validate cookie length (by @Hlavtox)
+    - #34531: Update Address.php - small phpdoc edit (@return value) (by @ShaiMagal)
+    - #34439: Update retro-compat.js.php - prevent PHP Warning (by @ShaiMagal)
+    - #34444: Fix php warning webservice (by @ShaiMagal)
+    - #34436: Update jquery.no conflict.php - prevent E_NOTICE (by @ShaiMagal)
+- Tests:
+  - Improvement:
+    - #34773: Modify sanity tests workflow to use docker (by @jolelievre)
+  - Refactoring:
+    - #34759: CI: fix sanity tests on workflow (by @boubkerbribri)
+
+####################################
 #   v8.1.2 - (2023-09-27)
 ####################################
 
