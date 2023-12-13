@@ -27,7 +27,7 @@ import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'modules_ps_emailalerts_configuration_configurationForCustomer_enableDisableProductAvailability';
+const baseContext: string = 'modules_ps_emailalerts_configuration_customerNotifications_enableDisableProductAvailability';
 
 describe('Mail alerts module - Customer notifications - Enable/Disable product availability', async () => {
   let browserContext: BrowserContext;
