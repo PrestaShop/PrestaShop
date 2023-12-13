@@ -355,7 +355,7 @@ class PackTab extends BOBasePage {
    * @return <Promise<number>>
    */
   async getStockValue(page: Page): Promise<number> {
-    return parseInt(await page.locator(this.editQuantityBase).getAttribute('value') ?? '', 10);
+    return parseInt(await this.getAttributeContent(page, this.editQuantityBase, 'value'), 10);
   }
 }
 

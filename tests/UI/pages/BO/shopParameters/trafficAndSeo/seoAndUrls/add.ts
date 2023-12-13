@@ -114,7 +114,7 @@ class AddSeoUrl extends BOBasePage {
    * @return {Promise<void>}
    */
   async createEditSeoPage(page: Page, seoPageData: SeoPageData): Promise<string> {
-    await page.selectOption(this.pageNameSelect, seoPageData.page);
+    await this.selectByVisibleText(page, this.pageNameSelect, seoPageData.page);
     // Fill form in english
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValue(page, this.pageTitleInput(1), seoPageData.title);

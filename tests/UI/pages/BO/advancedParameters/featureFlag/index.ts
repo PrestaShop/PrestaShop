@@ -21,7 +21,7 @@ class FeatureFlag extends BOBasePage {
 
   private readonly modalSubmitFeatureFlag: string;
 
-  private readonly enableExperimentalfeatureButton: string;
+  private readonly enableExperimentalFeatureButton: string;
 
   /**
    * @constructs
@@ -42,7 +42,7 @@ class FeatureFlag extends BOBasePage {
     this.submitButton = (status: string) => `#feature_flag_${status}_submit`;
     this.alertSuccess = 'div.alert.alert-success[role="alert"]';
     this.modalSubmitFeatureFlag = '#modal-confirm-submit-feature-flag';
-    this.enableExperimentalfeatureButton = `${this.modalSubmitFeatureFlag} button.btn-confirm-submit`;
+    this.enableExperimentalFeatureButton = `${this.modalSubmitFeatureFlag} button.btn-confirm-submit`;
   }
 
   /**
@@ -80,7 +80,7 @@ class FeatureFlag extends BOBasePage {
     // The confirmation modal is only displayed for experimental/beta feature flags
     if (toEnable && !isStable) {
       await this.waitForVisibleSelector(page, this.modalSubmitFeatureFlag);
-      await this.clickAndWaitForLoadState(page, this.enableExperimentalfeatureButton);
+      await this.clickAndWaitForLoadState(page, this.enableExperimentalFeatureButton);
     }
 
     return this.getTextContent(page, this.alertSuccess, true);

@@ -464,7 +464,7 @@ class Currencies extends LocalizationBasePage {
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await page.hover(this.sortColumnDiv(sortBy));
+      await page.locator(this.sortColumnDiv(sortBy)).hover();
       await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }

@@ -677,7 +677,7 @@ export default class BOBasePage extends CommonPage {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
 
-    return page.textContent(this.growlDiv);
+    return page.locator(this.growlDiv).textContent();
   }
 
   /**
@@ -691,7 +691,7 @@ export default class BOBasePage extends CommonPage {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
 
-    return page.textContent(this.growlDiv);
+    return page.locator(this.growlDiv).textContent();
   }
 
   /**
@@ -924,7 +924,7 @@ export default class BOBasePage extends CommonPage {
       await page.locator(this.userProfileIconNonMigratedPages).click();
     }
 
-    return page.getAttribute(this.userProfileAvatar, 'src');
+    return this.getAttributeContent(page, this.userProfileAvatar, 'src');
   }
 
   /**

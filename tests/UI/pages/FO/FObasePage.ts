@@ -503,7 +503,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubCategory(page: Page, categoryID: number, subCategoryID: number): Promise<void> {
-    await page.hover(this.categoryMenu(categoryID));
+    await page.locator(this.categoryMenu(categoryID)).hover();
     await this.clickAndWaitForURL(page, this.categoryMenu(subCategoryID));
   }
 
@@ -767,23 +767,11 @@ export default class FOBasePage extends CommonPage {
 
   /**
    * Get the value of an input
-   *
-   * @param page {Page} Browser tab
-   * @param input {string} ID of the input
-   * @returns {Promise<string>}
-   */
-  async getInputValue(page: Page, input: string): Promise<string> {
-    return page.inputValue(input);
-  }
-
-  /**
-   * Get the value of an input
-   *
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getSearchValue(page: Page): Promise<string> {
-    return page.inputValue(this.searchInput);
+    return this.getInputValue(page, this.searchInput);
   }
 }
 

@@ -386,7 +386,7 @@ class DescriptionTab extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getProductIDImageCover(page: Page): Promise<number> {
-    return parseInt(await page.getAttribute(this.imagePreviewCover, 'data-id') ?? '', 10);
+    return parseInt(await this.getAttributeContent(page, this.imagePreviewCover, 'data-id'), 10);
   }
 
   /**
@@ -456,12 +456,7 @@ class DescriptionTab extends BOBasePage {
    * @returns {Promise<number>}
    */
   async isDeleteCategoryIconVisible(page: Page, categoryRow: number): Promise<boolean> {
-    const isDeleteIconVisible = await page.evaluate(
-      (selector: string) => document.querySelector(selector),
-      this.deleteCategoryIcon(categoryRow),
-    );
-
-    return isDeleteIconVisible !== null;
+    return (await page.locator(this.deleteCategoryIcon(categoryRow)).count()) !== 0;
   }
 
   /**

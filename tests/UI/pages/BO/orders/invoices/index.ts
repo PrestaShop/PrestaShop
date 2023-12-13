@@ -134,8 +134,8 @@ class Invoice extends BOBasePage {
    */
   async setValuesForGeneratingPDFByDate(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<void> {
     if (dateFrom) {
-      await page.fill(this.dateFromInput, dateFrom);
-      await page.fill(this.dateToInput, dateTo);
+      await page.locator(this.dateFromInput).fill(dateFrom);
+      await page.locator(this.dateToInput).fill(dateTo);
     }
   }
 

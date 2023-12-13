@@ -131,7 +131,7 @@ class Import extends BOBasePage {
    */
   async uploadImportFile(page: Page, fileType: string, filePath: string): Promise<string> {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
-    await page.setInputFiles(this.fileInputField, filePath);
+    await this.uploadFile(page, this.fileInputField, filePath);
 
     await page.waitForTimeout(2000);
     return this.getAlertSuccessBlockParagraphContent(page);

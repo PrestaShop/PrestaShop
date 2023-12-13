@@ -139,7 +139,7 @@ export default class CommonPage {
     if (waitForSelector) {
       await this.waitForVisibleSelector(page, selector);
     }
-    const textContent = await page.textContent(selector);
+    const textContent = await page.locator(selector).first().textContent();
 
     return (textContent ?? '').replace(/\s+/g, ' ').trim();
   }
@@ -149,10 +149,10 @@ export default class CommonPage {
    * @param page {Frame|Page} Browser tab
    * @param selector {string} String to locate the element
    * @param attribute {string} Name of the attribute to get
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
   async getAttributeContent(page: Frame | Page, selector: string, attribute: string): Promise<string> {
-    const attributeContent: string | null = await page.getAttribute(selector, attribute);
+    const attributeContent: string | null = await page.locator(selector).first().getAttribute(attribute);
 
     return attributeContent ?? '';
   }
@@ -268,6 +268,16 @@ export default class CommonPage {
   }
 
   /**
+   * Get the value of an input
+   * @param page {Page} Browser tab
+   * @param selector {string} Selector of the input
+   * @returns {Promise<string>}
+   */
+  async getInputValue(page: Page, selector: string): Promise<string> {
+    return page.locator(selector).inputValue();
+  }
+
+  /**
    * Delete text from input
    * @param page {Frame|Page} Browser tab
    * @param selector {string} String to locate the element for the deletion
@@ -358,19 +368,19 @@ export default class CommonPage {
     textValue: string | number,
     force: boolean = false,
   ): Promise<void> {
-    await page.selectOption(selector, {label: textValue.toString()}, {force});
+    await page.locator(selector).selectOption({label: textValue.toString()}, {force});
   }
 
   /**
    * Select option by value
    * @param page {Frame|Page} Browser tab
    * @param selector {string} String to locate the select
-   * @param valueToSelect {number} Value to select
+   * @param valueToSelect {number|string} Value to select
    * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByValue(page: Frame | Page, selector: string, valueToSelect: number, force: boolean = false): Promise<void> {
-    await page.selectOption(selector, {value: valueToSelect.toString()}, {force});
+  async selectByValue(page: Frame | Page, selector: string, valueToSelect: number|string, force: boolean = false): Promise<void> {
+    await page.locator(selector).selectOption({value: valueToSelect.toString()}, {force});
   }
 
   /**
@@ -447,7 +457,7 @@ export default class CommonPage {
    * @return {Promise<boolean>}
    */
   async isDisabled(page: Page, selector: string): Promise<boolean> {
-    return page.isDisabled(selector);
+    return page.locator(selector).isDisabled();
   }
 
   /**
@@ -457,7 +467,7 @@ export default class CommonPage {
    * @return {Promise<boolean>}
    */
   async isChecked(page: Frame | Page, selector: string): Promise<boolean> {
-    return page.isChecked(selector);
+    return page.locator(selector).isChecked();
   }
 
   /**
@@ -465,10 +475,16 @@ export default class CommonPage {
    * @param page {Frame|Page} Browser tab
    * @param checkboxSelector {string} String to locate the checkbox
    * @param valueWanted {boolean} Value wanted on the selector
+   * @param force {boolean} Force CheckBox check
    * @return {Promise<void>}
    */
-  async setChecked(page: Frame | Page, checkboxSelector: string, valueWanted: boolean = true): Promise<void> {
-    await page.setChecked(checkboxSelector, valueWanted);
+  async setChecked(
+    page: Frame | Page,
+    checkboxSelector: string,
+    valueWanted: boolean = true,
+    force: boolean = false,
+  ): Promise<void> {
+    await page.locator(checkboxSelector).setChecked(valueWanted, {force});
   }
 
   /**
@@ -511,7 +527,7 @@ export default class CommonPage {
    * @return {Promise<void>}
    */
   async dragAndDrop(page: Page, source: string, target: string): Promise<void> {
-    await page.dragAndDrop(source, target);
+    await page.locator(source).dragTo(page.locator(target));
   }
 
   /**

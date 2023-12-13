@@ -13,7 +13,7 @@ import type {Page} from 'playwright';
 class AddLinkBlock extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly changeNamelangButton: string;
+  private readonly changeNameLangButton: string;
 
   private readonly changeNameLangSpan: (lang: string) => string;
 
@@ -45,7 +45,7 @@ class AddLinkBlock extends BOBasePage {
     this.pageTitle = 'Link List •';
 
     // Selectors
-    this.changeNamelangButton = '#form_link_block_block_name_dropdown';
+    this.changeNameLangButton = '#form_link_block_block_name_dropdown';
     this.changeNameLangSpan = (lang: string) => `div.dropdown-menu.show span[data-locale='${lang}']`;
     this.nameInput = (id: number) => `#form_link_block_block_name_${id}`;
     this.hookSelect = '#form_link_block_id_hook';
@@ -67,12 +67,12 @@ class AddLinkBlock extends BOBasePage {
    */
   async changeLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
-      page.locator(this.changeNamelangButton).click(),
-      this.waitForVisibleSelector(page, `${this.changeNamelangButton}[aria-expanded='false']`),
+      page.locator(this.changeNameLangButton).click(),
+      this.waitForVisibleSelector(page, `${this.changeNameLangButton}[aria-expanded='false']`),
     ]);
     await Promise.all([
       page.locator(this.changeNameLangSpan(lang)).click(),
-      this.waitForVisibleSelector(page, `${this.changeNamelangButton}[aria-expanded='true']`),
+      this.waitForVisibleSelector(page, `${this.changeNameLangButton}[aria-expanded='true']`),
     ]);
   }
 

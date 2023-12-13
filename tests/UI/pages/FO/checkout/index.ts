@@ -1043,7 +1043,7 @@ class Checkout extends FOBasePage {
    */
   async getSelectedShippingMethod(page: Page): Promise<string | null> {
     const selectedOptionId = parseInt(
-      await page.locator(`${this.deliveryOptionsRadioButton}[checked]`).getAttribute('value') ?? '0',
+      await this.getAttributeContent(page, `${this.deliveryOptionsRadioButton}[checked]`, 'value') ?? '0',
       10,
     );
 

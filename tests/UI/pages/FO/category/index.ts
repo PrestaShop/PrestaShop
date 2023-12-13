@@ -327,7 +327,7 @@ class Category extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
-    await page.hover(this.productImg(id));
+    await page.locator(this.productImg(id)).hover();
     let displayed: boolean = false;
 
     /* eslint-disable no-await-in-loop */
@@ -476,7 +476,12 @@ class Category extends FOBasePage {
    * @return {Promise<void>}
    */
   async filterByCheckbox(page: Page, facetType: string, checkboxName: string, toEnable: boolean): Promise<void> {
-    await page.setChecked(`${this.searchFiltersCheckbox(facetType)}[data-search-url*=${checkboxName}]`, toEnable, {force: true});
+    await this.setChecked(
+      page,
+      `${this.searchFiltersCheckbox(facetType)}[data-search-url*=${checkboxName}]`,
+      toEnable,
+      true,
+    );
     await page.waitForTimeout(2000);
   }
 

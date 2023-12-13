@@ -82,7 +82,7 @@ class MyProfile extends EmployeeBasePage {
 
   /**
    * Get the value of an input
-   *
+   * @override
    * @param page {Page} Browser tab
    * @param input {string} ID of the input
    * @returns {Promise<string>}
@@ -101,7 +101,7 @@ class MyProfile extends EmployeeBasePage {
         throw new Error(`Field ${input} was not found`);
     }
 
-    return page.inputValue(inputSelector);
+    return super.getInputValue(page, inputSelector);
   }
 
   /**

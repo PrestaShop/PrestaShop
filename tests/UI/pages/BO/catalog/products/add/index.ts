@@ -274,7 +274,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getProductID(page: Page): Promise<number> {
-    return parseInt(await page.getAttribute(this.formProductPage, 'data-product-id') ?? '', 10);
+    return parseInt(await this.getAttributeContent(page, this.formProductPage, 'data-product-id'), 10);
   }
 
   /**
@@ -321,7 +321,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async applyChangesToAllStores(page: Page, status: boolean): Promise<void> {
-    await page.setChecked(this.modifyAllShopsNameSwitchButton, status, {force: true});
+    await this.setChecked(page, this.modifyAllShopsNameSwitchButton, status, true);
   }
 
   /**
@@ -383,10 +383,10 @@ class CreateProduct extends BOBasePage {
   async setProductName(page: Page, name: string, locale: string = 'en'): Promise<void> {
     await this.waitForSelectorAndClick(page, this.productNameLanguageButton);
     await this.waitForSelectorAndClick(page, this.productNameLanguageDropdownItem(locale));
-    await page.evaluate(
-      (selector: string) => (document.querySelector(selector) as HTMLElement).click(),
-      this.productNameLanguageDropdownItem(locale),
-    );
+    await page
+      .locator(this.productNameLanguageDropdownItem(locale))
+      .evaluate((el: HTMLElement) => el.click());
+
     await this.setValue(page, this.productNameInput(locale), name);
   }
 

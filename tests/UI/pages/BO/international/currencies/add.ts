@@ -122,7 +122,7 @@ class AddCurrency extends LocalizationBasePage {
    */
   async addOfficialCurrency(page: Page, currencyData: CurrencyData): Promise<string> {
     // Select currency
-    await page.selectOption(this.currencySelect, currencyData.isoCode);
+    await this.selectByValue(page, this.currencySelect, currencyData.isoCode);
     await this.waitForVisibleSelector(page, `${this.currencyLoadingModal}.show`);
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist
@@ -258,7 +258,7 @@ class AddCurrency extends LocalizationBasePage {
    * Click on the edit and displays the modal
    * @param {Page} page
    * @param {number} row
-   * @return {string} Return the message of the grow
+   * @return {string} Return the message of the growl
    */
   async resetCurrencyFormat(page: Page, row: number): Promise<string|null> {
     await page.locator(this.currencyFormatReset(row)).click();

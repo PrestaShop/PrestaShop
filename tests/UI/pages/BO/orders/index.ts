@@ -635,7 +635,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async previewOrder(page: Page, row: number = 1): Promise<boolean> {
-    await page.hover(this.tableColumn(row, 'id_order'));
+    await page.locator(this.tableColumn(row, 'id_order')).hover();
     await this.waitForSelectorAndClick(page, this.expandIcon(row));
 
     return this.elementVisible(page, this.previewRow, 2000);

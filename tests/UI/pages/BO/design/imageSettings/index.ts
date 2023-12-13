@@ -485,10 +485,10 @@ class ImageSettings extends BOBasePage {
     erasePreviousImages: boolean = false,
   ): Promise<string> {
     // Choose the type of image to regenerate thumbnails
-    await page.selectOption(this.selectRegenerateThumbnailsImage, image);
+    await this.selectByValue(page, this.selectRegenerateThumbnailsImage, image);
     if (image !== 'all') {
       // Choose the format of image to regenerate thumbnails
-      await page.selectOption(this.selectRegenerateThumbnailsFormat(image), {label: format});
+      await this.selectByVisibleText(page, this.selectRegenerateThumbnailsFormat(image), format);
     }
     // Erase previous images
     await this.setChecked(page, this.checkboxRegenerateThumbnailsErasePreviousImages(erasePreviousImages ? 'on' : 'off'));

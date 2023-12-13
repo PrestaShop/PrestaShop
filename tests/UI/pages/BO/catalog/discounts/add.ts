@@ -350,13 +350,13 @@ class AddCartRule extends BOBasePage {
     // Fill date from if its changed
     if (cartRuleData.dateFrom) {
       await this.setValue(page, this.dateFromInput, cartRuleData.dateFrom);
-      await page.press(this.dateFromInput, 'Enter');
+      await page.locator(this.dateFromInput).press('Enter');
     }
 
     // Fill date to if its changed
     if (cartRuleData.dateTo) {
       await this.setValue(page, this.dateToInput, cartRuleData.dateTo);
-      await page.press(this.dateToInput, 'Enter');
+      await page.locator(this.dateToInput).press('Enter');
     }
 
     // Set carrier discount

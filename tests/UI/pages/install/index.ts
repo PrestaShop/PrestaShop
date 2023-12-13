@@ -235,7 +235,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async setInstallLanguage(page: Page): Promise<void> {
-    await page.selectOption(this.languageSelect, global.INSTALL.LANGUAGE);
+    await this.selectByValue(page, this.languageSelect, global.INSTALL.LANGUAGE);
   }
 
   /**
