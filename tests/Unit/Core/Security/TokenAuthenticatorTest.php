@@ -82,9 +82,6 @@ class TokenAuthenticatorTest extends TestCase
         $this->request->headers->add(['Authorization' => 'toto']);
         $this->assertFalse($this->tokenAuthenticator->supports($this->request));
 
-        $this->request->headers->add(['Authorization' => 'bearer toto']);
-        $this->assertFalse($this->tokenAuthenticator->supports($this->request));
-
         $this->request->headers->add(['Authorization' => 'bearer ' . $this->buildTestToken()]);
         $this->assertTrue($this->tokenAuthenticator->supports($this->request));
     }

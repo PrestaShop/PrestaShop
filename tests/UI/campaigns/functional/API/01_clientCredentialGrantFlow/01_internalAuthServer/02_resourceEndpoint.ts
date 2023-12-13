@@ -132,8 +132,6 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
 
       const apiResponse = await apiContext.get('api/hook-status/1');
       expect(apiResponse.status()).to.eq(401);
-      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {

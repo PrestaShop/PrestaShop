@@ -28,9 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
-use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Token\InvalidTokenStructure;
-use Lcobucci\JWT\Token\Parser;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,14 +62,7 @@ class TokenAuthenticator extends AbstractAuthenticator
         if (null === $authorization) {
             return false;
         }
-        if (str_starts_with(strtolower($authorization), 'bearer ')) {
-            $token = substr($authorization, 7);
-            try {
-                (new Parser(new JoseEncoder()))->parse($token);
-            } catch (InvalidTokenStructure) {
-                return false;
-            }
-        } else {
+        if (!str_starts_with(strtolower($authorization), 'bearer ')) {
             return false;
         }
 
