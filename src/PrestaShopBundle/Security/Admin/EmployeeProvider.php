@@ -130,7 +130,7 @@ class EmployeeProvider implements UserProviderInterface
     /**
      * Needed by the interface but not used.
      *
-     * @deprecated since 9.0, to be removed when Symfony > 6.à
+     * @deprecated @todo since 9.0, to be removed when Symfony > 6.à
      */
     public function loadUserByUsername(string $username)
     {

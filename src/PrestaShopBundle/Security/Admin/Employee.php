@@ -27,13 +27,14 @@
 namespace PrestaShopBundle\Security\Admin;
 
 use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class Employee is used for Symfony security components to authenticate the user.
  */
-class Employee implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
+class Employee implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -106,13 +107,17 @@ class Employee implements UserInterface, EquatableInterface, PasswordAuthenticat
      *
      * @return string
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
 
     /**
      * Get the login of the current employee.
+     *
+     * @todo
+     *
+     * @deprecated to be removed for SF6
      *
      * @return string
      */
@@ -187,7 +192,7 @@ class Employee implements UserInterface, EquatableInterface, PasswordAuthenticat
             return false;
         }
 
-        if ($this->username !== $user->getUsername()) {
+        if ($this->username !== $user->getUserIdentifier()) {
             return false;
         }
 
