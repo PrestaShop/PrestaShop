@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01650975359a616bc9bf67a47be4a21b",
+    "content-hash": "0883f16c21912e506e4db6998c4360fa",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4941,22 +4941,23 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "2.1.1",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "481b7af6c5d5f82b4db05ec4fd747a9cc5ff87e3"
+                "reference": "51ece31aadca2f7bc7c6135dbd99eca5689eaae6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/481b7af6c5d5f82b4db05ec4fd747a9cc5ff87e3",
-                "reference": "481b7af6c5d5f82b4db05ec4fd747a9cc5ff87e3",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/51ece31aadca2f7bc7c6135dbd99eca5689eaae6",
+                "reference": "51ece31aadca2f7bc7c6135dbd99eca5689eaae6",
                 "shasum": ""
             },
             "require-dev": {
                 "symfony/console": "~4.4 || ^5.0",
                 "symfony/yaml": "~4.4 || ^5.0"
             },
+            "default-branch": true,
             "type": "prestashop-theme",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -4969,14 +4970,14 @@
                 },
                 {
                     "name": "PrestaShop Community",
-                    "homepage": "https://contributors.prestashop.com/"
+                    "homepage": "https://contributors.prestashop-project.org/"
                 }
             ],
-            "description": "Classic theme for PrestaShop 1.7",
+            "description": "Classic theme for develop PrestaShop version",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/2.1.1"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2023-03-13T21:18:14+00:00"
+            "time": "2023-10-27T14:14:25+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -18161,6 +18162,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "prestashop/classic": 20,
         "prestashop/ps_apiresources": 20
     },
     "prefer-stable": true,
