@@ -37,6 +37,10 @@
       {{ form_widget(form.feature_value_id) }}
       {{ form_widget(form.add_feature) }}
     </div>
+    {# Manually add the external link block because we don't use form_row and this way it's under the whole block #}
+    {% with {external_link: form.feature_id.vars.external_link} %}
+      {{- block('form_external_link') -}}
+    {% endwith %}
 
     {{- block('form_rows') -}}
   </div>

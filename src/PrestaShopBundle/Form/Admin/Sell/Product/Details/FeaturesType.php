@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeaturesType extends TranslatorAwareType
@@ -43,13 +44,20 @@ class FeaturesType extends TranslatorAwareType
      */
     private $featuresChoiceProvider;
 
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FeaturesChoiceProvider $featuresChoiceProvider
+        FeaturesChoiceProvider $featuresChoiceProvider,
+        UrlGeneratorInterface $urlGenerator
     ) {
         parent::__construct($translator, $locales);
         $this->featuresChoiceProvider = $featuresChoiceProvider;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -68,6 +76,11 @@ class FeaturesType extends TranslatorAwareType
                 'label' => $this->trans('Feature', 'Admin.Catalog.Feature'),
                 'attr' => [
                     'class' => 'feature-selector',
+                ],
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage features[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->urlGenerator->generate('admin_features_index'),
+                    'position' => 'prepend',
                 ],
             ])
             ->add('feature_value_id', ChoiceType::class, [
