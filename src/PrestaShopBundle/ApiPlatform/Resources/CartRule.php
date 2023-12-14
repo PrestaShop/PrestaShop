@@ -28,29 +28,44 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Resources;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Put;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 
 #[ApiResource(
     operations: [
-        new Put(
-            uriTemplate: '/cart-rule',
+        new CQRSUpdate(
+            uriTemplate: '/cart-rule/{cartRuleId}',
             processor: CommandProcessor::class,
-            extraProperties: ['CQRSCommand' => EditCartRuleCommand::class]
+            extraProperties: [
+                'CQRSCommandMapping' => [
+                    '[minimumAmount][value]' => '[minimumAmount][minimumAmount]',
+                ],
+            ],
+            CQRSCommand: EditCartRuleCommand::class,
+            CQRSQuery: GetCartRuleForEditing::class
+        ),
+        new CQRSGet(
+            uriTemplate: '/cart-rule/{cartRuleId}',
+            CQRSQuery: GetCartRuleForEditing::class
         ),
     ],
 )]
+
 class CartRule
 {
+    #[ApiProperty(identifier: true)]
     public int $cartRuleId;
 
     public string $description;
 
     public string $code;
 
-    public array $minimumAmount;
+    public CartRuleMinimumAmount $minimumAmount;
 
     public bool $minimumAmountShippingIncluded;
 
@@ -72,5 +87,5 @@ class CartRule
 
     public int $quantityPerUser;
 
-    public array $cartRuleAction;
+    public CartRuleAction $cartRuleAction;
 }
