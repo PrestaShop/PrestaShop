@@ -253,6 +253,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "composer-normalize": [
+            "composer normalize --no-check-lock"
+        ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
             "@php ./tests/bin/create-test-db.php",
@@ -272,6 +275,10 @@
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml"
         ],
+        "phpstan": [
+            "Composer\\Config::disableProcessTimeout",
+            "make phpstan"
+        ],
         "restore-test-db": [
             "@php ./tests/bin/restore-test-db.php"
         ],
@@ -285,9 +292,6 @@
         ],
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml"
-        ],
-        "phpstan": [
-            "./vendor/bin/phpstan analyse --memory-limit 1G -c phpstan.neon.dist"
         ]
     },
     "scripts-descriptions": {

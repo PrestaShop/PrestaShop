@@ -30,7 +30,7 @@ cs-fixer: ## Run php-cs-fixer
 	./vendor/bin/php-cs-fixer fix
 
 phpstan: ## Run phpstan analysis
-	./vendor/bin/phpstan analyse -c phpstan.neon.dist
+	./vendor/bin/phpstan analyse --memory-limit 1G -c phpstan.neon.dist
 
 scss-fixer: ## Run scss-fix
 	cd admin-dev/themes/new-theme && npm run scss-fix
