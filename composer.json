@@ -285,7 +285,10 @@
         ],
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml"
-        ]
+        ],
+	"phpstan": [
+	    "./vendor/bin/phpstan analyse --memory-limit 1G -c phpstan.neon.dist"
+	]
     },
     "scripts-descriptions": {
         "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information.",
