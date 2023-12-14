@@ -295,9 +295,11 @@
         ]
     },
     "scripts-descriptions": {
+        "composer-normalize": "Normalize composer.json file, CI will check this",
         "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information.",
         "create-test-db": "Create a Database for testing purposes",
         "create-test-table-dumps": "Create a dump of each table in the Database for testing purposes",
+        "phpstan": "Run PHPStan for the project",
         "restore-test-db": "Restore the whole DB in a single dump",
         "restore-test-tables": "Restore all tables one by one, only when they have been modified",
         "test-all": "Launch all PHPUnit test suites"
