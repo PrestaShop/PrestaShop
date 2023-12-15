@@ -55,16 +55,25 @@ use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterfac
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Class EmployeeController handles pages under "Configure > Advanced Parameters > Team > Employees".
  */
 class EmployeeController extends FrameworkBundleAdminController
 {
+    public function __construct(
+         TranslatorInterface $translator,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
+    ) {
+        parent::__construct($translator);
+    }
+
     /**
      * Show employees list & options page.
      *
@@ -378,7 +387,7 @@ class EmployeeController extends FrameworkBundleAdminController
                 // @see https://github.com/PrestaShop/PrestaShop/pull/32861
                 $redirectParameters = ['employeeId' => $result->getIdentifiableObjectId()];
                 if ($contextEmployeeProvider->getId() === $result->getIdentifiableObjectId()) {
-                    $newToken = $this->get('security.csrf.token_manager')
+                    $newToken = $this->csrfTokenManager
                         ->getToken($employeeForm->get('email')->getData())
                         ->getValue();
                     $redirectParameters['_token'] = $newToken;

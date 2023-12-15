@@ -26,3 +26,6 @@ services:
 
   PrestaShopBundle\Translation\TranslatorInterface:
     alias: translator
+
+  Symfony\Component\Security\Csrf\CsrfTokenManagerInterface:
+    alias: security.csrf.token_manager
