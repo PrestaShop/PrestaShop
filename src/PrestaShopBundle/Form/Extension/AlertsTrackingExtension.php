@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Appends alert messages from session flashbag to form vars.
@@ -60,10 +61,13 @@ class AlertsTrackingExtension extends AbstractTypeExtension
             return;
         }
 
+        /** @var Session $session */
+        $session = $this->requestStack->getSession();
+
         /*
          * Example: ['alerts' => ['success' => ['Success message'], 'error' => ['Invalid data']]]
          */
-        $view->vars['alerts'] = $this->requestStack->getSession()->getFlashBag()->peekAll();
+        $view->vars['alerts'] = $session->getFlashBag()->peekAll();
     }
 
     /**

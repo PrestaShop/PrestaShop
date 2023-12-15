@@ -34,6 +34,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 
 class ResponseBuilder
@@ -94,7 +95,9 @@ class ResponseBuilder
             } else {
                 foreach ($filtersForm->getErrors(true) as $error) {
                     $fieldLabel = $error->getOrigin()->getConfig()->getOption('label') ?: $error->getOrigin()->getName();
-                    $this->requestStack->getSession()->getFlashBag()->add('error', sprintf('%s: %s', $fieldLabel, $error->getMessage()));
+                    /** @var Session $session */
+                    $session = $this->requestStack->getSession();
+                    $session->getFlashBag()->add('error', sprintf('%s: %s', $fieldLabel, $error->getMessage()));
                 }
             }
         }
