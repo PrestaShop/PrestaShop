@@ -41,6 +41,8 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -50,6 +52,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class FrameworkBundleAdminController extends AbstractController implements ContainerAwareInterface
 {
+    protected TranslatorInterface $translator;
     /**
      * @deprecated since 9.0
      */
@@ -106,8 +109,6 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
             return $errors;
         }
 
-        $translator = $this->get('translator');
-
         foreach ($form->getErrors(true) as $error) {
             if ($error->getCause() && method_exists($error->getCause(), 'getPropertyPath')) {
                 $formId = str_replace(
@@ -120,7 +121,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
             }
 
             if ($error->getMessagePluralization()) {
-                $errors[$formId][] = $translator->trans(
+                $errors[$formId][] = $this->translator->trans(
                     $error->getMessageTemplate(),
                     array_merge(
                         $error->getMessageParameters(),
@@ -129,7 +130,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
                     'validators'
                 );
             } else {
-                $errors[$formId][] = $translator->trans(
+                $errors[$formId][] = $this->translator->trans(
                     $error->getMessageTemplate(),
                     $error->getMessageParameters(),
                     'validators'
@@ -305,7 +306,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
      */
     protected function trans($key, $domain, array $parameters = [])
     {
-        return $this->container->get('translator')->trans($key, $parameters, $domain);
+        return $this->translator->trans($key, $parameters, $domain);
     }
 
     /**
@@ -543,5 +544,11 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
             $exceptionCode,
             $e->getMessage()
         );
+    }
+
+    #[Required]
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
     }
 }

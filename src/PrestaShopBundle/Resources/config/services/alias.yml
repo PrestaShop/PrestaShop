@@ -23,3 +23,6 @@ services:
 
   theme_validator:
     alias: prestashop.core.addon.theme.theme_validator
+
+  PrestaShopBundle\Translation\TranslatorInterface:
+    alias: translator
