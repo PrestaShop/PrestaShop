@@ -109,26 +109,31 @@ class StockManager implements StockInterface
     {
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
 
-        $updatePhysicalQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
-
-        if ($idOrder) {
-            $updatePhysicalQuantityQuery .= '
-                INNER JOIN (
-                    SELECT product_id
-                    FROM {table_prefix}order_detail
-                    WHERE id_order = ' . (int) $idOrder . '
-                ) od 
-                ON sa.id_product = od.product_id
-            ';
-        }
-
-        $updatePhysicalQuantityQuery .= '
+        $updatePhysicalQuantityQuery = '
+            UPDATE {table_prefix}stock_available sa
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
             WHERE sa.id_shop = ' . (int) $shopId . '
         ';
 
         if ($idProduct) {
             $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
+        }
+
+        // Separating the extraction of the list of idProducts on separate queries prior to the UPDATE query
+        // as the query plan with the database provides worse performance
+        if ($idOrder) {
+            $productsList = [];
+            $getProductsToUpdateQuery = 'SELECT product_id FROM ' . _DB_PREFIX_ . 'order_detail WHERE id_order = ' . (int) $idOrder;
+            $productsToUpdate = Db::getInstance()->executeS($getProductsToUpdateQuery);
+            foreach ($productsToUpdate as $productToUpdate)
+                array_push($productsList, $productToUpdate['product_id']);
+            $getProductsToUpdateQuery = 'SELECT id_product_item FROM ' . _DB_PREFIX_ . 'pack pp 
+                                         JOIN ' . _DB_PREFIX_ . 'order_detail od ON (od.product_id = pp.id_product_pack) 
+                                         WHERE od.id_order = ' . (int) $idOrder;
+            $productsToUpdate = Db::getInstance()->executeS($getProductsToUpdateQuery);
+            foreach ($productsToUpdate as $productToUpdate)
+                array_push($productsList, $productToUpdate['id_product_item']);
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product IN (' . implode(', ', $productsList) . ')';
         }
 
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
@@ -147,38 +152,6 @@ class StockManager implements StockInterface
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
-        $updateReservedQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
-
-        if ($idOrder) {
-            $updateReservedQuantityQuery .= '
-                INNER JOIN (
-                    SELECT product_id
-                    FROM {table_prefix}order_detail
-                    WHERE id_order = :order_id
-                ) od2
-                ON sa.id_product = od2.product_id
-            ';
-        }
-
-        $updateReservedQuantityQuery .= '
-            SET sa.reserved_quantity = (
-                SELECT SUM(od.product_quantity - od.product_quantity_refunded)
-                FROM {table_prefix}orders o
-                INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
-                INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE o.id_shop = :shop_id AND
-                os.shipped != 1 AND (
-                    o.valid = 1 OR (
-                        os.id_order_state != :error_state AND
-                        os.id_order_state != :cancellation_state
-                    )
-                ) AND sa.id_product = od.product_id AND
-                sa.id_product_attribute = od.product_attribute_id
-                GROUP BY od.product_id, od.product_attribute_id
-            )
-            WHERE sa.id_shop = :shop_id
-        ';
-
         $strParams = [
             '{table_prefix}' => _DB_PREFIX_,
             ':shop_id' => (int) $shopId,
@@ -186,18 +159,137 @@ class StockManager implements StockInterface
             ':cancellation_state' => (int) $cancellationState,
         ];
 
+        $getProductsToUpdateQuery = 'SELECT od.product_id as id_product, od.product_attribute_id as id_product_attribute, SUM(od.product_quantity - od.product_quantity_refunded) as net_quantity
+            FROM {table_prefix}orders o
+            INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
+            INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
+            WHERE o.id_shop = :shop_id AND
+            os.shipped != 1 AND (
+                o.valid = 1 OR (
+                    os.id_order_state != :error_state AND
+                    os.id_order_state != :cancellation_state
+                )
+            )
+            ';
+
+        $getProductsFromPacksToUpdateQuery = 'SELECT pp.id_product_item as id_product, pp.id_product_attribute_item as id_product_attribute, SUM((od.product_quantity - od.product_quantity_refunded)*pp.quantity) as net_quantity
+            FROM {table_prefix}orders o
+            INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
+            INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
+            JOIN {table_prefix}pack pp ON pp.id_product_pack = od.product_id
+            WHERE o.id_shop = :shop_id AND
+            os.shipped != 1 AND (
+                o.valid = 1 OR (
+                    os.id_order_state != :error_state AND
+                    os.id_order_state != :cancellation_state
+                )
+            )
+            ';
+
         if ($idProduct) {
-            $updateReservedQuantityQuery .= ' AND sa.id_product = :product_id';
-            $strParams[':product_id'] = (int) $idProduct;
+            $getProductsToUpdateQuery .= ' AND od.product_id = ' . (int) $idProduct;
+
+            $getProductsFromPacksToUpdateQuery .= ' AND pp.id_product_item IN (SELECT id_product_item from ps_pack pp join ps_order_detail od on (od.product_id = pp.id_product_pack AND pp.id_product_item = ' . (int) $idProduct . '))';
         }
 
         if ($idOrder) {
-            $strParams[':order_id'] = (int) $idOrder;
+            $getProductsToUpdateQuery .= ' AND od.product_id IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = ' . (int) $idOrder . ')';
+
+            $getProductsFromPacksToUpdateQuery .= 'AND pp.id_product_item IN (SELECT id_product_item from ps_pack pp join ps_order_detail od on (od.product_id = pp.id_product_pack) where od.id_order = ' . (int) $idOrder . ')';
         }
 
-        $updateReservedQuantityQuery = strtr($updateReservedQuantityQuery, $strParams);
+        $getProductsToUpdateQuery .= ' GROUP BY od.product_id, od.product_attribute_id';
+        $getProductsFromPacksToUpdateQuery .= ' GROUP BY pp.id_product_item, pp.id_product_attribute_item';
 
-        return Db::getInstance()->execute($updateReservedQuantityQuery);
+        $getProductsToUpdateQuery = strtr($getProductsToUpdateQuery, $strParams);
+
+        $productsToUpdateStock = Db::getInstance()->executeS($getProductsToUpdateQuery);
+
+        $getProductsFromPacksToUpdateQuery = strtr($getProductsFromPacksToUpdateQuery, $strParams);
+
+        $productsToUpdateStockFromPacks = Db::getInstance()->executeS($getProductsFromPacksToUpdateQuery);
+
+        if ($productsToUpdateStock AND $productsToUpdateStockFromPacks) {
+            foreach ($productsToUpdateStock as $key1 => $pToUpdate) {
+                foreach ($productsToUpdateStockFromPacks as $key2 => $pToUpdateFromPack) {
+
+                    if (($pToUpdate['id_product'] == $pToUpdateFromPack['id_product'])
+                             AND ($pToUpdate['id_product_attribute'] == $pToUpdateFromPack['id_product_attribute'])) 
+                    {
+                        $productsToUpdateStock[$key1]['net_quantity'] = $pToUpdate['net_quantity'] + $pToUpdateFromPack['net_quantity'];
+                        unset($productsToUpdateStockFromPacks[$key2]);
+                    }
+                }
+            }
+            $productsToUpdateStock = array_merge($productsToUpdateStock, $productsToUpdateStockFromPacks);
+        }
+
+        // The following is only required to consider cases where there isn't any order in "not shipped state" with such product. The reserved value to be updated
+        // should be 0 in these cases but the initial INNER JOIN query doesn't return any aggregated value for that idProduct as there is no order
+        // in "not shipped state" so the reserved quantity would not be updated on the Available Stock.
+        if ($idProduct) {
+            $found = false;
+            foreach ($productsToUpdateStock as $pToUpdate) {
+                if ($pToUpdate['id_product'] == $idProduct)
+                    $found = true;
+            }    
+            if ($found == false) {
+                $productsAttributes = Db::getInstance()->executeS('SELECT id_product_attribute FROM ' . _DB_PREFIX_ . 'product_attribute WHERE id_product = ' . (int) $idProduct);
+                foreach ($productsAttributes as $productAttribute) {
+                    array_push($productsToUpdateStock, array('id_product' => $idProduct, 'id_product_attribute' => $productAttribute['id_product_attribute'], 'net_quantity' => 0));
+                }
+            }
+        }
+
+        // The following is only required to consider cases where there isn't any order in "not shipped state" for a product in the order. The reserved value to be updated
+        // should be 0 in these cases but the initial INNER JOIN query doesn't return any aggregated value for that idProduct as there is no order
+        // in "not shipped state" so the reserved quantity would not be updated on the Available Stock.
+        if ($idOrder) {
+            $productsAttributesQuery = '
+                SELECT od.product_id as id_product, od.product_attribute_id as id_product_attribute
+                FROM ' . _DB_PREFIX_ . 'orders o
+                INNER JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_order = o.id_order
+                WHERE o.id_shop = ' . (int) $shopId . '
+                AND od.product_id IN (SELECT product_id FROM ' . _DB_PREFIX_ . 'order_detail WHERE id_order = ' . (int) $idOrder .')';
+            
+            $productsAttributes = Db::getInstance()->executeS($productsAttributesQuery);
+
+            $productsAttributesQuery = '
+                SELECT pp.id_product_item as id_product, pp.id_product_attribute_item as id_product_attribute
+                FROM ' . _DB_PREFIX_ . 'orders o
+                INNER JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_order = o.id_order
+                JOIN ' . _DB_PREFIX_ . 'pack pp ON pp.id_product_pack = od.product_id
+                WHERE o.id_shop = ' . (int) $shopId . '
+                AND pp.id_product_item IN (SELECT id_product_item from ps_pack pp join ps_order_detail od on (od.product_id = pp.id_product_pack) where od.id_order = ' . (int) $idOrder . ')';
+
+            $productsAttributes = array_merge($productsAttributes, Db::getInstance()->executeS($productsAttributesQuery));
+
+            foreach ($productsAttributes as $productAttribute) {
+                $found = false;
+                foreach ($productsToUpdateStock as $pToUpdate) {
+                    if ($pToUpdate['id_product'] == $productAttribute['id_product'] AND $pToUpdate['id_product_attribute'] == $productAttribute['id_product_attribute']) {
+                        $found = true;
+                    }
+                }    
+                if ($found == false) {
+                    foreach ($productsAttributes as $productAttribute) {
+                        array_push($productsToUpdateStock, array('id_product' => $productAttribute['id_product'], 'id_product_attribute' => $productAttribute['id_product_attribute'], 'net_quantity' => 0));
+                    } 
+                }
+            }
+        }
+
+        foreach ($productsToUpdateStock as $pToUpdate) {
+            $updateQuery = 'UPDATE ' . _DB_PREFIX_ . 'stock_available sa
+                            SET sa.reserved_quantity = ' . (int) $pToUpdate['net_quantity'] . '
+                            WHERE sa.id_shop = '. (int) $shopId . '
+                            AND sa.id_product = ' . (int) $pToUpdate['id_product'] . '
+                            AND sa.id_product_attribute = ' . (int) $pToUpdate['id_product_attribute'];
+
+            Db::getInstance()->execute($updateQuery);
+        }
+
+        return true;
     }
 
     /**
