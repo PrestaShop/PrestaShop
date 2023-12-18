@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\AddAttributeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
+use ProductAttribute;
 
 /**
  * Handles adding of attribute value using legacy logic.
@@ -56,7 +57,7 @@ final class AddAttributeHandler extends AbstractObjectModelHandler implements Ad
      */
     public function handle(AddAttributeCommand $command): AttributeId
     {
-        $attribute = new \ProductAttribute();
+        $attribute = new ProductAttribute();
 
         $attribute->name = $command->getLocalizedValue();
 

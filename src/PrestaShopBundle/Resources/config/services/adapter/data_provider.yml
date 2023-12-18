@@ -39,9 +39,6 @@ services:
   prestashop.adapter.data_provider.order_return_state:
     class: PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider
 
-  PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupDataProvider:
-    autowire: true
-
   prestashop.adapter.data_provider.attribute:
     class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
 
