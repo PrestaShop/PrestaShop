@@ -306,6 +306,9 @@ class ProductsBlock extends ViewOrderBasePage {
       page.locator(`${this.updateProductButton}:visible`).first().click(),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
+    if (await this.elementVisible(page, this.orderProductsLoading, 2000)) {
+      await this.waitForHiddenSelector(page, this.orderProductsLoading);
+    }
     await this.waitForVisibleSelector(page, this.productQuantitySpan(row));
 
     return parseFloat(await this.getTextContent(page, this.productQuantitySpan(row)));
@@ -373,10 +376,7 @@ class ProductsBlock extends ViewOrderBasePage {
    */
   async deleteProduct(page: Page, row: number): Promise<string | null> {
     await this.dialogListener(page);
-    if (await this.elementVisible(page, this.growlMessageBlock)) {
-      await this.closeGrowlMessage(page);
-    }
-
+    await this.closeGrowlMessage(page);
     await Promise.all([
       page.waitForResponse((response) => response.url().includes('/products?_token')),
       this.waitForSelectorAndClick(page, this.deleteProductButton(row)),
@@ -591,7 +591,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{stockLocation: string, available: number, price:number;}>}
    */
-  async getSearchedProductDetails(page: Page): Promise<{ stockLocation: string; available: number; price:number; }> {
+  async getSearchedProductDetails(page: Page): Promise<{ stockLocation: string; available: number; price: number; }> {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),

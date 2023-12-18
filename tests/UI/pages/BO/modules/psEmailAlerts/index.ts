@@ -12,6 +12,8 @@ class PsEmailAlerts extends ModuleConfiguration {
 
   private readonly productAvailabilityCheckbox: (toEnable: boolean) => string;
 
+  private readonly orderEditCheckbox: (toEnable: boolean) => string;
+
   private readonly submitCustomerNotifications: string;
 
   private readonly newOrderCheckbox: (toEnable: boolean) => string;
@@ -40,6 +42,7 @@ class PsEmailAlerts extends ModuleConfiguration {
     // Selectors
     // Customer Notifications
     this.productAvailabilityCheckbox = (toEnable: boolean) => `#MA_CUSTOMER_QTY_${toEnable ? 'on' : 'off'}`;
+    this.orderEditCheckbox = (toEnable: boolean) => `#MA_ORDER_EDIT_${toEnable ? 'on' : 'off'}`;
     this.submitCustomerNotifications = 'button[name="submitMailAlert"]';
     // Merchant Notifications
     this.newOrderCheckbox = (toEnable: boolean) => `#MA_MERCHANT_ORDER_${toEnable ? 'on' : 'off'}`;
@@ -52,6 +55,19 @@ class PsEmailAlerts extends ModuleConfiguration {
   }
 
   /* Methods */
+
+  /**
+   * Set edit order
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable edit order
+   * @returns {Promise<number>}
+   */
+  async setEditOrder(page: Page, toEnable: boolean): Promise<string> {
+    await this.setChecked(page, this.orderEditCheckbox(toEnable));
+    await this.clickAndWaitForURL(page, this.submitCustomerNotifications);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
 
   /**
    * Set new order
