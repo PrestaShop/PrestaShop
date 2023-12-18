@@ -69,8 +69,8 @@ class EditableAttribute
      * @param int[] $shopAssociationIds
      */
     public function __construct(
-        AttributeId $attributeId,
-        AttributeGroupId $attributeGroupId,
+        int $attributeId,
+        int $attributeGroupId,
         array $value,
         string $color,
         array $shopAssociationIds
