@@ -1,0 +1,133 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<div id="header_quick" class="component">
+  <div class="dropdown">
+    <button
+      id="quick_select"
+      class="btn btn-link dropdown-toggle"
+      data-toggle="dropdown"
+    >
+      {{ 'Quick Access'|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">arrow_drop_down</i>
+    </button>
+    <ul class="dropdown-menu">
+      {% for quickAccess in this.quickAccesses %}
+        {assign "matchQuickLink" $quick.id_quick_access}
+        <li class="quick-row-link{% if quickAccess.active %} active{% endif %}">
+          <a {% if quickAccess.class is defined %}class="{{ quickAccess.class|escape('html_attr') }}"{% endif %}
+             href="{{ quickAccess.link|escape('html_attr') }}"
+             {% if quickAccess.new_window %} target="_blank"{% endif %}>
+            {{ quickAccess.name|escape('html_attr') }}</a>
+        </li>
+      {% endfor %}
+      <li class="divider"></li>
+      {% if this.currentQuickAccess %}
+        <li>
+          <a id="quick-remove-link" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
+             data-quicklink-id="{{ this.currentQuickAccess.id_quick_access }}">
+            <i class="material-icons">remove_circle</i>
+            {{ 'Remove from QuickAccess'|trans({}, 'Admin.Navigation.Header') }}
+          </a>
+        </li>
+      {% else %}
+        <li>
+          <a id="quick-add-link" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+            <i class="material-icons">add_circle</i>
+            {{ 'Add current page to QuickAccess'|trans({}, 'Admin.Navigation.Header') }}
+          </a>
+        </li>
+
+        <a id="quick-add-link"
+           class="dropdown-item js-quick-link"
+           href="#"
+           data-rand="{{ random(1, 200) }}"
+           data-method="add"
+           data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
+           data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
+           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr')}}"
+           data-link="{{ this.currentUrlTitle|escape('html_attr') }}"
+        >
+          <i class="material-icons">add_circle</i>
+          {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
+        </a>
+
+      {% endif %}
+      <li>
+        <a id="quick-manage-link" href="{{ legacy_path('AdminQuickAccesses') }}">
+          <i class="material-icons">settings</i>
+          {{ 'Manage quick accesses'|trans({}, 'Admin.Navigation.Header') }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    $('.ajax-quick-link').on('click', function(e){
+      e.preventDefault();
+
+      var method = $(this).data('method');
+
+      if(method == 'add')
+        var name = prompt('{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}', '{{ this.currentUrlTitle|escape('html_attr') }}');
+
+      if(method == 'add' && name || method == 'remove')
+      {
+        $.ajax({
+          type: 'POST',
+          headers: { "cache-control": "no-cache" },
+          async: false,
+          url: "{{ legacy_path('AdminQuickAccesses', {'action': 'GetUrl', 'rand': (random(1, 200)), 'ajax': 1}) }}" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
+          data: {
+            "url": "{{ this.cleanCurrentUrl|escape('js') }}",
+            "name": name,
+          },
+          dataType: "json",
+          success: function(data) {
+            var quicklink_list ='';
+            $.each(data, function(index,value){
+              if (typeof data[index]['name'] !== 'undefined')
+                quicklink_list += '<li><a href="' + data[index]['link'] + '">' + data[index]['name'] + '</a></li>';
+            });
+
+            if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
+              $.each(data, function(index, value)
+              {
+                if (typeof data[index] == 'string')
+                  $.growl.error({ title: "", message: data[index]});
+              });
+            else if (quicklink_list)
+            {
+              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+              $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
+              $(e.target).remove();
+              showSuccessMessage(update_success_msg);
+            }
+          }
+        });
+      }
+    });
+  });
+</script>

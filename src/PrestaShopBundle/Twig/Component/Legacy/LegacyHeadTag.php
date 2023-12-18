@@ -26,16 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Twig\Component;
+namespace PrestaShopBundle\Twig\Component\Legacy;
 
+use PrestaShopBundle\Twig\Component\HeadTag;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/shop_list.html.twig')]
-class ShopList
+#[AsTwigComponent(template: '@PrestaShop/Admin/Component/LegacyLayout/head_tag.html.twig')]
+class LegacyHeadTag extends HeadTag
 {
-    public string $baseUrl;
-    public ?bool $isMultishop;
-    public ?string $shopList;
-    public ?int $multishopContext;
-    public ?string $currentShopName;
 }

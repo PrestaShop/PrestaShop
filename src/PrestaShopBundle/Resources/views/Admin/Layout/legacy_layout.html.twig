@@ -22,11 +22,118 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]> <html class="no-js ie9"> <![endif]-->
+<html lang="{{ ps.isoUser }}">
+<head>
+  {% block header %}
+    {% set metaTitle = meta_title is defined ? meta_title : (layoutTitle is defined ? layoutTitle : '') %}
+    {{ component('LegacyHeadTag', { metaTitle: metaTitle }) }}
+  {% endblock %}
+</head>
 
-{% block content %}
-  {{ legacy_render|raw }}
+<body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} ps_back-office page-sidebar {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.multiShop|default(false) %} multishop-enabled{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %}"
+  {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
+  {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token is defined %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
+>
+
+{# Layout header #}
+{% block layout_header %}
+  <header id="header" class="bootstrap">
+    <nav id="header_infos" role="navigation">
+      <i class="material-icons js-mobile-menu">menu</i>
+
+      {# Logo #}
+      <a id="header_logo" href="{{ ps.defaultTabLink }}" aria-label="{{ 'PrestaShop logo'|trans({}, 'Admin.Navigation.Header') }}"></a>
+      <span id="shop_version">{{ ps.version }}</span>
+
+      {{ component('LegacyQuickAccess') }}
+      {{ component('LegacySearchForm') }}
+
+      {% if ps.debugMode|default(false) %}
+        <div class="component hide-mobile-sm">
+          <a class="shop-state label-tooltip"
+             id="debug-mode"
+             data-toggle="tooltip"
+             data-placement="bottom"
+             data-html="true"
+             title="<p class=&quot;text-left&quot;><strong>{{ 'Your shop is in debug mode.'|trans({}, 'Admin.Navigation.Notification') }}</strong></p><p class=&quot;text-left&quot;>{{ 'All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.'|trans({'[1]': '<strong>', '[/1]': '</strong>'}, 'Admin.Navigation.Notification') }}</p>"
+             href="{{ url('admin_performance') }}"
+          >
+            <i class="material-icons">bug_report</i>
+            <span>{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if ps.maintenanceModeEnabled|default(false) %}
+        {% set maintenanceTitle %}
+          <p class="text-left">
+            <strong>
+              {{ 'Your store is in maintenance mode.'|trans({}, 'Admin.Navigation.Notification') }}
+            </strong>
+          </p>
+          <p class="text-left">
+            {{ 'Your visitors and customers cannot access your store while in maintenance mode.'|trans({}, 'Admin.Navigation.Notification') }}
+          </p>
+          <p class="text-left">
+            {{ 'To manage the maintenance settings, go to Shop Parameters > Maintenance tab.'|trans({}, 'Admin.Navigation.Notification') }}
+          </p>
+          {% if ps.frontOfficeAccessibleForAdmins|default(false) %}
+            <p class="text-left">
+              {{ 'Admins can access the store front office without storing their IP.'|trans({}, 'Admin.Navigation.Notification') }}
+            </p>
+          {% endif %}
+        {% endset %}
+        <div class="component hide-mobile-sm">
+          <a class="shop-state label-tooltip"
+             id="maintenance-mode"
+             data-toggle="tooltip"
+             data-placement="bottom"
+             data-html="true"
+             title="{{ maintenanceTitle|e('html') }}"
+             href="{{ url('admin_maintenance') }}"
+          >
+            <i class="material-icons"
+               style="{% if ps.frontOfficeAccessibleForAdmins|default(false) %}color: #72c279;{% endif %}"
+            >build</i>
+            <span>{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+      {{ component('LegacyShopList') }}
+
+      {{ component('LegacyNotificationsCenter') }}
+      {{ component('LegacyEmployeeDropdown') }}
+
+      {# Ajax running *#}
+      <span id="ajax_running" class="hidden-xs">
+        <i class="icon-refresh icon-spin icon-fw"></i>
+      </span>
+
+      {{ renderhook('displayBackOfficeTop') }}
+    </nav>
+  </header>
+
+  {{ component('LegacyNavBar') }}
 {% endblock %}
 
-{% block stylesheets %}{% endblock %}
-{% block core_javascript %}{% endblock %}
+  <div id="main">
+    <div id="content" class="bootstrap{% if ps.displayedWithTabs %} with-tabs{% endif %}">
+      {% block content %}
+        {{ legacy_render|raw }}
+      {% endblock %}
+    </div>
+  </div>
+
+  <div id="footer" class="bootstrap">
+    <div class="col-sm-12">
+      {{ renderhook('displayBackOfficeFooter', {}) }}
+    </div>
+  </div>
+</body>
+</html>

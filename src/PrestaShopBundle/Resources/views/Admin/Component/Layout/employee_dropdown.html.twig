@@ -50,7 +50,7 @@
 
         {% for menuItem in displayBackOfficeEmployeeMenu %}
           {% set menuItemProperties = menuItem.getProperties %}
-          <a class="dropdown-item {{ menuItem.getClass }}" href="{{ menuItemProperties.link }}" target="_blank" rel="noopener noreferrer nofollow">
+          <a class="dropdown-item {{ menuItem.getClass }}" href="{{ menuItemProperties.link }}" {% if menuItemProperties.isExternalLink %} target="_blank"{% endif %} rel="noopener noreferrer nofollow">
             {% if menuItemProperties.icon is defined %}
               <i class="material-icons">{{ menuItemProperties.icon }}</i>
             {% endif %}

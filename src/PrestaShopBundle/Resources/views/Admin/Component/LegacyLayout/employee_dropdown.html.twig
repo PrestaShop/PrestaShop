@@ -1,0 +1,61 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<ul id="header_employee_box" class="component">
+  <li id="employee_infos" class="dropdown">
+    <a href="{{ path('admin_employees_edit', {employeeId: this.employee.id}) }}"
+       class="employee_name dropdown-toggle"
+       data-toggle="dropdown"
+    >
+      <i class="material-icons">account_circle</i>
+    </a>
+    <ul id="employee_links" class="dropdown-menu dropdown-menu-right">
+      <li class="employee-wrapper-avatar" data-mobile="true" data-from="employee_links" data-target="menu">
+              <span class="employee_avatar">
+                <img class="imgm img-thumbnail" alt="" src="{{ this.employee.imageUrl }}" width="60" height="60" />
+              </span>
+      </li>
+      <li class="text-left text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{{ 'Welcome back %name%'|trans({'%name%': this.employee.firstName}, 'Admin.Navigation.Header') }}</li>
+      <li class="employee-wrapper-profile"><a class="admin-link" href="{{ path('admin_employees_edit', {employeeId: this.employee.id}) }}"><i class="material-icons">edit</i> {{ 'Your profile'|trans({}, 'Admin.Navigation.Header') }}</a></li>
+      <li class="divider"></li>
+
+      {% for menuItem in displayBackOfficeEmployeeMenu %}
+        {% set menuItemProperties = menuItem.getProperties %}
+        <li class="{{ menuItem.getClass }}">
+          <a class="dropdown-item" href="{{ menuItemProperties.link }}" {% if menuItemProperties.isExternalLink %} target="_blank"{% endif %} rel="noopener noreferrer nofollow">
+            {% if menuItemProperties.icon is defined %}
+              <i class="material-icons">{{ menuItemProperties.icon }}</i>
+            {% endif %}
+            {{ menuItem.getContent }}
+          </a>
+        </li>
+        {% if loop.last %}
+          <p class="divider"></p>
+        {% endif %}
+      {% endfor %}
+
+      <li class="signout text-center" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{{ legacy_path('AdminLogin', {'logout' : 1})|escape('html_attr') }}"><i class="material-icons visible-xs">power_settings_new</i> {{ 'Sign out'|trans({}, 'Admin.Navigation.Header') }}</a></li>
+    </ul>
+  </li>
+</ul>

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Tools;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -36,7 +37,7 @@ use Twig\TwigFunction;
 class PathExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly LegacyContext $context
+        private readonly LegacyContext $context,
     ) {
     }
 
@@ -49,6 +50,10 @@ class PathExtension extends AbstractExtension
             new TwigFunction(
                 'legacy_path',
                 [$this, 'getLegacyPath']
+            ),
+            new TwigFunction(
+                'legacy_admin_token',
+                [$this, 'getLegacyAdminToken']
             ),
         ];
     }
@@ -64,5 +69,17 @@ class PathExtension extends AbstractExtension
     public function getLegacyPath(string $controllerName, array $parameters = []): string
     {
         return $this->context->getAdminLink($controllerName, extraParams: $parameters);
+    }
+
+    /**
+     * Get token for legacy controller.
+     *
+     * @param string $controllerName
+     *
+     * @return string
+     */
+    public function getLegacyAdminToken(string $controllerName): string
+    {
+        return Tools::getAdminToken($controllerName);
     }
 }

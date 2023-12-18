@@ -61,8 +61,12 @@ class CustomLegacyController extends PrestaShopAdminController
         $xpath = new DOMXPath($dom);
         $elementNodeList = $xpath->query('//*[@id="content"]');
 
+        $content = '';
         $elementNode = $elementNodeList->item(0);
+        foreach ($elementNode->childNodes->getIterator() as $childNode) {
+            $content .= $dom->saveHTML($childNode);
+        }
 
-        return $dom->saveHTML($elementNode);
+        return $content;
     }
 }
