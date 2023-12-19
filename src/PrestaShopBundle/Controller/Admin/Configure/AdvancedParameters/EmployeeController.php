@@ -55,7 +55,6 @@ use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterfac
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,10 +67,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 class EmployeeController extends FrameworkBundleAdminController
 {
     public function __construct(
-         TranslatorInterface $translator,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
-        parent::__construct($translator);
     }
 
     /**

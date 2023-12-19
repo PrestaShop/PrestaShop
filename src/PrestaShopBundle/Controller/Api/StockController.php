@@ -43,23 +43,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StockController extends ApiController
 {
-    /**
-     * @var StockRepository
-     */
-    public $stockRepository;
-
-    /**
-     * @var QueryStockParamsCollection
-     */
-    public $queryParams;
-
-    /**
-     * @var MovementsCollection;
-     */
-    public $movements;
-
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly StockRepository $stockRepository,
+        private readonly QueryStockParamsCollection $queryParams,
+        private readonly MovementsCollection $movements,
+    ) {
     }
 
     /**

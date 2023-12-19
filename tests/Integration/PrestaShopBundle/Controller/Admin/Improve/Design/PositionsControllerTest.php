@@ -78,7 +78,7 @@ class PositionsControllerTest extends WebTestCase
         $this->moduleId = Module::getModuleIdByName('ps_emailsubscription');
         $this->hookId = Hook::getIdByName('displayFooterBefore');
         $this->router = self::$kernel->getContainer()->get('router');
-        $this->session = self::$kernel->getContainer()->get('session');
+        $this->session = self::$kernel->getContainer()->get('request_stack')->getSession();
     }
 
     public function testUnhooksListAction(): void

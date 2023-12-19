@@ -35,7 +35,9 @@ use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;
 use ReflectionObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -49,14 +51,14 @@ class ModuleActivatedListener
     /**
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param FlashBagInterface $flashBag
+     * @param RequestStack $requestStack
      * @param Reader $annotationReader
      * @param ModuleRepository $moduleRepository
      */
     public function __construct(
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
-        private readonly FlashBagInterface $flashBag,
+        private readonly RequestStack $requestStack,
         private readonly Reader $annotationReader,
         private readonly ModuleRepository $moduleRepository
     ) {
@@ -106,7 +108,9 @@ class ModuleActivatedListener
      */
     private function showNotificationMessage(ModuleActivated $moduleActivated)
     {
-        $this->flashBag->add(
+        /** @var Session $session */
+        $session = $this->requestStack->getSession();
+        $session->getFlashBag()->add(
             'error',
             $this->translator->trans(
                 $moduleActivated->getMessage(),

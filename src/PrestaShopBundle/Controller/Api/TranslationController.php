@@ -47,18 +47,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TranslationController extends ApiController
 {
-    /**
-     * @var QueryTranslationParamsCollection
-     */
-    public $queryParams;
-
-    /**
-     * @var TranslationService
-     */
-    public $translationService;
-
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly QueryTranslationParamsCollection $queryParams,
+        private readonly TranslationService $translationService,
+    ) {
     }
 
     /**
@@ -353,7 +346,6 @@ class TranslationController extends ApiController
     private function translateMultilingualContent(array $modifiedDomains, Lang $lang)
     {
         if (in_array('AdminNavigationMenu', $modifiedDomains)) {
-
             // reset translator
             $this->translator->clearLanguage($lang->getLocale());
 

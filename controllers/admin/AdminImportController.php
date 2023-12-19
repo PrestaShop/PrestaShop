@@ -4242,7 +4242,9 @@ class AdminImportControllerCore extends AdminController
      */
     private function getSession()
     {
-        return \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('session');
+        $requestStack = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('request_stack');
+
+        return $requestStack->getSession();
     }
 
     /**

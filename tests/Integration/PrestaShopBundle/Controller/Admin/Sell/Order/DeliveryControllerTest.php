@@ -79,7 +79,7 @@ class DeliveryControllerTest extends WebTestCase
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');
-        $this->session = self::$kernel->getContainer()->get('session');
+        $this->session = self::$kernel->getContainer()->get('request_stack')->getSession();
     }
 
     public function testSlipAction(): void

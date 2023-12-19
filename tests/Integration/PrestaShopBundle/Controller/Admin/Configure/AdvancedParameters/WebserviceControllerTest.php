@@ -59,7 +59,7 @@ class WebserviceControllerTest extends WebTestCase
 
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
-        $this->session = self::$kernel->getContainer()->get('session');
+        $this->session = self::$kernel->getContainer()->get('request_stack')->getSession();
 
         $this->webserviceKey = new WebserviceKey();
         $this->webserviceKey->key = 'DFS51LTKBBMBAF5QQRG523JMQYEHA4X7';
