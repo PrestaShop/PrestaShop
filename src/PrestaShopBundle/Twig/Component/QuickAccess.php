@@ -45,46 +45,46 @@ class QuickAccess
     /**
      * link to new product creation form
      */
-    private const NEW_PRODUCT_LINK = 'index.php/sell/catalog/products/new';
+    protected const NEW_PRODUCT_LINK = 'index.php/sell/catalog/products/new';
 
     /**
      * link to new product creation form for product v2
      */
-    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products/create';
+    protected const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products/create';
 
     /**
      * List of Quick Accesses to display
      */
-    private array|null $quickAccesses = null;
+    protected array|null $quickAccesses = null;
 
     /**
      * Current Quick access by current request uri
      */
-    private array|false|null $currentQuickAccess = null;
+    protected array|false|null $currentQuickAccess = null;
 
     /**
      * Clean current Url
      */
-    private ?string $currentUrl = null;
+    protected ?string $currentUrl = null;
 
     /**
      * Current url title
      */
-    private ?string $currentUrlTitle = null;
+    protected ?string $currentUrlTitle = null;
 
     /**
      * Tokenized Urls cache
      */
-    private array $tokenizedUrls = [];
+    protected array $tokenizedUrls = [];
 
     public function __construct(
-        private readonly LegacyContext $context,
-        private readonly QuickAccessRepositoryInterface $quickAccessRepository,
-        private readonly TabRepository $tabRepository,
-        private readonly CsrfTokenManagerInterface $tokenManager,
-        private readonly UserProvider $userProvider,
-        private readonly RequestStack $requestStack,
-        private readonly MenuBuilder $menuBuilder
+        protected readonly LegacyContext $context,
+        protected readonly QuickAccessRepositoryInterface $quickAccessRepository,
+        protected readonly TabRepository $tabRepository,
+        protected readonly CsrfTokenManagerInterface $tokenManager,
+        protected readonly UserProvider $userProvider,
+        protected readonly RequestStack $requestStack,
+        protected readonly MenuBuilder $menuBuilder
     ) {
     }
 
@@ -191,7 +191,7 @@ class QuickAccess
     /**
      * Get url tokenized
      */
-    private function getTokenizedUrl(string $baseUrl): string
+    protected function getTokenizedUrl(string $baseUrl): string
     {
         if (!in_array($baseUrl, $this->tokenizedUrls)) {
             $url = $baseUrl;
@@ -219,7 +219,7 @@ class QuickAccess
     /**
      * Return true if the current page is the quick access url
      */
-    private function isCurrentPage(string $url): bool
+    protected function isCurrentPage(string $url): bool
     {
         return 0 === strcasecmp($this->getCleanCurrentUrl(), rtrim($url, '/'));
     }

@@ -69,7 +69,7 @@ class LegacyHeadTag extends HeadTag
      *
      * @return AdminController
      */
-    private function getLegacyController(): AdminController
+    protected function getLegacyController(): AdminController
     {
         return $this->context->getContext()->controller;
     }

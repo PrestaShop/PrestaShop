@@ -209,7 +209,7 @@ class HeadTag
     /**
      * Prepare price specifications to display cldr prices in javascript context.
      */
-    private function preparePriceSpecifications(): array
+    protected function preparePriceSpecifications(): array
     {
         /** @var Context $context */
         $context = $this->context->getContext();
@@ -227,7 +227,7 @@ class HeadTag
     /**
      * Prepare number specifications to display cldr numbers in javascript context.
      */
-    private function prepareNumberSpecifications(): array
+    protected function prepareNumberSpecifications(): array
     {
         /** @var Context $context */
         $context = $this->context->getContext();

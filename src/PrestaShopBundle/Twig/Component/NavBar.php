@@ -39,13 +39,13 @@ use Tab;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/nav_bar.html.twig')]
 class NavBar
 {
-    private ?array $tabs = null;
+    protected ?array $tabs = null;
 
     public function __construct(
-        private readonly LegacyContext $context,
-        private readonly LoggerInterface $logger,
-        private readonly MenuBuilder $menuBuilder,
-        private readonly string $psVersion,
+        protected readonly LegacyContext $context,
+        protected readonly LoggerInterface $logger,
+        protected readonly MenuBuilder $menuBuilder,
+        protected readonly string $psVersion,
     ) {
     }
 
@@ -68,7 +68,7 @@ class NavBar
         return $this->tabs;
     }
 
-    private function buildTabs($parentId = 0, $level = 0): array
+    protected function buildTabs($parentId = 0, $level = 0): array
     {
         $tabs = Tab::getTabs($this->context->getContext()->language->id, $parentId);
         $currentId = Tab::getCurrentParentId();
@@ -85,7 +85,7 @@ class NavBar
         return array_values(array_filter($processedTabs));
     }
 
-    private function isValidTab(array $tab): bool
+    protected function isValidTab(array $tab): bool
     {
         return Tab::checkTabRights($tab['id_tab'])
             && $tab['enabled']
@@ -93,7 +93,7 @@ class NavBar
             && $tab['class_name'] !== 'AdminCarrierWizard';
     }
 
-    private function processTab(array $tab, int $currentId, int $level, string $controllerName): array
+    protected function processTab(array $tab, int $currentId, int $level, string $controllerName): array
     {
         $isCurrentTab = ($currentId === $tab['id_tab']) || ($tab['class_name'] === $controllerName);
 
@@ -140,7 +140,7 @@ class NavBar
         return $tab;
     }
 
-    private function getTabLinkFromSubTabs(array $subtabs)
+    protected function getTabLinkFromSubTabs(array $subtabs)
     {
         foreach ($subtabs as $tab) {
             if ($tab['active'] && $tab['enabled']) {

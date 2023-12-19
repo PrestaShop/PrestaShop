@@ -35,10 +35,10 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/LegacyLayout/shop_list.html.twig')]
 class LegacyShopList
 {
-    private ?string $renderedShops;
+    protected ?string $renderedShops;
 
     public function __construct(
-        private readonly MultistoreFeature $multistoreFeature
+        protected readonly MultistoreFeature $multistoreFeature
     ) {
     }
 

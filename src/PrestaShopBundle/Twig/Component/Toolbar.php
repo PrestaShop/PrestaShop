@@ -45,8 +45,8 @@ class Toolbar
     public array $breadcrumbs;
 
     public function __construct(
-        private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly MenuBuilder $menuBuilder,
+        protected readonly HookDispatcherInterface $hookDispatcher,
+        protected readonly MenuBuilder $menuBuilder,
     ) {
     }
 
@@ -73,7 +73,7 @@ class Toolbar
         }
     }
 
-    private function setTitle(string $layoutTitle): void
+    protected function setTitle(string $layoutTitle): void
     {
         if (empty($layoutTitle)) {
             $this->title = $this->breadcrumbs['tab']->name;
@@ -82,7 +82,7 @@ class Toolbar
         }
     }
 
-    private function setBreadcrumbs(Tab $tab, array $ancestorsTab, array $tabs): void
+    protected function setBreadcrumbs(Tab $tab, array $ancestorsTab, array $tabs): void
     {
         $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
         $this->hookDispatcher->dispatchWithParameters('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$this->breadcrumbs]);
