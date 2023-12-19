@@ -68,8 +68,9 @@ final class CustomerAddressesChoiceProvider implements ConfigurableFormChoicePro
         $result = [];
         foreach ($addresses as $address) {
             $description = sprintf(
-                '%d- %s %s %s %s',
+                '#%d %s - %s %s %s %s',
                 $address['id_address'],
+                $address['alias'],
                 $address['address1'],
                 $address['address2'] ?: '',
                 $address['postcode'],
