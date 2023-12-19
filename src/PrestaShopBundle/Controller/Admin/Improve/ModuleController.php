@@ -48,6 +48,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
 /**
@@ -59,8 +60,10 @@ class ModuleController extends ModuleAbstractController
 
     public const MAX_MODULES_DISPLAYED = 6;
 
-    public function __construct(private readonly Environment $twig)
-    {
+    public function __construct(
+        private readonly Environment $twig,
+        private readonly ValidatorInterface $validator,
+    ) {
     }
 
     /**
@@ -372,7 +375,7 @@ class ModuleController extends ModuleAbstractController
                 ),
             ];
 
-            $violations = $this->get('validator')->validate($fileUploaded, $constraints);
+            $violations = $this->validator->validate($fileUploaded, $constraints);
             if (0 !== count($violations)) {
                 $violationsMessages = [];
                 foreach ($violations as $violation) {
