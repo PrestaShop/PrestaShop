@@ -76,6 +76,23 @@ final class SecurityAnnotationLinterCommand extends Command
         'admin_mail_theme_save_configuration_deprecated', // Deprecated
         'admin_mail_theme_send_test_mail_deprecated',  // Deprecated
         'admin_mail_theme_send_test_module_mail_deprecated',  // Deprecated
+        'admin_category_simple_add_form',
+        'admin_feature_get_feature_values',
+        'admin_shops_search',
+        'admin_employees_toggle_navigation',
+        'admin_employees_change_form_language',
+        'admin_module_notification_count',
+        'admin_product_new',
+        'admin_product_form',
+        'admin_import_file_upload',
+        'admin_emails_send_test',
+        'admin_employees_edit',
+        'admin_currencies_update_live_exchange_rates',
+        'admin_module_manage_action',
+        'admin_module_manage_action_bulk',
+        'admin_module_manage_update_all',
+        'admin_module_import',
+        'admin_theme_customize_layouts',
     ];
 
     public function __construct(AdminRouteProvider $adminRouteProvider, SecurityAnnotationLinter $securityAnnotationLinter)

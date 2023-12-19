@@ -13,6 +13,7 @@ services:
   PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalLocalizationPackLoader:
   PrestaShop\PrestaShop\Core\Localization\Pack\Loader\RemoteLocalizationPackLoader:
   PrestaShop\PrestaShop\Core\Localization\RTL\StyleSheetProcessorFactory:
+  PrestaShop\PrestaShop\Core\Localization\Number\LocaleNumberTransformer:
 
   # Deprecated since 9.0
   prestashop.core.localozation.pack.factory.localization_pack:
