@@ -29,50 +29,48 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Admin\Security;
 
 use PrestaShopBundle\Security\Admin\SessionRenewer;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Tests\Integration\Utility\ContextMockerTrait;
 
-class SessionRenewerTest extends WebTestCase
+class SessionRenewerTest extends KernelTestCase
 {
     use ContextMockerTrait;
-    /**
-     * @var CsrfTokenManager
-     */
-    private $sessionTokenManager;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var object|SessionRenewer|null
-     */
-    private $sessionRenewer;
+    private CsrfTokenManager $sessionTokenManager;
+    private SessionRenewer $sessionRenewer;
+    private Session $session;
 
     protected function setUp(): void
     {
-        $client = parent::createClient();
         static::mockContext();
 
-        $router = self::$kernel->getContainer()->get('router');
-        $client->request('GET', $router->generate('admin_title_index'));
+        $this->session = new Session(new MockArraySessionStorage());
+        $request = new Request([], [], [], [], [], [], null);
 
-        $this->sessionTokenManager = $client->getContainer()->get('security.csrf.token_manager');
-        $this->session = $client->getContainer()->get('request_stack')->getSession();
-        $this->sessionRenewer = $client->getContainer()->get(SessionRenewer::class);
+        $request->setSession($this->session);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $clearableTokenStorage = $this->getContainer()->get('security.csrf.token_storage');
+        $this->sessionRenewer = new SessionRenewer($clearableTokenStorage, $requestStack);
+
+        $this->sessionTokenManager = $this->getContainer()->get('security.csrf.token_manager');
     }
 
     public function testRenew(): void
     {
-        $this->session->start();
         $originalSessionId = $this->session->getId();
         $token = $this->sessionTokenManager->getToken('foo');
+
         self::assertEquals($originalSessionId, $this->session->getId());
         self::assertTrue($this->sessionTokenManager->isTokenValid($token));
+
         $this->sessionRenewer->renew();
+
         self::assertNotEquals($originalSessionId, $this->session->getId());
         self::assertFalse($this->sessionTokenManager->isTokenValid($token));
     }
