@@ -57,8 +57,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
@@ -137,10 +135,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, ProductFilters $filters): Response
     {
-        if ($this->shouldRedirectToV1()) {
-            return $this->redirectToRoute('admin_product_catalog');
-        }
-
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $productGrid = $productGridFactory->getGrid($filters);
 
@@ -160,6 +154,22 @@ class ProductController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminProducts'),
             'layoutTitle' => $this->trans('Products', 'Admin.Navigation.Menu'),
         ]);
+    }
+
+    /**
+     * This action is only used to allow backward compatible use of the former route admin_product_catalog
+     * It is added out of courtesy to give time for module to change and use the new admin_products_index route,
+     * but it will be removed in version 10.0 and its only usable via GET method.
+     *
+     * @deprecated Will be removed in 10.0
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function backwardCompatibleListAction(): RedirectResponse
+    {
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**
@@ -437,10 +447,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
-        if ($this->shouldRedirectToV1()) {
-            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
-        }
-
         if ($request->query->get('switchToShop')) {
             $this->addFlash('success', $this->trans('Your store context has been automatically modified.', 'Admin.Notifications.Success'));
 
@@ -500,6 +506,24 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->renderEditProductForm($productForm, $productId);
+    }
+
+    /**
+     * This action is only used to allow backward compatible use of the former route admin_product_form
+     * It is added out of courtesy to give time for module to change and use the new admin_products_edit route,
+     * but it will be removed in version 10.0 and its only usable via GET method.
+     *
+     * @deprecated Will be removed in 10.0
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
+     * @param int $id
+     *
+     * @return RedirectResponse
+     */
+    public function backwardCompatibleEditAction(int $id): RedirectResponse
+    {
+        return $this->redirectToRoute('admin_products_edit', ['productId' => $id]);
     }
 
     /**
@@ -633,7 +657,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Toggles product status
+     * Toggles product status for specific shop
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_index")
      *
@@ -644,29 +668,21 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function toggleStatusForShopAction(int $productId, int $shopId): JsonResponse
     {
-        $shopConstraint = ShopConstraint::shop($shopId);
-        /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
-            $productId,
-            $shopConstraint,
-            $this->getContextLangId()
-        ));
+        return $this->toggleProductStatusByShopConstraint($productId, ShopConstraint::shop($shopId));
+    }
 
-        try {
-            $command = new UpdateProductCommand($productId, $shopConstraint);
-            $command->setActive(!$productForEditing->isActive());
-            $this->getCommandBus()->handle($command);
-        } catch (Exception $e) {
-            return $this->json([
-                'status' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ]);
-        }
-
-        return $this->json([
-            'status' => true,
-            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
-        ]);
+    /**
+     * Toggles product status for all shops
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_index")
+     *
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusForAllShopsAction(int $productId): JsonResponse
+    {
+        return $this->toggleProductStatusByShopConstraint($productId, ShopConstraint::allShops());
     }
 
     /**
@@ -1281,6 +1297,32 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_products_index');
     }
 
+    private function toggleProductStatusByShopConstraint(int $productId, ShopConstraint $shopConstraint): JsonResponse
+    {
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
+            $productId,
+            $shopConstraint,
+            $this->getContextLangId()
+        ));
+
+        try {
+            $command = new UpdateProductCommand($productId, $shopConstraint);
+            $command->setActive(!$productForEditing->isActive());
+            $this->getCommandBus()->handle($command);
+        } catch (Exception $e) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ]);
+        }
+
+        return $this->json([
+            'status' => true,
+            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+        ]);
+    }
+
     /**
      * Helper private method to bulk update a product's status.
      *
@@ -1507,14 +1549,6 @@ class ProductController extends FrameworkBundleAdminController
         $shopId = $this->getContext()->shop->id;
 
         return $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, ProductGridDefinitionFactory::GRID_ID);
-    }
-
-    /**
-     * @return bool
-     */
-    private function shouldRedirectToV1(): bool
-    {
-        return $this->get(FeatureFlagStateCheckerInterface::class)->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 
     /**

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
-use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
 
 /**
@@ -36,7 +35,7 @@ use StockAvailable;
  *
  * This class will provide data from DB / ORM about Product stocks.
  */
-class StockManager implements StockInterface
+class StockManager
 {
     /**
      * Gets available stock for a given product / combination / shop.
@@ -117,7 +116,7 @@ class StockManager implements StockInterface
                     SELECT product_id
                     FROM {table_prefix}order_detail
                     WHERE id_order = ' . (int) $idOrder . '
-                ) od 
+                ) od
                 ON sa.id_product = od.product_id
             ';
         }

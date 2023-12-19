@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureValueException;
@@ -43,6 +44,7 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -264,6 +266,41 @@ class FeatureValueController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_feature_values_index', [
             'featureId' => $featureId,
         ]);
+    }
+
+    /**
+     * Get all values for a given feature.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('read', 'AdminProducts')")
+     *
+     * @param int $featureId The feature Id
+     *
+     * @return JsonResponse features list
+     */
+    public function getFeatureValuesAction($featureId)
+    {
+        if ($featureId == 0) {
+            return new JsonResponse();
+        }
+
+        $featuresChoices = $this->get(FeatureValuesChoiceProvider::class)->getChoices(['feature_id' => $featureId, 'custom' => false]);
+
+        $data = [];
+        if (count($featuresChoices) !== 0) {
+            $data[] = [
+                'id' => 0,
+                'value' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
+            ];
+        }
+
+        foreach ($featuresChoices as $featureName => $featureId) {
+            $data[] = [
+                'id' => $featureId,
+                'value' => $featureName,
+            ];
+        }
+
+        return new JsonResponse($data);
     }
 
     /**

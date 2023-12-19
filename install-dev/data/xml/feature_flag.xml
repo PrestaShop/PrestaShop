@@ -11,7 +11,6 @@
     <field name="stability"/>
   </fields>
   <entities>
-    <feature_flag id="product_page_v2" name="product_page_v2" type="env,dotenv,db" label_wording="New product page" label_domain="Admin.Advparameters.Feature" description_wording="This page benefits from increased performance and includes new features such as a new combination management system." description_domain="Admin.Advparameters.Help" state="1" stability="stable" />
     <feature_flag id="attribute_group" name="attribute_group" type="env,dotenv,db" label_wording="Attribute group" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable migrated attribute group page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="authorization_server" name="authorization_server" type="env,dotenv,db" label_wording="Authorization server" label_domain="Admin.Advparameters.Feature" description_wording="Enable or disable the authorization server page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="cart_rule" name="cart_rule" type="env,dotenv,db" label_wording="Cart rules" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated cart rules page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />

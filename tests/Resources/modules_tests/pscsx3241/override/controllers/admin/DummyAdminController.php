@@ -23,35 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Pack;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Context;
-use Pack;
-use Product;
-
-/**
- * @deprecated since 8.1 and will be removed in next major.
- *
- * This class will provide data from DB / ORM about product pack.
- */
-class PackDataProvider
+class DummyAdminController extends DummyAdminControllerCore
 {
     /**
-     * Get product pack items.
-     *
-     * @param int $id_product
-     * @param int $id_lang
+     * @return ContainerInterface|null
      */
-    public function getItems($id_product, $id_lang)
+    protected function buildContainer()
     {
-        $packItems = Pack::getItems($id_product, $id_lang);
-
-        foreach ($packItems as $packItem) {
-            $cover = $packItem->id_pack_product_attribute ? Product::getCombinationImageById($packItem->id_pack_product_attribute, $id_lang) : Product::getCover($packItem->id);
-            $packItem->image = Context::getContext()->link->getImageLink($packItem->link_rewrite, $cover ? $cover['id_image'] : '', 'home_default');
-        }
-
-        return $packItems;
+        return null;
     }
 }

@@ -23,32 +23,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
-
-use Db;
-
-/**
- * @deprecated since 8.1 and will be removed in next major.
- *
- * This class will provide data from DB / ORM about attachment.
- */
-class AttachmentDataProvider
+class DummyAdminController extends DummyAdminControllerCore
 {
-    /**
-     * Get all attachments.
-     *
-     * @param int $id_lang
-     *
-     * @return array Attachment
-     */
-    public function getAllAttachments($id_lang)
+    public function checkAccess()
     {
-        return Db::getInstance()->executeS('
-			SELECT *
-			FROM ' . _DB_PREFIX_ . 'attachment a
-			LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al
-				ON (a.id_attachment = al.id_attachment AND al.id_lang = ' . (int) $id_lang . ')
-        ');
+        return false;
     }
 }

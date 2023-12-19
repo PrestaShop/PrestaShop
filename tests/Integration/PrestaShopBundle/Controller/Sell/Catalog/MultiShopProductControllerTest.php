@@ -37,9 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAv
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreConfig;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Product;
 use Shop;
 use ShopGroup;
@@ -151,22 +149,6 @@ class MultiShopProductControllerTest extends GridControllerTestCase
         ShopResetter::resetShops();
         // Force cookie back to empty value for default all shops context to avoid messing with following tests
         self::forceMultiShopCookie([]);
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
-        $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-    }
-
-    public function tearDown(): void
-    {
-        $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
-        $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-
-        // Call parent tear down later or the kernel will be shut down
-        parent::tearDown();
     }
 
     /**

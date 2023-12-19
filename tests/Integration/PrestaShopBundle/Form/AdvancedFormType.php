@@ -30,7 +30,6 @@ namespace Tests\Integration\PrestaShopBundle\Form;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -69,11 +68,9 @@ class AdvancedFormType extends TranslatorAwareType
                     $this->trans('Temporary redirection to a product (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_TEMPORARY,
                 ],
             ])
-            ->add('target', TypeaheadProductCollectionType::class, [
+            ->add('target', ChoiceType::class, [
                 'required' => false,
                 'error_bubbling' => false,
-                'template_collection' => '<span class="label">%s</span>',
-                'limit' => 1,
             ])
         ;
 

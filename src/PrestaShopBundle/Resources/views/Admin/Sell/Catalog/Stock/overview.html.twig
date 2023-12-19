@@ -48,7 +48,7 @@
         <script>
             var data = {
                 baseUrl: '{{ app.request.getBasePath() }}',
-                catalogUrl: '{{ url('admin_product_catalog') }}',
+                catalogUrl: '{{ url('admin_products_index') }}',
                 stockUrl: '{{ url('admin_stock_overview') }}',
                 stockExportUrl: '{{ url('api_stock_list_products_export') }}',
                 stockImportUrl: '{{ getAdminLink('AdminImport')|raw }}',

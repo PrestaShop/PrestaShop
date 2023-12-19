@@ -18,42 +18,6 @@ services:
       - '@PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface'
       - '@PrestaShop\PrestaShop\Adapter\ContextStateManager'
 
-  # Deprecated in 8.1
-  PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider:
-    decorates: prestashop.core.admin.data_provider.product_interface
-    arguments:
-      - "@doctrine.orm.entity_manager"
-      - '@PrestaShop\PrestaShop\Adapter\ImageManager'
-      - "@prestashop.static_cache.adapter"
-    public: false
-    deprecated: ~
-
-  PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper:
-    arguments:
-      - "@translator"
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
-      - '@PrestaShop\PrestaShop\Core\Localization\LocaleInterface'
-      - '@PrestaShopBundle\Utils\FloatParser'
-    deprecated: ~
-
-  PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper:
-    deprecated: ~
-
-  PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier:
-    deprecated: ~
-
-  PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater:
-    deprecated: ~
-
-  PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater:
-    class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
-    decorates: prestashop.core.admin.data_updater.product_interface
-    public: false
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
-      - "@prestashop.static_cache.adapter"
-    deprecated: ~
-
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForAssociationHandler:
     autowire: true
     public: false
