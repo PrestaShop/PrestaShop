@@ -98,7 +98,12 @@ class EntityMapper
                         if (isset($entity_defs['fields'][$key]['type']) && in_array($entity_defs['fields'][$key]['type'], [
                             \ObjectModel::TYPE_BOOL,
                         ])) {
-                            $entity->{$key} = (string) $value;
+                            if (is_array($value)) {
+                                array_walk($value, function (&$v) { $v = strval($v); });
+                                $entity->{$key} = $value;
+                            } else {
+                                $entity->{$key} = strval($value);
+                            }
                         } else {
                             $entity->{$key} = $value;
                         }
