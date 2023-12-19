@@ -73,7 +73,7 @@ class StockManagementControllerTest extends ApiTestCase
             ->getMock();
 
         $stockMovementRepository->method('saveStockMvt')->willReturn(true);
-        self::$container->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
+        self::getContainer()->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
 
         $this->restoreQuantityEditionFixtures();
     }
