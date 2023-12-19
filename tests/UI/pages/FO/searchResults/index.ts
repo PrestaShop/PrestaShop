@@ -93,7 +93,7 @@ class SearchResultsPage extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
-    await page.hover(this.productImg(id));
+    await page.locator(this.productImg(id)).hover();
     let displayed: boolean = false;
 
     /* eslint-disable no-await-in-loop */

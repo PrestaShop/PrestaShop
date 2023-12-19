@@ -740,7 +740,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @returns {Promise<void>}
    */
   async checkReturnedQuantity(page: Page, row: number = 1): Promise<void> {
-    await page.setChecked(this.returnQuantityCheckbox(row), true, {force: true});
+    await this.setChecked(page, this.returnQuantityCheckbox(row), true, true);
   }
 
   /**

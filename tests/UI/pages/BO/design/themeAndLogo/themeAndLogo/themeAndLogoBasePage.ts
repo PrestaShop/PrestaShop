@@ -66,7 +66,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
    * @return {Promise<string|null>}
    */
   async getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
-    return page.textContent(this.growlMessageBlock, {timeout});
+    return page.locator(this.growlMessageBlock).first().textContent({timeout});
   }
 
   /**

@@ -107,6 +107,8 @@ class CombinationsTab extends BOBasePage {
 
   private readonly bulkCombinationProgressModalCloseButton: string;
 
+  private readonly filterBySizeBlock: string;
+
   private readonly filterBySizeButton: string;
 
   private readonly filterBySizeDropDownMenu: string;
@@ -268,9 +270,10 @@ class CombinationsTab extends BOBasePage {
     this.bulkCombinationProgressModalCloseButton = '#bulk-combination-progress-modal button.close-modal-button';
 
     // Filter by size selectors
-    this.filterBySizeButton = 'button[data-role=filter-by-size]';
-    this.filterBySizeDropDownMenu = 'div.combinations-filters div.dropdown-menu';
-    this.filterBySizeCheckboxButton = (id: number) => `${this.filterBySizeDropDownMenu} div:nth-child(${id}) `
+    this.filterBySizeBlock = 'div.combinations-filters [data-role=filter-by-size-block]';
+    this.filterBySizeDropDownMenu = `${this.filterBySizeBlock} div.dropdown-menu`;
+    this.filterBySizeButton = `${this.filterBySizeBlock} [data-role=filter-by-size-btn]`;
+    this.filterBySizeCheckboxButton = (id: number) => `${this.filterBySizeDropDownMenu}  div:nth-child(${id}) `
       + '.md-checkbox-container';
     this.clearFilterButton = 'div.combinations-filters button.combinations-filters-clear';
 
@@ -324,7 +327,7 @@ class CombinationsTab extends BOBasePage {
     // Pagination selectors
     this.paginationBlock = '#combinations-pagination';
     this.paginationLabel = '#pagination-info';
-    this.paginationLimitSelect = '#paginator-limit';
+    this.paginationLimitSelect = `${this.paginationBlock} #paginator-limit`;
     this.paginationNextLink = `${this.paginationBlock} .page-link.next:not(.disabled)`;
     this.paginationPreviousLink = `${this.paginationBlock} .page-link.previous:not(.disabled)`;
 
