@@ -28,10 +28,49 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Legacy;
 
+use AdminController;
 use PrestaShopBundle\Twig\Component\HeadTag;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/LegacyLayout/head_tag.html.twig')]
 class LegacyHeadTag extends HeadTag
 {
+    public function getControllerName(): string
+    {
+        return $this->getLegacyController()->controller_name;
+    }
+
+    public function getLegacyToken(): string
+    {
+        return $this->getLegacyController()->token;
+    }
+
+    public function getCurrentIndex(): string
+    {
+        return $this->getLegacyController()::$currentIndex;
+    }
+
+    public function getCssFiles(): array
+    {
+        return $this->getLegacyController()->css_files;
+    }
+
+    public function getJsFiles(): array
+    {
+        return $this->getLegacyController()->js_files;
+    }
+
+    /**
+     * For legacy pages rendered with the symfony layout we don't use the LegacyControllerContext which purpose is to replace
+     * the legacy controller for backward compatibility. In this case a real legacy controller is already accessible via the
+     * legacy context and should be preferred.
+     *
+     * Its data, and especially the CSS, JS files and JS definitions are more likely to be up-to-date.
+     *
+     * @return AdminController
+     */
+    private function getLegacyController(): AdminController
+    {
+        return $this->context->getContext()->controller;
+    }
 }

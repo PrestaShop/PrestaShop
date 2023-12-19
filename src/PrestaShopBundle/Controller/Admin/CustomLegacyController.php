@@ -40,9 +40,6 @@ class CustomLegacyController extends PrestaShopAdminController
         $controllerName = $request->query->get('controller');
         $htmlContent = $this->getHtmlContent($controllerName);
 
-        $controller = $legacyContext->getContext()->controller;
-        $controller->setMedia(false);
-
         return $this->render('@PrestaShop/Admin/Layout/legacy_layout.html.twig', [
             'legacy_render' => $htmlContent,
         ]);

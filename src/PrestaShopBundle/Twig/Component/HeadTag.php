@@ -48,20 +48,20 @@ use Tools;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/head_tag.html.twig')]
 class HeadTag
 {
-    private string $metaTitle;
+    protected string $metaTitle;
 
     public function __construct(
-        private readonly LegacyContext $context,
-        private readonly Configuration $configuration,
-        private readonly MenuBuilder $menuBuilder,
-        private readonly TranslatorInterface $translator,
-        private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly TemplateVariables $templateVariables,
-        private readonly CountryContext $countryContext,
-        private readonly ShopContext $shopContext,
-        private readonly LanguageContext $languageContext,
-        private readonly LanguageContext $defaultLanguageContext,
-        private readonly LegacyControllerContext $legacyControllerContext,
+        protected readonly LegacyContext $context,
+        protected readonly Configuration $configuration,
+        protected readonly MenuBuilder $menuBuilder,
+        protected readonly TranslatorInterface $translator,
+        protected readonly HookDispatcherInterface $hookDispatcher,
+        protected readonly TemplateVariables $templateVariables,
+        protected readonly CountryContext $countryContext,
+        protected readonly ShopContext $shopContext,
+        protected readonly LanguageContext $languageContext,
+        protected readonly LanguageContext $defaultLanguageContext,
+        protected readonly LegacyControllerContext $legacyControllerContext,
     ) {
     }
 
