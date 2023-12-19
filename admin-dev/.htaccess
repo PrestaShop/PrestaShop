@@ -37,6 +37,10 @@ DirectoryIndex index.php
     # Keep legacy entry points
     RewriteRule ^(cron_currency_rates|get-file-admin)\.php - [P]
 
+    # If the URL is a legacy on index.php?controller=..., do not rewrite (let the legacy take it)
+    RewriteCond  %{QUERY_STRING} (^|&)controller=|(^|&)tab=
+    RewriteRule .* - [P]
+
     # Redirect to URI without front controller to prevent duplicate content
     # (with and without `/app.php`). Only do this redirect on the initial
     # rewrite by Apache and not on subsequent cycles. Otherwise we would get an
