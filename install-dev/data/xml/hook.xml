@@ -4564,5 +4564,10 @@
       <title>Triggers when returning AJAX response</title>
       <description>Allows to modify AJAX response of controllers using ajaxRender method.</description>
     </hook>
+    <hook id="actionValidateCartRule">
+      <name>actionValidateCartRule</name>
+      <title>Alter cart rule validation process</title>
+      <description>Allow modules to implement their own rules to validate a cart rule.</description>
+    </hook>
   </entities>
 </entity_hook>
