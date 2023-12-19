@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Tools;
+use PrestaShop\PrestaShop\Core\Security\Hashing;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -38,6 +38,8 @@ class PathExtension extends AbstractExtension
 {
     public function __construct(
         private readonly LegacyContext $context,
+        private readonly Hashing $hashing,
+        private readonly string $cookieKey
     ) {
     }
 
@@ -72,7 +74,7 @@ class PathExtension extends AbstractExtension
     }
 
     /**
-     * Get token for legacy controller.
+     * Get token for legacy controller, this method mimics the same behaviour as Tools::getAdminToken.
      *
      * @param string $controllerName
      *
@@ -80,6 +82,6 @@ class PathExtension extends AbstractExtension
      */
     public function getLegacyAdminToken(string $controllerName): string
     {
-        return Tools::getAdminToken($controllerName);
+        return $this->hashing->hash($controllerName, $this->cookieKey);
     }
 }
