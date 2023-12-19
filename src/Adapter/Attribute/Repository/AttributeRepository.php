@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotAddAttributeException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotUpdateAttributeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -125,7 +126,7 @@ class AttributeRepository extends AbstractObjectModelRepository
     public function update(ProductAttribute $attribute, int $errorCode = 0): void
     {
         $this->attributeValidator->validate($attribute);
-        $this->updateObjectModel($attribute, CannotAddAttributeException::class, $errorCode);
+        $this->updateObjectModel($attribute, CannotUpdateAttributeException::class, $errorCode);
     }
 
     /**

@@ -72,12 +72,6 @@ class AttributeType extends TranslatorAwareType
      */
     private $contextLangId;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param AttributeGroupRepository $attributeGroupRepository
-     * @param int $contextShopId
-     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,

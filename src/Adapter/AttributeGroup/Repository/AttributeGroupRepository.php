@@ -76,9 +76,9 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
      * @throws AttributeGroupNotFoundException
      * @throws CoreException
      */
-    public function get(AttributeGroupId $attributeGroupId): AttributeGroup
+    /* public function get(AttributeGroupId $attributeGroupId): AttributeGroup
     {
-        /** @var AttributeGroup $attributeGroup */
+        /** @var AttributeGroup $attributeGroup
         $attributeGroup = $this->getObjectModel(
             $attributeGroupId->getValue(),
             AttributeGroup::class,
@@ -86,7 +86,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
         );
 
         return $attributeGroup;
-    }
+    } */
 
     /**
      * @param AttributeGroup $attributeGroup
