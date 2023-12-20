@@ -56,7 +56,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $this->localizeByRows($node);
 
-        $attributeGroupId = $this->createAttributeGroupUsingCommand($data['name'], $data['public_name'], $data['type']);
+        $attributeGroupId = $this->createAttributeGroupUsingCommand([1 => $data['name']], [1 => $data['public_name']], $data['type']);
 
         $this->getSharedStorage()->set($reference, $attributeGroupId->getValue());
     }

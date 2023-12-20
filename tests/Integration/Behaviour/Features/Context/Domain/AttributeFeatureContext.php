@@ -28,9 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use AttributeGroup;
 use Behat\Gherkin\Node\TableNode;
-use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
@@ -54,32 +52,6 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     public function __construct()
     {
         $this->defaultShopId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_DEFAULT');
-    }
-
-    /**
-     * @TODO temporary so tests for attributes can be created, since they need attribute group.
-     * Proper attribute group creation and behat implementation are done in PR #31502
-     * and should be used from there once it's merged.
-     *
-     * @When I create attribute group :reference with specified properties:
-     */
-    public function createAttributeGroup(string $reference, TableNode $node): void
-    {
-        $properties = $node->getRowsHash();
-        $attributeGroup = new AttributeGroup();
-        $name = [];
-        $publicName = [];
-        foreach (Language::getLanguages() as $language) {
-            $name[$language['id_lang']] = $properties['name'];
-            $publicName[$language['id_lang']] = $properties['public_name'];
-        }
-
-        $attributeGroup->public_name = $publicName;
-        $attributeGroup->name = $name;
-        $attributeGroup->group_type = $properties['type'];
-        $attributeGroup->add();
-
-        $this->getSharedStorage()->set($reference, (int) $attributeGroup->id);
     }
 
     /**

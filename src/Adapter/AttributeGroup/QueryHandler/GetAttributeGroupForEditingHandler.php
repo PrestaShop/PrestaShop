@@ -30,9 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler\GetAttributeGroupForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles query which gets attribute group for editing
@@ -40,14 +42,14 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttribu
 #[AsQueryHandler]
 final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEditingHandlerInterface
 {
-    /**
-     * @var AttributeGroupRepository
-     */
-    private $attributeGroupRepository;
+    private AttributeGroupRepository $attributeGroupRepository;
 
-    public function __construct(AttributeGroupRepository $attributeGroupRepository)
+    private ShopContext $shopContext;
+
+    public function __construct(AttributeGroupRepository $attributeGroupRepository, ShopContext $shopContext)
     {
         $this->attributeGroupRepository = $attributeGroupRepository;
+        $this->shopContext = $shopContext;
     }
 
     /**
@@ -55,7 +57,10 @@ final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEd
      */
     public function handle(GetAttributeGroupForEditing $query): EditableAttributeGroup
     {
-        $attributeGroup = $this->attributeGroupRepository->get($query->getAttributeGroupId());
+        $attributeGroup = $this->attributeGroupRepository->get(
+            $query->getAttributeGroupId(),
+            new ShopId($this->shopContext->getId())
+        );
 
         return new EditableAttributeGroup(
             $query->getAttributeGroupId()->getValue(),

@@ -31,8 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\EditAttributeGroupHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles editing of attribute groups using legacy logic.
@@ -40,14 +42,14 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\EditAttribut
 #[AsCommandHandler]
 final class EditAttributeGroupHandler extends AbstractObjectModelHandler implements EditAttributeGroupHandlerInterface
 {
-    /**
-     * @var AttributeGroupRepository
-     */
-    private $attributeGroupRepository;
+    private AttributeGroupRepository $attributeGroupRepository;
 
-    public function __construct(AttributeGroupRepository $attributeGroupRepository)
+    private ShopContext $shopContext;
+
+    public function __construct(AttributeGroupRepository $attributeGroupRepository, ShopContext $shopContext)
     {
         $this->attributeGroupRepository = $attributeGroupRepository;
+        $this->shopContext = $shopContext;
     }
 
     /**
@@ -55,7 +57,10 @@ final class EditAttributeGroupHandler extends AbstractObjectModelHandler impleme
      */
     public function handle(EditAttributeGroupCommand $command): void
     {
-        $attributeGroup = $this->attributeGroupRepository->get($command->getAttributeGroupId());
+        $attributeGroup = $this->attributeGroupRepository->get(
+            $command->getAttributeGroupId(),
+            new ShopId($this->shopContext->getId())
+        );
 
         $attributeGroup->name = $command->getLocalizedNames();
         $attributeGroup->public_name = $command->getLocalizedPublicNames();

@@ -36,30 +36,18 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupI
  */
 class EditableAttribute
 {
-    /**
-     * @var AttributeId
-     */
-    private $attributeId;
+    private int $attributeId;
 
-    /**
-     * @var AttributeGroupId
-     */
-    private $attributeGroupId;
+    private int $attributeGroupId;
 
-    /**
-     * @var array
-     */
-    private $value;
+    private array $value;
 
-    /**
-     * @var string
-     */
-    private $color;
+    private string $color;
 
     /**
      * @var int[]
      */
-    private $shopAssociationIds;
+    private array $shopAssociationIds;
 
     /**
      * @param int $attributeId
@@ -87,7 +75,7 @@ class EditableAttribute
      */
     public function getAttributeId(): AttributeId
     {
-        return $this->attributeId;
+        return new AttributeId($this->attributeId);
     }
 
     /**
@@ -95,7 +83,7 @@ class EditableAttribute
      */
     public function getAttributeGroupId(): AttributeGroupId
     {
-        return $this->attributeGroupId;
+        return new AttributeGroupId($this->attributeGroupId);
     }
 
     /**
