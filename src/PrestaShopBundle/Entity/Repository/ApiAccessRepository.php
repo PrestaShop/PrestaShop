@@ -55,6 +55,24 @@ class ApiAccessRepository extends EntityRepository
         return $apiAccess;
     }
 
+    /**
+     * @param string $clientId
+     *
+     * @return ApiAccess
+     *
+     * @throws NoResultException
+     */
+    public function getByClientId(string $clientId): ApiAccess
+    {
+        $apiAccess = $this->findOneBy(['clientId' => $clientId]);
+
+        if (null === $apiAccess) {
+            throw new NoResultException();
+        }
+
+        return $apiAccess;
+    }
+
     public function delete(ApiAccess $apiAccess): void
     {
         $this->getEntityManager()->remove($apiAccess);
