@@ -680,11 +680,11 @@ class CartRuleCore extends ObjectModel
     /**
      * Check if this CartRule can be applied.
      *
-     * @param Context $context Context instance
-     * @param bool $alreadyInCart Check if the voucher is already on the cart
-     * @param bool $display_error Display error
-     * @param bool $check_carrier
-     * @param bool $useOrderPrices
+     * @param Context $context Context instance to use.
+     * @param bool $alreadyInCart Special validation flag to use, that has different conditions for vouchers already in a cart.
+     * @param bool $display_error If true, method returns nothing if valid or an error message. If false, always returns a boolean.
+     * @param bool $check_carrier Disable this flag if you want to validate the cart rule for a different carrier than assigned to the cart.
+     * @param bool $useOrderPrices When true use the Order saved prices instead of the most recent ones from catalog.
      *
      * @return bool|mixed|string
      */
@@ -695,25 +695,17 @@ class CartRuleCore extends ObjectModel
         }
         $cart = $context->cart;
 
-        // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
-        // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
-        // these rules are outdated For example:
-        //  - the cart rule can now be disabled but it was at the time it was applied, so it doesn't need to be removed
-        //  - the current date is not in the range any more but it was at the time
-        //  - the quantity is now zero but it was not when it was added
-        if (!$alreadyInCart) {
-            if (!$this->active) {
-                return (!$display_error) ? false : $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
-            }
-            if (!$this->quantity) {
-                return (!$display_error) ? false : $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
-            }
-            if (strtotime($this->date_from) > time()) {
-                return (!$display_error) ? false : $this->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
-            }
-            if (strtotime($this->date_to) < time()) {
-                return (!$display_error) ? false : $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
-            }
+        // Basic validation scenarios for voucher active property, quantity and time validity.
+        if (!$this->active) {
+            return (!$display_error) ? false : $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
+        }
+        if (!$alreadyInCart && !$this->quantity) {
+            return (!$display_error) ? false : $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
+        if (strtotime($this->date_from) > time()) {
+            return (!$display_error) ? false : $this->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
+        }
+        if (strtotime($this->date_to) < time()) {
+            return (!$display_error) ? false : $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
         }
 
         if ($cart->id_customer) {
