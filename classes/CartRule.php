@@ -695,12 +695,9 @@ class CartRuleCore extends ObjectModel
         }
         $cart = $context->cart;
 
-        // Basic validation scenarios for voucher active property, quantity and time validity.
+        // Check if voucher is active and we are in a valid timeframe
         if (!$this->active) {
             return (!$display_error) ? false : $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
-        }
-        if (!$alreadyInCart && !$this->quantity) {
-            return (!$display_error) ? false : $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
         }
         if (strtotime($this->date_from) > time()) {
             return (!$display_error) ? false : $this->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
@@ -709,6 +706,21 @@ class CartRuleCore extends ObjectModel
             return (!$display_error) ? false : $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
         }
 
+        /*
+         * Validation of voucher total quantity.
+         *
+         * @todo This works when adding the voucher to a cart, but DOES NOT, when the voucher is already in a cart, due to !$alreadyInCart.
+         * When I removed this check, everything seemed to work properly in the front office, but it was breaking automatic tests.
+         * To be investigated and fixed.
+         */
+        if (!$alreadyInCart && !$this->quantity) {
+            return (!$display_error) ? false : $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
+        }
+
+        /*
+         * Now we check how many times the current customer used the voucher.
+         * If he already used the voucher as configured in quantity_per_user, he won't be able to use it again.
+         */
         if ($cart->id_customer) {
             $quantityUsed = Db::getInstance()->getValue('
 			SELECT count(*)
@@ -719,25 +731,7 @@ class CartRuleCore extends ObjectModel
 			AND ocr.`id_cart_rule` = ' . (int) $this->id . '
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
-
-            if ($alreadyInCart) {
-                // Sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
-                // in for example), these cart rules are not taken into account by the query above:
-                // so we count cart rules that are already linked to the current cart but not attached to an order yet.
-
-                $quantityUsed += (int) Db::getInstance()->getValue('
-                    SELECT count(*)
-                    FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
-                    INNER JOIN `' . _DB_PREFIX_ . 'cart` c ON c.id_cart = ccr.id_cart
-                    LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.id_cart = c.id_cart
-                    WHERE c.id_customer = ' . $cart->id_customer . ' AND c.id_cart = ' . $cart->id . ' AND ccr.id_cart_rule = ' . (int) $this->id . ' AND o.id_order IS NULL
-                ');
-            } else {
-                // When checking the cart rules present in that cart the request result is accurate
-                // When we check if using the cart rule one more time is valid then we increment this value
-                ++$quantityUsed;
-            }
-            if ($quantityUsed > $this->quantity_per_user) {
+            if ($quantityUsed >= $this->quantity_per_user) {
                 return (!$display_error) ? false : $this->trans('You cannot use this voucher anymore (usage limit reached)', [], 'Shop.Notifications.Error');
             }
         }
