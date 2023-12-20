@@ -62,8 +62,8 @@ class EditableAttribute
     private $shopAssociationIds;
 
     /**
-     * @param AttributeId $attributeId
-     * @param AttributeGroupId $attributeGroupId
+     * @param int $attributeId
+     * @param int $attributeGroupId
      * @param array $value
      * @param string $color
      * @param int[] $shopAssociationIds
