@@ -701,6 +701,7 @@ class CartRuleCore extends ObjectModel
         }
         if (!$alreadyInCart && !$this->quantity) {
             return (!$display_error) ? false : $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
+        }
         if (strtotime($this->date_from) > time()) {
             return (!$display_error) ? false : $this->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
         }
