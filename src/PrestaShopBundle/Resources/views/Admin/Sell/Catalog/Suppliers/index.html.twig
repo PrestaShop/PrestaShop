@@ -28,7 +28,9 @@
 
 {% block content %}
   {% block supplier_grid %}
-    {{ ps.infotip(settingsTipMessage, true) }}
+    {% if settingsTipMessage is not empty %}
+      {{ ps.infotip(settingsTipMessage, true) }}
+    {% endif %}
     {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': supplierGrid} %}
   {% endblock %}
 {% endblock %}
