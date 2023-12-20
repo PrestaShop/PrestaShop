@@ -1,6 +1,7 @@
 # To get started with security, check out the documentation:
 # https://symfony.com/doc/current/security.html
 security:
+  enable_authenticator_manager: true
   password_hashers:
     # auto hasher with default options for the User class (and children)
     PrestaShopBundle\Entity\ApiAccess: 'auto'
@@ -37,10 +38,9 @@ security:
       pattern: '^(%api_base_path%)(?!/docs)'
       stateless: true
       provider: 'oauth2'
-      guard:
-        authenticator:
-          - PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator
+      custom_authenticators:
+        - PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator
       request_matcher: PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher
 
-    main:
-      anonymous: ~
+  access_control:
+    - { path: ^/, roles: PUBLIC_ACCESS }
