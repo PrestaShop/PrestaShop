@@ -93,6 +93,7 @@
   "dependencies": {
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
+    "dotenv": "^16.0.2",
     "eslint-config-prestashop": "0.0.2",
     "faker": "^4.1.0",
     "js-image-generator": "^1.0.2",

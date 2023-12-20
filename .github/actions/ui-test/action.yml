@@ -1,0 +1,50 @@
+name: Setup and Run UI tests
+description: Setup a UI Tests Environment and run tests
+
+inputs:
+    # TEST Config inputs
+    TESTS_DIR:
+        required: false
+        description: Tests Folder on PrestaShop
+        default: './tests/UI/'
+    ENABLE_SSL:
+        required: false
+        description: True to Run with SSL
+        default: 'true'
+    TEST_CAMPAIGN:
+        required: true
+        description: Campaign To Run
+    NODE_VERSION:
+        required: false
+        description: Node Version for tests
+        default: '14'
+    INSTALL_BROWSERS:
+        required: false
+        description: True To Install Browsers
+        default: 'true'
+
+runs:
+    using: 'composite'
+    steps:
+        - name: Setup Node
+          uses: actions/setup-node@v3
+          with:
+              node-version: ${{ inputs.NODE_VERSION }}
+
+        - name: Use .env.ci
+          working-directory: ${{ inputs.TESTS_DIR }}
+          shell: bash
+          run: cp .env.ci .env
+
+        - name: Install dependencies
+          working-directory: ${{ inputs.TESTS_DIR }}
+          shell: bash
+          run: npm ci
+
+        # Run tests
+        - name: Run tests
+          working-directory: ${{ inputs.TESTS_DIR }}
+          env:
+              URL_FO: 'http://localhost:8001/'
+          shell: bash
+          run: npm run test:${{ inputs.TEST_CAMPAIGN }}

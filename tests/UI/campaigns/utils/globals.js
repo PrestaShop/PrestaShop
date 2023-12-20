@@ -1,5 +1,5 @@
+require('dotenv').config();
 const {DefaultEmployee} = require('@data/demo/employees');
-
 
 global.FO = {
   URL: process.env.URL_FO || 'http://localhost/prestashop/',
@@ -41,9 +41,9 @@ global.BROWSER = {
   interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
 };
 
-global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;
+global.GENERATE_FAILED_STEPS = JSON.parse(process.env.GENERATE_FAILED_STEPS || false);
 
-global.TAKE_SCREENSHOT_AFTER_FAIL = process.env.TAKE_SCREENSHOT_AFTER_FAIL || false;
+global.TAKE_SCREENSHOT_AFTER_FAIL = JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_FAIL || false);
 
 global.maildevConfig = {
   smtpPort: process.env.SMTP_PORT || '1025',
