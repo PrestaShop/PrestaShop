@@ -6,6 +6,10 @@ inputs:
   PHP_VERSION:
     required: true
     description: PHP Version For PrestaShop
+  NODE_VERSION:
+    required: false
+    description: Node Version to Build Themes
+    default: 16.20.1
   ENABLE_SSL:
     required: false
     description: True to Run with SSL
@@ -18,6 +22,14 @@ inputs:
     required: false
     description: True To Copy API Config
     default: 'false'
+  DEV_MODE:
+    required: false
+    description: True to enable Developer mode
+    default: 'false'
+  BO_LAYOUT:
+    required: false
+    description: Choose between Legacy and Symfony layout
+    default: 'legacy'
 
 runs:
   using: 'composite'
@@ -26,6 +38,12 @@ runs:
       if: inputs.CP_API_CONFIG == 'true'
       shell: bash
       run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
+
+    - name: Adapt Back Office layout
+      if: inputs.backoffice_layout == 'symfony'
+      shell: bash
+      run: |
+        echo PS_FF_SYMFONY_LAYOUT=true >> .env
 
     # Certificate for SSL
     - name: Generate a Certificate
@@ -53,10 +71,11 @@ runs:
         PS_ENABLE_SSL: ${{ (inputs.ENABLE_SSL == 'true') && '1' || '0' }}
         PS_INSTALL_AUTO: ${{ (inputs.INSTALL_AUTO == 'true') && '1' || '0' }}
         VERSION: ${{ inputs.PHP_VERSION }}-apache
+        NODE_VERSION: ${{ inputs.NODE_VERSION }}
         URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
         URL_PING: ${{ (inputs.INSTALL_AUTO == 'true') && 'en/' || 'install-dev/' }}
         PS_DOMAIN: ${{ (inputs.ENABLE_SSL == 'false')  && 'localhost:8001' || 'localhost:8002' }}
-        PS_DEV_MODE: '0'
+        PS_DEV_MODE: ${{ (inputs.DEV_MODE == 'false') && '0' || '1' }}
         DB_SERVER: 'mysql'
         DB_NAME: 'prestashop'
         DB_PREFIX: 'tst_'

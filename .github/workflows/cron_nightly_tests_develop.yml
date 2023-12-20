@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/cron_nightly_tests_reusable.yml
     with:
       BRANCH: develop
+      PHP_VERSION: '8.2'
     secrets:
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
