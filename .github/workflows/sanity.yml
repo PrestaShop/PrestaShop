@@ -1,8 +1,21 @@
 name: UI tests
-on: [ push, pull_request ]
-jobs:
 
+on: [ push, pull_request ]
+
+permissions:
+  contents: read   #   to fetch code (actions/checkout)
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  TEST_CAMPAIGN: 'sanity:fast-fail'
+
+jobs:
   sanity:
+    permissions:
+      contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
     strategy:
@@ -11,40 +24,23 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          all_but_latest: true
-          access_token: ${{ github.token }}
-
       - uses: actions/checkout@v3
 
-      - name: Setup environment
-        uses: ./.github/actions/setup-prestashop-env
+      - name: Setup Environment
+        timeout-minutes: 15
+        uses: ./.github/actions/setup-env
         with:
-          php-version: ${{ matrix.php }}
-          mysql-version: '5.7'
-          mysql-database: 'prestashop'
-          mysql-root-password: 'password'
-          node-version: '16'
-          npm-version: '7'
+          PHP_VERSION: ${{ matrix.php }}
+          INSTALL_AUTO: 'false'
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v3
+      - name: Run Tests
+        uses: ./.github/actions/ui-test
         with:
-          path: ~/.cache/ms-playwright/
-          key: ${{ runner.os }}-browsers
+          TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
 
-      - name: Use .env.ci
-        run: mv .env.ci .env
-        working-directory: ./tests/UI
-
-      - name: Run tests
-        run: npm install && npm run test:sanity:fast-fail
-        working-directory: ./tests/UI
-
-      - uses: actions/upload-artifact@v3
-        if: ${{ always() }}
+      - name: Upload Screenshots and logs
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-          name: screenshots-${{ matrix.php }}
+          name: sanity-${{ matrix.php }}
           path: ./tests/UI/screenshots/
