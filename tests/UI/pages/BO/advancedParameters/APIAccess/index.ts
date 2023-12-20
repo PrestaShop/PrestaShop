@@ -133,6 +133,24 @@ class APIAccess extends BOBasePage {
   }
 
   /**
+   * Get Value of column Displayed
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @return {Promise<boolean>}
+   */
+  async getStatus(page: Page, row: number): Promise<boolean> {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.gridTableColumn(row, 'enabled')} input:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
+  }
+
+  /**
    * Delete webservice key
    * @param page {Page} Browser tab
    * @param row {number} Row on table

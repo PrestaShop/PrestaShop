@@ -104,6 +104,96 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
       expect(hasScopeHookWrite).to.be.equal(true);
     });
 
+    it('should disable the application', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableApplication', baseContext);
+
+      await addNewApiAccessPage.setEnabled(page, false);
+
+      const textResult = await addNewApiAccessPage.saveForm(page);
+      expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
+    });
+
+    it('should check information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInformationsAfterDisable', baseContext);
+
+      const status = await addNewApiAccessPage.isEnabled(page);
+      expect(status).to.equal(false);
+    });
+
+    it('should return to the list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToListAfterDisable', baseContext);
+
+      // Go back to list to get number of elements because edition form redirects to itself
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.authorizationServerLink,
+      );
+      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      expect(numElements).to.equal(1);
+    });
+
+    it('should check list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkListAfterDisable', baseContext);
+
+      const status = await apiAccessPage.getStatus(page, 1);
+      expect(status).to.equal(false);
+    });
+
+    it('should go to edit API Access page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIAccessPageAfterDisable', baseContext);
+
+      await apiAccessPage.goToEditAPIAccessPage(page, 1);
+
+      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleEdit(editAPIAccess.clientName));
+    });
+
+    it('should enable the application', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableApplication', baseContext);
+
+      await addNewApiAccessPage.setEnabled(page, true);
+
+      const textResult = await addNewApiAccessPage.saveForm(page);
+      expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
+    });
+
+    it('should check information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInformationsAfterEnable', baseContext);
+
+      const status = await addNewApiAccessPage.isEnabled(page);
+      expect(status).to.equal(true);
+    });
+
+    it('should return to the list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToListAfterEnable', baseContext);
+
+      // Go back to list to get number of elements because edition form redirects to itself
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.authorizationServerLink,
+      );
+      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      expect(numElements).to.equal(1);
+    });
+
+    it('should check list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkListAfterEnable', baseContext);
+
+      const status = await apiAccessPage.getStatus(page, 1);
+      expect(status).to.equal(true);
+    });
+
+    it('should go to edit API Access page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIAccessPageAfterEnable', baseContext);
+
+      await apiAccessPage.goToEditAPIAccessPage(page, 1);
+
+      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleEdit(editAPIAccess.clientName));
+    });
+
     it('should regenerate the client secret', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'regenerateClientSecret', baseContext);
 
