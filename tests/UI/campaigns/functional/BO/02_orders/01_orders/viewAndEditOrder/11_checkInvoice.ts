@@ -347,8 +347,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it('should change the \'Invoice address\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress1', baseContext);
 
-        const addressToSelect = `${Addresses.third.id}- ${Addresses.third.address} ${Addresses.third.secondAddress} `
-          + `${Addresses.third.postalCode} ${Addresses.third.city}`;
+        const addressToSelect = `#${Addresses.third.id} ${Addresses.third.alias} - ${Addresses.third.address} `
+          + `${Addresses.third.secondAddress} ${Addresses.third.postalCode} ${Addresses.third.city}`;
 
         const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1236,8 +1236,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should change the \'Shipping address\'', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress2', baseContext);
 
-          const addressToSelect = `${Addresses.third.id}- ${Addresses.third.address} ${Addresses.third.secondAddress} `
-            + `${Addresses.third.postalCode} ${Addresses.third.city}`;
+          const addressToSelect = `#${Addresses.third.id} ${Addresses.third.alias} - ${Addresses.third.address} `
+            + `${Addresses.third.secondAddress} ${Addresses.third.postalCode} ${Addresses.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherShippingAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1272,8 +1272,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should change the \'Invoice address\'', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress3', baseContext);
 
-          const addressToSelect = `${Addresses.third.id}- ${Addresses.third.address} ${Addresses.third.secondAddress} `
-            + `${Addresses.third.postalCode} ${Addresses.third.city}`;
+          const addressToSelect = `#${Addresses.third.id} ${Addresses.third.alias} - ${Addresses.third.address} `
+            + `${Addresses.third.secondAddress} ${Addresses.third.postalCode} ${Addresses.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
