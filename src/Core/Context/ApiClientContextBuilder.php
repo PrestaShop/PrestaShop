@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\ApiAccess as ApiAccessEntity;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
 
@@ -37,7 +39,8 @@ class ApiClientContextBuilder
     private ?ApiAccessEntity $apiAccess = null;
 
     public function __construct(
-        private ApiAccessRepository $apiAccessRepository
+        private ApiAccessRepository $apiAccessRepository,
+        private readonly ShopConfigurationInterface $configuration
     ) {
     }
 
@@ -46,9 +49,12 @@ class ApiClientContextBuilder
         $apiAccessDTO = null;
         $apiAccess = $this->getApiAccess();
         if ($apiAccess) {
+            // Authorized shop should be associated to the client but for no we use the default one
+            $defaultShopId = $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
             $apiAccessDTO = new ApiClient(
                 clientId: $apiAccess->getClientId(),
-                scopes: $apiAccess->getScopes()
+                scopes: $apiAccess->getScopes(),
+                shopId: $defaultShopId
             );
         }
 

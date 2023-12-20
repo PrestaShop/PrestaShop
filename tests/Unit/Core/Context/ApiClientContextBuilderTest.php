@@ -31,26 +31,37 @@ namespace Core\Context;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Entity\ApiAccess;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use Tests\Unit\Core\Configuration\MockConfigurationTrait;
 
 class ApiClientContextBuilderTest extends TestCase
 {
+    use MockConfigurationTrait;
+
     public function testBuild(): void
     {
         $apiAccess = $this->getApiAccessEntity();
-        $builder = new ApiClientContextBuilder($this->mockRepository($apiAccess));
+        $builder = new ApiClientContextBuilder(
+            $this->mockRepository($apiAccess),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => 42])
+        );
 
         $builder->setClientId('client_id');
         $apiAccessContext = $builder->build();
         $this->assertNotNull($apiAccessContext->getApiClient());
         $this->assertEquals($apiAccess->getClientId(), $apiAccessContext->getApiClient()->getClientId());
         $this->assertEquals($apiAccess->getScopes(), $apiAccessContext->getApiClient()->getScopes());
+        $this->assertEquals(42, $apiAccessContext->getApiClient()->getShopId());
     }
 
     public function testBuildNoApiAccess(): void
     {
-        $builder = new ApiClientContextBuilder($this->createMock(ApiAccessRepository::class));
+        $builder = new ApiClientContextBuilder(
+            $this->createMock(ApiAccessRepository::class),
+            $this->createMock(ShopConfigurationInterface::class)
+        );
 
         $apiAccessContext = $builder->build();
         $this->assertNull($apiAccessContext->getApiClient());

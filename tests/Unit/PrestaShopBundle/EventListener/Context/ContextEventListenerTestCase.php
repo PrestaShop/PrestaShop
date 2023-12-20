@@ -30,8 +30,12 @@ namespace Tests\Unit\PrestaShopBundle\EventListener\Context;
 
 use Context;
 use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use ReflectionProperty;
+use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -81,5 +85,35 @@ abstract class ContextEventListenerTestCase extends KernelTestCase
     protected function createRequestEvent(Request $request): RequestEvent
     {
         return new RequestEvent(static::createKernel(), $request, HttpKernelInterface::MAIN_REQUEST);
+    }
+
+    protected function mockShopRepository(int $expectedShopId): ShopRepository|MockObject
+    {
+        $fakeShop = new Shop();
+        $fakeShop->id = $expectedShopId;
+        $fakeShop->name = 'Fake shop';
+        $fakeShop->active = true;
+        $fakeShop->theme_name = 'classic';
+        $fakeShop->color = 'red';
+        $fakeShop->physical_uri = $fakeShop->virtual_uri = $fakeShop->domain = $fakeShop->domain_ssl = '';
+
+        $shopRepository = $this->createMock(ShopRepository::class);
+        $shopRepository
+            ->method('get')
+            ->with(self::callback(function ($shopId) use ($expectedShopId) {
+                self::assertInstanceOf(ShopId::class, $shopId);
+                self::assertEquals($expectedShopId, $shopId->getValue());
+
+                return true;
+            }))
+            ->willReturn($fakeShop)
+        ;
+
+        return $shopRepository;
+    }
+
+    protected function mockContextStateManager(): ContextStateManager|MockObject
+    {
+        return $this->createMock(ContextStateManager::class);
     }
 }

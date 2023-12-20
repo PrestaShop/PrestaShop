@@ -26,29 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Context;
+namespace PrestaShopBundle\EventListener\Context\API;
 
-class ApiClient
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\EventListener\ExternalApiTrait;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+
+class ShopContextListener
 {
+    use ExternalApiTrait;
+
     public function __construct(
-        private string $clientId,
-        private array $scopes,
-        private int $shopId
+        private readonly ShopContextBuilder $shopContextBuilder,
+        private readonly ApiClientContext $apiClientContext
     ) {
     }
 
-    public function getClientId(): string
+    public function onKernelRequest(RequestEvent $event): void
     {
-        return $this->clientId;
-    }
+        if (!$event->isMainRequest() || !$this->isExternalApiRequest($event->getRequest())) {
+            return;
+        }
 
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
+        $shopId = $this->apiClientContext->getApiClient()->getShopId();
+        $shopConstraint = ShopConstraint::shop($shopId);
+        $this->shopContextBuilder->setShopId($shopId);
+        $this->shopContextBuilder->setShopConstraint($shopConstraint);
 
-    public function getShopId(): int
-    {
-        return $this->shopId;
+        // Set shop constraint easily accessible via request attribute
+        $event->getRequest()->attributes->set('shopConstraint', $shopConstraint);
     }
 }

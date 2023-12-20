@@ -49,7 +49,10 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         // Create request that mimic a call to external API
         $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
 
-        $builder = new ApiClientContextBuilder($this->mockRepository($clientId, $scopes));
+        $builder = new ApiClientContextBuilder(
+            $this->mockRepository($clientId, $scopes),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => 42])
+        );
         $listener = new ApiClientContextListener(
             $builder,
             $this->mockSecurity($this->mockToken($clientId))
@@ -61,6 +64,7 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         $this->assertNotNull($apiClientContext->getApiClient());
         $this->assertEquals($clientId, $apiClientContext->getApiClient()->getClientId());
         $this->assertEquals($scopes, $apiClientContext->getApiClient()->getScopes());
+        $this->assertEquals(42, $apiClientContext->getApiClient()->getShopId());
     }
 
     public function getExpectedClients(): iterable
