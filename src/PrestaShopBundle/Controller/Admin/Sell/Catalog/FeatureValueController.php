@@ -107,18 +107,18 @@ class FeatureValueController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
-                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
-                    return $this->redirectToRoute('admin_feature_values_add', [
-                        'featureId' => $featureId,
-                    ]);
+                // Case 1 - save and stay, user entered the form from feature value list
+                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME) && $featureId) {
+                    return $this->redirectToRoute('admin_feature_values_add', ['featureId' => $featureId]);
+                // Case 2 - save and stay, user entered the form from feature list
+                } elseif ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
+                    return $this->redirectToRoute('admin_feature_values_add');
+                // Case 3 - save and exit, user entered the form from feature value list
+                } elseif ($featureId) {
+                    return $this->redirectToRoute('admin_feature_values_index', ['featureId' => $featureId]);
                 }
 
-                if ($featureId) {
-                    return $this->redirectToRoute('admin_feature_values_index', [
-                        'featureId' => $featureId,
-                    ]);
-                }
-
+                // Case 4 - save and exit, if user entered the form from feature list
                 return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
@@ -127,10 +127,18 @@ class FeatureValueController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_features_index');
         }
 
+        // Resolve a link to use when cancelling the form
+        if ($featureId) {
+            $cancelLink = $this->generateUrl('admin_feature_values_index', ['featureId' => $featureId]);
+        } else {
+            $cancelLink = $this->generateUrl('admin_features_index');
+        }
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/create.html.twig', [
             'featureId' => $featureId,
             'featureValueForm' => $featureValueForm->createView(),
             'layoutTitle' => $this->trans('New Feature Value', 'Admin.Navigation.Menu'),
+            'cancelLink' => $cancelLink,
         ]);
     }
 
@@ -178,6 +186,7 @@ class FeatureValueController extends FrameworkBundleAdminController
                 'Feature value',
                 'Admin.Navigation.Menu',
             ),
+            'cancelLink' => $this->generateUrl('admin_feature_values_index', ['featureId' => $featureId]),
         ]);
     }
 
