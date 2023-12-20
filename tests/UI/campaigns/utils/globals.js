@@ -1,5 +1,5 @@
+require('dotenv').config();
 const {DefaultEmployee} = require('@data/demo/employees');
-
 
 global.FO = {
   URL: process.env.URL_FO || 'http://localhost/prestashop/',
