@@ -1,0 +1,46 @@
+name: Setup PrestaShop Environment
+description: Setup a docker Environment for PrestaShop
+
+inputs:
+  # PrestaShop Config inputs
+  PHP_VERSION:
+    required: true
+    description: PHP Version For PrestaShop
+  ENABLE_SSL:
+    required: false
+    description: True to Run with SSL
+    default: 'true'
+  INSTALL_AUTO:
+    required: false
+    description: True To Auto Install
+    default: 'true'
+  CP_API_CONFIG:    # Workaround until https://github.com/PrestaShop/PrestaShop/issues/29813 is fixed
+    required: false
+    description: True To Copy API Config
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    # Docker to create the shop
+    - name: Build and Run shop with docker
+      shell: bash
+      env:
+        PS_ENABLE_SSL: '0'
+        PS_INSTALL_AUTO: ${{ (inputs.INSTALL_AUTO == 'true') && '1' || '0' }}
+        VERSION: ${{ inputs.PHP_VERSION }}-apache
+        URL_FO: 'http://localhost:8001/'
+        URL_PING: ${{ (inputs.INSTALL_AUTO == 'true') && 'en/' || 'install-dev/' }}
+        PS_DOMAIN: 'localhost:8001'
+        PS_DEV_MODE: '0'
+        DB_SERVER: 'mysql'
+        DB_NAME: 'prestashop'
+        DB_PREFIX: 'tst_'
+        DB_USER: 'root'
+        DB_PASSWD: 'prestashop'
+        PS_LANGUAGE: 'en'
+        ADMIN_PASSWD: 'Correct Horse Battery Staple'
+      run: |
+        USER_ID=$(id -u) GROUP_ID=$(id -g) \
+        docker-compose -f docker-compose.yml up -d --build
+        bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'

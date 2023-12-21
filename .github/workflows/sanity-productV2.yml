@@ -10,9 +10,20 @@ on:
       - src/Core/Domain/Product/**
       - src/Adapter/Product/**
       - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
+
+permissions:
+  contents: read   #   to fetch code (actions/checkout)
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  TEST_CAMPAIGN: 'sanity:productV2:fast-fail'
+
 jobs:
 
-  sanity:
+  sanity-product:
     runs-on: ubuntu-latest
     name: Sanity Product V2
     strategy:
@@ -21,44 +32,23 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          all_but_latest: true
-          access_token: ${{ github.token }}
-
       - uses: actions/checkout@v3
 
-      - name: Setup environment
-        uses: ./.github/actions/setup-prestashop-env
+      - name: Setup Environment
+        timeout-minutes: 15
+        uses: ./.github/actions/setup-env
         with:
-          php-version: ${{ matrix.php }}
-          mysql-version: '5.7'
-          mysql-database: 'prestashop'
-          mysql-root-password: 'password'
-          node-version: '16'
-          npm-version: '7'
-          ps-auto-install: 'true'
-          ps-dev-mode: 'false'
+          PHP_VERSION: ${{ matrix.php }}
+          INSTALL_AUTO: 'true'
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v3
+      - name: Run Tests
+        uses: ./.github/actions/ui-test
         with:
-          path: ~/.cache/ms-playwright/
-          key: ${{ runner.os }}-browsers
+          TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
 
-      - name: Run tests
-        run: npm install && npm run test:sanity:productV2:fast-fail
-        env:
-          URL_FO: http://localhost/
-          DB_NAME: prestashop
-          DB_PASSWD: password
-          HEADLESS: true
-          TAKE_SCREENSHOT_AFTER_FAIL: true
-        working-directory: ./tests/UI
-
-      - uses: actions/upload-artifact@v3
-        if: ${{ always() }}
+      - name: Upload Screenshots and logs
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-          name: screenshots-${{ matrix.php }}
+          name: sanity-productV2-${{ matrix.php }}
           path: ./tests/UI/screenshots/
