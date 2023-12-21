@@ -56,6 +56,22 @@ class ApiClientContextBuilderTest extends TestCase
         $this->assertEquals(42, $apiAccessContext->getApiClient()->getShopId());
     }
 
+    public function testBuildWithStringValue(): void
+    {
+        $apiAccess = $this->getApiAccessEntity();
+        $builder = new ApiClientContextBuilder(
+            $this->mockRepository($apiAccess),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => '42'])
+        );
+
+        $builder->setClientId('client_id');
+        $apiAccessContext = $builder->build();
+        $this->assertNotNull($apiAccessContext->getApiClient());
+        $this->assertEquals($apiAccess->getClientId(), $apiAccessContext->getApiClient()->getClientId());
+        $this->assertEquals($apiAccess->getScopes(), $apiAccessContext->getApiClient()->getScopes());
+        $this->assertEquals(42, $apiAccessContext->getApiClient()->getShopId());
+    }
+
     public function testBuildNoApiAccess(): void
     {
         $builder = new ApiClientContextBuilder(

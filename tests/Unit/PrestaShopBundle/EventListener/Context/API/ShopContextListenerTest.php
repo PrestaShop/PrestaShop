@@ -71,6 +71,18 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $listener->onKernelRequest($event);
     }
 
+    public function testListenButNoClientAvailable(): void
+    {
+        // Create request that mimic a call to external API
+        $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
+
+        $listener = new ShopContextListener(
+            $this->mockUnusedBuilder(),
+            $this->mockEmptyApiClientContext()
+        );
+        $listener->onKernelRequest($event);
+    }
+
     private function mockUnusedBuilder(): ShopContextBuilder|MockObject
     {
         $builder = $this->createMock(ShopContextBuilder::class);
@@ -87,6 +99,14 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
 
         $context = $this->createMock(ApiClientContext::class);
         $context->expects($this->once())->method('getApiClient')->willReturn($apiClient);
+
+        return $context;
+    }
+
+    private function mockEmptyApiClientContext(): ApiClientContext|MockObject
+    {
+        $context = $this->createMock(ApiClientContext::class);
+        $context->expects($this->once())->method('getApiClient')->willReturn(null);
 
         return $context;
     }

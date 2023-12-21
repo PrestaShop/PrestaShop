@@ -54,7 +54,7 @@ class ApiClientContextBuilder
             $apiAccessDTO = new ApiClient(
                 clientId: $apiAccess->getClientId(),
                 scopes: $apiAccess->getScopes(),
-                shopId: $defaultShopId
+                shopId: (int) $defaultShopId
             );
         }
 

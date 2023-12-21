@@ -50,7 +50,12 @@ class ShopContextListener
             return;
         }
 
-        $shopId = $this->apiClientContext->getApiClient()->getShopId();
+        $apiClient = $this->apiClientContext->getApiClient();
+        if (!$apiClient) {
+            return;
+        }
+
+        $shopId = $apiClient->getShopId();
         $shopConstraint = ShopConstraint::shop($shopId);
         $this->shopContextBuilder->setShopId($shopId);
         $this->shopContextBuilder->setShopConstraint($shopConstraint);
