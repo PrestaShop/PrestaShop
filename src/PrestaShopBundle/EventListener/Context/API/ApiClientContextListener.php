@@ -45,7 +45,7 @@ class ApiClientContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || !$this->isExternalApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest() || !$this->isResourceApiRequest($event->getRequest())) {
             return;
         }
 

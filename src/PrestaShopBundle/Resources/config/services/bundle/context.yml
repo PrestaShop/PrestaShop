@@ -41,10 +41,16 @@ services:
   # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
   PrestaShopBundle\EventListener\Context\API\ApiClientContextListener:
     tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
 
   # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
   # but lower than the ApiClientListener because the listener depends on it
   PrestaShopBundle\EventListener\Context\API\ShopContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
+
+  # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
+  # but lower than the ShopContextListener because the listener depends on it
+  PrestaShopBundle\EventListener\Context\API\LanguageContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }

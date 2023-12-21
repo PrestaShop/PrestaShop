@@ -28,19 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\API;
 
-use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
-use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class ShopContextListener
+class LanguageContextListener
 {
     use ExternalApiTrait;
 
     public function __construct(
-        private readonly ShopContextBuilder $shopContextBuilder,
-        private readonly ApiClientContext $apiClientContext
+        private readonly LanguageContextBuilder $languageContextBuilder,
+        private readonly ShopConfigurationInterface $configuration,
+        private readonly ShopContext $shopContext
     ) {
     }
 
@@ -50,17 +52,14 @@ class ShopContextListener
             return;
         }
 
-        $apiClient = $this->apiClientContext->getApiClient();
-        if (!$apiClient) {
-            return;
+        $defaultLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT', null, ShopConstraint::shop($this->shopContext->getId()));
+        $this->languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
+
+        $langId = $event->getRequest()->get('langId');
+        if ($langId) {
+            $this->languageContextBuilder->setLanguageId((int) $langId);
+        } else {
+            $this->languageContextBuilder->setLanguageId($defaultLanguageId);
         }
-
-        $shopId = $apiClient->getShopId();
-        $shopConstraint = ShopConstraint::shop($shopId);
-        $this->shopContextBuilder->setShopId($shopId);
-        $this->shopContextBuilder->setShopConstraint($shopConstraint);
-
-        // Set shop constraint easily accessible via request attribute
-        $event->getRequest()->attributes->set('shopConstraint', $shopConstraint);
     }
 }

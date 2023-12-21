@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Configuration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Trait to easily mock configuration with specified configuration values passed via an array.
@@ -37,14 +38,18 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
  */
 trait MockConfigurationTrait
 {
-    protected function mockConfiguration(array $configurationValues = []): ShopConfigurationInterface|MockObject
+    protected function mockConfiguration(array $configurationValues = [], ?ShopConstraint $expectedShopConstraint = null): ShopConfigurationInterface|MockObject
     {
         $configuration = $this->createMock(ShopConfigurationInterface::class);
 
         if (!empty($configurationValues)) {
             $configuration
                 ->method('get')
-                ->will($this->returnCallback(function ($configurationName) use ($configurationValues) {
+                ->will($this->returnCallback(function ($configurationName, $default, $shopConstraint) use ($configurationValues, $expectedShopConstraint) {
+                    if (null !== $expectedShopConstraint) {
+                        self::assertEquals($shopConstraint, $expectedShopConstraint);
+                    }
+
                     if (isset($configurationValues[$configurationName])) {
                         return $configurationValues[$configurationName];
                     }

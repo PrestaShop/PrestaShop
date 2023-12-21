@@ -30,6 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
+use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use PrestaShopBundle\Entity\ApiAccess;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
 use PrestaShopBundle\EventListener\Context\API\ApiClientContextListener;
@@ -92,9 +93,21 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         $listener->onKernelRequest($event);
     }
 
-    public function testListenForRequestNotForApi(): void
+    public function testRequestNotForApiIsIgnored(): void
     {
         $event = $this->createRequestEvent(new Request());
+
+        $listener = new ApiClientContextListener(
+            $this->mockUnusedBuilder(),
+            $this->mockSecurity(null)
+        );
+        $listener->onKernelRequest($event);
+    }
+
+    public function testTokenApiRequestIsIgnored(): void
+    {
+        // When token access point is called the context listeners should not be executed
+        $event = $this->createRequestEvent(new Request([], [], ['_controller' => AccessTokenController::class]));
 
         $listener = new ApiClientContextListener(
             $this->mockUnusedBuilder(),
