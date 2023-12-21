@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -41,8 +43,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Contracts\Service\Attribute\Required;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -52,7 +52,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class FrameworkBundleAdminController extends AbstractController implements ContainerAwareInterface
 {
-    protected TranslatorInterface $translator;
     /**
      * @deprecated since 9.0
      */
@@ -75,6 +74,42 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
         $this->container = $container;
 
         return $previous;
+    }
+
+    /**
+     * This method was removed in Symfony 6, for backward compatibility reasons this method is temporarily
+     * maintained so the modules can keep using it a little longer. It will be removed in the next major though
+     * along with this base controller class
+     *
+     * @deprecated since 9.0
+     */
+    protected function has(string $id): bool
+    {
+        return $this->container->has($id);
+    }
+
+    /**
+     * This method was removed in Symfony 6, for backward compatibility reasons this method is temporarily
+     * maintained so the modules can keep using it a little longer. It will be removed in the next major though
+     * along with this base controller class
+     *
+     * @deprecated since 9.0
+     */
+    protected function get(string $id): object
+    {
+        return $this->container->get($id);
+    }
+
+    /**
+     * This method was removed in Symfony 6, for backward compatibility reasons this method is temporarily
+     * maintained so the modules can keep using it a little longer. It will be removed in the next major though
+     * along with this base controller class
+     *
+     * @deprecated since 9.0
+     */
+    protected function getDoctrine(): ManagerRegistry
+    {
+        return $this->container->get('doctrine');
     }
 
     /**
@@ -121,7 +156,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
             }
 
             if ($error->getMessagePluralization()) {
-                $errors[$formId][] = $this->translator->trans(
+                $errors[$formId][] = $this->getTranslator()->trans(
                     $error->getMessageTemplate(),
                     array_merge(
                         $error->getMessageParameters(),
@@ -130,7 +165,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
                     'validators'
                 );
             } else {
-                $errors[$formId][] = $this->translator->trans(
+                $errors[$formId][] = $this->getTranslator()->trans(
                     $error->getMessageTemplate(),
                     $error->getMessageParameters(),
                     'validators'
@@ -306,7 +341,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
      */
     protected function trans($key, $domain, array $parameters = [])
     {
-        return $this->translator->trans($key, $parameters, $domain);
+        return $this->getTranslator()->trans($key, $parameters, $domain);
     }
 
     /**
@@ -546,9 +581,8 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
         );
     }
 
-    #[Required]
-    public function setTranslator(TranslatorInterface $translator)
+    protected function getTranslator(): TranslatorInterface
     {
-        $this->translator = $translator;
+        return $this->get(TranslatorInterface::class);
     }
 }

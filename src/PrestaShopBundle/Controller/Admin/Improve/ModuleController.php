@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Improve;
 
 use DateTime;
 use Db;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -63,6 +63,7 @@ class ModuleController extends ModuleAbstractController
     public function __construct(
         private readonly Environment $twig,
         private readonly ValidatorInterface $validator,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -139,7 +140,7 @@ class ModuleController extends ModuleAbstractController
         $moduleAccessedId = (int) $moduleAccessed->database->get('id');
 
         // Save history for this module
-        $moduleHistory = $this->getDoctrine()
+        $moduleHistory = $this->entityManager
             ->getRepository(ModuleHistory::class)
             ->findOneBy(
                 [
@@ -156,9 +157,8 @@ class ModuleController extends ModuleAbstractController
         $moduleHistory->setIdModule($moduleAccessedId);
         $moduleHistory->setDateUpd(new DateTime());
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($moduleHistory);
-        $em->flush();
+        $this->entityManager->persist($moduleHistory);
+        $this->entityManager->flush();
 
         return $this->redirect(
             $legacyUrlGenerator->generate(

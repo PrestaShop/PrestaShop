@@ -52,9 +52,6 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
-  prestashop.access_denied.listener:
-    alias: PrestaShopBundle\EventListener\AccessDeniedListener
-
   PrestaShopBundle\EventListener\DemoModeEnabledListener:
     autowire: true
     autoconfigure: true
@@ -63,9 +60,6 @@ services:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
-  prestashop.module_activated.listener:
-    alias: PrestaShopBundle\EventListener\ModuleActivatedListener
 
   prestashop.bundle.event_listener.filter_category_search_criteria:
     class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
