@@ -32,12 +32,15 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\Hook as HookQuery;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
 use PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer;
@@ -58,6 +61,10 @@ class QueryProviderTest extends TestCase
      * @var DomainSerializer
      */
     private DomainSerializer $serializer;
+
+    private LanguageContext $languageContext;
+
+    private ShopContext $shopContext;
 
     /**
      * Set up dependencies for HookStatusProvider
@@ -81,11 +88,16 @@ class QueryProviderTest extends TestCase
 
                 throw new RuntimeException(sprintf('Query type %s was not expected in query bus mock', get_class($query)));
             });
+        $this->languageContext = $this->createMock(LanguageContext::class);
+        $this->languageContext->method('getId')->willReturn(42);
+        $this->shopContext = $this->createMock(ShopContext::class);
+        $this->shopContext->method('getShopConstraint')->willReturn(ShopConstraint::shop(1));
+        $this->shopContext->method('getId')->willReturn(1);
     }
 
     public function testProvideHookStatus(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new Get();
         $get = $get
             ->withExtraProperties(['CQRSQuery' => GetHookStatus::class])
@@ -100,7 +112,7 @@ class QueryProviderTest extends TestCase
 
     public function testProvideHook(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new Get();
         $get = $get
             ->withExtraProperties(['CQRSQuery' => GetHook::class])
@@ -121,7 +133,7 @@ class QueryProviderTest extends TestCase
 
     public function testSearchProduct(): void
     {
-        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new GetCollection();
         $get = $get
             ->withExtraProperties(['CQRSQuery' => SearchProducts::class])
@@ -129,14 +141,14 @@ class QueryProviderTest extends TestCase
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'mug', 'resultsLimit' => 10, 'isoCode' => 'EUR']);
         self::assertCount(1, $searchProducts);
 
-        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'search with order id', 'resultsLimit' => 10, 'isoCode' => 'EUR'], ['filters' => ['orderId' => 1]]);
         self::assertCount(0, $searchProducts);
     }
 
     public function testProvideNoQueryThrowsException(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new Get();
 
         $this->expectException(CQRSQueryNotFoundException::class);
