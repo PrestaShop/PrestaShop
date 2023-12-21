@@ -36,7 +36,11 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCom
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Resources\CustomerGroup;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -156,6 +160,53 @@ class DomainSerializerTest extends KernelTestCase
                 '[reduction]' => '[reductionPercent]',
             ],
         ];
+
+        yield 'single shop constraint' => [
+            [
+                'shopId' => 42,
+            ],
+            ShopConstraint::shop(42),
+        ];
+
+        yield 'shop group constraint' => [
+            [
+                'shopGroupId' => 42,
+            ],
+            ShopConstraint::shopGroup(42),
+        ];
+
+        yield 'all shop constraint' => [
+            [],
+            ShopConstraint::allShops(),
+        ];
+
+        yield 'strict shop constraint' => [
+            [
+                'shopGroupId' => null,
+                'shopId' => 51,
+                'isStrict' => true,
+            ],
+            ShopConstraint::shop(51, true),
+        ];
+
+        yield 'add product command' => [
+            [
+                'productType' => ProductType::TYPE_STANDARD,
+                'shopId' => 51,
+            ],
+            new AddProductCommand(ProductType::TYPE_STANDARD, 51),
+        ];
+
+        yield 'get product query' => [
+            [
+                'productId' => 42,
+                'shopConstraint' => [
+                    'shopId' => 2,
+                ],
+                'displayLanguageId' => 51,
+            ],
+            new GetProductForEditing(42, ShopConstraint::shop(2), 51),
+        ];
     }
 
     /**
@@ -242,6 +293,42 @@ class DomainSerializerTest extends KernelTestCase
             ],
             [
                 '[reduction]' => '[reductionPercent]',
+            ],
+        ];
+
+        yield 'normalize single shop constraint' => [
+            ShopConstraint::shop(42),
+            [
+                'shopId' => 42,
+                'shopGroupId' => null,
+                'isStrict' => false,
+            ],
+        ];
+
+        yield 'normalize group shop constraint' => [
+            ShopConstraint::shopGroup(42),
+            [
+                'shopId' => null,
+                'shopGroupId' => 42,
+                'isStrict' => false,
+            ],
+        ];
+
+        yield 'normalize all shop constraint' => [
+            ShopConstraint::allShops(),
+            [
+                'shopId' => null,
+                'shopGroupId' => null,
+                'isStrict' => false,
+            ],
+        ];
+
+        yield 'normalize all shop constraint strict' => [
+            ShopConstraint::allShops(true),
+            [
+                'shopId' => null,
+                'shopGroupId' => null,
+                'isStrict' => true,
             ],
         ];
     }

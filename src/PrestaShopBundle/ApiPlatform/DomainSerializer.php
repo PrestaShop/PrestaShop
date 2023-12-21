@@ -82,7 +82,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 
         $dataConstruct = [];
         $reflectionClass = $this->getReflectionClass($type);
-        if ($reflectionClass->getConstructor()) {
+        if ($reflectionClass->getConstructor() && $reflectionClass->getConstructor()->isPublic()) {
             $constructParameters = $reflectionClass->getConstructor()->getParameters();
             foreach ($constructParameters as $constructParameter) {
                 if (isset($data[$constructParameter->getName()])) {
@@ -90,6 +90,8 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
                     unset($data[$constructParameter->getName()]);
                 }
             }
+        } else {
+            $dataConstruct = $data;
         }
 
         $denormalizedObject = $this->serializer->denormalize($dataConstruct, $type, $format, $context);
