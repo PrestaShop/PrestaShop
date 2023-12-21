@@ -58,7 +58,7 @@ class BasicInformationFiller implements ProductFillerInterface
 
         $localizedNames = $command->getLocalizedNames();
         if (null !== $localizedNames) {
-            $defaultName = $localizedNames[$this->defaultLanguageId];
+            $defaultName = $localizedNames[$this->defaultLanguageId] ?? $product->name[$this->defaultLanguageId];
             // Go through all the product languages and make sure name is filled for each of them
             $productLanguages = array_keys($product->name);
             foreach ($productLanguages as $languageId) {
