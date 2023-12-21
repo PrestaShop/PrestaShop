@@ -318,8 +318,8 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should select another shipping address and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherShippingAddress', baseContext);
 
-      const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
-        + `${secondAddressData.postalCode} ${secondAddressData.city}`;
+      const addressToSelect = `#${addressID} ${secondAddressData.alias} - ${secondAddressData.address} `
+        + `${secondAddressData.secondAddress} ${secondAddressData.postalCode} ${secondAddressData.city}`;
 
       const alertMessage = await orderPageCustomerBlock.selectAnotherShippingAddress(page, addressToSelect);
       expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -350,8 +350,8 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should select another invoice address and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherInvoiceAddress', baseContext);
 
-      const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
-        + `${secondAddressData.postalCode} ${secondAddressData.city}`;
+      const addressToSelect = `#${addressID} ${secondAddressData.alias} - ${secondAddressData.address} `
+        + `${secondAddressData.secondAddress} ${secondAddressData.postalCode} ${secondAddressData.city}`;
 
       const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
       expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
