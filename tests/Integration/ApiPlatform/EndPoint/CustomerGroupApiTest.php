@@ -48,6 +48,38 @@ class CustomerGroupApiTest extends ApiTestCase
         DatabaseDump::restoreTables(['group', 'group_lang', 'group_reduction', 'group_shop', 'category_group']);
     }
 
+    /**
+     * @dataProvider getProtectedEndpoints
+     *
+     * @param string $method
+     * @param string $uri
+     */
+    public function testProtectedEndpoints(string $method, string $uri): void
+    {
+        $client = static::createClient();
+        $response = $client->request($method, $uri);
+        self::assertResponseStatusCodeSame(401);
+        $this->assertEmpty($response->getContent(false));
+    }
+
+    public function getProtectedEndpoints(): iterable
+    {
+        yield 'get endpoint' => [
+            'GET',
+            '/api/customers/group/1',
+        ];
+
+        yield 'create endpoint' => [
+            'POST',
+            '/api/customers/group',
+        ];
+
+        yield 'update endpoint' => [
+            'PUT',
+            '/api/customers/group/1',
+        ];
+    }
+
     public function testAddCustomerGroup(): int
     {
         $numberOfGroups = count(Group::getGroups(Context::getContext()->language->id));
@@ -193,7 +225,7 @@ class CustomerGroupApiTest extends ApiTestCase
         $this->assertEmpty($response->getContent());
 
         $client = static::createClient();
-        $response = $client->request('GET', '/api/customers/group/' . $customerGroupId, [
+        $client->request('GET', '/api/customers/group/' . $customerGroupId, [
             'auth_bearer' => $bearerToken,
         ]);
         self::assertResponseStatusCodeSame(404);
