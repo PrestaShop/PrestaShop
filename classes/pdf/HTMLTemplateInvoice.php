@@ -365,10 +365,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'legal_free_text' => $legal_free_text,
         ];
 
-        if (Tools::getValue('debug')) {
-            die(json_encode($data));
-        }
-
         $this->smarty->assign($data);
 
         $tpls = [
@@ -390,12 +386,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Returns the tax tab content.
      *
-     * @return string|array Tax tab html content (Returns an array if debug params used in request)
+     * @return string|array Tax tab html content
      */
     public function getTaxTabContent()
     {
-        $debug = Tools::getValue('debug');
-
+   
         $address = new Address((int) $this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
                             && !empty($address->vat_number)
@@ -411,14 +406,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
             'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
             'tax_breakdowns' => $this->getTaxBreakdown(),
-            'order' => $debug ? null : $this->order,
-            'order_invoice' => $debug ? null : $this->order_invoice,
-            'carrier' => $debug ? null : $carrier,
+            'order' => $this->order,
+            'order_invoice' => $this->order_invoice,
+            'carrier' => $carrier,
         ];
 
-        if ($debug) {
-            return $data;
-        }
 
         $this->smarty->assign($data);
 
