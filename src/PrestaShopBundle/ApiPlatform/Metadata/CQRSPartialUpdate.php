@@ -29,12 +29,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 /**
- * Class CQRSUpdate is a custom operation that provides extra parameters to help configure an operation
- * based on a CQRS command, it is custom tailed for update operations and forces using the PUT method by default,
- * but you can also use PATCH method.
+ * Class CQRSPartialUpdate is a custom operation that provides extra parameters to help configure an operation
+ * based on a CQRS command, it is custom tailed for update operations and forces using the PATCH method, to use PUT
+ * method you should use CQRSUpdate instead.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class CQRSUpdate extends CQRSCommand
+class CQRSPartialUpdate extends CQRSCommand
 {
     public function __construct(
         ?string $uriTemplate = null,
@@ -117,8 +117,8 @@ class CQRSUpdate extends CQRSCommand
         ?array $CQRSCommandMapping = null,
     ) {
         $passedArguments = \get_defined_vars();
-        $passedArguments['method'] = self::METHOD_PUT;
-        // Disable read listener because it is forced when using PUT method, but we don't need it since we rely on CQRS commands/queries
+        $passedArguments['method'] = self::METHOD_PATCH;
+        // Disable read listener because it is forced when using PATCH method, but we don't need it since we rely on CQRS commands/queries
         $passedArguments['read'] = $read ?? false;
 
         parent::__construct(...$passedArguments);
