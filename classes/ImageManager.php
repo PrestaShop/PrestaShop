@@ -330,11 +330,6 @@ class ImageManagerCore
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
         @imagedestroy($srcImage);
 
-        file_put_contents(
-            dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
-            $destinationFileType
-        );
-
         return $writeFile;
     }
 
