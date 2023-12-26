@@ -319,7 +319,7 @@ class SpecificPriceRuleCore extends ObjectModel
             (int) $rule->from_quantity,
             (string) $rule->from,
             (string) $rule->to,
-            (int) $rule->id
+            $rule->id != 0
         );
 
         $specific_price = new SpecificPrice($idSpecificPrice);
