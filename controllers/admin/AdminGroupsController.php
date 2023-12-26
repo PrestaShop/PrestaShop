@@ -195,6 +195,11 @@ class AdminGroupsControllerCore extends AdminController
         }
 
         parent::initProcess();
+
+        // This is a composite page, we don't want the "options" display mode
+        if ($this->display == 'options') {
+            $this->display = '';
+        }
     }
 
     public function postProcess(): void
