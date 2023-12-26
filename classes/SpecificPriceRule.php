@@ -308,7 +308,21 @@ class SpecificPriceRuleCore extends ObjectModel
             return false;
         }
 
-        $specific_price = new SpecificPrice();
+        $idSpecificPrice = (int) SpecificPrice::exists(
+            (int) $id_product,
+            (int) $id_product_attribute,
+            (int) $rule->id_shop,
+            (int) $rule->id_group,
+            (int) $rule->id_country,
+            (int) $rule->id_currency,
+            0,
+            (int) $rule->from_quantity,
+            (string) $rule->from,
+            (string) $rule->to,
+            (int) $rule->id
+        );
+
+        $specific_price = new SpecificPrice($idSpecificPrice);
         $specific_price->id_specific_price_rule = (int) $rule->id;
         $specific_price->id_product = (int) $id_product;
         $specific_price->id_product_attribute = (int) $id_product_attribute;
@@ -325,6 +339,6 @@ class SpecificPriceRuleCore extends ObjectModel
         $specific_price->from = $rule->from;
         $specific_price->to = $rule->to;
 
-        return $specific_price->add();
+        return $specific_price->save();
     }
 }
