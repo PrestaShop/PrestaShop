@@ -18,6 +18,10 @@ inputs:
     required: false
     description: Node Version for tests
     default: '16'
+  BROWSER:
+    required: false
+    description: Bowser for tests
+    default: 'chromium'
   INSTALL_BROWSERS:
     required: false
     description: True To Install Browsers
@@ -45,13 +49,14 @@ runs:
       if: inputs.INSTALL_BROWSERS == 'true'
       working-directory: ${{ inputs.TESTS_DIR }}
       shell: bash
-      run: npx playwright install --with-deps
+      run: npx playwright install ${{ inputs.BROWSER }} --with-deps
 
     # Run tests
     - name: Run tests
       working-directory: ${{ inputs.TESTS_DIR }}
       env:
-        URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+        BROWSER: ${{ inputs.BROWSER }}
         ENABLE_SSL: ${{ inputs.ENABLE_SSL }}
+        URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
       shell: bash
       run: npm run test:${{ inputs.TEST_CAMPAIGN }}
