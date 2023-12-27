@@ -86,6 +86,17 @@ class AddNewAPIAccess extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Save the form
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async saveForm(page: Page): Promise<string> {
+    // Save
+    await this.clickAndWaitForURL(page, this.saveButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
 
   /**
    * Add API Access
@@ -105,10 +116,7 @@ class AddNewAPIAccess extends BOBasePage {
       await this.setAPIScopeChecked(page, scope, true);
     }
 
-    // Save
-    await this.clickAndWaitForURL(page, this.saveButton);
-
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.saveForm(page);
   }
 
   /**
