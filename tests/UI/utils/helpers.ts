@@ -31,7 +31,7 @@ export default {
           `--lang=${global.BROWSER.lang}`,
         ];
 
-        browserConfig.args = await (browserConfig.args).concat(global.BROWSER.sandboxArgs);
+        browserConfig.args = (browserConfig.args).concat(global.BROWSER.sandboxArgs);
       }
 
       return (await browsers[global.BROWSER.name].launch(browserConfig));
@@ -74,11 +74,9 @@ export default {
             width: global.BROWSER.width,
             height: global.BROWSER.height,
           },
-        permissions: [
-          'clipboard-read',
-        ],
+        permissions: global.BROWSER.name === 'chromium' ? ['clipboard-read'] : [],
         // @todo : Remove it when Puppeteer will accept self signed certificates
-        ignoreHTTPSErrors: false,
+        ignoreHTTPSErrors: global.BROWSER.name === 'firefox',
       },
     );
   },

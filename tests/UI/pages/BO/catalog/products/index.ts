@@ -161,6 +161,8 @@ class Products extends BOBasePage {
 
   private readonly modalCreateProductCloseButton: string;
 
+  private readonly modalCreateProductIframe: string;
+
   private readonly productTypeChoices: string;
 
   private readonly productTypeDescription: string;
@@ -308,6 +310,7 @@ class Products extends BOBasePage {
     this.modalCreateProduct = '#modal-create-product';
     this.modalCreateProductLoader = `${this.modalCreateProduct} div.modal-iframe-loader`;
     this.modalCreateProductCloseButton = `${this.modalCreateProduct} div.modal-header button.close`;
+    this.modalCreateProductIframe = `${this.modalCreateProduct} iframe[name="modal-create-product-iframe"]`;
     this.productTypeChoices = '#create_product div.product-type-choices';
     this.productTypeDescription = '#create_product div.product-type-description';
     this.productType = (type: string) => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
@@ -403,6 +406,7 @@ class Products extends BOBasePage {
   async selectProductType(page: Page, productType: string): Promise<void> {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
+    await this.waitForVisibleLocator(page.frameLocator(this.modalCreateProductIframe).locator(this.productType(productType)));
 
     const createProductFrame: Frame | null = page.frame({url: /sell\/catalog\/products\/create/gmi});
     expect(createProductFrame).to.be.not.eq(null);
