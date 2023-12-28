@@ -88,7 +88,7 @@ class ProductEndpointTest extends ApiTestCase
         ];
 
         yield 'update endpoint' => [
-            'PUT',
+            'PATCH',
             '/api/product/1',
         ];
     }
@@ -150,7 +150,7 @@ class ProductEndpointTest extends ApiTestCase
         $client = static::createClient();
 
         // Update product with partial data, even multilang fields can be updated language by language
-        $response = $client->request('PUT', '/api/product/' . $productId, [
+        $response = $client->request('PATCH', '/api/product/' . $productId, [
             'auth_bearer' => $bearerToken,
             'json' => [
                 'names' => [

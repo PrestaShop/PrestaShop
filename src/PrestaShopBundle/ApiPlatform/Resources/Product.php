@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
 
 #[ApiResource(
     operations: [
@@ -63,7 +63,7 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
                 '[names]' => '[localizedNames]',
             ],
         ),
-        new CQRSUpdate(
+        new CQRSPartialUpdate(
             uriTemplate: '/product/{productId}',
             CQRSCommand: UpdateProductCommand::class,
             CQRSQuery: GetProductForEditing::class,
