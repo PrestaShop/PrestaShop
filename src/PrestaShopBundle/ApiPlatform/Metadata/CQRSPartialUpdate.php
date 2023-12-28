@@ -120,6 +120,11 @@ class CQRSPartialUpdate extends CQRSCommand
         $passedArguments['method'] = self::METHOD_PATCH;
         // Disable read listener because it is forced when using PATCH method, but we don't need it since we rely on CQRS commands/queries
         $passedArguments['read'] = $read ?? false;
+        // There is a strange behaviour in ApiPlatform DeserializeListener that forces deserializing deep object for PATCH requests only
+        // except it causes a bug in deserialization, since we don't understand the purpose of this deep population we forced it to be disabled
+        // by default
+        $passedArguments['denormalizationContext'] = $denormalizationContext ?? [];
+        $passedArguments['denormalizationContext']['deep_object_to_populate'] ??= false;
 
         parent::__construct(...$passedArguments);
     }

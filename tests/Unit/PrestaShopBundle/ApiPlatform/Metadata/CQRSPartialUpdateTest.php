@@ -45,6 +45,10 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertEquals(CQRSPartialUpdate::METHOD_PATCH, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertFalse($operation->canRead());
+        // Deep population is disabled or it causes a bug
+        $this->assertNotEmpty($operation->getDenormalizationContext());
+        $this->assertArrayHasKey('deep_object_to_populate', $operation->getDenormalizationContext());
+        $this->assertFalse($operation->getDenormalizationContext()['deep_object_to_populate']);
 
         // With positioned parameters
         $operation = new CQRSPartialUpdate('/uri');
