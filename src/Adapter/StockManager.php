@@ -246,21 +246,16 @@ class StockManager implements StockInterface
         // in "not shipped state" so the reserved quantity would not be updated on the Available Stock.
         if ($idOrder) {
             $productsAttributesQuery = '
-                SELECT od.product_id as id_product, od.product_attribute_id as id_product_attribute
-                FROM ' . _DB_PREFIX_ . 'orders o
-                INNER JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_order = o.id_order
-                WHERE o.id_shop = ' . (int) $shopId . '
-                AND od.product_id IN (SELECT product_id FROM ' . _DB_PREFIX_ . 'order_detail WHERE id_order = ' . (int) $idOrder .')';
+                SELECT od.product_id as id_product, od.product_attribute_id as id_product_attribute 
+                FROM ps_order_detail od 
+                WHERE od.id_order = ' . (int) $idOrder;
             
             $productsAttributes = Db::getInstance()->executeS($productsAttributesQuery);
 
             $productsAttributesQuery = '
-                SELECT pp.id_product_item as id_product, pp.id_product_attribute_item as id_product_attribute
-                FROM ' . _DB_PREFIX_ . 'orders o
-                INNER JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_order = o.id_order
-                JOIN ' . _DB_PREFIX_ . 'pack pp ON pp.id_product_pack = od.product_id
-                WHERE o.id_shop = ' . (int) $shopId . '
-                AND pp.id_product_item IN (SELECT id_product_item from ps_pack pp join ps_order_detail od on (od.product_id = pp.id_product_pack) where od.id_order = ' . (int) $idOrder . ')';
+                SELECT pp.id_product_item as id_product, pp.id_product_attribute_item as id_product_attribute 
+                FROM ps_pack pp 
+                INNER JOIN ps_order_detail od ON pp.id_product_pack = od.product_id AND od.id_order = ' . (int) $idOrder;
 
             $productsAttributes = array_merge($productsAttributes, Db::getInstance()->executeS($productsAttributesQuery));
 
