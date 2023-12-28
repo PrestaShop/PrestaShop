@@ -882,5 +882,11 @@ Country</value>
     <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
       <value>jpg</value>
     </configuration>
+    <configuration id="PS_DEBUG_COOKIE_NAME" name="PS_DEBUG_COOKIE_NAME">
+      <value/>
+    </configuration>
+    <configuration id="PS_DEBUG_COOKIE_VALUE" name="PS_DEBUG_COOKIE_VALUE">
+      <value/>
+    </configuration>
   </entities>
 </entity_configuration>
