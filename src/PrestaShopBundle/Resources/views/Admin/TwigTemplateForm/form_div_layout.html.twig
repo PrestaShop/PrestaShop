@@ -259,7 +259,7 @@
 
       {% if label_attr['popover'] is defined %}
         {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-        {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
+        {% include '@PrestaShop/Admin/Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
       {% endif %}
     </label>
 

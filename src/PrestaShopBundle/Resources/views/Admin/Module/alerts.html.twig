@@ -32,7 +32,7 @@
     <div class="col-lg-10">
       <div id="module-short-list-configure" class="module-short-list">
         <span class="module-search-result-title module-search-result-wording">{{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules|length}, 'Admin.Modules.Feature') }}</span>
-        {% include '@Common/HelpBox/helpbox.html.twig' with { 'content' : "These modules require your attention: you need to take some action to ensure they are fully operational."|trans({}, 'Admin.Modules.Help'), 'title' : "Modules to configure"|trans({}, 'Admin.Modules.Feature') } %}
+        {% include '@PrestaShop/Admin/Common/HelpBox/helpbox.html.twig' with { 'content' : "These modules require your attention: you need to take some action to ensure they are fully operational."|trans({}, 'Admin.Modules.Help'), 'title' : "Modules to configure"|trans({}, 'Admin.Modules.Feature') } %}
       </div>
       {% include '@PrestaShop/Admin/Module/Includes/grid_notification_configure.html.twig' with { 'modules': modules, 'display_type': 'list', id: 'notification', 'category': 'notification'  } %}
     </div>

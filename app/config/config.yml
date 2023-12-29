@@ -93,8 +93,11 @@ twig:
     - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
   paths:
     '%admin_page%/TwigTemplateForm': Twig
+    # Unused
     '%admin_page%/Common': Common
+    # Unused
     '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
+    # Unused
     '%admin_page%/Configure/ShopParameters': ShopParameters
     '%kernel.project_dir%/modules': Modules
     '%mail_themes_dir%': MailThemes

@@ -190,7 +190,7 @@
     {% if label_help_box is defined or label_attr['popover'] is defined %}
       {% set content = label_help_box is defined ? label_help_box : label_attr['popover'] %}
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-      {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
+      {% include '@PrestaShop/Admin/Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
     {% endif %}
     {{- block('form_disabling_switch') -}}
     </{{ labelTag }}>

@@ -63,7 +63,7 @@
   {% endif %}
 
   {{ label }}
-  {{ include('@Common/HelpBox/helpbox.html.twig', {'content': help}) }}
+  {{ include('@PrestaShop/Admin/Common/HelpBox/helpbox.html.twig', {'content': help}) }}
 </label>
 
 <p class="sr-only">{{ help }}</p>
@@ -275,7 +275,7 @@
         {{ extraVars.label }}
 
         {% if form.vars.label_attr is defined and form.vars.label_attr and form.vars.label_attr['popover'] is defined %}
-          {{ include('@Common/HelpBox/helpbox.html.twig', {'content': form.vars.label_attr['popover']}) }}
+          {{ include('@PrestaShop/Admin/Common/HelpBox/helpbox.html.twig', {'content': form.vars.label_attr['popover']}) }}
         {% endif %}
       </label>
     {% endif %}
