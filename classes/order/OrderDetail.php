@@ -583,8 +583,8 @@ class OrderDetailCore extends ObjectModel
     {
         $this->ecotax = Tools::convertPrice((float) ($product['ecotax']), (int) ($order->id_currency));
 
-        // Exclude VAT
-        if (!Tax::excludeTaxeOption()) {
+        // Include VAT
+        if (Configuration::get('PS_TAX')) {
             $this->setContext((int) $product['id_shop']);
             $this->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct((int) $product['id_product'], $this->context);
 

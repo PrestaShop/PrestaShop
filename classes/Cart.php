@@ -488,7 +488,7 @@ class CartCore extends ObjectModel
         // set base cart total values, they will be updated and used for percentage cart rules (because percentage cart rules
         // are applied to the cart total's value after previously applied cart rules)
         $virtual_context->virtualTotalTaxExcluded = $virtual_context->cart->getOrderTotal(false, self::ONLY_PRODUCTS);
-        if (Tax::excludeTaxeOption()) {
+        if (!Configuration::get('PS_TAX')) {
             $virtual_context->virtualTotalTaxIncluded = $virtual_context->virtualTotalTaxExcluded;
         } else {
             $virtual_context->virtualTotalTaxIncluded = $virtual_context->cart->getOrderTotal(true, self::ONLY_PRODUCTS);
@@ -2020,7 +2020,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        if (Tax::excludeTaxeOption()) {
+        if (!Configuration::get('PS_TAX')) {
             $withTaxes = false;
         }
 
@@ -3470,7 +3470,7 @@ class CartCore extends ObjectModel
         }
 
         // Select carrier tax
-        if ($use_tax && !Tax::excludeTaxeOption()) {
+        if ($use_tax && Configuration::get('PS_TAX')) {
             $address = Address::initialize((int) $address_id);
 
             if (Configuration::get('PS_ATCP_SHIPWRAP')) {

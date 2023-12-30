@@ -148,6 +148,13 @@ class TaxCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
+    /**
+     * Returns true if taxes are disabled in Prestashop.
+     *
+     * @return bool
+     *
+     * @deprecated since 9.0, please use Configuration::get('PS_TAX') directly
+     */
     public static function excludeTaxeOption()
     {
         return !Configuration::get('PS_TAX');

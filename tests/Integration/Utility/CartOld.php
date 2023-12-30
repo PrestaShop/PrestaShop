@@ -28,11 +28,11 @@ namespace Tests\Integration\Utility;
 
 use Cart;
 use CartRule;
+use Configuration;
 use Context;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Shop;
-use Tax;
 use Tools;
 
 /**
@@ -150,7 +150,7 @@ class CartOld extends Cart
         }
 
         $order_total = 0;
-        if (Tax::excludeTaxeOption()) {
+        if (!Configuration::get('PS_TAX')) {
             $with_taxes = false;
         }
 

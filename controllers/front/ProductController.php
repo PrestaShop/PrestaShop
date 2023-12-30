@@ -645,7 +645,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
         $this->context->smarty->assign([
-            'no_tax' => Tax::excludeTaxeOption() || !$tax,
+            'no_tax' => !Configuration::get('PS_TAX') || !$tax,
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         ]);
