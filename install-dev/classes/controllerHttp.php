@@ -178,11 +178,6 @@ class InstallControllerHttp
     {
         $self = new static();
 
-        if (Tools::getValue('compile_templates')) {
-            require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'http/smarty_compile.php';
-            exit;
-        }
-
         $session = InstallSession::getInstance();
         if (!$session->last_step || $session->last_step === 'welcome') {
             \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
