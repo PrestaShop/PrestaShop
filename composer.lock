@@ -5318,16 +5318,16 @@
         },
         {
             "name": "prestashop/gsitemap",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gsitemap.git",
-                "reference": "06763bb45c7643c92726cb3e43783183b37c3506"
+                "reference": "1d064b70ad0452f8181388e13b67b8b730727e5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/06763bb45c7643c92726cb3e43783183b37c3506",
-                "reference": "06763bb45c7643c92726cb3e43783183b37c3506",
+                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/1d064b70ad0452f8181388e13b67b8b730727e5a",
+                "reference": "1d064b70ad0452f8181388e13b67b8b730727e5a",
                 "shasum": ""
             },
             "require": {
@@ -5355,9 +5355,9 @@
             "description": "PrestaShop module gsitemap",
             "homepage": "https://github.com/PrestaShop/gsitemap",
             "support": {
-                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.3.0"
+                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.3.1"
             },
-            "time": "2023-04-05T13:04:34+00:00"
+            "time": "2023-12-30T15:06:02+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
