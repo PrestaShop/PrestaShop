@@ -1189,16 +1189,16 @@ class FrontControllerCore extends Controller
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        // If the component does not start with ui. prefix, we need to add it
-        if (substr($component, 0, 3) !== 'ui.') {
-            $component = 'ui.' . $component;
-        }
-
         if (!is_array($component)) {
             $component = [$component];
         }
 
         foreach ($component as $ui) {
+            // If the component does not start with ui. prefix, we need to add it
+            if (!str_starts_with($ui, 'ui.')) {
+                $ui = 'ui.' . $ui;
+            }
+
             $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
             foreach ($ui_path['css'] as $uiPathCss => $uiMediaCss) {
                 $this->registerStylesheet(
