@@ -77,6 +77,20 @@ class ValidateTest extends TestCase
         $this->assertSame($expected, $this->validate->isEmail($email));
     }
 
+    /**
+     * @dataProvider isCleanHtmlDataProvider
+     *
+     * @param string $html
+     * @param bool $allowFrame
+     * @param $expectedResult
+     *
+     * @return void
+     */
+    public function testIsCleanHtml(string $html, bool $allowFrame, $expectedResult): void
+    {
+        $this->assertSame($expectedResult, $this->validate->isCleanHtml($html, $allowFrame));
+    }
+
     public function isEmailDataProvider(): array
     {
         return [
@@ -93,6 +107,102 @@ class ValidateTest extends TestCase
             [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
+        ];
+    }
+
+    private function isCleanHtmlDataProvider()
+    {
+        return [
+            [
+                '<div randomattribute="randomvalue">test</div>', // nominal case
+                false,
+                true
+            ],
+            [
+                '<div
+
+randomattribute="anything"   attributewithoutvalue
+
+        randomattr="random value">
+
+</div>', // nominal case with added spaces and line jumps
+                false,
+                true
+            ],
+            [
+                '/form input > embed onerror iframe object', // test plain words with forbidden tag / attributes: should pass
+                false,
+                true
+            ],
+            [
+                '<a href="#" onchange="evilJavascriptIsCalled()"></a>', // event attributes are forbidden, should not pass
+                false,
+                false
+            ],
+            [
+                '<a href="#" onanything="evilJavascriptIsCalled()"></a>', // random attribute starting with on should not pass
+                false,
+                false
+            ],
+            [
+                '<a href="#" oNnotexi="evilJavascriptIsCalled()"></a>', // random attribute starting with on but case insensitive: should not pass
+                false,
+                false
+            ],
+            [
+                '<iframe src="catvideo.html" /></iframe>', // iframe forbidden
+                false,
+                false
+            ],
+            [
+                '<iframe src="catvideo.html" /></iframe>', // iframe parameter is set to true, should pass
+                true,
+                true
+            ],
+            [
+                '<form></form>', // form should not pass,
+                false,
+                false
+            ],
+            [
+                '<embed></embed>', // embed should not pass
+                false,
+                false
+            ],
+            [
+                '<input>', // input should not pass
+                false,
+                false
+            ],
+            [
+                '<script>
+
+    </script>', // script tags are forbidden, should not pass (added a random tabulation and line break
+                false,
+                false
+            ],
+            [
+                '<object></object>', // objects are forbidden, should not pass
+                false,
+                false
+            ],
+            [
+                '<div
+randomattribute="anything"
+
+    onbidule="test" attributewithoutvalue
+
+        randomattr="random value">test
+
+        </div>', // puting an attribute starting with "on" in the middle of other attributes, with spaces and line breaks: shouldn't pass
+                false,
+                false
+            ],
+            [
+                '‮<img src=x onerror="alert(\'img\')">', // test RLO xss attack
+                false,
+                false
+            ]
         ];
     }
 }
